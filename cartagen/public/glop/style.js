@@ -1,6 +1,6 @@
 function style(feature,selector) {
-	fillStyle("#777") //greyish
-	strokeStyle("#555") //greyish
+	fillStyle("#aaa") //greyish
+	strokeStyle("#333") //greyish
 	// try {
 		if (selector.fillStyle) fillStyle(selector.fillStyle)
 		if (selector.lineWidth || selector.lineWidth == 0) lineWidth(selector.lineWidth)

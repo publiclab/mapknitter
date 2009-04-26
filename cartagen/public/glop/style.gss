@@ -66,5 +66,5 @@ landuse: {
 	fillStyle: "#ccc"
 },
 rail: {
-	strokeStyle: "purplewww"
+	strokeStyle: "purple"
 }

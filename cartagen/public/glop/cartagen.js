@@ -86,12 +86,15 @@ bbox.shape = function() {
 }
 objects.push(bbox)
 
-new Ajax.Request('/glop/style.gss',{
-	method: 'get',
-	onComplete: function(result) {
-		styles = ("{"+result.responseText+"}").evalJSON()
-	}
-})
+function load_styles(stylesheet_url) {
+	new Ajax.Request("/map/style?url="+stylesheet_url,{
+		method: 'get',
+		onComplete: function(result) {
+			styles = ("{"+result.responseText+"}").evalJSON()
+		}
+	})
+}
+load_styles(stylesheet)
 
 function load_plot(_lat1,_lng1,_lat2,_lng2) {
 	_lat1 = number_precision(_lat1,0.001)
