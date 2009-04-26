@@ -3,6 +3,7 @@ class MapController < ApplicationController
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
   def find
+    
     unless params[:id]
       params[:id] = "20 ames st cambridge"
     end
@@ -46,5 +47,14 @@ class MapController < ApplicationController
       format.js  { render :json => @features }
     end
   end
-  
+    
+  def style
+    url = URI.parse(params[:url])
+    req = Net::HTTP::Get.new(url.path)
+    res = Net::HTTP.start(url.host, url.port) {|http|
+      http.request(req)
+    }
+    render :text => res.body
+  end
+    
 end

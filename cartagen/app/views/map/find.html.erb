@@ -15,6 +15,7 @@
 	<!-- <link rel="stylesheet" href="/glop/lib/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8"> -->
 	<script type="text/javascript" charset="utf-8">
 		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %>
+		var stylesheet = <% if params[:gss] %>"<%= params[:gss] %>"<% else %>"/glop/style.gss"<% end %>
 		var range = <%= @map[:range] %>, lat1 = <%= @map[:lat1] %>, lat2 = <%= @map[:lat2] %>, lng1 = <%= @map[:lng1] %>, lng2 = <%= @map[:lng2] %>, zoom_level = <%= @map[:zoom_level] ||= 0 %>
 
 		scripts = [
