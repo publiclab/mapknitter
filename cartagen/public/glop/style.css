@@ -1,0 +1,153 @@
+html {
+	font-family:georgia;
+	margin:0;
+	background:#ddd;
+	width:800px;
+	font-size:0.8em;
+}
+body {
+	margin:0;
+	padding:0;
+}
+a {
+	color:#555;
+}
+a:hover {
+	color:#222;
+}
+
+a.button {
+	background:#BE3F31 top repeat-x;
+	padding:6px 12px;
+	border:2px solid #900;
+	color:#fff;
+	font-family:georgia, serif;
+	text-decoration:none;
+	font-size:1.3em;
+}
+a.button:hover {
+	background:#b00;
+	color:#ccc;
+}
+a.button:active {
+	background:#900;
+	border-color:#5D1D15;
+}
+
+a.button.green {
+	background:#7BAB3A top repeat-x;
+	border:2px solid #070;
+}
+a.button.green:hover {
+	background:#6A9631 top repeat-x;
+}
+a.button.green:active {
+	background:#4F5F37 top repeat-x;
+}
+
+input {
+	font-size:1.6em;
+}
+
+h2 {
+	font-size:3em;
+	font-weight:normal;
+	line-height:0.5em;
+	margin-bottom:6px;
+}
+h2 small {
+	font-size:0.35em;
+	color:#444;
+}
+
+h3 {
+	font-size:1.4em;
+	font-weight:normal;
+}
+
+.label {
+	background:#FFEABC;
+	padding:4px;
+}
+
+#info {
+	margin-right:12px;
+	display:inline;
+	float:right;
+	text-align:right;
+	color:#888;
+}
+#info b {
+	color:#222;
+}
+
+#pointerLabel {
+	width:60px;
+}
+#pointerLabel span {
+	border:1px solid #ddd;
+	padding:3px;
+	background:#fff;
+	-moz-opacity: 0.8;
+	opacity:.8;
+	filter:alpha(opacity=80);
+}
+
+canvas {
+	background:#fff;
+	margin:0;
+	border-bottom:2px solid #555;
+/*	border:2px solid #bbb;*/
+}
+#script {
+	width:600px;
+	height:200px;
+}
+.object {
+	text-align:center;
+	color:white;
+	font-family:trebuchet ms;
+	font-weight:bold;
+	background:#009;
+}
+.object:hover {
+/*	border:2px solid #FFB76C;
+*/	background:#900;
+	-moz-opacity: 0.25;
+	opacity:.25;
+	filter:alpha(opacity=25);
+}
+#trace_div {
+	background:#333;
+	color:#eee;
+	margin-top:10px;
+	padding:10px;
+}
+#trace_div a {
+	color:#B8D225;
+}
+#trace {
+	height:200px;
+	overflow-y:scroll;
+}
+
+#brief div {
+	font-size:0.9em;
+	float:left;
+	width:21%;
+	padding:0 2%;
+	font-family: lucida grande, lucida sans console, sans-serif;
+	margin-bottom:16px;
+}
+#brief h3 {
+	margin-top:20px;
+}
+
+#browsers {
+	margin:0 auto;
+	width:300px;
+	border:3px solid #ccc;
+	background: #eee;
+	padding:20px;
+	position:absolute; top:10px; left:90px;
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Cartagen</title>
+	<script src="/glop/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/date.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="/glop/lib/scriptaculous/scriptaculous.js" type="text/javascript" charset="utf-8"></script> -->
+	<!-- <script src="/glop/lib/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script> -->
+	<!-- <script src="/glop/lib/scriptaculous/dragdrop.js" type="text/javascript" charset="utf-8"></script> -->
+	<!-- <script src="/glop/lib/codepress/codepress.js" type="text/javascript"></script> -->
+	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!-- <link rel="stylesheet" href="/glop/lib/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8"> -->
+	<script type="text/javascript" charset="utf-8">
+		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %>
+		var range = <%= @map[:range] %>, lat1 = <%= @map[:lat1] %>, lat2 = <%= @map[:lat2] %>, lng1 = <%= @map[:lng1] %>, lng2 = <%= @map[:lng2] %>, zoom_level = <%= @map[:zoom_level] ||= 0 %>
+
+		scripts = [
+		'/glop/canvas.js',
+		// '/glop/config.js',
+		'/glop/glop.js',
+		'/glop/label.js',
+		'/glop/events.js',
+		'/glop/box.js',
+		'/glop/style.js',
+		'/glop/cartagen.js'
+		]
+
+		function load_script(script) {
+			$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+		}
+		function load_next_script() {
+			if (scripts.length > 0) {
+	 			load_script(scripts.splice(0,1)[0])
+			}
+		}
+		// function load_scripts() {
+		// 	// These are asynchronous - no guarantee of order... problematic?
+		// 	// Can we aggregate responses and trigger an 'all loaded' event?
+		// 
+		// 	load_script('/glop/canvas.js');
+		// 	load_script('/glop/glop.js');
+		// 	load_script('/glop/events.js');
+		// 	load_script('/glop/layers.js');
+		// 	load_script('/glop/box.js');
+		// 	load_script('/glop/style.js');
+		// 	// load_script('/glop/label.js');
+		// 	load_script('/glop/cartagen.js');
+		// 	// load_script('rala.js');
+		// 	// load_script('glyphs.js');
+		// }
+		function demo() {
+			try {
+				global_rotate += 0.005
+			} catch(e) {
+				
+			}
+		}
+		<% if params[:demo] %>
+			// seconds between redraws:
+			new PeriodicalExecuter(demo, 0.2);
+		<% end %>
+	</script>
+</head>
+<body oncontextmenu="return false;" onLoad="load_next_script();browser_check()">
+
+<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
+
+<script type="text/javascript" charset="utf-8">
+	function browser_check() {
+		$('browsers').absolutize;
+		$('browsers').style.top = "100px";	
+		$('browsers').style.margin = "0 auto";	
+		if (Prototype.Browser.IE || Prototype.Browser.WebKit) $('browsers').show();
+	}
+</script>
+
+<div id="browsers" style="display:none;">
+	<h3>WHOOPS</h3>
+	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
+</div>
+
+<div id="pointerLabel"></div>
+<div id="labels"></div>
+
+<textarea style="display:none" id="dropject"></textarea>
+
+<canvas id="canvas"></canvas>
+
+<div id="brief" style="<% if params[:fullscreen] %>display:none;<% end %>">
+	<div>
+		<h2>Cartagen</h2>
+		<h2><small>a framework for dynamic mapping <br />
+			by <a href="http://unterbahn.com">Jeffrey Warren</a></small></h2>
+		<p><form action="/find" method="get" accept-charset="utf-8">
+			Go somewhere: <br />
+			<input style="width:170px;" type="text" name="id" value="">
+			<input type="button" name="some_name" value="Go">
+		</form></p>
+		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onChange ="highlights($('highlight').value)">
+			Search: <br />
+			<input style="width:170px;" type="text" id="highlight" value="">
+			<input type="submit" name="some_name" value="Go">
+		</form></p>
+	</div>
+	<div>
+		<h3>SMS mapping and search</h3>
+		<p>String-based geocoding (i.e. "map Bhagalpur, India") allows users to produce their own maps from in the field with only a basic cell phone. This widens participation to 4 billion cell phone users worldwide, as well as to rural regions outside the reach of the internet. Geographic mapping with text messages has applications in disaster response and health care.</p>
+	</div>
+	<div>
+		<h3>GSS: geo style sheets</h3>
+		<p>Just like CSS for styling web pages, GSS is a specification for designing maps. Adapted for dynamic data sources, GSS can define changing geographic elements, display multiple datasets, and even respond to contextual tags like "condition:poor".</p>
+		<p><a href="/glop/style.gss" target="_blank">Click here</a> to view styles for the above map.</p>
+	</div>
+	<div>
+		<h3>Vector web mapping</h3>
+		<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall.</p>
+	</div>
+</div>
+
+<div id="developer" style="display:none;">
+
+	<form id="shell_form" action="javascript:void(0);" onSubmit="eval($('shell').value);//$('shell').value = '';" method="get" accept-charset="utf-8">
+		<p style="margin:2px;">
+			<div id="info">2</div> 
+			<input id="shell" type="text" value="" style="width:450px;"/>
+			<input type="submit" value="Run" /> 
+		</p>
+	</form>
+
+	<form id="script_form" style="display:none;" action="javascript:void(0);" onSubmit="eval($('script').value);" method="get" accept-charset="utf-8">
+		<p style="margin:2px;">
+			<textarea id="script">objects.each(function(object) {
+
+	  object.y = Math.random()*30
+
+	})</textarea>
+			<input type="submit" value="Run" />
+	</form>
+
+	<p>
+	<!-- <a id="editmode_button" class="button green" href="javascript:void(0);" onClick="switch_editmode()">PLAY MODE</a>  -->
+	<a class="button" href="javascript:void(0)" onClick="$('trace_div').toggle()">Log</a> 
+	<a id="console_button" class="button" href="javascript:void(0);" onClick="switch_console()">Larger</a>
+	</p>
+
+	<div id="trace_div" style="display:none;">
+		<b>Trace:</b><br /><br />
+		<div id="trace">
+		
+		</div>
+		<br />
+		<a href="javascript:void(0)" onClick="log = []">Clear</a>	
+	</div>
+
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-180781-29");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

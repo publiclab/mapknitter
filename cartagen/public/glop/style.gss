@@ -1,0 +1,70 @@
+body: {
+	fillStyle: "#f6f6f6",
+	lineWidth: 0
+},
+node: {
+	fillStyle: "#ddd",
+	strokeStyle: "#090",
+	lineWidth: 0,
+	radius: 1
+},
+way: {
+	strokeStyle: function() { 
+		return "rgba(1,1,1,0.7)"
+		//return color_from_string(this.user)
+	},
+	lineWidth: 2,
+	fillStyle: "white"
+},
+leisure: {
+	fillStyle: "#2a2"
+},
+park: {
+	fillStyle: "#2a2"
+},
+waterway: {
+	fillStyle: "#57d"
+},
+water: {
+	fillStyle: "#57d"
+},
+coastline: {
+	fillStyle: "#57d"
+},
+highway: {
+	strokeStyle: "#ccc",
+	lineWidth: 7
+},
+primary: {
+	strokeStyle: "#d44",
+	lineWidth:  10
+},
+secondary: {
+	strokeStyle: "#d44",
+	lineWidth:  7
+},
+secondary: {
+	strokeStyle: "#d44",
+	lineWidth:  2
+},
+footway: {
+	lineWidth: 2,
+	strokeStyle: "#842"
+},
+pedestrian: {
+	lineWidth: 4,
+	strokeStyle: "#842"
+},
+parkchange: {
+	glow: "yellow"
+},
+building: {
+	lineWidth: 0.001,
+	fillStyle: "#444"
+},
+landuse: {
+	fillStyle: "#ccc"
+},
+rail: {
+	strokeStyle: "purplewww"
+}
