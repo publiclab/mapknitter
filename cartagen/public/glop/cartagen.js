@@ -142,17 +142,20 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 										w.nodes.push([node.x,node.y])
 
 									} catch(e) {
-										// alert(nd.ref)
+										console.log(nd.ref)
 									}
 								})
 								w.x = w.x/w.nodes.length
 								w.y = w.y/w.nodes.length
 								w.area = poly_area(w.nodes)
-								w.tags = new Hash()
-								way.tag.each(function(tag) {
-									w.tags.set(tag.k,tag.v)
-								})
+								if (w.tag) {
+									w.tags = new Hash()
+									way.tag.each(function(tag) {
+										w.tags.set(tag.k,tag.v)
+									})
+								}
 								objects.push(w)
+								console.log(w.user+": "+Object.toJSON(w.tags))
 								// queue.push(w)
 								ways.set(w.id,w)
 							}
