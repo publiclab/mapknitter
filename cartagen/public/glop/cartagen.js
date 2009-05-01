@@ -85,7 +85,7 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 	_lng1 = number_precision(_lng1,0.001)
 	_lat2 = number_precision(_lat2,0.001)
 	_lng2 = number_precision(_lng2,0.001)
-	if (!tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
+	if (live || !tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
 		tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
 		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
 			method: 'get',
