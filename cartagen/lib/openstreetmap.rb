@@ -17,15 +17,6 @@ class Openstreetmap
     puts options[:query][:bbox]
     features = self.get('/api/0.6/map', options)
   end
-
-  # def self.tag(left,bottom,right,top,key,value)
-  #   bbox = left.to_s+","+bottom.to_s+","+right.to_s+","+top.to_s
-  #   options = { :query => { :bbox => bbox } }
-  #   puts bbox
-  #   query = '/api/0.5/%2A%5b'+key+'='+value+'%5d%5bbbox='+bbox+"%5d"
-  #   # query = '/api/0.5/map?type='+key+'&value='+value+'&bbox='+left.to_s+","+bottom.to_s+","+right.to_s+","+top.to_s
-  #   features = self.get(query)
-  # end
   
   def self.precision(geo)
     case geo.precision

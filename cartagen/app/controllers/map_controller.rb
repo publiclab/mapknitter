@@ -48,6 +48,25 @@ class MapController < ApplicationController
       format.js  { render :json => @features }
     end
   end
+
+  # accepts lat1,lng1,lat2,lng2 and returns osm features for the bounding box in various formats
+  def tag
+    cache = "bbox="+params[:lng1]+","+params[:lat1]+","+params[:lng2]+","+params[:lat2]
+    # if params[:live] == true
+    #   @features = Rails.cache.read(cache)
+    # end
+    # unless @features
+      @features = Xapi.tag(params[:lng1],params[:lat1],params[:lng2],params[:lat2],params[:key],params[:value])
+      # Rails.cache.write(cache,@features)
+    # end
+    respond_to do |format|
+      format.html { render :html => @features }
+      format.xml  { render :xml => @features }
+      format.kml  { render :template => "map/plot.kml.erb" }
+      format.js  { render :json => @features }
+    end
+  end
+
     
   def style
     url = URI.parse(params[:url])

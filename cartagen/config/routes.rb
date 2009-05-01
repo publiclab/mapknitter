@@ -45,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tweets
 
   map.connect 'map/plot.:format', :controller => "map", :action => "plot"
+  map.connect 'map/tag.:format', :controller => "map", :action => "tag"
   map.connect 'demo/:id', :controller => "map", :action => "find", :demo => true
   map.connect 'demo/:id/:range', :controller => "map", :action => "find", :demo => true
   map.connect 'find/:id', :controller => "map", :action => "find"
