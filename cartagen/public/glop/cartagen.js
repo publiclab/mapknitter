@@ -1,4 +1,4 @@
-var tiles = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], queue = [], scale_factor = 100000
+var tiles = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000
 
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
@@ -54,8 +54,6 @@ function cartagen() {
 	// rotate(-1*global_rotate)
 		translate((-1*global_x)+(width/2),(-1*global_y)+(height/2))
 	// rotate(global_rotate)
-	// objects = objects.concat(queue.splice(0,parseInt(queue.length/2)+4))
-	// objects.sort()
 }
 
 function get_plot() {
@@ -71,20 +69,6 @@ function get_plot() {
 	lastPos[1] = global_y
 }
 new PeriodicalExecuter(get_plot,0.33)
-
-bbox = new Box
-bbox.x = lon_to_x(lng1)+global_x
-bbox.y = lat_to_y(lat1)+global_y
-bbox.shape = function() {
-	canvas.save()
-	strokeStyle("#900")
-	lineWidth(3)
-	rect(lon_to_x(lng1) * -1 * scale_factor,lat_to_y(lat1) * -1 * scale_factor,5,5)
-	rect(lon_to_x(lng2) * scale_factor,lat_to_y(lat2) * scale_factor,5,5)
-	stroke()
-	canvas.restore()
-}
-objects.push(bbox)
 
 function load_styles(stylesheet_url) {
 	new Ajax.Request("/map/style?url="+stylesheet_url,{
@@ -121,7 +105,6 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 							n.x = lon_to_x(n.lon)
 							n.y = lat_to_y(n.lat)
 							// objects.push(n)
-							// queue.push(n)
 							nodes.set(n.id,n)
 		                })
 						data.osm.way.each(function(way){
@@ -135,28 +118,23 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 								w.y = 0
 								way.nd.each(function(nd){
 									//find the node corresponding to nd.ref
-									try {
-										node = nodes.get(nd.ref)
-										w.x += node.x
-										w.x += node.y
-										w.nodes.push([node.x,node.y])
-
-									} catch(e) {
-										console.log(nd.ref)
-									}
+									node = nodes.get(nd.ref)
+									w.x += node.x
+									w.x += node.y
+									w.nodes.push([node.x,node.y])
 								})
 								w.x = w.x/w.nodes.length
 								w.y = w.y/w.nodes.length
 								w.area = poly_area(w.nodes)
-								if (w.tag) {
-									w.tags = new Hash()
+								w.tags = new Hash()
+								if (way.tag instanceof Array) {
 									way.tag.each(function(tag) {
 										w.tags.set(tag.k,tag.v)
 									})
+								} else {
+									w.tags.set(way.tag.k,way.tag.v)
 								}
 								objects.push(w)
-								console.log(w.user+": "+Object.toJSON(w.tags))
-								// queue.push(w)
 								ways.set(w.id,w)
 							}
 						})
@@ -233,7 +211,11 @@ var Way = Class.create({
 	},
 	shape: function() {
 	    canvas.save()
-			style(this,styles.way)
+			try	{
+				style(this,styles.way)
+			} catch(e) {
+				console.log("style.js error: "+e)
+			}
 			if (this.highlight) {
 				lineWidth(5)
 				strokeStyle("red")

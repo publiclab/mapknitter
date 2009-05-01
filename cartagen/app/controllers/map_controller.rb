@@ -3,7 +3,6 @@ class MapController < ApplicationController
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
   def find
-    
     unless params[:id]
       params[:id] = "20 ames st cambridge"
     end
@@ -35,7 +34,9 @@ class MapController < ApplicationController
   # accepts lat1,lng1,lat2,lng2 and returns osm features for the bounding box in various formats
   def plot
     cache = "bbox="+params[:lng1]+","+params[:lat1]+","+params[:lng2]+","+params[:lat2]
-    @features = Rails.cache.read(cache)
+    if params[:live] == true
+      @features = Rails.cache.read(cache)
+    end
     unless @features
       @features = Openstreetmap.features(params[:lng1],params[:lat1],params[:lng2],params[:lat2])
       Rails.cache.write(cache,@features)
