@@ -104,6 +104,7 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 							// n.visible = node.visible
 							n.x = lon_to_x(n.lon)
 							n.y = lat_to_y(n.lat)
+							parse_styles(n,styles.node)
 							// objects.push(n)
 							nodes.set(n.id,n)
 		                })
@@ -134,6 +135,7 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 								} else {
 									w.tags.set(way.tag.k,way.tag.v)
 								}
+								parse_styles(w,styles.way)
 								objects.push(w)
 								ways.set(w.id,w)
 							}
@@ -179,7 +181,7 @@ var Node = Class.create({
 	},
 	shape: function() {
 	    canvas.save()
-			style(this,styles.node)
+			style(this)
 		beginPath()
 		translate(this.x,this.y-6)
 		arc(0,this.radius,this.radius,0,Math.PI*2,true)
@@ -212,7 +214,7 @@ var Way = Class.create({
 	shape: function() {
 	    canvas.save()
 			try	{
-				style(this,styles.way)
+				style(this)
 			} catch(e) {
 				console.log("style.js error: "+e)
 			}
