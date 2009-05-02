@@ -39,13 +39,13 @@ function highlights(query) {
 					object.highlight = true
 				}
 			})
-			if (object.description && object.description.toLowerCase().match(query.toLowerCase())) {
-				object.highlight = true
-			}
+			if (object.user && object.user.toLowerCase().match(query.toLowerCase())) object.highlight = true
+			if (object.description && object.description.toLowerCase().match(query.toLowerCase())) object.highlight = true
 		}
 	})
 }
 
+// Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
 function cartagen() {
 	translate(width/2,height/2)
 		rotate(global_rotate)
@@ -109,7 +109,7 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 							nodes.set(n.id,n)
 		                })
 						data.osm.way.each(function(way){
-							if (!ways.get(way.id)) {
+							if (live || !ways.get(way.id)) {
 								var w = new Way
 								w.id = way.id
 								w.user = way.user
