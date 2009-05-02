@@ -59,7 +59,7 @@ building: {
 	fillStyle: "#444"
 },
 landuse: {
-	fillStyle: "#ccc"
+	fillStyle: "#eee"
 },
 rail: {
 	lineWidth: 4,
