@@ -1,4 +1,4 @@
-var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, zoom_level = 1, global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, keys = new Hash
+var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, zoom_level = 0.75, global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, keys = new Hash
 
 pointerX = 0,pointerY = 0
 
@@ -194,11 +194,11 @@ function draw() {
 	if (drawing == false) {
 		drawing = true
 		clear()
-		$('canvas').width = document.viewport.getWidth()-padding*2//-2
-		$('canvas').height = document.viewport.getHeight()-padding*2-270
-		$$('body')[0].style.width = (document.viewport.getWidth()-padding*2-2)+"px"
-		width = document.viewport.getWidth()-padding*2//-2
-		height = document.viewport.getHeight()-padding*2-270
+		$('canvas').width = document.viewport.getWidth()
+		$('canvas').height = document.viewport.getHeight()
+		$$('body')[0].style.width = (document.viewport.getWidth())+"px"
+		width = document.viewport.getWidth()
+		height = document.viewport.getHeight()
 		// if (!fullscreen) {
 		// 	height -= 260
 		// 	$('canvas').height -= 260

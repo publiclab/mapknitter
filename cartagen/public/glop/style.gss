@@ -43,10 +43,6 @@ secondary: {
 	strokeStyle: "#d44",
 	lineWidth:  7
 },
-secondary: {
-	strokeStyle: "#d44",
-	lineWidth:  2
-},
 footway: {
 	lineWidth: 2,
 	strokeStyle: "#842"
@@ -66,5 +62,6 @@ landuse: {
 	fillStyle: "#ccc"
 },
 rail: {
+	lineWidth: 4,
 	strokeStyle: "purple"
 }

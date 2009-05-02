@@ -92,7 +92,7 @@
 <canvas id="canvas"></canvas>
 
 <div id="brief" style="<% if params[:fullscreen] %>display:none;<% end %>">
-	<div>
+	<div class="column first" id="brief_first">
 		<h2>Cartagen <br />
 			<small>a framework for dynamic mapping<br />
 			by <a href="http://unterbahn.com">Jeffrey Warren</a> (<a href="http://wiki.cartagen.org">Docs</a>, <a href="http://code.google.com/p/cartagen/">Source</a>, <a href="http://groups.google.com/group/cartagen-dev">List</a>)</small></h2>
@@ -107,18 +107,21 @@
 			<input type="submit" name="some_name" value="Go">
 		</form></p>
 	</div>
-	<div>
-		<h3>SMS mapping and search</h3>
-		<p>String-based geocoding (i.e. "map Bhagalpur, India") allows users to produce their own maps from in the field with only a basic cell phone. This widens participation to 4 billion cell phone users worldwide, as well as to rural regions outside the reach of the internet. Geographic mapping with text messages has applications in disaster response and health care.</p>
-	</div>
-	<div>
-		<h3>GSS: geo style sheets</h3>
-		<p>Just like CSS for styling web pages, GSS is a specification for designing maps. Adapted for dynamic data sources, GSS can define changing geographic elements, display multiple datasets, and even respond to contextual tags like "condition:poor".</p>
-		<p><a href="/glop/style.gss" target="_blank">Click here</a> to view styles for the above map.</p>
-	</div>
-	<div>
-		<h3>Vector web mapping</h3>
-		<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall.</p>
+	<div id="description">
+		<div style="float:right;margin:5px;"><a href="javascript:void();" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
+		<div class="column">
+			<h3>SMS mapping and search</h3>
+			<p>String-based geocoding (i.e. "map Bhagalpur, India") allows users to produce their own maps from in the field with only a basic cell phone. This widens participation to 4 billion cell phone users worldwide, as well as to rural regions outside the reach of the internet. Geographic mapping with text messages has applications in disaster response and health care.</p>
+		</div>
+		<div class="column">
+			<h3>GSS: geo style sheets</h3>
+			<p>Just like CSS for styling web pages, GSS is a specification for designing maps. Adapted for dynamic data sources, GSS can define changing geographic elements, display multiple datasets, and even respond to contextual tags like "condition:poor".</p>
+			<p><a href="/glop/style.gss" target="_blank">Click here</a> to view styles for the above map.</p>
+		</div>
+		<div class="column">
+			<h3>Vector web mapping</h3>
+			<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall.</p>
+		</div>
 	</div>
 </div>
 

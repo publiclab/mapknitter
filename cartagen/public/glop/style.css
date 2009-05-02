@@ -2,7 +2,6 @@ html {
 	font-family:georgia;
 	margin:0;
 	background:#ddd;
-	width:800px;
 	font-size:0.8em;
 }
 body {
@@ -96,7 +95,7 @@ h3 {
 canvas {
 	background:#fff;
 	margin:0;
-	border-bottom:2px solid #555;
+	display:block;
 /*	border:2px solid #bbb;*/
 }
 #script {
@@ -131,13 +130,25 @@ canvas {
 	overflow-y:scroll;
 }
 
-#brief div {
+#brief {
+	line-height:1.4em;
+	width:95%;
+	position:absolute; bottom:12px; left:12px;
+	background:white;
+	-moz-opacity: 0.80;
+	opacity:.80;
+	filter:alpha(opacity=80);
+}
+#brief div.column {
 	font-size:0.9em;
 	float:left;
-	width:21%;
+	width:19%;
 	padding:0 2%;
 	font-family: lucida grande, lucida sans console, sans-serif;
 	margin-bottom:16px;
+}
+#brief div.column.first {
+	width:22%;
 }
 #brief h3 {
 	margin-top:20px;
