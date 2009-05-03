@@ -1,5 +1,5 @@
 function parse_styles(feature,selector) {
-	// try {
+	try {
 		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
 		if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
@@ -33,12 +33,14 @@ function parse_styles(feature,selector) {
 			}
 
 		})
-	// } catch(e) {
-	// 	console.log(e)
-	// }
+	} catch(e) {
+		console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+e)
+	}
 }
 
 function style(feature) {
+	canvas.lineJoin = 'round'
+	canvas.lineCap = 'round'
 	fillStyle("#aaa") // light grey base fill
 	strokeStyle("#333") // dark grey base stroke
 	if (feature.strokeStyle) {

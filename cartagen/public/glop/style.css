@@ -133,18 +133,19 @@ canvas {
 #brief {
 	line-height:1.4em;
 	width:95%;
+	padding:8px;
 	position:absolute; bottom:12px; left:12px;
 	background:white;
 	-moz-opacity: 0.80;
 	opacity:.80;
 	filter:alpha(opacity=80);
+	font-family: lucida grande, lucida sans console, sans-serif;
 }
 #brief div.column {
 	font-size:0.9em;
 	float:left;
 	width:19%;
 	padding:0 2%;
-	font-family: lucida grande, lucida sans console, sans-serif;
 	margin-bottom:16px;
 }
 #brief div.column.first {

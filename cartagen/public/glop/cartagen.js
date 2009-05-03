@@ -56,6 +56,7 @@ function cartagen() {
 	// rotate(global_rotate)
 }
 
+// gets the plot under the current center of the screen
 function get_plot() {
 	if (global_x != lastPos[0] && global_y != lastPos[1]) {
 		var new_lat1,new_lat2,new_lng1,new_lng2
@@ -80,96 +81,109 @@ function load_styles(stylesheet_url) {
 }
 load_styles(stylesheet)
 
+// reduces precision of a plot request to quantize plot requests
+// checks against local storage for browers with HTML 5
+// then fetches the plot and parses the data into the objects array
 function load_plot(_lat1,_lng1,_lat2,_lng2) {
 	_lat1 = number_precision(_lat1,0.001)
 	_lng1 = number_precision(_lng1,0.001)
 	_lat2 = number_precision(_lat2,0.001)
 	_lng2 = number_precision(_lng2,0.001)
-	if (live || !tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
-		tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
-		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
-			method: 'get',
-			onComplete: function(result) {
-		                data = result.responseText.evalJSON()
-						data.osm.node.each(function(node){
-		                    var n = new Node
-							n.h = 10
-							n.w = 10
-							n.color = randomColor()
-							n.timestamp = node.timestamp
-							n.user = node.user
-							n.id = node.id
-							n.lat = node.lat
-							n.lon = node.lon
-							// n.visible = node.visible
-							n.x = lon_to_x(n.lon)
-							n.y = lat_to_y(n.lat)
-							parse_styles(n,styles.node)
-							// objects.push(n)
-							nodes.set(n.id,n)
-		                })
-						data.osm.way.each(function(way){
-							if (live || !ways.get(way.id)) {
-								var w = new Way
-								w.id = way.id
-								w.user = way.user
-								w.timestamp = way.timestamp
-								w.nodes = []
-								w.x = 0
-								w.y = 0
-								way.nd.each(function(nd){
-									//find the node corresponding to nd.ref
-									node = nodes.get(nd.ref)
-									w.x += node.x
-									w.x += node.y
-									w.nodes.push([node.x,node.y])
-								})
-								w.x = w.x/w.nodes.length
-								w.y = w.y/w.nodes.length
-								w.area = poly_area(w.nodes)
-								w.tags = new Hash()
-								if (way.tag instanceof Array) {
-									way.tag.each(function(tag) {
-										w.tags.set(tag.k,tag.v)
-									})
-								} else {
-									w.tags.set(way.tag.k,way.tag.v)
-								}
-								parse_styles(w,styles.way)
-								objects.push(w)
-								ways.set(w.id,w)
-							}
-						})
-						// data.osm.relation.each(function(way){
-						// 	var w = new Way
-						// 	w.id = way.id
-						// 	w.user = way.user
-						// 	w.timestamp = way.timestamp
-						// 	w.nodes = []
-						// 	way.nd.each(function(nd){
-						// 		//find the node corresponding to nd.ref
-						// 		try {
-						// 			w.nodes.push([nodes.get(nd.ref).x,nodes.get(nd.ref).y])
-						// 		} catch(e) {
-						// 			// alert(nd.ref)
-						// 		}
-						// 		
-						// 	})
-						// 	way.tag.each(function(tag) {
-						// 		w.tags.push([tag.k,tag.v])
-						// 	})
-						// 	objects.push(w)
-						// })
-
-						// sort by polygons' node count:
-						objects.sort(objects_sort)
-			}
-		})
-	} else {
-		console.log("already loaded")
-	}
+	// var ls = false
+	// if (localStorage) ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
+	// tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
+	// if (localStorage && (ls != false) && !live) {
+	// 	console.log("locally cached")
+	// 	parse_objects(ls)
+	// } else {
+		if (live || !tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
+			new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
+				method: 'get',
+				onComplete: function(result) {
+					parse_objects(result.responseText.evalJSON())
+				}
+			})
+		} else {
+			console.log("already loaded")
+		}
+	// }
 }
 load_plot(lat1,lng1,lat2,lng2)
+
+function parse_objects(data) {
+	data.osm.node.each(function(node){
+        var n = new Node
+		n.h = 10
+		n.w = 10
+		n.color = randomColor()
+		n.timestamp = node.timestamp
+		n.user = node.user
+		n.id = node.id
+		n.lat = node.lat
+		n.lon = node.lon
+		// n.visible = node.visible
+		n.x = lon_to_x(n.lon)
+		n.y = lat_to_y(n.lat)
+		parse_styles(n,styles.node)
+		// objects.push(n)
+		nodes.set(n.id,n)
+    })
+	data.osm.way.each(function(way){
+		if (live || !ways.get(way.id)) {
+			var w = new Way
+			w.id = way.id
+			w.user = way.user
+			w.timestamp = way.timestamp
+			w.nodes = []
+			w.x = 0
+			w.y = 0
+			way.nd.each(function(nd){
+				//find the node corresponding to nd.ref
+				node = nodes.get(nd.ref)
+				w.x += node.x
+				w.y += node.y
+				w.nodes.push([node.x,node.y])
+			})
+			w.x = w.x/w.nodes.length
+			w.y = w.y/w.nodes.length
+			w.area = poly_area(w.nodes)
+			w.tags = new Hash()
+			if (way.tag instanceof Array) {
+				way.tag.each(function(tag) {
+					w.tags.set(tag.k,tag.v)
+				})
+			} else {
+				w.tags.set(way.tag.k,way.tag.v)
+			}
+			parse_styles(w,styles.way)
+			objects.push(w)
+			ways.set(w.id,w)
+		}
+	})
+	// data.osm.relation.each(function(way){
+	// 	var w = new Way
+	// 	w.id = way.id
+	// 	w.user = way.user
+	// 	w.timestamp = way.timestamp
+	// 	w.nodes = []
+	// 	way.nd.each(function(nd){
+	// 		//find the node corresponding to nd.ref
+	// 		try {
+	// 			w.nodes.push([nodes.get(nd.ref).x,nodes.get(nd.ref).y])
+	// 		} catch(e) {
+	// 			// alert(nd.ref)
+	// 		}
+	// 		
+	// 	})
+	// 	way.tag.each(function(tag) {
+	// 		w.tags.push([tag.k,tag.v])
+	// 	})
+	// 	objects.push(w)
+	// })
+
+	// sort by polygons' node count:
+	objects.sort(objects_sort)
+}
 
 var Node = Class.create({
 	radius: 6,
@@ -232,8 +246,9 @@ var Way = Class.create({
 		this.nodes.each(function(node){
 			lineTo(node[0],node[1])
 		})
-		// lineTo(this.nodes[0][0],this.nodes[0][1])
 		stroke()
+		// fill the polygon if the beginning and end nodes are the same.
+		// we'll have to change this for open polys, like coastlines
 		if (this.nodes[0][0] == this.nodes[this.nodes.length-1][0] && this.nodes[0][1] == this.nodes[this.nodes.length-1][1]) fill()
 	    canvas.restore()
 	},

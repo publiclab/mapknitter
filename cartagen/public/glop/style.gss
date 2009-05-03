@@ -1,6 +1,7 @@
 body: {
-	fillStyle: "#f6f6f6",
-	lineWidth: 0
+	fillStyle: "#dbdbdb",
+	lineWidth: 0,
+	
 },
 node: {
 	fillStyle: "#ddd",
@@ -13,26 +14,33 @@ way: {
 		return "rgba(1,1,1,0.7)"
 		//return color_from_string(this.user)
 	},
-	lineWidth: 2,
-	fillStyle: "white"
+	strokeStyle: "#ccc",
+	lineWidth: 3,
+	fillStyle: "#eee"
 },
 leisure: {
-	fillStyle: "#2a2"
+	fillStyle: "#2a2",
+	lineWidth: 3,
+	strokeStyle: "#181"
 },
 park: {
-	fillStyle: "#2a2"
+	fillStyle: "#2a2",
+	lineWidth: 3,
+	strokeStyle: "#181"
 },
 waterway: {
-	fillStyle: "#57d"
+	fillStyle: "#57d",
+	lineWidth: 0
 },
 water: {
-	fillStyle: "#57d"
+	fillStyle: "#57d",
+	lineWidth: 0
 },
 coastline: {
 	fillStyle: "#57d"
 },
 highway: {
-	strokeStyle: "#ccc",
+	strokeStyle: "white",
 	lineWidth: 7
 },
 primary: {
@@ -59,7 +67,7 @@ building: {
 	fillStyle: "#444"
 },
 landuse: {
-	fillStyle: "#eee"
+	fillStyle: "#ddd"
 },
 rail: {
 	lineWidth: 4,

@@ -15,17 +15,20 @@ Event.observe(document, 'keypress', function(e) {
 	if (e.keyCode) code = e.keyCode;
 	else if (e.which) code = e.which;
 	var character = String.fromCharCode(code);
-	if (character == "c") single_key = "c"
-	if (character == "s") zoom_in()
-	if (character == "w") zoom_out()
-	if (character == "d") global_rotate += 0.1
-	if (character == "a") global_rotate -= 0.1
-	if (character == "f") global_x += 20/zoom_level
-	if (character == "h") global_x -= 20/zoom_level
-	if (character == "t") global_y += 20/zoom_level
-	if (character == "g") global_y -= 20/zoom_level
-	if (character == "r") keys.set("r",true)
-	if (character == "z") keys.set("z",true)
+	if (key_input) {
+		if (character == "s") zoom_in()
+		if (character == "w") zoom_out()
+		if (character == "d") global_rotate += 0.1
+		if (character == "a") global_rotate -= 0.1
+		if (character == "f") global_x += 20/zoom_level
+		if (character == "h") global_x -= 20/zoom_level
+		if (character == "t") global_y += 20/zoom_level
+		if (character == "g") global_y -= 20/zoom_level
+	} else {
+		// just modifiers:
+		if (character == "r") keys.set("r",true)
+		if (character == "z") keys.set("z",true)
+	}
 	draw()
 });
 Event.observe(document, 'keyup', function() {
