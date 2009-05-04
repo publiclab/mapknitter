@@ -105,7 +105,7 @@ window.onmousewheel = document.onmousewheel = wheel;
 function doubleclick(event) {
 	on_object = false
 	objects.each(function(object) { 
-		if (!on_object && object.overlaps(pointerX,pointerY,0)) {
+		if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
 			object.doubleclick()
 			on_object = true
 		}
@@ -166,7 +166,7 @@ function mousedown(event) {
 	if (!dragging) {
 		on_object = false
 		objects.each(function(object) { 
-			if (!on_object && object.overlaps(pointerX,pointerY,0)) {
+			if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
 				if ((editmode && object.exploded) || !Event.isLeftClick(event)) {
 				} else if (Event.isLeftClick(event)) {
 					// Begin dragging
@@ -205,7 +205,7 @@ function mouseup() {
 			pointerLabel = ""
 		}
 		objects.each(function(object) { 
-			if (!on_object && object.overlaps(pointerX,pointerY,0)) {
+			if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
 				// copy the dragged object's code into a string parameter called 'code'
 				if (Object.isString(draggedObject.code)) {
 					var code = "'"+draggedObject.code+"'"
