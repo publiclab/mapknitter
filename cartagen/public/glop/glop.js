@@ -105,12 +105,12 @@ function draw() {
 			object.draw()
 		})
 			// cartagen crosshairs
-			beginPath()
-			moveTo(map_pointerX(),map_pointerY()-10)
-			lineTo(map_pointerX(),map_pointerY()+10)
-			moveTo(map_pointerX()-10,map_pointerY())
-			lineTo(map_pointerX()+10,map_pointerY())
-			stroke()
+			// beginPath()
+			// moveTo(map_pointerX(),map_pointerY()-10)
+			// lineTo(map_pointerX(),map_pointerY()+10)
+			// moveTo(map_pointerX()-10,map_pointerY())
+			// lineTo(map_pointerX()+10,map_pointerY())
+			// stroke()
 		
 		if (mouseDown) {
 			mouseDown = false
