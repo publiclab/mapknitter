@@ -8,7 +8,11 @@ function parse_styles(feature,selector) {
 		} else {
 			feature.strokeStyle = selector.strokeStyle
 		}
+		// radius is relevant to nodes, i.e. single points
 		if (selector.radius) feature.radius = selector.radius
+		// check selector for hover:
+		if (selector['hover']) feature.hover = selector['hover']
+		if (selector['mouseDown']) feature.hover = selector['mouseDown']
 
 		feature.tags.each(function(tag) {
 
@@ -31,7 +35,21 @@ function parse_styles(feature,selector) {
 			if (styles[tag.value] && styles[tag.value].lineWidth) {
 				feature.lineWidth = styles[tag.value].lineWidth
 			}
-
+			
+			//check tags for hover:
+			if (styles[tag.key] && styles[tag.key]['hover']) {
+				feature.hover = styles[tag.key]['hover']
+			}
+			if (styles[tag.value] && styles[tag.key]['hover']) {
+				feature.hover = styles[tag.value]['hover']
+			}
+			//check tags for mouseDown:
+			if (styles[tag.key] && styles[tag.key]['mouseDown']) {
+				feature.mouseDown = styles[tag.key]['mouseDown']
+			}
+			if (styles[tag.value] && styles[tag.key]['mouseDown']) {
+				feature.mouseDown = styles[tag.value]['mouseDown']
+			}
 		})
 	} catch(e) {
 		console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+e)
@@ -41,8 +59,6 @@ function parse_styles(feature,selector) {
 function style(feature) {
 	canvas.lineJoin = 'round'
 	canvas.lineCap = 'round'
-	fillStyle("#aaa") // light grey base fill
-	strokeStyle("#333") // dark grey base stroke
 	if (feature.strokeStyle) {
 		if (Object.isFunction(feature.strokeStyle)) {
 			// bind the styles object to the context of this Way:

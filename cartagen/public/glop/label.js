@@ -1,8 +1,11 @@
 var Label = Class.create({
-	initialize: function() {
+	initialize: function(_x,_y) {
+		this.x = _x
+		this.y = _y
 		$('labels').insert({ bottom: "<div id='label_"+this.obj_id+"'></div>" })
 		$('label_'+this.obj_id).absolutize()
 		this.draw()
+		this.show()
 	},
 	content: "label",
 	class_name: "label",
@@ -31,13 +34,13 @@ var Label = Class.create({
 			rect()
 			stroke()
 			fill()
-			this.shape()
 		canvas.restore()
 	},
 	draw: function() {
+		// console.log("Hover: "+Math.round(this.x-global_x)+","+Math.round(this.y-global_y))
 		if ($('label_'+this.obj_id)) {
-			$('label_'+this.obj_id).setStyle({top: this.y+"px"})
-			$('label_'+this.obj_id).setStyle({left: this.x+"px"})
+			$('label_'+this.obj_id).setStyle({top: Math.round(this.y+global_y)+"px"})
+			$('label_'+this.obj_id).setStyle({left: Math.round(this.x+global_x)+"px"})
 		}
 	},
 	overlaps: function() {

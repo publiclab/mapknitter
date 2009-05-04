@@ -64,7 +64,14 @@ parkchange: {
 },
 building: {
 	lineWidth: 0.001,
-	fillStyle: "#444"
+	fillStyle: "#444",
+	hover: {
+		fillStyle: '#222'
+	},
+	mouseDown: {
+		lineWidth: 4,
+		strokeStyle: "red"
+	}
 },
 landuse: {
 	fillStyle: "#ddd"

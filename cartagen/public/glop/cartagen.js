@@ -4,10 +4,10 @@ global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
 
 function map_pointerX() {
-	return global_x-(width/2)+pointerX
+	return global_x+(((width/2)-pointerX)/zoom_level)
 }
 function map_pointerY() {
-	return global_y-(height/2)+pointerY
+	return global_y+(((height/2)-pointerY)/zoom_level)
 }
 
 function number_precision(num,prec) {
@@ -47,6 +47,15 @@ function highlights(query) {
 
 // Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
 function cartagen() {
+	// gss body style:
+	if (styles) {
+		if (styles.body.fillStyle) fillStyle(styles.body.fillStyle)
+		if (styles.body.strokeStyle) strokeStyle(styles.body.strokeStyle)
+		if (styles.body.lineWidth || styles.body.lineWidth == 0) lineWidth(styles.body.lineWidth)
+		rect(0,0,width,height)
+		strokeRect(0,0,width,height)
+	}
+	
 	translate(width/2,height/2)
 		rotate(global_rotate)
 		scale(zoom_level,zoom_level)
@@ -57,19 +66,20 @@ function cartagen() {
 }
 
 // gets the plot under the current center of the screen
-function get_plot() {
+function get_current_plot() {
 	if (global_x != lastPos[0] && global_y != lastPos[1]) {
 		var new_lat1,new_lat2,new_lng1,new_lng2
 		new_lat1 = y_to_lat(global_y)-range
 		new_lng1 = x_to_lon(global_x)-range
 		new_lat2 = y_to_lat(global_y)+range
 		new_lng2 = x_to_lon(global_x)+range
-		load_plot(new_lat1,new_lng1,new_lat2,new_lng2)
+		// this will look for cached plots, or get new ones if it fails
+		get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2)
 	}
 	lastPos[0] = global_x
 	lastPos[1] = global_y
 }
-new PeriodicalExecuter(get_plot,0.33)
+new PeriodicalExecuter(get_current_plot,0.33)
 
 function load_styles(stylesheet_url) {
 	new Ajax.Request("/map/style?url="+stylesheet_url,{
@@ -84,31 +94,54 @@ load_styles(stylesheet)
 // reduces precision of a plot request to quantize plot requests
 // checks against local storage for browers with HTML 5
 // then fetches the plot and parses the data into the objects array
-function load_plot(_lat1,_lng1,_lat2,_lng2) {
+function get_cached_plot(_lat1,_lng1,_lat2,_lng2) {
 	_lat1 = number_precision(_lat1,0.001)
 	_lng1 = number_precision(_lng1,0.001)
 	_lat2 = number_precision(_lat2,0.001)
 	_lng2 = number_precision(_lng2,0.001)
-	// var ls = false
-	// if (localStorage) ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
-	// tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
-	// if (localStorage && (ls != false) && !live) {
-	// 	console.log("locally cached")
-	// 	parse_objects(ls)
-	// } else {
-		if (live || !tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
-			new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
-				method: 'get',
-				onComplete: function(result) {
-					parse_objects(result.responseText.evalJSON())
-				}
-			})
+	var cached = false
+	
+	// Remember that parse_objects() will fill localStorage.
+	// We can't do it here because it's an asychronous AJAX call.
+	
+	// if we're not live-loading:
+	if (!live) {
+		// check if we've loaded already this session:
+		if (tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
+			// no live-loading, so:
+			console.log("already loaded plot")
 		} else {
-			console.log("already loaded")
+			// if we haven't, check if HTML 5 localStorage exists in this browser:
+			if (typeof localStorage != "undefined") {
+				var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
+				if (ls) {
+					tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
+					console.log("localStorage cached plot")
+					parse_objects(ls)
+				} else {
+					// it's not in the localStorage:
+					load_plot(_lat1,_lng1,_lat2,_lng2)
+				}
+			} else {
+				// not loaded this session and no localStorage, so:
+				load_plot(_lat1,_lng1,_lat2,_lng2)
+			}
 		}
-	// }
+	} else {
+		// we're live-loading! Gotta get it no matter what:
+		load_plot(_lat1,_lng1,_lat2,_lng2)
+	}
 }
-load_plot(lat1,lng1,lat2,lng2)
+get_cached_plot(lat1,lng1,lat2,lng2)
+
+function load_plot(_lat1,_lng1,_lat2,_lng2) {
+	new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
+		method: 'get',
+		onComplete: function(result) {
+			parse_objects(result.responseText.evalJSON())
+		}
+	})
+}
 
 function parse_objects(data) {
 	data.osm.node.each(function(node){
@@ -138,11 +171,11 @@ function parse_objects(data) {
 			w.x = 0
 			w.y = 0
 			way.nd.each(function(nd){
-				//find the node corresponding to nd.ref
+				// find the node corresponding to nd.ref, store a reference:
 				node = nodes.get(nd.ref)
 				w.x += node.x
 				w.y += node.y
-				w.nodes.push([node.x,node.y])
+				w.nodes.push(node)
 			})
 			w.x = w.x/w.nodes.length
 			w.y = w.y/w.nodes.length
@@ -155,7 +188,11 @@ function parse_objects(data) {
 			} else {
 				w.tags.set(way.tag.k,way.tag.v)
 			}
+			if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) {
+				w.closed_poly = true
+			}
 			parse_styles(w,styles.way)
+			// parse_styles(w.hover,styles.)
 			objects.push(w)
 			ways.set(w.id,w)
 		}
@@ -203,25 +240,21 @@ var Node = Class.create({
 		stroke()
 	    canvas.restore()
   },
-  overlaps: function(target_x,target_y,fudge) {
-  	if (target_x > this.x-fudge && target_x < this.x+fudge) {
-  		if (target_y > this.y-fudge && target_y < this.y+fudge) {
-		  	return true
-  		} else {
-  			return false
-  		}
-  	} else {
-  		return false
-  	}
-  },
   within: function(start_x,start_y,end_x,end_y) {
 	return false
   }
 })
 
 var Way = Class.create({
+	initialize: function() {
+	},
 	age: 0,
-	draw: function() {
+	highlight: false,
+	nodes: [],
+	label: null,
+	closed_poly: false,
+	tags: new Hash(),
+	draw: function() {	
 		this.shape()
 		this.age += 1;
 	},
@@ -229,46 +262,45 @@ var Way = Class.create({
 	    canvas.save()
 			try	{
 				style(this)
+				// check for hover
+				if (this.hover && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
+					style(this.hover)
+					this.label = new Label(this.x,this.y)
+					this.label.content = this.user+": "+this.timestamp
+				}
+				// mouseDown sensing not working yet... should integrate new GLOP event.js
+				if (this.mouseDown && mouseDown == true && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
+					style(this.mouseDown)
+				}
 			} catch(e) {
 				console.log("style.js error: "+e)
 			}
 			if (this.highlight) {
 				lineWidth(5)
 				strokeStyle("red")
-				// this.highlight = false
 			}
+			// fade in after load:
 			if (this.age < 20) {
 				canvas.globalAlpha = this.age/20
 			} else {
 				canvas.globalAlpha = 1
 			}
 		beginPath()
+		var me = this
 		this.nodes.each(function(node){
-			lineTo(node[0],node[1])
+			lineTo(node.x,node.y)
 		})
-		stroke()
 		// fill the polygon if the beginning and end nodes are the same.
 		// we'll have to change this for open polys, like coastlines
-		if (this.nodes[0][0] == this.nodes[this.nodes.length-1][0] && this.nodes[0][1] == this.nodes[this.nodes.length-1][1]) fill()
+		if (this.closed_poly) fill()
+		stroke()
 	    canvas.restore()
 	},
-	highlight: false,
-	nodes: [],
-	tags: new Hash(),
-	overlaps: function() {
+	click: function() {
+	},
+	within: function(start_x,start_y,end_x,end_y) {
 		return false
-  },
-  click: function() {
-	// if (this.label) {
-	// 	delete this.label
-	// } else {
-	// 	this.label = new Label
-	// 	this.label.content = this.user+": "+this.timestamp
-	// }
-  },
-  within: function(start_x,start_y,end_x,end_y) {
-	return false
-  }
+	}
 })
 
 function poly_area(nodes) {
@@ -278,15 +310,37 @@ function poly_area(nodes) {
 		else next = nodes[0]
 		if (index > 0) last = nodes[index-1]
 		else last = nodes[nodes.length-1]
-		area += last[0]*node[1]-node[0]*last[1]+node[0]*next[1]-next[0]*node[1]
+		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 	})
 	return Math.abs(area/2)
+}
+
+function overlaps(x1,y1,x2,y2,fudge) {
+	if (x2 > x1-fudge && x2 < x1+fudge) {
+		if (y2 > y1-fudge && y2 < y1+fudge) {
+	  		return true
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
+}
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
+function is_point_in_poly(poly, _x, _y){
+    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i].y <= _y && _y < poly[j].y) || (poly[j].y <= _y && _y < poly[i].y))
+        && (_x < (poly[j].x - poly[i].x) * (_y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
+        && (c = !c);
+    return c;
 }
 
 function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
 function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
 
-function lat_to_y(lat) { return 1.7*((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor }
+function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 }
 function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) }
 
 function center_lon() {
