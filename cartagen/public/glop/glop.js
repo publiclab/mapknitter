@@ -166,6 +166,16 @@ function deep_clone(obj) {
     return c;
 }
 
+function draw_powersave() {
+	if (requested_plots && requested_plots > 0) {
+		draw()
+	} else {
+		if (last_event > frame-20) {
+			draw()
+		}
+	}
+}
+
 // seconds between redraws:
 new PeriodicalExecuter(draw, 0.1);
 load_next_script()

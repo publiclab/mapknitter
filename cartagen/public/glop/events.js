@@ -153,6 +153,7 @@ function drag() {
 			// pan_y = drag_y
 		}
 	}
+	draw()
 }
 
 function mousedown(event) {

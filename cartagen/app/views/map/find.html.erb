@@ -19,7 +19,6 @@
 		'/glop/glop.js',
 		'/glop/label.js',
 		'/glop/events.js',
-		'/glop/box.js',
 		'/glop/style.js',
 		'/glop/cartagen.js'
 		]
@@ -114,47 +113,11 @@
 		</div>
 		<div class="column">
 			<h3>Vector web mapping</h3>
-			<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall.</p>
+			<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall. Data displayed here is from <a href="http://openstreetmap.org">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>)</p>
 		</div>
 	</div>
 </div>
 
-<div id="developer" style="display:none;">
-
-	<form id="shell_form" action="javascript:void(0);" onSubmit="eval($('shell').value);//$('shell').value = '';" method="get" accept-charset="utf-8">
-		<p style="margin:2px;">
-			<div id="info">2</div> 
-			<input id="shell" type="text" value="" style="width:450px;"/>
-			<input type="submit" value="Run" /> 
-		</p>
-	</form>
-
-	<form id="script_form" style="display:none;" action="javascript:void(0);" onSubmit="eval($('script').value);" method="get" accept-charset="utf-8">
-		<p style="margin:2px;">
-			<textarea id="script">objects.each(function(object) {
-
-	  object.y = Math.random()*30
-
-	})</textarea>
-			<input type="submit" value="Run" />
-	</form>
-
-	<p>
-	<!-- <a id="editmode_button" class="button green" href="javascript:void(0);" onClick="switch_editmode()">PLAY MODE</a>  -->
-	<a class="button" href="javascript:void(0)" onClick="$('trace_div').toggle()">Log</a> 
-	<a id="console_button" class="button" href="javascript:void(0);" onClick="switch_console()">Larger</a>
-	</p>
-
-	<div id="trace_div" style="display:none;">
-		<b>Trace:</b><br /><br />
-		<div id="trace">
-		
-		</div>
-		<br />
-		<a href="javascript:void(0)" onClick="log = []">Clear</a>	
-	</div>
-
-</div>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
