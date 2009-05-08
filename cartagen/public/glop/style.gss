@@ -37,7 +37,8 @@ water: {
 	lineWidth: 0
 },
 coastline: {
-	fillStyle: "#57d"
+	fillStyle: "#57d",
+	lineWidth: 0
 },
 highway: {
 	strokeStyle: "white",
@@ -45,19 +46,31 @@ highway: {
 },
 primary: {
 	strokeStyle: "#d44",
-	lineWidth:  10
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 10
+	}
 },
 secondary: {
 	strokeStyle: "#d44",
-	lineWidth:  7
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 7
+	}
 },
 footway: {
-	lineWidth: 2,
-	strokeStyle: "#842"
+	strokeStyle: "#842",
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 3
+	}
 },
 pedestrian: {
-	lineWidth: 4,
-	strokeStyle: "#842"
+	strokeStyle: "#842",
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 3
+	}
 },
 parkchange: {
 	glow: "yellow"

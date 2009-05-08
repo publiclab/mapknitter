@@ -1,4 +1,4 @@
-var tiles = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, requested_plots = 0, bleed_level = 1
 
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
@@ -94,11 +94,12 @@ load_styles(stylesheet)
 // reduces precision of a plot request to quantize plot requests
 // checks against local storage for browers with HTML 5
 // then fetches the plot and parses the data into the objects array
-function get_cached_plot(_lat1,_lng1,_lat2,_lng2) {
-	_lat1 = number_precision(_lat1,0.001)
-	_lng1 = number_precision(_lng1,0.001)
-	_lat2 = number_precision(_lat2,0.001)
-	_lng2 = number_precision(_lng2,0.001)
+function get_cached_plot(_lat1,_lng1,_lat2,_lng2,_bleed) {
+	plot_precision = 0.001
+	_lat1 = number_precision(_lat1,plot_precision)
+	_lng1 = number_precision(_lng1,plot_precision)
+	_lat2 = number_precision(_lat2,plot_precision)
+	_lng2 = number_precision(_lng2,plot_precision)
 	var cached = false
 	
 	// Remember that parse_objects() will fill localStorage.
@@ -107,7 +108,7 @@ function get_cached_plot(_lat1,_lng1,_lat2,_lng2) {
 	// if we're not live-loading:
 	if (!live) {
 		// check if we've loaded already this session:
-		if (tiles.get(_lat1+","+_lng1+","+_lat2+","+_lng2)) {
+		if (plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
 			// no live-loading, so:
 			console.log("already loaded plot")
 		} else {
@@ -115,7 +116,7 @@ function get_cached_plot(_lat1,_lng1,_lat2,_lng2) {
 			if (typeof localStorage != "undefined") {
 				var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
 				if (ls) {
-					tiles.set(_lat1+","+_lng1+","+_lat2+","+_lng2,true)
+					plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
 					console.log("localStorage cached plot")
 					parse_objects(ls)
 				} else {
@@ -125,20 +126,41 @@ function get_cached_plot(_lat1,_lng1,_lat2,_lng2) {
 			} else {
 				// not loaded this session and no localStorage, so:
 				load_plot(_lat1,_lng1,_lat2,_lng2)
+				plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
 			}
+		}
+		// if the bleed level of this plot is > 0
+		if (plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[1] > 0) {
+			console.log('bleeding to neighbors with bleed = '+_bleed)
+			// bleed to 8 neighboring plots, decrement bleed:
+			// we could add a timeout so these are triggered asynchronously a bit later...
+			get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
+			get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
+
+			get_cached_plot(_lat1+plot_precision,_lng1,_lat2+plot_precision,_lng2,_bleed-1)
+			get_cached_plot(_lat1,_lng1+plot_precision,_lat2,_lng2+plot_precision,_bleed-1)
+
+			get_cached_plot(_lat1-plot_precision,_lng1,_lat2-plot_precision,_lng2,_bleed-1)
+			get_cached_plot(_lat1,_lng1-plot_precision,_lat2,_lng2-plot_precision,_bleed-1)
+
+			get_cached_plot(_lat1-plot_precision,_lng1+plot_precision,_lat2-plot_precision,_lng2+plot_precision,_bleed-1)
+			get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
 		}
 	} else {
 		// we're live-loading! Gotta get it no matter what:
 		load_plot(_lat1,_lng1,_lat2,_lng2)
 	}
 }
-get_cached_plot(lat1,lng1,lat2,lng2)
+get_cached_plot(lat1,lng1,lat2,lng2,bleed_level)
 
 function load_plot(_lat1,_lng1,_lat2,_lng2) {
+	requested_plots++
 	new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
 		method: 'get',
 		onComplete: function(result) {
 			parse_objects(result.responseText.evalJSON())
+			requested_plots--
+			if (requested_plots == 0) last_event = frame
 		}
 	})
 }

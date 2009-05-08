@@ -3,18 +3,28 @@ class MapController < ApplicationController
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
   def find
-    unless params[:id]
-      params[:id] = "20 ames st cambridge"
-    end
-    cache = "geocode"+params[:id]
+    # determine range, or use default:
     if params[:range]
       range = params[:range].to_f
     end
     range ||= 0.001
-    geo = Rails.cache.read(cache)
-    unless geo
-      geo = GeoKit::GeoLoc.geocode(params[:id])
-      Rails.cache.write(cache,geo)
+
+    # use lat/lon or geocode a string:
+    if params[:lat] && params[:lon]
+      geo = GeoKit::GeoLoc.new
+      geo.lat = params[:lat]
+      geo.lng = params[:lon]
+      geo.success = true
+    else
+      unless params[:id]
+        params[:id] = "20 ames st cambridge"
+      end
+      cache = "geocode"+params[:id]
+      geo = Rails.cache.read(cache)
+      unless geo
+        geo = GeoKit::GeoLoc.geocode(params[:id])
+        Rails.cache.write(cache,geo)
+      end
     end
     if geo.success
       # use geo.precision to define a width and height for the viewport
