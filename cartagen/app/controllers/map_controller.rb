@@ -26,10 +26,15 @@ class MapController < ApplicationController
         Rails.cache.write(cache,geo)
       end
     end
+    if params[:zoom_level]
+      zoom_level = params[:zoom_level]
+    else
+      zoom_level = Openstreetmap.precision(geo)
+    end
     if geo.success
       # use geo.precision to define a width and height for the viewport
       # set zoom_x and zoom_y accordingly in javascript... and the scale factor.
-      @map = {:range => range, :zoom_level => Openstreetmap.precision(geo),:lat1 => geo.lat-range, :lng1 => geo.lng-range, :lat2 => geo.lat+range, :lng2 => geo.lng+range }
+      @map = {:range => range, :zoom_level => zoom_level,:lat1 => geo.lat-range, :lng1 => geo.lng-range, :lat2 => geo.lat+range, :lng2 => geo.lng+range }
     end
   end
 
