@@ -2,6 +2,14 @@ var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = 
 
 pointerX = 0,pointerY = 0
 
+if (typeof console == "undefined") {
+	console = {
+		log: function(param) {
+			
+		}
+	}
+}
+
 // This contains all stage objects:
 var objects = []
 var log = []
