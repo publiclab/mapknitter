@@ -1,4 +1,4 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, requested_plots = 0, bleed_level = 1
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, requested_plots = 0, bleed_level = 1, initial_bleed_level = 2
 
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
@@ -74,7 +74,7 @@ function get_current_plot() {
 		new_lat2 = y_to_lat(global_y)+range
 		new_lng2 = x_to_lon(global_x)+range
 		// this will look for cached plots, or get new ones if it fails
-		get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2)
+		get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,bleed_level)
 	}
 	lastPos[0] = global_x
 	lastPos[1] = global_y
@@ -130,28 +130,32 @@ function get_cached_plot(_lat1,_lng1,_lat2,_lng2,_bleed) {
 			}
 		}
 		// if the bleed level of this plot is > 0
-		if (plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[1] > 0) {
+		if (_bleed > 0) {
 			console.log('bleeding to neighbors with bleed = '+_bleed)
 			// bleed to 8 neighboring plots, decrement bleed:
-			// we could add a timeout so these are triggered asynchronously a bit later...
-			get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
-			get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
 
-			get_cached_plot(_lat1+plot_precision,_lng1,_lat2+plot_precision,_lng2,_bleed-1)
-			get_cached_plot(_lat1,_lng1+plot_precision,_lat2,_lng2+plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1+plot_precision,_lng1,_lat2+plot_precision,_lng2,_bleed-1)
+			delayed_get_cached_plot(_lat1,_lng1+plot_precision,_lat2,_lng2+plot_precision,_bleed-1)
 
-			get_cached_plot(_lat1-plot_precision,_lng1,_lat2-plot_precision,_lng2,_bleed-1)
-			get_cached_plot(_lat1,_lng1-plot_precision,_lat2,_lng2-plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1-plot_precision,_lng1,_lat2-plot_precision,_lng2,_bleed-1)
+			delayed_get_cached_plot(_lat1,_lng1-plot_precision,_lat2,_lng2-plot_precision,_bleed-1)
 
-			get_cached_plot(_lat1-plot_precision,_lng1+plot_precision,_lat2-plot_precision,_lng2+plot_precision,_bleed-1)
-			get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1-plot_precision,_lng1+plot_precision,_lat2-plot_precision,_lng2+plot_precision,_bleed-1)
+			delayed_get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
 		}
 	} else {
 		// we're live-loading! Gotta get it no matter what:
 		load_plot(_lat1,_lng1,_lat2,_lng2)
 	}
 }
-get_cached_plot(lat1,lng1,lat2,lng2,bleed_level)
+get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
+
+function delayed_get_cached_plot(_lat1,_lng1,_lat2,_lng2,_bleed) {
+	bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
+	setTimeout("get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
+}
 
 function load_plot(_lat1,_lng1,_lat2,_lng2) {
 	requested_plots++
@@ -161,6 +165,7 @@ function load_plot(_lat1,_lng1,_lat2,_lng2) {
 			parse_objects(result.responseText.evalJSON())
 			requested_plots--
 			if (requested_plots == 0) last_event = frame
+			console.log("Total plots: "+plots.size()+", of which "+requested_plots+" are still loading.")
 		}
 	})
 }
@@ -293,6 +298,7 @@ var Way = Class.create({
 				// mouseDown sensing not working yet... should integrate new GLOP event.js
 				if (this.mouseDown && mouseDown == true && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
 					style(this.mouseDown)
+					alert(this.tags.toJSON())
 				}
 			} catch(e) {
 				console.log("style.js error: "+e)
