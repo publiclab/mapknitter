@@ -74,6 +74,7 @@ Event.observe(document, 'keyup', function() {
 * It must react to delta being more/less than zero.
 */
 function handle(delta) {
+		draw()
         if (delta <0) {
 			zoom_level += delta/10
 		} else {
