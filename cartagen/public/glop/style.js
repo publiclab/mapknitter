@@ -14,6 +14,13 @@ function parse_styles(feature,selector) {
 		if (selector['hover']) feature.hover = selector['hover']
 		if (selector['mouseDown']) feature.hover = selector['mouseDown']
 
+		if (styles[feature.name] && styles[feature.name].fillStyle) {
+			feature.fillStyle = styles[feature.name].fillStyle
+		}
+		if (styles[feature.name] && styles[feature.name].strokeStyle) {
+			feature.strokeStyle = styles[feature.name].strokeStyle
+		}
+
 		feature.tags.each(function(tag) {
 
 			//look for a style like this:
