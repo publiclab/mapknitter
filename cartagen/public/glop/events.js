@@ -1,9 +1,10 @@
 // Track mouse movement:
-$('canvas').observe('mousemove', mousemove)
+$$('body')[0].observe('mousemove', mousemove)
 var pointerX = 0, pointerY = 0
 function mousemove(event) { 
 	pointerX = Event.pointerX(event)-padding
 	pointerY = Event.pointerY(event)-padding
+	draw()
 }
 
 $('canvas').observe('mousedown', mousedown)

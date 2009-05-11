@@ -1,4 +1,7 @@
-var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, keys = new Hash, key_input = false
+var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false
+
+// Cartagen variables:
+var global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, requested_plots = 0
 
 pointerX = 0,pointerY = 0
 
@@ -175,15 +178,17 @@ function deep_clone(obj) {
 }
 
 function draw_powersave() {
-	if (requested_plots && requested_plots > 0) {
+	if (powersave == false || (requested_plots && requested_plots > 0)) {
 		draw()
 	} else {
 		if (last_event > frame-20) {
 			draw()
+		} else {
+			// console.log('sleeping')
 		}
 	}
 }
 
 // seconds between redraws:
-new PeriodicalExecuter(draw, 0.1);
+new PeriodicalExecuter(draw_powersave, 0.1);
 load_next_script()

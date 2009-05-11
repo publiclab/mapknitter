@@ -9,9 +9,10 @@
 	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
 	<script type="text/javascript" charset="utf-8">
-		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %>
+		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %> // default false
 		var stylesheet = <% if params[:gss] %>"<%= params[:gss] %>"<% else %>"http://map.cartagen.org/glop/style.gss"<% end %>
-		var live = <% if params[:live] == "true" %>true<% else %>false<% end %>
+		var live = <% if params[:live] == "true" %>true<% else %>false<% end %> // default false
+		var powersave = <% if params[:powersave] == "false" %>false<% else %>true<% end %> // default true
 		var range = <%= @map[:range] %>, lat1 = <%= @map[:lat1] %>, lat2 = <%= @map[:lat2] %>, lng1 = <%= @map[:lng1] %>, lng2 = <%= @map[:lng2] %>, zoom_level = <%= @map[:zoom_level] ||= 0 %>
 
 		scripts = [
