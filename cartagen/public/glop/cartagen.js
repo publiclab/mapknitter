@@ -1,4 +1,4 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, requested_plots = 0, bleed_level = 1, initial_bleed_level = 2
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2
 
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
