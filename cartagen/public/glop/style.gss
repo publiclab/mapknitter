@@ -1,34 +1,44 @@
 body: {
-	fillStyle: "white",
-	lineWidth: 0
+	fillStyle: "#dbdbdb",
+	lineWidth: 0,
+	
 },
 node: {
-	fillStyle: "#fff",
-	strokeStyle: "#d44",
-	lineWidth: 90,
-	radius: 70,
-	mouseDown: {
-		strokeStyle: "#333"
-	}
+	fillStyle: "#ddd",
+	strokeStyle: "#090",
+	lineWidth: 0,
+	radius: 1
 },
 way: {
-	strokeStyle: "red",
-	lineWidth: 2,
-	fillStyle: "white"
+	strokeStyle: function() { 
+		return "rgba(1,1,1,0.7)"
+		//return color_from_string(this.user)
+	},
+	strokeStyle: "#ccc",
+	lineWidth: 3,
+	fillStyle: "#eee"
+},
+leisure: {
+	fillStyle: "#2a2",
+	lineWidth: 3,
+	strokeStyle: "#181"
+},
+park: {
+	fillStyle: "#2a2",
+	lineWidth: 3,
+	strokeStyle: "#181"
 },
 waterway: {
 	fillStyle: "#57d",
-	strokeStyle: "#57d",
 	lineWidth: 0
 },
 water: {
 	fillStyle: "#57d",
-	strokeStyle: "#57d",
 	lineWidth: 0
 },
 coastline: {
-	strokeStyle: "#57d",
-	lineWidth: 35
+	fillStyle: "#57d",
+	lineWidth: 0
 },
 highway: {
 	strokeStyle: "white",
