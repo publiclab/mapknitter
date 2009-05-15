@@ -81,7 +81,6 @@ class MapController < ApplicationController
       format.js  { render :json => @features }
     end
   end
-
     
   def style
     url = URI.parse(params[:url])
@@ -92,4 +91,26 @@ class MapController < ApplicationController
     render :text => res.body
   end
     
+  def osm_to_json
+    @features = ParseOsm.parse(params[:url])
+    puts @features.length
+    respond_to do |format|
+      format.html { render :html => @features }
+      format.xml  { render :xml => @features }
+      format.kml  { render :template => "map/plot.kml.erb" }
+      format.js  { render :json => @features }
+    end
+  end
+  
+  def osm_to_json_by_tag
+    @features = ParseOsm.filter(params[:url],params[:id])
+    puts @features.length
+    respond_to do |format|
+      format.html { render :html => @features }
+      format.xml  { render :xml => @features }
+      format.kml  { render :template => "map/plot.kml.erb" }
+      format.js  { render :json => @features }
+    end
+  end
+  
 end

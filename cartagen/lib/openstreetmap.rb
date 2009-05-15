@@ -1,6 +1,5 @@
 gem "httparty"
 require "httparty"
-
 # Required to serve kml files:
 Mime::Type.register "text/kml", :kml
 

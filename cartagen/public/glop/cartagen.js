@@ -14,6 +14,7 @@ function number_precision(num,prec) {
 	return (num * (1/prec)).round()/(1/prec)
 }
 
+// sort ways by area:
 function objects_sort(a,b) {
 	if (a instanceof Way) {
 		if (b instanceof Way) {
