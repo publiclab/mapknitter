@@ -74,13 +74,13 @@ Event.observe(document, 'keyup', function() {
 * It must react to delta being more/less than zero.
 */
 function handle(delta) {
-		draw()
-        if (delta <0) {
-			zoom_level += delta/10
-		} else {
-			zoom_level += delta/10
-		}
-
+	draw()
+       if (delta <0) {
+		zoom_level += delta/40
+	} else {
+		zoom_level += delta/40
+	}
+	if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
 }
 
 function wheel(event){
@@ -92,13 +92,13 @@ function wheel(event){
         } else if (event.detail) {
                 delta = -event.detail/3;
         }
-        if (delta)
-                handle(delta);
+        if (delta) handle(delta);
 }
 
 /* Initialization code. */
-if (window.addEventListener)
-        window.addEventListener('DOMMouseScroll', wheel, false);
+if (window.addEventListener){
+    window.addEventListener('DOMMouseScroll', wheel, false);
+}
 window.onmousewheel = document.onmousewheel = wheel;
 
 

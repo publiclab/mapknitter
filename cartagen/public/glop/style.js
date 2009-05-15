@@ -47,19 +47,19 @@ function parse_styles(feature,selector) {
 			if (styles[tag.key] && styles[tag.key]['hover']) {
 				feature.hover = styles[tag.key]['hover']
 			}
-			if (styles[tag.value] && styles[tag.key]['hover']) {
+			if (styles[tag.value] && styles[tag.value]['hover']) {
 				feature.hover = styles[tag.value]['hover']
 			}
 			//check tags for mouseDown:
 			if (styles[tag.key] && styles[tag.key]['mouseDown']) {
 				feature.mouseDown = styles[tag.key]['mouseDown']
 			}
-			if (styles[tag.value] && styles[tag.key]['mouseDown']) {
+			if (styles[tag.value] && styles[tag.value]['mouseDown']) {
 				feature.mouseDown = styles[tag.value]['mouseDown']
 			}
 		})
 	} catch(e) {
-		console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+e)
+		console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
 	}
 }
 

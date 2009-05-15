@@ -1,4 +1,4 @@
-var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false
+var frame = 0, width = 0, height = 0, padding = 0, editmode = false, dragging = false, supermode = false, currentObject = "", pointerLabel = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0
 
 // Cartagen variables:
 var global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, requested_plots = 0
@@ -42,6 +42,10 @@ function drag() {
 			}
 		})		
 	}
+}
+
+function trace(e) {
+	return "An exception occurred in the script. Error name: " + e.name + ". Error description: " + e.description + ". Error number: " + e.number + ". Error message: " + e.message + ". Line number: "+ e.lineNumber
 }
 
 function highest_id() {
