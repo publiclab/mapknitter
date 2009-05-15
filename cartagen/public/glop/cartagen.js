@@ -1,4 +1,4 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit
 
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
@@ -79,17 +79,32 @@ function get_current_plot() {
 	lastPos[0] = global_x
 	lastPos[1] = global_y
 }
-new PeriodicalExecuter(get_current_plot,0.33)
 
 function load_styles(stylesheet_url) {
-	new Ajax.Request("/map/style?url="+stylesheet_url,{
+	if (stylesheet_url[0,4] == "http") {
+		stylesheet_url = "/map/style?url="+stylesheet_url
+	}
+	new Ajax.Request(stylesheet_url,{
 		method: 'get',
 		onComplete: function(result) {
 			styles = ("{"+result.responseText+"}").evalJSON()
 		}
 	})
 }
-load_styles(stylesheet)
+
+function get_static_plot(url) {
+	requested_plots++
+	new Ajax.Request(url,{
+		method: 'get',
+		onSuccess: function(result) {
+			console.log(result.responseText.evalJSON().osm)
+			parse_objects(result.responseText.evalJSON())
+			requested_plots--
+			if (requested_plots == 0) last_event = frame
+			console.log("Total plots: "+plots.size()+", of which "+requested_plots+" are still loading.")
+		}
+	})
+}
 
 // reduces precision of a plot request to quantize plot requests
 // checks against local storage for browers with HTML 5
@@ -150,7 +165,6 @@ function get_cached_plot(_lat1,_lng1,_lat2,_lng2,_bleed) {
 		load_plot(_lat1,_lng1,_lat2,_lng2)
 	}
 }
-get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
 
 function delayed_get_cached_plot(_lat1,_lng1,_lat2,_lng2,_bleed) {
 	bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
@@ -197,12 +211,20 @@ function parse_objects(data) {
 			w.nodes = []
 			w.x = 0
 			w.y = 0
-			way.nd.each(function(nd){
-				// find the node corresponding to nd.ref, store a reference:
-				node = nodes.get(nd.ref)
-				w.x += node.x
-				w.y += node.y
-				w.nodes.push(node)
+			way.nd.each(function(nd,index){
+				try {
+					if ((index % res_down) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= res_down*2) {
+						// find the node corresponding to nd.ref, store a reference:
+						node = nodes.get(nd.ref)
+						if (!Object.isUndefined(node)) {
+							w.x += node.x
+							w.y += node.y
+							w.nodes.push(node)
+						}
+					}
+				} catch(e) {
+					console.log(trace(e))
+				}
 			})
 			w.x = w.x/w.nodes.length
 			w.y = w.y/w.nodes.length
@@ -215,9 +237,8 @@ function parse_objects(data) {
 			} else {
 				w.tags.set(way.tag.k,way.tag.v)
 			}
-			if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) {
-				w.closed_poly = true
-			}
+			if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
+			if (w.tags.get('natural') == "coastline") w.closed_poly = true
 			parse_styles(w,styles.way)
 			// parse_styles(w.hover,styles.)
 			objects.push(w)
@@ -260,6 +281,16 @@ var Node = Class.create({
 	shape: function() {
 	    canvas.save()
 			style(this)
+			// check for hover
+			if (this.hover && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),80)) {
+				style(this.hover)
+				console.log('hover')
+			}
+			// mouseDown sensing not working yet... should integrate new GLOP event.js
+			if (this.mouseDown && mouseDown == true && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),80)) {
+				style(this.mouseDown)
+				alert(this.tags.toJSON())
+			}
 		beginPath()
 		translate(this.x,this.y-6)
 		arc(0,this.radius,this.radius,0,Math.PI*2,true)
@@ -368,10 +399,20 @@ function is_point_in_poly(poly, _x, _y){
 function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
 function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
 
-function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 }
-function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) }
+function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 2.7 }
+function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*2.7))*(Math.PI/180)/2))) }
 
 function center_lon() {
 	return (lng2+lng1)/2
+}
+
+load_styles(stylesheet)
+if (!static_map) {
+	get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
+	new PeriodicalExecuter(get_current_plot,0.33)
+} else {
+	static_map_layers.each(function(layer_url) {
+		get_static_plot(layer_url)
+	})
 }
 load_next_script()
