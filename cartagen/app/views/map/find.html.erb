@@ -10,16 +10,17 @@
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
 	<script type="text/javascript" charset="utf-8">
 		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %> // default false
-		var stylesheet = <% if params[:gss] %>"<%= params[:gss] %>"<% else %>"http://map.cartagen.org/glop/style.gss"<% end %>
+		var stylesheet = <% if params[:gss] %>"<%= params[:gss] %>"<% else %>"/glop/style.gss"<% end %>
 		var live = <% if params[:live] == "true" %>true<% else %>false<% end %> // default false
 		var powersave = <% if params[:powersave] == "false" %>false<% else %>true<% end %> // default true
 		var zoom_out_limit = 0.02
 		var res_down = 1
 		var static_map = false
-		var static_map_layers = ["/coastline.js","/water.js","/primary.js"]
+		// var static_map_layers = ["/coastline.js","/water.js","/primary.js"]
 		var range = <%= @map[:range] %>, lat1 = <%= @map[:lat1] %>, lat2 = <%= @map[:lat2] %>, lng1 = <%= @map[:lng1] %>, lng2 = <%= @map[:lng2] %>, zoom_level = <%= @map[:zoom_level] ||= 0 %>
 
 		scripts = [
+		'/glop/canvastext.js',
 		'/glop/canvas.js',
 		'/glop/glop.js',
 		'/glop/label.js',
@@ -36,21 +37,6 @@
 	 			load_script(scripts.splice(0,1)[0])
 			}
 		}
-		// function load_scripts() {
-		// 	// These are asynchronous - no guarantee of order... problematic?
-		// 	// Can we aggregate responses and trigger an 'all loaded' event?
-		// 
-		// 	load_script('/glop/canvas.js');
-		// 	load_script('/glop/glop.js');
-		// 	load_script('/glop/events.js');
-		// 	load_script('/glop/layers.js');
-		// 	load_script('/glop/box.js');
-		// 	load_script('/glop/style.js');
-		// 	// load_script('/glop/label.js');
-		// 	load_script('/glop/cartagen.js');
-		// 	// load_script('rala.js');
-		// 	// load_script('glyphs.js');
-		// }
 		function demo() {
 			try {
 				global_rotate += 0.005

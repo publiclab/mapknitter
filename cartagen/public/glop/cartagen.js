@@ -333,7 +333,7 @@ var Way = Class.create({
 					alert(this.tags.toJSON())
 				}
 			} catch(e) {
-				console.log("style.js error: "+e)
+				console.log("style.js error: "+trace(e))
 			}
 			if (this.highlight) {
 				lineWidth(5)
@@ -354,6 +354,10 @@ var Way = Class.create({
 		// we'll have to change this for open polys, like coastlines
 		if (this.closed_poly) fill()
 		stroke()
+		// if (this.text) {
+			if (this.fontColor) strokeStyle(this.fontColor)
+			drawTextCenter("sans",15,this.x,this.y,this.fillStyle)
+		// }
 	    canvas.restore()
 	},
 	click: function() {
