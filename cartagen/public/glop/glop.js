@@ -21,6 +21,9 @@ canvas = document.getElementById('canvas').getContext('2d')
 canvas.globalAlpha = 0.8
 $('pointerLabel').absolutize()
 
+//CanvasText setup:
+CanvasTextFunctions.enable(canvas);
+
 function drag() {
 	if (dragging) {
 		on_object = false

@@ -20,6 +20,8 @@ function parse_styles(feature,selector) {
 		if (styles[feature.name] && styles[feature.name].strokeStyle) {
 			feature.strokeStyle = styles[feature.name].strokeStyle
 		}
+		// font styling:
+		if (selector['fontColor']) feature.fontColor = selector['fontColor']
 
 		feature.tags.each(function(tag) {
 
