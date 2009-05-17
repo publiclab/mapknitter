@@ -283,12 +283,12 @@ var Node = Class.create({
 	    canvas.save()
 			style(this)
 			// check for hover
-			if (this.hover && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),80)) {
-				style(this.hover)
+			if (this.hover && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),100)) {
 				console.log('hover')
+				style(this.hover)
 			}
 			// mouseDown sensing not working yet... should integrate new GLOP event.js
-			if (this.mouseDown && mouseDown == true && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),80)) {
+			if (this.mouseDown && mouseDown == true && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),100)) {
 				style(this.mouseDown)
 				alert(this.tags.toJSON())
 			}
@@ -404,8 +404,8 @@ function is_point_in_poly(poly, _x, _y){
 function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
 function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
 
-function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 2.7 }
-function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*2.7))*(Math.PI/180)/2))) }
+function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 3.1 }
+function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*3.1))*(Math.PI/180)/2))) }
 
 function center_lon() {
 	return (lng2+lng1)/2
