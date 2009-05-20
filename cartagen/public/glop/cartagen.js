@@ -319,7 +319,7 @@ var Way = Class.create({
 	},
 	shape: function() {
 	    canvas.save()
-			try	{
+			// try	{
 				style(this)
 				// check for hover
 				if (this.hover && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
@@ -332,9 +332,9 @@ var Way = Class.create({
 					style(this.mouseDown)
 					alert(this.tags.toJSON())
 				}
-			} catch(e) {
-				console.log("style.js error: "+trace(e))
-			}
+			// } catch(e) {
+			// 	console.log("style.js error: "+trace(e))
+			// }
 			if (this.highlight) {
 				lineWidth(5)
 				strokeStyle("red")
@@ -346,10 +346,10 @@ var Way = Class.create({
 				canvas.globalAlpha = 1
 			}
 		beginPath()
-		var me = this
 		this.nodes.each(function(node){
 			lineTo(node.x,node.y)
-		})
+		},this)
+		
 		// fill the polygon if the beginning and end nodes are the same.
 		// we'll have to change this for open polys, like coastlines
 		if (this.closed_poly) fill()
