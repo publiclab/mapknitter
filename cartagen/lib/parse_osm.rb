@@ -25,10 +25,8 @@ class ParseOsm
           begin
             if tag['v'] == tag_query
               has_tag = true
-              puts "matched value"
             elsif tag['k'] == tag_query
               has_tag = true
-              puts "matched key"
             end
           rescue
           
