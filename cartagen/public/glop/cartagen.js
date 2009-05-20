@@ -214,7 +214,7 @@ function parse_objects(data) {
 			w.y = 0
 			way.nd.each(function(nd,index){
 				try {
-					if ((index % res_down) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= res_down*2) {
+					if ((index % simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= simplify*2) {
 						// find the node corresponding to nd.ref, store a reference:
 						node = nodes.get(nd.ref)
 						if (!Object.isUndefined(node)) {
@@ -354,10 +354,10 @@ var Way = Class.create({
 		// we'll have to change this for open polys, like coastlines
 		if (this.closed_poly) fill()
 		stroke()
-		// if (this.text) {
+		if (this.text) {
 			if (this.fontColor) strokeStyle(this.fontColor)
 			drawTextCenter("sans",15,this.x,this.y,this.fillStyle)
-		// }
+		}
 	    canvas.restore()
 	},
 	click: function() {
@@ -404,8 +404,8 @@ function is_point_in_poly(poly, _x, _y){
 function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
 function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
 
-function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 3.1 }
-function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*3.1))*(Math.PI/180)/2))) }
+function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 }
+function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) }
 
 function center_lon() {
 	return (lng2+lng1)/2
