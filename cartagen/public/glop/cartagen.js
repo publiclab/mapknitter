@@ -54,6 +54,9 @@ function objects_sort(a,b) {
 
 // Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
 function cartagen() {
+	if (Prototype.Browser.MobileSafari) {
+		simplify = 3
+	}
 	// gss body style:
 	if (styles) {
 		if (styles.body.fillStyle) fillStyle(styles.body.fillStyle)
