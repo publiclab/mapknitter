@@ -207,12 +207,17 @@ function parse_objects(data) {
 			w.nodes = []
 			w.x = 0
 			w.y = 0
+			w.bbox = [0,0,0,0] // top, left, bottom, right
 			way.nd.each(function(nd,index){
 				try {
 					if ((index % simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= simplify*2) {
 						// find the node corresponding to nd.ref, store a reference:
 						node = nodes.get(nd.ref)
 						if (!Object.isUndefined(node)) {
+							if (node.x < w.bbox[1] || w.bbox[1] == 0) w.bbox[1] = node.x
+							if (node.x > w.bbox[3] || w.bbox[3] == 0) w.bbox[3] = node.x
+							if (node.y < w.bbox[0] || w.bbox[0] == 0) w.bbox[0] = node.y
+							if (node.y > w.bbox[2] || w.bbox[2] == 0) w.bbox[2] = node.y
 							w.x += node.x
 							w.y += node.y
 							w.nodes.push(node)
@@ -222,6 +227,7 @@ function parse_objects(data) {
 					console.log(trace(e))
 				}
 			})
+			console.log(w.bbox)
 			w.x = w.x/w.nodes.length
 			w.y = w.y/w.nodes.length
 			w.area = poly_area(w.nodes)
@@ -333,6 +339,11 @@ var Way = Class.create({
 		stroke()
 		if (this.closed_poly) fill()
 
+		// test bboxes for ways:
+		// lineWidth(8)
+		// strokeStyle('red')
+		// strokeRect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
+
 		if (this.text) {
 			if (this.fontColor) strokeStyle(this.fontColor)
 			try{
@@ -424,8 +435,11 @@ if (!static_map) {
 	get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
 	new PeriodicalExecuter(get_current_plot,0.33)
 } else {
-	static_map_layers.each(function(layer_url) {
-		get_static_plot(layer_url)
-	})
+	if (Prototype.Browser.MobileSafari) get_static_plot(static_map_layers[0])
+	else {
+		static_map_layers.each(function(layer_url) {
+			get_static_plot(layer_url)
+		})	
+	}
 }
 load_next_script()
