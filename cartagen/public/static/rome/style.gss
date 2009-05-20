@@ -29,7 +29,7 @@ park: {
 },
 waterway: {
 	fillStyle: "#57d",
-	lineStyle: "#24a",
+	strokeStyle: "#24a",
 	lineWidth: 4
 },
 water: {
@@ -82,8 +82,11 @@ building: {
 		fillStyle: '#222'
 	},
 	mouseDown: {
-		lineWidth: 4,
-		strokeStyle: "red"
+		lineWidth: 18,
+		strokeStyle: "red",
+		action: function() {
+			alert('tags: ')
+		}
 	}
 },
 landuse: {

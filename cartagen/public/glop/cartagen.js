@@ -277,15 +277,6 @@ var Node = Class.create({
 	shape: function() {
 	    canvas.save()
 			style(this)
-			// check for hover
-			if (this.hover && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),100)) {
-				console.log('hover')
-				style(this.hover)
-			}
-			if (this.mouseDown && mouseDown == true && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),100)) {
-				style(this.mouseDown)
-				alert(this.tags.toJSON())
-			}
 		beginPath()
 		translate(this.x,this.y-6)
 		arc(0,this.radius,this.radius,0,Math.PI*2,true)
@@ -313,21 +304,7 @@ var Way = Class.create({
 	},
 	shape: function() {
 		canvas.save()
-			// try	{
-				style(this)
-				// check for hover
-				if (this.hover && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
-					style(this.hover)
-					this.label = new Label(this.x,this.y)
-					this.label.content = this.user+": "+this.timestamp
-				}
-				if (this.mouseDown && mouseDown == true && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
-					style(this.mouseDown)
-					alert(this.tags.toJSON())
-				}
-			// } catch(e) {
-			// 	console.log("style.js error: "+trace(e))
-			// }
+			style(this)
 			if (this.highlight) {
 				lineWidth(3/zoom_level)
 				strokeStyle("red")
@@ -342,8 +319,13 @@ var Way = Class.create({
 		beginPath()
 		moveTo(this.nodes[0].x,this.nodes[0].y)
 
-		this.nodes.each(function(node){
-			lineTo(node.x,node.y)
+		// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
+		var resolution = Math.round(Math.abs(Math.log(zoom_level)))
+		if (resolution == 0) resolution = 1
+		this.nodes.each(function(node,index){
+			if ((index % resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+				lineTo(node.x,node.y)
+			}
 		},this)
 
 		// fill the polygon if the beginning and end nodes are the same.
@@ -353,7 +335,12 @@ var Way = Class.create({
 
 		if (this.text) {
 			if (this.fontColor) strokeStyle(this.fontColor)
-			drawTextCenter("sans",15,this.x,this.y,this.fillStyle)
+			try{
+				rotate(Math.PI)
+				drawTextCenter("sans",15/zoom_level,this.x,this.y,this.fillStyle)
+			} catch(e) {
+				trace(e)
+			}
 		}
 	    canvas.restore()
 	},
