@@ -1,5 +1,5 @@
 body: {
-	fillStyle: "#dbdbdb",
+	fillStyle: "#fff",
 	lineWidth: 0,
 	
 },
@@ -15,8 +15,7 @@ way: {
 		//return color_from_string(this.user)
 	},
 	strokeStyle: "#ccc",
-	lineWidth: 3,
-	fillStyle: "#eee"
+	lineWidth: 3
 },
 leisure: {
 	fillStyle: "#2a2",
@@ -29,16 +28,16 @@ park: {
 	strokeStyle: "#181"
 },
 waterway: {
-	fillStyle: "#57d",
-	lineWidth: 0
+	strokeStyle: "#57d",
+	lineWidth: 20
 },
 water: {
-	fillStyle: "#57d",
-	lineWidth: 0
+	strokeStyle: "#57d",
+	lineWidth: 20
 },
 coastline: {
-	fillStyle: "#57d",
-	lineWidth: 0
+	strokeStyle: "#57d",
+	lineWidth: 20
 },
 highway: {
 	strokeStyle: "white",

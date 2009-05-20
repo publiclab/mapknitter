@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Cartagen</title>
+	<script src="/glop/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
+	<script type="text/javascript" charset="utf-8">
+		var fullscreen = true // default false
+		var stylesheet = "/static/rome/style.gss"
+		var live = false // default false
+		var powersave = true // default true
+		var zoom_out_limit = 0.02
+		var simplify = 1
+		var static_map = true
+		var static_map_layers = ["/static/rome/building.js","/static/rome/park.js","/static/rome/primary.js"]
+		var range = 0.001, lat1 = 37.4562, lat2 = 37.4199, lng1 = -122.1847, lng2 = -122.1415, zoom_level = 0.035
+
+		scripts = [
+		'/glop/canvas.js',
+		'/glop/canvastext.js',
+		'/glop/glop.js',
+		'/glop/events.js',
+		'/glop/style.js',
+		'/glop/cartagen.js',
+		'/sites.js'
+		]
+
+		function load_script(script) {
+			$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+		}
+		function load_next_script() {
+			if (scripts.length > 0) {
+	 			load_script(scripts.splice(0,1)[0])
+			}
+		}
+		function demo() {
+			try {
+				global_rotate += 0.005
+			} catch(e) {
+				
+			}
+		}
+		
+	</script>
+</head>
+<body oncontextmenu="return false;" onLoad="load_next_script();browser_check();" onresize="try {draw()} catch(e) {}">
+
+<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
+
+<script type="text/javascript" charset="utf-8">
+	function browser_check() {
+		$('browsers').absolutize;
+		$('browsers').style.top = "100px";	
+		$('browsers').style.margin = "0 auto";	
+		if (Prototype.Browser.IE || Prototype.Browser.WebKit) $('browsers').show();
+	}
+</script>
+
+<div id="browsers" style="display:none;">
+	<h3>WHOOPS</h3>
+	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
+</div>
+
+<div id="pointerLabel"></div>
+<div id="labels"></div>
+
+<textarea style="display:none" id="dropject"></textarea>
+
+<canvas id="canvas"></canvas>
+
+<div id="brief">
+	<div class="column first" id="brief_first">
+		<h2>Cartagen <br />
+			<small>a framework for dynamic mapping<br />
+			by <a href="http://unterbahn.com">Jeffrey Warren</a> (<a href="http://wiki.cartagen.org">Docs</a>, <a href="http://code.google.com/p/cartagen/">Source</a>, <a href="http://groups.google.com/group/cartagen-dev">List</a>)</small></h2>
+		<p><form action="/find" method="get" accept-charset="utf-8">
+			Go somewhere: <br />
+			<input style="width:170px;" type="text" name="id" value="">
+			<input type="button" name="some_name" value="Go">
+		</form></p>
+		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onChange ="highlights($('highlight').value)">
+			Search: <br />
+			<input style="width:170px;" type="text" id="highlight" value="">
+			<input type="submit" name="some_name" value="Go">
+		</form></p>
+	</div>
+	<div id="description">
+		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
+		<div class="column">
+			<h3>SMS mapping and search</h3>
+			<p>String-based geocoding (i.e. "map Bhagalpur, India") allows users to produce their own maps from in the field with only a basic cell phone. This widens participation to 4 billion cell phone users worldwide, as well as to rural regions outside the reach of the internet. Geographic mapping with text messages has applications in disaster response and health care.</p>
+		</div>
+		<div class="column">
+			<h3>GSS: geo style sheets</h3>
+			<p>Just like CSS for styling web pages, GSS is a specification for designing maps. Adapted for dynamic data sources, GSS can define changing geographic elements, display multiple datasets, and even respond to contextual tags like "condition:poor".</p>
+			<p><a href="/glop/style.gss" target="_blank">Click here</a> to view styles for the above map.</p>
+		</div>
+		<div class="column">
+			<h3>Vector web mapping</h3>
+			<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall. Data displayed here is from <a href="http://openstreetmap.org">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>)</p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-180781-29");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
