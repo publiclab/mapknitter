@@ -12,7 +12,7 @@ function parse_styles(feature,selector) {
 		if (selector.radius) feature.radius = selector.radius
 		// check selector for hover:
 		if (selector['hover']) feature.hover = selector['hover']
-		if (selector['mouseDown']) feature.hover = selector['mouseDown']
+		if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
 
 		if (styles[feature.name] && styles[feature.name].fillStyle) {
 			feature.fillStyle = styles[feature.name].fillStyle
