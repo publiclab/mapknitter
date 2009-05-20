@@ -81,18 +81,6 @@ function get_current_plot() {
 	lastPos[1] = global_y
 }
 
-function load_styles(stylesheet_url) {
-	if (stylesheet_url[0,4] == "http") {
-		stylesheet_url = "/map/style?url="+stylesheet_url
-	}
-	new Ajax.Request(stylesheet_url,{
-		method: 'get',
-		onComplete: function(result) {
-			styles = ("{"+result.responseText+"}").evalJSON()
-		}
-	})
-}
-
 function get_static_plot(url) {
 	requested_plots++
 	new Ajax.Request(url,{
@@ -336,7 +324,7 @@ var Way = Class.create({
 			// 	console.log("style.js error: "+trace(e))
 			// }
 			if (this.highlight) {
-				lineWidth(5)
+				lineWidth(3/zoom_level)
 				strokeStyle("red")
 			}
 			// fade in after load:
@@ -411,7 +399,6 @@ function center_lon() {
 	return (lng2+lng1)/2
 }
 
-load_styles(stylesheet)
 if (!static_map) {
 	get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
 	new PeriodicalExecuter(get_current_plot,0.33)

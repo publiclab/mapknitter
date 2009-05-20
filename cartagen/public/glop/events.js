@@ -27,8 +27,14 @@ Event.observe(document, 'keypress', function(e) {
 		if (character == "g") global_y -= 20/zoom_level
 	} else {
 		// just modifiers:
-		if (character == "r") keys.set("r",true)
-		if (character == "z") keys.set("z",true)
+		switch(character){
+			case "r": keys.set("r",true)
+			break
+			case "z": keys.set("z",true)
+			break
+			case "g": $('gss').toggle()
+			break
+		}
 	}
 	draw()
 });
