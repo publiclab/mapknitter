@@ -70,6 +70,15 @@ function cartagen() {
 	// rotate(-1*global_rotate)
 		translate((-1*global_x)+(width/2),(-1*global_y)+(height/2))
 	// rotate(global_rotate)
+	
+	strokeStyle('white')
+	lineWidth(10)
+	
+	// viewport stuff:
+	viewport_width = width*(1/zoom_level)-(100*(1/zoom_level))
+	viewport_height = height*(1/zoom_level)-(100*(1/zoom_level))
+	viewport = [global_y-viewport_height/2,global_x-viewport_width/2,global_y+viewport_height/2,global_x+viewport_width/2]
+	strokeRect(global_x-viewport_width/2,global_y-viewport_height/2,viewport_width,viewport_height)
 }
 
 // gets the plot under the current center of the screen
@@ -305,8 +314,11 @@ var Way = Class.create({
 	closed_poly: false,
 	tags: new Hash(),
 	draw: function() {	
-		this.shape()
-		this.age += 1;
+		// only draw if in the viewport:
+		if (intersect(viewport[0],viewport[1],viewport[2],viewport[3],this.bbox[0],this.bbox[1],this.bbox[2],this.bbox[3])) {
+			this.shape()
+			this.age += 1;
+		}
 	},
 	shape: function() {
 		canvas.save()
@@ -384,6 +396,10 @@ function overlaps(x1,y1,x2,y2,fudge) {
 	} else {
 		return false
 	}
+}
+
+function intersect(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {	
+	return !(box2left > box1right || box2right < box1left || box2top > box1bottom || box2bottom < box1top)
 }
 
 //+ Jonas Raoni Soares Silva
