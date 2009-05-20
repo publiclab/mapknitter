@@ -10,24 +10,22 @@
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
 	<script type="text/javascript" charset="utf-8">
 		var fullscreen = true // default false
-		var stylesheet = "/glop/style.gss"
+		var stylesheet = "/static/rome/style.gss"
 		var live = false // default false
 		var powersave = true // default true
 		var zoom_out_limit = 0.02
 		var simplify = 1
 		var static_map = true
-		var static_map_layers = ["/coastline.js","/water.js","/primary.js"]
-		var range = 0.001, lat1 = 64.122, lat2 = 64.121, lng1 = -21.8765, lng2 = -21.8755, zoom_level = 0.035
+		var static_map_layers = ["/static/rome/park.js","/static/rome/rail.js","/static/rome/waterway.js","/static/rome/primary.js","/static/rome/building.js"]
+		var range = 0.001, lat1 = 41.9227, lat2 = 41.861, lng1 = 12.4502, lng2 = 12.5341, zoom_level = 0.05
 
 		scripts = [
 		'/glop/canvas.js',
 		'/glop/canvastext.js',
 		'/glop/glop.js',
-		'/glop/label.js',
 		'/glop/events.js',
 		'/glop/style.js',
 		'/glop/cartagen.js',
-		// '/objects.js'
 		'/sites.js'
 		]
 
@@ -46,7 +44,10 @@
 				
 			}
 		}
-		
+		function fill_gss() {
+			$('gss_textarea').value = stylesheet_source
+		}
+		setTimeout(fill_gss,5000)
 	</script>
 </head>
 <body oncontextmenu="return false;" onLoad="load_next_script();browser_check();" onresize="try {draw()} catch(e) {}">
@@ -73,6 +74,11 @@
 <textarea style="display:none" id="dropject"></textarea>
 
 <canvas id="canvas"></canvas>
+
+<div class="overlay" id="gss" style="display:none;">
+	<h3>Edit GSS:</h3>
+	<textarea id="gss_textarea" rows="40" cols="40" onChange="apply_gss($('gss_textarea').value)"></textarea>
+</div>
 
 <div id="brief">
 	<div class="column first" id="brief_first">
