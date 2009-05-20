@@ -92,6 +92,27 @@ function style(feature) {
 			lineWidth(feature.lineWidth)
 		}
 	}
+	
+	// trigger hover and mouseDown styles:
+	if (feature instanceof Way) {
+		if (feature.hover && feature.closed_poly && is_point_in_poly(feature.nodes,map_pointerX(),map_pointerY())) {
+			style(feature.hover)
+			if (feature.hover.action) feature.hover.action()
+		}
+		if (feature.mouseDown && mouseDown == true && feature.closed_poly && is_point_in_poly(feature.nodes,map_pointerX(),map_pointerY())) {
+			style(feature.mouseDown)
+			if (feature.mouseDown.action) feature.mouseDown.action()
+		}
+	} else if (feature instanceof Node) {
+		if (feature.hover && overlaps(feature.x,feature.y,map_pointerX(),map_pointerY(),100)) {
+			style(feature.hover)
+			if (feature.hover.action) feature.hover.action()
+		}
+		if (feature.mouseDown && mouseDown == true && overlaps(feature.x,feature.y,map_pointerX(),map_pointerY(),100)) {
+			style(feature.mouseDown)
+			if (feature.mouseDown.action) feature.mouseDown.action()
+		}
+	}
 }
 
 // add_style('highway','strokeStyle','red')
