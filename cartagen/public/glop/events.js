@@ -107,9 +107,6 @@ if (window.addEventListener){
 }
 window.onmousewheel = document.onmousewheel = wheel;
 
-
-
-
 function doubleclick(event) {
 	on_object = false
 	objects.each(function(object) { 
@@ -138,30 +135,6 @@ function drag() {
 			global_y = global_y_old+(drag_y/zoom_level)
 		}
 	}
-	if (dragging) {
-		on_object = false
-		objects.each(function(object) {
-			// if (object.is_selected) {
-			// 	on_object = true
-			// 	// send drag to whole group
-			// 	selectedObjects.each(function(object) {
-			// 		object.dragging = true
-			// 		object.drag()
-			// 	})
-			// } else {
-			// 	on_object = true
-			// 	object.drag()
-			// 	if (object.dragging) {
-			// 		lastObject = object
-			// 	}				
-			// }
-		})
-		if (!on_object) {
-			// pan_x = drag_x
-			// pan_y = drag_y
-		}
-	}
-	draw()
 }
 
 function mousedown(event) {
@@ -173,29 +146,7 @@ function mousedown(event) {
 	global_y_old = global_y
 	global_rotate_old = global_rotate
 	if (!dragging) {
-		on_object = false
-		objects.each(function(object) { 
-			if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
-				if ((editmode && object.exploded) || !Event.isLeftClick(event)) {
-				} else if (Event.isLeftClick(event)) {
-					// Begin dragging
-					object.click()
-					end_editmode()
-					lastObject = object
-					object.dragging = true
-					dragging = true
-				}
-				on_object = true
-			}
-		})
-		if (!on_object) {
-			globalDragging = true
-			
-			selectedObjects.each(function(object) {
-				object.is_selected = false
-			})
-			selectedObjects = []
-		}
+		globalDragging = true
 	}
 }
 
@@ -235,7 +186,7 @@ function mouseup() {
 		draggedObject = ""
 	} else {
 		// nothing is being dragged
-		if (!dragging && !on_object && !editmode && selectedObjects.length == 0) {
+		if (!dragging && !on_object && selectedObjects.length == 0) {
 			// if (lastObject == "") {
 			// 	var new_box = deep_clone(box)
 			// } else {
@@ -246,8 +197,7 @@ function mouseup() {
 			// new_box.obj_id = objects.length
 			// objects.push(new_box)
 			// end_editmode()
-		} else if (!on_object && editmode) {			
-			end_editmode()
+		} else if (!on_object) {			
 			pointerLabel = ""
 		}
 		dragging = false

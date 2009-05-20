@@ -9,6 +9,39 @@
 	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
 	<script type="text/javascript" charset="utf-8">
+	
+		// load these into the new Cartagen class. Use defaults too.
+		
+		// var cartagen = new Cartagen({
+		// 	fullscreen: true,
+		// 	stylesheet: "/static/rome/style.gss",
+		// 	live: false,
+		// 	powersave: true,
+		// 	zoom_out_limit = 0.02,
+		// 	simplify: 1,
+		// 	static_map: true,
+		// 	static_map_layers: [
+		// 		"/static/rome/park.js",
+		// 		"/static/rome/rail.js",
+		// 		"/static/rome/waterway.js",
+		// 		"/static/rome/primary.js",
+		// 		"/static/rome/catholic.js"
+		// 		]
+		// 	range: 0.001,
+		// 	lat1: 41.9227,
+		// 	lat2: 41.861,
+		// 	lng1: 12.4502,
+		// 	lng2: 12.5341,
+		// 	zoom_level: 0.05,
+		// 	scripts: [
+		// 		'/glop/canvas.js',
+		// 		'/glop/canvastext.js',
+		// 		'/glop/glop.js',
+		// 		'/glop/events.js',
+		// 		'/glop/style.js',
+		// 		'/glop/cartagen.js'f
+		// 	]
+		// })
 		var fullscreen = true // default false
 		var stylesheet = "/static/rome/style.gss"
 		var live = false // default false
@@ -16,7 +49,7 @@
 		var zoom_out_limit = 0.02
 		var simplify = 1
 		var static_map = true
-		var static_map_layers = ["/static/rome/park.js","/static/rome/rail.js","/static/rome/waterway.js","/static/rome/primary.js","/static/rome/building.js"]
+		var static_map_layers = ["/static/rome/park.js","/static/rome/rail.js","/static/rome/waterway.js","/static/rome/primary.js","/static/rome/catholic.js"]
 		var range = 0.001, lat1 = 41.9227, lat2 = 41.861, lng1 = 12.4502, lng2 = 12.5341, zoom_level = 0.05
 
 		scripts = [
@@ -25,8 +58,7 @@
 		'/glop/glop.js',
 		'/glop/events.js',
 		'/glop/style.js',
-		'/glop/cartagen.js',
-		'/sites.js'
+		'/glop/cartagen.js'
 		]
 
 		function load_script(script) {
@@ -37,41 +69,29 @@
 	 			load_script(scripts.splice(0,1)[0])
 			}
 		}
-		function demo() {
-			try {
-				global_rotate += 0.005
-			} catch(e) {
-				
-			}
-		}
 		function fill_gss() {
-			$('gss_textarea').value = stylesheet_source
+			try {
+				$('gss_textarea').value = stylesheet_source
+			} catch(e) {}
 		}
 		setTimeout(fill_gss,5000)
+		
+		function browser_check() {
+			$('browsers').absolutize;
+			$('browsers').style.top = "100px";	
+			$('browsers').style.margin = "0 auto";	
+			if (Prototype.Browser.IE) $('browsers').show();
+		}
 	</script>
 </head>
 <body oncontextmenu="return false;" onLoad="load_next_script();browser_check();" onresize="try {draw()} catch(e) {}">
 
 <div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
 
-<script type="text/javascript" charset="utf-8">
-	function browser_check() {
-		$('browsers').absolutize;
-		$('browsers').style.top = "100px";	
-		$('browsers').style.margin = "0 auto";	
-		if (Prototype.Browser.IE || Prototype.Browser.WebKit) $('browsers').show();
-	}
-</script>
-
 <div id="browsers" style="display:none;">
 	<h3>WHOOPS</h3>
 	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
 </div>
-
-<div id="pointerLabel"></div>
-<div id="labels"></div>
-
-<textarea style="display:none" id="dropject"></textarea>
 
 <canvas id="canvas"></canvas>
 
@@ -90,7 +110,7 @@
 			<input style="width:170px;" type="text" name="id" value="">
 			<input type="button" name="some_name" value="Go">
 		</form></p>
-		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onChange ="highlights($('highlight').value)">
+		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="highlights($('highlight').value)">
 			Search: <br />
 			<input style="width:170px;" type="text" id="highlight" value="">
 			<input type="submit" name="some_name" value="Go">

@@ -1,5 +1,26 @@
 var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit
 
+// var spherical_mercator = Class.create({
+// 	lon_to_x: function(lon) { return (lon - projection.center_lon()) * -1 * scale_factor },
+// 	x_to_lon: function(x) { return (x/(-1*scale_factor)) + projection.center_lon() },
+// 	lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 },
+// 	y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) },
+// })
+// 
+// // Uses global values... should set these in the initializer/constructor:
+// var projection = Class.create({
+// 	current_projection: spherical_mercator,
+// 	set: function(new_projection) {
+// 		this.current_projection = new_projection
+// 	},
+// 	lon_to_x: function(lon) { return this.current_projection.lon_to_x() },
+// 	x_to_lon: function(x) { return this.current_projection.x_to_lon() },
+// 	lat_to_y: function(lat) { return this.current_projection.lat_to_y() },
+// 	y_to_lat: function(y) { return this.current_projection.y_to_lat() },
+// 	//required by spherical mercator:
+// 	center_lon: function() { return (lng2+lng1)/2 },
+// })
+
 global_x = lon_to_x((lng1+lng2)/2)
 global_y = lat_to_y((lat1+lat2)/2)
 
@@ -29,21 +50,6 @@ function objects_sort(a,b) {
 	} else {
 		return 1 // b wins no matter what if a is not a Way
 	}
-}
-
-function highlights(query) {
-	objects.each(function(object) {
-		object.highlight = false
-		if (query != "" && object.tags && object instanceof Way) {
-			object.tags.each(function(tag) {
-				if (tag.key.toLowerCase().match(query.toLowerCase()) || tag.value.toLowerCase().match(query.toLowerCase())) {
-					object.highlight = true
-				}
-			})
-			if (object.user && object.user.toLowerCase().match(query.toLowerCase())) object.highlight = true
-			if (object.description && object.description.toLowerCase().match(query.toLowerCase())) object.highlight = true
-		}
-	})
 }
 
 // Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
@@ -86,7 +92,7 @@ function get_static_plot(url) {
 	new Ajax.Request(url,{
 		method: 'get',
 		onSuccess: function(result) {
-			console.log(result.responseText.evalJSON().osm)
+			// console.log(result.responseText.evalJSON().osm.ways.length+" ways")
 			parse_objects(result.responseText.evalJSON())
 			requested_plots--
 			if (requested_plots == 0) last_event = frame
@@ -184,10 +190,11 @@ function parse_objects(data) {
 		n.id = node.id
 		n.lat = node.lat
 		n.lon = node.lon
-		// n.visible = node.visible
 		n.x = lon_to_x(n.lon)
 		n.y = lat_to_y(n.lat)
 		parse_styles(n,styles.node)
+		// can't currently afford to have all nodes in the map as well as all ways.
+		// but we're missing some nodes when we render... semantic ones i think. cross-check.
 		// objects.push(n)
 		nodes.set(n.id,n)
     })
@@ -275,7 +282,6 @@ var Node = Class.create({
 				console.log('hover')
 				style(this.hover)
 			}
-			// mouseDown sensing not working yet... should integrate new GLOP event.js
 			if (this.mouseDown && mouseDown == true && overlaps(this.x,this.y,map_pointerX(),map_pointerY(),100)) {
 				style(this.mouseDown)
 				alert(this.tags.toJSON())
@@ -306,7 +312,7 @@ var Way = Class.create({
 		this.age += 1;
 	},
 	shape: function() {
-	    canvas.save()
+		canvas.save()
 			// try	{
 				style(this)
 				// check for hover
@@ -315,7 +321,6 @@ var Way = Class.create({
 					this.label = new Label(this.x,this.y)
 					this.label.content = this.user+": "+this.timestamp
 				}
-				// mouseDown sensing not working yet... should integrate new GLOP event.js
 				if (this.mouseDown && mouseDown == true && this.closed_poly && is_point_in_poly(this.nodes,map_pointerX(),map_pointerY())) {
 					style(this.mouseDown)
 					alert(this.tags.toJSON())
@@ -333,15 +338,19 @@ var Way = Class.create({
 			} else {
 				canvas.globalAlpha = 1
 			}
+			
 		beginPath()
+		moveTo(this.nodes[0].x,this.nodes[0].y)
+
 		this.nodes.each(function(node){
 			lineTo(node.x,node.y)
 		},this)
-		
+
 		// fill the polygon if the beginning and end nodes are the same.
 		// we'll have to change this for open polys, like coastlines
-		if (this.closed_poly) fill()
 		stroke()
+		if (this.closed_poly) fill()
+
 		if (this.text) {
 			if (this.fontColor) strokeStyle(this.fontColor)
 			drawTextCenter("sans",15,this.x,this.y,this.fillStyle)
@@ -397,6 +406,31 @@ function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(sca
 
 function center_lon() {
 	return (lng2+lng1)/2
+}
+
+// Searches all objects by tags, and sets highlight=true for all matches.
+function highlights(query) {
+	objects.each(function(object) {
+		object.highlight = false
+		if (query != "" && object.tags && object instanceof Way) {
+			object.tags.each(function(tag) {
+				if (tag.key.toLowerCase().match(query.toLowerCase()) || tag.value.toLowerCase().match(query.toLowerCase())) {
+					object.highlight = true
+				}
+			})
+			if (object.user && object.user.toLowerCase().match(query.toLowerCase())) object.highlight = true
+			if (object.description && object.description.toLowerCase().match(query.toLowerCase())) object.highlight = true
+		}
+	})
+}
+
+// Rotates view slowly for cool demo purposes.
+function demo() {
+	try {
+		global_rotate += 0.005
+	} catch(e) {
+		
+	}
 }
 
 if (!static_map) {

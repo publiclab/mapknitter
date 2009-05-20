@@ -73,11 +73,6 @@
 	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
 </div> -->
 
-<div id="pointerLabel"></div>
-<div id="labels"></div>
-
-<textarea style="display:none" id="dropject"></textarea>
-
 <canvas id="canvas"></canvas>
 
 <div id="brief" style="<% if params[:fullscreen] %>display:none;<% end %>">
@@ -90,7 +85,7 @@
 			<input style="width:170px;" type="text" name="id" value="">
 			<input type="button" name="some_name" value="Go">
 		</form></p>
-		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onChange ="highlights($('highlight').value)">
+		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="highlights($('highlight').value)">
 			Search: <br />
 			<input style="width:170px;" type="text" id="highlight" value="">
 			<input type="submit" name="some_name" value="Go">
