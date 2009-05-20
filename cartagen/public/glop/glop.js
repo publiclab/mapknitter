@@ -188,7 +188,7 @@ function draw_powersave() {
 	if (powersave == false || (requested_plots && requested_plots > 0)) {
 		draw()
 	} else {
-		if (last_event > frame-20) {
+		if (last_event > frame-12) {
 			draw()
 		} else {
 			// console.log('sleeping')

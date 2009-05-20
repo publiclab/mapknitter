@@ -1,5 +1,5 @@
 body: {
-	fillStyle: "#fff",
+	fillStyle: "#dee",
 	lineWidth: 0,
 	
 },
@@ -28,8 +28,9 @@ park: {
 	strokeStyle: "#181"
 },
 waterway: {
-	strokeStyle: "#57d",
-	lineWidth: 20
+	fillStyle: "#57d",
+	lineStyle: "#24a",
+	lineWidth: 4
 },
 water: {
 	strokeStyle: "#57d",

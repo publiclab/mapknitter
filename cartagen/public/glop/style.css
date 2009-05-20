@@ -96,45 +96,29 @@ canvas {
 	background:#fff;
 	margin:0;
 	display:block;
-/*	border:2px solid #bbb;*/
 }
-#script {
-	width:600px;
-	height:200px;
+
+.overlay {
+	line-height:1.4em;
+	padding:8px;
+	margin:12px;
+	position:absolute; top:0; right:0;
+	background:white;
+	-moz-opacity: 0.80;
+	opacity:.80;
+	filter:alpha(opacity=80);
+	font-family: lucida grande, lucida sans console, sans-serif;
 }
-.object {
-	text-align:center;
-	color:white;
-	font-family:trebuchet ms;
-	font-weight:bold;
-	background:#009;
-}
-.object:hover {
-/*	border:2px solid #FFB76C;
-*/	background:#900;
-	-moz-opacity: 0.25;
-	opacity:.25;
-	filter:alpha(opacity=25);
-}
-#trace_div {
-	background:#333;
-	color:#eee;
-	margin-top:10px;
-	padding:10px;
-}
-#trace_div a {
-	color:#B8D225;
-}
-#trace {
-	height:200px;
-	overflow-y:scroll;
+.overlay h3 {
+	margin-top:6px;
 }
 
 #brief {
 	line-height:1.4em;
 	width:95%;
 	padding:8px;
-	position:absolute; bottom:12px; left:12px;
+	margin:12px;
+	position:absolute; bottom:0; left:0;
 	background:white;
 	-moz-opacity: 0.80;
 	opacity:.80;
