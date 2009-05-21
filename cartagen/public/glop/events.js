@@ -1,4 +1,5 @@
 // Track mouse movement:
+body = $$('body')[0]
 $$('body')[0].observe('mousemove', mousemove)
 var pointerX = 0, pointerY = 0
 function mousemove(event) { 
@@ -107,6 +108,58 @@ if (window.addEventListener){
 }
 window.onmousewheel = document.onmousewheel = wheel;
 
+// iPhone events:
+if (Prototype.Browser.MobileSafari) {
+	body.ontouchstart = function(e){
+	  if(e.touches.length == 1){ // Only deal with one finger
+	 	var touch = e.touches[0]; // Get the information for finger #1
+	    var node = touch.target; // Find the node the drag started from
+
+		mouseDown = true
+		clickFrame = frame
+		clickX = touch.pageX
+		clickY = touch.pageY
+		global_x_old = global_x
+		global_y_old = global_y
+		global_rotate_old = global_rotate
+		if (!dragging) {
+			globalDragging = true
+		}
+		
+	  }
+	}
+	body.touchend = function(e) {
+		if(e.touches.length == 1) {
+			mouseUp = true
+			mouseDown = false
+			releaseFrame = frame
+			globalDragging = false
+			if (draggedObject != "") {
+			} else {
+				dragging = false
+			}
+		}
+	}
+
+	// var width = 100, height = 200, rotation = ;
+
+	body.ongesturechange = function(e){
+	  var node = e.target;
+	  // scale and rotation are relative values,
+	  // so we wait to change our variables until the gesture ends
+	  node.style.width = (width * e.scale) + "px";
+	  node.style.height = (height * e.scale) + "px";
+	  node.style.webkitTransform = "rotate(" + ((rotation + e.rotation) % 360) + "deg)";
+	}
+
+	body.ongestureend = function(e){
+	  // Update the values for the next time a gesture happens
+	  width *= e.scale;
+	  height *= e.scale;
+	  rotation = (rotation + e.rotation) % 360;
+	}	
+}
+
 function doubleclick(event) {
 	on_object = false
 	objects.each(function(object) { 
@@ -156,62 +209,8 @@ function mouseup() {
 	releaseFrame = frame
 	globalDragging = false
 	if (draggedObject != "") {
-		// something is being dragged
-		on_object = false
-		// if it's an organ:
-		if (draggedObject instanceof Organ && clickLength() < 10) {
-			unexplode_all()
-			draggedObject.edit()
-			pointerLabel = ""
-		}
-		objects.each(function(object) { 
-			if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
-				// copy the dragged object's code into a string parameter called 'code'
-				if (Object.isString(draggedObject.code)) {
-					var code = "'"+draggedObject.code+"'"
-				} else {
-					var code = draggedObject.code
-				}
-				eval("object."+draggedObject.organName+" = "+code)
-				on_object = true
-			}
-			if (clickLength() < 10 && !(draggedObject instanceof Organ)) {
-				// Open editor
-				unexplode_all()
-				object.exploded = true
-				lastObject = object
-				object.rightclick()
-			}
-		})
-		draggedObject = ""
 	} else {
-		// nothing is being dragged
-		if (!dragging && !on_object && selectedObjects.length == 0) {
-			// if (lastObject == "") {
-			// 	var new_box = deep_clone(box)
-			// } else {
-			// 	var new_box = deep_clone(lastObject)
-			// }
-			// new_box.x = pointerX
-			// new_box.y = pointerY
-			// new_box.obj_id = objects.length
-			// objects.push(new_box)
-			// end_editmode()
-		} else if (!on_object) {			
-			pointerLabel = ""
-		}
 		dragging = false
-		objects.each(function(object) {
-			object.dragging = false
-			if (object.is_selected) {
-				// alert('deselected')
-				selectedObjects.each(function(object) {
-					object.dragging = false
-					object.old_x = null
-					object.old_y = null
-				})
-			}
-		})		
 	}
 }
 load_next_script()

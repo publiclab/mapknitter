@@ -67,7 +67,9 @@ function draw() {
 	$$('body')[0].style.width = width+"px"
 
 	frame += 1
-	if (drag) drag()
+	try {
+		drag()
+	} catch(e) {}
 
 	// cartagen-specific calls
 	if (typeof cartagen != "undefined") cartagen()
