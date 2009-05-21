@@ -97,11 +97,11 @@ function style(feature) {
 	if (feature instanceof Way) {
 		if (feature.hover && feature.closed_poly && is_point_in_poly(feature.nodes,map_pointerX(),map_pointerY())) {
 			style(feature.hover)
-			if (feature.hover.action) feature.hover.action()
+			if (!Object.isUndefined(feature.hover.action)) feature.hover.action()
 		}
 		if (feature.mouseDown && mouseDown == true && feature.closed_poly && is_point_in_poly(feature.nodes,map_pointerX(),map_pointerY())) {
 			style(feature.mouseDown)
-			if (feature.mouseDown.action) feature.mouseDown.action()
+			if (!Object.isUndefined(feature.mouseDown.action)) feature.mouseDown.action()
 		}
 	} else if (feature instanceof Node) {
 		if (feature.hover && overlaps(feature.x,feature.y,map_pointerX(),map_pointerY(),100)) {
