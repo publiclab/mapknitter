@@ -12,8 +12,13 @@ $('canvas').observe('mousedown', mousedown)
 $('canvas').observe('mouseup', mouseup)
 $('canvas').observe('dblclick', doubleclick)
 
-new PeriodicalExecuter(apply_live_gss,5)
-function apply_live_gss() { if (live_gss) apply_gss($('gss_textarea').value) }
+function show_gss_editor() {
+	$('description').hide()
+	$('brief').style.width = '28%'
+	$('brief_first').style.width = '92%';
+	$('gss').toggle()
+	live_gss = !live_gss
+}
 
 Event.observe(document, 'keypress', function(e) {
 	var code;
@@ -38,8 +43,9 @@ Event.observe(document, 'keypress', function(e) {
 			case "z": keys.set("z",true)
 			break
 			case "g": 
-				$('gss').toggle()
-				live_gss = !live_gss
+				if (!live_gss) {
+					show_gss_editor()
+				}
 			break
 			case "h": get_static_plot('/static/rome/highway.js')
 		}

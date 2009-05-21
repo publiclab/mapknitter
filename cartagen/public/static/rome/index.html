@@ -49,7 +49,7 @@
 		var zoom_out_limit = 0.02
 		var simplify = 1
 		var static_map = true
-		var static_map_layers = ["/static/rome/park.js","/static/rome/rail.js","/static/rome/waterway.js","/static/rome/primary.js","/static/rome/catholic.js","/static/rome/building.js"]
+		var static_map_layers = ["/static/rome/park.js","/static/rome/rail.js","/static/rome/waterway.js","/static/rome/primary.js","/static/rome/secondary.js","/static/rome/building.js","/static/rome/area.js"]
 		var range = 0.001, lat1 = 41.9227, lat2 = 41.861, lng1 = 12.4502, lng2 = 12.5341, zoom_level = 0.05
 
 		scripts = [
@@ -97,7 +97,10 @@
 
 <div class="overlay" id="gss" style="display:none;">
 	<h3>Edit GSS:</h3>
-	<textarea id="gss_textarea" rows="40" cols="40" onChange="apply_gss($('gss_textarea').value)"></textarea>
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="apply_gss($('gss_textarea').value)">
+		<textarea tabindex="1" id="gss_textarea" rows="40" cols="40"></textarea>
+		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();live_gss = !live_gss">cancel</a> <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
+	</form>	
 </div>
 
 <div id="brief">
@@ -105,16 +108,17 @@
 		<h2>Cartagen <br />
 			<small>a framework for dynamic mapping<br />
 			by <a href="http://unterbahn.com">Jeffrey Warren</a> (<a href="http://wiki.cartagen.org">Docs</a>, <a href="http://code.google.com/p/cartagen/">Source</a>, <a href="http://groups.google.com/group/cartagen-dev">List</a>)</small></h2>
-		<p><form action="/find" method="get" accept-charset="utf-8">
+		<!-- <p><form action="/find" method="get" accept-charset="utf-8">
 			Go somewhere: <br />
-			<input style="width:170px;" type="text" name="id" value="">
-			<input type="button" name="some_name" value="Go">
-		</form></p>
+			<input style="width:170px;" tabindex="3" type="text" name="id" value="">
+			<input type="button" name="some_name" tabindex="4" value="Go">
+		</form></p> -->
 		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="highlights($('highlight').value)">
 			Search: <br />
-			<input style="width:170px;" type="text" id="highlight" value="">
-			<input type="submit" name="some_name" value="Go">
+			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
+			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
+		<p><a href="javascript:void(0);" onClick="show_gss_editor()">Edit GSS &raquo;</a></p>
 	</div>
 	<div id="description">
 		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
