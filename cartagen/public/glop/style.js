@@ -135,15 +135,15 @@ function load_styles(stylesheet_url) {
 }
 
 function apply_gss(gss) {
-	try {
+	// try {
 		styles = ("{"+gss+"}").evalJSON()
 		objects.each(function(object) {
 			if (object instanceof Node) parse_styles(object,styles.node)
 			if (object instanceof Way) parse_styles(object,styles.way)
 		},this)
-	} catch(e) {
-		console.log(trace(e))
-	}
+	// } catch(e) {
+	// 	console.log(trace(e))
+	// }
 }
 
 load_styles(stylesheet)

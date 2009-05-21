@@ -239,7 +239,6 @@ function parse_objects(data) {
 					console.log(trace(e))
 				}
 			})
-			console.log(w.bbox)
 			w.x = w.x/w.nodes.length
 			w.y = w.y/w.nodes.length
 			w.area = poly_area(w.nodes)
@@ -445,17 +444,17 @@ function highlights(query) {
 function demo() {
 	try {
 		global_rotate += 0.005
-	} catch(e) {
-		
-	}
+	} catch(e) {}
 }
 
 if (!static_map) {
 	get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
 	new PeriodicalExecuter(get_current_plot,0.33)
 } else {
-	if (Prototype.Browser.MobileSafari) get_static_plot(static_map_layers[0])
-	else {
+	if (Prototype.Browser.MobileSafari) {
+		get_static_plot(static_map_layers[0])
+		get_static_plot(static_map_layers[1])
+	} else {
 		static_map_layers.each(function(layer_url) {
 			get_static_plot(layer_url)
 		})	
