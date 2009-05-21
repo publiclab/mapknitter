@@ -11,6 +11,10 @@ function mousemove(event) {
 $('canvas').observe('mousedown', mousedown)
 $('canvas').observe('mouseup', mouseup)
 $('canvas').observe('dblclick', doubleclick)
+
+new PeriodicalExecuter(apply_live_gss,5)
+function apply_live_gss() { if (live_gss) apply_gss($('gss_textarea').value) }
+
 Event.observe(document, 'keypress', function(e) {
 	var code;
 	if (!e) var e = window.event;
@@ -33,8 +37,11 @@ Event.observe(document, 'keypress', function(e) {
 			break
 			case "z": keys.set("z",true)
 			break
-			case "g": $('gss').toggle()
+			case "g": 
+				$('gss').toggle()
+				live_gss = !live_gss
 			break
+			case "h": get_static_plot('/static/rome/highway.js')
 		}
 	}
 	draw()
@@ -82,12 +89,14 @@ Event.observe(document, 'keyup', function() {
 */
 function handle(delta) {
 	draw()
-       if (delta <0) {
-		zoom_level += delta/40
-	} else {
-		zoom_level += delta/40
-	}
-	if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
+	if (!live_gss) {
+		if (delta <0) {
+			zoom_level += delta/40
+		} else {
+			zoom_level += delta/40
+		}
+		if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
+	}	
 }
 
 function wheel(event){

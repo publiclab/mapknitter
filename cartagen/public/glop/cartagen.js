@@ -1,4 +1,4 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit, live_gss = false
 
 // var spherical_mercator = Class.create({
 // 	lon_to_x: function(lon) { return (lon - projection.center_lon()) * -1 * scale_factor },
@@ -106,6 +106,7 @@ function get_static_plot(url) {
 		onSuccess: function(result) {
 			// console.log(result.responseText.evalJSON().osm.ways.length+" ways")
 			parse_objects(result.responseText.evalJSON())
+			console.log(objects.length)
 			requested_plots--
 			if (requested_plots == 0) last_event = frame
 			console.log("Total plots: "+plots.size()+", of which "+requested_plots+" are still loading.")
