@@ -52,6 +52,13 @@ var Cartagen = {
 			if (styles.body.fillStyle) fillStyle(styles.body.fillStyle)
 			if (styles.body.strokeStyle) strokeStyle(styles.body.strokeStyle)
 			if (styles.body.lineWidth || styles.body.lineWidth == 0) lineWidth(styles.body.lineWidth)
+			if (styles.body.pattern && Object.isUndefined(styles.body.pattern_img)) {
+				styles.body.pattern_img = new Image()
+				styles.body.pattern_img.src = styles.body.pattern
+			}
+			if (styles.body.pattern_img) {
+				fillStyle(canvas.createPattern(styles.body.pattern_img,'repeat'))	
+			}
 			rect(0,0,width,height)
 			strokeRect(0,0,width,height)
 		}

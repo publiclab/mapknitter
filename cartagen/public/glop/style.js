@@ -9,6 +9,11 @@ var Style = {
 			} else {
 				feature.strokeStyle = selector.strokeStyle
 			}
+			// patterns
+			if (selector.pattern) {
+				feature.pattern_img = new Image()
+				feature.pattern_img.src = selector.pattern
+			}
 			// radius is relevant to nodes, i.e. single points
 			if (selector.radius) feature.radius = selector.radius
 			// check selector for hover:
@@ -44,6 +49,15 @@ var Style = {
 				if (styles[tag.value] && styles[tag.value].lineWidth) {
 					feature.lineWidth = styles[tag.value].lineWidth
 				}
+				if (styles[tag.key] && styles[tag.key].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = styles[tag.key].pattern
+				}
+				if (styles[tag.value] && styles[tag.value].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = styles[tag.value].pattern
+				}
+				
 
 				//check tags for hover:
 				if (styles[tag.key] && styles[tag.key]['hover']) {
@@ -82,6 +96,9 @@ var Style = {
 			} else {
 				fillStyle(feature.fillStyle)
 			}
+		}
+		if (feature.pattern_img) {
+			fillStyle(canvas.createPattern(feature.pattern_img,'repeat'))
 		}
 		if (feature.lineWidth) {
 			if (Object.isFunction(feature.lineWidth)) {
