@@ -1,7 +1,7 @@
 body: {
 	fillStyle: "#dee",
 	lineWidth: 0,
-	// pattern: "/images/brown-paper.jpg"
+	pattern: "/images/brown-paper.jpg"
 },
 node: {
 	fillStyle: "#ddd",
@@ -97,4 +97,8 @@ landuse: {
 rail: {
 	lineWidth: 4,
 	strokeStyle: "purple"
+},
+area: {
+	fillStyle: "#459",
+	opacity: 0.4
 }

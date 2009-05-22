@@ -370,10 +370,11 @@ var Way = Class.create({
 				strokeStyle("red")
 			}
 			// fade in after load:
+			if (Object.isUndefined(this.opacity)) this.opacity = 1
 			if (this.age < 20) {
-				canvas.globalAlpha = this.age/20
+				canvas.globalAlpha = this.opacity*(this.age/20)
 			} else {
-				canvas.globalAlpha = 1
+				canvas.globalAlpha = this.opacity
 			}
 			
 		beginPath()

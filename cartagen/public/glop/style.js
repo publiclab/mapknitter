@@ -1,6 +1,9 @@
 var Style = {
 	parse_styles: function(feature,selector) {
 		try {
+			// check for function or parameter for each style type... 
+			// or is it copying the function itself, and doesn't need to know if it's a function or parameter?
+			if (selector.opacity) feature.opacity = selector.opacity
 			if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 			if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
 			if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
@@ -31,6 +34,12 @@ var Style = {
 
 			feature.tags.each(function(tag) {
 				//look for a style like this:
+				if (styles[tag.key] && styles[tag.key].opacity) {
+					feature.opacity = styles[tag.key].opacity
+				}
+				if (styles[tag.value] && styles[tag.value].opacity) {
+					feature.opacity = styles[tag.value].opacity
+				}
 				if (styles[tag.key] && styles[tag.key].fillStyle) {
 					feature.fillStyle = styles[tag.key].fillStyle
 				}
@@ -57,7 +66,6 @@ var Style = {
 					feature.pattern_img = new Image()
 					feature.pattern_img.src = styles[tag.value].pattern
 				}
-				
 
 				//check tags for hover:
 				if (styles[tag.key] && styles[tag.key]['hover']) {
@@ -81,6 +89,14 @@ var Style = {
 	apply_style: function(feature) {
 		canvas.lineJoin = 'round'
 		canvas.lineCap = 'round'
+		if (feature.opacity) {
+			if (Object.isFunction(feature.opacity)) {
+				// bind the styles object to the context of this Way:
+				canvas.globalOpacity = feature.opacity()
+			} else {
+				canvas.globalOpacity = feature.opacity
+			}
+		}
 		if (feature.strokeStyle) {
 			if (Object.isFunction(feature.strokeStyle)) {
 				// bind the styles object to the context of this Way:
