@@ -1,7 +1,6 @@
 body: {
-	fillStyle: "#dee",
-	lineWidth: 0,
-	// pattern: "/images/brown-paper.jpg"
+	fillStyle: "#57d",
+	lineWidth: 0
 },
 node: {
 	fillStyle: "#ddd",
@@ -15,6 +14,7 @@ way: {
 		//return color_from_string(this.user)
 	},
 	strokeStyle: "#ccc",
+	fillStyle: "white",
 	lineWidth: 3
 },
 leisure: {
@@ -28,15 +28,12 @@ park: {
 	strokeStyle: "#181"
 },
 waterway: {
-	fillStyle: "#57d",
-	strokeStyle: "#24a",
-	lineWidth: 4,
-	pattern: "/images/pattern-water.gif"
+	strokeStyle: "#57d",
+	lineWidth: 20
 },
 water: {
 	strokeStyle: "#57d",
-	lineWidth: 20,
-	pattern: "/images/pattern-water.gif"
+	lineWidth: 20
 },
 coastline: {
 	strokeStyle: "#57d",
@@ -84,11 +81,8 @@ building: {
 		fillStyle: '#222'
 	},
 	mouseDown: {
-		lineWidth: 18,
-		strokeStyle: "red",
-		action: function() {
-			alert('tags: ')
-		}
+		lineWidth: 4,
+		strokeStyle: "red"
 	}
 },
 landuse: {
