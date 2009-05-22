@@ -37,10 +37,10 @@ var Label = Class.create({
 		canvas.restore()
 	},
 	draw: function() {
-		// console.log("Hover: "+Math.round(this.x-global_x)+","+Math.round(this.y-global_y))
+		// console.log("Hover: "+Math.round(this.x-Map.x)+","+Math.round(this.y-Map.y))
 		if ($('label_'+this.obj_id)) {
-			$('label_'+this.obj_id).setStyle({top: Math.round(this.y+global_y)+"px"})
-			$('label_'+this.obj_id).setStyle({left: Math.round(this.x+global_x)+"px"})
+			$('label_'+this.obj_id).setStyle({top: Math.round(this.y+Map.y)+"px"})
+			$('label_'+this.obj_id).setStyle({left: Math.round(this.x+Map.x)+"px"})
 		}
 	},
 	overlaps: function() {

@@ -1,9 +1,7 @@
-var frame = 0, width = 0, height = 0, dragging = false, padding = 0, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0
+var frame = 0, width = 0, height = 0, dragging = false, padding = 0, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
 
 // Cartagen variables:
-var global_rotate = Math.PI, global_x = 0, global_y = 0, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, requested_plots = 0
-
-pointerX = 0,pointerY = 0
+var global_rotate = Math.PI, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, requested_plots = 0
 
 if (typeof console == "undefined") {
 	console = {
@@ -23,6 +21,35 @@ canvas.globalAlpha = 0.8
 //CanvasText setup:
 CanvasTextFunctions.enable(canvas);
 
+function draw() {
+	clear()
+	width = document.viewport.getWidth()
+	height = document.viewport.getHeight()
+	$('canvas').width = width
+	$('canvas').height = height
+	$$('body')[0].style.width = width+"px"
+
+	frame += 1
+	try { drag() } catch(e) {}
+
+	// let additional script subscribe to the draw method:
+	draw_calls.each(function(call) {
+		
+	})
+	// cartagen-specific calls
+	if (typeof Cartagen != "undefined") Cartagen.draw()
+	
+	objects.each(function(object) { 
+		object.draw()
+	})
+	if (mouseDown) {
+		mouseDown = false
+	}
+	if (mouseUp) {
+		mouseUp = false
+	}
+}
+
 function trace(e) {
 	return "An exception occurred in the script. Error name: " + e.name + ". Error description: " + e.description + ". Error number: " + e.number + ". Error message: " + e.message + ". Line number: "+ e.lineNumber
 }
@@ -39,10 +66,6 @@ function isNthFrame(num) {
 	return ((frame % num) == 0);
 }
 
-function clickLength() {
-	return releaseFrame-clickFrame
-}
-
 function color_from_string(string) {
 	return "#"+(parseInt((string),36).toString(16)+"ab2828").truncate(6,"")
 }
@@ -56,33 +79,6 @@ function zoom_in() {
 }
 function zoom_out() {
 	zoom_level = zoom_level * 0.9
-}
-
-function draw() {
-	clear()
-	width = document.viewport.getWidth()
-	height = document.viewport.getHeight()
-	$('canvas').width = width
-	$('canvas').height = height
-	$$('body')[0].style.width = width+"px"
-
-	frame += 1
-	try {
-		drag()
-	} catch(e) {}
-
-	// cartagen-specific calls
-	if (typeof cartagen != "undefined") cartagen()
-	
-	objects.each(function(object) { 
-		object.draw()
-	})
-	if (mouseDown) {
-		mouseDown = false
-	}
-	if (mouseUp) {
-		mouseUp = false
-	}
 }
 
 function jsonify(input,newlines) {
