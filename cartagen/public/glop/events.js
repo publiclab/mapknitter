@@ -1,24 +1,45 @@
-// Track mouse movement:
-body = $$('body')[0]
-$$('body')[0].observe('mousemove', mousemove)
-var pointerX = 0, pointerY = 0
+var Mouse = {
+	x: 0,
+	y: 0,
+	click_x: 0,
+	click_y: 0
+}
+
 function mousemove(event) { 
-	pointerX = Event.pointerX(event)-padding
-	pointerY = Event.pointerY(event)-padding
+	Mouse.x = Event.pointerX(event)
+	Mouse.y = Event.pointerY(event)
 	draw()
 }
 
-$('canvas').observe('mousedown', mousedown)
-$('canvas').observe('mouseup', mouseup)
-$('canvas').observe('dblclick', doubleclick)
-
-function show_gss_editor() {
-	$('description').hide()
-	$('brief').style.width = '28%'
-	$('brief_first').style.width = '92%';
-	$('gss').toggle()
-	live_gss = !live_gss
+function wheel(event){
+	var delta = 0;
+	if (!event) event = window.event;
+	if (event.wheelDelta) {
+		delta = event.wheelDelta/120;
+		if (window.opera) delta = -delta;
+	} else if (event.detail) {
+		delta = -event.detail/3;
+	}
+	if (delta && !live_gss) {
+		draw()
+		if (delta <0) {
+			zoom_level += delta/40
+		} else {
+			zoom_level += delta/40
+		}
+		if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
+	}
 }
+
+// Observe mouse events:
+body = $$('body')[0]
+body.observe('mousemove', mousemove)
+body.observe('mousedown', mousedown)
+body.observe('mouseup', mouseup)
+body.observe('dblclick', doubleclick)
+// Observe scrollwheel:
+if (window.addEventListener) window.addEventListener('DOMMouseScroll', wheel, false)
+window.onmousewheel = document.onmousewheel = wheel
 
 Event.observe(document, 'keypress', function(e) {
 	var code;
@@ -31,10 +52,10 @@ Event.observe(document, 'keypress', function(e) {
 		if (character == "w") zoom_out()
 		if (character == "d") global_rotate += 0.1
 		if (character == "a") global_rotate -= 0.1
-		if (character == "f") global_x += 20/zoom_level
-		if (character == "h") global_x -= 20/zoom_level
-		if (character == "t") global_y += 20/zoom_level
-		if (character == "g") global_y -= 20/zoom_level
+		if (character == "f") Map.x += 20/zoom_level
+		if (character == "h") Map.x -= 20/zoom_level
+		if (character == "t") Map.y += 20/zoom_level
+		if (character == "g") Map.y -= 20/zoom_level
 	} else {
 		// just modifiers:
 		switch(character){
@@ -44,7 +65,7 @@ Event.observe(document, 'keypress', function(e) {
 			break
 			case "g": 
 				if (!live_gss) {
-					show_gss_editor()
+					Cartagen.show_gss_editor()
 				}
 			break
 			case "h": get_static_plot('/static/rome/highway.js')
@@ -58,127 +79,88 @@ Event.observe(document, 'keyup', function() {
 	keys.set("r",false)
 	keys.set("z",false)
 	switch (single_key) {
-		case "c":
-			// Copy all selected objects in-place
-			var clonedObjects = []
-			selectedObjects.each(function(object){
-				var newbox = deep_clone(object)
-				newbox.is_proto = false
-				// Link child and parent in the clone:
-				newbox.clone_parent = object
-				object.clone_child = newbox
-				newbox.obj_id = highest_id()+1
-				newbox.is_selected = false
-				// newbox.memory = object.memory.slice()
-				objects.push(newbox)
-				clonedObjects.push(newbox)
-			})
-			// Re-assign input obj_ids to new cloned versions
-			clonedObjects.each(function(object){
-				// var clonedObject = object
-			})
-			// Clear out all the clone_parent/clone_child references:
-			clonedObjects.each(function(object){
-				object.clone_parent = null
-			})
-			selectedObjects.each(function(object){
-				object.clone_child = null				
-			})
-		break
 	}
 	single_key = null
 });
 
-
-/** This is high-level function; 
-* It must react to delta being more/less than zero.
-*/
-function handle(delta) {
-	draw()
-	if (!live_gss) {
-		if (delta <0) {
-			zoom_level += delta/40
-		} else {
-			zoom_level += delta/40
-		}
-		if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
-	}	
-}
-
-function wheel(event){
-        var delta = 0;
-        if (!event) event = window.event;
-        if (event.wheelDelta) {
-                delta = event.wheelDelta/120;
-                if (window.opera) delta = -delta;
-        } else if (event.detail) {
-                delta = -event.detail/3;
-        }
-        if (delta) handle(delta);
-}
-
-/* Initialization code. */
-if (window.addEventListener){
-    window.addEventListener('DOMMouseScroll', wheel, false);
-}
-window.onmousewheel = document.onmousewheel = wheel;
-
 // iPhone events:
 if (Prototype.Browser.MobileSafari) {
+	// get rid of url bar:
+	
+	// addEventListener("load", function() { setTimeout(updateLayout, 0) }, false)
+	// var currentWidth = 0;
+	// function updateLayout() {
+	//     if (window.innerWidth != currentWidth) {
+	//         currentWidth = window.innerWidth;
+	//         var orient = currentWidth == 320 ? "profile" : "landscape";
+	//         document.body.setAttribute("orient", orient);
+	//         setTimeout(function() {
+	//             window.scrollTo(0, 1);
+	//         }, 100);           
+	//     }
+	// }
+	// setInterval(updateLayout, 400);
+
 	body.ontouchstart = function(e){
-	  if(e.touches.length == 1){ // Only deal with one finger
+		e.preventDefault();
+		if(e.touches.length == 1){ // Only deal with one finger
+	 		var touch = e.touches[0]; // Get the information for finger #1
+		    var node = touch.target; // Find the node the drag started from
+
+			mouseDown = true
+			clickFrame = frame
+			Mouse.click_x = touch.screenX
+			Mouse.click_y = touch.screenY
+			Map.x_old = Map.x
+			Map.y_old = Map.y
+			if (!dragging) {
+				globalDragging = true
+			}
+			draw()	
+		  }
+	}
+	body.ontouchmove = function(e) {		
+		e.preventDefault();
+		if(e.touches.length == 1){ // Only deal with one finger
 	 	var touch = e.touches[0]; // Get the information for finger #1
 	    var node = touch.target; // Find the node the drag started from
 
-		mouseDown = true
-		clickFrame = frame
-		clickX = touch.pageX
-		clickY = touch.pageY
-		global_x_old = global_x
-		global_y_old = global_y
-		global_rotate_old = global_rotate
-		if (!dragging) {
-			globalDragging = true
-		}
-		
+		drag_x = (touch.screenX - Mouse.click_x)
+		drag_y = (touch.screenY - Mouse.click_y)
+		Map.x = Map.x_old+(drag_x/zoom_level)
+		Map.y = Map.y_old+(drag_y/zoom_level)
+		draw()
 	  }
 	}
-	body.touchend = function(e) {
+	body.ontouchend = function(e) {
 		if(e.touches.length == 1) {
 			mouseUp = true
 			mouseDown = false
 			releaseFrame = frame
 			globalDragging = false
-			if (draggedObject != "") {
-			} else {
-				dragging = false
-			}
+			dragging = false
 		}
+		draw()
 	}
-
-	// var width = 100, height = 200, rotation = ;
-
+	body.ongesturestart = function(e) {
+		zoom_level_old = zoom_level
+	}
 	body.ongesturechange = function(e){
 	  var node = e.target;
-	  // scale and rotation are relative values,
-	  // so we wait to change our variables until the gesture ends
-	  node.style.width = (width * e.scale) + "px";
-	  node.style.height = (height * e.scale) + "px";
-	  node.style.webkitTransform = "rotate(" + ((rotation + e.rotation) % 360) + "deg)";
+		if (global_rotate_old == null) global_rotate_old = global_rotate
+		global_rotate = global_rotate_old + (e.rotation/180)*Math.PI
+		zoom_level = zoom_level_old*e.scale
+		draw()
 	}
-
 	body.ongestureend = function(e){
-	  // Update the values for the next time a gesture happens
-	  width *= e.scale;
-	  height *= e.scale;
-	  rotation = (rotation + e.rotation) % 360;
+		global_rotate_old = null
 	}	
 }
 
 function doubleclick(event) {
 	on_object = false
 	objects.each(function(object) { 
-		if (!on_object && overlaps(object.x,object.y,pointerX,pointerY,0)) {
+		if (!on_object && overlaps(object.x,object.y,Mouse.x,Mouse.y,0)) {
 			object.doubleclick()
 			on_object = true
 		}
@@ -186,10 +168,10 @@ function doubleclick(event) {
 }
 
 function drag() {
-	if (globalDragging) {
+	if (globalDragging && !Prototype.Browser.MobileSafari) {
 		// alert('dragging')
-		drag_x = (pointerX - clickX)
-		drag_y = (pointerY - clickY)
+		drag_x = (Mouse.x - Mouse.click_x)
+		drag_y = (Mouse.y - Mouse.click_y)
 		if (keys.get("r")) { // rotating
 			global_rotate = global_rotate_old + (drag_y/height)
 		} else if (keys.get("z")) {
@@ -199,8 +181,8 @@ function drag() {
 				zoom_level = 0
 			}
 		} else {
-			global_x = global_x_old+(drag_x/zoom_level)
-			global_y = global_y_old+(drag_y/zoom_level)
+			Map.x = Map.x_old+(drag_x/zoom_level)
+			Map.y = Map.y_old+(drag_y/zoom_level)
 		}
 	}
 }
@@ -208,10 +190,10 @@ function drag() {
 function mousedown(event) {
 	mouseDown = true
 	clickFrame = frame
-	clickX = pointerX
-	clickY = pointerY
-	global_x_old = global_x
-	global_y_old = global_y
+	Mouse.click_x = Mouse.x
+	Mouse.click_y = Mouse.y
+	Map.x_old = Map.x
+	Map.y_old = Map.y
 	global_rotate_old = global_rotate
 	if (!dragging) {
 		globalDragging = true
@@ -228,4 +210,9 @@ function mouseup() {
 		dragging = false
 	}
 }
+
+function clickLength() {
+	return releaseFrame-clickFrame
+}
+
 load_next_script()

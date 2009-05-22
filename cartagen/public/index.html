@@ -8,6 +8,7 @@
 	<script src="/glop/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
 	
 		// load these into the new Cartagen class. Use defaults too.
@@ -96,10 +97,17 @@
 <canvas id="canvas"></canvas>
 
 <div class="overlay" id="gss" style="display:none;">
+	<h3>Import GSS:</h3>
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.load_styles($('import_gss').value)">
+		<p>
+			<input style="font-size:0.8em;" type="text" name="import_gss" value="http://" id="import_gss">
+			<input type="submit" value="Apply">
+		</p>
+	</form>
 	<h3>Edit GSS:</h3>
 	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="apply_gss($('gss_textarea').value)">
-		<textarea tabindex="1" id="gss_textarea" rows="40" cols="40"></textarea>
-		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();live_gss = !live_gss">cancel</a> <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
+		<textarea tabindex="1" id="gss_textarea" rows="34" cols="40"></textarea>
+		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();live_gss = !live_gss">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
 	</form>	
 </div>
 
@@ -113,12 +121,12 @@
 			<input style="width:170px;" tabindex="3" type="text" name="id" value="">
 			<input type="button" name="some_name" tabindex="4" value="Go">
 		</form></p> -->
-		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="highlights($('highlight').value)">
+		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="Cartagen.highlight($('highlight').value)">
 			Search: <br />
 			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
 			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
-		<p><a href="javascript:void(0);" onClick="show_gss_editor()">Edit GSS &raquo;</a></p>
+		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a></p>
 	</div>
 	<div id="description">
 		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
