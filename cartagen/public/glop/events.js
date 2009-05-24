@@ -1,9 +1,9 @@
-var Mouse = {
-	x: 0,
-	y: 0,
-	click_x: 0,
-	click_y: 0
-}
+// var Mouse = {
+// 	x: 0,
+// 	y: 0,
+// 	click_x: 0,
+// 	click_y: 0
+// }
 
 function mousemove(event) { 
 	Mouse.x = Event.pointerX(event)
@@ -23,11 +23,11 @@ function wheel(event){
 	if (delta && !live_gss) {
 		draw()
 		if (delta <0) {
-			zoom_level += delta/40
+			Cartagen.zoom_level += delta/40
 		} else {
-			zoom_level += delta/40
+			Cartagen.zoom_level += delta/40
 		}
-		if (zoom_level < zoom_out_limit) zoom_level = zoom_out_limit
+		if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 	}
 }
 
@@ -52,10 +52,10 @@ Event.observe(document, 'keypress', function(e) {
 		if (character == "w") zoom_out()
 		if (character == "d") global_rotate += 0.1
 		if (character == "a") global_rotate -= 0.1
-		if (character == "f") Map.x += 20/zoom_level
-		if (character == "h") Map.x -= 20/zoom_level
-		if (character == "t") Map.y += 20/zoom_level
-		if (character == "g") Map.y -= 20/zoom_level
+		if (character == "f") Map.x += 20/Cartagen.zoom_level
+		if (character == "h") Map.x -= 20/Cartagen.zoom_level
+		if (character == "t") Map.y += 20/Cartagen.zoom_level
+		if (character == "g") Map.y -= 20/Cartagen.zoom_level
 	} else {
 		// just modifiers:
 		switch(character){
@@ -66,6 +66,7 @@ Event.observe(document, 'keypress', function(e) {
 			case "g": 
 				if (!live_gss) {
 					Cartagen.show_gss_editor()
+					// $('gss').style.height = "90%"
 				}
 			break
 			case "h": get_static_plot('/static/rome/highway.js')
@@ -127,8 +128,8 @@ if (Prototype.Browser.MobileSafari) {
 
 		drag_x = (touch.screenX - Mouse.click_x)
 		drag_y = (touch.screenY - Mouse.click_y)
-		Map.x = Map.x_old+(drag_x/zoom_level)
-		Map.y = Map.y_old+(drag_y/zoom_level)
+		Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
+		Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
 		draw()
 	  }
 	}
@@ -143,13 +144,13 @@ if (Prototype.Browser.MobileSafari) {
 		draw()
 	}
 	body.ongesturestart = function(e) {
-		zoom_level_old = zoom_level
+		zoom_level_old = Cartagen.zoom_level
 	}
 	body.ongesturechange = function(e){
 	  var node = e.target;
 		if (global_rotate_old == null) global_rotate_old = global_rotate
 		global_rotate = global_rotate_old + (e.rotation/180)*Math.PI
-		zoom_level = zoom_level_old*e.scale
+		Cartagen.zoom_level = zoom_level_old*e.scale
 		draw()
 	}
 	body.ongestureend = function(e){
@@ -175,14 +176,14 @@ function drag() {
 		if (keys.get("r")) { // rotating
 			global_rotate = global_rotate_old + (drag_y/height)
 		} else if (keys.get("z")) {
-			if (zoom_level > 0) {
-				zoom_level = Math.abs(zoom_level - (drag_y/height))
+			if (Cartagen.zoom_level > 0) {
+				Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (drag_y/height))
 			} else {
-				zoom_level = 0
+				Cartagen.zoom_level = 0
 			}
 		} else {
-			Map.x = Map.x_old+(drag_x/zoom_level)
-			Map.y = Map.y_old+(drag_y/zoom_level)
+			Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
+			Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
 		}
 	}
 }
