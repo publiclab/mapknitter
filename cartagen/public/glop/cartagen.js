@@ -15,7 +15,9 @@ function load_next_script() {
 	if (scripts.length > 0) {
 		load_script(scripts.splice(0,1)[0])
 	}
-}		
+}
+
+if (typeof console == "undefined") { console = { log: function(param) {}}}
 
 // var spherical_mercator = Class.create({
 // 	lon_to_x: function(lon) { return (lon - projection.center_lon()) * -1 * scale_factor },
@@ -38,7 +40,7 @@ function load_next_script() {
 // 	center_lon: function() { return (lng2+lng1)/2 },
 // })
 
-if (Prototype.Browser.MobileSafari) $('brief').hide()
+// if (Prototype.Browser.MobileSafari) $('brief').hide()
 
 var Mouse = {
 	x: 0,
@@ -283,6 +285,8 @@ var Cartagen = {
 	lng2: 12.5341,
 	zoom_level: 0.05,
 	setup: function(configs) {
+		// geolocate with IP... in Firefox 3.5
+		if (Prototype.Browser.Gecko && navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
 		// wait for window load:
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
 	},
@@ -308,8 +312,8 @@ var Cartagen = {
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
 			if (Prototype.Browser.MobileSafari) {
-				this.get_static_plot(static_map_layers[0])
-				this.get_static_plot(static_map_layers[1])
+				this.get_static_plot(this.static_map_layers[0])
+				this.get_static_plot(this.static_map_layers[1])
 			} else {
 				this.static_map_layers.each(function(layer_url) {
 					console.log('fetching '+layer_url)
@@ -605,6 +609,13 @@ var Map = {
 	y: 0,
 	x_old: 0,
 	y_old: 0,
+	set_user_loc: function(loc) {
+		this.user_lat = loc.coords.latitude
+		this.user_lon = loc.coords.longitude
+		alert(this.user_lat+","+this.user_lon)
+	},
+	user_lat: 0,
+	user_lon: 0,
 	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
 	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
 	refresh_resolution: function() {
