@@ -3,13 +3,7 @@ var frame = 0, width = 0, height = 0, dragging = false, padding = 0, currentObje
 // Cartagen variables:
 var global_rotate = Math.PI, drawing = false, global_x_old, global_y_old, global_rotate_old
 
-if (typeof console == "undefined") {
-	console = {
-		log: function(param) {
-			
-		}
-	}
-}
+if (typeof console == "undefined") { console = { log: function(param) {}}}
 
 // This contains all stage objects:
 if (Object.isUndefined(objects)) var objects = []
