@@ -1,7 +1,7 @@
 body: {
-	fillStyle: "#dee",
+	fillStyle: "#fff",
 	lineWidth: 0,
-	pattern: "/images/brown-paper.jpg"
+	
 },
 node: {
 	fillStyle: "#ddd",
@@ -26,19 +26,15 @@ park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
 	strokeStyle: "#181",
-	// opacity: 0.6,
-	// pattern: "/images/trees.gif"
+	pattern: "/images/pattern-water.gif"
 },
 waterway: {
-	fillStyle: "#57d",
-	strokeStyle: "#24a",
-	lineWidth: 4,
-	pattern: "/images/pattern-water.gif"
+	strokeStyle: "#57d",
+	lineWidth: 20
 },
 water: {
 	strokeStyle: "#57d",
-	lineWidth: 20,
-	pattern: "/images/pattern-water.gif"
+	lineWidth: 20
 },
 coastline: {
 	strokeStyle: "#57d",
@@ -86,11 +82,8 @@ building: {
 		fillStyle: '#222'
 	},
 	mouseDown: {
-		lineWidth: 18,
-		strokeStyle: "red",
-		action: function() {
-			console.log('tags: ')
-		}
+		lineWidth: 4,
+		strokeStyle: "red"
 	}
 },
 landuse: {
@@ -99,8 +92,4 @@ landuse: {
 rail: {
 	lineWidth: 4,
 	strokeStyle: "purple"
-},
-area: {
-	fillStyle: "#459",
-	opacity: 0.4
 }

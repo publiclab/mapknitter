@@ -183,5 +183,5 @@ var Style = {
 	}
 }
 
-Style.load_styles(stylesheet)
+Style.load_styles(Cartagen.stylesheet)
 load_next_script()

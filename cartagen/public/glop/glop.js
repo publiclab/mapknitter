@@ -1,7 +1,7 @@
 var frame = 0, width = 0, height = 0, dragging = false, padding = 0, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
 
 // Cartagen variables:
-var global_rotate = Math.PI, drawing = false, styles = "", global_x_old, global_y_old, global_rotate_old, requested_plots = 0
+var global_rotate = Math.PI, drawing = false, global_x_old, global_y_old, global_rotate_old
 
 if (typeof console == "undefined") {
 	console = {
@@ -12,8 +12,7 @@ if (typeof console == "undefined") {
 }
 
 // This contains all stage objects:
-var objects = []
-var log = []
+if (Object.isUndefined(objects)) var objects = []
 
 canvas = document.getElementById('canvas').getContext('2d')
 canvas.globalAlpha = 0.8
@@ -42,6 +41,7 @@ function draw() {
 	objects.each(function(object) { 
 		object.draw()
 	})
+	
 	if (mouseDown) {
 		mouseDown = false
 	}
@@ -126,7 +126,7 @@ function deep_clone(obj) {
 }
 
 function draw_powersave() {
-	if (powersave == false || (requested_plots && requested_plots > 0)) {
+	if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
 		draw()
 	} else {
 		if (last_event > frame-15) {
@@ -138,5 +138,5 @@ function draw_powersave() {
 }
 
 // seconds between redraws:
-new PeriodicalExecuter(draw_powersave, 0.1);
+new PeriodicalExecuter(draw_powersave, 0.1)
 load_next_script()

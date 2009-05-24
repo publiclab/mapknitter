@@ -56,4 +56,3 @@ function drawText(font,size,x,y,text) {
 function drawTextCenter(font,size,x,y,text) {
 	canvas.drawTextCenter(font,size,x,y,text)
 }
-load_next_script()

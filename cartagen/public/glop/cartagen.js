@@ -1,4 +1,21 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit, live_gss = false
+var plots = new Hash(), nodes = new Hash(), ways = new Hash(), lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit, live_gss = false
+
+var objects = []
+
+var scripts = [
+	'/glop/canvastext.js',
+	'/glop/glop.js',
+	'/glop/events.js'
+]
+
+function load_script(script) {
+	$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+}
+function load_next_script() {
+	if (scripts.length > 0) {
+		load_script(scripts.splice(0,1)[0])
+	}
+}		
 
 // var spherical_mercator = Class.create({
 // 	lon_to_x: function(lon) { return (lon - projection.center_lon()) * -1 * scale_factor },
@@ -23,62 +40,318 @@ var plots = new Hash(), nodes = new Hash(), ways = new Hash(), styles, lastPos =
 
 if (Prototype.Browser.MobileSafari) $('brief').hide()
 
-var Viewport = {
+var Mouse = {
+	x: 0,
+	y: 0,
+	click_x: 0,
+	click_y: 0
 }
 
-var Map = {
-	pointer_x: function() { return Map.x+(((width/2)-Mouse.x)/zoom_level) },
-	pointer_y: function() { return Map.y+(((height/2)-Mouse.y)/zoom_level) },
-	x: lon_to_x((lng1+lng2)/2),
-	y: lat_to_y((lat1+lat2)/2),
-	x_old: 0,
-	y_old: 0,
-	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
-	resolution: Math.round(Math.abs(Math.log(zoom_level))),
-	refresh_resolution: function() {
-		this.resolution = Math.round(Math.abs(Math.log(zoom_level)))
-	}
-}
-
-var Cartagen = {
-	// Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
-	draw: function() {
-		Map.refresh_resolution()
-		if (Prototype.Browser.MobileSafari) {
-			simplify = 2
+var Style = {
+	styles: {
+		body: {
+			fillStyle: "#eee",
+		},
+		way: {
+			fillStyle: "#555",
+		},
+		node: {
+			fillStyle: "#555",
 		}
-		// gss body style:
-		if (styles) {
-			if (styles.body.fillStyle) fillStyle(styles.body.fillStyle)
-			if (styles.body.strokeStyle) strokeStyle(styles.body.strokeStyle)
-			if (styles.body.lineWidth || styles.body.lineWidth == 0) lineWidth(styles.body.lineWidth)
-			if (styles.body.pattern && Object.isUndefined(styles.body.pattern_img)) {
-				styles.body.pattern_img = new Image()
-				styles.body.pattern_img.src = styles.body.pattern
+	},
+	style_body: function() {
+		if (Style.styles) {
+			if (Style.styles.body.fillStyle) fillStyle(Style.styles.body.fillStyle)
+			if (Style.styles.body.strokeStyle) strokeStyle(Style.styles.body.strokeStyle)
+			if (Style.styles.body.lineWidth || Style.styles.body.lineWidth == 0) lineWidth(Style.styles.body.lineWidth)
+			if (Style.styles.body.pattern && Object.isUndefined(Style.styles.body.pattern_img)) {
+				Style.styles.body.pattern_img = new Image()
+				Style.styles.body.pattern_img.src = Style.styles.body.pattern
 			}
-			if (styles.body.pattern_img) {
-				fillStyle(canvas.createPattern(styles.body.pattern_img,'repeat'))	
+			if (Style.styles.body.pattern_img) {
+				try {
+					fillStyle(canvas.createPattern(Style.styles.body.pattern_img,'repeat'))	
+				} catch(e) {}
 			}
 			rect(0,0,width,height)
 			strokeRect(0,0,width,height)
 		}
+		canvas.lineJoin = 'round'
+		canvas.lineCap = 'round'
+	},
+	parse_styles: function(feature,selector) {
+		try {
+			// check for function or parameter for each style type... 
+			// or is it copying the function itself, and doesn't need to know if it's a function or parameter?
+			if (selector.opacity) feature.opacity = selector.opacity
+			if (selector.fillStyle) feature.fillStyle = selector.fillStyle
+			if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
+			if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
+				// bind the styles object to the context of this Way:
+				feature.strokeStyle = selector.strokeStyle()
+			} else {
+				feature.strokeStyle = selector.strokeStyle
+			}
+			// patterns
+			if (selector.pattern) {
+				feature.pattern_img = new Image()
+				feature.pattern_img.src = selector.pattern
+			}
+			// radius is relevant to nodes, i.e. single points
+			if (selector.radius) feature.radius = selector.radius
+			// check selector for hover:
+			if (selector['hover']) feature.hover = selector['hover']
+			if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
+
+			if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle) {
+				feature.fillStyle = Style.styles[feature.name].fillStyle
+			}
+			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle) {
+				feature.strokeStyle = Style.styles[feature.name].strokeStyle
+			}
+			// font styling:
+			if (selector['fontColor']) feature.fontColor = selector['fontColor']
+
+			feature.tags.each(function(tag) {
+				//look for a style like this:
+				if (Style.styles[tag.key] && Style.styles[tag.key].opacity) {
+					feature.opacity = Style.styles[tag.key].opacity
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value].opacity) {
+					feature.opacity = Style.styles[tag.value].opacity
+				}
+				if (Style.styles[tag.key] && Style.styles[tag.key].fillStyle) {
+					feature.fillStyle = Style.styles[tag.key].fillStyle
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value].fillStyle) {
+					feature.fillStyle = Style.styles[tag.value].fillStyle
+				}
+				if (Style.styles[tag.key] && Style.styles[tag.key].strokeStyle) {
+					feature.strokeStyle = Style.styles[tag.key].strokeStyle
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value].strokeStyle) {
+					feature.strokeStyle = Style.styles[tag.value].strokeStyle
+				}
+				if (Style.styles[tag.key] && Style.styles[tag.key].lineWidth) {
+					feature.lineWidth = Style.styles[tag.key].lineWidth
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value].lineWidth) {
+					feature.lineWidth = Style.styles[tag.value].lineWidth
+				}
+				if (Style.styles[tag.key] && Style.styles[tag.key].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = Style.styles[tag.key].pattern
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = Style.styles[tag.value].pattern
+				}
+
+				//check tags for hover:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
+					feature.hover = Style.styles[tag.key]['hover']
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
+					feature.hover = Style.styles[tag.value]['hover']
+				}
+				//check tags for mouseDown:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
+					feature.mouseDown = Style.styles[tag.key]['mouseDown']
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
+					feature.mouseDown = Style.styles[tag.value]['mouseDown']
+				}
+			})
+		} catch(e) {
+			console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
+		}
+	},
+	apply_style: function(feature) {
+		if (feature.opacity) {
+			if (Object.isFunction(feature.opacity)) {
+				canvas.globalOpacity = feature.opacity()
+			} else {
+				canvas.globalOpacity = feature.opacity
+			}
+		}
+		if (feature.strokeStyle) {
+			if (Object.isFunction(feature.strokeStyle)) {
+				strokeStyle(feature.strokeStyle())
+			} else {
+				strokeStyle(feature.strokeStyle)
+			}
+		}
+		if (feature.fillStyle) {
+			if (Object.isFunction(feature.fillStyle)) {
+				fillStyle(feature.fillStyle())
+			} else {
+				fillStyle(feature.fillStyle)
+			}
+		}
+		if (feature.pattern_img) {
+			fillStyle(canvas.createPattern(feature.pattern_img,'repeat'))
+		}
+		if (feature.lineWidth) {
+			if (Object.isFunction(feature.lineWidth)) {
+				lineWidth(feature.lineWidth())
+			} else {
+				lineWidth(feature.lineWidth)
+			}
+		}
+		// trigger hover and mouseDown styles:
+		if (feature instanceof Way) {
+			if (feature.hover && feature.closed_poly && is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
+				Style.apply_style(feature.hover)
+				if (!Object.isUndefined(feature.hover.action)) feature.hover.action()
+			}
+			if (feature.mouseDown && mouseDown == true && feature.closed_poly && is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
+				Style.apply_style(feature.mouseDown)
+				if (!Object.isUndefined(feature.mouseDown.action)) feature.mouseDown.action()
+			}
+		} else if (feature instanceof Node) {
+			if (feature.hover && overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
+				Style.apply_style(feature.hover)
+				if (feature.hover.action) feature.hover.action()
+			}
+			if (feature.mouseDown && mouseDown == true && overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
+				Style.apply_style(feature.mouseDown)
+				if (feature.mouseDown.action) feature.mouseDown.action()
+			}
+		}
+	},
+	// add an individual style to the styles object. May not actually work; old code.
+	// add_style('highway','strokeStyle','red')
+	add_style: function(tag,style,value) {
+		eval("styles."+tag+" = {"+style+": '"+value+"'}")
+	},
+	// load a remote stylesheet, given a URL
+	load_styles: function(stylesheet_url) {
+		if (stylesheet_url[0,4] == "http") {
+			stylesheet_url = "/map/style?url="+stylesheet_url
+		}
+		new Ajax.Request(stylesheet_url,{
+			method: 'get',
+			onComplete: function(result) {
+				console.log('applying '+stylesheet_url)
+				Style.styles = ("{"+result.responseText+"}").evalJSON()
+				Style.stylesheet_source = "{"+result.responseText+"}"
+				Style.apply_gss(Style.stylesheet_source)
+				// populate the gss field
+				$('gss_textarea').value = Style.stylesheet_source
+			}
+		})
+	},
+	// given a string of gss, applies the string to all Ways and Nodes in the objects array
+	apply_gss: function(gss) {
+		if (Object.isUndefined(arguments[1])) var clear_styles = true
+		else clear_styles = arguments[1]
+		Style.styles = gss.evalJSON()
+		objects.each(function(object) {
+			if (clear_styles) {
+				object.lineWeight = null
+				object.strokeStyle = null
+				object.fillStyle = null
+				object.hover = null
+				object.mouseDown = null
+			}
+			if (object instanceof Node) Style.parse_styles(object,Style.styles.node)
+			if (object instanceof Way) Style.parse_styles(object,Style.styles.way)
+		},this)
+	}
+}
+
+var Viewport = {
+}
+
+var Cartagen = {
+	object_count: 0,
+	way_count: 0,
+	node_count: 0,
+	requested_plots: 0,
+	fullscreen: true,
+	stylesheet: "/style.gss",
+	live: false,
+	powersave: true,
+	zoom_out_limit: 0.02,
+	simplify: 1,
+	static_map: true,
+	static_map_layers: ["/static/rome/park.js"],
+	range: 0.001,
+	lat1: 41.9227,
+	lat2: 41.861,
+	lng1: 12.4502,
+	lng2: 12.5341,
+	zoom_level: 0.05,
+	setup: function(configs) {
+		// wait for window load:
+		Event.observe(window, 'load', this.initialize.bind(this,configs))
+	},
+	initialize: function(configs) {
+		// queue dependencies:
+		load_next_script()
+		this.browser_check()
+		// draw on window resize:
+		Event.observe(window, 'resize', function() {try{draw()}catch(e){}});
+		// we can override right-click:
+		// Event.observe(window, 'oncontextmenu', function() { return false })
+
+		Object.keys(configs).each(function(key,index) {
+			this[key] = Object.values(configs)[index]
+			console.log('configuring '+key+': '+this[key])
+		},this)
+		
+		Map.initialize()
+		// Startup:
+		Style.load_styles(this.stylesheet)
+		if (!this.static_map) {
+			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,initial_bleed_level)
+			new PeriodicalExecuter(this.get_current_plot,0.33)
+		} else {
+			if (Prototype.Browser.MobileSafari) {
+				this.get_static_plot(static_map_layers[0])
+				this.get_static_plot(static_map_layers[1])
+			} else {
+				this.static_map_layers.each(function(layer_url) {
+					console.log('fetching '+layer_url)
+					this.get_static_plot(layer_url)
+				},this)	
+			}
+		}
+	},
+	// Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
+	draw: function() {
+		this.object_count = 0
+		this.way_count = 0
+		this.node_count = 0
+		Map.refresh_resolution()
+		if (Prototype.Browser.MobileSafari) {
+			Cartagen.simplify = 2
+		}
+
+		Style.style_body()
 
 		translate(width/2,height/2)
 			rotate(global_rotate)
-			scale(zoom_level,zoom_level)
+			scale(Cartagen.zoom_level,Cartagen.zoom_level)
 	 	translate(width/-2,height/-2)
 		// rotate(-1*global_rotate)
 			translate((-1*Map.x)+(width/2),(-1*Map.y)+(height/2))
 		// rotate(global_rotate)
 
+		// viewport stuff:
 		strokeStyle('white')
 		lineWidth(10)
-
-		// viewport stuff:
-		viewport_width = width*(1/zoom_level)-(100*(1/zoom_level))
-		viewport_height = height*(1/zoom_level)-(100*(1/zoom_level))
+		viewport_width = width*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
+		viewport_height = height*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
 		viewport = [Map.y-viewport_height/2,Map.x-viewport_width/2,Map.y+viewport_height/2,Map.x+viewport_width/2]
 		strokeRect(Map.x-viewport_width/2,Map.y-viewport_height/2,viewport_width,viewport_height)
+	},
+	// show alert if it's IE:
+	browser_check: function() {
+		$('browsers').absolutize;
+		$('browsers').style.top = "100px";	
+		$('browsers').style.margin = "0 auto";	
+		if (Prototype.Browser.IE) $('browsers').show();
 	},
 	// sort ways by area:
 	sort_by_area: function(a,b) {
@@ -109,14 +382,14 @@ var Cartagen = {
 			n.lon = node.lon
 			n.x = lon_to_x(n.lon)
 			n.y = lat_to_y(n.lat)
-			Style.parse_styles(n,styles.node)
+			Style.parse_styles(n,Style.styles.node)
 			// can't currently afford to have all nodes in the map as well as all ways.
 			// but we're missing some nodes when we render... semantic ones i think. cross-check.
 			// objects.push(n)
 			nodes.set(n.id,n)
 	    })
 		data.osm.way.each(function(way){
-			if (live || !ways.get(way.id)) {
+			if (Cartagen.live || !ways.get(way.id)) {
 				var w = new Way
 				w.id = way.id
 				w.user = way.user
@@ -127,7 +400,7 @@ var Cartagen = {
 				w.bbox = [0,0,0,0] // top, left, bottom, right
 				way.nd.each(function(nd,index){
 					try {
-						if ((index % simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= simplify*2) {
+						if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
 							// find the node corresponding to nd.ref, store a reference:
 							node = nodes.get(nd.ref)
 							if (!Object.isUndefined(node)) {
@@ -157,8 +430,7 @@ var Cartagen = {
 				}
 				if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
 				if (w.tags.get('natural') == "coastline") w.closed_poly = true
-				Style.parse_styles(w,styles.way)
-				// Style.parse_styles(w.hover,styles.)
+				Style.parse_styles(w,Style.styles.way)
 				objects.push(w)
 				ways.set(w.id,w)
 			}
@@ -206,16 +478,16 @@ var Cartagen = {
 	},
 	// fetches a JSON plot from a static file, given a full url
 	get_static_plot: function(url) {
-		requested_plots++
+		Cartagen.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
 			onSuccess: function(result) {
 				// console.log(result.responseText.evalJSON().osm.ways.length+" ways")
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				console.log(objects.length)
-				requested_plots--
-				if (requested_plots == 0) last_event = frame
-				console.log("Total plots: "+plots.size()+", of which "+requested_plots+" are still loading.")
+				console.log(objects.length+" objects")
+				Cartagen.requested_plots--
+				if (Cartagen.requested_plots == 0) last_event = frame
+				console.log("Total plots: "+plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -234,7 +506,7 @@ var Cartagen = {
 		// We can't do it here because it's an asychronous AJAX call.
 
 		// if we're not live-loading:
-		if (!live) {
+		if (!Cartagen.live) {
 			// check if we've loaded already this session:
 			if (plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
 				// no live-loading, so:
@@ -249,11 +521,11 @@ var Cartagen = {
 						Cartagen.parse_objects(ls)
 					} else {
 						// it's not in the localStorage:
-						load_plot(_lat1,_lng1,_lat2,_lng2)
+						Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
 					}
 				} else {
 					// not loaded this session and no localStorage, so:
-					load_plot(_lat1,_lng1,_lat2,_lng2)
+					Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
 					plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
 				}
 			}
@@ -287,14 +559,14 @@ var Cartagen = {
 	},
 	// requests a JSON plot for a bbox from the server
 	load_plot: function(_lat1,_lng1,_lat2,_lng2) {
-		requested_plots++
+		Cartagen.requested_plots++
 		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
 			method: 'get',
 			onComplete: function(result) {
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				requested_plots--
-				if (requested_plots == 0) last_event = frame
-				console.log("Total plots: "+plots.size()+", of which "+requested_plots+" are still loading.")
+				Cartagen.requested_plots--
+				if (Cartagen.requested_plots == 0) last_event = frame
+				console.log("Total plots: "+plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -322,11 +594,30 @@ var Cartagen = {
 	}
 }
 
+var Map = {
+	initialize: function() {
+		this.x = lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
+		this.y = lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
+	},
+	pointer_x: function() { return Map.x+(((width/2)-Mouse.x)/Cartagen.zoom_level) },
+	pointer_y: function() { return Map.y+(((height/2)-Mouse.y)/Cartagen.zoom_level) },
+	x: 0,
+	y: 0,
+	x_old: 0,
+	y_old: 0,
+	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
+	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
+	refresh_resolution: function() {
+		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
+	}
+}
 
 var Node = Class.create({
 	radius: 6,
 	tags: [],
 	draw: function() {
+		Cartagen.object_count++
+		Cartagen.point_count++
 		canvas.save()
 		this.shape()
 		canvas.restore()
@@ -355,9 +646,11 @@ var Way = Class.create({
 	label: null,
 	closed_poly: false,
 	tags: new Hash(),
-	draw: function() {	
+	draw: function() {
+		Cartagen.object_count++
 		// only draw if in the viewport:
 		if (intersect(viewport[0],viewport[1],viewport[2],viewport[3],this.bbox[0],this.bbox[1],this.bbox[2],this.bbox[3])) {
+			Cartagen.way_count++
 			this.shape()
 			this.age += 1;
 		}
@@ -383,6 +676,7 @@ var Way = Class.create({
 		if (Map.resolution == 0) Map.resolution = 1
 		this.nodes.each(function(node,index){
 			if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+				Cartagen.node_count++
 				lineTo(node.x,node.y)
 			}
 		},this)
@@ -453,6 +747,11 @@ function is_point_in_poly(poly, _x, _y){
     return c;
 }
 
+// This duplicates a function call in glop.js... load order issues
+function randomColor() {
+	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
+}
+
 function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
 function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
 
@@ -460,7 +759,7 @@ function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math
 function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) }
 
 function center_lon() {
-	return (lng2+lng1)/2
+	return (Cartagen.lng2+Cartagen.lng1)/2
 }
 
 // Rotates view slowly for cool demo purposes.
@@ -469,18 +768,3 @@ function demo() {
 		global_rotate += 0.005
 	} catch(e) {}
 }
-
-if (!static_map) {
-	get_cached_plot(lat1,lng1,lat2,lng2,initial_bleed_level)
-	new PeriodicalExecuter(Cartagen.get_current_plot,0.33)
-} else {
-	if (Prototype.Browser.MobileSafari) {
-		Cartagen.get_static_plot(static_map_layers[0])
-		Cartagen.get_static_plot(static_map_layers[1])
-	} else {
-		static_map_layers.each(function(layer_url) {
-			Cartagen.get_static_plot(layer_url)
-		})	
-	}
-}
-load_next_script()

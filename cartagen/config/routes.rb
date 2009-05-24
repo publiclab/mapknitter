@@ -45,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tweets
 
   map.connect 'static/:city/:tag.:format', :controller => "extract", :action => "osm_to_json_by_tag"
+  map.connect 'static/:city.:format', :controller => "extract", :action => "osm_to_json"
   map.connect 'map/plot.:format', :controller => "map", :action => "plot"
   map.connect 'map/tag.:format', :controller => "map", :action => "tag"
   map.connect 'demo/:id', :controller => "map", :action => "find", :demo => true
