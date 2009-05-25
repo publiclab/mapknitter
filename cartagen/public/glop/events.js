@@ -1,3 +1,16 @@
+// events.js
+//
+// Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab
+//
+// This file is part of the Cartagen mapping framework. Read more at
+// <http://cartagen.org>
+//
+// Cartagen is free software: you can redistribute it and/or modify
+// it under the terms of the MIT License. You should have received a copy 
+// of the MIT License along with Cartagen.  If not, see
+// <http://www.opensource.org/licenses/mit-license.php>.
+//
+
 // var Mouse = {
 // 	x: 0,
 // 	y: 0,
@@ -75,8 +88,6 @@ Event.observe(document, 'keypress', function(e) {
 	draw()
 });
 Event.observe(document, 'keyup', function() {
-	modifier = false
-	token_mod = false
 	keys.set("r",false)
 	keys.set("z",false)
 	switch (single_key) {

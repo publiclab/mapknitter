@@ -1,15 +1,6 @@
-var frame = 0, width = 0, height = 0, dragging = false, padding = 0, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, draggedObject = "", lastObject = "", clickFrame = 0, releaseFrame, mode = "layout", modifier = false, arrow_drawing_box = "", clickX, clickY, globalDragging = false, selectedObjects = [], glyphs = [], drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
-
-// Cartagen variables:
-var global_rotate = Math.PI, drawing = false, global_x_old, global_y_old, global_rotate_old
-
-if (typeof console == "undefined") { console = { log: function(param) {}}}
-
-// This contains all stage objects:
-if (Object.isUndefined(objects)) var objects = []
+var frame = 0, width = 0, height = 0, dragging = false, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, clickFrame = 0, releaseFrame, clickX, clickY, globalDragging = false, drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
 
 canvas = document.getElementById('canvas').getContext('2d')
-canvas.globalAlpha = 0.8
 
 //CanvasText setup:
 CanvasTextFunctions.enable(canvas);
@@ -66,13 +57,6 @@ function color_from_string(string) {
 
 function randomColor() {
 	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
-}
-
-function zoom_in() {
-	zoom_level = zoom_level * 1.1
-}
-function zoom_out() {
-	zoom_level = zoom_level * 0.9
 }
 
 function jsonify(input,newlines) {

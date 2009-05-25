@@ -1,3 +1,16 @@
+// canvas.js
+//
+// Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab
+//
+// This file is part of the Cartagen mapping framework. Read more at
+// <http://cartagen.org>
+//
+// Cartagen is free software: you can redistribute it and/or modify
+// it under the terms of the MIT License. You should have received a copy 
+// of the MIT License along with Cartagen.  If not, see
+// <http://www.opensource.org/licenses/mit-license.php>.
+//
+
 // Wrapped native canvas methods in shorter, simpler method names:
 function clear() {
 	canvas.clearRect(0,0,width,height)

@@ -1,17 +1,22 @@
+// cartagen.js
 //
 // Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab
 //
-// This file is part of the Cartagen mapping framework
+// This file is part of the Cartagen mapping framework. Read more at
+// <http://cartagen.org>
 //
-// You should have received a copy of the MIT License
-// along with Cartagen.  If not, see <http://www.gnu.org/licenses/>.
+// Cartagen is free software: you can redistribute it and/or modify
+// it under the terms of the MIT License. You should have received a copy 
+// of the MIT License along with Cartagen.  If not, see
+// <http://www.opensource.org/licenses/mit-license.php>.
 //
 
 // these belong in other objects... move them
 var plots = new Hash(), nodes = new Hash(), ways = new Hash()
 var lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2
 var live_gss = false
-
+var global_rotate = Math.PI, drawing = false
+var global_x_old, global_y_old, global_rotate_old
 var objects = []
 
 // additional dependencies:
