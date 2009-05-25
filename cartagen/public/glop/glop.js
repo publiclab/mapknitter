@@ -1,3 +1,4 @@
+// many of these belong in events.js
 var frame = 0, width = 0, height = 0, dragging = false, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, clickFrame = 0, releaseFrame, clickX, clickY, globalDragging = false, drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
 
 canvas = document.getElementById('canvas').getContext('2d')
