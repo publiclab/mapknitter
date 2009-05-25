@@ -649,8 +649,6 @@ var Node = Class.create({
 })
 
 var Way = Class.create({
-	initialize: function() {
-	},
 	age: 0,
 	highlight: false,
 	nodes: [],
