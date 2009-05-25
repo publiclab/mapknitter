@@ -1,22 +1,41 @@
-var plots = new Hash(), nodes = new Hash(), ways = new Hash(), lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2, zoom_out_limit, zoom_in_limit, live_gss = false
+//
+// Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab
+//
+// This file is part of the Cartagen mapping framework
+//
+// You should have received a copy of the MIT License
+// along with Cartagen.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+// these belong in other objects... move them
+var plots = new Hash(), nodes = new Hash(), ways = new Hash()
+var lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2
+var live_gss = false
 
 var objects = []
 
+// additional dependencies:
 var scripts = [
 	'/glop/canvastext.js',
 	'/glop/glop.js',
 	'/glop/events.js'
 ]
 
-function load_script(script) {
-	$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
-}
+// loads each script in scripts array, sequentially.
+// requires a load_next_script() call at the end of each
+// dependent script to trigger the next one.
 function load_next_script() {
 	if (scripts.length > 0) {
 		load_script(scripts.splice(0,1)[0])
 	}
 }
 
+// loads a script into <script> tags, no cross-domain limits:
+function load_script(script) {
+	$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+}
+
+// some browsers don't have a console object, so create a dud one for them:
 if (typeof console == "undefined") { console = { log: function(param) {}}}
 
 // var spherical_mercator = Class.create({
@@ -275,6 +294,7 @@ var Cartagen = {
 	live: false,
 	powersave: true,
 	zoom_out_limit: 0.02,
+	zoom_in_limit: 0,
 	simplify: 1,
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
