@@ -355,6 +355,8 @@ var Cartagen = {
 			this[key] = Object.values(configs)[index]
 			console.log('configuring '+key+': '+this[key])
 		},this)
+		
+		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 
 		Map.initialize()
 		// Startup:
@@ -408,6 +410,14 @@ var Cartagen = {
 		$('browsers').style.top = "100px";
 		$('browsers').style.margin = "0 auto";
 		if (Prototype.Browser.IE) $('browsers').show();
+	},
+	get_url_param: function(name) {  
+		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+		var regexS = "[\\?&]"+name+"=([^&#]*)";  
+		var regex = new RegExp( regexS );  
+		var results = regex.exec( window.location.href );  
+		if( results == null )    return "";  
+		else return results[1];
 	},
 	// sort ways by area:
 	sort_by_area: function(a,b) {
