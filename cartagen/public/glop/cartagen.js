@@ -21,9 +21,9 @@ var objects = []
 
 // additional dependencies:
 var scripts = [
-	'/glop/canvastext.js',
-	'/glop/glop.js',
-	'/glop/events.js'
+	'glop/canvastext.js',
+	'glop/glop.js',
+	'glop/events.js'
 ]
 
 // loads each script in scripts array, sequentially.

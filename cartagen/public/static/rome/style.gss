@@ -1,7 +1,7 @@
 body: {
 	fillStyle: "#dee",
 	lineWidth: 0,
-	pattern: "/images/brown-paper.jpg"
+	pattern: "images/brown-paper.jpg"
 },
 node: {
 	fillStyle: "#ddd",
@@ -33,12 +33,12 @@ waterway: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
 	lineWidth: 4,
-	pattern: "/images/pattern-water.gif"
+	pattern: "images/pattern-water.gif"
 },
 water: {
 	strokeStyle: "#57d",
 	lineWidth: 20,
-	pattern: "/images/pattern-water.gif"
+	pattern: "images/pattern-water.gif"
 },
 coastline: {
 	strokeStyle: "#57d",

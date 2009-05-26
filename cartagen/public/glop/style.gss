@@ -26,7 +26,7 @@ park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
 	strokeStyle: "#181",
-	pattern: "/images/pattern-water.gif"
+	pattern: "images/pattern-water.gif"
 },
 waterway: {
 	strokeStyle: "#57d",
