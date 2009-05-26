@@ -213,6 +213,7 @@ var Style = {
 			Style.refresh_style(feature, property)
 			feature.style_generators.executers[property] = new PeriodicalExecuter(function() {
 				Style.refresh_style(feature, property)
+				feature.shape()
 			}, interval)
 		}
 	},
