@@ -6,7 +6,7 @@
 // <http://cartagen.org>
 //
 // Cartagen is free software: you can redistribute it and/or modify
-// it under the terms of the MIT License. You should have received a copy 
+// it under the terms of the MIT License. You should have received a copy
 // of the MIT License along with Cartagen.  If not, see
 // <http://www.opensource.org/licenses/mit-license.php>.
 //
@@ -49,7 +49,7 @@ if (typeof console == "undefined") { console = { log: function(param) {}}}
 // 	lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 },
 // 	y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) },
 // })
-// 
+//
 // // Uses global values... should set these in the initializer/constructor:
 // var projection = Class.create({
 // 	current_projection: spherical_mercator,
@@ -96,7 +96,7 @@ var Style = {
 			}
 			if (Style.styles.body.pattern_img) {
 				try {
-					fillStyle(canvas.createPattern(Style.styles.body.pattern_img,'repeat'))	
+					fillStyle(canvas.createPattern(Style.styles.body.pattern_img,'repeat'))
 				} catch(e) {}
 			}
 			rect(0,0,width,height)
@@ -107,7 +107,7 @@ var Style = {
 	},
 	parse_styles: function(feature,selector) {
 		try {
-			// check for function or parameter for each style type... 
+			// check for function or parameter for each style type...
 			// or is it copying the function itself, and doesn't need to know if it's a function or parameter?
 			if (selector.opacity) feature.opacity = selector.opacity
 			if (selector.fillStyle) feature.fillStyle = selector.fillStyle
@@ -187,10 +187,37 @@ var Style = {
 				if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
 					feature.mouseDown = Style.styles[tag.value]['mouseDown']
 				}
+				// check tags for refresh:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
+
+					$H(Style.styles[tag.key]['refresh']).each(function(pair) {
+						Style.create_refresher(feature, pair.key, pair.value)
+					})
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
+					if(!feature.style_generators) feature.style_generators = {}
+					$H(Style.styles[tag.value]['refresh']).each(function(pair) {
+						Style.create_refresher(feature, pair.key, pair.value)
+					})
+				}
 			})
 		} catch(e) {
 			console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
 		}
+	},
+	create_refresher: function(feature, property, interval) {
+		if (Object.isFunction(feature[property])) { //sanity check
+			if(!feature.style_generators) feature.style_generators = {}
+			if(!feature.style_generators.executers) feature.style_generators.executers = {}
+			feature.style_generators[property] = feature[property]
+			Style.refresh_style(feature, property)
+			feature.style_generators.executers[property] = new PeriodicalExecuter(function() {
+				Style.refresh_style(feature, property)
+			}, interval)
+		}
+	},
+	refresh_style: function(feature, property) {
+		feature[property] = feature.style_generators[property]()
 	},
 	apply_style: function(feature) {
 		if (feature.opacity) {
@@ -328,7 +355,7 @@ var Cartagen = {
 			this[key] = Object.values(configs)[index]
 			console.log('configuring '+key+': '+this[key])
 		},this)
-		
+
 		Map.initialize()
 		// Startup:
 		Style.load_styles(this.stylesheet)
@@ -343,7 +370,7 @@ var Cartagen = {
 				this.static_map_layers.each(function(layer_url) {
 					console.log('fetching '+layer_url)
 					this.get_static_plot(layer_url)
-				},this)	
+				},this)
 			}
 		}
 	},
@@ -378,8 +405,8 @@ var Cartagen = {
 	// show alert if it's IE:
 	browser_check: function() {
 		$('browsers').absolutize;
-		$('browsers').style.top = "100px";	
-		$('browsers').style.margin = "0 auto";	
+		$('browsers').style.top = "100px";
+		$('browsers').style.margin = "0 auto";
 		if (Prototype.Browser.IE) $('browsers').show();
 	},
 	// sort ways by area:
@@ -477,7 +504,7 @@ var Cartagen = {
 		// 		} catch(e) {
 		// 			// alert(nd.ref)
 		// 		}
-		// 		
+		//
 		// 	})
 		// 	way.tag.each(function(tag) {
 		// 		w.tags.push([tag.k,tag.v])
@@ -620,6 +647,10 @@ var Cartagen = {
 		$('brief_first').style.width = '92%';
 		$('gss').toggle()
 		live_gss = !live_gss
+	},
+	// sends user to an image of the current canvas
+	redirect_to_image: function() {
+		document.location = canvas.canvas.toDataURL();
 	}
 }
 
@@ -693,7 +724,7 @@ var Way = Class.create({
 		canvas.save()
 			Style.apply_style(this)
 			if (this.highlight) {
-				lineWidth(3/zoom_level)
+				lineWidth(3/Cartagen.zoom_level)
 				strokeStyle("red")
 			}
 			// fade in after load:
@@ -703,7 +734,7 @@ var Way = Class.create({
 			} else {
 				canvas.globalAlpha = this.opacity
 			}
-			
+
 		beginPath()
 		moveTo(this.nodes[0].x,this.nodes[0].y)
 
@@ -767,7 +798,7 @@ function overlaps(x1,y1,x2,y2,fudge) {
 	}
 }
 
-function intersect(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {	
+function intersect(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {
 	return !(box2left > box1right || box2right < box1left || box2top > box1bottom || box2bottom < box1top)
 }
 
