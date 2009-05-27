@@ -11,16 +11,9 @@
 // <http://www.opensource.org/licenses/mit-license.php>.
 //
 
-// var Mouse = {
-// 	x: 0,
-// 	y: 0,
-// 	click_x: 0,
-// 	click_y: 0
-// }
-
 function mousemove(event) { 
-	Mouse.x = Event.pointerX(event)
-	Mouse.y = Event.pointerY(event)
+	Mouse.x = -1*Event.pointerX(event)
+	Mouse.y = -1*Event.pointerY(event)
 	draw()
 }
 
@@ -63,8 +56,8 @@ Event.observe(document, 'keypress', function(e) {
 	if (key_input) {
 		if (character == "s") zoom_in()
 		if (character == "w") zoom_out()
-		if (character == "d") global_rotate += 0.1
-		if (character == "a") global_rotate -= 0.1
+		if (character == "d") Map.rotate += 0.1
+		if (character == "a") Map.rotate -= 0.1
 		if (character == "f") Map.x += 20/Cartagen.zoom_level
 		if (character == "h") Map.x -= 20/Cartagen.zoom_level
 		if (character == "t") Map.y += 20/Cartagen.zoom_level
@@ -159,13 +152,13 @@ if (Prototype.Browser.MobileSafari) {
 	}
 	body.ongesturechange = function(e){
 	  var node = e.target;
-		if (global_rotate_old == null) global_rotate_old = global_rotate
-		global_rotate = global_rotate_old + (e.rotation/180)*Math.PI
+		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
+		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
 		draw()
 	}
 	body.ongestureend = function(e){
-		global_rotate_old = null
+		Map.rotate_old = null
 	}	
 }
 
@@ -185,7 +178,7 @@ function drag() {
 		drag_x = (Mouse.x - Mouse.click_x)
 		drag_y = (Mouse.y - Mouse.click_y)
 		if (keys.get("r")) { // rotating
-			global_rotate = global_rotate_old + (drag_y/height)
+			Map.rotate = Map.rotate_old + (drag_y/height)
 		} else if (keys.get("z")) {
 			if (Cartagen.zoom_level > 0) {
 				Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (drag_y/height))
@@ -206,7 +199,7 @@ function mousedown(event) {
 	Mouse.click_y = Mouse.y
 	Map.x_old = Map.x
 	Map.y_old = Map.y
-	global_rotate_old = global_rotate
+	Map.rotate_old = Map.rotate
 	if (!dragging) {
 		globalDragging = true
 	}
@@ -217,10 +210,7 @@ function mouseup() {
 	mouseDown = false
 	releaseFrame = frame
 	globalDragging = false
-	if (draggedObject != "") {
-	} else {
-		dragging = false
-	}
+	dragging = false
 }
 
 function clickLength() {

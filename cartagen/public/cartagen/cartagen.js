@@ -12,18 +12,14 @@
 //
 
 // these belong in other objects... move them
-var plots = new Hash(), nodes = new Hash(), ways = new Hash()
-var lastPos = [0,0], scale_factor = 100000, bleed_level = 1, initial_bleed_level = 2
-var live_gss = false
-var global_rotate = Math.PI, drawing = false
-var global_x_old, global_y_old, global_rotate_old
+var lastPos = [0,0]
 var objects = []
 
 // additional dependencies:
 var scripts = [
-	'glop/canvastext.js',
-	'glop/glop.js',
-	'glop/events.js'
+	'cartagen/canvastext.js',
+	'cartagen/glop.js',
+	'cartagen/events.js'
 ]
 
 // loads each script in scripts array, sequentially.
@@ -34,7 +30,6 @@ function load_next_script() {
 		load_script(scripts.splice(0,1)[0])
 	}
 }
-
 // loads a script into <script> tags, no cross-domain limits:
 function load_script(script) {
 	$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
@@ -42,27 +37,6 @@ function load_script(script) {
 
 // some browsers don't have a console object, so create a dud one for them:
 if (typeof console == "undefined") { console = { log: function(param) {}}}
-
-// var spherical_mercator = Class.create({
-// 	lon_to_x: function(lon) { return (lon - projection.center_lon()) * -1 * scale_factor },
-// 	x_to_lon: function(x) { return (x/(-1*scale_factor)) + projection.center_lon() },
-// 	lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 },
-// 	y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) },
-// })
-//
-// // Uses global values... should set these in the initializer/constructor:
-// var projection = Class.create({
-// 	current_projection: spherical_mercator,
-// 	set: function(new_projection) {
-// 		this.current_projection = new_projection
-// 	},
-// 	lon_to_x: function(lon) { return this.current_projection.lon_to_x() },
-// 	x_to_lon: function(x) { return this.current_projection.x_to_lon() },
-// 	lat_to_y: function(lat) { return this.current_projection.lat_to_y() },
-// 	y_to_lat: function(y) { return this.current_projection.y_to_lat() },
-// 	//required by spherical mercator:
-// 	center_lon: function() { return (lng2+lng1)/2 },
-// })
 
 // if (Prototype.Browser.MobileSafari) $('brief').hide()
 
@@ -213,7 +187,6 @@ var Style = {
 			Style.refresh_style(feature, property)
 			feature.style_generators.executers[property] = new PeriodicalExecuter(function() {
 				Style.refresh_style(feature, property)
-				feature.shape()
 			}, interval)
 		}
 	},
@@ -329,14 +302,20 @@ var Cartagen = {
 	zoom_out_limit: 0.02,
 	zoom_in_limit: 0,
 	simplify: 1,
+	live_gss: false, // this is for inline gss editing, generally only on cartagen.org
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
 	range: 0.001,
-	lat1: 41.9227,
+	lat1: 41.9227, // these are the initial bounding boxes for the viewport
 	lat2: 41.861,
 	lng1: 12.4502,
 	lng2: 12.5341,
 	zoom_level: 0.05,
+	plots: new Hash(),
+	nodes: new Hash(),
+	ways: new Hash(),
+	bleed_level: 1,
+	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
 	setup: function(configs) {
 		// geolocate with IP... in Firefox 3.5
 		if (Prototype.Browser.Gecko && navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
@@ -363,7 +342,7 @@ var Cartagen = {
 		// Startup:
 		Style.load_styles(this.stylesheet)
 		if (!this.static_map) {
-			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,initial_bleed_level)
+			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
 			if (Prototype.Browser.MobileSafari) {
@@ -383,19 +362,17 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 		Map.refresh_resolution()
-		if (Prototype.Browser.MobileSafari) {
-			Cartagen.simplify = 2
-		}
+		if (Prototype.Browser.MobileSafari) Cartagen.simplify = 2
 
 		Style.style_body()
 
 		translate(width/2,height/2)
-			rotate(global_rotate)
+			rotate(Map.rotate)
 			scale(Cartagen.zoom_level,Cartagen.zoom_level)
 	 	translate(width/-2,height/-2)
-		// rotate(-1*global_rotate)
+		// rotate(-1*Map.rotate)
 			translate((-1*Map.x)+(width/2),(-1*Map.y)+(height/2))
-		// rotate(global_rotate)
+		// rotate(Map.rotate)
 
 		// viewport stuff:
 		strokeStyle('white')
@@ -447,16 +424,16 @@ var Cartagen = {
 			n.id = node.id
 			n.lat = node.lat
 			n.lon = node.lon
-			n.x = lon_to_x(n.lon)
-			n.y = lat_to_y(n.lat)
+			n.x = Projection.lon_to_x(n.lon)
+			n.y = Projection.lat_to_y(n.lat)
 			Style.parse_styles(n,Style.styles.node)
 			// can't currently afford to have all nodes in the map as well as all ways.
 			// but we're missing some nodes when we render... semantic ones i think. cross-check.
 			// objects.push(n)
-			nodes.set(n.id,n)
+			Cartagen.nodes.set(n.id,n)
 	    })
 		data.osm.way.each(function(way){
-			if (Cartagen.live || !ways.get(way.id)) {
+			if (Cartagen.live || !Cartagen.ways.get(way.id)) {
 				var w = new Way
 				w.id = way.id
 				w.user = way.user
@@ -469,7 +446,7 @@ var Cartagen = {
 					try {
 						if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
 							// find the node corresponding to nd.ref, store a reference:
-							node = nodes.get(nd.ref)
+							node = Cartagen.nodes.get(nd.ref)
 							if (!Object.isUndefined(node)) {
 								if (node.x < w.bbox[1] || w.bbox[1] == 0) w.bbox[1] = node.x
 								if (node.x > w.bbox[3] || w.bbox[3] == 0) w.bbox[3] = node.x
@@ -499,7 +476,7 @@ var Cartagen = {
 				if (w.tags.get('natural') == "coastline") w.closed_poly = true
 				Style.parse_styles(w,Style.styles.way)
 				objects.push(w)
-				ways.set(w.id,w)
+				Cartagen.ways.set(w.id,w)
 			}
 		})
 		// data.osm.relation.each(function(way){
@@ -538,7 +515,7 @@ var Cartagen = {
 			new_lat2 = y_to_lat(Map.y)+range
 			new_lng2 = x_to_lon(Map.x)+range
 			// this will look for cached plots, or get new ones if it fails
-			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,bleed_level)
+			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
 		}
 		lastPos[0] = Map.x
 		lastPos[1] = Map.y
@@ -554,7 +531,7 @@ var Cartagen = {
 				console.log(objects.length+" objects")
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) last_event = frame
-				console.log("Total plots: "+plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				console.log("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -575,7 +552,7 @@ var Cartagen = {
 		// if we're not live-loading:
 		if (!Cartagen.live) {
 			// check if we've loaded already this session:
-			if (plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
+			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
 				// no live-loading, so:
 				console.log("already loaded plot")
 			} else {
@@ -583,7 +560,7 @@ var Cartagen = {
 				if (typeof localStorage != "undefined") {
 					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
 					if (ls) {
-						plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
 						console.log("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
@@ -593,7 +570,7 @@ var Cartagen = {
 				} else {
 					// not loaded this session and no localStorage, so:
 					Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
-					plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+					Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
 				}
 			}
 			// if the bleed level of this plot is > 0
@@ -633,7 +610,7 @@ var Cartagen = {
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) last_event = frame
-				console.log("Total plots: "+plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				console.log("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -657,7 +634,7 @@ var Cartagen = {
 		$('brief').style.width = '28%'
 		$('brief_first').style.width = '92%';
 		$('gss').toggle()
-		live_gss = !live_gss
+		Cartagen.live_gss = !Cartagen.live_gss
 	},
 	// sends user to an image of the current canvas
 	redirect_to_image: function() {
@@ -667,13 +644,15 @@ var Cartagen = {
 
 var Map = {
 	initialize: function() {
-		this.x = lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
-		this.y = lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
+		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
+		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
 	},
 	pointer_x: function() { return Map.x+(((width/2)-Mouse.x)/Cartagen.zoom_level) },
 	pointer_y: function() { return Map.y+(((height/2)-Mouse.y)/Cartagen.zoom_level) },
 	x: 0,
 	y: 0,
+	rotate: 0,
+	rotate_old: 0,
 	x_old: 0,
 	y_old: 0,
 	set_user_loc: function(loc) {
@@ -681,6 +660,7 @@ var Map = {
 		this.user_lon = loc.coords.longitude
 		alert(this.user_lat+","+this.user_lon)
 	},
+	// user_lat & user_lon are based on IP-based geocoding in Firefox 3.5:
 	user_lat: 0,
 	user_lon: 0,
 	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
@@ -785,17 +765,59 @@ var Way = Class.create({
 	}
 })
 
-function poly_area(nodes) {
-	var area = 0
-	nodes.each(function(node,index) {
-		if (index < nodes.length-1) next = nodes[index+1]
-		else next = nodes[0]
-		if (index > 0) last = nodes[index-1]
-		else last = nodes[nodes.length-1]
-		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
-	})
-	return Math.abs(area/2)
+var Projection = {
+	current_projection: 'spherical_mercator',
+	scale_factor: 100000,
+	set: function(new_projection) {
+		this.current_projection = new_projection
+	},
+	lon_to_x: function(lon) { return -1*Projection[Projection.current_projection].lon_to_x(lon) },
+	x_to_lon: function(x) { return -1*Projection[Projection.current_projection].x_to_lon(x) },
+	lat_to_y: function(lat) { return -1*Projection[Projection.current_projection].lat_to_y(lat) },
+	y_to_lat: function(y) { return -1*Projection[Projection.current_projection].y_to_lat(y) },
+	//required by spherical mercator:
+	center_lon: function() { return (Cartagen.lng2+Cartagen.lng1)/2 },
+	spherical_mercator: {
+		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
+		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
+		lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * Projection.scale_factor * 1.7 },
+		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) },
+	},
+	elliptical_mercator: {
+		lon_to_x: function(lon) {
+		    var r_major = 6378137.000;
+		    return r_major * lon;
+		},
+		x_to_lon: function(x) {
+		    var r_major = 6378137.000;
+		    return lon/r_major;
+		},
+		lat_to_y: function(lat) {
+		    if (lat > 89.5)
+		        lat = 89.5;
+		    if (lat < -89.5)
+		        lat = -89.5;
+		    var r_major = 6378137.000;
+		    var r_minor = 6356752.3142;
+		    var temp = r_minor / r_major;
+		    var es = 1.0 - (temp * temp);
+		    var eccent = Math.sqrt(es);
+		    var phi = lat;
+		    var sinphi = Math.sin(phi);
+		    var con = eccent * sinphi;
+		    var com = .5 * eccent;
+		    con = Math.pow(((1.0-con)/(1.0+con)), com);
+		    var ts = Math.tan(.5 * ((Math.PI*0.5) - phi))/con;
+		    var y = 0 - r_major * Math.log(ts);
+		    return y;
+		},
+		y_to_lat: function(y) {
+			// unknown
+		}
+		
+	}
 }
+
 
 function overlaps(x1,y1,x2,y2,fudge) {
 	if (x2 > x1-fudge && x2 < x1+fudge) {
@@ -823,24 +845,22 @@ function is_point_in_poly(poly, _x, _y){
     return c;
 }
 
+function poly_area(nodes) {
+	var area = 0
+	nodes.each(function(node,index) {
+		if (index < nodes.length-1) next = nodes[index+1]
+		else next = nodes[0]
+		if (index > 0) last = nodes[index-1]
+		else last = nodes[nodes.length-1]
+		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
+	})
+	return Math.abs(area/2)
+}
+
 // This duplicates a function call in glop.js... load order issues
 function randomColor() {
 	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 }
 
-function lon_to_x(lon) { return (lon - center_lon()) * -1 * scale_factor }
-function x_to_lon(x) { return (x/(-1*scale_factor)) + center_lon() }
-
-function lat_to_y(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * scale_factor * 1.7 }
-function y_to_lat(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(scale_factor*1.7))*(Math.PI/180)/2))) }
-
-function center_lon() {
-	return (Cartagen.lng2+Cartagen.lng1)/2
-}
-
 // Rotates view slowly for cool demo purposes.
-function demo() {
-	try {
-		global_rotate += 0.005
-	} catch(e) {}
-}
+function demo() { try { Map.rotate += 0.005 } catch(e) {}}
