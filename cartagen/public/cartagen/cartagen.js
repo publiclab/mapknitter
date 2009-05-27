@@ -19,7 +19,8 @@ var objects = []
 var scripts = [
 	'cartagen/canvastext.js',
 	'cartagen/glop.js',
-	'cartagen/events.js'
+	'cartagen/events.js',
+	'cartagen/lib/geohash.js'
 ]
 
 // loads each script in scripts array, sequentially.
@@ -290,6 +291,18 @@ var Style = {
 var Viewport = {
 }
 
+var Geohash = {
+	hash: new Hash(),
+	set: function(lat,lon,feature,length) {
+		if (!length) length = 8 // default length of geohash
+		var _short_hash = encodeGeoHash(lat,lon).truncate(length,"")
+		var merge_hash = hash.get(_short_hash)
+		if (merge_hash) merge_hash = merge_hash.push(feature)
+		else merge_hash = [feature]
+		hash.set(_short_hash,merge_hash)
+	}
+}
+
 var Cartagen = {
 	object_count: 0,
 	way_count: 0,
@@ -475,6 +488,7 @@ var Cartagen = {
 				if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
 				if (w.tags.get('natural') == "coastline") w.closed_poly = true
 				Style.parse_styles(w,Style.styles.way)
+				// geohash.set(encodeGeoHash())
 				objects.push(w)
 				Cartagen.ways.set(w.id,w)
 			}
