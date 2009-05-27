@@ -25,9 +25,9 @@ leisure: {
 park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
-	strokeStyle: "#181",
-	// opacity: 0.6,
-	// pattern: "/images/trees.gif"
+	strokeStyle: "#181"// ,
+	// 	opacity: 0.6,
+	// 	pattern: "images/trees.gif"
 },
 waterway: {
 	fillStyle: "#57d",
