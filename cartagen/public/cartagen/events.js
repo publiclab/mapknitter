@@ -26,7 +26,7 @@ function wheel(event){
 	} else if (event.detail) {
 		delta = -event.detail/3;
 	}
-	if (delta && !live_gss) {
+	if (delta && !Cartagen.live_gss) {
 		draw()
 		if (delta <0) {
 			Cartagen.zoom_level += delta/40
@@ -70,7 +70,7 @@ Event.observe(document, 'keypress', function(e) {
 			case "z": keys.set("z",true)
 			break
 			case "g": 
-				if (!live_gss) {
+				if (!Cartagen.live_gss) {
 					Cartagen.show_gss_editor()
 					// $('gss').style.height = "90%"
 				}
@@ -132,8 +132,8 @@ if (Prototype.Browser.MobileSafari) {
 
 		drag_x = (touch.screenX - Mouse.click_x)
 		drag_y = (touch.screenY - Mouse.click_y)
-		Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
-		Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
+		Map.x = Map.x_old+(-1*drag_x/Cartagen.zoom_level)
+		Map.y = Map.y_old+(-1*drag_y/Cartagen.zoom_level)
 		draw()
 	  }
 	}
@@ -178,7 +178,7 @@ function drag() {
 		drag_x = (Mouse.x - Mouse.click_x)
 		drag_y = (Mouse.y - Mouse.click_y)
 		if (keys.get("r")) { // rotating
-			Map.rotate = Map.rotate_old + (drag_y/height)
+			Map.rotate = Map.rotate_old + (-1*drag_y/height)
 		} else if (keys.get("z")) {
 			if (Cartagen.zoom_level > 0) {
 				Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (drag_y/height))
