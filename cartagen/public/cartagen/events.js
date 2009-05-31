@@ -70,10 +70,7 @@ Event.observe(document, 'keypress', function(e) {
 			case "z": keys.set("z",true)
 			break
 			case "g": 
-				if (!Cartagen.live_gss) {
-					Cartagen.show_gss_editor()
-					// $('gss').style.height = "90%"
-				}
+				if (!Cartagen.live_gss) Cartagen.show_gss_editor()
 			break
 			case "h": get_static_plot('/static/rome/highway.js')
 		}

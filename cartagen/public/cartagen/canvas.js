@@ -62,9 +62,7 @@ function arc(x,y,radius,startAngle,endAngle,clockwise) {
 	canvas.arc(x,y,radius,startAngle,endAngle,clockwise)
 }
 function drawText(font,size,x,y,text) {
-	canvas.rotate(1.5)
 	canvas.drawText(font,size,x,y,text)
-	canvas.rotate(Math.PI)
 }
 function drawTextCenter(font,size,x,y,text) {
 	canvas.drawTextCenter(font,size,x,y,text)

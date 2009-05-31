@@ -10,12 +10,9 @@ node: {
 	radius: 1
 },
 way: {
-	strokeStyle: function() { 
-		return "rgba(1,1,1,0.7)"
-		//return color_from_string(this.user)
-	},
 	strokeStyle: "#ccc",
-	lineWidth: 3
+	lineWidth: 3,
+	text: 'lalala'
 },
 leisure: {
 	fillStyle: "#2a2",
@@ -26,7 +23,11 @@ park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
 	strokeStyle: "#181",
-	pattern: "/images/pattern-water.gif"
+	pattern: "/images/pattern-water.gif",
+	fontColor: "#66f",
+	fontSize: 8,
+	text: 'lalala'
+	// text: function() { return this.user }
 },
 waterway: {
 	strokeStyle: "#57d",

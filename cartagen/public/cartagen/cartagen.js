@@ -27,6 +27,7 @@ var scripts = [
 // requires a load_next_script() call at the end of each
 // dependent script to trigger the next one.
 function load_next_script() {
+	// console.log("loading: "+scripts[0])
 	if (scripts.length > 0) {
 		load_script(scripts.splice(0,1)[0])
 	}
@@ -50,15 +51,12 @@ var Mouse = {
 
 var Style = {
 	styles: {
+		// this doesn't get used. We don't have a body object to load them into...
 		body: {
 			fillStyle: "#eee",
+			fontColor: "#eee",
+			fontSize: 12
 		},
-		way: {
-			fillStyle: "#555",
-		},
-		node: {
-			fillStyle: "#555",
-		}
 	},
 	style_body: function() {
 		if (Style.styles) {
@@ -104,48 +102,54 @@ var Style = {
 			if (selector['hover']) feature.hover = selector['hover']
 			if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
 
-			if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle) {
-				feature.fillStyle = Style.styles[feature.name].fillStyle
-			}
-			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle) {
-				feature.strokeStyle = Style.styles[feature.name].strokeStyle
-			}
+			// copy styles based on feature name
+			if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle) feature.fillStyle = Style.styles[feature.name].fillStyle
+			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle) feature.strokeStyle = Style.styles[feature.name].strokeStyle
+
 			// font styling:
-			if (selector['fontColor']) feature.fontColor = selector['fontColor']
+			if (selector.fontColor) feature.fontColor = selector.fontColor
+			if (selector.fontSize) feature.fontSize = selector.fontSize
+			if (selector.fontScale) feature.fontScale = selector.fontScale
+			if (selector.fontBackground) feature.fontBackground = selector.fontBackground
+			if (selector.text) feature.text = selector.text
 
 			feature.tags.each(function(tag) {
 				//look for a style like this:
-				if (Style.styles[tag.key] && Style.styles[tag.key].opacity) {
-					feature.opacity = Style.styles[tag.key].opacity
+				if (Style.styles[tag.key]) {
+					if (Style.styles[tag.key].opacity) feature.opacity = Style.styles[tag.key].opacity
+					if (Style.styles[tag.key].fillStyle) feature.fillStyle = Style.styles[tag.key].fillStyle
+					if (Style.styles[tag.key].strokeStyle) feature.strokeStyle = Style.styles[tag.key].strokeStyle
+					if (Style.styles[tag.key].lineWidth) feature.lineWidth = Style.styles[tag.key].lineWidth
+					if (Style.styles[tag.key].fontColor) feature.fontColor = Style.styles[tag.key].fontColor
+					if (Style.styles[tag.key].fontSize) feature.fontSize = Style.styles[tag.key].fontSize
+					if (Style.styles[tag.key].fontScale) feature.fontScale = Style.styles[tag.key].fontScale
+					if (Style.styles[tag.key].fontBackground) feature.fontBackground = Style.styles[tag.key].fontBackground
+					if (Style.styles[tag.key].text) {
+						if (Object.isFunction(Style.styles[tag.key].text)) feature.text = Style.styles[tag.key].text.apply(feature)
+						else feature.text = Style.styles[tag.key].text
+					}
+					if (Style.styles[tag.key].pattern) {
+						feature.pattern_img = new Image()
+						feature.pattern_img.src = Style.styles[tag.key].pattern
+					}
 				}
-				if (Style.styles[tag.value] && Style.styles[tag.value].opacity) {
-					feature.opacity = Style.styles[tag.value].opacity
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key].fillStyle) {
-					feature.fillStyle = Style.styles[tag.key].fillStyle
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value].fillStyle) {
-					feature.fillStyle = Style.styles[tag.value].fillStyle
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key].strokeStyle) {
-					feature.strokeStyle = Style.styles[tag.key].strokeStyle
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value].strokeStyle) {
-					feature.strokeStyle = Style.styles[tag.value].strokeStyle
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key].lineWidth) {
-					feature.lineWidth = Style.styles[tag.key].lineWidth
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value].lineWidth) {
-					feature.lineWidth = Style.styles[tag.value].lineWidth
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key].pattern) {
-					feature.pattern_img = new Image()
-					feature.pattern_img.src = Style.styles[tag.key].pattern
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value].pattern) {
-					feature.pattern_img = new Image()
-					feature.pattern_img.src = Style.styles[tag.value].pattern
+				if (Style.styles[tag.value]) {
+					if (Style.styles[tag.value].opacity) feature.opacity = Style.styles[tag.value].opacity
+					if (Style.styles[tag.value].fillStyle) feature.fillStyle = Style.styles[tag.value].fillStyle
+					if (Style.styles[tag.value].strokeStyle) feature.strokeStyle = Style.styles[tag.value].strokeStyle
+					if (Style.styles[tag.value].lineWidth) feature.lineWidth = Style.styles[tag.value].lineWidth
+					if (Style.styles[tag.value].fontColor) feature.fontColor = Style.styles[tag.value].fontColor
+					if (Style.styles[tag.value].fontSize) feature.fontSize = Style.styles[tag.value].fontSize
+					if (Style.styles[tag.value].fontScale) feature.fontScale = Style.styles[tag.value].fontScale
+					if (Style.styles[tag.value].fontBackground) feature.fontBackground = Style.styles[tag.value].fontBackground
+					if (Style.styles[tag.value].text) {
+						if (Object.isFunction(Style.styles[tag.value].text)) feature.text = Style.styles[tag.value].text.apply(feature)
+						else feature.text = Style.styles[tag.value].text
+					}
+					if (Style.styles[tag.value].pattern) {
+						feature.pattern_img = new Image()
+						feature.pattern_img.src = Style.styles[tag.value].pattern
+					}
 				}
 
 				//check tags for hover:
@@ -194,38 +198,28 @@ var Style = {
 	refresh_style: function(feature, property) {
 		feature[property] = feature.style_generators[property]()
 	},
+	// sets the canvas 'pen' styles using the object.foo style definitions
 	apply_style: function(feature) {
 		if (feature.opacity) {
-			if (Object.isFunction(feature.opacity)) {
-				canvas.globalOpacity = feature.opacity()
-			} else {
-				canvas.globalOpacity = feature.opacity
-			}
+			if (Object.isFunction(feature.opacity)) canvas.globalOpacity = feature.opacity()
+			else canvas.globalOpacity = feature.opacity
 		}
 		if (feature.strokeStyle) {
-			if (Object.isFunction(feature.strokeStyle)) {
-				strokeStyle(feature.strokeStyle())
-			} else {
-				strokeStyle(feature.strokeStyle)
-			}
+			if (Object.isFunction(feature.strokeStyle)) strokeStyle(feature.strokeStyle())
+			else strokeStyle(feature.strokeStyle)
 		}
 		if (feature.fillStyle) {
-			if (Object.isFunction(feature.fillStyle)) {
-				fillStyle(feature.fillStyle())
-			} else {
-				fillStyle(feature.fillStyle)
-			}
+			if (Object.isFunction(feature.fillStyle)) fillStyle(feature.fillStyle())
+			else  fillStyle(feature.fillStyle)
 		}
 		if (feature.pattern_img) {
 			fillStyle(canvas.createPattern(feature.pattern_img,'repeat'))
 		}
 		if (feature.lineWidth) {
-			if (Object.isFunction(feature.lineWidth)) {
-				lineWidth(feature.lineWidth())
-			} else {
-				lineWidth(feature.lineWidth)
-			}
+			if (Object.isFunction(feature.lineWidth)) lineWidth(feature.lineWidth())
+			else lineWidth(feature.lineWidth)
 		}
+		
 		// trigger hover and mouseDown styles:
 		if (feature instanceof Way) {
 			if (feature.hover && feature.closed_poly && is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
@@ -245,6 +239,15 @@ var Style = {
 				Style.apply_style(feature.mouseDown)
 				if (feature.mouseDown.action) feature.mouseDown.action()
 			}
+		}
+	},
+	// same as apply_style but just for fonts. This was necessary because
+	// strokeStyle and such have to be reset *after* drawing actual polygons but
+	// *before* drawing text.
+	apply_font_style: function(feature) {
+		if (feature.fontColor) {
+			if (Object.isFunction(feature.fontColor)) strokeStyle(feature.fontColor())
+			else strokeStyle(feature.fontColor)
 		}
 	},
 	// add an individual style to the styles object. May not actually work; old code.
@@ -346,14 +349,14 @@ var Cartagen = {
 
 		Object.keys(configs).each(function(key,index) {
 			this[key] = Object.values(configs)[index]
-			console.log('configuring '+key+': '+this[key])
+			// console.log('configuring '+key+': '+this[key])
 		},this)
 		
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 
 		Map.initialize()
 		// Startup:
-		Style.load_styles(this.stylesheet)
+		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
 			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
@@ -363,7 +366,7 @@ var Cartagen = {
 				this.get_static_plot(this.static_map_layers[1])
 			} else {
 				this.static_map_layers.each(function(layer_url) {
-					console.log('fetching '+layer_url)
+					// console.log('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
 			}
@@ -450,13 +453,14 @@ var Cartagen = {
 				var w = new Way
 				w.id = way.id
 				w.user = way.user
+				if (way.name) w.name = way.name
 				w.timestamp = way.timestamp
 				w.nodes = []
 				w.x = 0
 				w.y = 0
 				w.bbox = [0,0,0,0] // top, left, bottom, right
 				way.nd.each(function(nd,index){
-					try {
+					// try {
 						if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
 							// find the node corresponding to nd.ref, store a reference:
 							node = Cartagen.nodes.get(nd.ref)
@@ -470,13 +474,10 @@ var Cartagen = {
 								w.nodes.push(node)
 							}
 						}
-					} catch(e) {
-						console.log(trace(e))
-					}
+					// } catch(e) {
+					// 	console.log(trace(e))
+					// }
 				})
-				w.x = w.x/w.nodes.length
-				w.y = w.y/w.nodes.length
-				w.area = poly_area(w.nodes)
 				w.tags = new Hash()
 				if (way.tag instanceof Array) {
 					way.tag.each(function(tag) {
@@ -487,6 +488,17 @@ var Cartagen = {
 				}
 				if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
 				if (w.tags.get('natural') == "coastline") w.closed_poly = true
+				if (w.closed_poly) {
+					w.x = w.x/w.nodes.length
+					w.y = w.y/w.nodes.length
+				} else {
+				// attempt to make letters follow line segments:
+					try {
+						w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
+						w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
+					} catch(e) { trace(e) }
+				}
+				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
 				// geohash.set(encodeGeoHash())
 				objects.push(w)
@@ -686,7 +698,10 @@ var Map = {
 
 var Node = Class.create({
 	radius: 6,
-	tags: [],
+	tags: new Hash(),
+	fillStyle: "#555",
+	fontColor: "#eee",
+	fontSize: 12,
 	draw: function() {
 		Cartagen.object_count++
 		Cartagen.point_count++
@@ -703,9 +718,6 @@ var Node = Class.create({
 		fill()
 		stroke()
 	    canvas.restore()
-  },
-  within: function(start_x,start_y,end_x,end_y) {
-	return false
   }
 })
 
@@ -716,6 +728,18 @@ var Way = Class.create({
 	label: null,
 	closed_poly: false,
 	tags: new Hash(),
+	fillStyle: "#555",
+	fontColor: "#eee",
+	fontSize: 12,
+	// returns the middle-most line segment as a tuple [node_1,node_2]
+	middle_segment: function() {
+		return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
+	},
+	middle_segment_angle: function() {
+		var _x = this.middle_segment()[0].x-this.middle_segment()[1].x
+		var _y = this.middle_segment()[0].y-this.middle_segment()[1].y
+		return Math.tan(_y/_x)
+	},
 	draw: function() {
 		Cartagen.object_count++
 		// only draw if in the viewport:
@@ -756,26 +780,31 @@ var Way = Class.create({
 		stroke()
 		if (this.closed_poly) fill()
 
-		// test bboxes for ways:
+		// show bboxes for ways:
 		// lineWidth(8)
 		// strokeStyle('red')
 		// strokeRect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
 
-		if (this.text) {
-			if (this.fontColor) strokeStyle(this.fontColor)
-			try{
-				rotate(Math.PI)
-				drawTextCenter("sans",15/zoom_level,this.x,this.y,this.fillStyle)
-			} catch(e) {
-				trace(e)
+		// this need restructuring. Perhaps a Label class is in order:
+		if (this.text && Cartagen.zoom_level > 0.1) {
+			Style.apply_font_style(this)
+			// try to rotate the labels on unclosed ways:
+			// if (!this.closed_poly) { try { rotate(this.middle_segment_angle()) } catch(e) {}}
+			if (this.fontScale == "fixed") {
+				var _height = this.fontSize
+				var _padding = 6
+			} else {
+				var _height = this.fontSize/Cartagen.zoom_level
+				var _padding = 6/Cartagen.zoom_level
 			}
+			var _width = canvas.measureText("sans",_height,this.text)
+			if (this.fontBackground) {
+				fillStyle(this.fontBackground)
+				rect(this.x-((_width+_padding)/2),this.y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+			}
+			drawTextCenter("sans",_height,this.x,this.y,this.text)
 		}
 	    canvas.restore()
-	},
-	click: function() {
-	},
-	within: function(start_x,start_y,end_x,end_y) {
-		return false
 	}
 })
 

@@ -25,9 +25,11 @@ leisure: {
 park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
-	strokeStyle: "#181"// ,
-	// 	opacity: 0.6,
-	// 	pattern: "images/trees.gif"
+	strokeStyle: "#181",
+	fontColor: "#dfd",
+	fontSize: 12,
+	// text: 'lalala'
+	text: function() { return this.user }
 },
 waterway: {
 	fillStyle: "#57d",
@@ -46,7 +48,11 @@ coastline: {
 },
 highway: {
 	strokeStyle: "white",
-	lineWidth: 7
+	lineWidth: 7,
+	fontColor: "#333",
+	fontBackground: "white",
+	fontScale: "fixed",
+	text: function() { return this.tags.get('name') }
 },
 primary: {
 	strokeStyle: "#d44",
