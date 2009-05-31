@@ -4,88 +4,30 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Cartagen</title>
-	<script src="/glop/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
-	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="../../cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../../cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../cartagen/canvas.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
 	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
-	
-		// load these into the new Cartagen class. Use defaults too.
-		
-		// var cartagen = new Cartagen({
-		// 	fullscreen: true,
-		// 	stylesheet: "/static/rome/style.gss",
-		// 	live: false,
-		// 	powersave: true,
-		// 	zoom_out_limit = 0.02,
-		// 	simplify: 1,
-		// 	static_map: true,
-		// 	static_map_layers: [
-		// 		"/static/rome/park.js",
-		// 		"/static/rome/rail.js",
-		// 		"/static/rome/waterway.js",
-		// 		"/static/rome/primary.js",
-		// 		"/static/rome/catholic.js"
-		// 		]
-		// 	range: 0.001,
-		// 	lat1: 41.9227,
-		// 	lat2: 41.861,
-		// 	lng1: 12.4502,
-		// 	lng2: 12.5341,
-		// 	zoom_level: 0.05,
-		// 	scripts: [
-		// 		'/glop/canvas.js',
-		// 		'/glop/canvastext.js',
-		// 		'/glop/glop.js',
-		// 		'/glop/events.js',
-		// 		'/glop/style.js',
-		// 		'/glop/cartagen.js'f
-		// 	]
-		// })
-		var fullscreen = true // default false
-		var stylesheet = "/static/rome/style.gss"
-		var live = false // default false
-		var powersave = true // default true
-		var zoom_out_limit = 0.02
-		var simplify = 1
-		var static_map = true
-		var static_map_layers = ["/static/palo-alto/building.js","/static/palo-alto/park.js","/static/palo-alto/highway.js"]
-		var range = 0.001, lat1 = 37.4562, lat2 = 37.4199, lng1 = -122.1847, lng2 = -122.1415, zoom_level = 0.2
-
-		scripts = [
-		'/glop/canvas.js',
-		'/glop/canvastext.js',
-		'/glop/glop.js',
-		'/glop/events.js',
-		'/glop/style.js',
-		'/glop/cartagen.js'
-		]
-
-		function load_script(script) {
-			$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
-		}
-		function load_next_script() {
-			if (scripts.length > 0) {
-	 			load_script(scripts.splice(0,1)[0])
-			}
-		}
-		function fill_gss() {
-			try {
-				$('gss_textarea').value = stylesheet_source
-			} catch(e) {}
-		}
-		setTimeout(fill_gss,5000)
-		
-		function browser_check() {
-			$('browsers').absolutize;
-			$('browsers').style.top = "100px";	
-			$('browsers').style.margin = "0 auto";	
-			if (Prototype.Browser.IE) $('browsers').show();
-		}
+		Cartagen.setup({
+			stylesheet: "style.gss",
+			static_map: true,
+			static_map_layers: ["building.js",
+								"park.js",
+								"highway.js"],
+			lat1: 37.4562,
+			lat2: 37.4199,
+			lng1: -122.1847,
+			lng2: -122.1415
+		})
 	</script>
 </head>
-<body oncontextmenu="return false;" onLoad="load_next_script();browser_check();" onresize="try {draw()} catch(e) {}">
+<body>
 
 <div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
 
@@ -112,10 +54,19 @@
 </div>
 
 <div id="brief">
+	<script type="text/javascript" charset="utf-8">
+		if (Prototype.Browser.MobileSafari) {$('brief').hide()}
+	</script>
 	<div class="column first" id="brief_first">
 		<h2>Cartagen <br />
 			<small>a framework for dynamic mapping<br />
-			by <a href="http://unterbahn.com">Jeffrey Warren</a> (<a href="http://wiki.cartagen.org">Docs</a>, <a href="http://code.google.com/p/cartagen/">Source</a>, <a href="http://groups.google.com/group/cartagen-dev">List</a>)</small></h2>
+			by <a href="http://unterbahn.com">Jeffrey Warren</a>
+			<br />
+			<a href="http://wiki.cartagen.org">Docs</a> | 
+			<a href="http://code.google.com/p/cartagen/">Source</a> | 
+			<a href="http://groups.google.com/group/cartagen-dev">List</a> | 
+			<a href="http://unterbahn.com">Blog</a>
+			</small></h2>
 		<!-- <p><form action="/find" method="get" accept-charset="utf-8">
 			Go somewhere: <br />
 			<input style="width:170px;" tabindex="3" type="text" name="id" value="">
@@ -127,6 +78,7 @@
 			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
 		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a></p>
+		<p><a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a></p>
 	</div>
 	<div id="description">
 		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
@@ -146,7 +98,7 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
@@ -154,6 +106,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-180781-29");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}</script> -->
 </body>
 </html>
