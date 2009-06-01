@@ -27,6 +27,9 @@ function draw() {
 	objects.each(function(object) { 
 		object.draw()
 	})
+
+    // cartagen-specific calls
+	if (typeof Cartagen != "undefined") Cartagen.post_draw()
 	
 	if (mouseDown) {
 		mouseDown = false
