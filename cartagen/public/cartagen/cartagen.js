@@ -56,7 +56,7 @@ var Style = {
 			fillStyle: "#eee",
 			fontColor: "#eee",
 			fontSize: 12
-		},
+		}
 	},
 	style_body: function() {
 		if (Style.styles) {
@@ -107,11 +107,11 @@ var Style = {
 			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle) feature.strokeStyle = Style.styles[feature.name].strokeStyle
 
 			// font styling:
-			if (selector.fontColor) feature.fontColor = selector.fontColor
-			if (selector.fontSize) feature.fontSize = selector.fontSize
-			if (selector.fontScale) feature.fontScale = selector.fontScale
-			if (selector.fontBackground) feature.fontBackground = selector.fontBackground
-			if (selector.text) feature.text = selector.text
+			if (selector.fontColor) feature.label.fontColor = selector.fontColor
+			if (selector.fontSize) feature.label.fontSize = selector.fontSize
+			if (selector.fontScale) feature.label.fontScale = selector.fontScale
+			if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
+			if (selector.text) feature.label.text = selector.text
 
 			feature.tags.each(function(tag) {
 				//look for a style like this:
@@ -120,13 +120,13 @@ var Style = {
 					if (Style.styles[tag.key].fillStyle) feature.fillStyle = Style.styles[tag.key].fillStyle
 					if (Style.styles[tag.key].strokeStyle) feature.strokeStyle = Style.styles[tag.key].strokeStyle
 					if (Style.styles[tag.key].lineWidth) feature.lineWidth = Style.styles[tag.key].lineWidth
-					if (Style.styles[tag.key].fontColor) feature.fontColor = Style.styles[tag.key].fontColor
-					if (Style.styles[tag.key].fontSize) feature.fontSize = Style.styles[tag.key].fontSize
-					if (Style.styles[tag.key].fontScale) feature.fontScale = Style.styles[tag.key].fontScale
-					if (Style.styles[tag.key].fontBackground) feature.fontBackground = Style.styles[tag.key].fontBackground
+					if (Style.styles[tag.key].fontColor) feature.label.fontColor = Style.styles[tag.key].fontColor
+					if (Style.styles[tag.key].fontSize) feature.label.fontSize = Style.styles[tag.key].fontSize
+					if (Style.styles[tag.key].fontScale) feature.label.fontScale = Style.styles[tag.key].fontScale
+					if (Style.styles[tag.key].fontBackground) feature.label.fontBackground = Style.styles[tag.key].fontBackground
 					if (Style.styles[tag.key].text) {
-						if (Object.isFunction(Style.styles[tag.key].text)) feature.text = Style.styles[tag.key].text.apply(feature)
-						else feature.text = Style.styles[tag.key].text
+						if (Object.isFunction(Style.styles[tag.key].text)) feature.label.text = Style.styles[tag.key].text.apply(feature)
+						else feature.label.text = Style.styles[tag.key].text
 					}
 					if (Style.styles[tag.key].pattern) {
 						feature.pattern_img = new Image()
@@ -137,14 +137,14 @@ var Style = {
 					if (Style.styles[tag.value].opacity) feature.opacity = Style.styles[tag.value].opacity
 					if (Style.styles[tag.value].fillStyle) feature.fillStyle = Style.styles[tag.value].fillStyle
 					if (Style.styles[tag.value].strokeStyle) feature.strokeStyle = Style.styles[tag.value].strokeStyle
-					if (Style.styles[tag.value].lineWidth) feature.lineWidth = Style.styles[tag.value].lineWidth
-					if (Style.styles[tag.value].fontColor) feature.fontColor = Style.styles[tag.value].fontColor
-					if (Style.styles[tag.value].fontSize) feature.fontSize = Style.styles[tag.value].fontSize
-					if (Style.styles[tag.value].fontScale) feature.fontScale = Style.styles[tag.value].fontScale
-					if (Style.styles[tag.value].fontBackground) feature.fontBackground = Style.styles[tag.value].fontBackground
+					if (Style.styles[tag.value].lineWidth) feature.label.lineWidth = Style.styles[tag.value].lineWidth
+					if (Style.styles[tag.value].fontColor) feature.label.fontColor = Style.styles[tag.value].fontColor
+					if (Style.styles[tag.value].fontSize) feature.label.fontSize = Style.styles[tag.value].fontSize
+					if (Style.styles[tag.value].fontScale) feature.label.fontScale = Style.styles[tag.value].fontScale
+					if (Style.styles[tag.value].fontBackground) feature.label.fontBackground = Style.styles[tag.value].fontBackground
 					if (Style.styles[tag.value].text) {
-						if (Object.isFunction(Style.styles[tag.value].text)) feature.text = Style.styles[tag.value].text.apply(feature)
-						else feature.text = Style.styles[tag.value].text
+						if (Object.isFunction(Style.styles[tag.value].text)) feature.label.text = Style.styles[tag.value].text.apply(feature)
+						else feature.label.text = Style.styles[tag.value].text
 					}
 					if (Style.styles[tag.value].pattern) {
 						feature.pattern_img = new Image()
@@ -186,6 +186,9 @@ var Style = {
 	},
 	create_refresher: function(feature, property, interval) {
 		if (Object.isFunction(feature[property])) { //sanity check
+            if (['fontBackground', 'fontColor', 'fontScale', 'fontSize', 'text'].include(property)) {
+                feature = feature.label
+            }
 			if(!feature.style_generators) feature.style_generators = {}
 			if(!feature.style_generators.executers) feature.style_generators.executers = {}
 			feature.style_generators[property] = feature[property]
@@ -201,23 +204,19 @@ var Style = {
 	// sets the canvas 'pen' styles using the object.foo style definitions
 	apply_style: function(feature) {
 		if (feature.opacity) {
-			if (Object.isFunction(feature.opacity)) canvas.globalOpacity = feature.opacity()
-			else canvas.globalOpacity = feature.opacity
+			canvas.globalOpacity = Object.value(feature.opacity)
 		}
 		if (feature.strokeStyle) {
-			if (Object.isFunction(feature.strokeStyle)) strokeStyle(feature.strokeStyle())
-			else strokeStyle(feature.strokeStyle)
+			 strokeStyle(Object.value(feature.strokeStyle))
 		}
 		if (feature.fillStyle) {
-			if (Object.isFunction(feature.fillStyle)) fillStyle(feature.fillStyle())
-			else  fillStyle(feature.fillStyle)
+			fillStyle(Object.value(feature.fillStyle))
 		}
 		if (feature.pattern_img) {
 			fillStyle(canvas.createPattern(feature.pattern_img,'repeat'))
 		}
 		if (feature.lineWidth) {
-			if (Object.isFunction(feature.lineWidth)) lineWidth(feature.lineWidth())
-			else lineWidth(feature.lineWidth)
+			lineWidth(Object.value(feature.lineWidth))
 		}
 		
 		// trigger hover and mouseDown styles:
@@ -332,6 +331,7 @@ var Cartagen = {
 	ways: new Hash(),
 	bleed_level: 1,
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
+    label_queue: [], // queue of labels to draw
 	setup: function(configs) {
 		// geolocate with IP... in Firefox 3.5
 		if (Prototype.Browser.Gecko && navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
@@ -398,6 +398,16 @@ var Cartagen = {
 		viewport = [Map.y-viewport_height/2,Map.x-viewport_width/2,Map.y+viewport_height/2,Map.x+viewport_width/2]
 		strokeRect(Map.x-viewport_width/2,Map.y-viewport_height/2,viewport_width,viewport_height)
 	},
+    // runs every frame in the draw() method, after Globjects have been drawn
+    post_draw: function() {
+        this.label_queue.each(function(item) {
+            item[0].draw(item[1], item[2])
+        })
+    },
+    // adds the label to the list of labels to be drawn when
+    queue_label: function(label, x, y) {
+        this.label_queue.push([label, x, y])
+    },
 	// show alert if it's IE:
 	browser_check: function() {
 		$('browsers').absolutize;
@@ -731,6 +741,9 @@ var Way = Class.create({
 	fillStyle: "#555",
 	fontColor: "#eee",
 	fontSize: 12,
+    initialize: function() {
+        this.label = new Label(this)
+    },
 	// returns the middle-most line segment as a tuple [node_1,node_2]
 	middle_segment: function() {
 		return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
@@ -786,28 +799,48 @@ var Way = Class.create({
 		// strokeRect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
 
 		// this need restructuring. Perhaps a Label class is in order:
-		if (this.text && Cartagen.zoom_level > 0.1) {
-			Style.apply_font_style(this)
-			// try to rotate the labels on unclosed ways:
-			// if (!this.closed_poly) { try { rotate(this.middle_segment_angle()) } catch(e) {}}
-			if (this.fontScale == "fixed") {
-				var _height = this.fontSize
-				var _padding = 6
-			} else {
-				var _height = this.fontSize/Cartagen.zoom_level
-				var _padding = 6/Cartagen.zoom_level
-			}
-			var _width = canvas.measureText("sans",_height,this.text)
-			if (this.fontBackground) {
-				fillStyle(this.fontBackground)
-				rect(this.x-((_width+_padding)/2),this.y-((_height+(_padding/2))),_width+_padding,_height+_padding)
-			}
-			drawTextCenter("sans",_height,this.x,this.y,this.text)
+		if (Cartagen.zoom_level > 0.1) {
+			Cartagen.queue_label(this.label, this.x, this.y)
 		}
 	    canvas.restore()
 	}
 })
 
+var Label = Class.create({
+    fontFamily: 'sans',
+    fontSize: 0,
+    fontBackground: null,
+    text: null,
+    fontScale: false,
+    padding: 6,
+    fontColor: '#eee',
+    initialize: function(parent) {
+        this.parent = parent;
+    },
+    draw: function(x, y) {
+        if (this.text) {
+            Style.apply_font_style(this)
+
+			// try to rotate the labels on unclosed ways:
+			// if (!this.parent.closed_poly) { try { rotate(this.parent.middle_segment_angle()) } catch(e) {}}
+			if (this.fontScale == "fixed") {
+				var _height = Object.value(this.fontSize)
+				var _padding = Object.value(this.padding)
+			} else {
+				var _height = Object.value(this.fontSize)/Cartagen.zoom_level
+				var _padding = Object.value(this.padding)/Cartagen.zoom_level
+			}
+			var _width = canvas.measureText(Object.value(this.fontFamily),_height,this.text)
+			if (this.fontBackground) {
+				fillStyle(Object.value(this.fontBackground))
+				rect(x-((_width+_padding)/2),y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+			}
+			drawTextCenter("sans",_height,x,y,Object.value(this.text))
+        }
+    }
+
+
+})
 var Projection = {
 	current_projection: 'spherical_mercator',
 	scale_factor: 100000,
@@ -824,7 +857,7 @@ var Projection = {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
 		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
 		lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * Projection.scale_factor * 1.7 },
-		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) },
+		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) }
 	},
 	elliptical_mercator: {
 		lon_to_x: function(lon) {
@@ -898,6 +931,13 @@ function poly_area(nodes) {
 		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 	})
 	return Math.abs(area/2)
+}
+
+// add Object.value, which returns the argument, unless the argument is a function,
+// in which case it calls the function and returns the result
+Object.value = function(obj) {
+    if(Object.isFunction(obj)) return obj()
+    return obj
 }
 
 // This duplicates a function call in glop.js... load order issues
