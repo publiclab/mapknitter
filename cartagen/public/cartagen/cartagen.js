@@ -334,7 +334,7 @@ var Cartagen = {
     label_queue: [], // queue of labels to draw
 	setup: function(configs) {
 		// geolocate with IP... in Firefox 3.5
-		if (Prototype.Browser.Gecko && navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
+		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
 		// wait for window load:
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
 	},
