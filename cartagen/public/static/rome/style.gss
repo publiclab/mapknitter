@@ -10,10 +10,6 @@ node: {
 	radius: 1
 },
 way: {
-	strokeStyle: function() { 
-		return "rgba(1,1,1,0.7)"
-		//return color_from_string(this.user)
-	},
 	strokeStyle: "#ccc",
 	lineWidth: 3
 },
@@ -28,7 +24,6 @@ park: {
 	strokeStyle: "#181",
 	fontColor: "#dfd",
 	fontSize: 12,
-	// text: 'lalala'
 	text: function() { return this.user }
 },
 waterway: {
