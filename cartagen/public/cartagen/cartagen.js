@@ -526,7 +526,7 @@ var Cartagen = {
 					try {
 						w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
 						w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
-					} catch(e) { console.log(e) }
+					} catch(e) {console.log(e) }
 				}
 				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
@@ -773,12 +773,26 @@ var Way = Class.create({
 	// returns the middle-most line segment as a tuple [node_1,node_2]
 	middle_segment: function() {
 		// console.log(this.nodes[Math.floor(this.nodes.length/2)+1])
-		return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
+        if (this.nodes.length == 1) {
+            return this.nodes[0]
+        }
+        else if (this.nodes.length == 2) {
+            return [this.nodes[0], this.nodes[1]]
+        }
+        else {
+            return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
+        }
 	},
 	middle_segment_angle: function() {
-		var _x = this.middle_segment()[0].x-this.middle_segment()[1].x
-		var _y = this.middle_segment()[0].y-this.middle_segment()[1].y
-		return Math.tan(_y/_x)
+        var segment = this.middle_segment()
+        if (segment[1]) {
+            var _x = segment[0].x-segment[1].x
+            var _y = segment[0].y-segment[1].y
+            return (Math.tan(_y/_x) * 180) / (2*Math.PI)
+        }
+        else {
+            return 90
+        }
 	},
 	draw: function() {
 		Cartagen.object_count++
@@ -846,10 +860,12 @@ var Label = Class.create({
     },
     draw: function(_x, _y) {
         if (this.text) {
+            this.text = this.way.id
             Style.apply_font_style(this)
 
 			// try to rotate the labels on unclosed ways:
-			// try { rotate(this.way.middle_segment_angle()) } catch(e) { console.log(e) }
+            //try { rotate(this.way.middle_segment_angle()) } catch(e) { console.log(this.way) }
+            //canvas.rotate(30)
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)

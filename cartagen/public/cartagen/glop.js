@@ -28,7 +28,8 @@ function draw() {
 		object.draw()
 	})
 
-    // cartagen-specific calls
+    // cartagen-specific call - draws labels so that labels are drawn after
+    // other objects.
 	if (typeof Cartagen != "undefined") Cartagen.post_draw()
 	
 	if (mouseDown) {
