@@ -214,6 +214,7 @@ var Style = {
 	},
 	// sets the canvas 'pen' styles using the object.foo style definitions
 	apply_style: function(feature) {
+		canvas.globalOpacity = 1
 		if (feature.opacity) {
 			canvas.globalOpacity = Object.value(feature.opacity)
 		}
@@ -306,13 +307,20 @@ var Viewport = {
 
 var Geohash = {
 	hash: new Hash(),
-	set: function(lat,lon,feature,length) {
+	// adds a feature to a geohash index
+	put: function(lat,lon,length,feature) {
 		if (!length) length = 8 // default length of geohash
 		var _short_hash = encodeGeoHash(lat,lon).truncate(length,"")
+		// check to see if the geohash is already populated:
 		var merge_hash = hash.get(_short_hash)
 		if (merge_hash) merge_hash = merge_hash.push(feature)
 		else merge_hash = [feature]
 		hash.set(_short_hash,merge_hash)
+	},
+	// fetch features in a geohash index
+	get: function(geohash,length) {
+		if (length) geohash = geohash.truncate(length,"") // default length of geohash
+		return hash.get(geohash)
 	}
 }
 
@@ -517,7 +525,7 @@ var Cartagen = {
 					try {
 						w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
 						w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
-					} catch(e) { trace(e) }
+					} catch(e) { console.log(e) }
 				}
 				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
@@ -763,6 +771,7 @@ var Way = Class.create({
     },
 	// returns the middle-most line segment as a tuple [node_1,node_2]
 	middle_segment: function() {
+		// console.log(this.nodes[Math.floor(this.nodes.length/2)+1])
 		return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
 	},
 	middle_segment_angle: function() {
@@ -839,7 +848,7 @@ var Label = Class.create({
             Style.apply_font_style(this)
 
 			// try to rotate the labels on unclosed ways:
-			// if (!this.parent.closed_poly) { try { rotate(this.parent.middle_segment_angle()) } catch(e) {}}
+			try { rotate(this.middle_segment_angle()) } catch(e) { console.log(e) }
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)
