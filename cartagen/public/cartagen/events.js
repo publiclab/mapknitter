@@ -86,7 +86,7 @@ Event.observe(document, 'keyup', function() {
 });
 
 // iPhone events:
-if (Prototype.Browser.MobileSafari) {
+if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 	// get rid of url bar:
 	
 	// addEventListener("load", function() { setTimeout(updateLayout, 0) }, false)
@@ -121,18 +121,18 @@ if (Prototype.Browser.MobileSafari) {
 			draw()	
 		  }
 	}
-	body.ontouchmove = function(e) {		
+	body.ontouchmove = function(e) {	
 		e.preventDefault();
 		if(e.touches.length == 1){ // Only deal with one finger
-	 	var touch = e.touches[0]; // Get the information for finger #1
-	    var node = touch.target; // Find the node the drag started from
+			var touch = e.touches[0]; // Get the information for finger #1
+			var node = touch.target; // Find the node the drag started from
 
-		drag_x = (touch.screenX - Mouse.click_x)
-		drag_y = (touch.screenY - Mouse.click_y)
-		Map.x = Map.x_old+(-1*drag_x/Cartagen.zoom_level)
-		Map.y = Map.y_old+(-1*drag_y/Cartagen.zoom_level)
-		draw()
-	  }
+			drag_x = (touch.screenX - Mouse.click_x)
+			drag_y = (touch.screenY - Mouse.click_y)
+			Map.x = Map.x_old+(-1*drag_x/Cartagen.zoom_level)
+			Map.y = Map.y_old+(-1*drag_y/Cartagen.zoom_level)
+			draw()
+		}
 	}
 	body.ontouchend = function(e) {
 		if(e.touches.length == 1) {
@@ -170,8 +170,7 @@ function doubleclick(event) {
 }
 
 function drag() {
-	if (globalDragging && !Prototype.Browser.MobileSafari) {
-		// alert('dragging')
+	if (globalDragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
 		drag_x = (Mouse.x - Mouse.click_x)
 		drag_y = (Mouse.y - Mouse.click_y)
 		if (keys.get("r")) { // rotating

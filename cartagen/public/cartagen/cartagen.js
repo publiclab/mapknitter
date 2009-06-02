@@ -15,19 +15,30 @@
 var lastPos = [0,0]
 var objects = []
 
+PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
+
 // additional dependencies:
 var scripts = [
 	'cartagen/canvastext.js',
 	'cartagen/glop.js',
 	'cartagen/events.js',
-	'cartagen/lib/geohash.js'
+	'cartagen/lib/geohash.js',
 ]
+
+// load phonegap js if needed
+if(window.PhoneGap) {
+	scripts.unshift('cartagen/lib/phonegap/phonegap.base.js',
+				 'cartagen/lib/phonegap/geolocation.js',
+				 'cartagen/lib/phonegap/iphone/phonegap.js',
+				 'cartagen/lib/phonegap/iphone/geolocation.js')
+}
+
 
 // loads each script in scripts array, sequentially.
 // requires a load_next_script() call at the end of each
 // dependent script to trigger the next one.
 function load_next_script() {
-	// console.log("loading: "+scripts[0])
+	console.log("loading: "+scripts[0])
 	if (scripts.length > 0) {
 		load_script(scripts.splice(0,1)[0])
 	}
@@ -333,7 +344,7 @@ var Cartagen = {
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
     label_queue: [], // queue of labels to draw
 	setup: function(configs) {
-		// geolocate with IP... in Firefox 3.5
+		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
 		// wait for window load:
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
@@ -378,8 +389,8 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 		Map.refresh_resolution()
-		if (Prototype.Browser.MobileSafari) Cartagen.simplify = 2
-
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
+		
 		Style.style_body()
 
 		translate(width/2,height/2)
@@ -692,9 +703,15 @@ var Map = {
 	x_old: 0,
 	y_old: 0,
 	set_user_loc: function(loc) {
-		this.user_lat = loc.coords.latitude
-		this.user_lon = loc.coords.longitude
-		alert(this.user_lat+","+this.user_lon)
+		if (loc.coords) {
+			this.user_lat = loc.coords.latitude
+			this.user_lon = loc.coords.longitude
+		}
+		else {
+			this.user_lat = loc.latitude
+			this.user_lon = loc.longitude
+		}
+		console.log('detected location: '+this.user_lat+","+this.user_lon)
 	},
 	// user_lat & user_lon are based on IP-based geocoding in Firefox 3.5:
 	user_lat: 0,
@@ -944,6 +961,7 @@ Object.value = function(obj) {
 function randomColor() {
 	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 }
+
 
 // Rotates view slowly for cool demo purposes.
 function demo() { try { Map.rotate += 0.005 } catch(e) {}}

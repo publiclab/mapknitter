@@ -1,0 +1,1093 @@
+// !$*UTF8*$!
+{
+	1B1B4FBD0F94571B00ECD4E6 /* PhoneGapCommand.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {691, 686}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 636}";
+			sepNavWindowFrame = "{{15, 465}, {750, 558}}";
+		};
+	};
+	1B64D8990F6C73C700D12F7F /* DebugConsole.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {691, 430}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 525}";
+			sepNavWindowFrame = "{{38, 444}, {750, 558}}";
+		};
+	};
+	1BB1F7D10F9E1BE2002A28DA /* Settings.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{38, 444}, {750, 558}}";
+		};
+	};
+	1D3623240D0F684500981E51 /* PhoneGapDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {929, 798}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 941}";
+			sepNavWindowFrame = "{{543, -207}, {750, 558}}";
+		};
+	};
+	1D3623250D0F684500981E51 /* PhoneGapDelegate.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {960, 4970}}";
+			sepNavSelRange = "{2817, 0}";
+			sepNavVisRange = "{2067, 1629}";
+			sepNavWindowFrame = "{{15, 465}, {750, 558}}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* PhoneGap */ = {
+		activeExec = 0;
+		executables = (
+			362A3D8D0FD472B400BD82F6 /* PhoneGap */,
+		);
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 362A3D8D0FD472B400BD82F6 /* PhoneGap */;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* PhoneGap */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* PhoneGap */,
+		);
+		codeSenseManager = 362A3DAF0FD472BB00BD82F6 /* Code sense */;
+		executables = (
+			362A3D8D0FD472B400BD82F6 /* PhoneGap */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					231,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					229,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = 1;
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1231,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 265659658;
+			PBXWorkspaceStateSaveDate = 265659658;
+		};
+		perUserProjectItems = {
+			362A3DBD0FD4733C00BD82F6 /* PBXBookmark */ = 362A3DBD0FD4733C00BD82F6 /* PBXBookmark */;
+			362A3DBE0FD4733C00BD82F6 /* PBXBookmark */ = 362A3DBE0FD4733C00BD82F6 /* PBXBookmark */;
+			362A3DDC0FD475BB00BD82F6 /* PBXTextBookmark */ = 362A3DDC0FD475BB00BD82F6 /* PBXTextBookmark */;
+			362A3DDD0FD475BB00BD82F6 /* PlistBookmark */ = 362A3DDD0FD475BB00BD82F6 /* PlistBookmark */;
+			362A3DE00FD475BB00BD82F6 /* PlistBookmark */ = 362A3DE00FD475BB00BD82F6 /* PlistBookmark */;
+			362A3DE40FD475BB00BD82F6 /* PBXTextBookmark */ = 362A3DE40FD475BB00BD82F6 /* PBXTextBookmark */;
+			362A3DE80FD475BB00BD82F6 /* PlistBookmark */ = 362A3DE80FD475BB00BD82F6 /* PlistBookmark */;
+			362A3DEB0FD475BB00BD82F6 /* PlistBookmark */ = 362A3DEB0FD475BB00BD82F6 /* PlistBookmark */;
+			362A3DEC0FD475BB00BD82F6 /* PlistBookmark */ = 362A3DEC0FD475BB00BD82F6 /* PlistBookmark */;
+			3635F6320FD5A6CD002446A6 /* PBXTextBookmark */ = 3635F6320FD5A6CD002446A6 /* PBXTextBookmark */;
+			3635F6330FD5A6CD002446A6 /* PBXTextBookmark */ = 3635F6330FD5A6CD002446A6 /* PBXTextBookmark */;
+			3635F6340FD5A6CD002446A6 /* PBXTextBookmark */ = 3635F6340FD5A6CD002446A6 /* PBXTextBookmark */;
+			3635F6350FD5A6CD002446A6 /* PBXTextBookmark */ = 3635F6350FD5A6CD002446A6 /* PBXTextBookmark */;
+			3635F63C0FD5A734002446A6 /* PBXTextBookmark */ = 3635F63C0FD5A734002446A6 /* PBXTextBookmark */;
+			3635F63D0FD5A734002446A6 /* PBXTextBookmark */ = 3635F63D0FD5A734002446A6 /* PBXTextBookmark */;
+			3635F63E0FD5A734002446A6 /* PBXTextBookmark */ = 3635F63E0FD5A734002446A6 /* PBXTextBookmark */;
+			3635F6430FD5A763002446A6 /* PBXTextBookmark */ = 3635F6430FD5A763002446A6 /* PBXTextBookmark */;
+			3635F6440FD5A763002446A6 /* PBXTextBookmark */ = 3635F6440FD5A763002446A6 /* PBXTextBookmark */;
+			3635F6450FD5A763002446A6 /* PBXTextBookmark */ = 3635F6450FD5A763002446A6 /* PBXTextBookmark */;
+			3635F6460FD5A763002446A6 /* PBXTextBookmark */ = 3635F6460FD5A763002446A6 /* PBXTextBookmark */;
+			3635F6870FD5AE22002446A6 /* PBXTextBookmark */ = 3635F6870FD5AE22002446A6 /* PBXTextBookmark */;
+			3635F6AA0FD5B080002446A6 /* PBXTextBookmark */ = 3635F6AA0FD5B080002446A6 /* PBXTextBookmark */;
+			3635F6AD0FD5B080002446A6 /* PBXTextBookmark */ = 3635F6AD0FD5B080002446A6 /* PBXTextBookmark */;
+			3635F6AE0FD5B080002446A6 /* PBXTextBookmark */ = 3635F6AE0FD5B080002446A6 /* PBXTextBookmark */;
+			3635F6FB0FD5B695002446A6 /* PBXTextBookmark */ = 3635F6FB0FD5B695002446A6 /* PBXTextBookmark */;
+			3635F6FC0FD5B695002446A6 /* PBXBookmark */ = 3635F6FC0FD5B695002446A6 /* PBXBookmark */;
+			3635F6FD0FD5B695002446A6 /* PBXBookmark */ = 3635F6FD0FD5B695002446A6 /* PBXBookmark */;
+			3635F6FE0FD5B695002446A6 /* PBXTextBookmark */ = 3635F6FE0FD5B695002446A6 /* PBXTextBookmark */;
+			3635F6FF0FD5B695002446A6 /* PBXBookmark */ = 3635F6FF0FD5B695002446A6 /* PBXBookmark */;
+			3635F7000FD5B695002446A6 /* PBXBookmark */ = 3635F7000FD5B695002446A6 /* PBXBookmark */;
+			3635F7010FD5B695002446A6 /* PBXBookmark */ = 3635F7010FD5B695002446A6 /* PBXBookmark */;
+			3635F7020FD5B695002446A6 /* PBXBookmark */ = 3635F7020FD5B695002446A6 /* PBXBookmark */;
+			3635F7030FD5B695002446A6 /* PBXTextBookmark */ = 3635F7030FD5B695002446A6 /* PBXTextBookmark */;
+			3635F7050FD5B695002446A6 /* PBXTextBookmark */ = 3635F7050FD5B695002446A6 /* PBXTextBookmark */;
+			364C130A0FD47826000C2CE1 /* PBXTextBookmark */ = 364C130A0FD47826000C2CE1 /* PBXTextBookmark */;
+			364C130B0FD47826000C2CE1 /* PBXTextBookmark */ = 364C130B0FD47826000C2CE1 /* PBXTextBookmark */;
+			364C130C0FD47826000C2CE1 /* PBXTextBookmark */ = 364C130C0FD47826000C2CE1 /* PBXTextBookmark */;
+			365D67590FD56F6700255C00 /* PBXTextBookmark */ = 365D67590FD56F6700255C00 /* PBXTextBookmark */;
+			365D675A0FD56F6700255C00 /* PlistBookmark */ = 365D675A0FD56F6700255C00 /* PlistBookmark */;
+			365D675B0FD56F6700255C00 /* PBXTextBookmark */ = 365D675B0FD56F6700255C00 /* PBXTextBookmark */;
+			365D675C0FD56F6700255C00 /* PBXTextBookmark */ = 365D675C0FD56F6700255C00 /* PBXTextBookmark */;
+			365D675D0FD56F6700255C00 /* PBXTextBookmark */ = 365D675D0FD56F6700255C00 /* PBXTextBookmark */;
+			365D675E0FD56F6700255C00 /* PBXTextBookmark */ = 365D675E0FD56F6700255C00 /* PBXTextBookmark */;
+			365D67670FD56F6700255C00 /* PBXTextBookmark */ = 365D67670FD56F6700255C00 /* PBXTextBookmark */;
+			365D676A0FD56F6700255C00 /* PBXTextBookmark */ = 365D676A0FD56F6700255C00 /* PBXTextBookmark */;
+			365D676D0FD56F6700255C00 /* PBXTextBookmark */ = 365D676D0FD56F6700255C00 /* PBXTextBookmark */;
+			365D67700FD56F6700255C00 /* PBXTextBookmark */ = 365D67700FD56F6700255C00 /* PBXTextBookmark */;
+			365D67710FD56F6700255C00 /* PBXTextBookmark */ = 365D67710FD56F6700255C00 /* PBXTextBookmark */;
+			365D67720FD56F6700255C00 /* PBXTextBookmark */ = 365D67720FD56F6700255C00 /* PBXTextBookmark */;
+			365D67730FD56F6700255C00 /* PBXTextBookmark */ = 365D67730FD56F6700255C00 /* PBXTextBookmark */;
+			365D67780FD56F6700255C00 /* PBXTextBookmark */ = 365D67780FD56F6700255C00 /* PBXTextBookmark */;
+			365D677A0FD56F6700255C00 /* PBXTextBookmark */ = 365D677A0FD56F6700255C00 /* PBXTextBookmark */;
+			365D67820FD56F6700255C00 /* PBXTextBookmark */ = 365D67820FD56F6700255C00 /* PBXTextBookmark */;
+			365D67880FD56FFD00255C00 /* PBXTextBookmark */ = 365D67880FD56FFD00255C00 /* PBXTextBookmark */;
+			365D67C40FD578BD00255C00 /* PBXTextBookmark */ = 365D67C40FD578BD00255C00 /* PBXTextBookmark */;
+			365D67CB0FD578BD00255C00 /* PBXTextBookmark */ = 365D67CB0FD578BD00255C00 /* PBXTextBookmark */;
+			365D67CD0FD578BD00255C00 /* PBXTextBookmark */ = 365D67CD0FD578BD00255C00 /* PBXTextBookmark */;
+			365D67E10FD57AE500255C00 /* PBXTextBookmark */ = 365D67E10FD57AE500255C00 /* PBXTextBookmark */;
+			365D67E60FD57AE500255C00 /* PBXTextBookmark */ = 365D67E60FD57AE500255C00 /* PBXTextBookmark */;
+			365D67FF0FD5807200255C00 /* PBXTextBookmark */ = 365D67FF0FD5807200255C00 /* PBXTextBookmark */;
+			365D680D0FD587BA00255C00 /* PBXTextBookmark */ = 365D680D0FD587BA00255C00 /* PBXTextBookmark */;
+			365D68250FD5885F00255C00 /* PBXTextBookmark */ = 365D68250FD5885F00255C00 /* PBXTextBookmark */;
+			365D68260FD5885F00255C00 /* PBXTextBookmark */ = 365D68260FD5885F00255C00 /* PBXTextBookmark */;
+			365D68330FD589C800255C00 /* PBXTextBookmark */ = 365D68330FD589C800255C00 /* PBXTextBookmark */;
+			365D683B0FD58AB000255C00 /* PBXTextBookmark */ = 365D683B0FD58AB000255C00 /* PBXTextBookmark */;
+			365D68530FD58D0A00255C00 /* PBXTextBookmark */ = 365D68530FD58D0A00255C00 /* PBXTextBookmark */;
+			365D68620FD58D3E00255C00 /* PBXTextBookmark */ = 365D68620FD58D3E00255C00 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 362A3DAE0FD472BB00BD82F6 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA /* main.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {929, 594}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 229}";
+			sepNavWindowFrame = "{{130, 360}, {750, 558}}";
+		};
+	};
+	362A3D8D0FD472B400BD82F6 /* PhoneGap */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = PhoneGap;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+	};
+	362A3DAE0FD472BB00BD82F6 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	362A3DAF0FD472BB00BD82F6 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	362A3DBD0FD4733C00BD82F6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 824041C00E942F0E002F3376 /* Default.png */;
+	};
+	362A3DBE0FD4733C00BD82F6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 8204F3D20E5CB4DC00F2DAA1 /* icon.png */;
+	};
+	362A3DDC0FD475BB00BD82F6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 825DFB5D0E464E6C000D0A5D /* README.md */;
+		name = "README.md: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 22;
+		vrLoc = 0;
+	};
+	362A3DDD0FD475BB00BD82F6 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/Info.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	362A3DE00FD475BB00BD82F6 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 1BB1F7D10F9E1BE2002A28DA /* Settings.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/Settings.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	362A3DE40FD475BB00BD82F6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 825DFB5D0E464E6C000D0A5D /* README.md */;
+		name = "README.md: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 22;
+		vrLoc = 0;
+	};
+	362A3DE80FD475BB00BD82F6 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/Info.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	362A3DEB0FD475BB00BD82F6 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 47DC7FB20EFADF9E00D0B526 /* PhoneGap.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			DetectPhoneNumber,
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/PhoneGap.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	362A3DEC0FD475BB00BD82F6 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 1BB1F7D10F9E1BE2002A28DA /* Settings.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/Settings.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	3635F6320FD5A6CD002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 126";
+		rLen = 0;
+		rLoc = 3563;
+		rType = 0;
+		vrLen = 1532;
+		vrLoc = 2270;
+	};
+	3635F6330FD5A6CD002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67850FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 344";
+		rLen = 0;
+		rLoc = 13613;
+		rType = 0;
+		vrLen = 1563;
+		vrLoc = 12449;
+	};
+	3635F6340FD5A6CD002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 89";
+		rLen = 0;
+		rLoc = 2468;
+		rType = 0;
+		vrLen = 1540;
+		vrLoc = 2262;
+	};
+	3635F6350FD5A6CD002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67850FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 344";
+		rLen = 0;
+		rLoc = 13613;
+		rType = 0;
+		vrLen = 1638;
+		vrLoc = 12450;
+	};
+	3635F63C0FD5A734002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 13";
+		rLen = 0;
+		rLoc = 443;
+		rType = 0;
+		vrLen = 1437;
+		vrLoc = 0;
+	};
+	3635F63D0FD5A734002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67850FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 29";
+		rLen = 0;
+		rLoc = 830;
+		rType = 0;
+		vrLen = 1562;
+		vrLoc = 0;
+	};
+	3635F63E0FD5A734002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 13";
+		rLen = 0;
+		rLoc = 443;
+		rType = 0;
+		vrLen = 1437;
+		vrLoc = 0;
+	};
+	3635F6430FD5A763002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67850FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 29";
+		rLen = 0;
+		rLoc = 830;
+		rType = 0;
+		vrLen = 1713;
+		vrLoc = 0;
+	};
+	3635F6440FD5A763002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67D10FD578BD00255C00 /* geolocation.js */;
+		name = "geolocation.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1961;
+		vrLoc = 355;
+	};
+	3635F6450FD5A763002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67850FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 29";
+		rLen = 0;
+		rLoc = 830;
+		rType = 0;
+		vrLen = 1713;
+		vrLoc = 0;
+	};
+	3635F6460FD5A763002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67D10FD578BD00255C00 /* geolocation.js */;
+		name = "geolocation.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1961;
+		vrLoc = 355;
+	};
+	3635F6870FD5AE22002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D68610FD58D3E00255C00 /* index.html */;
+		name = "index.html: 80";
+		rLen = 63;
+		rLoc = 2604;
+		rType = 0;
+		vrLen = 874;
+		vrLoc = 2177;
+	};
+	3635F6AA0FD5B080002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3635F6AB0FD5B080002446A6 /* device.js */;
+		name = "device.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1025;
+		vrLoc = 0;
+	};
+	3635F6AB0FD5B080002446A6 /* device.js */ = {
+		isa = PBXFileReference;
+		name = device.js;
+		path = /Users/plw/Desktop/cartagen/phonegap/javascripts/device.js;
+		sourceTree = "<absolute>";
+	};
+	3635F6AD0FD5B080002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 89";
+		rLen = 0;
+		rLoc = 2469;
+		rType = 0;
+		vrLen = 1599;
+		vrLoc = 2362;
+	};
+	3635F6AE0FD5B080002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3635F6AF0FD5B080002446A6 /* device.js */;
+		name = "device.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1025;
+		vrLoc = 0;
+	};
+	3635F6AF0FD5B080002446A6 /* device.js */ = {
+		isa = PBXFileReference;
+		name = device.js;
+		path = /Users/plw/Desktop/cartagen/phonegap/javascripts/device.js;
+		sourceTree = "<absolute>";
+	};
+	3635F6FB0FD5B695002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 150";
+		rLen = 0;
+		rLoc = 4270;
+		rType = 0;
+		vrLen = 1310;
+		vrLoc = 3688;
+	};
+	3635F6FC0FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 824041C00E942F0E002F3376 /* Default.png */;
+	};
+	3635F6FD0FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 8204F3D20E5CB4DC00F2DAA1 /* icon.png */;
+	};
+	3635F6FE0FD5B695002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D685F0FD58D3E00255C00 /* events.js */;
+		name = "events.js: 150";
+		rLen = 0;
+		rLoc = 4270;
+		rType = 0;
+		vrLen = 1310;
+		vrLoc = 3688;
+	};
+	3635F6FF0FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 824041C00E942F0E002F3376 /* Default.png */;
+	};
+	3635F7000FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 8204F3D20E5CB4DC00F2DAA1 /* icon.png */;
+	};
+	3635F7010FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 824041C00E942F0E002F3376 /* Default.png */;
+	};
+	3635F7020FD5B695002446A6 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 8204F3D20E5CB4DC00F2DAA1 /* icon.png */;
+	};
+	3635F7030FD5B695002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3635F7040FD5B695002446A6 /* index.html */;
+		name = "index.html: 80";
+		rLen = 63;
+		rLoc = 2604;
+		rType = 0;
+		vrLen = 1313;
+		vrLoc = 0;
+	};
+	3635F7040FD5B695002446A6 /* index.html */ = {
+		isa = PBXFileReference;
+		name = index.html;
+		path = /Users/plw/Desktop/cartagen/phonegap/iphone/www/index.html;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {804, 1806}}";
+			sepNavSelRange = "{2604, 63}";
+			sepNavVisRange = "{0, 1313}";
+			sepNavWindowFrame = "{{107, 381}, {750, 558}}";
+		};
+	};
+	3635F7050FD5B695002446A6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F8800E650500002FDA36 /* Location.m */;
+		name = "Location.m: 95";
+		rLen = 10;
+		rLoc = 3281;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 2804;
+	};
+	364C130A0FD47826000C2CE1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* PhoneGapDelegate.h */;
+		name = "PhoneGapDelegate.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 369;
+		vrLoc = 0;
+	};
+	364C130B0FD47826000C2CE1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 47FAB6A80EF751E2005F55AB /* PhoneGapViewController.m */;
+		name = "PhoneGapViewController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 462;
+		vrLoc = 0;
+	};
+	364C130C0FD47826000C2CE1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1B1B4FBD0F94571B00ECD4E6 /* PhoneGapCommand.m */;
+		name = "PhoneGapCommand.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 458;
+		vrLoc = 0;
+	};
+	365D67590FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 47FAB6A80EF751E2005F55AB /* PhoneGapViewController.m */;
+		name = "PhoneGapViewController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 444;
+		vrLoc = 1453;
+	};
+	365D675A0FD56F6700255C00 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 47DC7FB20EFADF9E00D0B526 /* PhoneGap.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			Offline,
+		);
+		name = /Users/plw/Desktop/cartagen/phonegap/iphone/PhoneGap.plist;
+		rLen = 0;
+		rLoc = 2147483647;
+	};
+	365D675B0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1B1B4FBD0F94571B00ECD4E6 /* PhoneGapCommand.m */;
+		name = "PhoneGapCommand.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 836;
+		vrLoc = 0;
+	};
+	365D675C0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F87F0E650500002FDA36 /* Location.h */;
+		name = "Location.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 838;
+		vrLoc = 0;
+	};
+	365D675D0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 474A7F820EFAD6580020DD7F /* PhoneGap_Prefix.pch */;
+		name = "PhoneGap_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 311;
+		vrLoc = 0;
+	};
+	365D675E0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
+		name = "main.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 229;
+		vrLoc = 0;
+	};
+	365D67670FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* PhoneGapDelegate.h */;
+		name = "PhoneGapDelegate.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 941;
+		vrLoc = 0;
+	};
+	365D676A0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* PhoneGapDelegate.m */;
+		name = "PhoneGapDelegate.m: 87";
+		rLen = 0;
+		rLoc = 2984;
+		rType = 0;
+		vrLen = 1745;
+		vrLoc = 2162;
+	};
+	365D676D0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D676E0FD56F6700255C00 /* index.html */;
+		name = "index.html: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1612;
+		vrLoc = 0;
+	};
+	365D676E0FD56F6700255C00 /* index.html */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.html;
+		name = index.html;
+		path = /Users/plw/Desktop/cartagen/phonegap/iphone/www/index.html;
+		sourceTree = "<absolute>";
+	};
+	365D67700FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F87F0E650500002FDA36 /* Location.h */;
+		name = "Location.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 838;
+		vrLoc = 0;
+	};
+	365D67710FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F8800E650500002FDA36 /* Location.m */;
+		name = "Location.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1509;
+		vrLoc = 2276;
+	};
+	365D67720FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 474A7F820EFAD6580020DD7F /* PhoneGap_Prefix.pch */;
+		name = "PhoneGap_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 311;
+		vrLoc = 0;
+	};
+	365D67730FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
+		name = "main.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 229;
+		vrLoc = 0;
+	};
+	365D67780FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67790FD56F6700255C00 /* phonegap.js.base */;
+		name = "phonegap.js.base: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1254;
+		vrLoc = 0;
+	};
+	365D67790FD56F6700255C00 /* phonegap.js.base */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = phonegap.js.base;
+		path = /Users/plw/Desktop/cartagen/phonegap/javascripts/phonegap.js.base;
+		sourceTree = "<absolute>";
+	};
+	365D677A0FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D677B0FD56F6700255C00 /* cartagen.js */;
+		name = "cartagen.js: 381";
+		rLen = 0;
+		rLoc = 15269;
+		rType = 0;
+		vrLen = 1596;
+		vrLoc = 14131;
+	};
+	365D677B0FD56F6700255C00 /* cartagen.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = cartagen.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/cartagen.js;
+		sourceTree = "<absolute>";
+	};
+	365D67810FD56F6700255C00 /* phonegap.js.base */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = phonegap.js.base;
+		path = /Users/plw/Desktop/cartagen/phonegap/javascripts/phonegap.js.base;
+		sourceTree = "<absolute>";
+	};
+	365D67820FD56F6700255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67830FD56F6700255C00 /* phonegap.js */;
+		name = "phonegap.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1168;
+		vrLoc = 29393;
+	};
+	365D67830FD56F6700255C00 /* phonegap.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = phonegap.js;
+		path = /Users/plw/Desktop/cartagen/phonegap/lib/iphone/phonegap.js;
+		sourceTree = "<absolute>";
+	};
+	365D67850FD56F6700255C00 /* cartagen.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = cartagen.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/cartagen.js;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1409, 13664}}";
+			sepNavSelRange = "{830, 0}";
+			sepNavVisRange = "{0, 1713}";
+		};
+	};
+	365D67880FD56FFD00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* PhoneGapDelegate.m */;
+		name = "PhoneGapDelegate.m: 85";
+		rLen = 0;
+		rLoc = 2817;
+		rType = 0;
+		vrLen = 1629;
+		vrLoc = 2067;
+	};
+	365D67C40FD578BD00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F8800E650500002FDA36 /* Location.m */;
+		name = "Location.m: 95";
+		rLen = 10;
+		rLoc = 3281;
+		rType = 0;
+		vrLen = 1655;
+		vrLoc = 2130;
+	};
+	365D67CB0FD578BD00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67CC0FD578BD00255C00 /* geolocation.js */;
+		name = "geolocation.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1541;
+		vrLoc = 99;
+	};
+	365D67CC0FD578BD00255C00 /* geolocation.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = geolocation.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/lib/phonegap/geolocation.js;
+		sourceTree = "<absolute>";
+	};
+	365D67CD0FD578BD00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67CE0FD578BD00255C00 /* geolocation.js */;
+		name = "geolocation.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 194;
+		vrLoc = 0;
+	};
+	365D67CE0FD578BD00255C00 /* geolocation.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = geolocation.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/lib/phonegap/iphone/geolocation.js;
+		sourceTree = "<absolute>";
+	};
+	365D67D10FD578BD00255C00 /* geolocation.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = geolocation.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/lib/phonegap/geolocation.js;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1409, 1624}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{355, 1961}";
+		};
+	};
+	365D67D80FD578BD00255C00 /* geolocation.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = geolocation.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/lib/phonegap/iphone/geolocation.js;
+		sourceTree = "<absolute>";
+	};
+	365D67E10FD57AE500255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67E20FD57AE500255C00 /* README.md */;
+		name = "README.md: 82";
+		rLen = 39;
+		rLoc = 2246;
+		rType = 0;
+		vrLen = 1783;
+		vrLoc = 1373;
+	};
+	365D67E20FD57AE500255C00 /* README.md */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = README.md;
+		path = /Users/plw/Desktop/cartagen/phonegap/README.md;
+		sourceTree = "<absolute>";
+	};
+	365D67E60FD57AE500255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67E70FD57AE500255C00 /* README.md */;
+		name = "README.md: 82";
+		rLen = 39;
+		rLoc = 2246;
+		rType = 0;
+		vrLen = 1783;
+		vrLoc = 1373;
+	};
+	365D67E70FD57AE500255C00 /* README.md */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = README.md;
+		path = /Users/plw/Desktop/cartagen/phonegap/README.md;
+		sourceTree = "<absolute>";
+	};
+	365D67FF0FD5807200255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67D80FD578BD00255C00 /* geolocation.js */;
+		name = "geolocation.js: 8";
+		rLen = 0;
+		rLoc = 175;
+		rType = 0;
+		vrLen = 254;
+		vrLoc = 0;
+	};
+	365D680D0FD587BA00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67810FD56F6700255C00 /* phonegap.js.base */;
+		name = "phonegap.js.base: 2";
+		rLen = 0;
+		rLoc = 56;
+		rType = 0;
+		vrLen = 1559;
+		vrLoc = 0;
+	};
+	365D681D0FD5880500255C00 /* phonegap.base.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = phonegap.base.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/lib/phonegap/phonegap.base.js;
+		sourceTree = "<absolute>";
+	};
+	365D68250FD5885F00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D681D0FD5880500255C00 /* phonegap.base.js */;
+		name = "phonegap.base.js: 5";
+		rLen = 0;
+		rLoc = 76;
+		rType = 0;
+		vrLen = 1494;
+		vrLoc = 0;
+	};
+	365D68260FD5885F00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D681D0FD5880500255C00 /* phonegap.base.js */;
+		name = "phonegap.base.js: 5";
+		rLen = 0;
+		rLoc = 76;
+		rType = 0;
+		vrLen = 1494;
+		vrLoc = 0;
+	};
+	365D68330FD589C800255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D68340FD589C800255C00 /* events.js */;
+		name = "events.js: 89";
+		rLen = 0;
+		rLoc = 2483;
+		rType = 0;
+		vrLen = 1537;
+		vrLoc = 2407;
+	};
+	365D68340FD589C800255C00 /* events.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = events.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/events.js;
+		sourceTree = "<absolute>";
+	};
+	365D683B0FD58AB000255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D676E0FD56F6700255C00 /* index.html */;
+		name = "index.html: 76";
+		rLen = 20;
+		rLoc = 2529;
+		rType = 0;
+		vrLen = 1445;
+		vrLoc = 1447;
+	};
+	365D68530FD58D0A00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 365D67830FD56F6700255C00 /* phonegap.js */;
+		name = "phonegap.js: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1559;
+		vrLoc = 0;
+	};
+	365D685F0FD58D3E00255C00 /* events.js */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.javascript;
+		name = events.js;
+		path = /Users/plw/Desktop/cartagen/cartagen/cartagen/public/cartagen/events.js;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1409, 2856}}";
+			sepNavSelRange = "{4270, 0}";
+			sepNavVisRange = "{3688, 1310}";
+		};
+	};
+	365D68610FD58D3E00255C00 /* index.html */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.html;
+		name = index.html;
+		path = /Users/plw/Desktop/cartagen/phonegap/iphone/www/index.html;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {804, 1806}}";
+			sepNavSelRange = "{2604, 63}";
+			sepNavVisRange = "{0, 1308}";
+		};
+	};
+	365D68620FD58D3E00255C00 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8254F8800E650500002FDA36 /* Location.m */;
+		name = "Location.m: 95";
+		rLen = 10;
+		rLoc = 3281;
+		rType = 0;
+		vrLen = 981;
+		vrLoc = 2804;
+	};
+	474A7F820EFAD6580020DD7F /* PhoneGap_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {929, 594}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 311}";
+			sepNavWindowFrame = "{{61, 423}, {750, 558}}";
+		};
+	};
+	47DC7FB20EFADF9E00D0B526 /* PhoneGap.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{15, 465}, {750, 558}}";
+		};
+	};
+	47FAB6A80EF751E2005F55AB /* PhoneGapViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {762, 798}}";
+			sepNavSelRange = "{1070, 10}";
+			sepNavVisRange = "{904, 458}";
+		};
+	};
+	8205CB7C0E68A701006CBEEF /* Device.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {691, 490}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 951}";
+			sepNavWindowFrame = "{{15, 465}, {750, 558}}";
+		};
+	};
+	8254F87F0E650500002FDA36 /* Location.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {929, 594}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 838}";
+		};
+	};
+	8254F8800E650500002FDA36 /* Location.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1320, 1526}}";
+			sepNavSelRange = "{3281, 10}";
+			sepNavVisRange = "{2804, 981}";
+			sepNavWindowFrame = "{{38, 444}, {750, 558}}";
+		};
+	};
+	825DFB5D0E464E6C000D0A5D /* README.md */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {691, 430}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 22}";
+			sepNavWindowFrame = "{{84, 402}, {750, 558}}";
+		};
+	};
+	8D1107310486CEB800E47090 /* Info.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{61, 423}, {750, 558}}";
+		};
+	};
+}
