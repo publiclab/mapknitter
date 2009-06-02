@@ -422,6 +422,7 @@ var Cartagen = {
         this.label_queue.each(function(item) {
             item[0].draw(item[1], item[2])
         })
+		this.label_queue = []
     },
     // adds the label to the list of labels to be drawn when
     queue_label: function(label, x, y) {
@@ -834,21 +835,21 @@ var Way = Class.create({
 
 var Label = Class.create({
     fontFamily: 'sans',
-    fontSize: 0,
+    fontSize: 11,
     fontBackground: null,
     text: null,
     fontScale: false,
     padding: 6,
     fontColor: '#eee',
-    initialize: function(parent) {
-        this.parent = parent;
+    initialize: function(_way) {
+        this.way = _way
     },
-    draw: function(x, y) {
+    draw: function(_x, _y) {
         if (this.text) {
             Style.apply_font_style(this)
 
 			// try to rotate the labels on unclosed ways:
-			try { rotate(this.middle_segment_angle()) } catch(e) { console.log(e) }
+			// try { rotate(this.way.middle_segment_angle()) } catch(e) { console.log(e) }
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)
@@ -859,9 +860,9 @@ var Label = Class.create({
 			var _width = canvas.measureText(Object.value(this.fontFamily),_height,this.text)
 			if (this.fontBackground) {
 				fillStyle(Object.value(this.fontBackground))
-				rect(x-((_width+_padding)/2),y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+				rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
 			}
-			drawTextCenter("sans",_height,x,y,Object.value(this.text))
+			drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
         }
     }
 
