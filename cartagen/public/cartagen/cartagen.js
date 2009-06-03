@@ -332,7 +332,6 @@ var Cartagen = {
 	way_count: 0,
 	node_count: 0,
 	requested_plots: 0,
-	fullscreen: true,
 	stylesheet: "/style.gss",
 	live: false,
 	powersave: true,
