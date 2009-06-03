@@ -39,10 +39,10 @@ function wheel(event){
 
 // Observe mouse events:
 body = $$('body')[0]
-body.observe('mousemove', mousemove)
-body.observe('mousedown', mousedown)
-body.observe('mouseup', mouseup)
-body.observe('dblclick', doubleclick)
+Event.observe(document, 'mousemove', mousemove)
+Event.observe(document, 'mousedown', mousedown)
+Event.observe(document, 'mouseup', mouseup)
+Event.observe(document, 'dblclick', doubleclick)
 // Observe scrollwheel:
 if (window.addEventListener) window.addEventListener('DOMMouseScroll', wheel, false)
 window.onmousewheel = document.onmousewheel = wheel
@@ -190,6 +190,7 @@ function drag() {
 
 function mousedown(event) {
 	mouseDown = true
+	console.log('mouseDown')
 	clickFrame = frame
 	Mouse.click_x = Mouse.x
 	Mouse.click_y = Mouse.y
@@ -199,14 +200,17 @@ function mousedown(event) {
 	if (!dragging) {
 		globalDragging = true
 	}
+	draw()
 }
 
 function mouseup() {
 	mouseUp = true
+	console.log('mouseUp')
 	mouseDown = false
 	releaseFrame = frame
 	globalDragging = false
 	dragging = false
+	draw()
 }
 
 function clickLength() {
