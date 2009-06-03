@@ -17,20 +17,23 @@ var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
 
+if (typeof cartagen_base_uri == 'undefined') {
+    cartagen_base_uri = 'cartagen'
+}
 // additional dependencies:
 var scripts = [
-	'cartagen/canvastext.js',
-	'cartagen/glop.js',
-	'cartagen/events.js',
-	'cartagen/lib/geohash.js',
+	cartagen_base_uri + '/canvastext.js',
+	cartagen_base_uri + '/glop.js',
+	cartagen_base_uri + '/events.js',
+	cartagen_base_uri + '/lib/geohash.js',
 ]
 
 // load phonegap js if needed
 if(window.PhoneGap) {
-	scripts.unshift('cartagen/lib/phonegap/phonegap.base.js',
-				 'cartagen/lib/phonegap/geolocation.js',
-				 'cartagen/lib/phonegap/iphone/phonegap.js',
-				 'cartagen/lib/phonegap/iphone/geolocation.js')
+	scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
+				 cartagen_base_uri + '/lib/phonegap/geolocation.js',
+				 cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
+				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
 }
 
 
@@ -38,7 +41,7 @@ if(window.PhoneGap) {
 // requires a load_next_script() call at the end of each
 // dependent script to trigger the next one.
 function load_next_script() {
-	console.log("loading: "+scripts[0])
+	Cartagen.debug("loading: "+scripts[0])
 	if (scripts.length > 0) {
 		load_script(scripts.splice(0,1)[0])
 	}
@@ -192,7 +195,7 @@ var Style = {
 				}
 			})
 		} catch(e) {
-			console.log("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
+			Cartagen.debug("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
 		}
 	},
 	create_refresher: function(feature, property, interval) {
@@ -274,7 +277,7 @@ var Style = {
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
 			onComplete: function(result) {
-				console.log('applying '+stylesheet_url)
+				Cartagen.debug('applying '+stylesheet_url)
 				Style.styles = ("{"+result.responseText+"}").evalJSON()
 				Style.stylesheet_source = "{"+result.responseText+"}"
 				Style.apply_gss(Style.stylesheet_source)
@@ -351,6 +354,7 @@ var Cartagen = {
 	bleed_level: 1,
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
     label_queue: [], // queue of labels to draw
+    debug_mode: typeof console != "undefined",
 	setup: function(configs) {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
@@ -368,7 +372,7 @@ var Cartagen = {
 
 		Object.keys(configs).each(function(key,index) {
 			this[key] = Object.values(configs)[index]
-			// console.log('configuring '+key+': '+this[key])
+			// Cartagen.debug('configuring '+key+': '+this[key])
 		},this)
 		
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
@@ -385,7 +389,7 @@ var Cartagen = {
 				this.get_static_plot(this.static_map_layers[1])
 			} else {
 				this.static_map_layers.each(function(layer_url) {
-					// console.log('fetching '+layer_url)
+					// Cartagen.debug('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
 			}
@@ -505,7 +509,7 @@ var Cartagen = {
 							}
 						}
 					// } catch(e) {
-					// 	console.log(trace(e))
+					// 	Cartagen.debug(trace(e))
 					// }
 				})
 				w.tags = new Hash()
@@ -526,7 +530,7 @@ var Cartagen = {
 					try {
 						w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
 						w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
-					} catch(e) {console.log(e) }
+					} catch(e) {Cartagen.debug(e) }
 				}
 				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
@@ -582,12 +586,12 @@ var Cartagen = {
 		new Ajax.Request(url,{
 			method: 'get',
 			onSuccess: function(result) {
-				// console.log(result.responseText.evalJSON().osm.ways.length+" ways")
+				// Cartagen.debug(result.responseText.evalJSON().osm.ways.length+" ways")
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				console.log(objects.length+" objects")
+				Cartagen.debug(objects.length+" objects")
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) last_event = frame
-				console.log("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -610,14 +614,14 @@ var Cartagen = {
 			// check if we've loaded already this session:
 			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
 				// no live-loading, so:
-				console.log("already loaded plot")
+				Cartagen.debug("already loaded plot")
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
 				if (typeof localStorage != "undefined") {
 					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
 					if (ls) {
 						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
-						console.log("localStorage cached plot")
+						Cartagen.debug("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
 						// it's not in the localStorage:
@@ -631,7 +635,7 @@ var Cartagen = {
 			}
 			// if the bleed level of this plot is > 0
 			if (_bleed > 0) {
-				console.log('bleeding to neighbors with bleed = '+_bleed)
+				Cartagen.debug('bleeding to neighbors with bleed = '+_bleed)
 				// bleed to 8 neighboring plots, decrement bleed:
 				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
 				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
@@ -666,7 +670,7 @@ var Cartagen = {
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) last_event = frame
-				console.log("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -695,7 +699,10 @@ var Cartagen = {
 	// sends user to an image of the current canvas
 	redirect_to_image: function() {
 		document.location = canvas.canvas.toDataURL();
-	}
+	},
+    debug: function(msg) {
+        console.log(msg)
+    }
 }
 
 var Map = {
@@ -720,7 +727,7 @@ var Map = {
 			this.user_lat = loc.latitude
 			this.user_lon = loc.longitude
 		}
-		console.log('detected location: '+this.user_lat+","+this.user_lon)
+		Cartagen.debug('detected location: '+this.user_lat+","+this.user_lon)
 	},
 	// user_lat & user_lon are based on IP-based geocoding in Firefox 3.5:
 	user_lat: 0,
@@ -772,7 +779,7 @@ var Way = Class.create({
     },
 	// returns the middle-most line segment as a tuple [node_1,node_2]
 	middle_segment: function() {
-		// console.log(this.nodes[Math.floor(this.nodes.length/2)+1])
+		// Cartagen.debug(this.nodes[Math.floor(this.nodes.length/2)+1])
         if (this.nodes.length == 1) {
             return this.nodes[0]
         }
@@ -839,7 +846,7 @@ var Way = Class.create({
 		// strokeStyle('red')
 		// strokeRect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
 
-		// this need restructuring. Perhaps a Label class is in order:
+		// draw label if we're zoomed in enough'
 		if (Cartagen.zoom_level > 0.1) {
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
@@ -860,12 +867,22 @@ var Label = Class.create({
     },
     draw: function(_x, _y) {
         if (this.text) {
-            this.text = this.way.id
+            canvas.save()
+            //this.text = this.way.id
             Style.apply_font_style(this)
 
 			// try to rotate the labels on unclosed ways:
-            //try { rotate(this.way.middle_segment_angle()) } catch(e) { console.log(this.way) }
-            //canvas.rotate(30)
+            //try { rotate(this.way.middle_segment_angle()) } catch(e) { Cartagen.debug(this.way) }
+//            var rotation = 1
+//            rotate(rotation)
+//            var orig_angle = Math.atan2(_x,_y)
+//            var new_angle = orig_angle + rotation
+//            var hypot = Math.sqrt(_x*_x + _y*_y)
+//            var x_offset = Math.sin(new_angle) * hypot
+//            var y_offset = Math.cos(new_angle) * hypot
+//            Cartagen.debug('x: ' + _x + '; y: ' + _y + '; orig: ' + orig_angle + '; new: ' + new_angle + '; hypot: ' + hypot + '; x_offset: ' + x_offset + '; y_offset ' + y_offset+ '; new x: ' + _x - x_offset + '; new y: ' + _y - y_offset)
+//            _x = _x - x_offset
+//            _y = _y - y_offset
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)
@@ -878,7 +895,9 @@ var Label = Class.create({
 				fillStyle(Object.value(this.fontBackground))
 				rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
 			}
+
 			drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
+            canvas.restore()
         }
     }
 
@@ -973,7 +992,8 @@ function poly_area(nodes) {
 		else last = nodes[nodes.length-1]
 		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 	})
-	return Math.abs(area/2)
+	return Math.abs(area/2)//            var rotation = 1
+
 }
 
 // add Object.value, which returns the argument, unless the argument is a function,
