@@ -895,8 +895,14 @@ var Label = Class.create({
 				rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
 			}
 
-			drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
-            canvas.restore()
+			if (canvas.fillText) { // || Prototype.Browser.Gecko) {
+				canvas.font = _height+"pt Helvetica"
+				fillStyle(Object.value(this.fontColor))
+	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y)	
+			} else {
+				drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
+			}
+			canvas.restore()
         }
     }
 
