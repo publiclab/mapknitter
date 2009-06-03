@@ -709,8 +709,8 @@ var Map = {
 		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
 		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
 	},
-	pointer_x: function() { return Map.x+(((width/2)-Mouse.x)/Cartagen.zoom_level) },
-	pointer_y: function() { return Map.y+(((height/2)-Mouse.y)/Cartagen.zoom_level) },
+	pointer_x: function() { return Map.x+(((width/-2)-Mouse.x)/Cartagen.zoom_level) },
+	pointer_y: function() { return Map.y+(((height/-2)-Mouse.y)/Cartagen.zoom_level) },
 	x: 0,
 	y: 0,
 	rotate: 0,
