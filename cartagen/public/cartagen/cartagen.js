@@ -787,7 +787,7 @@ var Way = Class.create({
         if (segment[1]) {
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
-            return (Math.tan(_y/_x))
+            return (Math.tan(_y/_x)/1.7)
         } else return 90
 	},
 	draw: function() {
@@ -962,7 +962,7 @@ User = {
 			User.lat = loc.latitude
 			User.lon = loc.longitude
 		}
-		User.calculate_coords()
+		// User.calculate_coords()
 		Cartagen.debug('detected location: '+this.lat+","+this.lon)
 	},
 	// lat & lon are based on geolocation:
@@ -970,54 +970,14 @@ User = {
 	lon: 0,
 	x: -118.31700000003664,
 	y: -6562600.9880228145,
-	point_submit_uri: '/write/point',
-	line_submit_uri: '/write/line',
-	updates_uri: '/updates',
-	following: false,
-	following_executer: null,
 	calculate_coords: function() {
-		// this should update x and y based on lat and lon
+		// this should be based on lat and lon
 	},
-	
-	submit_point: function(_x, _y) {
-		if (Object.isUndefined(_x)) _x = User.x
-		if (Object.isUndefined(_y)) _y = User.y
+	submit_point: function(x, y) {
+		if (isUndefined(x)) x = User.x
+		if (isUndefined(y)) y = User.y
 		var point = new Node()
-		point.x = _x
-		point.y = _y
-		point.radius = 50
-		point.fillStyle = User.color
-		objects.push(point)
-		draw()
 		
-		var params = {
-			color: User.color,
-			x: _x,
-			y: _y
-		}
-		
-		new Ajax.Request('/write/point', {
-			method: 'post',
-			parameters: params
-		});
-	},
-	toggle_following: function() {
-		if (User.following) {
-			following_executer.stop()
-			User.following = false
-		}
-		else {
-			following_executer = new PeriodicalExecuter(User.center_map_on_user, 60)
-			User.following = true
-		}
-	},
-	center_map_on_user: function() {
-		navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
-	},
-	set_loc_and_center: function(loc) {
-		User.set_loc(loc)
-		Map.x = User.x
-		Map.y = User.y
 	}
 }
 

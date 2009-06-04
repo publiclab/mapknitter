@@ -18,11 +18,17 @@ leisure: {
 	lineWidth: 3,
 	strokeStyle: "#181"
 },
+area: {
+	lineWidth: 3,
+	strokeStyle: "#444",
+	fillStyle: "#888",
+	opacity: 0.4,
+	fontColor: "#444"
+},
 park: {
 	fillStyle: "#2a2",
 	lineWidth: 3,
 	strokeStyle: "#181",
-	fontColor: "#dfd",
 	fontSize: 12,
 	text: function() { return this.tags.get('name') }
 },
@@ -72,6 +78,8 @@ footway: {
 },
 pedestrian: {
 	strokeStyle: "#842",
+	fontBackground: "rgba(1,1,1,0)",
+	fontColor: "#444",
 	lineWidth: function() {
 		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
 		else return 3
@@ -100,10 +108,4 @@ landuse: {
 rail: {
 	lineWidth: 4,
 	strokeStyle: "purple"
-},
-area: {
-	lineWidth: 3,
-	strokeStyle: "#444",
-	fillStyle: "#888",
-	opacity: 0.4
 }
