@@ -6,8 +6,7 @@ Mushrooms = {
 		$('point').observe('click', Mushrooms.point)
 	},
 	follow: function() {
-		// should toggle user following
-		alert('following')
+		User.toggle_following()
 		return false
 	},
 	line: function() {
@@ -19,7 +18,7 @@ Mushrooms = {
 	},
 	click: function() {
 		// should add mushroom to map
-		alert('clicked')
+		User.submit_point()
 		return false
 	},
 	point: function() {
