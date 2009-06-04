@@ -785,7 +785,7 @@ var Way = Class.create({
         if (segment[1]) {
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
-            return (Math.tan(_y/_x) * 180) / (2*Math.PI)
+            return (Math.tan(_y/_x))
         }
         else {
             return 90
@@ -845,7 +845,7 @@ var Way = Class.create({
 })
 
 var Label = Class.create({
-    fontFamily: 'sans',
+    fontFamily: 'Lucida Grande',
     fontSize: 11,
     fontBackground: null,
     text: null,
@@ -862,17 +862,13 @@ var Label = Class.create({
             Style.apply_font_style(this)
 
 			// try to rotate the labels on unclosed ways:
-            //try { rotate(this.way.middle_segment_angle()) } catch(e) { Cartagen.debug(this.way) }
-//            var rotation = 1
-//            rotate(rotation)
-//            var orig_angle = Math.atan2(_x,_y)
-//            var new_angle = orig_angle + rotation
-//            var hypot = Math.sqrt(_x*_x + _y*_y)
-//            var x_offset = Math.sin(new_angle) * hypot
-//            var y_offset = Math.cos(new_angle) * hypot
-//            Cartagen.debug('x: ' + _x + '; y: ' + _y + '; orig: ' + orig_angle + '; new: ' + new_angle + '; hypot: ' + hypot + '; x_offset: ' + x_offset + '; y_offset ' + y_offset+ '; new x: ' + _x - x_offset + '; new y: ' + _y - y_offset)
-//            _x = _x - x_offset
-//            _y = _y - y_offset
+			try {
+				if (!this.way.closed_poly) {
+					translate(_x,_y)
+					rotate(this.way.middle_segment_angle())
+					translate(-1*_x,-1*_y)
+				}
+			} catch(e) {console.log(e)}
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)
@@ -880,17 +876,22 @@ var Label = Class.create({
 				var _height = Object.value(this.fontSize)/Cartagen.zoom_level
 				var _padding = Object.value(this.padding)/Cartagen.zoom_level
 			}
-			var _width = canvas.measureText(Object.value(this.fontFamily),_height,this.text)
-			if (this.fontBackground) {
-				fillStyle(Object.value(this.fontBackground))
-				rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
-			}
 
 			if (canvas.fillText) { // || Prototype.Browser.Gecko) {
-				canvas.font = _height+"pt Helvetica"
+				canvas.font = _height+"pt "+this.fontFamily
+				var _width = canvas.measureText(Object.value(this.text)).width
+				if (this.fontBackground) {
+					fillStyle(Object.value(this.fontBackground))
+					rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+				}
 				fillStyle(Object.value(this.fontColor))
 	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y)	
 			} else {
+				var _width = canvas.measureCanvasText(Object.value(this.fontFamily),_height,this.text)
+				if (this.fontBackground) {
+					fillStyle(Object.value(this.fontBackground))
+					rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+				}
 				drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
 			}
 			canvas.restore()

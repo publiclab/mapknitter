@@ -170,7 +170,7 @@ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
 CanvasTextFunctions.enable = function( ctx)
 {
     ctx.drawText = function(font,size,x,y,text) { return CanvasTextFunctions.draw( ctx, font,size,x,y,text); };
-    ctx.measureText = function(font,size,text) { return CanvasTextFunctions.measure( font,size,text); };
+    ctx.measureCanvasText = function(font,size,text) { return CanvasTextFunctions.measure( font,size,text); };
     ctx.fontAscent = function(font,size) { return CanvasTextFunctions.ascent(font,size); }
     ctx.fontDescent = function(font,size) { return CanvasTextFunctions.descent(font,size); }
 
