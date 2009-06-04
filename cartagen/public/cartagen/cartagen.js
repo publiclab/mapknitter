@@ -343,6 +343,7 @@ var Cartagen = {
 	live_gss: false, // this is for inline gss editing, generally only on cartagen.org
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
+	dynamic_layers: [],
 	range: 0.001,
 	lat1: 41.9227, // these are the initial bounding boxes for the viewport
 	lat2: 41.861,
@@ -391,9 +392,15 @@ var Cartagen = {
 				this.get_static_plot(this.static_map_layers[1])
 			} else {
 				this.static_map_layers.each(function(layer_url) {
-					// Cartagen.debug('fetching '+layer_url)
+					Cartagen.debug('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
+				if (this.dynamic_layers.length > 0) {
+					this.dynamic_layers.each(function(layer_url) {
+						Cartagen.debug('fetching '+layer_url)
+						load_script(layer_url)
+					},this)
+				}
 			}
 		}
 	},
@@ -1018,7 +1025,33 @@ function poly_area(nodes) {
 		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 	})
 	return Math.abs(area/2)//            var rotation = 1
+}
 
+var Geometry = {
+	// poly_centroid(point,n)
+	
+	// PolygonCenterOfMass(Point[] polygon,int N)
+	// {
+	// 	float cx=0,cy=0;
+	// 	float A=(float)SignedPolygonArea(polygon,N);
+	// 	Point2Df res=new Point2Df();
+	// 	int i,j;
+	// 
+	// 	float factor=0;
+	// 	for (i=0;i<N;i++) {
+	// 		j = (i + 1) % N;
+	// 		factor=(polygon[i].x*polygon[j].y-polygon[j].x*polygon[i].y);
+	// 		cx+=(polygon[i].x+polygon[j].x)*factor;
+	// 		cy+=(polygon[i].y+polygon[j].y)*factor;
+	// 	}
+	// 	A*=6.0f;
+	// 	factor=1/A;
+	// 	cx*=factor;
+	// 	cy*=factor;
+	// 	res.x=cx;
+	// 	res.y=cy;
+	// 	return res;
+	// }
 }
 
 // add Object.value, which returns the argument, unless the argument is a function,
