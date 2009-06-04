@@ -38,11 +38,12 @@ function wheel(event){
 }
 
 // Observe mouse events:
-body = $$('body')[0]
-Event.observe(document, 'mousemove', mousemove)
-Event.observe(document, 'mousedown', mousedown)
-Event.observe(document, 'mouseup', mouseup)
-Event.observe(document, 'dblclick', doubleclick)
+body = $('body')
+var canvas_el = $('canvas')
+canvas_el.observe('mousemove', mousemove)
+canvas_el.observe('mousedown', mousedown)
+canvas_el.observe('mouseup', mouseup)
+canvas_el.observe('dblclick', doubleclick)
 // Observe scrollwheel:
 if (window.addEventListener) window.addEventListener('DOMMouseScroll', wheel, false)
 window.onmousewheel = document.onmousewheel = wheel
@@ -103,7 +104,7 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 	// }
 	// setInterval(updateLayout, 400);
 
-	body.ontouchstart = function(e){
+	canvas_el.ontouchstart = function(e){
 		e.preventDefault();
 		if(e.touches.length == 1){ // Only deal with one finger
 	 		var touch = e.touches[0]; // Get the information for finger #1
@@ -121,7 +122,7 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 			draw()	
 		  }
 	}
-	body.ontouchmove = function(e) {	
+	canvas_el.ontouchmove = function(e) {	
 		e.preventDefault();
 		if(e.touches.length == 1){ // Only deal with one finger
 			var touch = e.touches[0]; // Get the information for finger #1
@@ -134,7 +135,7 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 			draw()
 		}
 	}
-	body.ontouchend = function(e) {
+	canvas_el.ontouchend = function(e) {
 		if(e.touches.length == 1) {
 			mouseUp = true
 			mouseDown = false
@@ -144,17 +145,17 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 		}
 		draw()
 	}
-	body.ongesturestart = function(e) {
+	canvas_el.ongesturestart = function(e) {
 		zoom_level_old = Cartagen.zoom_level
 	}
-	body.ongesturechange = function(e){
+	canvas_el.ongesturechange = function(e){
 	  var node = e.target;
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
 		draw()
 	}
-	body.ongestureend = function(e){
+	canvas_el.ongestureend = function(e){
 		Map.rotate_old = null
 	}	
 }
@@ -190,7 +191,6 @@ function drag() {
 
 function mousedown(event) {
 	mouseDown = true
-	console.log('mouseDown')
 	clickFrame = frame
 	Mouse.click_x = Mouse.x
 	Mouse.click_y = Mouse.y
@@ -200,17 +200,14 @@ function mousedown(event) {
 	if (!dragging) {
 		globalDragging = true
 	}
-	draw()
 }
 
 function mouseup() {
 	mouseUp = true
-	console.log('mouseUp')
 	mouseDown = false
 	releaseFrame = frame
 	globalDragging = false
 	dragging = false
-	draw()
 }
 
 function clickLength() {

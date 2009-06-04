@@ -282,7 +282,9 @@ var Style = {
 				Style.stylesheet_source = "{"+result.responseText+"}"
 				Style.apply_gss(Style.stylesheet_source)
 				// populate the gss field
-				$('gss_textarea').value = Style.stylesheet_source
+				if($('gss_textarea')) {
+					$('gss_textarea').value = Style.stylesheet_source
+				}
 			}
 		})
 	},
@@ -350,13 +352,14 @@ var Cartagen = {
 	plots: new Hash(),
 	nodes: new Hash(),
 	ways: new Hash(),
+	fullscreen: true,
 	bleed_level: 1,
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
     label_queue: [], // queue of labels to draw
     debug_mode: typeof console != "undefined",
 	setup: function(configs) {
 		// geolocate with IP if available
-		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(Map.set_user_loc)
+		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		// wait for window load:
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
 	},
@@ -433,10 +436,12 @@ var Cartagen = {
     },
 	// show alert if it's IE:
 	browser_check: function() {
-		$('browsers').absolutize;
-		$('browsers').style.top = "100px";
-		$('browsers').style.margin = "0 auto";
-		if (Prototype.Browser.IE) $('browsers').show();
+		if ($('browsers')) {
+			$('browsers').absolutize;
+			$('browsers').style.top = "100px";
+			$('browsers').style.margin = "0 auto";
+			if (Prototype.Browser.IE) $('browsers').show();
+		}
 	},
 	get_url_param: function(name) {  
 		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
@@ -717,20 +722,6 @@ var Map = {
 	rotate_old: 0,
 	x_old: 0,
 	y_old: 0,
-	set_user_loc: function(loc) {
-		if (loc.coords) {
-			this.user_lat = loc.coords.latitude
-			this.user_lon = loc.coords.longitude
-		}
-		else {
-			this.user_lat = loc.latitude
-			this.user_lon = loc.longitude
-		}
-		Cartagen.debug('detected location: '+this.user_lat+","+this.user_lon)
-	},
-	// user_lat & user_lon are based on IP-based geocoding in Firefox 3.5:
-	user_lat: 0,
-	user_lon: 0,
 	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
 	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
 	refresh_resolution: function() {
@@ -960,7 +951,35 @@ var Projection = {
 		
 	}
 }
-
+User = {
+	color: randomColor(),
+	set_loc: function(loc) {
+		if (loc.coords) {
+			User.lat = loc.coords.latitude
+			User.lon = loc.coords.longitude
+		}
+		else {
+			User.lat = loc.latitude
+			User.lon = loc.longitude
+		}
+		// User.calculate_coords()
+		Cartagen.debug('detected location: '+this.lat+","+this.lon)
+	},
+	// lat & lon are based on geolocation:
+	lat: 0,
+	lon: 0,
+	x: -118.31700000003664,
+	y: -6562600.9880228145,
+	calculate_coords: function() {
+		// this should be based on lat and lon
+	},
+	submit_point: function(x, y) {
+		if (isUndefined(x)) x = User.x
+		if (isUndefined(y)) y = User.y
+		var point = new Node()
+		
+	}
+}
 
 function overlaps(x1,y1,x2,y2,fudge) {
 	if (x2 > x1-fudge && x2 < x1+fudge) {
