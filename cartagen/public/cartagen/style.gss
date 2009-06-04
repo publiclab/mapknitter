@@ -12,7 +12,6 @@ node: {
 way: {
 	strokeStyle: function() { 
 		return "rgba(1,1,1,0.7)"
-		//return color_from_string(this.user)
 	},
 	strokeStyle: "#ccc",
 	lineWidth: 3
