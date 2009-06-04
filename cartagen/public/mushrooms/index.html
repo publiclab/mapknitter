@@ -7,25 +7,28 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Cartagen</title>
-	<link rel="stylesheet" href="mushrooms/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script src="cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
-	<script src="mushrooms/mushrooms.js" type="text/javascript" charset="utf-8"></script>
-	<script src="cartagen/canvas.js" type="text/javascript" charset="utf-8"></script>
-	<script src="cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="mushrooms.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/canvas.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		cartagen_base_uri = '../cartagen'
+	</script>
+	<script src="../cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
 	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
 		Cartagen.setup({
-			stylesheet: "static/rome/style.gss",
+			stylesheet: "style.gss",
 			static_map: true,
 			static_map_layers: [
-				"static/rome/park.js",
-				"static/rome/rail.js",
-				"static/rome/waterway.js",
-				"static/rome/primary.js",
-				"static/rome/secondary.js",
-				"static/rome/building.js",
-				"static/rome/area.js"
+				"../static/rome/park.js",
+				"../static/rome/rail.js",
+				"../static/rome/waterway.js",
+				"../static/rome/primary.js",
+				"../static/rome/secondary.js",
+				"../static/rome/building.js",
+				"../static/rome/area.js"
 				],
 			lat1: 41.9227,
 			lat2: 41.861,
