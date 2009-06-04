@@ -1,0 +1,43 @@
+html {
+	font-family:georgia;
+	margin:0;
+	background:#ddd;
+	font-size:0.8em;
+}
+body {
+	margin:0;
+	padding:0;
+	height: 100%;
+}
+#canvas {
+	background:#fff;
+	margin:0;
+	display:block;
+	width: 100%;
+	height: 400px;
+}
+#controls {
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+	width: 100%;
+	height: 20px;
+}
+#controls a.btn{
+	border: 1px solid #555;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	text-align:center;
+	display:block;
+	float:left;
+	background:#444;
+	height:20px;
+	color:#9ab;
+	font-size:1.1em;
+	text-decoration:none;
+	padding:1.2em 0;
+	margin:3px 0px 3px 5px;
+}
+#controls a.btn.pressed {
+	background: #222
+}
