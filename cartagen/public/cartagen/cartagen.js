@@ -505,23 +505,19 @@ var Cartagen = {
 				w.y = 0
 				w.bbox = [0,0,0,0] // top, left, bottom, right
 				way.nd.each(function(nd,index){
-					// try {
-						if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
-							// find the node corresponding to nd.ref, store a reference:
-							node = Cartagen.nodes.get(nd.ref)
-							if (!Object.isUndefined(node)) {
-								if (node.x < w.bbox[1] || w.bbox[1] == 0) w.bbox[1] = node.x
-								if (node.x > w.bbox[3] || w.bbox[3] == 0) w.bbox[3] = node.x
-								if (node.y < w.bbox[0] || w.bbox[0] == 0) w.bbox[0] = node.y
-								if (node.y > w.bbox[2] || w.bbox[2] == 0) w.bbox[2] = node.y
-								w.x += node.x
-								w.y += node.y
-								w.nodes.push(node)
-							}
+					if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
+						// find the node corresponding to nd.ref, store a reference:
+						node = Cartagen.nodes.get(nd.ref)
+						if (!Object.isUndefined(node)) {
+							if (node.x < w.bbox[1] || w.bbox[1] == 0) w.bbox[1] = node.x
+							if (node.x > w.bbox[3] || w.bbox[3] == 0) w.bbox[3] = node.x
+							if (node.y < w.bbox[0] || w.bbox[0] == 0) w.bbox[0] = node.y
+							if (node.y > w.bbox[2] || w.bbox[2] == 0) w.bbox[2] = node.y
+							w.x += node.x
+							w.y += node.y
+							w.nodes.push(node)
 						}
-					// } catch(e) {
-					// 	Cartagen.debug(trace(e))
-					// }
+					}
 				})
 				w.tags = new Hash()
 				if (way.tag instanceof Array) {
@@ -534,14 +530,13 @@ var Cartagen = {
 				if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
 				if (w.tags.get('natural') == "coastline") w.closed_poly = true
 				if (w.closed_poly) {
-					w.x = w.x/w.nodes.length
-					w.y = w.y/w.nodes.length
+					var centroid = Geometry.poly_centroid(w.nodes)
+					w.x = centroid[0]*2
+					w.y = centroid[1]*2
 				} else {
 				// attempt to make letters follow line segments:
-					try {
-						w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
-						w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
-					} catch(e) {Cartagen.debug(e) }
+					w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
+					w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
 				}
 				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
@@ -793,10 +788,7 @@ var Way = Class.create({
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
             return (Math.tan(_y/_x))
-        }
-        else {
-            return 90
-        }
+        } else return 90
 	},
 	draw: function() {
 		Cartagen.object_count++
@@ -839,12 +831,12 @@ var Way = Class.create({
 		if (this.closed_poly) fill()
 
 		// show bboxes for ways:
-		// lineWidth(8)
+		// lineWidth(1)
 		// strokeStyle('red')
 		// strokeRect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
 
 		// draw label if we're zoomed in enough'
-		if (Cartagen.zoom_level > 0.1) {
+		if (Cartagen.zoom_level > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
 	    canvas.restore()
@@ -889,17 +881,17 @@ var Label = Class.create({
 				var _width = canvas.measureText(Object.value(this.text)).width
 				if (this.fontBackground) {
 					fillStyle(Object.value(this.fontBackground))
-					rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+					rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
 				}
 				fillStyle(Object.value(this.fontColor))
-	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y)	
+	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y+(_height/2))	
 			} else {
 				var _width = canvas.measureCanvasText(Object.value(this.fontFamily),_height,this.text)
 				if (this.fontBackground) {
 					fillStyle(Object.value(this.fontBackground))
-					rect(_x-((_width+_padding)/2),_y-((_height+(_padding/2))),_width+_padding,_height+_padding)
+					rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
 				}
-				drawTextCenter(Object.value(this.fontFamily),_height,_x,_y,Object.value(this.text))
+				drawTextCenter(Object.value(this.fontFamily),_height,_x,_y+(_height/2),Object.value(this.text))
 			}
 			canvas.restore()
         }
@@ -1055,6 +1047,7 @@ function is_point_in_poly(poly, _x, _y){
     return c;
 }
 
+// use poly_area(nodes,true) for signed area
 function poly_area(nodes) {
 	var area = 0
 	nodes.each(function(node,index) {
@@ -1064,34 +1057,59 @@ function poly_area(nodes) {
 		else last = nodes[nodes.length-1]
 		area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 	})
-	return Math.abs(area/2)//            var rotation = 1
+	if (arguments[1] == true) return area/2
+	else return Math.abs(area/2)
 }
 
 var Geometry = {
-	// poly_centroid(point,n)
+	poly_centroid: function(polygon) {
+		var n = polygon.length
+		var cx = 0, cy = 0
+		var a = poly_area(polygon,true)
+		var centroid = []
+		var i,j
+		var factor = 0
+		
+		for (i=0;i<n;i++) {
+			j = (i + 1) % n
+			factor = (polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y)
+			cx += (polygon[i].x + polygon[j].x) * factor
+			cy += (polygon[i].y + polygon[j].y) * factor
+		}
+		
+		a *= 6
+		factor = 1/a
+		cx *= factor
+		cy *= factor
+		centroid[0] = cx
+		centroid[1] = cy
+		return centroid
+	}
 	
-	// PolygonCenterOfMass(Point[] polygon,int N)
-	// {
-	// 	float cx=0,cy=0;
-	// 	float A=(float)SignedPolygonArea(polygon,N);
-	// 	Point2Df res=new Point2Df();
-	// 	int i,j;
-	// 
-	// 	float factor=0;
-	// 	for (i=0;i<N;i++) {
-	// 		j = (i + 1) % N;
-	// 		factor=(polygon[i].x*polygon[j].y-polygon[j].x*polygon[i].y);
-	// 		cx+=(polygon[i].x+polygon[j].x)*factor;
-	// 		cy+=(polygon[i].y+polygon[j].y)*factor;
-	// 	}
-	// 	A*=6.0f;
-	// 	factor=1/A;
-	// 	cx*=factor;
-	// 	cy*=factor;
-	// 	res.x=cx;
-	// 	res.y=cy;
-	// 	return res;
-	// }
+	/*
+	PolygonCenterOfMass(Point[] polygon,int N)
+	{
+		float cx=0,cy=0;
+		float A=(float)SignedPolygonArea(polygon,N);
+		Point2Df res=new Point2Df();
+		int i,j;
+
+		float factor=0;
+		for (i=0;i<N;i++) {
+			j = (i + 1) % N;
+			factor=(polygon[i].x*polygon[j].y-polygon[j].x*polygon[i].y);
+			cx+=(polygon[i].x+polygon[j].x)*factor;
+			cy+=(polygon[i].y+polygon[j].y)*factor;
+		}
+		A*=6.0f;
+		factor=1/A;
+		cx*=factor;
+		cy*=factor;
+		res.x=cx;
+		res.y=cy;
+		return res;
+	}
+	*/
 }
 
 // add Object.value, which returns the argument, unless the argument is a function,

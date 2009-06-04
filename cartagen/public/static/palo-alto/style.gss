@@ -1,7 +1,7 @@
 body: {
 	fillStyle: "#dee",
 	lineWidth: 0,
-	pattern: "images/brown-paper.jpg"
+	pattern: "../../images/brown-paper.jpg"
 },
 node: {
 	fillStyle: "#ddd",
@@ -30,12 +30,12 @@ waterway: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
 	lineWidth: 4,
-	pattern: "images/pattern-water.gif"
+	pattern: "../../images/pattern-water.gif"
 },
 water: {
 	strokeStyle: "#57d",
 	lineWidth: 20,
-	pattern: "images/pattern-water.gif"
+	pattern: "../../images/pattern-water.gif"
 },
 coastline: {
 	strokeStyle: "#57d",
@@ -44,6 +44,7 @@ coastline: {
 highway: {
 	strokeStyle: "white",
 	lineWidth: 7,
+	fontSize: 8,
 	fontColor: "#333",
 	fontBackground: "white",
 	fontScale: "fixed",
@@ -102,8 +103,6 @@ rail: {
 	strokeStyle: "purple"
 },
 area: {
-	lineWidth: 3,
-	strokeStyle: "#444",
-	fillStyle: "#888",
+	fillStyle: "#459",
 	opacity: 0.4
 }
