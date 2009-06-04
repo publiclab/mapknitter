@@ -1,7 +1,9 @@
 if (typeof(DeviceInfo) != 'object')
     DeviceInfo = {};
 
-$('brief').hide()
+if ($('brief')) {
+	$('brief').hide()
+}
 
 /**
  * This represents the PhoneGap API itself, and provides a global namespace for accessing

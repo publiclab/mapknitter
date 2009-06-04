@@ -8,12 +8,19 @@ CanvasTextFunctions.enable(canvas);
 
 function draw() {
 	clear()
-	width = document.viewport.getWidth()
-	height = document.viewport.getHeight()
-	$('canvas').width = width
-	$('canvas').height = height
-	$$('body')[0].style.width = width+"px"
-
+	if (Cartagen.fullscreen) {
+		width = document.viewport.getWidth()
+		height = document.viewport.getHeight()
+		$('canvas').width = width
+		$('canvas').height = height
+		$$('body')[0].style.width = width+"px"
+	}
+	else {
+		width = $('canvas').getWidth()
+		height = $('canvas').getHeight()
+		$('canvas').width = width
+		$('canvas').height = height
+	}
 	frame += 1
 	try { drag() } catch(e) {}
 
