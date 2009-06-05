@@ -1,4 +1,4 @@
 class Node < ActiveRecord::Base
-  # belongs_to :way
+  belongs_to :way
   
 end
