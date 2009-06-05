@@ -312,20 +312,30 @@ var Viewport = {
 
 var Geohash = {
 	hash: new Hash(),
+	default_length: 4, // default length of geohash
 	// adds a feature to a geohash index
-	put: function(lat,lon,length,feature) {
-		if (!length) length = 8 // default length of geohash
+	put: function(lat,lon,feature,length) {
+		if (!length) length = this.default_length
 		var _short_hash = encodeGeoHash(lat,lon).truncate(length,"")
 		// check to see if the geohash is already populated:
-		var merge_hash = hash.get(_short_hash)
-		if (merge_hash) merge_hash = merge_hash.push(feature)
-		else merge_hash = [feature]
-		hash.set(_short_hash,merge_hash)
+		var merge_hash = this.hash.get(_short_hash)
+		if (!merge_hash) {
+			merge_hash = [feature]
+		} else {
+			merge_hash.push(feature)
+		}
+		this.hash.set(_short_hash,merge_hash)
 	},
 	// fetch features in a geohash index
-	get: function(geohash,length) {
-		if (length) geohash = geohash.truncate(length,"") // default length of geohash
-		return hash.get(geohash)
+	get: function(key,length) {
+		if (!length) length = this.default_length
+		key = key.truncate(length,"") // default length of geohash
+		return this.hash.get(key)
+	},
+	trace: function() {
+		this.hash.keys().each(function(key) {
+			Cartagen.debug(this.hash.get(key).length)
+		},this)
 	}
 }
 
@@ -540,8 +550,8 @@ var Cartagen = {
 				}
 				w.area = poly_area(w.nodes)
 				Style.parse_styles(w,Style.styles.way)
-				// geohash.set(encodeGeoHash())
 				objects.push(w)
+				Geohash.put(Projection.y_to_lat(w.y),Projection.x_to_lon(w.x),w,6)
 				Cartagen.ways.set(w.id,w)
 			}
 		})
