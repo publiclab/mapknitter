@@ -505,54 +505,29 @@ var Cartagen = {
 	    })
 		data.osm.way.each(function(way){
 			if (Cartagen.live || !Cartagen.ways.get(way.id)) {
-				var w = new Way
-				w.id = way.id
-				w.user = way.user
-				if (way.name) w.name = way.name
-				w.timestamp = way.timestamp
-				w.nodes = []
-				w.x = 0
-				w.y = 0
-				w.bbox = [0,0,0,0] // top, left, bottom, right
-				way.nd.each(function(nd,index){
-					if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2) {
-						// find the node corresponding to nd.ref, store a reference:
+				var data = {
+					id: way.id,
+					user: way.user,
+					timestamp: way.timestamp,
+					nodes: [],
+					tags: new Hash()
+				}
+				if (way.name) data.name = way.name
+				way.nd.each(function(nd, index) {
+					if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
 						node = Cartagen.nodes.get(nd.ref)
-						if (!Object.isUndefined(node)) {
-							if (node.x < w.bbox[1] || w.bbox[1] == 0) w.bbox[1] = node.x
-							if (node.x > w.bbox[3] || w.bbox[3] == 0) w.bbox[3] = node.x
-							if (node.y < w.bbox[0] || w.bbox[0] == 0) w.bbox[0] = node.y
-							if (node.y > w.bbox[2] || w.bbox[2] == 0) w.bbox[2] = node.y
-							w.x += node.x
-							w.y += node.y
-							w.nodes.push(node)
-						}
+						if (!Object.isUndefined(node)) data.nodes.push(node)
 					}
 				})
-				w.tags = new Hash()
 				if (way.tag instanceof Array) {
 					way.tag.each(function(tag) {
-						w.tags.set(tag.k,tag.v)
+						data.tags.set(tag.k,tag.v)
 					})
 				} else {
-					w.tags.set(way.tag.k,way.tag.v)
+					data.tags.set(way.tag.k,way.tag.v)
 				}
-				if (w.nodes[0].x == w.nodes[w.nodes.length-1].x && w.nodes[0].y == w.nodes[w.nodes.length-1].y) w.closed_poly = true
-				if (w.tags.get('natural') == "coastline") w.closed_poly = true
-				if (w.closed_poly) {
-					var centroid = Geometry.poly_centroid(w.nodes)
-					w.x = centroid[0]*2
-					w.y = centroid[1]*2
-				} else {
-				// attempt to make letters follow line segments:
-					w.x = (w.middle_segment()[0].x+w.middle_segment()[1].x)/2
-					w.y = (w.middle_segment()[0].y+w.middle_segment()[1].y)/2
-				}
-				w.area = poly_area(w.nodes)
-				Style.parse_styles(w,Style.styles.way)
-				objects.push(w)
-				Geohash.put(Projection.y_to_lat(w.y),Projection.x_to_lon(w.x),w,6)
-				Cartagen.ways.set(w.id,w)
+
+				new Way(data)
 			}
 		})
 		// data.osm.relation.each(function(way){
@@ -776,8 +751,27 @@ var Way = Class.create({
 	fillStyle: "#555",
 	fontColor: "#eee",
 	fontSize: 12,
-    initialize: function() {
-        this.label = new Label(this)
+    initialize: function(data) {
+		Object.extend(this, data)
+		this.bbox = Geometry.calculate_bounding_box(this.nodes)
+		if (this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
+		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+		if (this.closed_poly) {
+			var centroid = Geometry.poly_centroid(this.nodes)
+			this.x = centroid[0]*2
+			this.y = centroid[1]*2
+		} else {
+		// attempt to make letters follow line segments:
+			this.x = (this.middle_segment()[0].x+this.middle_segment()[1].x)/2
+			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
+		}
+		this.area = poly_area(this.nodes)
+		this.label = new Label(this)
+		Style.parse_styles(this,Style.styles.way)
+		// geohash.set(encodeGeoHash())
+		objects.push(this)
+		Geohash.put(Projection.y_to_lat(this.y),Projection.x_to_lon(this.x),this,6)
+		Cartagen.ways.set(this.id,this)
     },
 	// returns the middle-most line segment as a tuple [node_1,node_2]
 	middle_segment: function() {
@@ -980,6 +974,13 @@ User = {
 	lon: 0,
 	x: -118.31700000003664,
 	y: -6562600.9880228145,
+	point_submit_uri: '/write/point',
+	line_submit_uri: '/write/line',
+	update_uri: '/updates',
+	follow_interval: 60,
+	following: false,
+	following_executer: null,
+	drawing_line: false,
 	calculate_coords: function() {
 		// this should be based on lat and lon
 	},
@@ -987,7 +988,48 @@ User = {
 		if (isUndefined(x)) x = User.x
 		if (isUndefined(y)) y = User.y
 		var point = new Node()
+        draw()
+        
+		var params = {
+			color: User.color,
+			x: _x,
+			y: _y
+		}
 		
+		new Ajax.Request(User.point_sumbit_uri, {
+			method: 'post',
+			parameters: params
+		});
+	},
+	toggle_following: function() {
+		if (User.following) {
+			User.following_executer.stop()
+			User.following = false
+		}
+		else {
+			User.following_executer = new PeriodicalExecuter(User.center_map_on_user, User.follow_interval)
+			User.following = true
+			User.center_map_on_user()
+		}
+	},
+	center_map_on_user: function() {
+		//navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
+		User.set_loc_and_center()
+	},
+	set_loc_and_center: function(loc) {
+		//User.set_loc(loc)
+		Map.x = User.x
+		Map.y = User.y
+		draw()
+	},
+	toggle_line_drawing: function() {
+		if (User.drawing_line) {
+		}
+		else {
+			User.drawing_line = true
+			User.line = new Way()
+			
+		}
 	}
 }
 
@@ -1054,6 +1096,16 @@ var Geometry = {
 		centroid[0] = cx
 		centroid[1] = cy
 		return centroid
+	},
+	calculate_bounding_box: function(points) {
+		var bbox = [0,0,0,0] // top, left, bottom, right
+		points.each(function(node) {
+			if (node.x < bbox[1] || bbox[1] == 0) bbox[1] = node.x
+			if (node.x > bbox[3] || bbox[3] == 0) bbox[3] = node.x
+			if (node.y < bbox[0] || bbox[0] == 0) bbox[0] = node.y
+			if (node.y > bbox[2] || bbox[2] == 0) bbox[2] = node.y
+		})
+		return bbox
 	}
 	
 	/*
