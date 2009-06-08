@@ -12,7 +12,7 @@
 
 @synthesize locationManager;
 
--(PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView
+-(MushroomMapCommand*) initWithWebView:(UIWebView*)theWebView
 {
     self = [super initWithWebView:(UIWebView*)theWebView];
     if (self) {

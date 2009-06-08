@@ -1,6 +1,6 @@
 //
 //  Notification.m
-//  PhoneGap
+//  MushroomMap
 //
 //  Created by Michael Nachbaur on 16/04/09.
 //  Copyright 2009 Decaf Ninja Software. All rights reserved.
