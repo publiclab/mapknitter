@@ -1,6 +1,6 @@
 /*
  *  Image.h
- *  PhoneGap
+ *  MushroomMap
  *
  *  Created by Nitobi on 04/02/09.
  *  Copyright 2009 Nitobi. All rights reserved.
@@ -8,9 +8,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Image : PhoneGapCommand {
+@interface Image : MushroomMapCommand {
 	IBOutlet UIWindow *window;
 	
 	UIImagePickerController *picker;	// added by urbian

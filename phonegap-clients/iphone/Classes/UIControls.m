@@ -1,6 +1,6 @@
 //
 //  UIControls.m
-//  PhoneGap
+//  MushroomMap
 //
 //  Created by Michael Nachbaur on 13/04/09.
 //  Copyright 2009 Decaf Ninja Software. All rights reserved.
@@ -11,7 +11,7 @@
 @implementation UIControls
 @synthesize webView;
 
--(PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView
+-(MushroomMapCommand*) initWithWebView:(UIWebView*)theWebView
 {
     self = [super initWithWebView:theWebView];
     if (self) {

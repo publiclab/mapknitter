@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioServices.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Sound : PhoneGapCommand {
+@interface Sound : MushroomMapCommand {
 }
 
 - (void) play:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;

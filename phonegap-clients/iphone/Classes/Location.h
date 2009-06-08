@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Location : PhoneGapCommand <CLLocationManagerDelegate> {
+@interface Location : MushroomMapCommand <CLLocationManagerDelegate> {
 	CLLocationManager *locationManager;
     BOOL              __started;
 }

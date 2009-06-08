@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIDevice.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Device : PhoneGapCommand {
+@interface Device : MushroomMapCommand {
 }
 
 - (NSDictionary*) getDeviceProperties;
