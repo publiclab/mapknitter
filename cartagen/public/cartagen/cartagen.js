@@ -957,6 +957,20 @@ var Projection = {
 }
 User = {
 	color: randomColor(),
+	name: 'anonymous',
+	// lat & lon are based on geolocation:
+	lat: 0,
+	lon: 0,
+	x: -118.31700000003664,
+	y: -6562600.9880228145,
+	point_submit_uri: '/write/point',
+	line_submit_uri: '/write/line',
+	update_uri: '/updates',
+	point_radius: 50,
+	follow_interval: 60,
+	following: false,
+	following_executer: null,
+	drawing_line: false,
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -969,31 +983,26 @@ User = {
 		// User.calculate_coords()
 		Cartagen.debug('detected location: '+this.lat+","+this.lon)
 	},
-	// lat & lon are based on geolocation:
-	lat: 0,
-	lon: 0,
-	x: -118.31700000003664,
-	y: -6562600.9880228145,
-	point_submit_uri: '/write/point',
-	line_submit_uri: '/write/line',
-	update_uri: '/updates',
-	follow_interval: 60,
-	following: false,
-	following_executer: null,
-	drawing_line: false,
 	calculate_coords: function() {
 		// this should be based on lat and lon
 	},
-	submit_point: function(x, y) {
-		if (isUndefined(x)) x = User.x
-		if (isUndefined(y)) y = User.y
+	submit_point: function(_x, _y) {
+		if (Object.isUndefined(_x)) _x = User.x
+		if (Object.isUndefined(_y)) _y = User.y
 		var point = new Node()
+		point.x = _x
+		point.y = _y
+		point.radius = User.point_radius
+		point.id = 'temp_' + (Math.random() * 999999999).floor()
+		point.lon = Projection.x_to_lon(_x)
+		point.lat = Projection.y_to_lat(_y)
+		objects.push(point)
         draw()
         
 		var params = {
 			color: User.color,
-			x: _x,
-			y: _y
+			lon: point.lon,
+			lat: _y
 		}
 		
 		new Ajax.Request(User.point_sumbit_uri, {
@@ -1027,7 +1036,18 @@ User = {
 		}
 		else {
 			User.drawing_line = true
-			User.line = new Way()
+			
+			var id = (Math.random() * 999999999).floor()
+			while(Cartagen.ways[id]) {
+				id = (Math.random() * 999999999).floor()
+			}
+			
+			User.line = new Way({
+				id: id,
+				nodes: [],
+				tags: new Hash(),
+				
+			})
 			
 		}
 	}
