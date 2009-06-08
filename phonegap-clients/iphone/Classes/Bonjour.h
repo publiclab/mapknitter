@@ -1,6 +1,6 @@
 //
 //  Bonjour.h
-//  PhoneGap
+//  MushroomMap
 //
 //  Created by Brant Vasilieff on 3/1/09.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Bonjour : PhoneGapCommand
+@interface Bonjour : MushroomMapCommand
 {
     NSString* __identifier;
 }

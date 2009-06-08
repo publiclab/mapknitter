@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/ABAddressBook.h>
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface Contacts : PhoneGapCommand {
+@interface Contacts : MushroomMapCommand {
 	ABAddressBookRef addressBook;
 	NSArray *allPeople;
 	CFIndex nPeople;
@@ -19,7 +19,7 @@
 @property (getter=getAddressBook,assign) ABAddressBookRef addressBook;
 @property (getter=getContacts,assign) NSArray *allPeople;
 
--(PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView;
+-(MushroomMapCommand*) initWithWebView:(UIWebView*)theWebView;
 
 - (void)get:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 

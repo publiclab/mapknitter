@@ -1,6 +1,6 @@
 //
 //  Bonjour.m
-//  PhoneGap
+//  MushroomMap
 //
 //  Created by Brant Vasilieff on 3/1/09.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.

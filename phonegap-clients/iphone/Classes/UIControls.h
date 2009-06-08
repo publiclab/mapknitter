@@ -1,6 +1,6 @@
 //
 //  UIControls.h
-//  PhoneGap
+//  MushroomMap
 //
 //  Created by Michael Nachbaur on 13/04/09.
 //  Copyright 2009 Decaf Ninja Software. All rights reserved.
@@ -11,9 +11,9 @@
 #import <UIKit/UITabBar.h>
 #import <UIKit/UIToolbar.h>
 
-#import "PhoneGapCommand.h"
+#import "MushroomMapCommand.h"
 
-@interface UIControls : PhoneGapCommand <UITabBarDelegate> {
+@interface UIControls : MushroomMapCommand <UITabBarDelegate> {
     UITabBar* tabBar;
     NSMutableDictionary* tabBarItems;
     

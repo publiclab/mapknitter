@@ -6,8 +6,6 @@
 	<true/>
 	<key>Offline</key>
 	<false/>
-	<key>Callback</key>
-	<string>map.cartagen.org</string>
 	<key>TopActivityIndicator</key>
 	<string>gray</string>
 	<key>EnableLocation</key>
