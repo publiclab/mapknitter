@@ -309,12 +309,19 @@ var Style = {
 
 var Viewport = {
 	bbox: [],
+	// in-map x-width (after scaling)
 	width: 0,
-	height: 0
+	// in-map y-height (after scaling)
+	height: 0,
+	// varies around 1.0 as function of browser window resolution
+	power: function() {
+		return width/1000
+	}
 }
 
 var Geohash = {
 	hash: new Hash(),
+	objects: [],
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
 	// adds a feature to a geohash index
@@ -331,7 +338,7 @@ var Geohash = {
 		this.hash.set(key,merge_hash)
 	},
 	put_object: function(object) {
-		Geohash.put(Projection.y_to_lat(object.y),Projection.x_to_lon(object.x),object,Geohash.key_length(object.width,object.height)-2)
+		Geohash.put(Projection.y_to_lat(object.y),Projection.x_to_lon(object.x),object,Geohash.get_key_length(object.width,object.height)-2)
 	},
 	key: function(lat,lon,length) {
 		if (!length) length = this.default_length
@@ -346,7 +353,9 @@ var Geohash = {
 	},
 	// fetch features in a geohash key
 	get_from_key: function(key) {
-		return this.hash.get(key)
+		var result = this.hash.get(key)
+		if (result) return result
+		else return []
 	},
 	// fetch features in a geohash from a geohash key, and all shorter keys
 	get_upward: function(key) {
@@ -404,7 +413,7 @@ var Geohash = {
 		// Cartagen.debug(key+": xy_rect: "+Projection.lon_to_x(bbox[0])+","+Projection.lat_to_y(bbox[3])+","+(Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))+","+(Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3])))
 		// Cartagen.debug(key+': latlon_rect: '+bbox[0]+','+bbox[3]+','+bbox[2]+','+bbox[1])
 	},
-	key_length: function(lat,lon) {
+	get_key_length: function(lat,lon) {
 		if (lon < 0.0000003357) lon_key = 12
 		else if (lon < 0.000001341) lon_key = 11
 		else if (lon < 0.00001072) lon_key = 10
@@ -434,12 +443,34 @@ var Geohash = {
 		else lat_key = 0 // eventually we can map the whole planet at once
 		return Math.min(lat_key,lon_key)
 	},
-	objects: function() {
-		Geohash.viewport_key = Geohash.key(Map.lat(),Map.lon(),Geohash.key_length(Map.lon_width(),Map.lat_height()))
+	get_objects: function() {
+		this.objects = []
+
 		// get geohash for each of the 4 corners,
 		// not just the center,
 		// remove dupes, then get_upward
-		return Geohash.get_upward(Geohash.viewport_key)
+		this.keys = []
+		this.key_length = Geohash.get_key_length(Map.lon_width(),Map.lat_height())
+		// [lon1, lat2, lon2, lat1]
+		this.keys[0] = Geohash.key(Map.get_bbox()[3],Map.get_bbox()[0],this.key_length)
+		this.keys[1] = Geohash.key(Map.get_bbox()[3],Map.get_bbox()[2],this.key_length)
+		this.keys[2] = Geohash.key(Map.get_bbox()[1],Map.get_bbox()[0],this.key_length)
+		this.keys[3] = Geohash.key(Map.get_bbox()[1],Map.get_bbox()[2],this.key_length)
+		
+		this.keys = this.keys.uniq()
+		// Geohash.key(Map.lat(),Map.lon())
+
+		// // this will produce duplicate upward keys!!
+		this.keys.each(function(key,index) {
+			// this.objects.push(Geohash.get_upward(key))
+		
+			// therefore for now let's just do:
+			// and cascade upwards from the upper left. This is dumb.
+			if (index == 0) this.objects = this.objects.concat(Geohash.get_upward(key))
+			else this.objects = this.objects.concat(Geohash.get_from_key(key))
+		},this)
+		
+		return this.objects
 	}
 }
 
@@ -547,7 +578,7 @@ var Cartagen = {
 		strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 		
 		//Geohash lookup:
-		Geohash.objects().each(function(object) { 
+		Geohash.get_objects().each(function(object) { 
 			object.draw()
 		})
 	},
