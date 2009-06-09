@@ -8,10 +8,10 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Cartagen</title>
 	<link rel="stylesheet" href="cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
 	<script src="cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
 	<script src="cartagen/canvas.js" type="text/javascript" charset="utf-8"></script>
 	<script src="cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
-	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
 		Cartagen.setup({
@@ -54,8 +54,8 @@
 	</form>
 	<h3>Edit GSS:</h3>
 	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.apply_gss($('gss_textarea').value)">
-		<textarea tabindex="1" id="gss_textarea" rows="34" cols="40"></textarea>
-		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();live_gss = !live_gss">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
+		<textarea tabindex="1" id="gss_textarea" rows="30" cols="40"></textarea>
+		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();Cartagen.live_gss = false;">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
 	</form>	
 </div>
 

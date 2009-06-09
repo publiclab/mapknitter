@@ -23,9 +23,9 @@ if (typeof cartagen_base_uri == 'undefined') {
 // additional dependencies:
 var scripts = [
 	cartagen_base_uri + '/canvastext.js',
+	cartagen_base_uri + '/lib/geohash.js',
 	cartagen_base_uri + '/glop.js',
 	cartagen_base_uri + '/events.js',
-	cartagen_base_uri + '/lib/geohash.js',
 ]
 
 // load phonegap js if needed
@@ -308,34 +308,138 @@ var Style = {
 }
 
 var Viewport = {
+	bbox: [],
+	width: 0,
+	height: 0
 }
 
 var Geohash = {
 	hash: new Hash(),
-	default_length: 4, // default length of geohash
+	default_length: 6, // default length of geohash
+	limit_bottom: 8, // 12 is most ever...
 	// adds a feature to a geohash index
 	put: function(lat,lon,feature,length) {
 		if (!length) length = this.default_length
-		var _short_hash = encodeGeoHash(lat,lon).truncate(length,"")
+		var key = Geohash.key(lat,lon,length)
 		// check to see if the geohash is already populated:
-		var merge_hash = this.hash.get(_short_hash)
+		var merge_hash = this.hash.get(key)
 		if (!merge_hash) {
 			merge_hash = [feature]
 		} else {
 			merge_hash.push(feature)
 		}
-		this.hash.set(_short_hash,merge_hash)
+		this.hash.set(key,merge_hash)
 	},
-	// fetch features in a geohash index
-	get: function(key,length) {
+	put_object: function(object) {
+		Geohash.put(Projection.y_to_lat(object.y),Projection.x_to_lon(object.x),object,Geohash.key_length(object.width,object.height)-2)
+	},
+	key: function(lat,lon,length) {
 		if (!length) length = this.default_length
-		key = key.truncate(length,"") // default length of geohash
+		if (length < 1) length = 1
+		return encodeGeoHash(lat,lon).truncate(length,"")
+	},
+	// fetch features in a geohash from lat/lon and length
+	get: function(lat,lon,length) {
+		if (!length) length = this.default_length
+		var key = this.key(lat,lon,length)
 		return this.hash.get(key)
+	},
+	// fetch features in a geohash key
+	get_from_key: function(key) {
+		return this.hash.get(key)
+	},
+	// fetch features in a geohash from a geohash key, and all shorter keys
+	get_upward: function(key) {
+		if (key.length > this.limit_bottom) key.truncate(this.limit_bottom,'')
+		// this.draw_bbox(key)
+		var this_level = this.hash.get(key)
+		if (this_level && key.length > 0) {
+			// Cartagen.debug(key+': '+this_level.length)
+			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1,"")))
+			else return this_level
+		} else {
+			// Cartagen.debug(key+': 0')
+			if (key.length > 1) return this.get_upward(key.truncate(key.length-1,""))
+			else return []
+		}
+	},
+	// fetch adjacent geohashes:
+	get_neighbors: function(key) {
+		var neighbors = []
+		var dirs = ['top','bottom','left','right']
+		dirs.each(function(dir) {
+			var n_key = calculateAdjacent(key,dir)
+			var n_array = this.get_from_key(n_key)
+			if (n_array) neighbors.concat()
+			// Cartagen.debug("n_key: "+n_key)
+		},this)
+		// Cartagen.debug('neighbors of '+key+': '+neighbors.length)
+		return neighbors
+	},
+	// return a geohash length from a zoom_level
+	length_from_zoom: function(zoom_level) {
+		return zoom_level/0.003
 	},
 	trace: function() {
 		this.hash.keys().each(function(key) {
-			Cartagen.debug(this.hash.get(key).length)
+			Cartagen.debug(key+': '+this.hash.get(key).length)
 		},this)
+		return this.hash.size()
+	},
+	bbox: function(geohash) {
+		var geo = decodeGeoHash(geohash)
+		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0]]
+	},
+	draw_bbox: function(key) {
+		var bbox = this.bbox(key)
+		lineWidth(1/Cartagen.zoom_level)
+		strokeStyle('rgba(0,0,0,0.5)')
+		// Cartagen.debug(key.length+": "+(bbox[2]-bbox[0])+","+(bbox[1]-bbox[3]))
+		var width = (Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))
+		var height = (Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3]))
+		strokeRect(-width-Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]),width,height)
+		fillStyle('rgba(0,0,0,0.5)')
+		canvas.font = "12pt Helvetica"
+		canvas.fillText(key,-width-Projection.lon_to_x(bbox[0])+5,Projection.lat_to_y(bbox[3])-5)
+		// Cartagen.debug(key+": xy_rect: "+Projection.lon_to_x(bbox[0])+","+Projection.lat_to_y(bbox[3])+","+(Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))+","+(Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3])))
+		// Cartagen.debug(key+': latlon_rect: '+bbox[0]+','+bbox[3]+','+bbox[2]+','+bbox[1])
+	},
+	key_length: function(lat,lon) {
+		if (lon < 0.0000003357) lon_key = 12
+		else if (lon < 0.000001341) lon_key = 11
+		else if (lon < 0.00001072) lon_key = 10
+		else if (lon < 0.00004291) lon_key = 9
+		else if (lon < 0.0003433) lon_key = 8
+		else if (lon < 0.001373) lon_key = 7
+		else if (lon < 0.01098) lon_key = 6
+		else if (lon < 0.04394) lon_key = 5
+		else if (lon < 0.3515) lon_key = 4
+		else if (lon < 1.406) lon_key = 3
+		else if (lon < 11.25) lon_key = 2
+		else if (lon < 45) lon_key = 1
+		else lon_key = 0 // eventually we can map the whole planet at once
+		
+		if (lat < 0.0000001676) lat_key = 12
+		else if (lat < 0.000001341) lat_key = 11
+		else if (lat < 0.000005364) lat_key = 10
+		else if (lat < 0.00004291) lat_key = 9
+		else if (lat < 0.0001716) lat_key = 8
+		else if (lat < 0.001373) lat_key = 7
+		else if (lat < 0.005493) lat_key = 6
+		else if (lat < 0.04394) lat_key = 5
+		else if (lat < 0.1757) lat_key = 4
+		else if (lat < 1.40625) lat_key = 3
+		else if (lat < 5.625) lat_key = 2
+		else if (lat < 45) lat_key = 1
+		else lat_key = 0 // eventually we can map the whole planet at once
+		return Math.min(lat_key,lon_key)
+	},
+	objects: function() {
+		Geohash.viewport_key = Geohash.key(Map.lat(),Map.lon(),Geohash.key_length(Map.lon_width(),Map.lat_height()))
+		// get geohash for each of the 4 corners,
+		// not just the center,
+		// remove dupes, then get_upward
+		return Geohash.get_upward(Geohash.viewport_key)
 	}
 }
 
@@ -359,7 +463,7 @@ var Cartagen = {
 	lat2: 41.861,
 	lng1: 12.4502,
 	lng2: 12.5341,
-	zoom_level: 0.05,
+	zoom_level: 0.1,
 	plots: new Hash(),
 	nodes: new Hash(),
 	ways: new Hash(),
@@ -405,6 +509,7 @@ var Cartagen = {
 					Cartagen.debug('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
+				// to add user-added map data... messy!
 				if (this.dynamic_layers.length > 0) {
 					this.dynamic_layers.each(function(layer_url) {
 						Cartagen.debug('fetching '+layer_url)
@@ -435,10 +540,16 @@ var Cartagen = {
 		// viewport stuff:
 		strokeStyle('white')
 		lineWidth(10)
-		viewport_width = width*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
-		viewport_height = height*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
-		viewport = [Map.y-viewport_height/2,Map.x-viewport_width/2,Map.y+viewport_height/2,Map.x+viewport_width/2]
-		strokeRect(Map.x-viewport_width/2,Map.y-viewport_height/2,viewport_width,viewport_height)
+		
+		Viewport.width = width*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
+		Viewport.height = height*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
+		Viewport.bbox = [Map.y-Viewport.height/2,Map.x-Viewport.width/2,Map.y+Viewport.height/2,Map.x+Viewport.width/2]
+		strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
+		
+		//Geohash lookup:
+		Geohash.objects().each(function(object) { 
+			object.draw()
+		})
 	},
     // runs every frame in the draw() method, after Globjects have been drawn
     post_draw: function() {
@@ -561,10 +672,10 @@ var Cartagen = {
 	get_current_plot: function() {
 		if (Map.x != lastPos[0] && Map.y != lastPos[1]) {
 			var new_lat1,new_lat2,new_lng1,new_lng2
-			new_lat1 = y_to_lat(Map.y)-range
-			new_lng1 = x_to_lon(Map.x)-range
-			new_lat2 = y_to_lat(Map.y)+range
-			new_lng2 = x_to_lon(Map.x)+range
+			new_lat1 = Projection.y_to_lat(Map.y)-range
+			new_lng1 = Projection.x_to_lon(Map.x)-range
+			new_lat2 = Projection.y_to_lat(Map.y)+range
+			new_lng2 = Projection.x_to_lon(Map.x)+range
 			// this will look for cached plots, or get new ones if it fails
 			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
 		}
@@ -707,10 +818,18 @@ var Map = {
 	pointer_y: function() { return Map.y+(((height/-2)-Mouse.y)/Cartagen.zoom_level) },
 	x: 0,
 	y: 0,
+	lat: function() { return Projection.y_to_lat(this.y) },
+	lon: function() { return Projection.x_to_lon(this.x) },
 	rotate: 0,
 	rotate_old: 0,
 	x_old: 0,
 	y_old: 0,
+	lon_width: function() {
+		return Math.abs(Map.get_bbox()[0]-Map.get_bbox()[2])
+	},
+	lat_height: function() {
+		return Math.abs(Map.get_bbox()[1]-Map.get_bbox()[3])
+	},
 	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
 	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
 	refresh_resolution: function() {
@@ -718,10 +837,10 @@ var Map = {
 	},
 	// [lon1, lat2, lon2, lat1]
 	get_bbox: function() {
-		var lon1 = Projection.x_to_lon(Map.x - (width/2))
-		var lon2 = Projection.x_to_lon(Map.x + (width/2))
-		var lat1 = Projection.y_to_lat(Map.y - (height/2))
-		var lat2 = Projection.y_to_lat(Map.y + (height/2))
+		var lon1 = Projection.x_to_lon(Map.x - (Viewport.width/2))
+		var lon2 = Projection.x_to_lon(Map.x + (Viewport.width/2))
+		var lat1 = Projection.y_to_lat(Map.y - (Viewport.height/2))
+		var lat2 = Projection.y_to_lat(Map.y + (Viewport.height/2))
 		return [lon1, lat2, lon2, lat1]
 	}
 }
@@ -763,7 +882,6 @@ var Way = Class.create({
 	fontSize: 12,
     initialize: function(data) {
 		Object.extend(this, data)
-		this.bbox = Geometry.calculate_bounding_box(this.nodes)
 		if (this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
 		if (this.closed_poly) {
@@ -777,10 +895,13 @@ var Way = Class.create({
 		}
 		this.area = poly_area(this.nodes)
 		this.label = new Label(this)
+		this.bbox = Geometry.calculate_bounding_box(this.nodes)
+			// calculate longest dimension to file in a correct geohash:
+			this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
+			this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 		Style.parse_styles(this,Style.styles.way)
-		// geohash.set(encodeGeoHash())
-		objects.push(this)
-		Geohash.put(Projection.y_to_lat(this.y),Projection.x_to_lon(this.x),this,6)
+		objects.push(this) // made obsolete by Geohash
+		Geohash.put_object(this)
 		Cartagen.ways.set(this.id,this)
     },
 	// returns the middle-most line segment as a tuple [node_1,node_2]
@@ -807,7 +928,7 @@ var Way = Class.create({
 	draw: function() {
 		Cartagen.object_count++
 		// only draw if in the viewport:
-		if (intersect(viewport[0],viewport[1],viewport[2],viewport[3],this.bbox[0],this.bbox[1],this.bbox[2],this.bbox[3])) {
+		if (intersect(Viewport.bbox[0],Viewport.bbox[1],Viewport.bbox[2],Viewport.bbox[3],this.bbox[0],this.bbox[1],this.bbox[2],this.bbox[3])) {
 			Cartagen.way_count++
 			this.shape()
 			this.age += 1;
@@ -920,7 +1041,7 @@ var Projection = {
 		this.current_projection = new_projection
 	},
 	lon_to_x: function(lon) { return -1*Projection[Projection.current_projection].lon_to_x(lon) },
-	x_to_lon: function(x) { return -1*Projection[Projection.current_projection].x_to_lon(x) },
+	x_to_lon: function(x) { return Projection[Projection.current_projection].x_to_lon(x) },
 	lat_to_y: function(lat) { return -1*Projection[Projection.current_projection].lat_to_y(lat) },
 	y_to_lat: function(y) { return -1*Projection[Projection.current_projection].y_to_lat(y) },
 	//required by spherical mercator:
@@ -1193,30 +1314,6 @@ var Geometry = {
 		return bbox
 	}
 	
-	/*
-	PolygonCenterOfMass(Point[] polygon,int N)
-	{
-		float cx=0,cy=0;
-		float A=(float)SignedPolygonArea(polygon,N);
-		Point2Df res=new Point2Df();
-		int i,j;
-
-		float factor=0;
-		for (i=0;i<N;i++) {
-			j = (i + 1) % N;
-			factor=(polygon[i].x*polygon[j].y-polygon[j].x*polygon[i].y);
-			cx+=(polygon[i].x+polygon[j].x)*factor;
-			cy+=(polygon[i].y+polygon[j].y)*factor;
-		}
-		A*=6.0f;
-		factor=1/A;
-		cx*=factor;
-		cy*=factor;
-		res.x=cx;
-		res.y=cy;
-		return res;
-	}
-	*/
 }
 
 // add Object.value, which returns the argument, unless the argument is a function,
@@ -1231,6 +1328,24 @@ function randomColor() {
 	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 }
 
+// http://phpjs.org/functions/strstr
+// Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+// MIT License (http://www.opensource.org/licenses/mit-license.php)
+function strstr( haystack, needle, bool ) {
+    var pos = 0;
+
+    haystack += '';
+    pos = haystack.indexOf( needle );
+    if (pos == -1) {
+        return false;
+    } else{
+        if( bool ){
+            return haystack.substr( 0, pos );
+        } else{
+            return haystack.slice( pos );
+        }
+    }
+}
 
 // Rotates view slowly for cool demo purposes.
 function demo() { try { Map.rotate += 0.005 } catch(e) {}}

@@ -30,10 +30,11 @@ function draw() {
 	})
 	// cartagen-specific calls
 	if (typeof Cartagen != "undefined") Cartagen.draw()
-	
-	objects.each(function(object) { 
-		object.draw()
-	})
+	else {
+		objects.each(function(object) { 
+			object.draw()
+		})
+	}
 
     // cartagen-specific call - draws labels so that labels are drawn after
     // other objects.
