@@ -715,6 +715,14 @@ var Map = {
 	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
 	refresh_resolution: function() {
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
+	},
+	// [lon1, lat2, lon2, lat1]
+	get_bbox: function() {
+		var lon1 = Projection.x_to_lon(Map.x - (width/2))
+		var lon2 = Projection.x_to_lon(Map.x + (width/2))
+		var lat1 = Projection.y_to_lat(Map.y - (height/2))
+		var lat2 = Projection.y_to_lat(Map.y + (height/2))
+		return [lon1, lat2, lon2, lat1]
 	}
 }
 
@@ -1096,8 +1104,18 @@ User = {
 		User.way.nodes.push(node)
 		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
 		draw()
-	}
+	},
+	update: function() {
+		if (User.last_pos && User.last_pos == lastPos) {
+			 var timestamp = User.last_update
+		}
+		User.last_pos = lastPos
+		User.last_update = (new Date()).toUTCString()
 		
+		
+		new Ajax.Request(User.node_update_uri, {
+		})
+	}	
 }
 
 function overlaps(x1,y1,x2,y2,fudge) {
