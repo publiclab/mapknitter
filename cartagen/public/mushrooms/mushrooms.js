@@ -10,20 +10,20 @@ Mushrooms = {
 		return false
 	},
 	line: function() {
-		// should toggle line drawing
 		$('line').toggleClassName('pressed')
 		$('click').toggle()
 		$('point').toggle()
+		User.toggle_way_drawing()
 		return false
 	},
 	click: function() {
 		// should add mushroom to map
-		User.submit_point()
+		User.submit_node()
 		return false
 	},
 	point: function() {
 		// should add point to line
-		alert('pointed')
+		User.add_node()
 		return false
 	}
 }
