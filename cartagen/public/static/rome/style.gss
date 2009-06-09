@@ -91,14 +91,18 @@ parkchange: {
 building: {
 	lineWidth: 0.001,
 	fillStyle: "#444",
+	text: function() { return this.tags.get('name') },
 	hover: {
-		fillStyle: '#222'
+		fillStyle: '#222',
+		action: function() {
+			console.log('hover')
+		}
 	},
 	mouseDown: {
 		lineWidth: 18,
 		strokeStyle: "red",
 		action: function() {
-			console.log('tags: ')
+			console.log('mousedown')
 		}
 	}
 },
