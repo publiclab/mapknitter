@@ -573,11 +573,13 @@ var Cartagen = {
 	},
 	// fetches a JSON plot from a static file, given a full url
 	get_static_plot: function(url) {
+		Cartagen.debug('fetching ' + url)
 		Cartagen.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
-			onSuccess: function(result) {
+			onComplete: function(result) {
 				// Cartagen.debug(result.responseText.evalJSON().osm.ways.length+" ways")
+				Cartagen.debug('got ' + url)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.debug(objects.length+" objects")
 				Cartagen.requested_plots--
@@ -963,14 +965,16 @@ User = {
 	lon: 0,
 	x: -118.31700000003664,
 	y: -6562600.9880228145,
-	point_submit_uri: '/write/point',
-	line_submit_uri: '/write/line',
-	update_uri: '/updates',
-	point_radius: 50,
+	node_submit_uri: '/node/write',
+	node_updates_uri: '/node/read',
+	way_submit_uri: '/way/write',
+	way_update_uri: '/way/read',
+	line_width: 10,
+	node_radius: 50,
 	follow_interval: 60,
 	following: false,
 	following_executer: null,
-	drawing_line: false,
+	drawing_way: false,
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -986,29 +990,42 @@ User = {
 	calculate_coords: function() {
 		// this should be based on lat and lon
 	},
-	submit_point: function(_x, _y) {
+	create_node: function(_x, _y, _draw, id) {
 		if (Object.isUndefined(_x)) _x = User.x
 		if (Object.isUndefined(_y)) _y = User.y
-		var point = new Node()
-		point.x = _x
-		point.y = _y
-		point.radius = User.point_radius
-		point.id = 'temp_' + (Math.random() * 999999999).floor()
-		point.lon = Projection.x_to_lon(_x)
-		point.lat = Projection.y_to_lat(_y)
-		objects.push(point)
-        draw()
-        
-		var params = {
-			color: User.color,
-			lon: point.lon,
-			lat: _y
+		if (Object.isUndefined(id)) id = 'temp_' + (Math.random() * 999999999).floor()
+		var node = new Node()
+		node.x = _x
+		node.y = _y
+		node.radius = User.node_radius
+		node.id = id
+		node.lon = Projection.x_to_lon(_x)
+		node.lat = Projection.y_to_lat(_y)
+		node.fillStyle = User.color
+		
+		if (_draw) {
+			objects.push(node)
+        	draw()
 		}
 		
-		new Ajax.Request(User.point_sumbit_uri, {
+		return node
+	},
+	submit_node: function(_x, _y) {
+		var node = User.create_node(_x, _y, true)
+		var params = {
+			color: User.color,
+			lon: node.lon,
+			lat: node.lat,
+			author: User.name
+		}
+		new Ajax.Request(User.node_submit_uri, {
 			method: 'post',
-			parameters: params
-		});
+			parameters: params,
+			onSuccess: function(transport) {
+				node.id = 'cartagen_' + transport.responseText
+				Cartagen.debug('saved node with id ' + node.id)
+			}
+		})
 	},
 	toggle_following: function() {
 		if (User.following) {
@@ -1031,26 +1048,56 @@ User = {
 		Map.y = User.y
 		draw()
 	},
-	toggle_line_drawing: function() {
-		if (User.drawing_line) {
+	toggle_way_drawing: function(_x, _y) {
+		if (User.drawing_way) {
+			User.add_node(_x, _y)
+			User.submit_way(User.way)
+
 		}
 		else {
-			User.drawing_line = true
-			
-			var id = (Math.random() * 999999999).floor()
-			while(Cartagen.ways[id]) {
-				id = (Math.random() * 999999999).floor()
-			}
-			
-			User.line = new Way({
-				id: id,
-				nodes: [],
-				tags: new Hash(),
-				
+			User.way = new Way({
+				id: 'temp_' + (Math.random() * 999999999).floor(),
+				author: User.name,
+				nodes: [User.create_node(_x,_y,true)],
+				tags: new Hash()
 			})
-			
+			User.way.closed_poly = false
+			User.way.strokeStyle = User.color
+			User.way.lineWidth = User.line_width
+			User.way.age = 40
+			draw()			
 		}
+		User.drawing_way = !User.drawing_way
+	},
+	submit_way: function(_way) {
+ 		var params = {
+			color: User.color,
+			author: User.name,
+			bbox: _way.bbox,
+			nodes: _way.nodes.collect(function(node) {
+				return [node.lon, node.lat]
+			})
+		}
+		Cartagen.debug(_way.nodes)
+		Cartagen.debug(params)
+		new Ajax.Request(User.way_submit_uri, {
+			parameters: {way: Object.toJSON(params)},
+			onSuccess: function(transport) {
+				_way.id = 'cartagen_' + transport.responseJSON.way_id
+				_way.nodes.each(function(nd) {
+					nd.id = 'cartagen_' + transport.responseJSON.node_ids.shift()
+				})
+			}
+		})
+		Cartagen.debug(_way)
+	},
+	add_node: function(_x, _y) {
+		node = User.create_node(_x, _y, true)
+		User.way.nodes.push(node)
+		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
+		draw()
 	}
+		
 }
 
 function overlaps(x1,y1,x2,y2,fudge) {
