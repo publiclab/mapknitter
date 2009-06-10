@@ -324,6 +324,10 @@ var Geohash = {
 	objects: [],
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
+	// once-per-frame calls to regenerate objects, etc.
+	draw: function() {
+		this.get_objects()
+	},
 	// adds a feature to a geohash index
 	put: function(lat,lon,feature,length) {
 		if (!length) length = this.default_length
@@ -353,6 +357,7 @@ var Geohash = {
 	},
 	// fetch features in a geohash key
 	get_from_key: function(key) {
+		// this.draw_bbox(key)
 		var result = this.hash.get(key)
 		if (result) return result
 		else return []
@@ -579,7 +584,8 @@ var Cartagen = {
 		strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 		
 		//Geohash lookup:
-		Geohash.get_objects().each(function(object) { 
+		Geohash.draw()
+		Geohash.objects.each(function(object) { 
 			object.draw()
 		})
 	},

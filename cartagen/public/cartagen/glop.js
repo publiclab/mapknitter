@@ -120,7 +120,7 @@ function draw_powersave() {
 	if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
 		draw()
 	} else {
-		if (last_event > frame-15) {
+		if (last_event > frame-25) {
 			draw()
 		} else {
 			// console.log('sleeping')
