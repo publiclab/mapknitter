@@ -308,20 +308,23 @@ var Style = {
 }
 
 var Viewport = {
+	// x,y bbox
 	bbox: [],
 	// in-map x-width (after scaling)
 	width: 0,
 	// in-map y-height (after scaling)
 	height: 0,
-	// varies around 1.0 as function of browser window resolution
+	// varies around 1.0 as function of hardware resolution: larger screens ~= powerfuller devices
+	// we could also tie to framerate based on measurement of initial load using Date object and frame count
 	power: function() {
-		return width/1000
+		return window.screen.width/1024
 	}
 }
 
 var Geohash = {
 	hash: new Hash(),
 	objects: [],
+	grid: true,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
 	// once-per-frame calls to regenerate objects, etc.
@@ -331,7 +334,7 @@ var Geohash = {
 	// adds a feature to a geohash index
 	put: function(lat,lon,feature,length) {
 		if (!length) length = this.default_length
-		var key = Geohash.key(lat,lon,length)
+		var key = Geohash.get_key(lat,lon,length)
 		// check to see if the geohash is already populated:
 		var merge_hash = this.hash.get(key)
 		if (!merge_hash) {
@@ -342,9 +345,9 @@ var Geohash = {
 		this.hash.set(key,merge_hash)
 	},
 	put_object: function(object) {
-		Geohash.put(Projection.y_to_lat(object.y),Projection.x_to_lon(object.x),object,Geohash.get_key_length(object.width,object.height)-2)
+		Geohash.put(Projection.y_to_lat(object.y),Projection.x_to_lon(object.x),object,Geohash.get_key_length(object.width,object.height)-1)
 	},
-	key: function(lat,lon,length) {
+	get_key: function(lat,lon,length) {
 		if (!length) length = this.default_length
 		if (length < 1) length = 1
 		return encodeGeoHash(lat,lon).truncate(length,"")
@@ -352,7 +355,7 @@ var Geohash = {
 	// fetch features in a geohash from lat/lon and length
 	get: function(lat,lon,length) {
 		if (!length) length = this.default_length
-		var key = this.key(lat,lon,length)
+		var key = this.get_key(lat,lon,length)
 		return this.hash.get(key)
 	},
 	// fetch features in a geohash key
@@ -377,6 +380,24 @@ var Geohash = {
 			else return []
 		}
 	},
+	/** 
+	 *  Geohash.get_keys_upward(key,keys) -> undefined
+	 *  
+	 *  fetch keys in a geohash from a geohash key, and all shorter keys
+	 *  checks for redundancy against a hash of keys 
+	 **/
+	get_keys_upward: function(key) {
+		if (key.length > this.limit_bottom) key.truncate(this.limit_bottom,'')
+		if (key.length > 0) {
+			// this.draw_bbox(key)
+			Geohash.keys.set(key,true)
+			k = key.truncate(key.length-1,"")
+			if (key.length > 1 && !Geohash.keys.get(k)) {
+				this.get_keys_upward(k)
+				Cartagen.debug('going up!')
+			}
+		}
+	},
 	// fetch adjacent geohashes:
 	get_neighbors: function(key) {
 		var neighbors = []
@@ -384,15 +405,36 @@ var Geohash = {
 		dirs.each(function(dir) {
 			var n_key = calculateAdjacent(key,dir)
 			var n_array = this.get_from_key(n_key)
-			if (n_array) neighbors.concat()
+			if (n_array) neighbors = neighbors.concat(n_array)
 			// Cartagen.debug("n_key: "+n_key)
 		},this)
 		// Cartagen.debug('neighbors of '+key+': '+neighbors.length)
 		return neighbors
 	},
 	// return a geohash length from a zoom_level
+	// i believe this is deprecated (jeff)
 	length_from_zoom: function(zoom_level) {
 		return zoom_level/0.003
+	},
+	/** 
+	 *  Geohash.fill_bbox(key,keys) -> undefined
+	 *  
+	 *  given a geohash key, recurses outwards to neighbors while still within the viewport
+	 **/
+	fill_bbox: function(key,keys) {
+		var dirs = ['top','bottom','left','right']
+		// we may be able to improve efficiency by only checking certain directions
+		dirs.each(function(dir) {
+			var k = calculateAdjacent(key,dir)
+			if (!keys.get(k)) {
+				keys.set(k,true)
+				// if still inside viewport:
+				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
+				if (in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2])) this.fill_bbox(k,keys)
+				// if (overlaps(bbox.latitude[2],bbox.longitude[2],Map.lat,Map.lon,Math.min(Map.lat_height,Map.lon_width)/2)) this.fill_bbox(k,keys)
+				this.draw_bbox(k)
+			}
+		},this)
 	},
 	trace: function() {
 		this.hash.keys().each(function(key) {
@@ -405,18 +447,20 @@ var Geohash = {
 		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0]]
 	},
 	draw_bbox: function(key) {
-		var bbox = this.bbox(key)
-		lineWidth(1/Cartagen.zoom_level)
-		strokeStyle('rgba(0,0,0,0.5)')
-		// Cartagen.debug(key.length+": "+(bbox[2]-bbox[0])+","+(bbox[1]-bbox[3]))
-		var width = (Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))
-		var height = (Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3]))
-		strokeRect(-width-Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]),width,height)
-		fillStyle('rgba(0,0,0,0.5)')
-		canvas.font = "12pt Helvetica"
-		canvas.fillText(key,-width-Projection.lon_to_x(bbox[0])+5,Projection.lat_to_y(bbox[3])-5)
-		// Cartagen.debug(key+": xy_rect: "+Projection.lon_to_x(bbox[0])+","+Projection.lat_to_y(bbox[3])+","+(Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))+","+(Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3])))
-		// Cartagen.debug(key+': latlon_rect: '+bbox[0]+','+bbox[3]+','+bbox[2]+','+bbox[1])
+		if (Geohash.grid) {
+			var bbox = this.bbox(key)
+			canvas.lineWidth = 1/Cartagen.zoom_level
+			strokeStyle('rgba(0,0,0,0.5)')
+			// Cartagen.debug(key.length+": "+(bbox[2]-bbox[0])+","+(bbox[1]-bbox[3]))
+			var width = (Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))
+			var height = (Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3]))
+			strokeRect(-width-Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]),width,height)
+			fillStyle('rgba(0,0,0,0.5)')
+			canvas.font = (9/Cartagen.zoom_level)+"pt Helvetica"
+			canvas.fillText(key,-width-Projection.lon_to_x(bbox[0])+3/Cartagen.zoom_level,Projection.lat_to_y(bbox[3])-3/Cartagen.zoom_level)
+			// Cartagen.debug(key+": xy_rect: "+Projection.lon_to_x(bbox[0])+","+Projection.lat_to_y(bbox[3])+","+(Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))+","+(Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3])))
+			// Cartagen.debug(key+': latlon_rect: '+bbox[0]+','+bbox[3]+','+bbox[2]+','+bbox[1])
+		}
 	},
 	get_key_length: function(lat,lon) {
 		if (lon < 0.0000003357) lon_key = 12
@@ -452,27 +496,22 @@ var Geohash = {
 		this.objects = []
 
 		// get geohash for each of the 4 corners,
-		// not just the center,
-		// remove dupes, then get_upward
-		this.keys = []
-		this.key_length = Geohash.get_key_length(Map.lon_width(),Map.lat_height())
-		// [lon1, lat2, lon2, lat1]
-		this.keys[0] = Geohash.key(Map.get_bbox()[3],Map.get_bbox()[0],this.key_length)
-		this.keys[1] = Geohash.key(Map.get_bbox()[3],Map.get_bbox()[2],this.key_length)
-		this.keys[2] = Geohash.key(Map.get_bbox()[1],Map.get_bbox()[0],this.key_length)
-		this.keys[3] = Geohash.key(Map.get_bbox()[1],Map.get_bbox()[2],this.key_length)
+		this.keys = new Hash
+		this.key_length = Geohash.get_key_length(0.0015/Cartagen.zoom_level,0.0015/Cartagen.zoom_level)
 		
-		this.keys = this.keys.uniq()
-		// Geohash.key(Map.lat(),Map.lon())
+		this.key = Geohash.get_key(Map.lat,Map.lon,this.key_length)
+		
+		var bbox = decodeGeoHash(this.key) //[lon1, lat2, lon2, lat1]
+		
+		this.fill_bbox(this.key,this.keys)
+		this.get_keys_upward(this.key)
 
-		// // this will produce duplicate upward keys!!
-		this.keys.each(function(key,index) {
-			// this.objects.push(Geohash.get_upward(key))
+		this.keys.keys().each(function(key,index) {
+			this.get_keys_upward(key)
+		},this)
 		
-			// therefore for now let's just do:
-			// and cascade upwards from the upper left. This is dumb.
-			if (index == 0) this.objects = this.objects.concat(Geohash.get_upward(key))
-			else this.objects = this.objects.concat(Geohash.get_from_key(key))
+		this.keys.keys().each(function(key) {
+			this.objects = this.objects.concat(this.get_from_key(key))
 		},this)
 		
 		// reverse because smaller objects are added first:
@@ -561,7 +600,7 @@ var Cartagen = {
 		this.object_count = 0
 		this.way_count = 0
 		this.node_count = 0
-		Map.refresh_resolution()
+		Map.draw()
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
 		
 		Style.style_body()
@@ -852,35 +891,32 @@ var Map = {
 		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
 		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
 	},
-	pointer_x: function() { return Map.x+(((width/-2)-Mouse.x)/Cartagen.zoom_level) },
-	pointer_y: function() { return Map.y+(((height/-2)-Mouse.y)/Cartagen.zoom_level) },
-	x: 0,
-	y: 0,
-	lat: function() { return Projection.y_to_lat(this.y) },
-	lon: function() { return Projection.x_to_lon(this.x) },
-	rotate: 0,
-	rotate_old: 0,
-	x_old: 0,
-	y_old: 0,
-	lon_width: function() {
-		return Math.abs(Map.get_bbox()[0]-Map.get_bbox()[2])
-	},
-	lat_height: function() {
-		return Math.abs(Map.get_bbox()[1]-Map.get_bbox()[3])
-	},
-	// Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
-	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
-	refresh_resolution: function() {
-		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
-	},
-	// [lon1, lat2, lon2, lat1]
-	get_bbox: function() {
+	draw: function() {
 		var lon1 = Projection.x_to_lon(Map.x - (Viewport.width/2))
 		var lon2 = Projection.x_to_lon(Map.x + (Viewport.width/2))
 		var lat1 = Projection.y_to_lat(Map.y - (Viewport.height/2))
 		var lat2 = Projection.y_to_lat(Map.y + (Viewport.height/2))
-		return [lon1, lat2, lon2, lat1]
-	}
+		this.bbox = [lon1, lat2, lon2, lat1]
+		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
+		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
+		this.lat = Projection.y_to_lat(this.y)
+		this.lon = Projection.x_to_lon(this.x)
+		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
+	},
+	pointer_x: function() { return Map.x+(((width/-2)-Mouse.x)/Cartagen.zoom_level) },
+	pointer_y: function() { return Map.y+(((height/-2)-Mouse.y)/Cartagen.zoom_level) },
+	bbox: [],
+	x: 0,
+	y: 0,
+	lat: 0,
+	lon: 0,
+	rotate: 0,
+	rotate_old: 0, // from beginning of drag motion
+	x_old: 0, // from beginning of drag motion
+	y_old: 0,
+	lon_width: 0,
+	lat_height: 0,
+	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))) // Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
 }
 
 var Node = Class.create({
@@ -1124,7 +1160,7 @@ var Projection = {
 		
 	}
 }
-User = {
+var User = {
 	color: randomColor(),
 	name: 'anonymous',
 	// lat & lon are based on geolocation:
@@ -1275,6 +1311,10 @@ User = {
 		new Ajax.Request(User.node_update_uri, {
 		})
 	}	
+}
+
+function in_range(v,r1,r2) {
+	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
 }
 
 function overlaps(x1,y1,x2,y2,fudge) {
