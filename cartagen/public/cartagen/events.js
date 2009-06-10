@@ -27,7 +27,6 @@ function wheel(event){
 		delta = -event.detail/3;
 	}
 	if (delta && !Cartagen.live_gss) {
-		draw()
 		if (delta <0) {
 			Cartagen.zoom_level += delta/40
 		} else {
@@ -35,6 +34,7 @@ function wheel(event){
 		}
 		if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 	}
+	draw()
 }
 
 // Observe mouse events:
