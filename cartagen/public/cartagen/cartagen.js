@@ -470,7 +470,8 @@ var Geohash = {
 			else this.objects = this.objects.concat(Geohash.get_from_key(key))
 		},this)
 		
-		return this.objects
+		// reverse because smaller objects are added first:
+		return this.objects.reverse
 	}
 }
 
