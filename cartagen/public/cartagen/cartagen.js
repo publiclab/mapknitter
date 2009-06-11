@@ -394,7 +394,6 @@ var Geohash = {
 			k = key.truncate(key.length-1,"")
 			if (key.length > 1 && !Geohash.keys.get(k)) {
 				this.get_keys_upward(k)
-				Cartagen.debug('going up!')
 			}
 		}
 	},
