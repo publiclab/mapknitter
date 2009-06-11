@@ -19,25 +19,50 @@ body {
 #controls {
 	position: absolute;
 	bottom: 40px;
-	left: 0px;
+	left: 5px;
 	width: 100%;
-	height: 20px;
+	height: 30px;
 }
 #controls a.btn{
-	border: 1px solid #555;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
 	text-align:center;
 	display:block;
 	float:left;
 	background:#444;
-	height:20px;
+	height:63px;
 	color:#9ab;
 	font-size:1.1em;
 	text-decoration:none;
-	padding:1.2em 0;
-	margin:3px 0px 3px 5px;
+/*	padding:1.2em 0;*/
+	margin:3px 0 3px 0;
 }
 #controls a.btn.pressed {
 	background: #222
 }
+#controls a.btn#follow {
+	background:url('/images/iphone/follow.png') top no-repeat;
+	width:104px;
+}
+#controls a.btn#follow:active {
+	background:#900 url('/images/iphone/follow-down.png') top no-repeat;
+}
+#controls a.btn#line {
+	background:url('/images/iphone/line.png') top no-repeat;
+	width:100px;
+}
+#controls a.btn#line:active {
+	background:#900 url('/images/iphone/line-down.png') top no-repeat;
+}
+#controls a.btn#click,#controls a.btn#point {
+	background:url('/images/iphone/pin.png') top no-repeat;
+	width:104px;
+}
+#controls a.btn#click:active,#controls a.btn#point:active {
+	background:#900 url('/images/iphone/pin-down.png') top no-repeat;
+}
+#controls a.btn#point {
+	background:url('/images/iphone/add-point.png') top no-repeat;
+}
+#controls a.btn#point:active {
+	background:#900 url('/images/iphone/add-point-down.png') top no-repeat;
+}
+/* line, click, point */
