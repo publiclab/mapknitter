@@ -13,6 +13,7 @@ class Sms < ActiveRecord::Base
         :created_at => self.dateTimeP
       })
       message.save
+      message
     end
   end
   
