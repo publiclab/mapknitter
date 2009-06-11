@@ -142,6 +142,7 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 			releaseFrame = frame
 			globalDragging = false
 			dragging = false
+			User.update()
 		}
 		draw()
 	}
@@ -157,6 +158,7 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 	}
 	canvas_el.ongestureend = function(e){
 		Map.rotate_old = null
+		User.update()
 	}	
 }
 
@@ -208,6 +210,7 @@ function mouseup() {
 	releaseFrame = frame
 	globalDragging = false
 	dragging = false
+	User.update()
 }
 
 function clickLength() {

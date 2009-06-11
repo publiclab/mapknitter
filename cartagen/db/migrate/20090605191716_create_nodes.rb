@@ -3,8 +3,8 @@ class CreateNodes < ActiveRecord::Migration
     create_table :nodes do |t|
       t.string :color, :default => 'red'
       t.string :author, :default => 'anonymous'
-      t.float :lat, :default => 0
-      t.float :lon, :default => 0
+      t.decimal :lat, :default => 0, :precision => 10
+      t.decimal :lon, :default => 0, :precision => 10
       t.timestamps
     end
   end
