@@ -15,5 +15,7 @@ class CreateWays < ActiveRecord::Migration
 
   def self.down
     drop_table :ways
+    remove_column :nodes, :way_id
+    remove_column :nodes, :order
   end
 end

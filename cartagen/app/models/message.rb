@@ -24,6 +24,8 @@ class Message < ActiveRecord::Base
     n.color = 'red'
     geohash = self.text.split(' ')[0]
     latlon = GeoHash.decode(geohash)
+    self.text.slice!(geohash+" ")
+    n.description = self.text
     n.lat = latlon[0]
     n.lon = latlon[1]
     n.author = self.author if self.author
