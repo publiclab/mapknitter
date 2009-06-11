@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090611170805) do
+ActiveRecord::Schema.define(:version => 20090611204112) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -29,14 +29,15 @@ ActiveRecord::Schema.define(:version => 20090611170805) do
   end
 
   create_table "nodes", :force => true do |t|
-    t.string   "color",                                                   :default => "red"
-    t.string   "author",                                                  :default => "anonymous"
-    t.integer  "lat",        :limit => 10, :precision => 10, :scale => 0, :default => 0
-    t.integer  "lon",        :limit => 10, :precision => 10, :scale => 0, :default => 0
+    t.string   "color",       :default => "red"
+    t.string   "author",      :default => "anonymous"
+    t.float    "lat",         :default => 0.0
+    t.float    "lon",         :default => 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "way_id",                                                  :default => 0
-    t.integer  "order",                                                   :default => 0
+    t.integer  "way_id",      :default => 0
+    t.string   "name",        :default => ""
+    t.string   "description", :default => ""
   end
 
   create_table "tweets", :force => true do |t|
@@ -45,14 +46,16 @@ ActiveRecord::Schema.define(:version => 20090611170805) do
   end
 
   create_table "ways", :force => true do |t|
-    t.string   "color",      :default => "red"
-    t.string   "author",     :default => "anonymous"
-    t.integer  "lat1",       :default => 0
-    t.integer  "lat2",       :default => 0
-    t.integer  "lon1",       :default => 0
-    t.integer  "lon2",       :default => 0
+    t.string   "color",       :default => "red"
+    t.string   "author",      :default => "anonymous"
+    t.integer  "lat1",        :default => 0
+    t.integer  "lat2",        :default => 0
+    t.integer  "lon1",        :default => 0
+    t.integer  "lon2",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name",        :default => ""
+    t.string   "description", :default => ""
   end
 
 end
