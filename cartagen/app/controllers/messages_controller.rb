@@ -18,17 +18,32 @@ class MessagesController < ApplicationController
   end
   
   def import
-    last_message = Message.find(:last,:conditions => ['source = "twitter"'])
-    since = (last_message.created_at+1.second).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
-    new_tweets = Tweet.find(:all, :from=>"/statuses/friends_timeline/whooz.xml?since="+since)
-    puts since
-    new_tweets.each do |tweet|
-      begin
-        tweet.save_as_message
-      rescue
-        puts "GEOCODING ERROR: "+tweet.inspect
+    # Tweets:
+      # last_tweet = Message.find(:last,:conditions => ['source = "twitter"'])
+      # since = (last_tweet.created_at+1.second).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
+      # puts since
+      # new_tweets = Tweet.find(:all, :from=>"/statuses/friends_timeline/whooz.xml?since="+since)
+      # new_tweets.each do |tweet|
+      #   begin
+      #     tweet.save_as_message
+      #   rescue
+      #     puts "GEOCODING ERROR: "+tweet.inspect
+      #   end
+      # end
+    # SMSes:
+      last_sms = Message.find(:last,:conditions => ['source = "sms"'])
+      since = (DateTime.now-2.hours).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
+      # since = (last_sms.created_at+1.second).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
+      puts since
+      new_sms = Sms.find(:all)
+      new_sms.each do |sms|
+        begin
+          sms.save_as_message
+          sms.save_as_node
+        rescue
+          puts "IMPORT ERROR: "+sms.inspect
+        end
       end
-    end
     render :xml => Message.find(:all)
   end
   

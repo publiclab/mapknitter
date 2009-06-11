@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090605201606) do
+ActiveRecord::Schema.define(:version => 20090611170805) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
