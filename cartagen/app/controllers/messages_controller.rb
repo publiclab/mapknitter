@@ -38,8 +38,7 @@ class MessagesController < ApplicationController
       new_sms = Sms.find(:all)
       new_sms.each do |sms|
         begin
-          sms.save_as_message
-          sms.save_as_node
+          sms.save_as_message.save_as_node
         rescue
           puts "IMPORT ERROR: "+sms.inspect
         end
