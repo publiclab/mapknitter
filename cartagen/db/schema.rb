@@ -29,13 +29,14 @@ ActiveRecord::Schema.define(:version => 20090605201606) do
   end
 
   create_table "nodes", :force => true do |t|
-    t.string   "color",      :default => "red"
-    t.string   "author",     :default => "anonymous"
-    t.float    "lat",        :default => 0.0
-    t.float    "lon",        :default => 0.0
+    t.string   "color",                                                   :default => "red"
+    t.string   "author",                                                  :default => "anonymous"
+    t.integer  "lat",        :limit => 10, :precision => 10, :scale => 0, :default => 0
+    t.integer  "lon",        :limit => 10, :precision => 10, :scale => 0, :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "way_id",     :default => 0
+    t.integer  "way_id",                                                  :default => 0
+    t.integer  "order",                                                   :default => 0
   end
 
   create_table "tweets", :force => true do |t|

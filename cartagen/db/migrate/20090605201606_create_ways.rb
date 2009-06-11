@@ -10,6 +10,7 @@ class CreateWays < ActiveRecord::Migration
       t.timestamps
     end
     add_column :nodes, :way_id, :integer, :default => 0
+    add_column :nodes, :order, :integer, :default => 0
   end
 
   def self.down

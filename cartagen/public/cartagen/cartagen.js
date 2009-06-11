@@ -324,7 +324,7 @@ var Viewport = {
 var Geohash = {
 	hash: new Hash(),
 	objects: [],
-	grid: true,
+	grid: false,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
 	// once-per-frame calls to regenerate objects, etc.
@@ -593,6 +593,8 @@ var Cartagen = {
 				}
 			}
 		}
+		User.update()
+		new PeriodicalExecuter(User.update, 60)
 	},
 	// Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code
 	draw: function() {
@@ -955,7 +957,7 @@ var Way = Class.create({
 	fontSize: 12,
     initialize: function(data) {
 		Object.extend(this, data)
-		if (this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
+		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -981,7 +983,7 @@ var Way = Class.create({
 	middle_segment: function() {
 		// Cartagen.debug(this.nodes[Math.floor(this.nodes.length/2)+1])
         if (this.nodes.length == 1) {
-            return this.nodes[0]
+            return [this.nodes[0], this.nodes[0]]
         }
         else if (this.nodes.length == 2) {
             return [this.nodes[0], this.nodes[1]]
@@ -1171,12 +1173,13 @@ var User = {
 	node_updates_uri: '/node/read',
 	way_submit_uri: '/way/write',
 	way_update_uri: '/way/read',
-	line_width: 10,
+	line_width:25,
 	node_radius: 50,
 	follow_interval: 60,
 	following: false,
 	following_executer: null,
 	drawing_way: false,
+	loaded_node_ids: [],
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -1206,6 +1209,7 @@ var User = {
 		node.fillStyle = User.color
 		
 		if (_draw) {
+			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
         	draw()
 		}
@@ -1225,7 +1229,7 @@ var User = {
 			parameters: params,
 			onSuccess: function(transport) {
 				node.id = 'cartagen_' + transport.responseText
-				Cartagen.debug('saved node with id ' + node.id)
+				User.loaded_node_ids.push(id)
 			}
 		})
 	},
@@ -1263,10 +1267,11 @@ var User = {
 				nodes: [User.create_node(_x,_y,true)],
 				tags: new Hash()
 			})
-			User.way.closed_poly = false
 			User.way.strokeStyle = User.color
 			User.way.lineWidth = User.line_width
 			User.way.age = 40
+			Cartagen.debug([Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1])
+			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
 			draw()			
 		}
 		User.drawing_way = !User.drawing_way
@@ -1277,7 +1282,7 @@ var User = {
 			author: User.name,
 			bbox: _way.bbox,
 			nodes: _way.nodes.collect(function(node) {
-				return [node.lon, node.lat]
+				return [node.lat, node.lon]
 			})
 		}
 		Cartagen.debug(_way.nodes)
@@ -1286,8 +1291,11 @@ var User = {
 			parameters: {way: Object.toJSON(params)},
 			onSuccess: function(transport) {
 				_way.id = 'cartagen_' + transport.responseJSON.way_id
+				var id = 0
 				_way.nodes.each(function(nd) {
+					id = transport.responseJSON.node_ids.shift()
 					nd.id = 'cartagen_' + transport.responseJSON.node_ids.shift()
+					User.loaded_node_ids.push(id)
 				})
 			}
 		})
@@ -1300,16 +1308,103 @@ var User = {
 		draw()
 	},
 	update: function() {
-		if (User.last_pos && User.last_pos == lastPos) {
-			 var timestamp = User.last_update
+		var params = {
+			bbox: Map.bbox.join(',')
 		}
-		User.last_pos = lastPos
-		User.last_update = (new Date()).toUTCString()
-		
-		
-		new Ajax.Request(User.node_update_uri, {
+		if (User.last_pos && User.last_pos == [Map.x, Map.y]) {
+			 params.timestamp = User.last_update
+		}
+		new Ajax.Request(User.node_updates_uri, {
+			parameters: params,
+			onSuccess: function(transport) {
+				Cartagen.debug(transport)
+				User.update_nodes(transport.responseJSON)
+			}
 		})
-	}	
+		User.last_pos = [Map.x, Map.y]
+		User.last_update = (new Date()).toUTCString()
+	},
+	update_nodes: function(nodes) {
+		var ways = []
+		nodes.each(function(node) {
+			node = node.node
+			if (User.loaded_node_ids.indexOf(node.id) == -1) {				
+				if (node.way_id != 0) {
+					ways.push(node.way_id)
+				}
+				else {
+					var n = new Node
+					n.height = User.node_radius*2
+					n.width = User.node_radius*2
+					n.radius = User.node_radius
+					n.fillStyle = node.color
+					n.user = node.author
+					n.lat = node.lat
+					n.lon = node.lon
+					n.x = Projection.lon_to_x(n.lon)
+					n.y = Projection.lat_to_y(n.lat)
+					Geohash.put(n.lat, n.lon, n, 1)
+				}
+			}
+		})
+		Cartagen.debug(ways)
+		draw()
+		if (ways.length > 0) {
+			new Ajax.Request(User.way_update_uri, {
+				parameters: {
+					ids: ways.uniq().join(',')
+				},
+				onSuccess: function(transport) {
+					Cartagen.debug(transport)
+					User.update_ways(transport.responseJSON)
+				}
+			})
+		}
+	},
+	
+	update_ways: function(data) {
+		nodes = new Hash()
+		
+		data.node.each(function(node) {
+			var n = new Node
+			n.height = User.node_radius*2
+			n.width = User.node_radius*2
+			n.radius = User.node_radius
+			n.fillStyle = node.color
+			n.user = node.author
+			n.lat = node.lat
+			n.lon = node.lon
+			n.x = Projection.lon_to_x(n.lon)
+			n.y = Projection.lat_to_y(n.lat)
+			n.order = node.order
+			if (nodes.get(node.way_id)) {
+				nodes.get(node.way_id).push(n)
+			}
+			else {
+				nodes.set(node.way_id, [n])
+			}
+		})
+			
+		data.way.each(function(way) {
+			try {
+			var nds = nodes.get(way.id).sort(function(a, b) {return a.order - b.order})
+			var data = {
+				id: 'cartagen_' + way.id,
+				user: way.author,
+				nodes: nds,
+				tags: new Hash()
+			}
+			Cartagen.debug(way)
+			Cartagen.debug(data)
+			w = new Way(data)
+			w.strokeStyle = way.color
+			w.lineWidth = User.line_width
+			Cartagen.debug(w)
+			g_w = w
+			} catch(e) {Cartagen.debug(e)}
+		})
+	}
+	
 }
 
 function in_range(v,r1,r2) {

@@ -2,6 +2,7 @@ class NodeController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def write
+  	p params
     n = Node.new
     n.color = params[:color]
     n.lat = params[:lat]
@@ -17,8 +18,8 @@ class NodeController < ApplicationController
       bbox = params[:bbox].split(',')
       # counting from left, counter-clockwise
       lon1,lat2,lon2,lat1 = bbox
-      conditions[0] << 'lat > ? AND lat < ? AND lon > ? AND lon < ?'
-      conditions.push(lat1,lat2,lon1,lat1)
+      conditions[0] << '((lat BETWEEN ? AND ?) OR (lat BETWEEN ? AND ?)) AND ((lon BETWEEN ? AND ?) OR (lon BETWEEN ? AND ?))'
+      conditions.push(lat1,lat2,lat2,lat1,lon1,lon2,lon2,lon1)
     end
     if params[:timestamp]
       since = DateTime.parse(params[:timestamp])

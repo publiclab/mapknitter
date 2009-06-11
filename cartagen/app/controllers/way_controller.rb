@@ -15,11 +15,13 @@ class WayController < ApplicationController
       way.bbox = json['bbox']
       way.author = json['author']
     
+      order = -1
       json['nodes'].each do |nd|
         node = Node.new
         node.lat = nd[0]
         node.lon = nd[1]
         node.author = way.author
+        node.order = order += 1
         node.save
         nodes << node
       end
@@ -61,7 +63,13 @@ class WayController < ApplicationController
     end
     conditions[0] = conditions[0].join(' AND ')
     ways = Way.find(:all, :conditions => conditions)
-    render :json => ways    
+    way_ids = ways.collect {|way| way.id }
+    ways.collect! {|way| way.attributes}
+	nodes = Node.find_all_by_way_id(way_ids)
+	p nodes
+    nodes.collect! {|node| node.attributes}
+	p nodes
+    render :json => {'way' => ways, 'node' => nodes}
   end
   
 end
