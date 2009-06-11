@@ -7,6 +7,7 @@ Mushrooms = {
 	},
 	follow: function() {
 		User.toggle_following()
+		$('follow').toggleClassName('pressed')
 		return false
 	},
 	line: function() {
