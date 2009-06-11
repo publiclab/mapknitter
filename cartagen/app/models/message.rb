@@ -1,5 +1,7 @@
+gem 'davetroy-geohash'
+require 'geohash'
+
 class Message < ActiveRecord::Base
-  
   has_many :keyvalues
   after_create :keyvalues
   
@@ -15,6 +17,17 @@ class Message < ActiveRecord::Base
       keyvalue.message_id = self.id
       keyvalue.save
     end
+  end
+  
+  def save_as_node
+    n = Node.new
+    n.color = 'red'
+    geohash = self.text.split(' ')[0]
+    latlon = GeoHash.decode(geohash)
+    n.lat = latlon[0]
+    n.lon = latlon[1]
+    n.author = self.author if self.author
+    n.save
   end
   
 end
