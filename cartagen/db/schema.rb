@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(:version => 20090612011846) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
-    t.boolean  "complete",                                    :default => true
   end
 
 end

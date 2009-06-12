@@ -33,9 +33,7 @@ if(window.PhoneGap) {
 	scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 				 cartagen_base_uri + '/lib/phonegap/geolocation.js',
 				 cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js',
-				 cartagen_base_uri + '/lib/phonegap/debugconsole.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/debugconsole.js')
+				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
 }
 
 
@@ -548,7 +546,7 @@ var Cartagen = {
 	bleed_level: 1,
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
     label_queue: [], // queue of labels to draw
-    debug_mode: ((typeof console != "undefined") || (typeof window.debug != "undefined")),
+    debug_mode: typeof console != "undefined",
 	setup: function(configs) {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
