@@ -142,8 +142,8 @@ if (Prototype.Browser.MobileSafari || window.PhoneGap) {
 			releaseFrame = frame
 			globalDragging = false
 			dragging = false
-			User.update()
 		}
+		User.update()
 		draw()
 	}
 	canvas_el.ongesturestart = function(e) {
@@ -211,6 +211,7 @@ function mouseup() {
 	globalDragging = false
 	dragging = false
 	User.update()
+	Cartagen.debug("x: " + Map.pointer_x() + ", y: " + Map.pointer_y())
 }
 
 function clickLength() {

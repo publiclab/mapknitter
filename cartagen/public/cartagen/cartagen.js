@@ -1180,6 +1180,7 @@ var User = {
 	following_executer: null,
 	drawing_way: false,
 	loaded_node_ids: [],
+	nodes: [],
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -1207,13 +1208,14 @@ var User = {
 		node.lon = Projection.x_to_lon(_x)
 		node.lat = Projection.y_to_lat(_y)
 		node.fillStyle = User.color
+		node.strokeStyle = "rgba(0,0,0,0)"
 		
 		if (_draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
         	draw()
 		}
-		
+		User.nodes.push(node)
 		return node
 	},
 	submit_node: function(_x, _y) {
@@ -1341,8 +1343,10 @@ var User = {
 					n.user = node.author
 					n.lat = node.lat
 					n.lon = node.lon
-					n.x = Projection.lon_to_x(n.lon)
+					// BAD!!! Why do we need a *-1????
+					n.x = -1*Projection.lon_to_x(n.lon)
 					n.y = Projection.lat_to_y(n.lat)
+					n.strokeStyle = "rgba(0,0,0,0)"
 					Geohash.put(n.lat, n.lon, n, 1)
 				}
 			}
@@ -1374,8 +1378,10 @@ var User = {
 			n.user = node.author
 			n.lat = node.lat
 			n.lon = node.lon
-			n.x = Projection.lon_to_x(n.lon)
+			// BAD!!! Why do we need a *-1????
+			n.x = -1*Projection.lon_to_x(n.lon)
 			n.y = Projection.lat_to_y(n.lat)
+			n.strokeStyle = "rgba(0,0,0,0)"
 			n.order = node.order
 			if (nodes.get(node.way_id)) {
 				nodes.get(node.way_id).push(n)
