@@ -183,4 +183,3 @@ CanvasTextFunctions.enable = function( ctx)
 	return CanvasTextFunctions.draw( ctx, font,size,x-w/2,y,text); 
     };
 }
-load_next_script()

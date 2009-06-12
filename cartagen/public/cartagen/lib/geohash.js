@@ -110,4 +110,3 @@ function encodeGeoHash(latitude, longitude) {
 	}
 	return geohash;
 }
-load_next_script()
