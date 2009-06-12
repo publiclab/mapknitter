@@ -576,10 +576,10 @@ var Cartagen = {
 			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
-			if (Prototype.Browser.MobileSafari) {
-				this.get_static_plot(this.static_map_layers[0])
-				this.get_static_plot(this.static_map_layers[1])
-			} else {
+			// if (Prototype.Browser.MobileSafari) {
+			// 	this.get_static_plot(this.static_map_layers[0])
+			// 	this.get_static_plot(this.static_map_layers[1])
+			// } else {
 				this.static_map_layers.each(function(layer_url) {
 					Cartagen.debug('fetching '+layer_url)
 					this.get_static_plot(layer_url)
@@ -591,7 +591,7 @@ var Cartagen = {
 						load_script(layer_url)
 					},this)
 				}
-			}
+			// }
 		}
 		User.update()
 		new PeriodicalExecuter(User.update, 60)
@@ -602,7 +602,7 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 		Map.draw()
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 1
 		
 		Style.style_body()
 
