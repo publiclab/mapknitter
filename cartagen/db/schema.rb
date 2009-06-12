@@ -29,15 +29,16 @@ ActiveRecord::Schema.define(:version => 20090612011846) do
   end
 
   create_table "nodes", :force => true do |t|
-    t.string   "color",       :default => "red"
-    t.string   "author",      :default => "anonymous"
-    t.float    "lat",         :default => 0.0
-    t.float    "lon",         :default => 0.0
+    t.string   "color",                                       :default => "red"
+    t.string   "author",                                      :default => "anonymous"
+    t.decimal  "lat",         :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lon",         :precision => 20, :scale => 10, :default => 0.0
+    t.integer  "way_id",                                      :default => 0
+    t.integer  "order",                                       :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "way_id",      :default => 0
-    t.string   "name",        :default => ""
-    t.string   "description", :default => ""
+    t.string   "name",                                        :default => ""
+    t.string   "description",                                 :default => ""
   end
 
   create_table "tweets", :force => true do |t|
@@ -46,17 +47,17 @@ ActiveRecord::Schema.define(:version => 20090612011846) do
   end
 
   create_table "ways", :force => true do |t|
-    t.string   "color",       :default => "red"
-    t.string   "author",      :default => "anonymous"
-    t.integer  "lat1",        :default => 0
-    t.integer  "lat2",        :default => 0
-    t.integer  "lon1",        :default => 0
-    t.integer  "lon2",        :default => 0
+    t.string   "color",                                       :default => "red"
+    t.string   "author",                                      :default => "anonymous"
+    t.decimal  "lat1",        :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lat2",        :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lon1",        :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lon2",        :precision => 20, :scale => 10, :default => 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name",        :default => ""
-    t.string   "description", :default => ""
-    t.boolean  "complete",    :default => true
+    t.string   "name",                                        :default => ""
+    t.string   "description",                                 :default => ""
+    t.boolean  "complete",                                    :default => true
   end
 
 end
