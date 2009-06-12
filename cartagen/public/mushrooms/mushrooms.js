@@ -14,17 +14,17 @@ Mushrooms = {
 		$('line').toggleClassName('pressed')
 		$('click').toggle()
 		$('point').toggle()
-		User.toggle_way_drawing()
+		User.toggle_way_drawing(Map.x,Map.y)
 		return false
 	},
 	click: function() {
 		// should add mushroom to map
-		User.submit_node()
+		User.submit_node(Map.x,Map.y)
 		return false
 	},
 	point: function() {
 		// should add point to line
-		User.add_node()
+		User.add_node(Map.x,Map.y)
 		return false
 	}
 }
