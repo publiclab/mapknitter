@@ -281,7 +281,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 28}, {186, 884}}</string>
+							<string>{{0, 0}, {186, 884}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -300,7 +300,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>-16 59 1596 943 0 0 1600 1002 </string>
+						<string>3 58 1596 943 0 0 1600 1002 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -330,7 +330,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>365A81320FE2CB9A00D349B0</string>
+										<string>365A81770FE2FA0C00D349B0</string>
 										<key>history</key>
 										<array>
 											<string>365D675C0FD56F6700255C00</string>
@@ -344,7 +344,9 @@
 											<string>3696BF080FD834B400262136</string>
 											<string>3616FD0C0FD8665000AFFEC6</string>
 											<string>3616FD0D0FD8665000AFFEC6</string>
-											<string>365A81200FE2A9CC00D349B0</string>
+											<string>365A81490FE2E4F900D349B0</string>
+											<string>365A816E0FE2F24300D349B0</string>
+											<string>365A816F0FE2F24300D349B0</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -360,6 +362,13 @@
 											<string>36CFB6910FD73132008579A8</string>
 											<string>36CFB6A00FD73132008579A8</string>
 											<string>36CFB6A60FD73132008579A8</string>
+											<string>365A814B0FE2E4F900D349B0</string>
+											<string>365A814C0FE2E4F900D349B0</string>
+											<string>365A814D0FE2E4F900D349B0</string>
+											<string>365A81640FE2F10F00D349B0</string>
+											<string>365A81690FE2F17B00D349B0</string>
+											<string>365A81700FE2F24300D349B0</string>
+											<string>365A81710FE2F24300D349B0</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -373,7 +382,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1388, 731}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-16 59 1596 943 0 0 1600 1002 </string>
+								<string>3 58 1596 943 0 0 1600 1002 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -393,7 +402,7 @@
 								<key>Frame</key>
 								<string>{{0, 736}, {1388, 166}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-16 59 1596 943 0 0 1600 1002 </string>
+								<string>3 58 1596 943 0 0 1600 1002 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -553,7 +562,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>365A81330FE2CB9A00D349B0</string>
 		<string>365A811E0FE28FFA00D349B0</string>
 		<string>365A811F0FE28FFA00D349B0</string>
 		<string>1C78EAAD065D492600B07095</string>
@@ -562,7 +570,7 @@
 		<string>/Users/plw/Desktop/cartagen/cartagen/phonegap-clients/mushroommap/MushroomMap.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>-16 59 1596 943 0 0 1600 1002 </string>
+	<string>3 58 1596 943 0 0 1600 1002 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
