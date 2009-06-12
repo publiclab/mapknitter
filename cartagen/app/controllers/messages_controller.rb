@@ -35,7 +35,7 @@ class MessagesController < ApplicationController
       since = (DateTime.now-2.hours).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
       # since = (last_sms.created_at+1.second).strftime("%a%%2C+%d+%b+%Y+%H%%3A%M%%3A%S+GMT")
       puts since
-      new_sms = Sms.find(:all)
+      new_sms = Sms.find(:all,:limit => 100)
       new_sms.each do |sms|
         begin
           sms.save_as_message.save_as_node
