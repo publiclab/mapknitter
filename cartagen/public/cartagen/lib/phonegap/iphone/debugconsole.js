@@ -26,3 +26,6 @@ DebugConsole.prototype.error = function(message) {
     else
         console.error(message);
 };
+
+alert('MushMap alert!')
+window.debug.log('MushMap log!')

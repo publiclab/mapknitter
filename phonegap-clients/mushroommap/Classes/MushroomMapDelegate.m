@@ -83,9 +83,9 @@
 	 * This is where we define the inital instance of the browser (WebKit) and give it a starting url/file.
 	 */
 	// device testing:
-    //NSURL *appURL        = [NSURL URLWithString:@"http://dad.media.mit.edu/~eco/cartagen/public/mushrooms"];
+    NSURL *appURL        = [NSURL URLWithString:@"http://mom.media.mit.edu:3010/mushrooms/"];
     // local testing:
-	NSURL *appURL        = [NSURL URLWithString:@"http://localhost:3000/mushrooms/"];
+	//NSURL *appURL        = [NSURL URLWithString:@"http://localhost:3000/mushrooms/"];
 	// release
 	//NSURL *appURL        = [NSURL URLWithString:@"http://mushroommap.com/"];
 

@@ -33,7 +33,9 @@ if(window.PhoneGap) {
 	scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 				 cartagen_base_uri + '/lib/phonegap/geolocation.js',
 				 cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
+				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js',
+				 cartagen_base_uri + '/lib/phonegap/debugconsole.js',
+				 cartagen_base_uri + '/lib/phonegap/iphone/debugconsole.js')
 }
 
 
@@ -546,7 +548,7 @@ var Cartagen = {
 	bleed_level: 1,
 	initial_bleed_level: 2, // this is how much plots bleed on the initial pageload
     label_queue: [], // queue of labels to draw
-    debug_mode: typeof console != "undefined",
+    debug_mode: ((typeof console != "undefined") || (typeof window.debug != "undefined")),
 	setup: function(configs) {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
@@ -576,10 +578,10 @@ var Cartagen = {
 			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
-			// if (Prototype.Browser.MobileSafari) {
-			// 	this.get_static_plot(this.static_map_layers[0])
-			// 	this.get_static_plot(this.static_map_layers[1])
-			// } else {
+			if (Prototype.Browser.MobileSafari) {
+				this.get_static_plot(this.static_map_layers[0])
+				this.get_static_plot(this.static_map_layers[1])
+			} else {
 				this.static_map_layers.each(function(layer_url) {
 					Cartagen.debug('fetching '+layer_url)
 					this.get_static_plot(layer_url)
@@ -591,7 +593,7 @@ var Cartagen = {
 						load_script(layer_url)
 					},this)
 				}
-			// }
+			}
 		}
 		User.update()
 		new PeriodicalExecuter(User.update, 60)
@@ -602,7 +604,7 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 		Map.draw()
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 1
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
 		
 		Style.style_body()
 
@@ -883,7 +885,10 @@ var Cartagen = {
 		document.location = canvas.canvas.toDataURL();
 	},
     debug: function(msg) {
-        console.log(msg)
+    	if (Cartagen.debug_mode) {
+        	if (typeof console != 'undefined') console.log(msg)
+        	if (typeof window.debug != 'undefined') window.debug.log(msg)
+    	}
     }
 }
 
