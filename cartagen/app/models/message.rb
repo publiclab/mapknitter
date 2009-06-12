@@ -20,16 +20,33 @@ class Message < ActiveRecord::Base
   end
   
   def save_as_node
-    n = Node.new
-    n.color = 'red'
-    geohash = self.text.split(' ')[0]
-    latlon = GeoHash.decode(geohash)
-    self.text.slice!(geohash+" ")
-    n.description = self.text
-    n.lat = latlon[0]
-    n.lon = latlon[1]
-    n.author = self.author if self.author
-    n.save
+    # mind privacy with regard to phone # => author. maybe gen irreversible hash of #?
+    keyword = Cartagen.chop_word(self.text)
+    if keyword == "line"
+      way = Way.find(:last,:conditions => {:complete => false, :author => self.author})
+      if way.nil?
+        way = Way.new({:complete => false,:author => self.author})
+        way.save
+      end
+      coords = GeoHash.decode(Cartagen.chop_word(self.text))
+    elsif keyword == "find"
+      
+    else
+      coords = GeoHash.decode(Cartagen.chop_word(self.text))
+    end
+
+    # save it as a node
+    unless coords.nil?
+      n = Node.new
+      n.color = 'red'
+      n.lat = coords[0]
+      n.lon = coords[1]
+      n.description = self.text
+      # append to way if one exists: 
+      n.way_id = way.id unless way.nil?      
+      n.author = self.author unless self.nil?
+      n.save
+    end
   end
   
 end
