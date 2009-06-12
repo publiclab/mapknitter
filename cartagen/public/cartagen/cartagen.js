@@ -22,10 +22,7 @@ if (typeof cartagen_base_uri == 'undefined') {
 }
 // additional dependencies:
 var scripts = [
-	cartagen_base_uri + '/canvastext.js',
-	cartagen_base_uri + '/lib/geohash.js',
-	cartagen_base_uri + '/glop.js',
-	cartagen_base_uri + '/events.js',
+
 ]
 
 // load phonegap js if needed
@@ -554,6 +551,8 @@ var Cartagen = {
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
 	},
 	initialize: function(configs) {
+		glop_init()
+		events_init()
 		// queue dependencies:
 		load_next_script()
 		this.browser_check()
@@ -715,7 +714,6 @@ var Cartagen = {
 				} else {
 					data.tags.set(way.tag.k,way.tag.v)
 				}
-
 				new Way(data)
 			}
 		})
