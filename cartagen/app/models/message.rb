@@ -29,6 +29,11 @@ class Message < ActiveRecord::Base
         way.save
       end
       coords = GeoHash.decode(Cartagen.chop_word(self.text))
+    elsif keyword == "end"
+      way = Way.find(:last,:conditions => {:complete => false, :author => self.author})
+      way.complete = true
+      way.save
+      coords = GeoHash.decode(Cartagen.chop_word(self.text))
     elsif keyword == "find"
       
     else
@@ -41,7 +46,7 @@ class Message < ActiveRecord::Base
       n.color = 'red'
       n.lat = coords[0]
       n.lon = coords[1]
-      n.description = self.text
+      n.description = self.text unless self.text.nil?
       # append to way if one exists: 
       n.way_id = way.id unless way.nil?      
       n.author = self.author unless self.nil?
