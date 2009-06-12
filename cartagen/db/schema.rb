@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090611204112) do
+ActiveRecord::Schema.define(:version => 20090612011846) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20090611204112) do
     t.datetime "updated_at"
     t.string   "name",        :default => ""
     t.string   "description", :default => ""
+    t.boolean  "complete",    :default => true
   end
 
 end
