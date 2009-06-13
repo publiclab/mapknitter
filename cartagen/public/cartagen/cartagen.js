@@ -1162,6 +1162,7 @@ var Projection = {
 		
 	}
 }
+
 var User = {
 	color: randomColor(),
 	name: 'anonymous',
@@ -1174,8 +1175,8 @@ var User = {
 	node_updates_uri: '/node/read',
 	way_submit_uri: '/way/write',
 	way_update_uri: '/way/read',
-	line_width:25,
-	node_radius: 50,
+	line_width:15,
+	node_radius: 30,
 	follow_interval: 60,
 	following: false,
 	following_executer: null,
@@ -1366,7 +1367,6 @@ var User = {
 			})
 		}
 	},
-	
 	update_ways: function(data) {
 		nodes = new Hash()
 		
@@ -1411,7 +1411,6 @@ var User = {
 			} catch(e) {Cartagen.debug(e)}
 		})
 	}
-	
 }
 
 function in_range(v,r1,r2) {
