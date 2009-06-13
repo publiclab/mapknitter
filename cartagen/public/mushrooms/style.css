@@ -37,34 +37,31 @@ body {
 /*	padding:1.2em 0;*/
 	margin:3px 0 3px 0;
 }
-#controls a.btn.pressed {
-	background: #222
-}
 #controls a.btn#follow {
 	background:url('/images/iphone/follow.png') top no-repeat;
 	width:104px;
 }
 #controls a.btn#follow:active {
-	background:#900 url('/images/iphone/follow-down.png') top no-repeat;
+	background:url('/images/iphone/follow-down.png') top no-repeat;
 }
 #controls a.btn#line {
 	background:url('/images/iphone/line.png') top no-repeat;
 	width:100px;
 }
 #controls a.btn#line:active,#controls a.btn#line.pressed {
-	background:#900 url('/images/iphone/line-down.png') top no-repeat;
+	background:url('/images/iphone/line-down.png') top no-repeat;
 }
 #controls a.btn#click,#controls a.btn#point {
 	background:url('/images/iphone/pin.png') top no-repeat;
 	width:104px;
 }
 #controls a.btn#click:active,#controls a.btn#point:active {
-	background:#900 url('/images/iphone/pin-down.png') top no-repeat;
+	background:url('/images/iphone/pin-down.png') top no-repeat;
 }
 #controls a.btn#point {
 	background:url('/images/iphone/add-point.png') top no-repeat;
 }
 #controls a.btn#point:active {
-	background:#900 url('/images/iphone/add-point-down.png') top no-repeat;
+	background:url('/images/iphone/add-point-down.png') top no-repeat;
 }
 /* line, click, point */
