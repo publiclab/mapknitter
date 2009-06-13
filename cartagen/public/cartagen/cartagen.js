@@ -938,7 +938,7 @@ var Node = Class.create({
 	    canvas.save()
 			Style.apply_style(this)
 		beginPath()
-		translate(this.x,this.y-6)
+		translate(this.x,this.y-this.radius)
 		arc(0,this.radius,this.radius,0,Math.PI*2,true)
 		fill()
 		stroke()
