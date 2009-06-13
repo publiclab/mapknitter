@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Cartagen</title>
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="mushrooms.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/canvas.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/lib/geohash.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/canvastext.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/glop.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../cartagen/events.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		cartagen_base_uri = '../cartagen'
+	</script>
+	<script src="../cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script type="text/javascript" charset="utf-8">
+		Cartagen.setup({
+			stylesheet: "style.gss",
+			static_map: true,
+			static_map_layers: [
+				"../static/central-park/central-park.js",
+				// "../static/rome/park.js",
+				// "../static/rome/rail.js",
+				// "../static/rome/waterway.js",
+				// "../static/rome/primary.js",
+				// "../static/rome/secondary.js",
+				// "../static/rome/building.js",
+				// "../static/rome/area.js"
+				],
+			lat1: 40.79727,
+			lat2: 40.79295,
+			lng1: -73.95941,
+			lng2: -73.95328,
+			// lat1: 41.9227,
+			// lat2: 41.861,
+			// lng1: 12.4502,
+			// lng2: 12.5341,
+			fullscreen: false
+		})
+	</script>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="controls">
+	<a href="#" class="btn" id="follow">&nbsp;</a>
+	<a href="#" class="btn" id="line">&nbsp;</a>
+	<a href="#" class="btn" id="click">&nbsp;</a>
+	<a href="#" class="btn" id="point" style="display:none">&nbsp;</a>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-180781-29");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
