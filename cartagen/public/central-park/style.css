@@ -51,7 +51,7 @@ body {
 	background:url('/images/iphone/line.png') top no-repeat;
 	width:100px;
 }
-#controls a.btn#line:active {
+#controls a.btn#line:active,#controls a.btn#line.pressed {
 	background:#900 url('/images/iphone/line-down.png') top no-repeat;
 }
 #controls a.btn#click,#controls a.btn#point {
