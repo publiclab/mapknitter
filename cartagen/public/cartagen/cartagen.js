@@ -556,6 +556,7 @@ var Cartagen = {
 		// queue dependencies:
 		load_next_script()
 		this.browser_check()
+		if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar
 		// draw on window resize:
 		Event.observe(window, 'resize', function() {try{draw()}catch(e){}});
 		// we can override right-click:
