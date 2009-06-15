@@ -14,57 +14,54 @@ body {
 	margin:0;
 	display:block;
 	width: 100%;
-	height: 390px;
+/*	height: 390px; */
+	height: 100%;
 }
 #controls {
 	position: absolute;
-	bottom: 0px;
+	bottom: 0;
 	left: 0px;
 	width: 100%;
 	height: 70px;
-	background-color: #000000;
-	padding-left: 5px;
+	padding-left: 8px;
 }
 #controls a.btn{
 	text-align:center;
 	display:block;
 	float:left;
 	background:#444;
-	height:63px;
+	height:59px;
 	color:#9ab;
 	font-size:1.1em;
 	text-decoration:none;
 /*	padding:1.2em 0;*/
 	margin:3px 0 3px 0;
 }
-#controls a.btn.pressed {
-	background: #222
-}
 #controls a.btn#follow {
-	background:url('/images/iphone/follow.png') top no-repeat;
-	width:104px;
+	background:url('/images/iphone/buttons.png') top left no-repeat;
+	width:101px;
 }
 #controls a.btn#follow:active {
-	background:#900 url('/images/iphone/follow-down.png') top no-repeat;
+	background:url('/images/iphone/buttons.png') bottom left no-repeat;
 }
 #controls a.btn#line {
-	background:url('/images/iphone/line.png') top no-repeat;
+	background:url('/images/iphone/buttons.png') top -101px no-repeat;
 	width:100px;
 }
-#controls a.btn#line:active {
-	background:#900 url('/images/iphone/line-down.png') top no-repeat;
+#controls a.btn#line:active,#controls a.btn#line.pressed {
+	background:url('/images/iphone/buttons.png') bottom -101px no-repeat;
 }
 #controls a.btn#click,#controls a.btn#point {
-	background:url('/images/iphone/pin.png') top no-repeat;
-	width:104px;
+	background:url('/images/iphone/buttons.png') top -201px no-repeat;
+	width:102px;
 }
 #controls a.btn#click:active,#controls a.btn#point:active {
-	background:#900 url('/images/iphone/pin-down.png') top no-repeat;
+	background:url('/images/iphone/buttons.png') bottom -201px no-repeat;
 }
 #controls a.btn#point {
-	background:url('/images/iphone/add-point.png') top no-repeat;
+	background:url('/images/iphone/buttons.png') top right no-repeat;
 }
 #controls a.btn#point:active {
-	background:#900 url('/images/iphone/add-point-down.png') top no-repeat;
+	background:url('/images/iphone/buttons.png') bottom right no-repeat;
 }
 /* line, click, point */
