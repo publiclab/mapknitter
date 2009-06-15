@@ -132,8 +132,8 @@ function events_init() {
 				drag_x = (touch.screenX - Mouse.click_x)
 				drag_y = (touch.screenY - Mouse.click_y)
 				
-				var d_x = Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
-				var d_y = Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+				var d_x = -Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
+				var d_y = -Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
 
 				Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 				Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
