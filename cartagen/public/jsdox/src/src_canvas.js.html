@@ -1,0 +1,220 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">// canvas.js</span><span class="WHIT">
+<span class='linenumber'>  2</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'>  3</span> </span><span class="COMM">// Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab</span><span class="WHIT">
+<span class='linenumber'>  4</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'>  5</span> </span><span class="COMM">// This file is part of the Cartagen mapping framework. Read more at</span><span class="WHIT">
+<span class='linenumber'>  6</span> </span><span class="COMM">// &lt;http://cartagen.org></span><span class="WHIT">
+<span class='linenumber'>  7</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'>  8</span> </span><span class="COMM">// Cartagen is free software: you can redistribute it and/or modify</span><span class="WHIT">
+<span class='linenumber'>  9</span> </span><span class="COMM">// it under the terms of the MIT License. You should have received a copy </span><span class="WHIT">
+<span class='linenumber'> 10</span> </span><span class="COMM">// of the MIT License along with Cartagen.  If not, see</span><span class="WHIT">
+<span class='linenumber'> 11</span> </span><span class="COMM">// &lt;http://www.opensource.org/licenses/mit-license.php>.</span><span class="WHIT">
+<span class='linenumber'> 12</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'> 13</span> 
+<span class='linenumber'> 14</span> </span><span class="COMM">// Wrapped native canvas methods in shorter, simpler method names:</span><span class="WHIT">
+<span class='linenumber'> 15</span> 
+<span class='linenumber'> 16</span> </span><span class="COMM">/**
+<span class='linenumber'> 17</span>  * Initializes the $C namespace
+<span class='linenumber'> 18</span>  */</span><span class="WHIT">
+<span class='linenumber'> 19</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">canvas_init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 20</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 21</span> 	 * @namespace
+<span class='linenumber'> 22</span> 	 * Cavas functions, wapped into shorter, simpler names.
+<span class='linenumber'> 23</span> 	 * @see &lt;a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes>MDC Docs&lt;/a>
+<span class='linenumber'> 24</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 25</span> 	</span><span class="NAME">$C</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 26</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 27</span> 		 * Clears the canvas
+<span class='linenumber'> 28</span> 		 * @function
+<span class='linenumber'> 29</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 30</span> 		</span><span class="NAME">clear</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 31</span> 			</span><span class="NAME">canvas.clearRect</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">height</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 32</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 33</span> 		
+<span class='linenumber'> 34</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 35</span> 		 * Sets canvas.fillStyle
+<span class='linenumber'> 36</span> 		 * @param {String} color Color to use for future fill operations
+<span class='linenumber'> 37</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 38</span> 		</span><span class="NAME">fill_style</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">color</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 39</span> 			</span><span class="NAME">canvas.fillStyle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">color</span><span class="WHIT">
+<span class='linenumber'> 40</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 41</span> 		
+<span class='linenumber'> 42</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 43</span> 		 * Alias of canvas.translate
+<span class='linenumber'> 44</span> 		 * @param {Number} x Number of pixels to tranlate in the x direction
+<span class='linenumber'> 45</span> 		 * @param {Number} y Number of pixels to tranlate in the y direction
+<span class='linenumber'> 46</span> 		 * @function
+<span class='linenumber'> 47</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 48</span> 		</span><span class="NAME">translate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 49</span> 			</span><span class="NAME">canvas.translate</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 50</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 51</span> 		
+<span class='linenumber'> 52</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 53</span> 		 * Alias of canvas.scale
+<span class='linenumber'> 54</span> 		 * @param {Number} x Number of pixels to stretch/shring in the x direction
+<span class='linenumber'> 55</span> 		 * @param {Number} y Number of pixels to stretch/shring in the y direction
+<span class='linenumber'> 56</span> 		 * @function
+<span class='linenumber'> 57</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 58</span> 		</span><span class="NAME">scale</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 59</span> 			</span><span class="NAME">canvas.scale</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 60</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 61</span> 		
+<span class='linenumber'> 62</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 63</span> 		 * Alias of canvas.rotate
+<span class='linenumber'> 64</span> 		 * @param {Number} rotation Amount, in radians, to rotate
+<span class='linenumber'> 65</span> 		 * @function
+<span class='linenumber'> 66</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 67</span> 		</span><span class="NAME">rotate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">rotation</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 68</span> 			</span><span class="NAME">canvas.rotate</span><span class="WHIT">
+<span class='linenumber'> 69</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 70</span> 		
+<span class='linenumber'> 71</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 72</span> 		 * Alias of canvas.fillRect (filled rectangle)
+<span class='linenumber'> 73</span> 		 * @param {Number} x X-coord of the top-left corner
+<span class='linenumber'> 74</span> 		 * @param {Number} y Y-coord of the top-left corner
+<span class='linenumber'> 75</span> 		 * @param {Number} w Width of the rectangle
+<span class='linenumber'> 76</span> 		 * @param {Number} h Height of the rectangle
+<span class='linenumber'> 77</span> 		 * @function
+<span class='linenumber'> 78</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 79</span> 		</span><span class="NAME">rect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">h</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 80</span> 			</span><span class="NAME">canvas.fillRect</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">h</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 81</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 82</span> 		
+<span class='linenumber'> 83</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 84</span> 		 * Alias of canvas.strokeRect (unfilled rectangle
+<span class='linenumber'> 85</span> 		 * @param {Number} x X-coord of the top-left corner
+<span class='linenumber'> 86</span> 		 * @param {Number} y Y-coord of the top-left corner
+<span class='linenumber'> 87</span> 		 * @param {Number} w Width of the rectangle
+<span class='linenumber'> 88</span> 		 * @param {Number} h Height of the rectangle
+<span class='linenumber'> 89</span> 		 * @function
+<span class='linenumber'> 90</span> 		 */</span><span class="WHIT">
+<span class='linenumber'> 91</span> 		</span><span class="NAME">stroke_rect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">h</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 92</span> 			</span><span class="NAME">canvas.strokeRect</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">h</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 93</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 94</span> 		
+<span class='linenumber'> 95</span> 		</span><span class="COMM">/**
+<span class='linenumber'> 96</span> 		 * Alias of canvas.strokeStyle
+<span class='linenumber'> 97</span> 		 * @param {String} color Color to use for future stroke operations
+<span class='linenumber'> 98</span> 		 * @function
+<span class='linenumber'> 99</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>100</span> 		</span><span class="NAME">stroke_style</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">color</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>101</span> 			</span><span class="NAME">canvas.strokeStyle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">color</span><span class="WHIT">
+<span class='linenumber'>102</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>103</span> 		
+<span class='linenumber'>104</span> 		</span><span class="COMM">/**
+<span class='linenumber'>105</span> 		 * Sets canvas.lineWidth
+<span class='linenumber'>106</span> 		 * @param {Number} lineWidth New width, in pixels, to use for stroke operations
+<span class='linenumber'>107</span> 		 * @function
+<span class='linenumber'>108</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>109</span> 		</span><span class="NAME">line_width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">lineWidth</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>110</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">lineWidth</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='linenumber'>111</span> 				</span><span class="NAME">canvas.lineWidth</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.0000000001</span><span class="WHIT">
+<span class='linenumber'>112</span> 			</span><span class="KEYW">else</span><span class="WHIT"> 
+<span class='linenumber'>113</span> 				</span><span class="NAME">canvas.lineWidth</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">lineWidth</span><span class="WHIT">
+<span class='linenumber'>114</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>115</span> 		
+<span class='linenumber'>116</span> 		</span><span class="COMM">/**
+<span class='linenumber'>117</span> 		 * Alias of canvas.beginPath
+<span class='linenumber'>118</span> 		 * @function
+<span class='linenumber'>119</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>120</span> 		</span><span class="NAME">begin_path</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>121</span> 			</span><span class="NAME">canvas.beginPath</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>122</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>123</span> 		
+<span class='linenumber'>124</span> 		</span><span class="COMM">/**
+<span class='linenumber'>125</span> 		 * Alias of canvas.moveTo
+<span class='linenumber'>126</span> 		 * @param {Number} x X-coord of location to move to
+<span class='linenumber'>127</span> 		 * @param {Number} y Y-coord of location to move to
+<span class='linenumber'>128</span> 		 * @function
+<span class='linenumber'>129</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>130</span> 		</span><span class="NAME">move_to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>131</span> 			</span><span class="NAME">canvas.moveTo</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>132</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>133</span> 		
+<span class='linenumber'>134</span> 		</span><span class="COMM">/**
+<span class='linenumber'>135</span> 		 * Alias of canvas.lineTo
+<span class='linenumber'>136</span> 		 * @param {Number} x X-coord of location to draw line to
+<span class='linenumber'>137</span> 		 * @param {Number} y Y-coord of location to draw line to
+<span class='linenumber'>138</span> 		 * @function
+<span class='linenumber'>139</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>140</span> 		</span><span class="NAME">line_to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>141</span> 			</span><span class="NAME">canvas.lineTo</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>142</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>143</span> 		
+<span class='linenumber'>144</span> 		</span><span class="COMM">/**
+<span class='linenumber'>145</span> 		 * Draws a quadratic curve
+<span class='linenumber'>146</span> 		 * @param {Number} cp_x X-coord of control point
+<span class='linenumber'>147</span> 		 * @param {Number} cp_y Y-coord of control point
+<span class='linenumber'>148</span> 		 * @param {Number} x    X-coord of point to draw to
+<span class='linenumber'>149</span> 		 * @param {Number} y    Y-coord of point to draw to
+<span class='linenumber'>150</span> 		 * @see &lt;a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#Bezier_and_quadratic_curves">MDC Docs&lt;/a>
+<span class='linenumber'>151</span> 		 * @function
+<span class='linenumber'>152</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>153</span> 		</span><span class="NAME">quadratic_curve_to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">cp_x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cp_y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>154</span> 			</span><span class="NAME">canvas.quadraticCurveTo</span><span class="PUNC">(</span><span class="NAME">cp_x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cp_y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>155</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>156</span> 		
+<span class='linenumber'>157</span> 		</span><span class="COMM">/**
+<span class='linenumber'>158</span> 		 * Draws a stroke along the current path.
+<span class='linenumber'>159</span> 		 * @function
+<span class='linenumber'>160</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>161</span> 		</span><span class="NAME">stroke</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>162</span> 			</span><span class="NAME">canvas.stroke</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>163</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>164</span> 		
+<span class='linenumber'>165</span> 		</span><span class="COMM">/**
+<span class='linenumber'>166</span> 		 * Closes the current path, then fills it.
+<span class='linenumber'>167</span> 		 * @function
+<span class='linenumber'>168</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>169</span> 		</span><span class="NAME">fill</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>170</span> 			</span><span class="NAME">canvas.fill</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>171</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>172</span> 		
+<span class='linenumber'>173</span> 		</span><span class="COMM">/**
+<span class='linenumber'>174</span> 		 * Draws an arc
+<span class='linenumber'>175</span> 		 * @param {Number} x                   X-coord of circle's center
+<span class='linenumber'>176</span> 		 * @param {Number} y                   Y-coord of circle's center
+<span class='linenumber'>177</span> 		 * @param {Number} radius              Radius of circle
+<span class='linenumber'>178</span> 		 * @param {Number} startAngle          Angle, in radians, from the +x axis to start the arc from
+<span class='linenumber'>179</span> 		 * @param {Number} endAngle            Angle, in radians, from the +x axis to end the arc at
+<span class='linenumber'>180</span> 		 * @param {Boolean} [counterclockwise] If true, arc is drawn counterclockwise. Else, it is drawn clockwise
+<span class='linenumber'>181</span> 		 * @function
+<span class='linenumber'>182</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>183</span> 		</span><span class="NAME">arc</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">radius</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">startAngle</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">endAngle</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">counterclockwise</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>184</span> 			</span><span class="NAME">canvas.arc</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">radius</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">startAngle</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">endAngle</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">counterclockwise</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>185</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>186</span> 		
+<span class='linenumber'>187</span> 		</span><span class="COMM">/**
+<span class='linenumber'>188</span> 		 * Draws text on the canvas
+<span class='linenumber'>189</span> 		 * @param {String} font Font to use
+<span class='linenumber'>190</span> 		 * @param {Number} size Size, in pts, of text
+<span class='linenumber'>191</span> 		 * @param {Number} x    X-coord to start drawing at
+<span class='linenumber'>192</span> 		 * @param {Number} y    Y-coord to start drawing at
+<span class='linenumber'>193</span> 		 * @param {String} text Text to draw
+<span class='linenumber'>194</span> 		 * @function
+<span class='linenumber'>195</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>196</span> 		</span><span class="NAME">draw_text</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">font</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">size</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>197</span> 			</span><span class="NAME">canvas.drawText</span><span class="PUNC">(</span><span class="NAME">font</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">size</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>198</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>199</span> 		
+<span class='linenumber'>200</span> 		</span><span class="COMM">/**
+<span class='linenumber'>201</span> 		 * Draws text on canvas, with location specified as a center point
+<span class='linenumber'>202</span> 		 * @param {String} font Font to use
+<span class='linenumber'>203</span> 		 * @param {Number} size Size, in pts, of text
+<span class='linenumber'>204</span> 		 * @param {Number} x    X-coord to center text on
+<span class='linenumber'>205</span> 		 * @param {Number} y    Y-coord to center text on
+<span class='linenumber'>206</span> 		 * @param {String} text Text to draw
+<span class='linenumber'>207</span> 		 * @function
+<span class='linenumber'>208</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>209</span> 		</span><span class="NAME">draw_text_center</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">font</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">size</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>210</span> 			</span><span class="NAME">canvas.drawTextCenter</span><span class="PUNC">(</span><span class="NAME">font</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">size</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>211</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>212</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>213</span> </span><span class="PUNC">}</span></pre></body></html>

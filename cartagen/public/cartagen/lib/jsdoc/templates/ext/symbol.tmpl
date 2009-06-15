@@ -1,0 +1,35 @@
+<symbol alias="{+data.alias+}">
+	<name>{+data.name+}</name>
+	<memberof>{+data.memberof+}</memberof>
+	<isStatic>{+data.isStatic+}</isStatic>
+	<isa>{+data.isa+}</isa>
+	<desc>{+data.desc+}</desc>
+	<classDesc>{+data.classDesc+}</classDesc>
+	
+	<methods><for each="method" in="data.methods">
+		<method>
+			<name>{+method.name+}</name>
+			<memberof>{+method.memberof+}</memberof>
+			<isStatic>{+method.isStatic+}</isStatic>
+			<desc>{+method.desc+}</desc>
+			<params><for each="param" in="method.params">
+				<param>
+					<type>{+param.type+}</type>
+					<name>{+param.name+}</name>
+					<desc>{+param.desc+}</desc>
+					<defaultValue>{+param.defaultValue+}</defaultValue>
+				</param></for>
+			</params>
+		</method></for>
+	</methods>
+	
+	<properties><for each="property" in="data.properties">
+		<property>
+			<name>{+property.name+}</name>
+			<memberof>{+property.memberof+}</memberof>
+			<isStatic>{+property.isStatic+}</isStatic>
+			<desc>{+property.desc+}</desc>
+			<type>{+property.type+}</type>
+		</property></for>
+	</properties>
+</symbol>
