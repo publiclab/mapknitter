@@ -1,0 +1,584 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * @namespace
+<span class='linenumber'>  3</span>  * Namespace for methods and variables that manage Cartagen as a whole, i.e. loading
+<span class='linenumber'>  4</span>  * data and creating Nodes and Ways.
+<span class='linenumber'>  5</span>  */</span><span class="WHIT">
+<span class='linenumber'>  6</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Cartagen</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  7</span> 	</span><span class="COMM">/** 
+<span class='linenumber'>  8</span> 	 * The number of objects drawn during the current frame.
+<span class='linenumber'>  9</span> 	 * @type Number
+<span class='linenumber'> 10</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 11</span> 	</span><span class="NAME">object_count</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 12</span> 	</span><span class="COMM">/** 
+<span class='linenumber'> 13</span> 	 * The number of ways drawn during the current frame.
+<span class='linenumber'> 14</span> 	 * @type Number
+<span class='linenumber'> 15</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 16</span> 	</span><span class="NAME">way_count</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 17</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 18</span> 	 * The number of nodes drawn during the current frame, including nodes
+<span class='linenumber'> 19</span> 	 *  that are part of a way but are not drawn.
+<span class='linenumber'> 20</span> 	 *  @type Number
+<span class='linenumber'> 21</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 22</span> 	</span><span class="NAME">node_count</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 23</span> 	</span><span class="COMM">/** 
+<span class='linenumber'> 24</span> 	 * The number of plots that have been requested, but have not been loaded yet.
+<span class='linenumber'> 25</span> 	 * @type Number
+<span class='linenumber'> 26</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 27</span> 	</span><span class="NAME">requested_plots</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 28</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 29</span> 	 * The path to the stylesheet that GSS will be loaded from. 
+<span class='linenumber'> 30</span> 	 * @type String
+<span class='linenumber'> 31</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 32</span> 	</span><span class="NAME">stylesheet</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"/style.gss"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 33</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 34</span> 	 * If true, we are loading live data. Else, we are loading static data.
+<span class='linenumber'> 35</span> 	 * @type Boolean
+<span class='linenumber'> 36</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 37</span> 	</span><span class="NAME">live</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 38</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 39</span> 	 * When true, only draws when needed, rather than as much as possible.
+<span class='linenumber'> 40</span> 	 * @type Boolean
+<span class='linenumber'> 41</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 42</span> 	</span><span class="NAME">powersave</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 43</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 44</span> 	 * The smallest (farthest out) the zoom level can become.
+<span class='linenumber'> 45</span> 	 * @type Number
+<span class='linenumber'> 46</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 47</span> 	</span><span class="NAME">zoom_out_limit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0.02</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 48</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 49</span> 	 * Currently unused.
+<span class='linenumber'> 50</span> 	 * @type Number
+<span class='linenumber'> 51</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 52</span> 	</span><span class="NAME">zoom_in_limit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 53</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 54</span> 	 * When drawing ways, only 1/simplify nodes will be used - so a value
+<span class='linenumber'> 55</span> 	 * of 2 would mean that only half of nodes are used to draw ways (and
+<span class='linenumber'> 56</span> 	 * the other half are skipped). Can help on slower computers.
+<span class='linenumber'> 57</span> 	 * @type Number 
+<span class='linenumber'> 58</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 59</span> 	</span><span class="NAME">simplify</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 60</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 61</span> 	 * When true, a live gss editor is active. Generally only used for cartagen.org.
+<span class='linenumber'> 62</span> 	 * @type Boolean
+<span class='linenumber'> 63</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 64</span> 	</span><span class="NAME">live_gss</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// this is for inline gss editing, generally only on cartagen.org</span><span class="WHIT">
+<span class='linenumber'> 65</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 66</span> 	 * If true, map data is no dynamic and does not need to be reloaded periodically.
+<span class='linenumber'> 67</span> 	 * @type Boolean
+<span class='linenumber'> 68</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 69</span> 	</span><span class="NAME">static_map</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 70</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 71</span> 	 * Path to layers that will be statically loaded on initialization. This should be
+<span class='linenumber'> 72</span> 	 * overriden by the user in the arguments passed to {@link setup}
+<span class='linenumber'> 73</span> 	 * @type String[]
+<span class='linenumber'> 74</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 75</span> 	</span><span class="NAME">static_map_layers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">"/static/rome/park.js"</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 76</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 77</span> 	 * URIs of layers that will be refreshed periodically.
+<span class='linenumber'> 78</span> 	 * @type String[]
+<span class='linenumber'> 79</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 80</span> 	</span><span class="NAME">dynamic_layers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 81</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 82</span> 	 * ???
+<span class='linenumber'> 83</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 84</span> 	</span><span class="NAME">range</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0.001</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 85</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 86</span> 	 * Upper bound of map
+<span class='linenumber'> 87</span> 	 * @type Number
+<span class='linenumber'> 88</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 89</span> 	</span><span class="NAME">lat1</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">41.9227</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 90</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 91</span> 	 * Lower bound of map
+<span class='linenumber'> 92</span> 	 * @type Number
+<span class='linenumber'> 93</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 94</span> 	</span><span class="NAME">lat2</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">41.861</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 95</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 96</span> 	 * Left bound of map
+<span class='linenumber'> 97</span> 	 * @type Number
+<span class='linenumber'> 98</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 99</span> 	</span><span class="NAME">lng1</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">12.4502</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>100</span> 	</span><span class="COMM">/**
+<span class='linenumber'>101</span> 	 * Right bound of map
+<span class='linenumber'>102</span> 	 * @type Number
+<span class='linenumber'>103</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>104</span> 	</span><span class="NAME">lng2</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">12.5341</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>105</span> 	</span><span class="COMM">/**
+<span class='linenumber'>106</span> 	 * Current zoom level
+<span class='linenumber'>107</span> 	 * @type Number
+<span class='linenumber'>108</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>109</span> 	</span><span class="NAME">zoom_level</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0.1</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>110</span> 	</span><span class="COMM">/**
+<span class='linenumber'>111</span> 	 * Hash of bbox => features
+<span class='linenumber'>112</span> 	 * @type Hash
+<span class='linenumber'>113</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>114</span> 	</span><span class="NAME">plots</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hash</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>115</span> 	</span><span class="COMM">/**
+<span class='linenumber'>116</span> 	 * Hash of node id => node
+<span class='linenumber'>117</span> 	 * @type Hash
+<span class='linenumber'>118</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>119</span> 	</span><span class="NAME">nodes</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hash</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>120</span> 	</span><span class="COMM">/**
+<span class='linenumber'>121</span> 	 * Hash of way id => way
+<span class='linenumber'>122</span> 	 * @type Way
+<span class='linenumber'>123</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>124</span> 	</span><span class="NAME">ways</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hash</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>125</span> 	</span><span class="COMM">/**
+<span class='linenumber'>126</span> 	 * Should Cartagen expand to fill the browser window?
+<span class='linenumber'>127</span> 	 * @type Boolean
+<span class='linenumber'>128</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>129</span> 	</span><span class="NAME">fullscreen</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>130</span> 	</span><span class="COMM">/**
+<span class='linenumber'>131</span> 	 * The amound of bleed to use when requesting plots
+<span class='linenumber'>132</span> 	 * @type Number
+<span class='linenumber'>133</span> 	 * @see initial_bleed_level
+<span class='linenumber'>134</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>135</span> 	</span><span class="NAME">bleed_level</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>136</span> 	</span><span class="COMM">/**
+<span class='linenumber'>137</span> 	 * How much plots bleed on the initial pageload
+<span class='linenumber'>138</span> 	 * @type Number
+<span class='linenumber'>139</span> 	 * @see bleed_level
+<span class='linenumber'>140</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>141</span> 	</span><span class="NAME">initial_bleed_level</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>142</span> 	</span><span class="COMM">/**
+<span class='linenumber'>143</span> 	 * Queue of labels to draw
+<span class='linenumber'>144</span> 	 * @type Array
+<span class='linenumber'>145</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>146</span>     </span><span class="NAME">label_queue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>147</span> 	</span><span class="COMM">/**
+<span class='linenumber'>148</span> 	 * Should deebug messages be sent to the console?
+<span class='linenumber'>149</span> 	 * @type Boolean
+<span class='linenumber'>150</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>151</span>     </span><span class="NAME">debug_mode</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">console</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>152</span> 	</span><span class="COMM">/**
+<span class='linenumber'>153</span> 	 * Registers {@link initialize} to run with the given configs when window is loaded
+<span class='linenumber'>154</span> 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
+<span class='linenumber'>155</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>156</span> 	</span><span class="NAME">setup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>157</span> 		</span><span class="COMM">// geolocate with IP if available</span><span class="WHIT">
+<span class='linenumber'>158</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">navigator.geolocation</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">navigator.geolocation.getCurrentPosition</span><span class="PUNC">(</span><span class="NAME">User.set_loc</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>159</span> 		</span><span class="COMM">// wait for window load:</span><span class="WHIT">
+<span class='linenumber'>160</span> 		</span><span class="NAME">Event.observe</span><span class="PUNC">(</span><span class="NAME">window</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'load'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.initialize.bind</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>161</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>162</span> 	</span><span class="COMM">/**
+<span class='linenumber'>163</span> 	 * Performs initialization tasks, mainly fetching map data. This should never be called directly,
+<span class='linenumber'>164</span> 	 * rather it is intended to be registed as a callback for window.onload by {@link setup}
+<span class='linenumber'>165</span> 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
+<span class='linenumber'>166</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>167</span> 	</span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>168</span> 		</span><span class="NAME">glop_init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>169</span> 		</span><span class="NAME">events_init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>170</span> 		</span><span class="NAME">canvas_init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>171</span> 		</span><span class="COMM">// queue dependencies:</span><span class="WHIT">
+<span class='linenumber'>172</span> 		</span><span class="NAME">Cartagen.load_next_script</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>173</span> 		</span><span class="NAME">this.browser_check</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>174</span> 		</span><span class="COMM">//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar</span><span class="WHIT">
+<span class='linenumber'>175</span> 		</span><span class="COMM">// draw on window resize:</span><span class="WHIT">
+<span class='linenumber'>176</span> 		</span><span class="NAME">Event.observe</span><span class="PUNC">(</span><span class="NAME">window</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'resize'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="KEYW">try</span><span class="PUNC">{</span><span class="NAME">draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>177</span> 		</span><span class="COMM">// we can override right-click:</span><span class="WHIT">
+<span class='linenumber'>178</span> 		</span><span class="COMM">// Event.observe(window, 'oncontextmenu', function() { return false })</span><span class="WHIT">
+<span class='linenumber'>179</span> 
+<span class='linenumber'>180</span> 		</span><span class="NAME">Object.keys</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="NAME">index</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>181</span> 			</span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Object.values</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'>182</span> 			</span><span class="COMM">// Cartagen.debug('configuring '+key+': '+this[key])</span><span class="WHIT">
+<span class='linenumber'>183</span> 		</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>184</span> 		
+<span class='linenumber'>185</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.get_url_param</span><span class="PUNC">(</span><span class="STRN">'gss'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">this.stylesheet</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.get_url_param</span><span class="PUNC">(</span><span class="STRN">'gss'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>186</span> 
+<span class='linenumber'>187</span> 		</span><span class="NAME">Map.initialize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>188</span> 		</span><span class="COMM">// Startup:</span><span class="WHIT">
+<span class='linenumber'>189</span> 		</span><span class="NAME">Style.load_styles</span><span class="PUNC">(</span><span class="NAME">this.stylesheet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="COMM">// stylesheet</span><span class="WHIT">
+<span class='linenumber'>190</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.static_map</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>191</span> 			</span><span class="NAME">this.get_cached_plot</span><span class="PUNC">(</span><span class="NAME">this.lat1</span><span class="PUNC">,</span><span class="NAME">this.lng1</span><span class="PUNC">,</span><span class="NAME">this.lat2</span><span class="PUNC">,</span><span class="NAME">this.lng2</span><span class="PUNC">,</span><span class="NAME">Cartagen.initial_bleed_level</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>192</span> 			</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">PeriodicalExecuter</span><span class="PUNC">(</span><span class="NAME">this.get_current_plot</span><span class="PUNC">,</span><span class="NUMB">0.33</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>193</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>194</span> 			</span><span class="COMM">// if (Prototype.Browser.MobileSafari) {</span><span class="WHIT">
+<span class='linenumber'>195</span> 			</span><span class="COMM">// 	this.get_static_plot(this.static_map_layers[0])</span><span class="WHIT">
+<span class='linenumber'>196</span> 			</span><span class="COMM">// 	this.get_static_plot(this.static_map_layers[1])</span><span class="WHIT">
+<span class='linenumber'>197</span> 			</span><span class="COMM">// } else {</span><span class="WHIT">
+<span class='linenumber'>198</span> 				</span><span class="NAME">this.static_map_layers.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>199</span> 					</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">'fetching '</span><span class="PUNC">+</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>200</span> 					</span><span class="NAME">this.get_static_plot</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>201</span> 				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>202</span> 				</span><span class="COMM">// to add user-added map data... messy!</span><span class="WHIT">
+<span class='linenumber'>203</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.dynamic_layers.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>204</span> 					</span><span class="NAME">this.dynamic_layers.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>205</span> 						</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">'fetching '</span><span class="PUNC">+</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>206</span> 						</span><span class="NAME">load_script</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>207</span> 					</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>208</span> 				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>209</span> 			</span><span class="COMM">// }</span><span class="WHIT">
+<span class='linenumber'>210</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>211</span> 		</span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>212</span> 		</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">PeriodicalExecuter</span><span class="PUNC">(</span><span class="NAME">User.update</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">60</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>213</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>214</span> 	</span><span class="COMM">/**
+<span class='linenumber'>215</span> 	 * Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code.
+<span class='linenumber'>216</span> 	 * Uses {@link Geohash} to draw each feature on the map.
+<span class='linenumber'>217</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>218</span> 	</span><span class="NAME">draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>219</span> 		</span><span class="NAME">this.object_count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'>220</span> 		</span><span class="NAME">this.way_count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'>221</span> 		</span><span class="NAME">this.node_count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'>222</span> 		</span><span class="NAME">Map.draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>223</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Prototype.Browser.MobileSafari</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">window.PhoneGap</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">Cartagen.simplify</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="WHIT">
+<span class='linenumber'>224</span> 		
+<span class='linenumber'>225</span> 		</span><span class="NAME">Style.style_body</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>226</span> 
+<span class='linenumber'>227</span> 		</span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="NAME">width</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">height</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>228</span> 			</span><span class="NAME">$C.rotate</span><span class="PUNC">(</span><span class="NAME">Map.rotate</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>229</span> 			</span><span class="NAME">$C.scale</span><span class="PUNC">(</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">,</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>230</span> 			</span><span class="COMM">// $C.translate(-1*Map.x,-1*Map.y)</span><span class="WHIT">
+<span class='linenumber'>231</span> 	 	</span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="NAME">width</span><span class="PUNC">/</span><span class="PUNC">-</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">height</span><span class="PUNC">/</span><span class="PUNC">-</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>232</span> 		</span><span class="COMM">// $C.rotate(-1*Map.rotate)</span><span class="WHIT">
+<span class='linenumber'>233</span> 			</span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">*</span><span class="NAME">Map.x</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="PUNC">(</span><span class="NAME">width</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="PUNC">(</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">*</span><span class="NAME">Map.y</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="PUNC">(</span><span class="NAME">height</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>234</span> 		</span><span class="COMM">// $C.rotate(Map.rotate)</span><span class="WHIT">
+<span class='linenumber'>235</span> 
+<span class='linenumber'>236</span> 		</span><span class="COMM">// viewport stuff:</span><span class="WHIT">
+<span class='linenumber'>237</span> 		</span><span class="NAME">$C.stroke_style</span><span class="PUNC">(</span><span class="STRN">'white'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>238</span> 		</span><span class="NAME">$C.line_width</span><span class="PUNC">(</span><span class="NUMB">10</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>239</span> 		
+<span class='linenumber'>240</span> 		</span><span class="NAME">Viewport.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">*</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">/</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">)</span><span class="PUNC">-</span><span class="PUNC">(</span><span class="NUMB">100</span><span class="PUNC">*</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">/</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>241</span> 		</span><span class="NAME">Viewport.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">height</span><span class="PUNC">*</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">/</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">)</span><span class="PUNC">-</span><span class="PUNC">(</span><span class="NUMB">100</span><span class="PUNC">*</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">/</span><span class="NAME">Cartagen.zoom_level</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>242</span> 		</span><span class="NAME">Viewport.bbox</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Map.y</span><span class="PUNC">-</span><span class="NAME">Viewport.height</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">Map.x</span><span class="PUNC">-</span><span class="NAME">Viewport.width</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">Map.y</span><span class="PUNC">+</span><span class="NAME">Viewport.height</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">Map.x</span><span class="PUNC">+</span><span class="NAME">Viewport.width</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'>243</span> 		</span><span class="NAME">$C.stroke_rect</span><span class="PUNC">(</span><span class="NAME">Map.x</span><span class="PUNC">-</span><span class="NAME">Viewport.width</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">Map.y</span><span class="PUNC">-</span><span class="NAME">Viewport.height</span><span class="PUNC">/</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NAME">Viewport.width</span><span class="PUNC">,</span><span class="NAME">Viewport.height</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>244</span> 		
+<span class='linenumber'>245</span> 		</span><span class="COMM">//Geohash lookup:</span><span class="WHIT">
+<span class='linenumber'>246</span> 		</span><span class="NAME">Geohash.draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>247</span> 		</span><span class="NAME">Geohash.objects.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">object</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='linenumber'>248</span> 			</span><span class="NAME">object.draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>249</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>250</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>251</span>     </span><span class="COMM">/**
+<span class='linenumber'>252</span>      * Runs every frame, after everything else has been done.
+<span class='linenumber'>253</span>      */</span><span class="WHIT">
+<span class='linenumber'>254</span>     </span><span class="NAME">post_draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>255</span>         </span><span class="NAME">this.label_queue.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>256</span>             </span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">draw</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>257</span>         </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>258</span> 		</span><span class="NAME">this.label_queue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'>259</span>     </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>260</span>     </span><span class="COMM">/**
+<span class='linenumber'>261</span>      * Adds the label to the list of labels to be drawn during {@link post_draw}
+<span class='linenumber'>262</span>      * @param {Label}  label The label to draw
+<span class='linenumber'>263</span>      * @param {Number} x     x-coord
+<span class='linenumber'>264</span>      * @param {Number} y     y-coord
+<span class='linenumber'>265</span>      */</span><span class="WHIT">
+<span class='linenumber'>266</span>     </span><span class="NAME">queue_label</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">label</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>267</span>         </span><span class="NAME">this.label_queue.push</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NAME">label</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>268</span>     </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>269</span> 	</span><span class="COMM">/**
+<span class='linenumber'>270</span> 	 * Show alert if it's IE.
+<span class='linenumber'>271</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>272</span> 	</span><span class="NAME">browser_check</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>273</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>274</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">absolutize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>275</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.top</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"100px"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>276</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.margin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"0 auto"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>277</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Prototype.Browser.IE</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>278</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>279</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>280</span> 	</span><span class="COMM">/**
+<span class='linenumber'>281</span> 	 * Returns a GET parameter.
+<span class='linenumber'>282</span> 	 * @param {String} name The name of the parameter.
+<span class='linenumber'>283</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>284</span> 	</span><span class="NAME">get_url_param</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">  
+<span class='linenumber'>285</span> 		</span><span class="NAME">name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">name.replace</span><span class="PUNC">(</span><span class="REGX">/[\[]/</span><span class="PUNC">,</span><span class="STRN">"\\\["</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">replace</span><span class="PUNC">(</span><span class="REGX">/[\]]/</span><span class="PUNC">,</span><span class="STRN">"\\\]"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">  
+<span class='linenumber'>286</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">regexS</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"[\\?&]"</span><span class="PUNC">+</span><span class="NAME">name</span><span class="PUNC">+</span><span class="STRN">"=([^&#]*)"</span><span class="PUNC">;</span><span class="WHIT">  
+<span class='linenumber'>287</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">regex</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">RegExp</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">regexS</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">  
+<span class='linenumber'>288</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">results</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">regex.exec</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">window.location.href</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">  
+<span class='linenumber'>289</span> 		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">results</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">;</span><span class="WHIT">  
+<span class='linenumber'>290</span> 		</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">results</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>291</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>292</span> 	</span><span class="COMM">/**
+<span class='linenumber'>293</span> 	 * Compared two ways based on area
+<span class='linenumber'>294</span> 	 * @param {Way} a
+<span class='linenumber'>295</span> 	 * @param {Way} b
+<span class='linenumber'>296</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>297</span> 	</span><span class="NAME">sort_by_area</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">a</span><span class="PUNC">,</span><span class="NAME">b</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>298</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">a</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Way</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>299</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">b</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Way</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>300</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">a.area</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">b.area</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>301</span> 			    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>302</span> 			  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">a.area</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">b.area</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>303</span> 			    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>304</span> 			  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// a == b</span><span class="WHIT">
+<span class='linenumber'>305</span> 			</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>306</span> 				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="COMM">// a wins no matter what if b is not a Way</span><span class="WHIT">
+<span class='linenumber'>307</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>308</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>309</span> 			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT"> </span><span class="COMM">// b wins no matter what if a is not a Way</span><span class="WHIT">
+<span class='linenumber'>310</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>311</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>312</span> 	</span><span class="COMM">/**
+<span class='linenumber'>313</span> 	 * Parses feature data and creates Way and Node objects, registering them with
+<span class='linenumber'>314</span> 	 * {@link Geohash}
+<span class='linenumber'>315</span> 	 * @param {Object} data OSM data to parse
+<span class='linenumber'>316</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>317</span> 	</span><span class="NAME">parse_objects</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>318</span> 		</span><span class="NAME">data.osm.node.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">node</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>319</span> 	        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Node</span><span class="WHIT">
+<span class='linenumber'>320</span> 			</span><span class="NAME">n.h</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">10</span><span class="WHIT">
+<span class='linenumber'>321</span> 			</span><span class="NAME">n.w</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">10</span><span class="WHIT">
+<span class='linenumber'>322</span> 			</span><span class="NAME">n.color</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">randomColor</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>323</span> 			</span><span class="NAME">n.timestamp</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">node.timestamp</span><span class="WHIT">
+<span class='linenumber'>324</span> 			</span><span class="NAME">n.user</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">node.user</span><span class="WHIT">
+<span class='linenumber'>325</span> 			</span><span class="NAME">n.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">node.id</span><span class="WHIT">
+<span class='linenumber'>326</span> 			</span><span class="NAME">n.lat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">node.lat</span><span class="WHIT">
+<span class='linenumber'>327</span> 			</span><span class="NAME">n.lon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">node.lon</span><span class="WHIT">
+<span class='linenumber'>328</span> 			</span><span class="NAME">n.x</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.lon_to_x</span><span class="PUNC">(</span><span class="NAME">n.lon</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>329</span> 			</span><span class="NAME">n.y</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.lat_to_y</span><span class="PUNC">(</span><span class="NAME">n.lat</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>330</span> 			</span><span class="NAME">Style.parse_styles</span><span class="PUNC">(</span><span class="NAME">n</span><span class="PUNC">,</span><span class="NAME">Style.styles.node</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>331</span> 			</span><span class="COMM">// can't currently afford to have all nodes in the map as well as all ways.</span><span class="WHIT">
+<span class='linenumber'>332</span> 			</span><span class="COMM">// but we're missing some nodes when we render... semantic ones i think. cross-check.</span><span class="WHIT">
+<span class='linenumber'>333</span> 			</span><span class="COMM">// objects.push(n)</span><span class="WHIT">
+<span class='linenumber'>334</span> 			</span><span class="NAME">Cartagen.nodes.set</span><span class="PUNC">(</span><span class="NAME">n.id</span><span class="PUNC">,</span><span class="NAME">n</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>335</span> 	    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>336</span> 		</span><span class="NAME">data.osm.way.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">way</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>337</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.live</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">Cartagen.ways.get</span><span class="PUNC">(</span><span class="NAME">way.id</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>338</span> 				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>339</span> 					</span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">way.id</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>340</span> 					</span><span class="NAME">user</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">way.user</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>341</span> 					</span><span class="NAME">timestamp</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">way.timestamp</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>342</span> 					</span><span class="NAME">nodes</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>343</span> 					</span><span class="NAME">tags</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hash</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>344</span> 				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>345</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">way.name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">data.name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">way.name</span><span class="WHIT">
+<span class='linenumber'>346</span> 				</span><span class="NAME">way.nd.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">nd</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">index</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>347</span> 					</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">index</span><span class="WHIT"> </span><span class="PUNC">%</span><span class="WHIT"> </span><span class="NAME">Cartagen.simplify</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">index</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">index</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">way.nd.length</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">way.nd.length</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">Cartagen.simplify</span><span class="PUNC">*</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="WHIT">  </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>348</span> 						</span><span class="NAME">node</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Cartagen.nodes.get</span><span class="PUNC">(</span><span class="NAME">nd.ref</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>349</span> 						</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">Object.isUndefined</span><span class="PUNC">(</span><span class="NAME">node</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">data.nodes.push</span><span class="PUNC">(</span><span class="NAME">node</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>350</span> 					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>351</span> 				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>352</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">way.tag</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Array</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>353</span> 					</span><span class="NAME">way.tag.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">tag</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>354</span> 						</span><span class="NAME">data.tags.set</span><span class="PUNC">(</span><span class="NAME">tag.k</span><span class="PUNC">,</span><span class="NAME">tag.v</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>355</span> 					</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>356</span> 				</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>357</span> 					</span><span class="NAME">data.tags.set</span><span class="PUNC">(</span><span class="NAME">way.tag.k</span><span class="PUNC">,</span><span class="NAME">way.tag.v</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>358</span> 				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>359</span> 				</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Way</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>360</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>361</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>362</span> 		</span><span class="COMM">// data.osm.relation.each(function(way){</span><span class="WHIT">
+<span class='linenumber'>363</span> 		</span><span class="COMM">// 	var w = new Way</span><span class="WHIT">
+<span class='linenumber'>364</span> 		</span><span class="COMM">// 	w.id = way.id</span><span class="WHIT">
+<span class='linenumber'>365</span> 		</span><span class="COMM">// 	w.user = way.user</span><span class="WHIT">
+<span class='linenumber'>366</span> 		</span><span class="COMM">// 	w.timestamp = way.timestamp</span><span class="WHIT">
+<span class='linenumber'>367</span> 		</span><span class="COMM">// 	w.nodes = []</span><span class="WHIT">
+<span class='linenumber'>368</span> 		</span><span class="COMM">// 	way.nd.each(function(nd){</span><span class="WHIT">
+<span class='linenumber'>369</span> 		</span><span class="COMM">// 		//find the node corresponding to nd.ref</span><span class="WHIT">
+<span class='linenumber'>370</span> 		</span><span class="COMM">// 		try {</span><span class="WHIT">
+<span class='linenumber'>371</span> 		</span><span class="COMM">// 			w.nodes.push([nodes.get(nd.ref).x,nodes.get(nd.ref).y])</span><span class="WHIT">
+<span class='linenumber'>372</span> 		</span><span class="COMM">// 		} catch(e) {</span><span class="WHIT">
+<span class='linenumber'>373</span> 		</span><span class="COMM">// 			// alert(nd.ref)</span><span class="WHIT">
+<span class='linenumber'>374</span> 		</span><span class="COMM">// 		}</span><span class="WHIT">
+<span class='linenumber'>375</span> 		</span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'>376</span> 		</span><span class="COMM">// 	})</span><span class="WHIT">
+<span class='linenumber'>377</span> 		</span><span class="COMM">// 	way.tag.each(function(tag) {</span><span class="WHIT">
+<span class='linenumber'>378</span> 		</span><span class="COMM">// 		w.tags.push([tag.k,tag.v])</span><span class="WHIT">
+<span class='linenumber'>379</span> 		</span><span class="COMM">// 	})</span><span class="WHIT">
+<span class='linenumber'>380</span> 		</span><span class="COMM">// 	objects.push(w)</span><span class="WHIT">
+<span class='linenumber'>381</span> 		</span><span class="COMM">// })</span><span class="WHIT">
+<span class='linenumber'>382</span> 
+<span class='linenumber'>383</span> 		</span><span class="COMM">// sort by polygons' node count:</span><span class="WHIT">
+<span class='linenumber'>384</span> 		</span><span class="NAME">objects.sort</span><span class="PUNC">(</span><span class="NAME">Cartagen.sort_by_area</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>385</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>386</span> 	</span><span class="COMM">/**
+<span class='linenumber'>387</span> 	 * Gets the plot under the current center of the viewport
+<span class='linenumber'>388</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>389</span> 	</span><span class="NAME">get_current_plot</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>390</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Map.x</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">Map.last_pos</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">Map.y</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">Map.last_pos</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>391</span> 			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">new_lat1</span><span class="PUNC">,</span><span class="NAME">new_lat2</span><span class="PUNC">,</span><span class="NAME">new_lng1</span><span class="PUNC">,</span><span class="NAME">new_lng2</span><span class="WHIT">
+<span class='linenumber'>392</span> 			</span><span class="NAME">new_lat1</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.y_to_lat</span><span class="PUNC">(</span><span class="NAME">Map.y</span><span class="PUNC">)</span><span class="PUNC">-</span><span class="NAME">range</span><span class="WHIT">
+<span class='linenumber'>393</span> 			</span><span class="NAME">new_lng1</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.x_to_lon</span><span class="PUNC">(</span><span class="NAME">Map.x</span><span class="PUNC">)</span><span class="PUNC">-</span><span class="NAME">range</span><span class="WHIT">
+<span class='linenumber'>394</span> 			</span><span class="NAME">new_lat2</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.y_to_lat</span><span class="PUNC">(</span><span class="NAME">Map.y</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="NAME">range</span><span class="WHIT">
+<span class='linenumber'>395</span> 			</span><span class="NAME">new_lng2</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.x_to_lon</span><span class="PUNC">(</span><span class="NAME">Map.x</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="NAME">range</span><span class="WHIT">
+<span class='linenumber'>396</span> 			</span><span class="COMM">// this will look for cached plots, or get new ones if it fails</span><span class="WHIT">
+<span class='linenumber'>397</span> 			</span><span class="NAME">Cartagen.get_cached_plot</span><span class="PUNC">(</span><span class="NAME">new_lat1</span><span class="PUNC">,</span><span class="NAME">new_lng1</span><span class="PUNC">,</span><span class="NAME">new_lat2</span><span class="PUNC">,</span><span class="NAME">new_lng2</span><span class="PUNC">,</span><span class="NAME">Cartagen.bleed_level</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>398</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>399</span> 		</span><span class="NAME">Map.last_pos</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Map.x</span><span class="WHIT">
+<span class='linenumber'>400</span> 		</span><span class="NAME">Map.last_pos</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Map.y</span><span class="WHIT">
+<span class='linenumber'>401</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>402</span> 	</span><span class="COMM">/**
+<span class='linenumber'>403</span> 	 * Fetches a JSON plot from a static file, given a full url.
+<span class='linenumber'>404</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>405</span> 	</span><span class="NAME">get_static_plot</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>406</span> 		</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">'fetching '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>407</span> 		</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">++</span><span class="WHIT">
+<span class='linenumber'>408</span> 		</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Ajax.Request</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">,</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>409</span> 			</span><span class="NAME">method</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'get'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>410</span> 			</span><span class="NAME">onComplete</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">result</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>411</span> 				</span><span class="COMM">// Cartagen.debug(result.responseText.evalJSON().osm.ways.length+" ways")</span><span class="WHIT">
+<span class='linenumber'>412</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">'got '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>413</span> 				</span><span class="NAME">Cartagen.parse_objects</span><span class="PUNC">(</span><span class="NAME">result.responseText.evalJSON</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>414</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="NAME">objects.length</span><span class="PUNC">+</span><span class="STRN">" objects"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>415</span> 				</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">--</span><span class="WHIT">
+<span class='linenumber'>416</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.requested_plots</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">last_event</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">frame</span><span class="WHIT">
+<span class='linenumber'>417</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">"Total plots: "</span><span class="PUNC">+</span><span class="NAME">Cartagen.plots.size</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="STRN">", of which "</span><span class="PUNC">+</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">+</span><span class="STRN">" are still loading."</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>418</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>419</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>420</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>421</span> 	</span><span class="COMM">/** 
+<span class='linenumber'>422</span> 	 * Reduces precision of a plot request to quantize plot requests,
+<span class='linenumber'>423</span> 	 * checks against local storage for browers with HTML 5,
+<span class='linenumber'>424</span> 	 * then fetches the plot and parses the data into the objects array.
+<span class='linenumber'>425</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>426</span> 	</span><span class="NAME">get_cached_plot</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>427</span> 		</span><span class="NAME">plot_precision</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.001</span><span class="WHIT">
+<span class='linenumber'>428</span> 		</span><span class="NAME">_lat1</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_lat1.to_precision</span><span class="PUNC">(</span><span class="NAME">plot_precision</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>429</span> 		</span><span class="NAME">_lng1</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_lng1.to_precision</span><span class="PUNC">(</span><span class="NAME">plot_precision</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>430</span> 		</span><span class="NAME">_lat2</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_lat2.to_precision</span><span class="PUNC">(</span><span class="NAME">plot_precision</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>431</span> 		</span><span class="NAME">_lng2</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_lng2.to_precision</span><span class="PUNC">(</span><span class="NAME">plot_precision</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>432</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">cached</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
+<span class='linenumber'>433</span> 
+<span class='linenumber'>434</span> 		</span><span class="COMM">// Remember that parse_objects() will fill localStorage.</span><span class="WHIT">
+<span class='linenumber'>435</span> 		</span><span class="COMM">// We can't do it here because it's an asychronous AJAX call.</span><span class="WHIT">
+<span class='linenumber'>436</span> 
+<span class='linenumber'>437</span> 		</span><span class="COMM">// if we're not live-loading:</span><span class="WHIT">
+<span class='linenumber'>438</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">Cartagen.live</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>439</span> 			</span><span class="COMM">// check if we've loaded already this session:</span><span class="WHIT">
+<span class='linenumber'>440</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.plots.get</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">Cartagen.plots.get</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>441</span> 				</span><span class="COMM">// no live-loading, so:</span><span class="WHIT">
+<span class='linenumber'>442</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">"already loaded plot"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>443</span> 			</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>444</span> 				</span><span class="COMM">// if we haven't, check if HTML 5 localStorage exists in this browser:</span><span class="WHIT">
+<span class='linenumber'>445</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">localStorage</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>446</span> 					</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ls</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">localStorage.getItem</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>447</span> 					</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">ls</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>448</span> 						</span><span class="NAME">Cartagen.plots.set</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="PUNC">[</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>449</span> 						</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">"localStorage cached plot"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>450</span> 						</span><span class="NAME">Cartagen.parse_objects</span><span class="PUNC">(</span><span class="NAME">ls</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>451</span> 					</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>452</span> 						</span><span class="COMM">// it's not in the localStorage:</span><span class="WHIT">
+<span class='linenumber'>453</span> 						</span><span class="NAME">Cartagen.load_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>454</span> 					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>455</span> 				</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>456</span> 					</span><span class="COMM">// not loaded this session and no localStorage, so:</span><span class="WHIT">
+<span class='linenumber'>457</span> 					</span><span class="NAME">Cartagen.load_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>458</span> 					</span><span class="NAME">Cartagen.plots.set</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="PUNC">[</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>459</span> 				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>460</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>461</span> 			</span><span class="COMM">// if the bleed level of this plot is > 0</span><span class="WHIT">
+<span class='linenumber'>462</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_bleed</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>463</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">'bleeding to neighbors with bleed = '</span><span class="PUNC">+</span><span class="NAME">_bleed</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>464</span> 				</span><span class="COMM">// bleed to 8 neighboring plots, decrement bleed:</span><span class="WHIT">
+<span class='linenumber'>465</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>466</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>467</span> 
+<span class='linenumber'>468</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>469</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>470</span> 
+<span class='linenumber'>471</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>472</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>473</span> 
+<span class='linenumber'>474</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>475</span> 				</span><span class="NAME">Cartagen.delayed_get_cached_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">-</span><span class="NAME">plot_precision</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>476</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>477</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>478</span> 			</span><span class="COMM">// we're live-loading! Gotta get it no matter what:</span><span class="WHIT">
+<span class='linenumber'>479</span> 			</span><span class="NAME">load_plot</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>480</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>481</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">	
+<span class='linenumber'>482</span> 	</span><span class="COMM">/**
+<span class='linenumber'>483</span> 	 * Peforms get_cached_plot() with a randomized delay of between 1 and 3 seconds.
+<span class='linenumber'>484</span> 	 * 
+<span class='linenumber'>485</span> 	 * This prevents a zillion requests to the server at the same time and is useful for live viewing.
+<span class='linenumber'>486</span> 	 * For viewing page_cached plots, it doesn't matter.
+<span class='linenumber'>487</span> 	 * 
+<span class='linenumber'>488</span> 	 * @param {Number} _lat1  Upper bound
+<span class='linenumber'>489</span> 	 * @param {Number} _lng1  Left bound
+<span class='linenumber'>490</span> 	 * @param {Number} _lat2  Lower bound
+<span class='linenumber'>491</span> 	 * @param {Number} _lng2  Right bound
+<span class='linenumber'>492</span> 	 * @param {Number} _bleed Amount of bleed
+<span class='linenumber'>493</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>494</span> 	</span><span class="NAME">delayed_get_cached_plot</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">,</span><span class="NAME">_bleed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>495</span> 		</span><span class="NAME">bleed_delay</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1000</span><span class="PUNC">+</span><span class="PUNC">(</span><span class="NUMB">2000</span><span class="PUNC">*</span><span class="NAME">Math.random</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="COMM">//milliseconds, with a random factor to stagger requests</span><span class="WHIT">
+<span class='linenumber'>496</span> 		</span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="STRN">"get_cached_plot("</span><span class="PUNC">+</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">+</span><span class="STRN">","</span><span class="PUNC">+</span><span class="NAME">_bleed</span><span class="PUNC">+</span><span class="STRN">")"</span><span class="PUNC">,</span><span class="NAME">bleed_delay</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>497</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>498</span> 	</span><span class="COMM">/**
+<span class='linenumber'>499</span> 	 * Requests a JSON plot for a bbox from the server
+<span class='linenumber'>500</span> 	 * 
+<span class='linenumber'>501</span> 	 * @param {Number} _lat1  Upper bound
+<span class='linenumber'>502</span> 	 * @param {Number} _lng1  Left bound
+<span class='linenumber'>503</span> 	 * @param {Number} _lat2  Lower bound
+<span class='linenumber'>504</span> 	 * @param {Number} _lng2  Right bound
+<span class='linenumber'>505</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>506</span> 	</span><span class="NAME">load_plot</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">_lat1</span><span class="PUNC">,</span><span class="NAME">_lng1</span><span class="PUNC">,</span><span class="NAME">_lat2</span><span class="PUNC">,</span><span class="NAME">_lng2</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>507</span> 		</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">++</span><span class="WHIT">
+<span class='linenumber'>508</span> 		</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Ajax.Request</span><span class="PUNC">(</span><span class="STRN">'/map/plot.js?lat1='</span><span class="PUNC">+</span><span class="NAME">_lat1</span><span class="PUNC">+</span><span class="STRN">'&lng1='</span><span class="PUNC">+</span><span class="NAME">_lng1</span><span class="PUNC">+</span><span class="STRN">'&lat2='</span><span class="PUNC">+</span><span class="NAME">_lat2</span><span class="PUNC">+</span><span class="STRN">'&lng2='</span><span class="PUNC">+</span><span class="NAME">_lng2</span><span class="PUNC">+</span><span class="STRN">''</span><span class="PUNC">,</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>509</span> 			</span><span class="NAME">method</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'get'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>510</span> 			</span><span class="NAME">onComplete</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">result</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>511</span> 				</span><span class="NAME">Cartagen.parse_objects</span><span class="PUNC">(</span><span class="NAME">result.responseText.evalJSON</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>512</span> 				</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">--</span><span class="WHIT">
+<span class='linenumber'>513</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.requested_plots</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">last_event</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">frame</span><span class="WHIT">
+<span class='linenumber'>514</span> 				</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">"Total plots: "</span><span class="PUNC">+</span><span class="NAME">Cartagen.plots.size</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">+</span><span class="STRN">", of which "</span><span class="PUNC">+</span><span class="NAME">Cartagen.requested_plots</span><span class="PUNC">+</span><span class="STRN">" are still loading."</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>515</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>516</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>517</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>518</span> 	</span><span class="COMM">/**
+<span class='linenumber'>519</span> 	 * Searches all objects by tags, and sets highlight=true for all matches.
+<span class='linenumber'>520</span> 	 * 
+<span class='linenumber'>521</span> 	 * @param {Object} query The tag to search for
+<span class='linenumber'>522</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>523</span> 	</span><span class="NAME">highlight</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">query</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>524</span> 		</span><span class="NAME">objects.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">object</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>525</span> 			</span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
+<span class='linenumber'>526</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.tags</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Way</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>527</span> 				</span><span class="NAME">object.tags.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">tag</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>528</span> 					</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">tag.key.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">tag.value.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>529</span> 						</span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>530</span> 					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>531</span> 				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>532</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">object.user</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.user.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>533</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">object.description</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.description.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>534</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>535</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>536</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>537</span> 	</span><span class="COMM">/**
+<span class='linenumber'>538</span> 	 * Shows the live GSS editor. Generally only for cartgen.org.
+<span class='linenumber'>539</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>540</span> 	</span><span class="NAME">show_gss_editor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>541</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'description'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>542</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'brief'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'28%'</span><span class="WHIT">
+<span class='linenumber'>543</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'brief_first'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'92%'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>544</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'gss'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">toggle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>545</span> 		</span><span class="NAME">Cartagen.live_gss</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">Cartagen.live_gss</span><span class="WHIT">
+<span class='linenumber'>546</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>547</span> 	</span><span class="COMM">/**
+<span class='linenumber'>548</span> 	 * Sends user to an image of the current canvas
+<span class='linenumber'>549</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>550</span> 	</span><span class="NAME">redirect_to_image</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>551</span> 		</span><span class="NAME">document.location</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">canvas.canvas.toDataURL</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>552</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>553</span>     </span><span class="NAME">debug</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>554</span>     	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.debug_mode</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>555</span>         	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">console</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">'undefined'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>556</span>         	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">window.debug</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">'undefined'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">window.debug.log</span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>557</span>     	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>558</span>     </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>559</span> 	</span><span class="COMM">/**
+<span class='linenumber'>560</span> 	 * Loads each script in scripts array, sequentially.
+<span class='linenumber'>561</span> 	 * Requires a load_next_script() call at the end of each
+<span class='linenumber'>562</span> 	 * dependent script to trigger the next one.
+<span class='linenumber'>563</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>564</span> 	</span><span class="NAME">load_next_script</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>565</span> 		</span><span class="NAME">Cartagen.debug</span><span class="PUNC">(</span><span class="STRN">"loading: "</span><span class="PUNC">+</span><span class="NAME">scripts</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>566</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">scripts.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>567</span> 			</span><span class="NAME">Cartagen.load_script</span><span class="PUNC">(</span><span class="NAME">scripts.splice</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>568</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>569</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>570</span> 	</span><span class="COMM">/**
+<span class='linenumber'>571</span> 	 * Loads a script into &lt;script> tags, no cross-domain limits.
+<span class='linenumber'>572</span> 	 * @param {String} script Path to the script
+<span class='linenumber'>573</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>574</span> 	</span><span class="NAME">load_script</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">script</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>575</span> 		</span><span class="NAME">$$</span><span class="PUNC">(</span><span class="STRN">'head'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">insert</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Element</span><span class="PUNC">(</span><span class="STRN">'script'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">'src'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">script</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'type'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'text/javascript'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'charset'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'utf-8'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">evalJSON</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'force'</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>576</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>577</span> </span><span class="PUNC">}</span></pre></body></html>

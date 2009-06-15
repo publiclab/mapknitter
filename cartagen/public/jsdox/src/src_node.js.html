@@ -1,0 +1,31 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Node</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Class.create</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  2</span> 	</span><span class="NAME">radius</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">6</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  3</span> 	</span><span class="NAME">tags</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hash</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  4</span> 	</span><span class="NAME">fillStyle</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"#555"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  5</span> 	</span><span class="NAME">fontColor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"#eee"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  6</span> 	</span><span class="NAME">fontSize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">12</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  7</span> 	</span><span class="NAME">draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  8</span> 		</span><span class="NAME">Cartagen.object_count</span><span class="PUNC">++</span><span class="WHIT">
+<span class='linenumber'>  9</span> 		</span><span class="NAME">Cartagen.node_count</span><span class="PUNC">++</span><span class="WHIT">
+<span class='linenumber'> 10</span> 		</span><span class="NAME">canvas.save</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 11</span> 		</span><span class="NAME">this.shape</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 12</span> 		</span><span class="NAME">canvas.restore</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 13</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 14</span> 	</span><span class="NAME">shape</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 15</span> 	    </span><span class="NAME">canvas.save</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 16</span> 			</span><span class="NAME">Style.apply_style</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 17</span> 		</span><span class="NAME">$C.begin_path</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 18</span> 		</span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="NAME">this.x</span><span class="PUNC">,</span><span class="NAME">this.y</span><span class="PUNC">-</span><span class="NAME">this.radius</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 19</span> 		</span><span class="NAME">$C.arc</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NAME">this.radius</span><span class="PUNC">,</span><span class="NAME">this.radius</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NAME">Math.PI</span><span class="PUNC">*</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 20</span> 		</span><span class="NAME">$C.fill</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 21</span> 		</span><span class="NAME">$C.stroke</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 22</span> 	    </span><span class="NAME">canvas.restore</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 23</span>   </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 24</span> </span><span class="PUNC">}</span><span class="PUNC">)</span></pre></body></html>
