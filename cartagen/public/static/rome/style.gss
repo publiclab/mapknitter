@@ -30,7 +30,8 @@ park: {
 	lineWidth: 3,
 	strokeStyle: "#181",
 	fontSize: 12,
-	text: function() { return this.tags.get('name') }
+	text: function() { return this.tags.get('name') },
+	fontRotation: 'fixed'
 },
 waterway: {
 	fillStyle: "#57d",
