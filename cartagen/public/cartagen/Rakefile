@@ -1,0 +1,57 @@
+desc "builds cartagen.js"
+task :build do
+	build
+end
+
+		
+desc "automatically builds cartagen.js when something in src/ changes"
+task :autobuild do
+	require "filesystemwatcher"
+	watcher = FileSystemWatcher.new
+	watcher.addDirectory "src", "*.js"
+	watcher.sleepTime = 5
+	watcher.start do |status,file|
+	    if ([FileSystemWatcher::CREATED,
+	    	FileSystemWatcher::MODIFIED,
+	    	FileSystemWatcher::DELETED].include? status)
+	        
+	        build
+	    end
+	end
+	
+	watcher.join()
+end
+
+desc "builds the API docs"
+task :docs do
+	Dir.chdir 'lib/jsdoc'
+	puts `java -jar jsrun.jar app/main.js -t=templates/ext/ -d=../../../jsdox/ -a ../../src/`
+end
+
+
+def build
+	puts 'building...'
+	header = ''
+	footer = ''
+	sources = []
+	
+	# grab the sources
+	Dir.entries('src').each do |file|
+		if file == 'header.js'
+			header = IO.read 'src/header.js' 
+		elsif file == 'footer.js'
+			footer = IO.read 'src/footer.js'
+		elsif file[-3..-1] == '.js'
+			sources.push IO.read('src/' + file)
+		end
+	end
+
+	# put together file
+	File.open 'cartagen.js', 'w' do |f|
+		f.puts header
+		f.puts sources.join("\n")
+		f.puts footer
+	end
+	
+	puts "Build finished"
+end 
