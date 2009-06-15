@@ -609,6 +609,7 @@ var Cartagen = {
 		translate(width/2,height/2)
 			rotate(Map.rotate)
 			scale(Cartagen.zoom_level,Cartagen.zoom_level)
+			// translate(-1*Map.x,-1*Map.y)
 	 	translate(width/-2,height/-2)
 		// rotate(-1*Map.rotate)
 			translate((-1*Map.x)+(width/2),(-1*Map.y)+(height/2))
