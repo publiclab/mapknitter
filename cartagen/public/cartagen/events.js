@@ -131,8 +131,12 @@ function events_init() {
 	
 				drag_x = (touch.screenX - Mouse.click_x)
 				drag_y = (touch.screenY - Mouse.click_y)
-				Map.x = Map.x_old+(-1*drag_x/Cartagen.zoom_level)
-				Map.y = Map.y_old+(-1*drag_y/Cartagen.zoom_level)
+				
+				var d_x = Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
+				var d_y = Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+
+				Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
+				Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 				draw()
 			}
 		}
@@ -187,8 +191,14 @@ function drag() {
 				Cartagen.zoom_level = 0
 			}
 		} else {
-			Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
-			Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
+			// var h = Math.sqrt((drag_x*drag_x)+(drag_y*drag_y))
+			var d_x = Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
+			var d_y = Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+						
+			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
+			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
+			// Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
+			// Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
 		}
 	}
 }
@@ -213,7 +223,6 @@ function mouseup() {
 	globalDragging = false
 	dragging = false
 	User.update()
-	Cartagen.debug("x: " + Map.pointer_x() + ", y: " + Map.pointer_y())
 }
 
 function clickLength() {
