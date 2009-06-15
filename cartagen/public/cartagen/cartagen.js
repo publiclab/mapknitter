@@ -66,7 +66,8 @@ var Style = {
 		body: {
 			fillStyle: "#eee",
 			fontColor: "#eee",
-			fontSize: 12
+			fontSize: 12,
+			fontRotation: 0
 		}
 	},
 	style_body: function() {
@@ -121,6 +122,7 @@ var Style = {
 			if (selector.fontColor) feature.label.fontColor = selector.fontColor
 			if (selector.fontSize) feature.label.fontSize = selector.fontSize
 			if (selector.fontScale) feature.label.fontScale = selector.fontScale
+			if (selector.fontRotation) feature.label.fontRotation = selector.fontRotation
 			if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
 			if (selector.text) feature.label.text = selector.text
 
@@ -134,6 +136,7 @@ var Style = {
 					if (Style.styles[tag.key].fontColor) feature.label.fontColor = Style.styles[tag.key].fontColor
 					if (Style.styles[tag.key].fontSize) feature.label.fontSize = Style.styles[tag.key].fontSize
 					if (Style.styles[tag.key].fontScale) feature.label.fontScale = Style.styles[tag.key].fontScale
+					if (Style.styles[tag.key].fontRotation) feature.label.fontRotation = Style.styles[tag.key].fontRotation
 					if (Style.styles[tag.key].fontBackground) feature.label.fontBackground = Style.styles[tag.key].fontBackground
 					if (Style.styles[tag.key].text) {
 						if (Object.isFunction(Style.styles[tag.key].text)) feature.label.text = Style.styles[tag.key].text.apply(feature)
@@ -152,6 +155,7 @@ var Style = {
 					if (Style.styles[tag.value].fontColor) feature.label.fontColor = Style.styles[tag.value].fontColor
 					if (Style.styles[tag.value].fontSize) feature.label.fontSize = Style.styles[tag.value].fontSize
 					if (Style.styles[tag.value].fontScale) feature.label.fontScale = Style.styles[tag.value].fontScale
+					if (Style.styles[tag.value].fontRotation) feature.label.fontRotation = Style.styles[tag.value].fontRotation
 					if (Style.styles[tag.value].fontBackground) feature.label.fontBackground = Style.styles[tag.value].fontBackground
 					if (Style.styles[tag.value].text) {
 						if (Object.isFunction(Style.styles[tag.value].text)) feature.label.text = Style.styles[tag.value].text.apply(feature)
@@ -197,7 +201,7 @@ var Style = {
 	},
 	create_refresher: function(feature, property, interval) {
 		if (Object.isFunction(feature[property])) { //sanity check
-            if (['fontBackground', 'fontColor', 'fontScale', 'fontSize', 'text'].include(property)) {
+            if (['fontBackground', 'fontColor', 'fontScale', 'fontSize', 'fontRotation', 'text'].include(property)) {
                 feature = feature.label
             }
 			if(!feature.style_generators) feature.style_generators = {}
@@ -305,6 +309,7 @@ var Style = {
 }
 
 var Viewport = {
+	padding: 0, // frame to show bbox culling
 	// x,y bbox
 	bbox: [],
 	// in-map x-width (after scaling)
@@ -606,23 +611,26 @@ var Cartagen = {
 		
 		Style.style_body()
 
+		if (Viewport.padding > 0) {
+			strokeStyle('white')
+			lineWidth(2)
+			strokeRect(Viewport.padding,Viewport.padding,width-(Viewport.padding*2),height-(Viewport.padding*2))
+		}
+		
 		translate(width/2,height/2)
 			rotate(Map.rotate)
 			scale(Cartagen.zoom_level,Cartagen.zoom_level)
-			// translate(-1*Map.x,-1*Map.y)
 	 	translate(width/-2,height/-2)
-		// rotate(-1*Map.rotate)
-			translate((-1*Map.x)+(width/2),(-1*Map.y)+(height/2))
-		// rotate(Map.rotate)
+		translate((-1*Map.x)+(width/2),(-1*Map.y)+(height/2))
 
 		// viewport stuff:
-		strokeStyle('white')
-		lineWidth(10)
-		
-		Viewport.width = width*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
-		Viewport.height = height*(1/Cartagen.zoom_level)-(100*(1/Cartagen.zoom_level))
+		Viewport.width = width*(1/Cartagen.zoom_level)-(2*Viewport.padding*(1/Cartagen.zoom_level))
+		Viewport.height = height*(1/Cartagen.zoom_level)-(2*Viewport.padding*(1/Cartagen.zoom_level))
+		// culling won't work anymore after we fixed rotation...
+		Viewport.width = Math.max(Viewport.width,Viewport.height)
+		Viewport.height = Viewport.width
 		Viewport.bbox = [Map.y-Viewport.height/2,Map.x-Viewport.width/2,Map.y+Viewport.height/2,Map.x+Viewport.width/2]
-		strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
+		// strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 		
 		//Geohash lookup:
 		Geohash.draw()
@@ -929,6 +937,7 @@ var Node = Class.create({
 	fillStyle: "#555",
 	fontColor: "#eee",
 	fontSize: 12,
+	fontRotation: 0,
 	draw: function() {
 		Cartagen.object_count++
 		Cartagen.point_count++
@@ -958,6 +967,7 @@ var Way = Class.create({
 	fillStyle: "#555",
 	fontColor: "#eee",
 	fontSize: 12,
+	fontRotation: 0,
     initialize: function(data) {
 		Object.extend(this, data)
 		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
@@ -1059,6 +1069,7 @@ var Way = Class.create({
 var Label = Class.create({
     fontFamily: 'Lucida Grande',
     fontSize: 11,
+	fontRotation: 0,
     fontBackground: null,
     text: null,
     fontScale: false,
@@ -1078,9 +1089,19 @@ var Label = Class.create({
 				if (!this.way.closed_poly) {
 					translate(_x,_y)
 					rotate(this.way.middle_segment_angle())
-					translate(-1*_x,-1*_y)
+					translate(-_x,-_y)
 				}
 			} catch(e) {console.log(e)}
+			
+			if (this.fontRotation) {
+				translate(_x,_y)
+				if (this.fontRotation == "fixed") {
+					rotate(-Map.rotate)
+				} else if (Object.isNumber(this.fontRotation)) {
+					rotate(this.fontRotation)
+				}
+				translate(-_x,-_y)
+			}
 			if (this.fontScale == "fixed") {
 				var _height = Object.value(this.fontSize)
 				var _padding = Object.value(this.padding)
