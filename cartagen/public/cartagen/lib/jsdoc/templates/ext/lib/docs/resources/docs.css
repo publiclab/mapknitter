@@ -46,6 +46,22 @@ html, body {
     margin:5px;
 }
 
+#header span {
+	font:normal 12px tahoma, arial, sans-serif;
+	color:white;
+	float:right;
+	padding-right: 5px;
+}
+
+#header a {
+	color: white;
+	text-decoration: underline;
+}
+
+#header a:hover {
+	text-decoration: none;
+}
+
 .loading-indicator {
     font-size:11px;
     background-image:url('../../resources/images/default/grid/loading.gif');
@@ -151,6 +167,7 @@ a:hover {
 }
 
 #welcome {
+	font:normal 16px tahoma, arial, sans-serif;
     position:relative;
     top:0;
     left: 0;

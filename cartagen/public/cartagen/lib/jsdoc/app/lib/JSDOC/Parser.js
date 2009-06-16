@@ -342,7 +342,9 @@ JSDOC.Parser.onParamList = function(/**Array*/paramTokens) {
 			}
 		}
 		else if (paramTokens[i].is("NAME")) {
-			params.push({name: paramTokens[i].data});
+			if (paramTokens[i].data != '$super') {
+				params.push({name: paramTokens[i].data});
+			}
 		}
 	}
 	return params;
