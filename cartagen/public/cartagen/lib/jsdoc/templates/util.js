@@ -261,7 +261,7 @@ JSDOC.template.Link.prototype = {
      toParsedFileInRepo : function(url){
         if (defined(url)) {
             this.clear();
-            this.file = '/repo\/trunk' + ( url.replace(/\\/g,"\/").split('trunk')[1]);
+            this.file = 'http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/' + url.slice(10);
 
         }
 
@@ -400,7 +400,7 @@ JSDOC.template.symbolGroup = null;
 /** From prototype.js */
 String.prototype.camelize = function() {
 	var parts = this.split('_'), len = parts.length;
-	if (len == 1) return parts[0];
+	if (len == 1) parts[0].charAt(0).toUpperCase() + parts[0].substring(1);
 	
 	var camelized = parts[0].charAt(0).toUpperCase() + parts[0].substring(1);
 	
