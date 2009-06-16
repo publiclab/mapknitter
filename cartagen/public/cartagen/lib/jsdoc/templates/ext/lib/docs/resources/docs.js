@@ -146,27 +146,7 @@ MainPanel = function(){
             title: 'API Home',
             autoLoad: {url: 'welcome.html', callback: this.initSearch, scope: this},
             iconCls:'icon-docs',
-            autoScroll: true,
-			tbar: [
-				'Search: ', ' ',
-                new Ext.ux.SelectBox({
-                    listClass:'x-combo-list-small',
-                    width:90,
-                    value:'Starts with',
-                    id:'search-type',
-                    store: new Ext.data.SimpleStore({
-                        fields: ['text'],
-                        expandData: true,
-                        data : ['Starts with', 'Ends with', 'Any match']
-                    }),
-                    displayField: 'text'
-                }), ' ',
-                new Ext.app.SearchField({
-	                width:240,
-					store: this.searchStore,
-					paramName: 'q'
-	            })
-            ]
+            autoScroll: true
         }
     });
 };
@@ -391,58 +371,6 @@ Ext.onReady(function(){
 	
 });
 
-
-Ext.app.SearchField = Ext.extend(Ext.form.TwinTriggerField, {
-    initComponent : function(){
-        if(!this.store.baseParams){
-			this.store.baseParams = {};
-		}
-		Ext.app.SearchField.superclass.initComponent.call(this);
-		this.on('specialkey', function(f, e){
-            if(e.getKey() == e.ENTER){
-                this.onTrigger2Click();
-            }
-        }, this);
-    },
-
-    validationEvent:false,
-    validateOnBlur:false,
-    trigger1Class:'x-form-clear-trigger',
-    trigger2Class:'x-form-search-trigger',
-    hideTrigger1:true,
-    width:180,
-    hasSearch : false,
-    paramName : 'query',
-
-    onTrigger1Click : function(){
-        if(this.hasSearch){
-            this.store.baseParams[this.paramName] = '';
-			this.store.removeAll();
-			this.el.dom.value = '';
-            this.triggers[0].hide();
-            this.hasSearch = false;
-			this.focus();
-        }
-    },
-
-    onTrigger2Click : function(){
-        var v = this.getRawValue();
-        if(v.length < 1){
-            this.onTrigger1Click();
-            return;
-        }
-		if(v.length < 2){
-			Ext.Msg.alert('Invalid Search', 'You must enter a minimum of 2 characters to search the API');
-			return;
-		}
-		this.store.baseParams[this.paramName] = v;
-        var o = {start: 0};
-        this.store.reload({params:o});
-        this.hasSearch = true;
-        this.triggers[0].show();
-		this.focus();
-    }
-});
 
 
 /**

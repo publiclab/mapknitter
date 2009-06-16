@@ -6,9 +6,9 @@ end
 		
 desc "automatically builds cartagen.js when something in src/ changes"
 task :autobuild do
-	require "filesystemwatcher"
+	require 'lib/filesystemwatcher'
 	watcher = FileSystemWatcher.new
-	watcher.addDirectory "src", "*.js"
+	watcher.addDirectory 'src', '**/*.js'
 	watcher.sleepTime = 5
 	watcher.start do |status,file|
 	    if ([FileSystemWatcher::CREATED,
@@ -25,33 +25,23 @@ end
 desc "builds the API docs"
 task :docs do
 	Dir.chdir 'lib/jsdoc'
-	puts `java -jar jsrun.jar app/main.js -t=templates/ext/ -d=../../../jsdox/ -a ../../src/`
+	puts `java -jar jsrun.jar app/main.js -t=templates/ext/ -d=../../../jsdox/ -a -r=2 ../../src/`
 end
 
 
 def build
 	puts 'building...'
-	header = ''
-	footer = ''
-	sources = []
+	$:.push 'lib/sprockets'
+	require 'sprockets'
 	
-	# grab the sources
-	Dir.entries('src').each do |file|
-		if file == 'header.js'
-			header = IO.read 'src/header.js' 
-		elsif file == 'footer.js'
-			footer = IO.read 'src/footer.js'
-		elsif file[-3..-1] == '.js'
-			sources.push IO.read('src/' + file)
-		end
-	end
-
-	# put together file
-	File.open 'cartagen.js', 'w' do |f|
-		f.puts header
-		f.puts sources.join("\n")
-		f.puts footer
-	end
+	secretary = Sprockets::Secretary.new(
+	  :load_path    => ['src'],
+	  :source_files => ['src/cartagen.js']
+	)
+	
+	concatenation = secretary.concatenation
+	
+	concatenation.save_to("cartagen.js")
 	
 	puts "Build finished"
 end 
