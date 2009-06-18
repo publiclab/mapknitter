@@ -16,39 +16,70 @@ var Way = Class.create(Feature,
 	 */
     initialize: function($super, data) {
 		$super()
+		
+		/**
+		 * Number of frames this Way has existed for
+		 * @type Number
+		 */
 		this.age = 0
+		/**
+		 * If true, this way will have a red border
+		 * @type Boolean
+		 */
 		this.highlight = false
+		/**
+		 * Nodes that make up this Way
+		 * @type Node[]
+		 */
 		this.nodes = []
+		/**
+		 * Label for this way
+		 * @type Label
+		 */
 		this.label = null
+		/**
+		 * If true, this way will be treated a a polygon and filled when drawn
+		 * @type Boolean
+		 */
 		this.closed_poly = false
 		
 		Object.extend(this, data)
 		
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
+		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && 
+			this.nodes[0].y == this.nodes[this.nodes.length-1].y) 
+				this.closed_poly = true
+				
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+		
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
 			this.x = centroid[0]*2
 			this.y = centroid[1]*2
 		} else {
-		// attempt to make letters follow line segments:
+			// attempt to make letters follow line segments:
 			this.x = (this.middle_segment()[0].x+this.middle_segment()[1].x)/2
 			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
 		}
+		
 		this.area = Geometry.poly_area(this.nodes)
 		this.label = new Label(this)
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
-			// calculate longest dimension to file in a correct geohash:
-			this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
-			this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
+		
+		// calculate longest dimension to file in a correct geohash:
+		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
+		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
+		
 		Style.parse_styles(this,Style.styles.way)
 		objects.push(this) // made obsolete by Geohash
 		Geohash.put_object(this)
 		Cartagen.ways.set(this.id,this)
     },
-	// returns the middle-most line segment as a tuple [node_1,node_2]
-	middle_segment: function() {
-		// Cartagen.debug(this.nodes[Math.floor(this.nodes.length/2)+1])
+	/** 
+	 * Finds the middle-most line segment
+	 * @return a tuple of nodes
+	 * @type Node[]
+	 */	
+	 middle_segment: function() {
         if (this.nodes.length == 1) {
             return [this.nodes[0], this.nodes[0]]
         }
@@ -56,22 +87,34 @@ var Way = Class.create(Feature,
             return [this.nodes[0], this.nodes[1]]
         }
         else {
-            return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
+            return [this.nodes[Math.floor(this.nodes.length/2)],
+			        this.nodes[Math.floor(this.nodes.length/2)+1]]
         }
 	},
+	/**
+	 * Finds the angle of the middle-most line segment
+	 * @return The angle, in radians
+	 * @type Number
+	 */
 	middle_segment_angle: function() {
         var segment = this.middle_segment()
         if (segment[1]) {
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
             return (Math.tan(_y/_x)/1.7)
-        } else return 90
+        } else return 0
 	},
+	/**
+	 * Draws this way on the canvas
+	 */
 	draw: function($super) {
 		Cartagen.way_count++
 		$super()
 		this.age += 1;
 	},
+	/**
+	 * Draws on the canvas to display this way
+	 */
 	shape: function() {
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
@@ -80,9 +123,9 @@ var Way = Class.create(Feature,
 		// fade in after load:
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if (this.age < 20) {
-			canvas.globalAlpha = this.opacity*(this.age/20)
+			$C.opacity(this.opacity*(this.age/20))
 		} else {
-			canvas.globalAlpha = this.opacity
+			$C.opacity(this.opacity)
 		}
 
 		$C.begin_path()

@@ -14,6 +14,10 @@ var Node = Class.create(Feature,
 	 * @constructs
 	 */
 	initialize: function($super) {
+		/**
+		 * The radius, in pixels, of this node.
+		 * @type Number
+		 */
 		this.radius = 6
 		$super()
 	},
@@ -29,8 +33,8 @@ var Node = Class.create(Feature,
 	 */
 	shape: function() {
 		$C.begin_path()
-		$C.translate(this.x,this.y-this.radius)
-		$C.arc(0,this.radius,this.radius,0,Math.PI*2,true)
+		$C.translate(this.x, this.y-this.radius)
+		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
 		$C.fill()
 		$C.stroke()
 	}
