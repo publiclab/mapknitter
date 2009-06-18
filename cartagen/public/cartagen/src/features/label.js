@@ -1,5 +1,18 @@
-var Label = Class.create({
-    initialize: function(_way) {
+/**
+ * Represents a label for a Feature.
+ * @class
+ */
+var Label = Class.create(
+/**
+ * @lends Label#
+ */
+{
+	/**
+	 * Sets the default label properties and owner.
+	 * @param {Feature} owner
+	 * @constructs
+	 */
+    initialize: function(owner) {
 		/**
 		 * Font to use if native canvas text is supported
 		 * @type String
@@ -42,64 +55,68 @@ var Label = Class.create({
 		 */
 		this.fontRotation = 0,
 		/**
-		 * The parent way that this label belongs to
-		 * @type Way
+		 * The parent feature that this label belongs to
+		 * @type Feature
 		 */
-        this.way = _way
+        this.owner = owner
     },
-    draw: function(_x, _y) {
+	/**
+	 * Draws this label at the specified position
+	 * @param {Number} x
+	 * @param {Number} y
+	 */
+    draw: function(x, y) {
         if (this.text) {
-			try {
-            canvas.save()
-            //this.text = this.way.id
+            $C.save()
+
             Style.apply_font_style(this)
 
-			// try to rotate the labels on unclosed ways:
-			try {
-				if (!this.way.closed_poly) {
-					$C.translate(_x,_y)
-					$C.rotate(this.way.middle_segment_angle())
-					$C.translate(-_x,-_y)
-				}
-			} catch(e) {console.log(e)}
+			//rotate the labels on unclosed ways:
+			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
+				$C.translate(x, y)
+				$C.rotate(this.owner.middle_segment_angle())
+				$C.translate(-x, -y)
+			}
+			
 			if (this.fontRotation) {
-				$C.translate(_x,_y)
+				$C.translate(x, y)
 				if (this.fontRotation == "fixed") {
 					$C.rotate(-Map.rotate)
 				} else if (Object.isNumber(this.fontRotation)) {
 					$C.rotate(this.fontRotation)
 				}
-				$C.translate(-_x,-_y)
+				$C.translate(-x, -y)
 			}
+			
 			if (this.fontScale == "fixed") {
-				var _height = Object.value(this.fontSize)
-				var _padding = Object.value(this.padding)
+				var height = Object.value(this.fontSize)
+				var padding = Object.value(this.padding)
 			} else {
-				var _height = Object.value(this.fontSize)/Cartagen.zoom_level
-				var _padding = Object.value(this.padding)/Cartagen.zoom_level
+				var height = Object.value(this.fontSize) / Cartagen.zoom_level
+				var padding = Object.value(this.padding) / Cartagen.zoom_level
 			}
 
-			if (canvas.fillText) { // || Prototype.Browser.Gecko) {
-				canvas.font = _height+"pt "+this.fontFamily
-				var _width = canvas.measureText(Object.value(this.text)).width
-				if (this.fontBackground) {
-					$C.fill_style(Object.value(this.fontBackground))
-					$C.rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
-				}
-				$C.fill_style(Object.value(this.fontColor))
-	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y+(_height/2))	
-			} else {
-				var _width = canvas.measureCanvasText(Object.value(this.fontFamily),_height,this.text)
-				if (this.fontBackground) {
-					$C.fill_style(Object.value(this.fontBackground))
-					$C.rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
-				}
-				$C.draw_text_center(Object.value(this.fontFamily),_height,_x,_y+(_height/2),Object.value(this.text))
+
+			var width = $C.measure_text(Object.value(this.fontFamily), 
+			                            height,
+			                            Object.value(this.text))
+		
+			if (this.fontBackground) {
+				$C.fill_style(Object.value(this.fontBackground))
+				$C.rect(x - (width + padding)/2, 
+						y - (height/2 + padding/2), 
+						width + padding,
+				        height + padding)
 			}
-			canvas.restore()
-			} catch (e) {console.log(e)}
+			
+			$C.draw_text(Object.value(this.fontFamily),
+			             height,
+						 Object.value(this.fontColor),
+			             x - width/2,
+						 y + height/2,
+						 Object.value(this.text))
+
+			$C.restore()
         }
     }
-
-
 })

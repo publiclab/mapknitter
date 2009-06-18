@@ -1,26 +1,104 @@
 /**
- * @namespace
+ * @namespace Data about the user, and function to collect user input and fetch other users' input
  */
 var User = {
-	color: randomColor(),
+	/**
+	 * Color assigned to this user's submissions
+	 * @type String
+	 */
+	color: Glop.random_color(),
+	/**
+	 * Name of the user
+	 * @type String
+	 */
 	name: 'anonymous',
-	// lat & lon are based on geolocation:
+	/**
+	 * Latitude of the user, from geolocation
+	 * @type Number
+	 */
 	lat: 0,
+	/**
+	 * Longitude of the user, from geolocation
+	 * @type Number
+	 */
 	lon: 0,
+	/**
+	 * X-coordinate of the user, from geolocation
+	 * @type Number
+	 */
 	x: -118.31700000003664,
+	/**
+	 * Y-coordinate of the user, from geolocation
+	 * @type Number
+	 */
 	y: -6562600.9880228145,
+	/**
+	 * URI to submit nodes to
+	 * @type String
+	 */
 	node_submit_uri: '/node/write',
+	/**
+	 * URI to get updated nodes from
+	 * @type String
+	 */
 	node_updates_uri: '/node/read',
+	/**
+	 * URI to submit nodes to
+	 * @type String
+	 */
 	way_submit_uri: '/way/write',
+	/**
+	 * URI to get way updates from
+	 * @type String
+	 */
 	way_update_uri: '/way/read',
+	/**
+	 * Width of user-submitted lines
+	 * @type Number
+	 */
 	line_width:15,
+	/**
+	 * Radius of user-submitted nodes
+	 * @type Number
+	 */
 	node_radius: 30,
+	/**
+	 * How often the user's location is updated when following
+	 * @type Number
+	 */
 	follow_interval: 60,
+	/**
+	 * Whether we are following the user, like a creepy stalker
+	 * @type Boolean
+	 */
 	following: false,
+	/**
+	 * The PeriodicalExecuter that is responsible for updating the user's location
+	 * @type PeriodicalExecuter
+	 */
 	following_executer: null,
+	/**
+	 * Whether the user is in the process of drawing a way
+	 * @type Boolean
+	 */
 	drawing_way: false,
+	/**
+	 * Ids of user-submitted nodes that have already been loaded
+	 * @type Number[]
+	 */
 	loaded_node_ids: [],
-	nodes: [],
+	/**
+	 * Loads User-submitted data and sets up the periodical updater to reload
+	 * data. Bound to cartagen:postinit
+	 */
+	init: function() {
+		User.update()
+		new PeriodicalExecuter(User.update, 60)
+	},
+	/**
+	 * Sets the user's location
+	 * @param {Location} loc The Loction object passed by navigator.geolocation
+	 */
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -31,35 +109,51 @@ var User = {
 			User.lon = loc.longitude
 		}
 		// User.calculate_coords()
-		Cartagen.debug('detected location: '+this.lat+","+this.lon)
+		$l('detected location: '+this.lat+","+this.lon)
 	},
+	/**
+	 * Calculates the user's x and y based on the user's lon and lat
+	 */
 	calculate_coords: function() {
 		// this should be based on lat and lon
 	},
-	create_node: function(_x, _y, _draw, id) {
-		if (Object.isUndefined(_x)) _x = User.x
-		if (Object.isUndefined(_y)) _y = User.y
+	/**
+	 * Creates a node
+	 * @param {Number} [x]     X-coordinate of node. Defaults to {@link User.x}
+	 * @param {Number} [y]     Y-coordinate of node. Defaults to {@link User.y}
+	 * @param {Boolean} [draw] Whether this node should be drawn on the canvas. Defaults to false.
+	 * @param {String} [id]    Id of the node. Defaults to a random number below 1000000000
+	 *                         prefixed with "temp_"
+	 */
+	create_node: function(x, y, draw, id) {
+		if (Object.isUndefined(x)) x = User.x
+		if (Object.isUndefined(y)) y = User.y
 		if (Object.isUndefined(id)) id = 'temp_' + (Math.random() * 999999999).floor()
 		var node = new Node()
-		node.x = _x
-		node.y = _y
+		node.x = x
+		node.y = y
 		node.radius = User.node_radius
 		node.id = id
-		node.lon = Projection.x_to_lon(_x)
-		node.lat = Projection.y_to_lat(_y)
+		node.lon = Projection.x_to_lon(x)
+		node.lat = Projection.y_to_lat(y)
 		node.fillStyle = User.color
 		node.strokeStyle = "rgba(0,0,0,0)"
 		
-		if (_draw) {
+		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
-        	draw()
+        	Glop.draw()
 		}
-		User.nodes.push(node)
 		return node
 	},
-	submit_node: function(_x, _y) {
-		var node = User.create_node(_x, _y, true)
+	/**
+	 * Creates and submits a node to the server. The node is set to be drawn in each frame, and
+	 * sets the id of the node to the server-generated id, prefixed with "cartagen_".
+	 * @param {Object} [x] X-coordinate of the node. Defaults to user's x.
+	 * @param {Object} [y] Y-coordinate of the node. Defaults to user's y.
+	 */
+	submit_node: function(x, y) {
+		var node = User.create_node(x, y, true)
 		var params = {
 			color: User.color,
 			lon: node.lon,
@@ -75,30 +169,48 @@ var User = {
 			}
 		})
 	},
+	/**
+	 * Toggles whether the map follows the user.
+	 */
 	toggle_following: function() {
 		if (User.following) {
 			User.following_executer.stop()
 			User.following = false
 		}
 		else {
-			User.following_executer = new PeriodicalExecuter(User.center_map_on_user, User.follow_interval)
+			User.following_executer = new PeriodicalExecuter(User.center_map_on_user, 
+			                                                 User.follow_interval)
 			User.following = true
 			User.center_map_on_user()
 		}
 	},
+	/**
+	 * Updates the user's location with geolocation and moves the map to be centered on the user.
+	 */
 	center_map_on_user: function() {
 		//navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
 		User.set_loc_and_center()
 	},
+	/**
+	 * Sets the user's location and centers the map on the new location
+	 * @param {Location} loc Location object from navigator.geolocation
+	 */
 	set_loc_and_center: function(loc) {
 		//User.set_loc(loc)
 		Map.x = User.x
 		Map.y = User.y
-		draw()
+		Glop.draw()
 	},
-	toggle_way_drawing: function(_x, _y) {
+	/**
+	 * Toggles whether the user is drawing a way. When ending a way, submits the way to the server
+	 * and updates the way's id to the server-generated id, prefixed with "cartagen_". When 
+	 * starting a way, the way is created with a node at the user's current position.
+	 * @param {Number} [x] X-coordinate of the start or end node. Defaults to user's x.
+	 * @param {Number} [y] Y-coordinate of the start or end node. Defaults to user's y.
+	 */
+	toggle_way_drawing: function(x, y) {
 		if (User.drawing_way) {
-			User.add_node(_x, _y)
+			User.add_node(x, y)
 			User.submit_way(User.way)
 
 		}
@@ -106,49 +218,58 @@ var User = {
 			User.way = new Way({
 				id: 'temp_' + (Math.random() * 999999999).floor(),
 				author: User.name,
-				nodes: [User.create_node(_x,_y,true)],
+				nodes: [User.create_node(x,y,true)],
 				tags: new Hash()
 			})
 			User.way.strokeStyle = User.color
 			User.way.lineWidth = User.line_width
 			User.way.age = 40
-			Cartagen.debug([Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1])
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
-			draw()			
+			Glop.draw()			
 		}
 		User.drawing_way = !User.drawing_way
 	},
-	submit_way: function(_way) {
+	/**
+	 * Submits a way to the server and updates its id to the server-generated id, prefixed with
+	 * "cartagen_"
+	 * @param {Way} way Way to submit
+	 */
+	submit_way: function(way) {
  		var params = {
 			color: User.color,
 			author: User.name,
-			bbox: _way.bbox,
-			nodes: _way.nodes.collect(function(node) {
+			bbox: way.bbox,
+			nodes: way.nodes.collect(function(node) {
 				return [node.lat, node.lon]
 			})
 		}
-		Cartagen.debug(_way.nodes)
-		Cartagen.debug(params)
 		new Ajax.Request(User.way_submit_uri, {
 			parameters: {way: Object.toJSON(params)},
 			onSuccess: function(transport) {
-				_way.id = 'cartagen_' + transport.responseJSON.way_id
+				way.id = 'cartagen_' + transport.responseJSON.way_id
 				var id = 0
-				_way.nodes.each(function(nd) {
+				way.nodes.each(function(nd) {
 					id = transport.responseJSON.node_ids.shift()
 					nd.id = 'cartagen_' + transport.responseJSON.node_ids.shift()
 					User.loaded_node_ids.push(id)
 				})
 			}
 		})
-		Cartagen.debug(_way)
 	},
-	add_node: function(_x, _y) {
-		node = User.create_node(_x, _y, true)
+	/**
+	 * Adds a node to the way that is currently being drawn
+	 * @param {Number} [x] X-coordinate of node to add
+	 * @param {Number} [y] Y-coordinate of node to add
+	 */
+	add_node: function(x, y) {
+		node = User.create_node(x, y, true)
 		User.way.nodes.push(node)
 		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
-		draw()
+		Glop.draw()
 	},
+	/**
+	 * Updates the map with other users' nodes and ways
+	 */
 	update: function() {
 		var params = {
 			bbox: Map.bbox.join(',')
@@ -159,14 +280,15 @@ var User = {
 		new Ajax.Request(User.node_updates_uri, {
 			parameters: params,
 			onSuccess: function(transport) {
-				Cartagen.debug(transport)
-				User.update_nodes(transport.responseJSON)
+				User._update_nodes(transport.responseJSON)
 			}
 		})
 		User.last_pos = [Map.x, Map.y]
 		User.last_update = (new Date()).toUTCString()
 	},
-	update_nodes: function(nodes) {
+	// callback for update - takes the server's node data
+	// and creates the nodes, then loads ways, as needed
+	_update_nodes: function(nodes) {
 		var ways = []
 		nodes.each(function(node) {
 			node = node.node
@@ -191,21 +313,20 @@ var User = {
 				}
 			}
 		})
-		Cartagen.debug(ways)
-		draw()
+		Glop.draw()
 		if (ways.length > 0) {
 			new Ajax.Request(User.way_update_uri, {
 				parameters: {
 					ids: ways.uniq().join(',')
 				},
 				onSuccess: function(transport) {
-					Cartagen.debug(transport)
-					User.update_ways(transport.responseJSON)
+					User._update_ways(transport.responseJSON)
 				}
 			})
 		}
 	},
-	update_ways: function(data) {
+	// callback for _update_nodes - updates the map with the server's way data
+	_update_ways: function(data) {
 		nodes = new Hash()
 		
 		data.node.each(function(node) {
@@ -231,7 +352,6 @@ var User = {
 		})
 			
 		data.way.each(function(way) {
-			try {
 			var nds = nodes.get(way.id).sort(function(a, b) {return a.order - b.order})
 			var data = {
 				id: 'cartagen_' + way.id,
@@ -239,14 +359,12 @@ var User = {
 				nodes: nds,
 				tags: new Hash()
 			}
-			Cartagen.debug(way)
-			Cartagen.debug(data)
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
-			Cartagen.debug(w)
-			g_w = w
-			} catch(e) {Cartagen.debug(e)}
 		})
 	}
 }
+
+// bind events
+document.observe('cartagen:postinit', User.init.bindAsEventListener(User))

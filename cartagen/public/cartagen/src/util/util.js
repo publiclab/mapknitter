@@ -1,4 +1,5 @@
 //= require "geometry"
+//= require "debug"
 
 function in_range(v,r1,r2) {
 	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
@@ -36,4 +37,4 @@ function strstr( haystack, needle, bool ) {
 }
 
 // Rotates view slowly for cool demo purposes.
-function demo() { try { Map.rotate += 0.005 } catch(e) {}}
+function demo() { Map.rotate += 0.005 }

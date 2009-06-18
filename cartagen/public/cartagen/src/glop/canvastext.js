@@ -2,6 +2,7 @@
 // This code is released to the public domain by Jim Studt, 2007.
 // He may keep some sort of up to date copy at http://www.federated.com/~jim/canvastext/
 //
+/** @ignore */
 var CanvasTextFunctions = { };
 
 CanvasTextFunctions.letters = {

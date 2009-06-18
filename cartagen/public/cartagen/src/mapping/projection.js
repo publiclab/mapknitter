@@ -1,24 +1,54 @@
 /**
- * @namespace
+ * @namespace Contains functions to convert x/y to lon/lat and vice-versa. Projection can handle
+ *            multiple projection systems, and the methods are abstracted so projections can
+ *            be switched easily. 
  */
 var Projection = {
+	/**
+	 * The projection system to use. "spherical_mercator" and "elliptical_mercator". Elliptical
+	 * mercator does not support y to lat, so it is not recommended.
+	 * @type String
+	 * @default "spherical_mercator"
+	 */
 	current_projection: 'spherical_mercator',
+	/**
+	 * Scale to use when dealing with x/y
+	 * @type Number
+	 * @default 100000
+	 */
 	scale_factor: 100000,
-	set: function(new_projection) {
-		this.current_projection = new_projection
-	},
+	/**
+	 * Converts lon to x using the current projection system
+	 * @param {Number} lon
+	 */
 	lon_to_x: function(lon) { return -1*Projection[Projection.current_projection].lon_to_x(lon) },
+	/**
+	 * Converts x to lo using the current projection system
+	 * @param {Number} x
+	 */
 	x_to_lon: function(x) { return Projection[Projection.current_projection].x_to_lon(x) },
+	/**
+	 * Converts lat to y using the current projection system
+	 * @param {Number} lat
+	 */
 	lat_to_y: function(lat) { return -1*Projection[Projection.current_projection].lat_to_y(lat) },
+	/**
+	 * Converts y to lat using the current projection system
+	 * @param {Number} y
+	 */
 	y_to_lat: function(y) { return -1*Projection[Projection.current_projection].y_to_lat(y) },
-	//required by spherical mercator:
+	/**
+	 * Finds the longitude of the center of the Map
+	 */
 	center_lon: function() { return (Cartagen.lng2+Cartagen.lng1)/2 },
+	/** @ignore */
 	spherical_mercator: {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
 		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
 		lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * Projection.scale_factor * 1.7 },
 		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) }
 	},
+	/** @ignore */
 	elliptical_mercator: {
 		lon_to_x: function(lon) {
 		    var r_major = 6378137.000;
@@ -48,7 +78,7 @@ var Projection = {
 		    return y;
 		},
 		y_to_lat: function(y) {
-			// unknown
+			$D.err('y_to_lat is not supported in elliptical mercator')
 		}
 		
 	}

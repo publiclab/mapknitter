@@ -19,15 +19,6 @@ if (typeof cartagen_base_uri == 'undefined') {
     cartagen_base_uri = 'cartagen'
 }
 
-var scripts = []
-
-if(window.PhoneGap) {
-	scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
-				 cartagen_base_uri + '/lib/phonegap/geolocation.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
-}
-
 
 var Cartagen = {
 	object_count: 0,
@@ -40,7 +31,7 @@ var Cartagen = {
 	zoom_out_limit: 0.02,
 	zoom_in_limit: 0,
 	simplify: 1,
-	live_gss: false, // this is for inline gss editing, generally only on cartagen.org
+	live_gss: false,
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
 	dynamic_layers: [],
@@ -57,50 +48,58 @@ var Cartagen = {
 	bleed_level: 1,
 	initial_bleed_level: 2,
     label_queue: [],
-    debug_mode: typeof console != "undefined",
+    debug: false,
+	scripts: [],
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
 	},
 	initialize: function(configs) {
-		glop_init()
-		Events.init()
-		canvas_init()
-		Cartagen.load_next_script()
-		this.browser_check()
-		Event.observe(window, 'resize', function() {try{draw()}catch(e){}});
-
-		Object.keys(configs).each(function(key,index) {
-			this[key] = Object.values(configs)[index]
-		},this)
-
+		Object.extend(this, configs)
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 
-		Map.initialize()
+		if(window.PhoneGap) {
+			scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
+						    cartagen_base_uri + '/lib/phonegap/geolocation.js',
+						    cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
+						    cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
+		}
+
+		Cartagen.load_next_script()
+
+		this.browser_check()
+
+		document.fire('cartagen:init')
+
+		$('canvas').observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
+		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
+
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
 			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
 				this.static_map_layers.each(function(layer_url) {
-					Cartagen.debug('fetching '+layer_url)
+					$l('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
 				if (this.dynamic_layers.length > 0) {
 					this.dynamic_layers.each(function(layer_url) {
-						Cartagen.debug('fetching '+layer_url)
+						$l('fetching '+layer_url)
 						load_script(layer_url)
 					},this)
 				}
 		}
-		User.update()
-		new PeriodicalExecuter(User.update, 60)
+
+		document.fire('cartagen:postinit')
 	},
-	draw: function() {
+	draw: function(e) {
+		e.no_draw = true
+
 		this.object_count = 0
 		this.way_count = 0
 		this.node_count = 0
-		Map.draw()
+
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
 
 		Style.style_body()
@@ -109,22 +108,21 @@ var Cartagen = {
         if (Viewport.padding > 0) {
             strokeStyle('white')
             lineWidth(2)
-            strokeRect(Viewport.padding, Viewport.padding, width - (Viewport.padding * 2), height - (Viewport.padding * 2))
+            strokeRect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
         }
 
-        $C.translate(width / 2, height / 2)
+        $C.translate(Glop.width / 2, Glop.height / 2)
         $C.rotate(Map.rotate)
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
-        $C.translate(width / -2, height / -2)
-        $C.translate((-1 * Map.x) + (width / 2), (-1 * Map.y) + (height / 2))
+        $C.translate(Glop.width / -2, Glop.height / -2)
+        $C.translate((-1 * Map.x) + (Glop.width / 2), (-1 * Map.y) + (Glop.height / 2))
 
-        Viewport.width = width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.height = height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
         Viewport.width = Math.max(Viewport.width, Viewport.height)
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
 
-		Geohash.draw()
 		Geohash.objects.each(function(object) {
 			object.draw()
 		})
@@ -174,7 +172,7 @@ var Cartagen = {
 	        var n = new Node
 			n.h = 10
 			n.w = 10
-			n.color = randomColor()
+			n.color = Glop.random_color()
 			n.timestamp = node.timestamp
 			n.user = node.user
 			n.id = node.id
@@ -227,17 +225,17 @@ var Cartagen = {
 		Map.last_pos[1] = Map.y
 	},
 	get_static_plot: function(url) {
-		Cartagen.debug('fetching ' + url)
+		$l('fetching ' + url)
 		Cartagen.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
 			onComplete: function(result) {
-				Cartagen.debug('got ' + url)
+				$l('got ' + url)
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				Cartagen.debug(objects.length+" objects")
+				$l(objects.length+" objects")
 				Cartagen.requested_plots--
-				if (Cartagen.requested_plots == 0) last_event = frame
-				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
+				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -252,13 +250,13 @@ var Cartagen = {
 
 		if (!Cartagen.live) {
 			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
-				Cartagen.debug("already loaded plot")
+				$l("already loaded plot")
 			} else {
 				if (typeof localStorage != "undefined") {
 					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
 					if (ls) {
 						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
-						Cartagen.debug("localStorage cached plot")
+						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
 						Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
@@ -269,7 +267,7 @@ var Cartagen = {
 				}
 			}
 			if (_bleed > 0) {
-				Cartagen.debug('bleeding to neighbors with bleed = '+_bleed)
+				$l('bleeding to neighbors with bleed = '+_bleed)
 				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
 				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
 
@@ -297,8 +295,8 @@ var Cartagen = {
 			onComplete: function(result) {
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
-				if (Cartagen.requested_plots == 0) last_event = frame
-				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
+				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -324,79 +322,249 @@ var Cartagen = {
 		Cartagen.live_gss = !Cartagen.live_gss
 	},
 	redirect_to_image: function() {
-		document.location = canvas.canvas.toDataURL();
+		document.location = $C.toDataURL();
 	},
-    debug: function(msg) {
-    	if (Cartagen.debug_mode) {
-        	if (typeof console != 'undefined') console.log(msg)
-        	if (typeof window.debug != 'undefined') window.debug.log(msg)
-    	}
-    },
 	load_next_script: function() {
-		Cartagen.debug("loading: "+scripts[0])
-		if (scripts.length > 0) {
-			Cartagen.load_script(scripts.splice(0,1)[0])
+		$l("loading: "+Cartagen.scripts[0])
+		if (Cartagen.scripts.length > 0) {
+			Cartagen.load_script(Cartagen.scripts.splice(0,1)[0])
 		}
 	},
 	load_script: function(script) {
-		$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+		$$('head')[0].insert(new Element('script', {
+			'src': script,
+			'type': 'text/javascript',
+			'charset': 'utf-8',
+			evalJSON: 'force'
+		}));
 	}
 }
 
+var Geometry = {
+	poly_centroid: function(polygon) {
+		var n = polygon.length
+		var cx = 0, cy = 0
+		var a = Geometry.poly_area(polygon,true)
+		var centroid = []
+		var i,j
+		var factor = 0
+
+		for (i=0;i<n;i++) {
+			j = (i + 1) % n
+			factor = (polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y)
+			cx += (polygon[i].x + polygon[j].x) * factor
+			cy += (polygon[i].y + polygon[j].y) * factor
+		}
+
+		a *= 6
+		factor = 1/a
+		cx *= factor
+		cy *= factor
+		centroid[0] = cx
+		centroid[1] = cy
+		return centroid
+	},
+	calculate_bounding_box: function(points) {
+		var bbox = [0,0,0,0] // top, left, bottom, right
+		points.each(function(node) {
+			if (node.x < bbox[1] || bbox[1] == 0) bbox[1] = node.x
+			if (node.x > bbox[3] || bbox[3] == 0) bbox[3] = node.x
+			if (node.y < bbox[0] || bbox[0] == 0) bbox[0] = node.y
+			if (node.y > bbox[2] || bbox[2] == 0) bbox[2] = node.y
+		})
+		return bbox
+	},
+	overlaps: function(x1,y1,x2,y2,fudge) {
+		if (x2 > x1-fudge && x2 < x1+fudge) {
+			if (y2 > y1-fudge && y2 < y1+fudge) {
+		  		return true
+			} else {
+				return false
+			}
+		} else {
+			return false
+		}
+	},
+	intersect: function(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {
+		return !(box2left > box1right || box2right < box1left || box2top > box1bottom || box2bottom < box1top)
+	},
+	is_point_in_poly: function(poly, _x, _y){
+	    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+	        ((poly[i].y <= _y && _y < poly[j].y) || (poly[j].y <= _y && _y < poly[i].y))
+	        && (_x < (poly[j].x - poly[i].x) * (_y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
+	        && (c = !c);
+	    return c;
+	},
+	poly_area: function(nodes) {
+		var area = 0
+		nodes.each(function(node,index) {
+			if (index < nodes.length-1) next = nodes[index+1]
+			else next = nodes[0]
+			if (index > 0) last = nodes[index-1]
+			else last = nodes[nodes.length-1]
+			area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
+		})
+		if (arguments[1] == true) return area/2
+		else return Math.abs(area/2)
+	}
+}
+$D = {
+	enabled: false,
+	init: function(){
+		if (Cartagen.debug) {
+			$D.enable()
+		}
+	},
+	enable: function() {
+		$D.enabled = true
+		if (console.firebug) {
+			$D.log = console.debug
+			$D.warn = console.warn
+			$D.err = console.error
+			$D.trace = console.trace
+		}
+		else {
+			$D.log = $D._log
+			$D.warn = $D._warn
+			$D.err = $D._err
+			$D.trace = $D._trace
+		}
+		$l = $D.log
+	},
+	disable: function() {
+		$D.enabled = false
+
+		(['log', 'warn', 'err', 'trace']).each(function(m) {
+			$D[m] = Prototype.emptyFunction
+		})
+	},
+
+	log: Prototype.emptyFunction,
+
+	_log: function(msg) {
+		console.log(msg)
+	},
+
+	warn: Prototype.emptyFunction,
+
+	_warn: function(msg) {
+		console.warn(msg)
+	},
+
+	err: Prototype.emptyFunction,
+
+	_err: function(msg) {
+		console.err(msg)
+	},
+
+	trace: Prototype.emptyFunction,
+
+	_trace: function() {
+		console.trace()
+	}
+}
+
+$l = $D.log
+
+document.observe('cartagen:init', $D.init)
+
+function in_range(v,r1,r2) {
+	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
+}
+
+
+Object.value = function(obj) {
+    if(Object.isFunction(obj)) return obj()
+    return obj
+}
+
+Number.prototype.to_precision = function(prec){
+	return (this * (1/prec)).round()/(1/prec)
+}
+
+function strstr( haystack, needle, bool ) {
+    var pos = 0;
+
+    haystack += '';
+    pos = haystack.indexOf( needle );
+    if (pos == -1) {
+        return false;
+    } else{
+        if( bool ){
+            return haystack.substr( 0, pos );
+        } else{
+            return haystack.slice( pos );
+        }
+    }
+}
+
+function demo() { Map.rotate += 0.005 }
 var Geohash = {
+	_dirs: ['top','bottom','left','right'],
 	hash: new Hash(),
 	objects: [],
 	grid: false,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
+	init: function() {
+		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
+	},
 	draw: function() {
 		this.get_objects()
 	},
 	put: function(lat,lon,feature,length) {
 		if (!length) length = this.default_length
-		var key = Geohash.get_key(lat,lon,length)
+		var key = this.get_key(lat,lon,length)
+
 		var merge_hash = this.hash.get(key)
 		if (!merge_hash) {
 			merge_hash = [feature]
 		} else {
 			merge_hash.push(feature)
 		}
+
 		this.hash.set(key,merge_hash)
 	},
 	put_object: function(feature) {
-		Geohash.put(Projection.y_to_lat(feature.y),Projection.x_to_lon(feature.x),feature,Geohash.get_key_length(feature.width,feature.height)-1)
+		this.put(Projection.y_to_lat(feature.y),
+		         Projection.x_to_lon(feature.x),
+		         feature,
+		         this.get_key_length(feature.width,feature.height)-1)
 	},
 	get_key: function(lat,lon,length) {
 		if (!length) length = this.default_length
 		if (length < 1) length = 1
-		return encodeGeoHash(lat,lon).truncate(length,"")
+
+		return encodeGeoHash(lat,lon).truncate(length)
 	},
 	get: function(lat,lon,length) {
 		if (!length) length = this.default_length
+
 		var key = this.get_key(lat,lon,length)
 		return this.hash.get(key)
 	},
 	get_from_key: function(key) {
-		var result = this.hash.get(key)
-		if (result) return result
-		else return []
+		return this.hash.get(key) || []
 	},
 	get_upward: function(key) {
-		if (key.length > this.limit_bottom) key.truncate(this.limit_bottom,'')
+		key.truncate(this.limit_bottom)
+
 		var this_level = this.hash.get(key)
+
 		if (this_level && key.length > 0) {
-			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1,"")))
+			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1)))
 			else return this_level
 		} else {
-			if (key.length > 1) return this.get_upward(key.truncate(key.length-1,""))
+			if (key.length > 1) return this.get_upward(key.truncate(key.length-1))
 			else return []
 		}
 	},
 	get_keys_upward: function(key) {
-		if (key.length > this.limit_bottom) key.truncate(this.limit_bottom,'')
+		key.truncate(this.limit_bottom)
+
 		if (key.length > 0) {
-			Geohash.keys.set(key,true)
-			k = key.truncate(key.length-1,"")
+			this.keys.set(key, true)
+			k = key.truncate(key.length-1)
 			if (key.length > 1 && !Geohash.keys.get(k)) {
 				this.get_keys_upward(k)
 			}
@@ -404,30 +572,36 @@ var Geohash = {
 	},
 	get_neighbors: function(key) {
 		var neighbors = []
-		var dirs = ['top','bottom','left','right']
-		dirs.each(function(dir) {
-			var n_key = calculateAdjacent(key,dir)
+
+		this._dirs.each(function(dir) {
+			var n_key = calculateAdjacent(key, dir)
 			var n_array = this.get_from_key(n_key)
 			if (n_array) neighbors = neighbors.concat(n_array)
-		},this)
+		}, this)
+
 		return neighbors
 	},
 	fill_bbox: function(key,keys) {
-		var dirs = ['top','bottom','left','right']
-		dirs.each(function(dir) {
-			var k = calculateAdjacent(key,dir)
+		this._dirs.each(function(dir) {
+			var k = calculateAdjacent(key, dir)
 			if (!keys.get(k)) {
-				keys.set(k,true)
+				keys.set(k, true)
+
 				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
-				if (in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2])) this.fill_bbox(k,keys)
+				if (in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
+				    in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
+						this.fill_bbox(k,keys)
+
+
 				this.draw_bbox(k)
 			}
-		},this)
+		}, this)
 	},
 	trace: function() {
 		this.hash.keys().each(function(key) {
-			Cartagen.debug(key+': '+this.hash.get(key).length)
-		},this)
+			$l(key+': '+this.hash.get(key).length)
+		}, this)
+
 		return this.hash.size()
 	},
 	bbox: function(geohash) {
@@ -437,70 +611,84 @@ var Geohash = {
 	draw_bbox: function(key) {
 		if (Geohash.grid) {
 			var bbox = this.bbox(key)
-			canvas.lineWidth = 1/Cartagen.zoom_level
+
+			$C.lineWidth(1/Cartagen.zoom_level)
 			$C.stroke_style('rgba(0,0,0,0.5)')
-			var width = (Projection.lon_to_x(bbox[2])-Projection.lon_to_x(bbox[0]))
-			var height = (Projection.lat_to_y(bbox[1])-Projection.lat_to_y(bbox[3]))
-			$C.stroke_rect(-width-Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]),width,height)
-			$C.fill_style('rgba(0,0,0,0.5)')
-			canvas.font = (9/Cartagen.zoom_level)+"pt Helvetica"
-			canvas.fillText(key,-width-Projection.lon_to_x(bbox[0])+3/Cartagen.zoom_level,Projection.lat_to_y(bbox[3])-3/Cartagen.zoom_level)
+
+			var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
+			var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
+
+			$C.stroke_rect(-Glop.width - Projection.lon_to_x(bbox[0]),
+			               Projection.lat_to_y(bbox[3]),
+						   width,
+						   height)
+
+			$C.draw_text('Helvetica',
+			             9 / Cartagen.zoom_level,
+						 'rgba(0,0,0,0.5)',
+						 -Glop.width - Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
+						 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
+						 key)
 		}
 	},
 	get_key_length: function(lat,lon) {
-		if (lon < 0.0000003357) lon_key = 12
-		else if (lon < 0.000001341) lon_key = 11
-		else if (lon < 0.00001072) lon_key = 10
-		else if (lon < 0.00004291) lon_key = 9
-		else if (lon < 0.0003433) lon_key = 8
-		else if (lon < 0.001373) lon_key = 7
-		else if (lon < 0.01098) lon_key = 6
-		else if (lon < 0.04394) lon_key = 5
-		else if (lon < 0.3515) lon_key = 4
-		else if (lon < 1.406) lon_key = 3
-		else if (lon < 11.25) lon_key = 2
-		else if (lon < 45) lon_key = 1
-		else lon_key = 0 // eventually we can map the whole planet at once
+		if      (lon < 0.0000003357) lon_key = 12
+		else if (lon < 0.000001341)  lon_key = 11
+		else if (lon < 0.00001072)   lon_key = 10
+		else if (lon < 0.00004291)   lon_key = 9
+		else if (lon < 0.0003433)    lon_key = 8
+		else if (lon < 0.001373)     lon_key = 7
+		else if (lon < 0.01098)      lon_key = 6
+		else if (lon < 0.04394)      lon_key = 5
+		else if (lon < 0.3515)       lon_key = 4
+		else if (lon < 1.406)        lon_key = 3
+		else if (lon < 11.25)        lon_key = 2
+		else if (lon < 45)           lon_key = 1
+		else                         lon_key = 0 // eventually we can map the whole planet at once
 
-		if (lat < 0.0000001676) lat_key = 12
-		else if (lat < 0.000001341) lat_key = 11
-		else if (lat < 0.000005364) lat_key = 10
-		else if (lat < 0.00004291) lat_key = 9
-		else if (lat < 0.0001716) lat_key = 8
-		else if (lat < 0.001373) lat_key = 7
-		else if (lat < 0.005493) lat_key = 6
-		else if (lat < 0.04394) lat_key = 5
-		else if (lat < 0.1757) lat_key = 4
-		else if (lat < 1.40625) lat_key = 3
-		else if (lat < 5.625) lat_key = 2
-		else if (lat < 45) lat_key = 1
-		else lat_key = 0 // eventually we can map the whole planet at once
+		if      (lat < 0.0000001676) lat_key = 12
+		else if (lat < 0.000001341)  lat_key = 11
+		else if (lat < 0.000005364)  lat_key = 10
+		else if (lat < 0.00004291)   lat_key = 9
+		else if (lat < 0.0001716)    lat_key = 8
+		else if (lat < 0.001373)     lat_key = 7
+		else if (lat < 0.005493)     lat_key = 6
+		else if (lat < 0.04394)      lat_key = 5
+		else if (lat < 0.1757)       lat_key = 4
+		else if (lat < 1.40625)      lat_key = 3
+		else if (lat < 5.625)        lat_key = 2
+		else if (lat < 45)           lat_key = 1
+		else                         lat_key = 0 // eventually we can map the whole planet at once
+
 		return Math.min(lat_key,lon_key)
 	},
 	get_objects: function() {
 		this.objects = []
 
 		this.keys = new Hash
-		this.key_length = Geohash.get_key_length(0.0015/Cartagen.zoom_level,0.0015/Cartagen.zoom_level)
 
-		this.key = Geohash.get_key(Map.lat,Map.lon,this.key_length)
+		this.key_length = this.get_key_length(0.0015/Cartagen.zoom_level, 0.0015/Cartagen.zoom_level)
+
+		this.key = this.get_key(Map.lat, Map.lon, this.key_length)
 
 		var bbox = decodeGeoHash(this.key) //[lon1, lat2, lon2, lat1]
 
-		this.fill_bbox(this.key,this.keys)
+		this.fill_bbox(this.key, this.keys)
 		this.get_keys_upward(this.key)
 
-		this.keys.keys().each(function(key,index) {
+		this.keys.keys().each(function(key, index) {
 			this.get_keys_upward(key)
-		},this)
+		}, this)
 
 		this.keys.keys().each(function(key) {
 			this.objects = this.objects.concat(this.get_from_key(key))
-		},this)
+		}, this)
 
 		return this.objects.reverse()
 	}
 }
+
+document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
 	styles: {
 		body: {
@@ -511,126 +699,145 @@ var Style = {
 		}
 	},
 	style_body: function() {
-		if (Style.styles) {
-			if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
-			if (Style.styles.body.strokeStyle) $C.stroke_style(Style.styles.body.strokeStyle)
-			if (Style.styles.body.lineWidth || Style.styles.body.lineWidth == 0) $C.line_width(Style.styles.body.lineWidth)
-			if (Style.styles.body.pattern && Object.isUndefined(Style.styles.body.pattern_img)) {
-				Style.styles.body.pattern_img = new Image()
-				Style.styles.body.pattern_img.src = Style.styles.body.pattern
-			}
-			if (Style.styles.body.pattern_img) {
-				try {
-					$C.fill_style(canvas.createPattern(Style.styles.body.pattern_img,'repeat'))
-				} catch(e) {}
-			}
-			$C.rect(0,0,width,height)
-			$C.stroke_rect(0,0,width,height)
+		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+		if (Style.styles.body.strokeStyle) $C.stroke_style(Style.styles.body.strokeStyle)
+		if (Style.styles.body.lineWidth || Style.styles.body.lineWidth == 0)
+			$C.line_width(Style.styles.body.lineWidth)
+		if (Style.styles.body.pattern && Object.isUndefined(Style.styles.body.pattern_img)) {
+			Style.styles.body.pattern_img = new Image()
+			Style.styles.body.pattern_img.src = Style.styles.body.pattern
 		}
-		canvas.lineJoin = 'round'
-		canvas.lineCap = 'round'
+		if (Style.styles.body.pattern_img) {
+			$C.fill_pattern(Style.styles.body.pattern_img,'repeat')
+		}
+		$C.rect(0, 0, Glop.width, Glop.height)
+		$C.stroke_rect(0, 0, Glop.width, Glop.height)
+		$C.line_join('round')
+		$C.line_cap('round')
 	},
 	parse_styles: function(feature,selector) {
-		try {
-			if (selector.opacity) feature.opacity = selector.opacity
-			if (selector.fillStyle) feature.fillStyle = selector.fillStyle
-			if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
-			if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
-				feature.strokeStyle = selector.$C.stroke_style()
-			} else {
-				feature.strokeStyle = selector.strokeStyle
-			}
-			if (selector.pattern) {
-				feature.pattern_img = new Image()
-				feature.pattern_img.src = selector.pattern
-			}
-			if (selector.radius) feature.radius = selector.radius
-			if (selector['hover']) feature.hover = selector['hover']
-			if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
-
-			if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle) feature.fillStyle = Style.styles[feature.name].fillStyle
-			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle) feature.strokeStyle = Style.styles[feature.name].strokeStyle
-
-			if (selector.fontColor) feature.label.fontColor = selector.fontColor
-			if (selector.fontSize) feature.label.fontSize = selector.fontSize
-			if (selector.fontScale) feature.label.fontScale = selector.fontScale
-			if (selector.fontRotation) feature.label.fontRotation = selector.fontRotation
-			if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
-			if (selector.text) feature.label.text = selector.text
-
-			feature.tags.each(function(tag) {
-				if (Style.styles[tag.key]) {
-					if (Style.styles[tag.key].opacity) feature.opacity = Style.styles[tag.key].opacity
-					if (Style.styles[tag.key].fillStyle) feature.fillStyle = Style.styles[tag.key].fillStyle
-					if (Style.styles[tag.key].strokeStyle) feature.strokeStyle = Style.styles[tag.key].strokeStyle
-					if (Style.styles[tag.key].lineWidth) feature.lineWidth = Style.styles[tag.key].lineWidth
-					if (Style.styles[tag.key].fontColor) feature.label.fontColor = Style.styles[tag.key].fontColor
-					if (Style.styles[tag.key].fontSize) feature.label.fontSize = Style.styles[tag.key].fontSize
-					if (Style.styles[tag.key].fontScale) feature.label.fontScale = Style.styles[tag.key].fontScale
-					if (Style.styles[tag.key].fontRotation) feature.label.fontRotation = Style.styles[tag.key].fontRotation
-					if (Style.styles[tag.key].fontBackground) feature.label.fontBackground = Style.styles[tag.key].fontBackground
-					if (Style.styles[tag.key].text) {
-						if (Object.isFunction(Style.styles[tag.key].text)) feature.label.text = Style.styles[tag.key].text.apply(feature)
-						else feature.label.text = Style.styles[tag.key].text
-					}
-					if (Style.styles[tag.key].pattern) {
-						feature.pattern_img = new Image()
-						feature.pattern_img.src = Style.styles[tag.key].pattern
-					}
-				}
-				if (Style.styles[tag.value]) {
-					if (Style.styles[tag.value].opacity) feature.opacity = Style.styles[tag.value].opacity
-					if (Style.styles[tag.value].fillStyle) feature.fillStyle = Style.styles[tag.value].fillStyle
-					if (Style.styles[tag.value].strokeStyle) feature.strokeStyle = Style.styles[tag.value].strokeStyle
-					if (Style.styles[tag.value].lineWidth) feature.label.lineWidth = Style.styles[tag.value].lineWidth
-					if (Style.styles[tag.value].fontColor) feature.label.fontColor = Style.styles[tag.value].fontColor
-					if (Style.styles[tag.value].fontSize) feature.label.fontSize = Style.styles[tag.value].fontSize
-					if (Style.styles[tag.value].fontScale) feature.label.fontScale = Style.styles[tag.value].fontScale
-					if (Style.styles[tag.value].fontRotation) feature.label.fontRotation = Style.styles[tag.value].fontRotation
-					if (Style.styles[tag.value].fontBackground) feature.label.fontBackground = Style.styles[tag.value].fontBackground
-					if (Style.styles[tag.value].text) {
-						if (Object.isFunction(Style.styles[tag.value].text)) feature.label.text = Style.styles[tag.value].text.apply(feature)
-						else feature.label.text = Style.styles[tag.value].text
-					}
-					if (Style.styles[tag.value].pattern) {
-						feature.pattern_img = new Image()
-						feature.pattern_img.src = Style.styles[tag.value].pattern
-					}
-				}
-
-				if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
-					feature.hover = Style.styles[tag.key]['hover']
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
-					feature.hover = Style.styles[tag.value]['hover']
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
-					feature.mouseDown = Style.styles[tag.key]['mouseDown']
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
-					feature.mouseDown = Style.styles[tag.value]['mouseDown']
-				}
-				if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
-
-					$H(Style.styles[tag.key]['refresh']).each(function(pair) {
-						Style.create_refresher(feature, pair.key, pair.value)
-					})
-				}
-				if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
-					if(!feature.style_generators) feature.style_generators = {}
-					$H(Style.styles[tag.value]['refresh']).each(function(pair) {
-						Style.create_refresher(feature, pair.key, pair.value)
-					})
-				}
-			})
-		} catch(e) {
-			Cartagen.debug("There was an error in your stylesheet. Please check http://wiki.cartagen.org for the GSS spec. Error: "+trace(e))
+		if (selector.opacity) feature.opacity = selector.opacity
+		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
+		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
+		if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
+			feature.strokeStyle = selector.$C.stroke_style()
+		} else {
+			feature.strokeStyle = selector.strokeStyle
 		}
+
+		if (selector.pattern) {
+			feature.pattern_img = new Image()
+			feature.pattern_img.src = selector.pattern
+		}
+
+		if (selector.radius) feature.radius = selector.radius
+
+		if (selector['hover']) feature.hover = selector['hover']
+		if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
+
+		if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle)
+			feature.fillStyle = Style.styles[feature.name].fillStyle
+		if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle)
+			feature.strokeStyle = Style.styles[feature.name].strokeStyle
+
+		if (selector.fontColor) feature.label.fontColor = selector.fontColor
+		if (selector.fontSize) feature.label.fontSize = selector.fontSize
+		if (selector.fontScale) feature.label.fontScale = selector.fontScale
+		if (selector.fontRotation) feature.label.fontRotation = selector.fontRotation
+		if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
+		if (selector.text) feature.label.text = selector.text
+
+		feature.tags.each(function(tag) {
+			if (Style.styles[tag.key]) {
+				if (Style.styles[tag.key].opacity)
+					feature.opacity = Style.styles[tag.key].opacity
+				if (Style.styles[tag.key].fillStyle)
+					feature.fillStyle = Style.styles[tag.key].fillStyle
+				if (Style.styles[tag.key].strokeStyle)
+					feature.strokeStyle = Style.styles[tag.key].strokeStyle
+				if (Style.styles[tag.key].lineWidth)
+					feature.lineWidth = Style.styles[tag.key].lineWidth
+				if (Style.styles[tag.key].fontColor)
+					feature.label.fontColor = Style.styles[tag.key].fontColor
+				if (Style.styles[tag.key].fontSize)
+					feature.label.fontSize = Style.styles[tag.key].fontSize
+				if (Style.styles[tag.key].fontScale)
+					feature.label.fontScale = Style.styles[tag.key].fontScale
+				if (Style.styles[tag.key].fontRotation)
+					feature.label.fontRotation = Style.styles[tag.key].fontRotation
+				if (Style.styles[tag.key].fontBackground)
+					feature.label.fontBackground = Style.styles[tag.key].fontBackground
+				if (Style.styles[tag.key].text) {
+					if (Object.isFunction(Style.styles[tag.key].text))
+						feature.label.text = Style.styles[tag.key].text.apply(feature)
+					else feature.label.text = Style.styles[tag.key].text
+				}
+				if (Style.styles[tag.key].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = Style.styles[tag.key].pattern
+				}
+			}
+			if (Style.styles[tag.value]) {
+				if (Style.styles[tag.value].opacity)
+					feature.opacity = Style.styles[tag.value].opacity
+				if (Style.styles[tag.value].fillStyle)
+					feature.fillStyle = Style.styles[tag.value].fillStyle
+				if (Style.styles[tag.value].strokeStyle)
+					feature.strokeStyle = Style.styles[tag.value].strokeStyle
+				if (Style.styles[tag.value].lineWidth)
+					feature.label.lineWidth = Style.styles[tag.value].lineWidth
+				if (Style.styles[tag.value].fontColor)
+					feature.label.fontColor = Style.styles[tag.value].fontColor
+				if (Style.styles[tag.value].fontSize)
+					feature.label.fontSize = Style.styles[tag.value].fontSize
+				if (Style.styles[tag.value].fontScale)
+					feature.label.fontScale = Style.styles[tag.value].fontScale
+				if (Style.styles[tag.value].fontRotation)
+					feature.label.fontRotation = Style.styles[tag.value].fontRotation
+				if (Style.styles[tag.value].fontBackground)
+					feature.label.fontBackground = Style.styles[tag.value].fontBackground
+				if (Style.styles[tag.value].text) {
+					if (Object.isFunction(Style.styles[tag.value].text))
+						feature.label.text = Style.styles[tag.value].text.apply(feature)
+					else feature.label.text = Style.styles[tag.value].text
+				}
+				if (Style.styles[tag.value].pattern) {
+					feature.pattern_img = new Image()
+					feature.pattern_img.src = Style.styles[tag.value].pattern
+				}
+			}
+
+			if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
+				feature.hover = Style.styles[tag.key]['hover']
+			}
+			if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
+				feature.hover = Style.styles[tag.value]['hover']
+			}
+			if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
+				feature.mouseDown = Style.styles[tag.key]['mouseDown']
+			}
+			if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
+				feature.mouseDown = Style.styles[tag.value]['mouseDown']
+			}
+			if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
+
+				$H(Style.styles[tag.key]['refresh']).each(function(pair) {
+					Style.create_refresher(feature, pair.key, pair.value)
+				})
+			}
+			if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
+				if(!feature.style_generators) feature.style_generators = {}
+				$H(Style.styles[tag.value]['refresh']).each(function(pair) {
+					Style.create_refresher(feature, pair.key, pair.value)
+				})
+			}
+		})
 	},
 	create_refresher: function(feature, property, interval) {
 		if (Object.isFunction(feature[property])) { //sanity check
-            if (['fontBackground', 'fontColor', 'fontScale', 'fontSize', 'fontRotation', 'text'].include(property)) {
-                feature = feature.label
+            if (['fontBackground', 'fontColor', 'fontScale',
+			     'fontSize', 'fontRotation', 'text'].include(property)) {
+                	feature = feature.label
             }
 			if(!feature.style_generators) feature.style_generators = {}
 			if(!feature.style_generators.executers) feature.style_generators.executers = {}
@@ -645,9 +852,9 @@ var Style = {
 		feature[property] = feature.style_generators[property]()
 	},
 	apply_style: function(feature) {
-		canvas.globalOpacity = 1
+		$C.opacity(1)
 		if (feature.opacity) {
-			canvas.globalOpacity = Object.value(feature.opacity)
+			$C.opacity(Object.value(feature.opacity))
 		}
 		if (feature.strokeStyle) {
 			 $C.stroke_style(Object.value(feature.strokeStyle))
@@ -656,29 +863,33 @@ var Style = {
 			$C.fill_style(Object.value(feature.fillStyle))
 		}
 		if (feature.pattern_img) {
-			$C.fill_style(canvas.createPattern(feature.pattern_img,'repeat'))
+			$C.fill_pattern(feature.pattern_img,'repeat')
 		}
 		if (feature.lineWidth) {
 			$C.line_width(Object.value(feature.lineWidth))
 		}
 
 		if (feature instanceof Way) {
-			if (feature.hover && feature.closed_poly && Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
-				Style.apply_style(feature.hover)
-				if (!Object.isUndefined(feature.hover.action)) feature.hover.action()
+			if (feature.hover && feature.closed_poly &&
+			    Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
+					Style.apply_style(feature.hover)
+					if (!Object.isUndefined(feature.hover.action)) feature.hover.action()
 			}
-			if (feature.mouseDown && mouseDown == true && feature.closed_poly && Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
-				Style.apply_style(feature.mouseDown)
-				if (!Object.isUndefined(feature.mouseDown.action)) feature.mouseDown.action()
+			if (feature.mouseDown && Mouse.down == true && feature.closed_poly &&
+			    Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
+					Style.apply_style(feature.mouseDown)
+					if (!Object.isUndefined(feature.mouseDown.action)) feature.mouseDown.action()
 			}
 		} else if (feature instanceof Node) {
-			if (feature.hover && Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
-				Style.apply_style(feature.hover)
-				if (feature.hover.action) feature.hover.action()
+			if (feature.hover &&
+			    Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
+					Style.apply_style(feature.hover)
+					if (feature.hover.action) feature.hover.action()
 			}
-			if (feature.mouseDown && mouseDown == true && Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
-				Style.apply_style(feature.mouseDown)
-				if (feature.mouseDown.action) feature.mouseDown.action()
+			if (feature.mouseDown && Mouse.down == true &&
+			    Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
+					Style.apply_style(feature.mouseDown)
+					if (feature.mouseDown.action) feature.mouseDown.action()
 			}
 		}
 	},
@@ -688,9 +899,6 @@ var Style = {
 			else $C.stroke_style(feature.fontColor)
 		}
 	},
-	add_style: function(tag,style,value) {
-		eval("styles."+tag+" = {"+style+": '"+value+"'}")
-	},
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url[0,4] == "http") {
 			stylesheet_url = "/map/style?url="+stylesheet_url
@@ -698,12 +906,10 @@ var Style = {
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
 			onComplete: function(result) {
-				Cartagen.debug('applying '+stylesheet_url)
+				$l('applying '+stylesheet_url)
 				Style.styles = ("{"+result.responseText+"}").evalJSON()
-				Style.stylesheet_source = "{"+result.responseText+"}"
-				Style.apply_gss(Style.stylesheet_source)
 				if($('gss_textarea')) {
-					$('gss_textarea').value = Style.stylesheet_source
+					$('gss_textarea').value = result.responseText
 				}
 			}
 		})
@@ -737,13 +943,13 @@ var Feature = Class.create(
 	},
 	draw: function() {
 		Cartagen.object_count++
-		canvas.save()
+		$C.save()
 		Style.apply_style(this)
 		this.shape()
-		canvas.restore()
+		$C.restore()
 	},
 	shape: function() {
-		Cartagen.debug('WARNING: Feature#shape should be overriden')
+		$D.warn('Feature#shape should be overriden')
 	}
 })
 
@@ -759,8 +965,8 @@ var Node = Class.create(Feature,
 	},
 	shape: function() {
 		$C.begin_path()
-		$C.translate(this.x,this.y-this.radius)
-		$C.arc(0,this.radius,this.radius,0,Math.PI*2,true)
+		$C.translate(this.x, this.y-this.radius)
+		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
 		$C.fill()
 		$C.stroke()
 	}
@@ -769,6 +975,7 @@ var Way = Class.create(Feature,
 {
     initialize: function($super, data) {
 		$super()
+
 		this.age = 0
 		this.highlight = false
 		this.nodes = []
@@ -777,8 +984,12 @@ var Way = Class.create(Feature,
 
 		Object.extend(this, data)
 
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && this.nodes[0].y == this.nodes[this.nodes.length-1].y) this.closed_poly = true
+		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x &&
+			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
+				this.closed_poly = true
+
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
 			this.x = centroid[0]*2
@@ -787,17 +998,20 @@ var Way = Class.create(Feature,
 			this.x = (this.middle_segment()[0].x+this.middle_segment()[1].x)/2
 			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
 		}
+
 		this.area = Geometry.poly_area(this.nodes)
 		this.label = new Label(this)
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
-			this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
-			this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
+
+		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
+		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
+
 		Style.parse_styles(this,Style.styles.way)
 		objects.push(this) // made obsolete by Geohash
 		Geohash.put_object(this)
 		Cartagen.ways.set(this.id,this)
     },
-	middle_segment: function() {
+	 middle_segment: function() {
         if (this.nodes.length == 1) {
             return [this.nodes[0], this.nodes[0]]
         }
@@ -805,7 +1019,8 @@ var Way = Class.create(Feature,
             return [this.nodes[0], this.nodes[1]]
         }
         else {
-            return [this.nodes[Math.floor(this.nodes.length/2)],this.nodes[Math.floor(this.nodes.length/2)+1]]
+            return [this.nodes[Math.floor(this.nodes.length/2)],
+			        this.nodes[Math.floor(this.nodes.length/2)+1]]
         }
 	},
 	middle_segment_angle: function() {
@@ -814,7 +1029,7 @@ var Way = Class.create(Feature,
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
             return (Math.tan(_y/_x)/1.7)
-        } else return 90
+        } else return 0
 	},
 	draw: function($super) {
 		Cartagen.way_count++
@@ -828,9 +1043,9 @@ var Way = Class.create(Feature,
 		}
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if (this.age < 20) {
-			canvas.globalAlpha = this.opacity*(this.age/20)
+			$C.opacity(this.opacity*(this.age/20))
 		} else {
-			canvas.globalAlpha = this.opacity
+			$C.opacity(this.opacity)
 		}
 
 		$C.begin_path()
@@ -853,80 +1068,139 @@ var Way = Class.create(Feature,
 		}
 	}
 })
-
-var Label = Class.create({
-    fontFamily: 'Lucida Grande',
-    fontSize: 11,
-    fontBackground: null,
-    text: null,
-    fontScale: false,
-    padding: 6,
-    fontColor: '#eee',
-	fontRotation: 0,
-    initialize: function(_way) {
-        this.way = _way
+var Label = Class.create(
+{
+    initialize: function(owner) {
+		this.fontFamily = 'Lucida Grande',
+	    this.fontSize = 11,
+	    this.fontBackground = null,
+	    this.text = null,
+	    this.fontScale = false,
+	    this.padding = 6,
+	    this.fontColor = '#eee',
+		this.fontRotation = 0,
+        this.owner = owner
     },
-    draw: function(_x, _y) {
+    draw: function(x, y) {
         if (this.text) {
-			try {
-            canvas.save()
+            $C.save()
+
             Style.apply_font_style(this)
 
-			try {
-				if (!this.way.closed_poly) {
-					$C.translate(_x,_y)
-					$C.rotate(this.way.middle_segment_angle())
-					$C.translate(-_x,-_y)
-				}
-			} catch(e) {console.log(e)}
+			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
+				$C.translate(x, y)
+				$C.rotate(this.owner.middle_segment_angle())
+				$C.translate(-x, -y)
+			}
+
 			if (this.fontRotation) {
-				$C.translate(_x,_y)
+				$C.translate(x, y)
 				if (this.fontRotation == "fixed") {
 					$C.rotate(-Map.rotate)
 				} else if (Object.isNumber(this.fontRotation)) {
 					$C.rotate(this.fontRotation)
 				}
-				$C.translate(-_x,-_y)
-			}
-			if (this.fontScale == "fixed") {
-				var _height = Object.value(this.fontSize)
-				var _padding = Object.value(this.padding)
-			} else {
-				var _height = Object.value(this.fontSize)/Cartagen.zoom_level
-				var _padding = Object.value(this.padding)/Cartagen.zoom_level
+				$C.translate(-x, -y)
 			}
 
-			if (canvas.fillText) { // || Prototype.Browser.Gecko) {
-				canvas.font = _height+"pt "+this.fontFamily
-				var _width = canvas.measureText(Object.value(this.text)).width
-				if (this.fontBackground) {
-					$C.fill_style(Object.value(this.fontBackground))
-					$C.rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
-				}
-				$C.fill_style(Object.value(this.fontColor))
-	            canvas.fillText(Object.value(this.text),_x-(_width/2),_y+(_height/2))
+			if (this.fontScale == "fixed") {
+				var height = Object.value(this.fontSize)
+				var padding = Object.value(this.padding)
 			} else {
-				var _width = canvas.measureCanvasText(Object.value(this.fontFamily),_height,this.text)
-				if (this.fontBackground) {
-					$C.fill_style(Object.value(this.fontBackground))
-					$C.rect(_x-((_width+_padding)/2),_y-((_height/2+(_padding/2))),_width+_padding,_height+_padding)
-				}
-				$C.draw_text_center(Object.value(this.fontFamily),_height,_x,_y+(_height/2),Object.value(this.text))
+				var height = Object.value(this.fontSize) / Cartagen.zoom_level
+				var padding = Object.value(this.padding) / Cartagen.zoom_level
 			}
-			canvas.restore()
-			} catch (e) {console.log(e)}
+
+
+			var width = $C.measure_text(Object.value(this.fontFamily),
+			                            height,
+			                            Object.value(this.text))
+
+			if (this.fontBackground) {
+				$C.fill_style(Object.value(this.fontBackground))
+				$C.rect(x - (width + padding)/2,
+						y - (height/2 + padding/2),
+						width + padding,
+				        height + padding)
+			}
+
+			$C.draw_text(Object.value(this.fontFamily),
+			             height,
+						 Object.value(this.fontColor),
+			             x - width/2,
+						 y + height/2,
+						 Object.value(this.text))
+
+			$C.restore()
         }
     }
-
-
 })
-var Events = {
+var Glop = {
+	frame: 0,
+	width: 0,
+	height: 0,
 	init: function() {
-		var canvas_el = $('canvas')
-		canvas_el.observe('mousemove', Events.mousemove)
-		canvas_el.observe('mousedown', Events.mousedown)
-		canvas_el.observe('mouseup', Events.mouseup)
-		canvas_el.observe('dblclick', Events.doubleclick)
+		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
+	},
+	draw: function() {
+		$C.clear()
+
+		if (Cartagen.fullscreen) {
+			Glop.width = document.viewport.getWidth()
+			Glop.height = document.viewport.getHeight()
+			$('canvas').width = Glop.width
+			$('canvas').height = Glop.height
+			$$('body')[0].style.width = Glop.width+"px"
+		}
+		else {
+			Glop.width = $('canvas').getWidth()
+			Glop.height = $('canvas').getHeight()
+			$('canvas').width = Glop.width
+			$('canvas').height = Glop.height
+		}
+
+		Glop.frame += 1
+
+		Events.drag()
+
+		$('canvas').fire('glop:predraw')
+
+		draw_event = $('canvas').fire('glop:draw')
+
+		if (!draw_event.no_draw) {
+			objects.each(function(object) {
+				object.draw()
+			})
+		}
+
+		$('canvas').fire('glop:postdraw')
+	},
+	random_color: function() {
+		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
+	},
+	draw_powersave: function() {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
+			Glop.draw()
+		} else {
+			if (Event.last_event > Glop.frame-25) {
+				Glop.draw()
+			} else {
+			}
+		}
+	}
+}
+
+document.observe('cartagen:init', Glop.init.bindAsEventListener(Glop))
+
+var Events = {
+	last_event: 0,
+
+	init: function() {
+		var canvas = $('canvas')
+		canvas.observe('mousemove', Events.mousemove)
+		canvas.observe('mousedown', Events.mousedown)
+		canvas.observe('mouseup', Events.mouseup)
+		canvas.observe('dblclick', Events.doubleclick)
 
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
 		window.onmousewheel = document.onmousewheel = Events.wheel
@@ -934,36 +1208,36 @@ var Events = {
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
 
-		canvas_el.ontouchstart = Events.ontouchstart
-		canvas_el.ontouchmove = Events.ontouchmove
-		canvas_el.ontouchend = Events.ontouchend
-		canvas_el.ongesturestart = Events.ongesturestart
-		canvas_el.ongesturechange = Events.ongesturechange
-		canvas_el.ongestureend = Events.ongestureend
+		canvas.ontouchstart = Events.ontouchstart
+		canvas.ontouchmove = Events.ontouchmove
+		canvas.ontouchend = Events.ontouchend
+		canvas.ongesturestart = Events.ongesturestart
+		canvas.ongesturechange = Events.ongesturechange
+		canvas.ongestureend = Events.ongestureend
+
+		Event.observe(window, 'resize', Events.resize);
+
 	},
 	mousemove: function(event) {
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
-		draw()
+		Glop.draw()
 	},
 	mousedown: function(event) {
-        mouseDown = true
-        clickFrame = frame
+        Mouse.down = true
+        Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
         Mouse.click_y = Mouse.y
         Map.x_old = Map.x
         Map.y_old = Map.y
         Map.rotate_old = Map.rotate
-        if (!dragging) {
-                globalDragging = true
-        }
+		Mouse.dragging = true
 	},
 	mouseup: function() {
-        mouseUp = true
-        mouseDown = false
-        releaseFrame = frame
-        globalDragging = false
-        dragging = false
+        Mouse.up = true
+        Mouse.down = false
+        Mouse.release_frame = Glop.frame
+        Mouse.dragging = false
         User.update()
 	},
 	wheel: function(event){
@@ -983,7 +1257,7 @@ var Events = {
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
-		draw()
+		Glop.draw()
 	},
 	keypress: function(e) {
 		var code;
@@ -991,7 +1265,7 @@ var Events = {
 		if (e.keyCode) code = e.keyCode;
 		else if (e.which) code = e.which;
 		var character = String.fromCharCode(code);
-		if (key_input) {
+		if (Keyboard.key_input) {
 			switch(character) {
 				case "s": zoom_in(); break
 				case "w": zoom_out(); break
@@ -1004,18 +1278,17 @@ var Events = {
 			}
 		} else {
 			switch(character){
-				case "r": keys.set("r",true); break
-				case "z": keys.set("z",true); break
+				case "r": Keyboard.keys.set("r",true); break
+				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
 			}
 		}
-		draw()
+		Glop.draw()
 	},
 	keyup: function() {
-		keys.set("r",false)
-		keys.set("z",false)
-		single_key = null
+		Keyboard.keys.set("r",false)
+		Keyboard.keys.set("z",false)
 	},
 	ontouchstart: function(e){
 		e.preventDefault();
@@ -1023,16 +1296,14 @@ var Events = {
 	 		var touch = e.touches[0]; // Get the information for finger #1
 		    var node = touch.target; // Find the node the drag started from
 
-			mouseDown = true
-			clickFrame = frame
+			Mouse.down = true
+			Mouse.click_frame = Glop.frame
 			Mouse.click_x = touch.screenX
 			Mouse.click_y = touch.screenY
 			Map.x_old = Map.x
 			Map.y_old = Map.y
-			if (!dragging) {
-				globalDragging = true
-			}
-			draw()
+			Mouse.dragging = true
+			Glop.draw()
 		  }
 	},
 	ontouchmove: function(e) {
@@ -1041,28 +1312,27 @@ var Events = {
 			var touch = e.touches[0]; // Get the information for finger #1
 			var node = touch.target; // Find the node the drag started from
 
-			drag_x = (touch.screenX - Mouse.click_x)
-			drag_y = (touch.screenY - Mouse.click_y)
+			Mouse.drag_x = (touch.screenX - Mouse.click_x)
+			Mouse.drag_y = (touch.screenY - Mouse.click_y)
 
-			var d_x = -Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
-			var d_y = -Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+			var d_x = -Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+			var d_y = -Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 
 			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 
-			draw()
+			Glop.draw()
 		}
 	},
 	ontouchend: function(e) {
 		if(e.touches.length == 1) {
-			mouseUp = true
-			mouseDown = false
-			releaseFrame = frame
-			globalDragging = false
-			dragging = false
+			Mouse.up = true
+			Mouse.down = false
+			Mouse.release_frame = Glop.frame
+			Mouse.dragging = false
 		}
 		User.update()
-		draw()
+		Glop.draw()
 	},
 	ongesturestart: function(e) {
 		zoom_level_old = Cartagen.zoom_level
@@ -1072,36 +1342,29 @@ var Events = {
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
-		draw()
+		Glop.draw()
 	},
 	gestureend: function(e){
 		Map.rotate_old = null
 		User.update()
 	},
 	doubleclick: function(event) {
-		on_object = false
-		objects.each(function(object) {
-			if (!on_object && Geometry.overlaps(object.x,object.y,Mouse.x,Mouse.y,0)) {
-				object.doubleclick()
-				on_object = true
-			}
-		})
 	},
 	drag: function() {
-		if (globalDragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
-			drag_x = (Mouse.x - Mouse.click_x)
-			drag_y = (Mouse.y - Mouse.click_y)
-			if (keys.get("r")) { // rotating
-				Map.rotate = Map.rotate_old + (-1*drag_y/height)
-			} else if (keys.get("z")) {
+		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
+			Mouse.drag_x = (Mouse.x - Mouse.click_x)
+			Mouse.drag_y = (Mouse.y - Mouse.click_y)
+			if (Keyboard.keys.get("r")) { // rotating
+				Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
+			} else if (Keyboard.keys.get("z")) {
 				if (Cartagen.zoom_level > 0) {
-					Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (drag_y/height))
+					Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (Mouse.drag_y/Glop.height))
 				} else {
 					Cartagen.zoom_level = 0
 				}
 			} else {
-				var d_x = Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
-				var d_y = Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+				var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+				var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 
 				Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 				Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
@@ -1109,89 +1372,132 @@ var Events = {
 		}
 	},
 	click_length: function() {
-		return releaseFrame-clickFrame
+		return Mouse.release_frame-Mouse.click_frame
+	},
+	resize: function() {
+		Glop.draw()
 	}
 }
+document.observe('cartagen:init', Events.init)
 
 
-function canvas_init(){
-	$C = {
-		clear: function(){
-			canvas.clearRect(0, 0, width, height)
-		},
 
-		fill_style: function(color) {
-			canvas.fillStyle = color
-		},
+$C = {
+	init: function() {
+		this.canvas =  $('canvas').getContext('2d')
+		CanvasTextFunctions.enable(this.canvas)
+	},
+	clear: function(){
+		$C.canvas.clearRect(0, 0, Glop.width, Glop.height)
+	},
 
-		translate: function(x,y) {
-			canvas.translate(x,y)
-		},
+	fill_style: function(color) {
+		$C.canvas.fillStyle = color
+	},
+	fill_pattern: function(image, repeat) {
+		$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+	},
+	translate: function(x,y) {
+		$C.canvas.translate(x,y)
+	},
 
-		scale: function(x,y) {
-			canvas.scale(x,y)
-		},
+	scale: function(x,y) {
+		$C.canvas.scale(x,y)
+	},
 
-		rotate: function(rotation){
-			canvas.rotate(rotation)
-		},
+	rotate: function(rotation){
+		$C.canvas.rotate(rotation)
+	},
 
-		rect: function(x, y, w, h){
-			canvas.fillRect(x, y, w, h)
-		},
+	rect: function(x, y, w, h){
+		$C.canvas.fillRect(x, y, w, h)
+	},
 
-		stroke_rect: function(x, y, w, h){
-			canvas.strokeRect(x, y, w, h)
-		},
+	stroke_rect: function(x, y, w, h){
+		$C.canvas.strokeRect(x, y, w, h)
+	},
 
-		stroke_style: function(color) {
-			canvas.strokeStyle = color
-		},
+	stroke_style: function(color) {
+		$C.canvas.strokeStyle = color
+	},
 
-		line_width: function(lineWidth){
-			if (parseInt(lineWidth) == 0)
-				canvas.lineWidth = 0.0000000001
-			else
-				canvas.lineWidth = lineWidth
-		},
+	line_join: function(style) {
+		$C.canvas.lineJoin = style
+	},
 
-		begin_path: function(){
-			canvas.beginPath()
-		},
+	line_cap: function(style) {
+		$C.canvas.lineCap = style
+	},
 
-		move_to: function(x, y){
-			canvas.moveTo(x, y)
-		},
+	line_width: function(lineWidth){
+		if (parseInt(lineWidth) == 0)
+			$C.canvas.lineWidth = 0.0000000001
+		else
+			$C.canvas.lineWidth = lineWidth
+	},
 
-		line_to: function(x, y){
-			canvas.lineTo(x, y)
-		},
+	begin_path: function(){
+		$C.canvas.beginPath()
+	},
 
-		quadratic_curve_to: function(cp_x, cp_y, x, y){
-			canvas.quadraticCurveTo(cp_x, cp_y, x, y)
-		},
+	move_to: function(x, y){
+		$C.canvas.moveTo(x, y)
+	},
 
-		stroke: function(){
-			canvas.stroke()
-		},
+	line_to: function(x, y){
+		$C.canvas.lineTo(x, y)
+	},
 
-		fill: function(){
-			canvas.fill()
-		},
+	quadratic_curve_to: function(cp_x, cp_y, x, y){
+		$C.canvas.quadraticCurveTo(cp_x, cp_y, x, y)
+	},
 
-		arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
-			canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
-		},
+	stroke: function(){
+		$C.canvas.stroke()
+	},
 
-		draw_text: function(font, size, x, y, text){
-			canvas.drawText(font, size, x, y, text)
-		},
+	fill: function(){
+		$C.canvas.fill()
+	},
 
-		draw_text_center: function(font, size, x, y, text){
-			canvas.drawTextCenter(font, size, x, y, text)
+	arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
+		$C.canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
+	},
+	draw_text: function(font, size, color, x, y, text){
+		if ($C.canvas.fillText) {
+			$C.canvas.fillStyle = color
+			$C.canvas.font = size + 'pt ' + font
+			$C.canvas.fillText(text, x, y)
 		}
+		else {
+			$C.canvas.strokeStyle = color
+			$C.canvas.drawText(font, size, x, y, text)
+		}
+	},
+	measure_text: function(font, size, text) {
+		if ($C.canvas.fillText) {
+			$C.canvas.font = size + 'pt ' + font
+			return $C.canvas.measureText(text)
+		}
+		else {
+			return $C.canvas.measureCanvasText(font, size, text)
+		}
+	},
+	opacity: function(alpha) {
+		$C.canvas.alpha = alpha
+	},
+	save: function() {
+		$C.canvas.save()
+	},
+	restore: function() {
+		$C.canvas.restore()
+	},
+	to_data_url: function() {
+		return $C.canvas.canvas.toDataUrl()
 	}
 }
+
+document.observe('cartagen:init', $C.init.bindAsEventListener($C))
 var CanvasTextFunctions = { };
 
 CanvasTextFunctions.letters = {
@@ -1373,136 +1679,25 @@ CanvasTextFunctions.enable = function( ctx)
 	return CanvasTextFunctions.draw( ctx, font,size,x-w/2,y,text);
     };
 }
-
-var frame = 0, width = 0, height = 0, dragging = false, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, clickFrame = 0, releaseFrame, clickX, clickY, globalDragging = false, drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
-
-function glop_init() {
-	canvas = document.getElementById('canvas').getContext('2d')
-
-	CanvasTextFunctions.enable(canvas);
-
-	new PeriodicalExecuter(draw_powersave, 0.1)
+var Keyboard = {
+	keys: new Hash(),
+	key_input: false,
 }
-
-function draw() {
-	$C.clear()
-	if (Cartagen.fullscreen) {
-		width = document.viewport.getWidth()
-		height = document.viewport.getHeight()
-		$('canvas').width = width
-		$('canvas').height = height
-		$$('body')[0].style.width = width+"px"
-	}
-	else {
-		width = $('canvas').getWidth()
-		height = $('canvas').getHeight()
-		$('canvas').width = width
-		$('canvas').height = height
-	}
-	frame += 1
-	try { Events.drag() } catch(e) {}
-
-	draw_calls.each(function(call) {
-
-	})
-	if (typeof Cartagen != "undefined") Cartagen.draw()
-	else {
-		objects.each(function(object) {
-			object.draw()
-		})
-	}
-
-	if (typeof Cartagen != "undefined") Cartagen.post_draw()
-
-	if (mouseDown) {
-		mouseDown = false
-	}
-	if (mouseUp) {
-		mouseUp = false
-	}
+var Mouse = {
+	x: 0,
+	y: 0,
+	down: false,
+	up: false,
+	click_x: 0,
+	click_y: 0,
+	click_frame: 0,
+	release_frame: null,
+	dragging: false,
+	drag_x: null,
+	drag_y: null
 }
-
-function trace(e) {
-	return "An exception occurred in the script. Error name: " + e.name + ". Error description: " + e.description + ". Error number: " + e.number + ". Error message: " + e.message + ". Line number: "+ e.lineNumber
-}
-
-function highest_id() {
-	var high = 0
-	objects.each(function(object) {
-		if (object.obj_id > high) high = object.obj_id
-	})
-	return high
-}
-
-function isNthFrame(num) {
-	return ((frame % num) == 0);
-}
-
-function color_from_string(string) {
-	return "#"+(parseInt((string),36).toString(16)+"ab2828").truncate(6,"")
-}
-
-function randomColor() {
-	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
-}
-
-function jsonify(input,newlines) {
-	if (newlines == null) var newline = ""
-	else var newline = "\r"
-	var json = ""
-	if (input instanceof Array) {
-		var string = ''
-		input.each(function(item) {
-			string += jsonify(item)+","+newline
-		})
-		string = string.truncate(string.length-1,'')
-		json += "["+string+"]"
-	} else if (Object.isString(input)) {
-		json += "'"+String(input).escapeHTML()+"'"
-	} else if (Object.isNumber(input)) {
-		json += String(input)
-	} else if (typeof input == 'object') {
-		var string = ''
-		Object.keys(input).each(function(key,index) {
-			string += key+": "+jsonify(Object.values(input)[index])+", "+newline
-		})
-		string.truncate(string.length-1)
-		json += "{"+string+"}"
-	} else {
-		json += String(input).escapeHTML()
-	}
-	return json
-}
-
-function deep_clone(obj) {
-    var c = {};
-    for (var i in obj) {
-        var prop = obj[i];
-
-        if (prop instanceof Array) {
-			c[i] = prop.slice();
-        } else if (typeof prop == 'object') {
-           c[i] = deep_clone(prop);
-		} else {
-           c[i] = prop;
-        }
-    }
-    return c;
-}
-
-function draw_powersave() {
-	if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
-		draw()
-	} else {
-		if (last_event > frame-25) {
-			draw()
-		} else {
-		}
-	}
-}
-
 var User = {
-	color: randomColor(),
+	color: Glop.random_color(),
 	name: 'anonymous',
 	lat: 0,
 	lon: 0,
@@ -1519,7 +1714,10 @@ var User = {
 	following_executer: null,
 	drawing_way: false,
 	loaded_node_ids: [],
-	nodes: [],
+	init: function() {
+		User.update()
+		new PeriodicalExecuter(User.update, 60)
+	},
 	set_loc: function(loc) {
 		if (loc.coords) {
 			User.lat = loc.coords.latitude
@@ -1529,34 +1727,33 @@ var User = {
 			User.lat = loc.latitude
 			User.lon = loc.longitude
 		}
-		Cartagen.debug('detected location: '+this.lat+","+this.lon)
+		$l('detected location: '+this.lat+","+this.lon)
 	},
 	calculate_coords: function() {
 	},
-	create_node: function(_x, _y, _draw, id) {
-		if (Object.isUndefined(_x)) _x = User.x
-		if (Object.isUndefined(_y)) _y = User.y
+	create_node: function(x, y, draw, id) {
+		if (Object.isUndefined(x)) x = User.x
+		if (Object.isUndefined(y)) y = User.y
 		if (Object.isUndefined(id)) id = 'temp_' + (Math.random() * 999999999).floor()
 		var node = new Node()
-		node.x = _x
-		node.y = _y
+		node.x = x
+		node.y = y
 		node.radius = User.node_radius
 		node.id = id
-		node.lon = Projection.x_to_lon(_x)
-		node.lat = Projection.y_to_lat(_y)
+		node.lon = Projection.x_to_lon(x)
+		node.lat = Projection.y_to_lat(y)
 		node.fillStyle = User.color
 		node.strokeStyle = "rgba(0,0,0,0)"
 
-		if (_draw) {
+		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
-        	draw()
+        	Glop.draw()
 		}
-		User.nodes.push(node)
 		return node
 	},
-	submit_node: function(_x, _y) {
-		var node = User.create_node(_x, _y, true)
+	submit_node: function(x, y) {
+		var node = User.create_node(x, y, true)
 		var params = {
 			color: User.color,
 			lon: node.lon,
@@ -1578,7 +1775,8 @@ var User = {
 			User.following = false
 		}
 		else {
-			User.following_executer = new PeriodicalExecuter(User.center_map_on_user, User.follow_interval)
+			User.following_executer = new PeriodicalExecuter(User.center_map_on_user,
+			                                                 User.follow_interval)
 			User.following = true
 			User.center_map_on_user()
 		}
@@ -1589,11 +1787,11 @@ var User = {
 	set_loc_and_center: function(loc) {
 		Map.x = User.x
 		Map.y = User.y
-		draw()
+		Glop.draw()
 	},
-	toggle_way_drawing: function(_x, _y) {
+	toggle_way_drawing: function(x, y) {
 		if (User.drawing_way) {
-			User.add_node(_x, _y)
+			User.add_node(x, y)
 			User.submit_way(User.way)
 
 		}
@@ -1601,48 +1799,44 @@ var User = {
 			User.way = new Way({
 				id: 'temp_' + (Math.random() * 999999999).floor(),
 				author: User.name,
-				nodes: [User.create_node(_x,_y,true)],
+				nodes: [User.create_node(x,y,true)],
 				tags: new Hash()
 			})
 			User.way.strokeStyle = User.color
 			User.way.lineWidth = User.line_width
 			User.way.age = 40
-			Cartagen.debug([Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1])
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
-			draw()
+			Glop.draw()
 		}
 		User.drawing_way = !User.drawing_way
 	},
-	submit_way: function(_way) {
+	submit_way: function(way) {
  		var params = {
 			color: User.color,
 			author: User.name,
-			bbox: _way.bbox,
-			nodes: _way.nodes.collect(function(node) {
+			bbox: way.bbox,
+			nodes: way.nodes.collect(function(node) {
 				return [node.lat, node.lon]
 			})
 		}
-		Cartagen.debug(_way.nodes)
-		Cartagen.debug(params)
 		new Ajax.Request(User.way_submit_uri, {
 			parameters: {way: Object.toJSON(params)},
 			onSuccess: function(transport) {
-				_way.id = 'cartagen_' + transport.responseJSON.way_id
+				way.id = 'cartagen_' + transport.responseJSON.way_id
 				var id = 0
-				_way.nodes.each(function(nd) {
+				way.nodes.each(function(nd) {
 					id = transport.responseJSON.node_ids.shift()
 					nd.id = 'cartagen_' + transport.responseJSON.node_ids.shift()
 					User.loaded_node_ids.push(id)
 				})
 			}
 		})
-		Cartagen.debug(_way)
 	},
-	add_node: function(_x, _y) {
-		node = User.create_node(_x, _y, true)
+	add_node: function(x, y) {
+		node = User.create_node(x, y, true)
 		User.way.nodes.push(node)
 		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
-		draw()
+		Glop.draw()
 	},
 	update: function() {
 		var params = {
@@ -1654,14 +1848,13 @@ var User = {
 		new Ajax.Request(User.node_updates_uri, {
 			parameters: params,
 			onSuccess: function(transport) {
-				Cartagen.debug(transport)
-				User.update_nodes(transport.responseJSON)
+				User._update_nodes(transport.responseJSON)
 			}
 		})
 		User.last_pos = [Map.x, Map.y]
 		User.last_update = (new Date()).toUTCString()
 	},
-	update_nodes: function(nodes) {
+	_update_nodes: function(nodes) {
 		var ways = []
 		nodes.each(function(node) {
 			node = node.node
@@ -1685,21 +1878,19 @@ var User = {
 				}
 			}
 		})
-		Cartagen.debug(ways)
-		draw()
+		Glop.draw()
 		if (ways.length > 0) {
 			new Ajax.Request(User.way_update_uri, {
 				parameters: {
 					ids: ways.uniq().join(',')
 				},
 				onSuccess: function(transport) {
-					Cartagen.debug(transport)
-					User.update_ways(transport.responseJSON)
+					User._update_ways(transport.responseJSON)
 				}
 			})
 		}
 	},
-	update_ways: function(data) {
+	_update_ways: function(data) {
 		nodes = new Hash()
 
 		data.node.each(function(node) {
@@ -1724,7 +1915,6 @@ var User = {
 		})
 
 		data.way.each(function(way) {
-			try {
 			var nds = nodes.get(way.id).sort(function(a, b) {return a.order - b.order})
 			var data = {
 				id: 'cartagen_' + way.id,
@@ -1732,29 +1922,17 @@ var User = {
 				nodes: nds,
 				tags: new Hash()
 			}
-			Cartagen.debug(way)
-			Cartagen.debug(data)
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
-			Cartagen.debug(w)
-			g_w = w
-			} catch(e) {Cartagen.debug(e)}
 		})
 	}
 }
-var Mouse = {
-	x: 0,
-	y: 0,
-	click_x: 0,
-	click_y: 0
-}
+
+document.observe('cartagen:postinit', User.init.bindAsEventListener(User))
 var Projection = {
 	current_projection: 'spherical_mercator',
 	scale_factor: 100000,
-	set: function(new_projection) {
-		this.current_projection = new_projection
-	},
 	lon_to_x: function(lon) { return -1*Projection[Projection.current_projection].lon_to_x(lon) },
 	x_to_lon: function(x) { return Projection[Projection.current_projection].x_to_lon(x) },
 	lat_to_y: function(lat) { return -1*Projection[Projection.current_projection].lat_to_y(lat) },
@@ -1795,6 +1973,7 @@ var Projection = {
 		    return y;
 		},
 		y_to_lat: function(y) {
+			$D.err('y_to_lat is not supported in elliptical mercator')
 		}
 
 	}
@@ -1810,9 +1989,10 @@ var Viewport = {
 }
 
 var Map = {
-	initialize: function() {
+	init: function() {
 		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
 		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
+		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
 	},
 	draw: function() {
 		var lon1 = Projection.x_to_lon(Map.x - (Viewport.width/2))
@@ -1826,119 +2006,22 @@ var Map = {
 		this.lon = Projection.x_to_lon(this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
 	},
-	pointer_x: function() { return Map.x+(((width/-2)-Mouse.x)/Cartagen.zoom_level) },
-	pointer_y: function() { return Map.y+(((height/-2)-Mouse.y)/Cartagen.zoom_level) },
+	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Cartagen.zoom_level) },
+	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y)/Cartagen.zoom_level) },
 	bbox: [],
 	x: 0,
 	y: 0,
 	lat: 0,
 	lon: 0,
 	rotate: 0,
-	rotate_old: 0, // from beginning of drag motion
-	x_old: 0, // from beginning of drag motion
+	rotate_old: 0,
+	x_old: 0,
 	y_old: 0,
 	lon_width: 0,
 	lat_height: 0,
-	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))), // Res down for zoomed-out... getting a NaN for x % 0. Not that much savings yet.
+	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
 	last_pos: [0,0]
 }
-var Geometry = {
-	poly_centroid: function(polygon) {
-		var n = polygon.length
-		var cx = 0, cy = 0
-		var a = Geometry.poly_area(polygon,true)
-		var centroid = []
-		var i,j
-		var factor = 0
 
-		for (i=0;i<n;i++) {
-			j = (i + 1) % n
-			factor = (polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y)
-			cx += (polygon[i].x + polygon[j].x) * factor
-			cy += (polygon[i].y + polygon[j].y) * factor
-		}
-
-		a *= 6
-		factor = 1/a
-		cx *= factor
-		cy *= factor
-		centroid[0] = cx
-		centroid[1] = cy
-		return centroid
-	},
-	calculate_bounding_box: function(points) {
-		var bbox = [0,0,0,0] // top, left, bottom, right
-		points.each(function(node) {
-			if (node.x < bbox[1] || bbox[1] == 0) bbox[1] = node.x
-			if (node.x > bbox[3] || bbox[3] == 0) bbox[3] = node.x
-			if (node.y < bbox[0] || bbox[0] == 0) bbox[0] = node.y
-			if (node.y > bbox[2] || bbox[2] == 0) bbox[2] = node.y
-		})
-		return bbox
-	},
-	overlaps: function(x1,y1,x2,y2,fudge) {
-		if (x2 > x1-fudge && x2 < x1+fudge) {
-			if (y2 > y1-fudge && y2 < y1+fudge) {
-		  		return true
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	},
-	intersect: function(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {
-		return !(box2left > box1right || box2right < box1left || box2top > box1bottom || box2bottom < box1top)
-	},
-	is_point_in_poly: function(poly, _x, _y){
-	    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-	        ((poly[i].y <= _y && _y < poly[j].y) || (poly[j].y <= _y && _y < poly[i].y))
-	        && (_x < (poly[j].x - poly[i].x) * (_y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
-	        && (c = !c);
-	    return c;
-	},
-	poly_area: function(nodes) {
-		var area = 0
-		nodes.each(function(node,index) {
-			if (index < nodes.length-1) next = nodes[index+1]
-			else next = nodes[0]
-			if (index > 0) last = nodes[index-1]
-			else last = nodes[nodes.length-1]
-			area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
-		})
-		if (arguments[1] == true) return area/2
-		else return Math.abs(area/2)
-	}
-}
-
-function in_range(v,r1,r2) {
-	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
-}
-
-
-Object.value = function(obj) {
-    if(Object.isFunction(obj)) return obj()
-    return obj
-}
-
-Number.prototype.to_precision = function(prec){
-	return (this * (1/prec)).round()/(1/prec)
-}
-
-function strstr( haystack, needle, bool ) {
-    var pos = 0;
-
-    haystack += '';
-    pos = haystack.indexOf( needle );
-    if (pos == -1) {
-        return false;
-    } else{
-        if( bool ){
-            return haystack.substr( 0, pos );
-        } else{
-            return haystack.slice( pos );
-        }
-    }
-}
-
-function demo() { try { Map.rotate += 0.005 } catch(e) {}}
+document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
+document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))

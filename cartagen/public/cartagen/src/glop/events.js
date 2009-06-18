@@ -1,18 +1,19 @@
 /**
- * @namespace
- * Contains event callbacks and binds them to events.
+ * @namespace Contains native event callbacks and binds them to events.
  */
 var Events = {
+	last_event: 0,
+	
 	/**
 	 * Binds each event handler to its event.
 	 */
 	init: function() {
 		// Observe mouse events:
-		var canvas_el = $('canvas')
-		canvas_el.observe('mousemove', Events.mousemove)
-		canvas_el.observe('mousedown', Events.mousedown)
-		canvas_el.observe('mouseup', Events.mouseup)
-		canvas_el.observe('dblclick', Events.doubleclick)
+		var canvas = $('canvas')
+		canvas.observe('mousemove', Events.mousemove)
+		canvas.observe('mousedown', Events.mousedown)
+		canvas.observe('mouseup', Events.mouseup)
+		canvas.observe('dblclick', Events.doubleclick)
 		
 		// Observe scrollwheel:
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -23,12 +24,18 @@ var Events = {
 		Event.observe(document, 'keyup', Events.keyup)
 		
 		// touchscreen (mobile phone) events:
-		canvas_el.ontouchstart = Events.ontouchstart
-		canvas_el.ontouchmove = Events.ontouchmove
-		canvas_el.ontouchend = Events.ontouchend
-		canvas_el.ongesturestart = Events.ongesturestart
-		canvas_el.ongesturechange = Events.ongesturechange
-		canvas_el.ongestureend = Events.ongestureend
+		canvas.ontouchstart = Events.ontouchstart
+		canvas.ontouchmove = Events.ontouchmove
+		canvas.ontouchend = Events.ontouchend
+		canvas.ongesturestart = Events.ongesturestart
+		canvas.ongesturechange = Events.ongesturechange
+		canvas.ongestureend = Events.ongestureend
+		
+		// window events:
+		Event.observe(window, 'resize', Events.resize);
+		
+		// we can override right-click:
+		// Event.observe(window, 'oncontextmenu', function() { return false })
 	},
 	/**
 	 * Triggered when moused is moved on the canvas
@@ -37,33 +44,30 @@ var Events = {
 	mousemove: function(event) { 
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
-		draw()
+		Glop.draw()
 	},
 	/**
 	 * Triggered when canvas is clicked on
 	 * @param {Event} event
 	 */
 	mousedown: function(event) {
-        mouseDown = true
-        clickFrame = frame
+        Mouse.down = true
+        Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
         Mouse.click_y = Mouse.y
         Map.x_old = Map.x
         Map.y_old = Map.y
         Map.rotate_old = Map.rotate
-        if (!dragging) {
-                globalDragging = true
-        }
+		Mouse.dragging = true
 	},
 	/**
 	 * Triggered when mouse is released on canvas
 	 */
 	mouseup: function() {
-        mouseUp = true
-        mouseDown = false
-        releaseFrame = frame
-        globalDragging = false
-        dragging = false
+        Mouse.up = true
+        Mouse.down = false
+        Mouse.release_frame = Glop.frame
+        Mouse.dragging = false
         User.update()
 	},
 	/**
@@ -87,7 +91,7 @@ var Events = {
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
-		draw()
+		Glop.draw()
 	},
 	/**
 	 * Triggered when a key is pressed
@@ -99,7 +103,7 @@ var Events = {
 		if (e.keyCode) code = e.keyCode;
 		else if (e.which) code = e.which;
 		var character = String.fromCharCode(code);
-		if (key_input) {
+		if (Keyboard.key_input) {
 			switch(character) {
 				case "s": zoom_in(); break
 				case "w": zoom_out(); break
@@ -113,21 +117,20 @@ var Events = {
 		} else {
 			// just modifiers:
 			switch(character){
-				case "r": keys.set("r",true); break
-				case "z": keys.set("z",true); break
+				case "r": Keyboard.keys.set("r",true); break
+				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
 			}
 		}
-		draw()
+		Glop.draw()
 	},
 	/**
 	 * Triggered when a key is released
 	 */
 	keyup: function() {
-		keys.set("r",false)
-		keys.set("z",false)
-		single_key = null
+		Keyboard.keys.set("r",false)
+		Keyboard.keys.set("z",false)
 	},
 	/**
 	 * Triggered when a touch is started. Mainly for touchscreen mobile platforms
@@ -139,16 +142,14 @@ var Events = {
 	 		var touch = e.touches[0]; // Get the information for finger #1
 		    var node = touch.target; // Find the node the drag started from
 
-			mouseDown = true
-			clickFrame = frame
+			Mouse.down = true
+			Mouse.click_frame = Glop.frame
 			Mouse.click_x = touch.screenX
 			Mouse.click_y = touch.screenY
 			Map.x_old = Map.x
 			Map.y_old = Map.y
-			if (!dragging) {
-				globalDragging = true
-			}
-			draw()	
+			Mouse.dragging = true
+			Glop.draw()	
 		  }
 	},
 	/**
@@ -161,16 +162,16 @@ var Events = {
 			var touch = e.touches[0]; // Get the information for finger #1
 			var node = touch.target; // Find the node the drag started from
 
-			drag_x = (touch.screenX - Mouse.click_x)
-			drag_y = (touch.screenY - Mouse.click_y)
+			Mouse.drag_x = (touch.screenX - Mouse.click_x)
+			Mouse.drag_y = (touch.screenY - Mouse.click_y)
 
-			var d_x = -Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
-			var d_y = -Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+			var d_x = -Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+			var d_y = -Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 
 			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 
-			draw()
+			Glop.draw()
 		}
 	},
 	/**
@@ -179,14 +180,13 @@ var Events = {
 	 */
 	ontouchend: function(e) {
 		if(e.touches.length == 1) {
-			mouseUp = true
-			mouseDown = false
-			releaseFrame = frame
-			globalDragging = false
-			dragging = false
+			Mouse.up = true
+			Mouse.down = false
+			Mouse.release_frame = Glop.frame
+			Mouse.dragging = false
 		}
 		User.update()
-		draw()
+		Glop.draw()
 	},
 	/**
 	 * Triggered when a touch gesture is started. Mainly for touchscreen mobile platforms
@@ -204,7 +204,7 @@ var Events = {
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
-		draw()
+		Glop.draw()
 	},
 	/**
 	 * Triggered when a touch gesture is ended. Mainly for touchscreen mobile platforms
@@ -215,52 +215,50 @@ var Events = {
 		User.update()
 	},
 	/**
-	 * Triggered when the canvas is double clicked
+	 * Triggered when the canvas is double clicked. Currently unused
 	 * @param {Event} event
 	 */
 	doubleclick: function(event) {
-		on_object = false
-		objects.each(function(object) { 
-			if (!on_object && Geometry.overlaps(object.x,object.y,Mouse.x,Mouse.y,0)) {
-				object.doubleclick()
-				on_object = true
-			}
-		})
 	},
 	/**
-	 * Currently unused?
+	 * Triggered each frame. Moves the map based on drags.
 	 */
 	drag: function() {
-		if (globalDragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
-			drag_x = (Mouse.x - Mouse.click_x)
-			drag_y = (Mouse.y - Mouse.click_y)
-			if (keys.get("r")) { // rotating
-				Map.rotate = Map.rotate_old + (-1*drag_y/height)
-			} else if (keys.get("z")) {
+		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
+			Mouse.drag_x = (Mouse.x - Mouse.click_x)
+			Mouse.drag_y = (Mouse.y - Mouse.click_y)
+			if (Keyboard.keys.get("r")) { // rotating
+				Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
+			} else if (Keyboard.keys.get("z")) {
 				if (Cartagen.zoom_level > 0) {
-					Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (drag_y/height))
+					Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (Mouse.drag_y/Glop.height))
 				} else {
 					Cartagen.zoom_level = 0
 				}
 			} else {
-				// var h = Math.sqrt((drag_x*drag_x)+(drag_y*drag_y))
-				var d_x = Math.cos(Map.rotate)*drag_x+Math.sin(Map.rotate)*drag_y
-				var d_y = Math.cos(Map.rotate)*drag_y-Math.sin(Map.rotate)*drag_x
+				var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+				var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 				
 				Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 				Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
-				// Map.x = Map.x_old+(drag_x/Cartagen.zoom_level)
-				// Map.y = Map.y_old+(drag_y/Cartagen.zoom_level)
 			}
 		}
 	},
 	/**
-	 * Returns the number of frames a click has lasted for. Currently unused?
+	 * Returns the number of frames a click has lasted for.
 	 */
 	click_length: function() {
-		return releaseFrame-clickFrame
+		return Mouse.release_frame-Mouse.click_frame
+	},
+	resize: function() {
+		Glop.draw()
 	}
 }
+// bind event
+document.observe('cartagen:init', Events.init)
+
+
+// not sure what this is:
 
 //if (Prototype.Browser.MobileSafari) {
 	// addEventListener("load", function() { setTimeout(updateLayout, 0) }, false)

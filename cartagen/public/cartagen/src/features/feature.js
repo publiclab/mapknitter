@@ -27,16 +27,16 @@ var Feature = Class.create(
 	 */
 	draw: function() {
 		Cartagen.object_count++
-		canvas.save()
+		$C.save()
 		Style.apply_style(this)
 		this.shape()
-		canvas.restore()
+		$C.restore()
 	},
 	/**
 	 * Abstract method that should be overridden to draw the feature.
 	 */
 	shape: function() {
-		Cartagen.debug('WARNING: Feature#shape should be overriden')
+		$D.warn('Feature#shape should be overriden')
 	}
 })
 

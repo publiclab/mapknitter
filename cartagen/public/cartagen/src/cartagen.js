@@ -12,6 +12,11 @@
  */
 
 // these belong in other objects... move them
+/**
+ * Array of all objects that should be drawn.
+ * @type Feature[]
+ * @deprecated
+ */
 var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
@@ -26,22 +31,6 @@ if (typeof cartagen_base_uri == 'undefined') {
 	 * @type String
 	 */
     cartagen_base_uri = 'cartagen'
-}
-
-/**
- * An array of scripts that will be loaded when Cartagen is initialized.
- * 
- * @type Array (of String)
- * @see Cartagen.initialize
- */
-var scripts = []
-
-// load phonegap js if needed
-if(window.PhoneGap) {
-	scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
-				 cartagen_base_uri + '/lib/phonegap/geolocation.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
-				 cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
 }
 
 // if (Prototype.Browser.MobileSafari) $('brief').hide()
@@ -109,7 +98,7 @@ var Cartagen = {
 	 * When true, a live gss editor is active. Generally only used for cartagen.org.
 	 * @type Boolean
 	 */
-	live_gss: false, // this is for inline gss editing, generally only on cartagen.org
+	live_gss: false,
 	/**
 	 * If true, map data is no dynamic and does not need to be reloaded periodically.
 	 * @type Boolean
@@ -189,14 +178,21 @@ var Cartagen = {
 	initial_bleed_level: 2,
 	/**
 	 * Queue of labels to draw
-	 * @type Array
+	 * @type Label[]
 	 */
     label_queue: [],
 	/**
 	 * Should deebug messages be sent to the console?
 	 * @type Boolean
 	 */
-    debug_mode: typeof console != "undefined",
+    debug: false,
+	/**
+	 * An array of scripts that will be loaded when Cartagen is initialized.
+	 * 
+	 * @type String[]
+	 * @see Cartagen.initialize
+	 */
+	scripts: [],
 	/**
 	 * Registers {@link initialize} to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
@@ -213,26 +209,39 @@ var Cartagen = {
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	initialize: function(configs) {
-		glop_init()
-		Events.init()
-		canvas_init()
-		// queue dependencies:
+		// basic configuration:
+		Object.extend(this, configs)
+		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
+		
+		// load phonegap js if needed
+		if(window.PhoneGap) {
+			scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
+						    cartagen_base_uri + '/lib/phonegap/geolocation.js',
+						    cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
+						    cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
+		}
+
+		// load extra scripts:
 		Cartagen.load_next_script()
+		
+		// browser stuff:
 		this.browser_check()
 		//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar
-		// draw on window resize:
-		Event.observe(window, 'resize', function() {try{draw()}catch(e){}});
-		// we can override right-click:
-		// Event.observe(window, 'oncontextmenu', function() { return false })
-
-		Object.keys(configs).each(function(key,index) {
-			this[key] = Object.values(configs)[index]
-			// Cartagen.debug('configuring '+key+': '+this[key])
-		},this)
 		
-		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
+		/**
+		 * @name Cartagen#cartagen:init
+		 * @event
+		 * Fired after Cartagen loads its configuration and the contents of 
+		 * Cartagen.scripts, but before any features are loaded or drawn.
+		 * Note that Cartagen.scripts are loaded asynchronously, so it is not
+		 * guarenteed that they will be finished loading.
+		 */
+		document.fire('cartagen:init')
+		
+		// bind event listeners
+		$('canvas').observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
+		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
 
-		Map.initialize()
 		// Startup:
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
@@ -244,30 +253,38 @@ var Cartagen = {
 			// 	this.get_static_plot(this.static_map_layers[1])
 			// } else {
 				this.static_map_layers.each(function(layer_url) {
-					Cartagen.debug('fetching '+layer_url)
+					$l('fetching '+layer_url)
 					this.get_static_plot(layer_url)
 				},this)
 				// to add user-added map data... messy!
 				if (this.dynamic_layers.length > 0) {
 					this.dynamic_layers.each(function(layer_url) {
-						Cartagen.debug('fetching '+layer_url)
+						$l('fetching '+layer_url)
 						load_script(layer_url)
 					},this)
 				}
 			// }
 		}
-		User.update()
-		new PeriodicalExecuter(User.update, 60)
+		
+		/**
+		 * @name cartagen:postinit
+		 * @event
+		 * Fired after Caragen loads map data.
+		 */
+		document.fire('cartagen:postinit')
 	},
 	/**
 	 * Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code.
 	 * Uses {@link Geohash} to draw each feature on the map.
+	 * @param {Event} e The Glop draw event.
 	 */
-	draw: function() {
+	draw: function(e) {
+		e.no_draw = true
+		
 		this.object_count = 0
 		this.way_count = 0
 		this.node_count = 0
-		Map.draw()
+
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
 		
 		Style.style_body()
@@ -276,18 +293,18 @@ var Cartagen = {
         if (Viewport.padding > 0) {
             strokeStyle('white')
             lineWidth(2)
-            strokeRect(Viewport.padding, Viewport.padding, width - (Viewport.padding * 2), height - (Viewport.padding * 2))
+            strokeRect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
         }
         
-        $C.translate(width / 2, height / 2)
+        $C.translate(Glop.width / 2, Glop.height / 2)
         $C.rotate(Map.rotate)
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
-        $C.translate(width / -2, height / -2)
-        $C.translate((-1 * Map.x) + (width / 2), (-1 * Map.y) + (height / 2))
+        $C.translate(Glop.width / -2, Glop.height / -2)
+        $C.translate((-1 * Map.x) + (Glop.width / 2), (-1 * Map.y) + (Glop.height / 2))
         
         // viewport stuff:
-        Viewport.width = width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.height = height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
         // culling won't work anymore after we fixed rotation...
         Viewport.width = Math.max(Viewport.width, Viewport.height)
         Viewport.height = Viewport.width
@@ -295,7 +312,6 @@ var Cartagen = {
         // strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 		
 		//Geohash lookup:
-		Geohash.draw()
 		Geohash.objects.each(function(object) { 
 			object.draw()
 		})
@@ -371,7 +387,7 @@ var Cartagen = {
 	        var n = new Node
 			n.h = 10
 			n.w = 10
-			n.color = randomColor()
+			n.color = Glop.random_color()
 			n.timestamp = node.timestamp
 			n.user = node.user
 			n.id = node.id
@@ -455,18 +471,18 @@ var Cartagen = {
 	 * Fetches a JSON plot from a static file, given a full url.
 	 */
 	get_static_plot: function(url) {
-		Cartagen.debug('fetching ' + url)
+		$l('fetching ' + url)
 		Cartagen.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
 			onComplete: function(result) {
-				// Cartagen.debug(result.responseText.evalJSON().osm.ways.length+" ways")
-				Cartagen.debug('got ' + url)
+				// $l(result.responseText.evalJSON().osm.ways.length+" ways")
+				$l('got ' + url)
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				Cartagen.debug(objects.length+" objects")
+				$l(objects.length+" objects")
 				Cartagen.requested_plots--
-				if (Cartagen.requested_plots == 0) last_event = frame
-				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
+				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -491,14 +507,14 @@ var Cartagen = {
 			// check if we've loaded already this session:
 			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
 				// no live-loading, so:
-				Cartagen.debug("already loaded plot")
+				$l("already loaded plot")
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
 				if (typeof localStorage != "undefined") {
 					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
 					if (ls) {
 						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
-						Cartagen.debug("localStorage cached plot")
+						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
 						// it's not in the localStorage:
@@ -512,7 +528,7 @@ var Cartagen = {
 			}
 			// if the bleed level of this plot is > 0
 			if (_bleed > 0) {
-				Cartagen.debug('bleeding to neighbors with bleed = '+_bleed)
+				$l('bleeding to neighbors with bleed = '+_bleed)
 				// bleed to 8 neighboring plots, decrement bleed:
 				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
 				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
@@ -562,8 +578,8 @@ var Cartagen = {
 			onComplete: function(result) {
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
-				if (Cartagen.requested_plots == 0) last_event = frame
-				Cartagen.debug("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
+				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		})
 	},
@@ -600,23 +616,17 @@ var Cartagen = {
 	 * Sends user to an image of the current canvas
 	 */
 	redirect_to_image: function() {
-		document.location = canvas.canvas.toDataURL();
+		document.location = $C.toDataURL();
 	},
-    debug: function(msg) {
-    	if (Cartagen.debug_mode) {
-        	if (typeof console != 'undefined') console.log(msg)
-        	if (typeof window.debug != 'undefined') window.debug.log(msg)
-    	}
-    },
 	/**
 	 * Loads each script in scripts array, sequentially.
 	 * Requires a load_next_script() call at the end of each
 	 * dependent script to trigger the next one.
 	 */
 	load_next_script: function() {
-		Cartagen.debug("loading: "+scripts[0])
-		if (scripts.length > 0) {
-			Cartagen.load_script(scripts.splice(0,1)[0])
+		$l("loading: "+Cartagen.scripts[0])
+		if (Cartagen.scripts.length > 0) {
+			Cartagen.load_script(Cartagen.scripts.splice(0,1)[0])
 		}
 	},
 	/**
@@ -624,13 +634,17 @@ var Cartagen = {
 	 * @param {String} script Path to the script
 	 */
 	load_script: function(script) {
-		$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
+		$$('head')[0].insert(new Element('script', { 
+			'src': script, 
+			'type': 'text/javascript', 
+			'charset': 'utf-8', 
+			evalJSON: 'force' 
+		}));
 	}
 }
 
+//= require <util/util>
 //= require <features/feature>
 //= require <glop/glop>
-//= require <interface/user>
-//= require <interface/mouse>
+//= require <interface/interface>
 //= require <mapping/map>
-//= require <util/util>

@@ -6,6 +6,6 @@ Geolocation.prototype.stop = function() {
     PhoneGap.exec("Location.stop");
 };
 
-navigator.geolocation.getCurrentPosition(Map.set_user_loc)
+navigator.geolocation.getCurrentPosition(User.set_loc)
 
 load_next_script()
