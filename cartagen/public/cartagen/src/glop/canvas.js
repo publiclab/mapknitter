@@ -1,186 +1,265 @@
-// Wrapped native canvas methods in shorter, simpler method names:
-
 /**
- * Initializes the $C namespace
+ * @namespace Cavas functions, wapped into shorter, simpler names and abstracted for cross-browser
+ *            compatability
+ * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes>
+ *      MDC Docs</a>
  */
-function canvas_init(){
+$C = {
 	/**
-	 * @namespace
-	 * Cavas functions, wapped into shorter, simpler names.
-	 * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes>MDC Docs</a>
+	 * Loads the canvas and its rendering context.
 	 */
-	$C = {
+	init: function() {
 		/**
-		 * Clears the canvas
+		 * The 2d rendering context of the canvas
+		 * @type CanvasRenderingContext2D
 		 */
-		clear: function(){
-			canvas.clearRect(0, 0, width, height)
-		},
-		
-		/**
-		 * Sets canvas.fillStyle
-		 * @param {String} color Color to use for future fill operations
-		 */
-		fill_style: function(color) {
-			canvas.fillStyle = color
-		},
-		
-		/**
-		 * Alias of canvas.translate
-		 * @param {Number} x Number of pixels to tranlate in the x direction
-		 * @param {Number} y Number of pixels to tranlate in the y direction
-		 */
-		translate: function(x,y) {
-			canvas.translate(x,y)
-		},
-		
-		/**
-		 * Alias of canvas.scale
-		 * @param {Number} x Number of pixels to stretch/shring in the x direction
-		 * @param {Number} y Number of pixels to stretch/shring in the y direction
-		 */
-		scale: function(x,y) {
-			canvas.scale(x,y)
-		},
-		
-		/**
-		 * Alias of canvas.rotate
-		 * @param {Number} rotation Amount, in radians, to rotate
-		 */
-		rotate: function(rotation){
-			canvas.rotate(rotation)
-		},
-		
-		/**
-		 * Alias of canvas.fillRect (filled rectangle)
-		 * @param {Number} x X-coord of the top-left corner
-		 * @param {Number} y Y-coord of the top-left corner
-		 * @param {Number} w Width of the rectangle
-		 * @param {Number} h Height of the rectangle
-		 */
-		rect: function(x, y, w, h){
-			canvas.fillRect(x, y, w, h)
-		},
-		
-		/**
-		 * Alias of canvas.strokeRect (unfilled rectangle
-		 * @param {Number} x X-coord of the top-left corner
-		 * @param {Number} y Y-coord of the top-left corner
-		 * @param {Number} w Width of the rectangle
-		 * @param {Number} h Height of the rectangle
+		this.canvas =  $('canvas').getContext('2d')
+		CanvasTextFunctions.enable(this.canvas)
+	},
+	/**
+	 * Clears the canvas
+	 */
+	clear: function(){
+		$C.canvas.clearRect(0, 0, Glop.width, Glop.height)
+	},
+	
+	/**
+	 * Sets canvas.fillStyle
+	 * @param {String} color Color to use for future fill operations
+	 */
+	fill_style: function(color) {
+		$C.canvas.fillStyle = color
+	},
+	/**
+	 * Sets the fill style of the canvas to a pattern.
+	 * @param {Image}  image  Image to use for pattern
+	 * @param {String} repeat How to repeat pattern - "repeat", "repeat-x", "repeat-y", or
+	 *                        "no-repeat"
+	 */
+	fill_pattern: function(image, repeat) {
+		$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+	},
+	/**
+	 * Alias of canvas.translate
+	 * @param {Number} x Number of pixels to tranlate in the x direction
+	 * @param {Number} y Number of pixels to tranlate in the y direction
+	 */
+	translate: function(x,y) {
+		$C.canvas.translate(x,y)
+	},
+	
+	/**
+	 * Alias of canvas.scale
+	 * @param {Number} x Number of pixels to stretch/shring in the x 
+	 *                   direction
+	 * @param {Number} y Number of pixels to stretch/shring in the y 
+	 *                   direction
+	 */
+	scale: function(x,y) {
+		$C.canvas.scale(x,y)
+	},
+	
+	/**
+	 * Alias of canvas.rotate
+	 * @param {Number} rotation Amount, in radians, to rotate
+	 */
+	rotate: function(rotation){
+		$C.canvas.rotate(rotation)
+	},
+	
+	/**
+	 * Alias of canvas.fillRect (filled rectangle)
+	 * @param {Number} x X-coord of the top-left corner
+	 * @param {Number} y Y-coord of the top-left corner
+	 * @param {Number} w Width of the rectangle
+	 * @param {Number} h Height of the rectangle
+	 */
+	rect: function(x, y, w, h){
+		$C.canvas.fillRect(x, y, w, h)
+	},
+	
+	/**
+	 * Alias of canvas.strokeRect (unfilled rectangle
+	 * @param {Number} x X-coord of the top-left corner
+	 * @param {Number} y Y-coord of the top-left corner
+	 * @param {Number} w Width of the rectangle
+	 * @param {Number} h Height of the rectangle
 
-		 */
-		stroke_rect: function(x, y, w, h){
-			canvas.strokeRect(x, y, w, h)
-		},
-		
-		/**
-		 * Alias of canvas.strokeStyle
-		 * @param {String} color Color to use for future stroke operations
-		 */
-		stroke_style: function(color) {
-			canvas.strokeStyle = color
-		},
-		
-		/**
-		 * Sets canvas.lineWidth
-		 * @param {Number} lineWidth New width, in pixels, to use for stroke operations
-		 */
-		line_width: function(lineWidth){
-			if (parseInt(lineWidth) == 0) 
-				canvas.lineWidth = 0.0000000001
-			else 
-				canvas.lineWidth = lineWidth
-		},
-		
-		/**
-		 * Alias of canvas.beginPath
-		 */
-		begin_path: function(){
-			canvas.beginPath()
-		},
-		
-		/**
-		 * Alias of canvas.moveTo
-		 * @param {Number} x X-coord of location to move to
-		 * @param {Number} y Y-coord of location to move to
-		 */
-		move_to: function(x, y){
-			canvas.moveTo(x, y)
-		},
-		
-		/**
-		 * Alias of canvas.lineTo
-		 * @param {Number} x X-coord of location to draw line to
-		 * @param {Number} y Y-coord of location to draw line to
-		 */
-		line_to: function(x, y){
-			canvas.lineTo(x, y)
-		},
-		
-		/**
-		 * Draws a quadratic curve
-		 * @param {Number} cp_x X-coord of control point
-		 * @param {Number} cp_y Y-coord of control point
-		 * @param {Number} x    X-coord of point to draw to
-		 * @param {Number} y    Y-coord of point to draw to
-		 * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#Bezier_and_quadratic_curves">MDC Docs</a>
-		 * @function
-		 */
-		quadratic_curve_to: function(cp_x, cp_y, x, y){
-			canvas.quadraticCurveTo(cp_x, cp_y, x, y)
-		},
-		
-		/**
-		 * Draws a stroke along the current path.
-		 * @function
-		 */
-		stroke: function(){
-			canvas.stroke()
-		},
-		
-		/**
-		 * Closes the current path, then fills it.
-		 */
-		fill: function(){
-			canvas.fill()
-		},
-		
-		/**
-		 * Draws an arc
-		 * @param {Number} x                   X-coord of circle's center
-		 * @param {Number} y                   Y-coord of circle's center
-		 * @param {Number} radius              Radius of circle
-		 * @param {Number} startAngle          Angle, in radians, from the +x axis to start the arc from
-		 * @param {Number} endAngle            Angle, in radians, from the +x axis to end the arc at
-		 * @param {Boolean} [counterclockwise] If true, arc is drawn counterclockwise. Else, it is drawn clockwise
-		 */
-		arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
-			canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
-		},
-		
-		/**
-		 * Draws text on the canvas
-		 * @param {String} font Font to use
-		 * @param {Number} size Size, in pts, of text
-		 * @param {Number} x    X-coord to start drawing at
-		 * @param {Number} y    Y-coord to start drawing at
-		 * @param {String} text Text to draw
-		 */
-		draw_text: function(font, size, x, y, text){
-			canvas.drawText(font, size, x, y, text)
-		},
-		
-		/**
-		 * Draws text on canvas, with location specified as a center point
-		 * @param {String} font Font to use
-		 * @param {Number} size Size, in pts, of text
-		 * @param {Number} x    X-coord to center text on
-		 * @param {Number} y    Y-coord to center text on
-		 * @param {String} text Text to draw
-		 */
-		draw_text_center: function(font, size, x, y, text){
-			canvas.drawTextCenter(font, size, x, y, text)
+	 */
+	stroke_rect: function(x, y, w, h){
+		$C.canvas.strokeRect(x, y, w, h)
+	},
+	
+	/**
+	 * Alias of canvas.strokeStyle
+	 * @param {String} color Color to use for future stroke operations
+	 */
+	stroke_style: function(color) {
+		$C.canvas.strokeStyle = color
+	},
+	
+	/**
+	 * Sets how succesive lines are joined.
+	 * @param {String} style Style string - 'round', 'bevel', or 'miter'
+	 */
+	line_join: function(style) {
+		$C.canvas.lineJoin = style
+	},
+	
+	/**
+	 * Sets how the end of a line is styled.
+	 * @param {String} style Style string - 'round', 'butt', or 'square'
+	 */
+	line_cap: function(style) {
+		$C.canvas.lineCap = style
+	},
+	
+	/**
+	 * Sets canvas.lineWidth
+	 * @param {Number} lineWidth New width, in pixels, to use for stroke
+	 *                           operations
+	 */
+	line_width: function(lineWidth){
+		if (parseInt(lineWidth) == 0) 
+			$C.canvas.lineWidth = 0.0000000001
+		else 
+			$C.canvas.lineWidth = lineWidth
+	},
+	
+	/**
+	 * Alias of canvas.beginPath
+	 */
+	begin_path: function(){
+		$C.canvas.beginPath()
+	},
+	
+	/**
+	 * Alias of canvas.moveTo
+	 * @param {Number} x X-coord of location to move to
+	 * @param {Number} y Y-coord of location to move to
+	 */
+	move_to: function(x, y){
+		$C.canvas.moveTo(x, y)
+	},
+	
+	/**
+	 * Alias of canvas.lineTo
+	 * @param {Number} x X-coord of location to draw line to
+	 * @param {Number} y Y-coord of location to draw line to
+	 */
+	line_to: function(x, y){
+		$C.canvas.lineTo(x, y)
+	},
+	
+	/**
+	 * Draws a quadratic curve
+	 * @param {Number} cp_x X-coord of control point
+	 * @param {Number} cp_y Y-coord of control point
+	 * @param {Number} x    X-coord of point to draw to
+	 * @param {Number} y    Y-coord of point to draw to
+	 * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#Bezier_and_quadratic_curves">
+	 *      MDC Docs</a>
+	 * @function
+	 */
+	quadratic_curve_to: function(cp_x, cp_y, x, y){
+		$C.canvas.quadraticCurveTo(cp_x, cp_y, x, y)
+	},
+	
+	/**
+	 * Draws a stroke along the current path.
+	 * @function
+	 */
+	stroke: function(){
+		$C.canvas.stroke()
+	},
+	
+	/**
+	 * Closes the current path, then fills it.
+	 */
+	fill: function(){
+		$C.canvas.fill()
+	},
+	
+	/**
+	 * Draws an arc
+	 * @param {Number} x                   X-coord of circle's center
+	 * @param {Number} y                   Y-coord of circle's center
+	 * @param {Number} radius              Radius of circle
+	 * @param {Number} startAngle          Angle, in radians, from the +x axis to start the arc
+	 *                                     from
+	 * @param {Number} endAngle            Angle, in radians, from the +x axis to end the arc 
+	 *                                     at
+	 * @param {Boolean} [counterclockwise] If true, arc is drawn counterclockwise. Else, it is
+	 *                                     drawn clockwise
+	 */
+	arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
+		$C.canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
+	},
+	/**
+	 * Draws text on the canvas. Fonts are not supported in all
+	 * broswers.
+	 * @param {String} font Font to use
+	 * @param {Number} size Size, in pts, of text
+	 * @param {Number} x    X-coord to start drawing at
+	 * @param {Number} y    Y-coord to start drawing at
+	 * @param {String} text Text to draw
+	 */
+	draw_text: function(font, size, color, x, y, text){
+		if ($C.canvas.fillText) {
+			$C.canvas.fillStyle = color
+			$C.canvas.font = size + 'pt ' + font
+			$C.canvas.fillText(text, x, y)
 		}
+		else {
+			$C.canvas.strokeStyle = color
+			$C.canvas.drawText(font, size, x, y, text)
+		}
+	},
+	/**
+	 * Measures the width, in pixels, that the text will be
+	 * @param {Object} font Font that will be drawn with
+	 * @param {Object} size Size, in pts, of text
+	 * @param {Object} text Text to be measured
+	 */
+	measure_text: function(font, size, text) {
+		if ($C.canvas.fillText) {
+			$C.canvas.font = size + 'pt ' + font
+			return $C.canvas.measureText(text)
+		}
+		else {
+			return $C.canvas.measureCanvasText(font, size, text)
+		}
+	},
+	/**
+	 * Sets the canvas' globalAlpha.
+	 * @param {Number} alpha New alpha value, between 0 and 1.
+	 */
+	opacity: function(alpha) {
+		$C.canvas.alpha = alpha
+	},
+	/**
+	 * Saves the state of the canvas
+	 * @see $C.restore
+	 */
+	save: function() {
+		$C.canvas.save()
+	},
+	/**
+	 * Restores the canvas its last saved state.
+	 * @see $C.save
+	 */
+	restore: function() {
+		$C.canvas.restore()
+	},
+	/**
+	 * Return a url that contains all the data in the canvas. Essentially,
+	 * it is a link to an image of the canvas.
+	 * @return Data url
+	 * @type String
+	 */
+	to_data_url: function() {
+		return $C.canvas.canvas.toDataUrl()
 	}
 }
+
+document.observe('cartagen:init', $C.init.bindAsEventListener($C))

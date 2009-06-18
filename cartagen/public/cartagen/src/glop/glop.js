@@ -1,139 +1,108 @@
-//= require "events"
-//= require "canvas"
-//= require "canvastext"
-
-// many of these belong in events.js
-var frame = 0, width = 0, height = 0, dragging = false, currentObject = "", on_object = false, mouseDown = false, mouseUp = false, clickFrame = 0, releaseFrame, clickX, clickY, globalDragging = false, drag_x, drag_y, single_key, keys = new Hash, key_input = false, last_event = 0, draw_calls = []
-
-function glop_init() {
-	canvas = document.getElementById('canvas').getContext('2d')
-	
-	//CanvasText setup:
-	CanvasTextFunctions.enable(canvas);
-	
-	// seconds between redraws:
-	new PeriodicalExecuter(draw_powersave, 0.1)
-}
-
-function draw() {
-	$C.clear()
-	if (Cartagen.fullscreen) {
-		width = document.viewport.getWidth()
-		height = document.viewport.getHeight()
-		$('canvas').width = width
-		$('canvas').height = height
-		$$('body')[0].style.width = width+"px"
-	}
-	else {
-		width = $('canvas').getWidth()
-		height = $('canvas').getHeight()
-		$('canvas').width = width
-		$('canvas').height = height
-	}
-	frame += 1
-	try { Events.drag() } catch(e) {}
-
-	// let additional script subscribe to the draw method:
-	draw_calls.each(function(call) {
+/**
+ * @namespace The base of the interface between javascript and the canvas element.
+ */
+var Glop = {
+	/**
+	 * The number of frames that have been drawn.
+	 * @type Number
+	 */
+	frame: 0,
+	/**
+	 * The width of the canvas
+	 * @type Number
+	 */
+	width: 0,
+	/**
+	 * The height of the canvas
+	 */
+	height: 0,
+	/**
+	 * Sets up powersaving.
+	 */
+	init: function() {
+		// seconds between redraws:
+		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
+	},
+	/**
+	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
+	 * the object array unless told not to (by  subscriber of glop:draw.
+	 */
+	draw: function() {
+		$C.clear()
 		
-	})
-	// cartagen-specific calls
-	if (typeof Cartagen != "undefined") Cartagen.draw()
-	else {
-		objects.each(function(object) { 
-			object.draw()
-		})
-	}
-
-    // cartagen-specific call - draws labels so that labels are drawn after
-    // other objects.
-	if (typeof Cartagen != "undefined") Cartagen.post_draw()
-	
-	if (mouseDown) {
-		mouseDown = false
-	}
-	if (mouseUp) {
-		mouseUp = false
-	}
-}
-
-function trace(e) {
-	return "An exception occurred in the script. Error name: " + e.name + ". Error description: " + e.description + ". Error number: " + e.number + ". Error message: " + e.message + ". Line number: "+ e.lineNumber
-}
-
-function highest_id() {
-	var high = 0
-	objects.each(function(object) {
-		if (object.obj_id > high) high = object.obj_id
-	})
-	return high
-}
-
-function isNthFrame(num) {
-	return ((frame % num) == 0);
-}
-
-function color_from_string(string) {
-	return "#"+(parseInt((string),36).toString(16)+"ab2828").truncate(6,"")
-}
-
-function randomColor() {
-	return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
-}
-
-function jsonify(input,newlines) {
-	if (newlines == null) var newline = ""
-	else var newline = "\r"
-	var json = ""
-	if (input instanceof Array) {
-		var string = ''
-		input.each(function(item) {
-			string += jsonify(item)+","+newline
-		})
-		string = string.truncate(string.length-1,'')
-		json += "["+string+"]"
-	} else if (Object.isString(input)) {
-		json += "'"+String(input).escapeHTML()+"'"
-	} else if (Object.isNumber(input)) {
-		json += String(input)
-	} else if (typeof input == 'object') {
-		var string = ''
-		Object.keys(input).each(function(key,index) {
-			string += key+": "+jsonify(Object.values(input)[index])+", "+newline
-		})
-		string.truncate(string.length-1)
-		json += "{"+string+"}"
-	} else {
-		json += String(input).escapeHTML()
-	}
-	return json
-}
-
-function deep_clone(obj) {
-    var c = {};
-    for (var i in obj) {
-        var prop = obj[i];
- 
-        if (prop instanceof Array) {
-			c[i] = prop.slice();
-        } else if (typeof prop == 'object') {
-           c[i] = deep_clone(prop);
+		if (Cartagen.fullscreen) {
+			Glop.width = document.viewport.getWidth()
+			Glop.height = document.viewport.getHeight()
+			$('canvas').width = Glop.width
+			$('canvas').height = Glop.height
+			$$('body')[0].style.width = Glop.width+"px"
+		}
+		else {
+			Glop.width = $('canvas').getWidth()
+			Glop.height = $('canvas').getHeight()
+			$('canvas').width = Glop.width
+			$('canvas').height = Glop.height
+		}
+		
+		Glop.frame += 1
+		
+		Events.drag()
+		
+		/**
+		 * @name Glop#glop:predraw
+		 * @event
+		 * Fired each frame before features are drawn.
+		 */
+		$('canvas').fire('glop:predraw')
+		
+		/**
+		 * @name Glop#glop:draw
+		 * @event
+		 * Fired each frame between glop:predraw and glop:postdraw. SHould be used
+		 * to draw features on the canvas. If the 'no_draw' property of the event
+		 * is set to true, GLOP will not raw the objects array.
+		 */
+		draw_event = $('canvas').fire('glop:draw')
+		
+		if (!draw_event.no_draw) {
+			objects.each(function(object) { 
+				object.draw()
+			})
+		}
+		
+		/**
+		 * @name Glop#glop:postdraw
+		 * @event
+		 * Fired at the end of each frame, after features are drawn.
+		 */
+		$('canvas').fire('glop:postdraw')
+	},
+	/**
+	 * Creates a random color
+	 * @return Color in rgb(r, g, b) format
+	 * @type String
+	 */
+	random_color: function() {
+		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
+	},
+	/**
+	 * Draws only if needed. Designed to be called periodically.
+	 */
+	draw_powersave: function() {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
+			Glop.draw()
 		} else {
-           c[i] = prop;
-        }
-    }
-    return c;
-}
-
-function draw_powersave() {
-	if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
-		draw()
-	} else {
-		if (last_event > frame-25) {
-			draw()
-		} else {
-			// console.log('sleeping')
+			if (Event.last_event > Glop.frame-25) {
+				Glop.draw()
+			} else {
+				// $l('sleeping')
+			}
 		}
 	}
 }
 
+document.observe('cartagen:init', Glop.init.bindAsEventListener(Glop))
+
+//= require "events"
+//= require "canvas"
+//= require "canvastext"
