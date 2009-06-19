@@ -12,7 +12,7 @@ var Projection = {
 	 */
 	current_projection: 'spherical_mercator',
 	/**
-	 * Scale to use when dealing with x/y
+	 * Now many x/y units a pixel represents.
 	 * @type Number
 	 * @default 100000
 	 */

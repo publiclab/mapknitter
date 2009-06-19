@@ -146,8 +146,8 @@ var Geohash = {
 	},
 	/** 
 	 * Fetch keys in a geohash from a geohash key, and all shorter keys, and place
-	 * then in {@link Geohash.keys}. Ensures that only one copy of a key will
-	 * be in {@link Geohash.keys}.
+	 * then in Geohash.keys. Ensures that only one copy of a key will
+	 * be in Geohash.keys.
 	 * @param {String} key Geohash to get keys from.
 	 * @see Geohash.get_upward
 	 */
@@ -194,8 +194,8 @@ var Geohash = {
 				
 				// if still inside viewport:
 				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
-				if (in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && 
-				    in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
+				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && 
+				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
 						
 				// if (Geometry.overlaps(bbox.latitude[2],bbox.longitude[2],Map.lat,Map.lon,
