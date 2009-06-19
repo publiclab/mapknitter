@@ -1,40 +1,44 @@
 //= require "geometry"
 //= require "debug"
 
-function in_range(v,r1,r2) {
+/**
+ * @name Math.in_range
+ * @function
+ * @memberOf Math
+ * Determines if a value is in a specified range. Order is not significant for the endpoints of
+ * the range.
+ * @param {Number} v  Value to test
+ * @param {Number} r1 One endpoint of the range
+ * @param {Number} r2 Other endpoint of the range
+ * @return Whether the value is in the range
+ * @type Boolean
+ */
+Math.in_range = function(v,r1,r2) {
 	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
 }
 
-
-// add Object.value, which returns the argument, unless the argument is a function,
-// in which case it calls the function and returns the result
+/**
+ * Finds the value of the argument, evaluating it as a function if possible.
+ * @param {Object} obj Object to find value of
+ * @return If the argument is a function, the result of evaluating it. Else,
+ *         the argument itself.
+ */
 Object.value = function(obj) {
     if(Object.isFunction(obj)) return obj()
     return obj
 }
 
+/**
+ * Returns the number, rounded to a certain precision
+ * @param {Number} prec Number of significant figures in the result
+ * @return The rounded number
+ * @type Number
+ */
 Number.prototype.to_precision = function(prec){
 	return (this * (1/prec)).round()/(1/prec)
 }
 
-// http://phpjs.org/functions/strstr
-// Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-// MIT License (http://www.opensource.org/licenses/mit-license.php)
-function strstr( haystack, needle, bool ) {
-    var pos = 0;
-
-    haystack += '';
-    pos = haystack.indexOf( needle );
-    if (pos == -1) {
-        return false;
-    } else{
-        if( bool ){
-            return haystack.substr( 0, pos );
-        } else{
-            return haystack.slice( pos );
-        }
-    }
-}
-
-// Rotates view slowly for cool demo purposes.
-function demo() { Map.rotate += 0.005 }
+/**
+ * Rotates view slowly for cool demo purposes.
+ */ 
+Cartagen.demo = function() { Map.rotate += 0.005 }

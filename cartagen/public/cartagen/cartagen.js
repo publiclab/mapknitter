@@ -388,14 +388,14 @@ var Geometry = {
 	intersect: function(box1top,box1left,box1bottom,box1right,box2top,box2left,box2bottom,box2right) {
 		return !(box2left > box1right || box2right < box1left || box2top > box1bottom || box2bottom < box1top)
 	},
-	is_point_in_poly: function(poly, _x, _y){
+	is_point_in_poly: function(poly, x, y){
 	    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-	        ((poly[i].y <= _y && _y < poly[j].y) || (poly[j].y <= _y && _y < poly[i].y))
-	        && (_x < (poly[j].x - poly[i].x) * (_y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
+	        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y))
+	        && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
 	        && (c = !c);
 	    return c;
 	},
-	poly_area: function(nodes) {
+	poly_area: function(nodes, signed) {
 		var area = 0
 		nodes.each(function(node,index) {
 			if (index < nodes.length-1) next = nodes[index+1]
@@ -404,7 +404,7 @@ var Geometry = {
 			else last = nodes[nodes.length-1]
 			area += last.x*node.y-node.x*last.y+node.x*next.y-next.x*node.y
 		})
-		if (arguments[1] == true) return area/2
+		if (signed) return area/2
 		else return Math.abs(area/2)
 	}
 }
@@ -468,10 +468,9 @@ $l = $D.log
 
 document.observe('cartagen:init', $D.init)
 
-function in_range(v,r1,r2) {
+Math.in_range = function(v,r1,r2) {
 	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
 }
-
 
 Object.value = function(obj) {
     if(Object.isFunction(obj)) return obj()
@@ -482,23 +481,7 @@ Number.prototype.to_precision = function(prec){
 	return (this * (1/prec)).round()/(1/prec)
 }
 
-function strstr( haystack, needle, bool ) {
-    var pos = 0;
-
-    haystack += '';
-    pos = haystack.indexOf( needle );
-    if (pos == -1) {
-        return false;
-    } else{
-        if( bool ){
-            return haystack.substr( 0, pos );
-        } else{
-            return haystack.slice( pos );
-        }
-    }
-}
-
-function demo() { Map.rotate += 0.005 }
+Cartagen.demo = function() { Map.rotate += 0.005 }
 var Geohash = {
 	_dirs: ['top','bottom','left','right'],
 	hash: new Hash(),
@@ -588,8 +571,8 @@ var Geohash = {
 				keys.set(k, true)
 
 				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
-				if (in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
-				    in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
+				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
+				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
 
 
@@ -1979,7 +1962,7 @@ var Projection = {
 	}
 }
 var Viewport = {
-	padding: 0, // frame to show bbox culling
+	padding: 0,
 	bbox: [],
 	width: 0,
 	height: 0,

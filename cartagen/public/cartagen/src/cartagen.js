@@ -11,7 +11,6 @@
  * <http://www.opensource.org/licenses/mit-license.php>.
  */
 
-// these belong in other objects... move them
 /**
  * Array of all objects that should be drawn.
  * @type Feature[]
@@ -106,7 +105,7 @@ var Cartagen = {
 	static_map: true,
 	/**
 	 * Path to layers that will be statically loaded on initialization. This should be
-	 * overriden by the user in the arguments passed to {@link setup}
+	 * overriden by the user in the arguments passed to setup
 	 * @type String[]
 	 */
 	static_map_layers: ["/static/rome/park.js"],
@@ -194,7 +193,7 @@ var Cartagen = {
 	 */
 	scripts: [],
 	/**
-	 * Registers {@link initialize} to run with the given configs when window is loaded
+	 * Registers initialize to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	setup: function(configs) {
@@ -205,7 +204,7 @@ var Cartagen = {
 	},
 	/**
 	 * Performs initialization tasks, mainly fetching map data. This should never be called directly,
-	 * rather it is intended to be registed as a callback for window.onload by {@link setup}
+	 * rather it is intended to be registed as a callback for window.onload by setup
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	initialize: function(configs) {
@@ -275,7 +274,7 @@ var Cartagen = {
 	},
 	/**
 	 * Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code.
-	 * Uses {@link Geohash} to draw each feature on the map.
+	 * Uses Geohash to draw each feature on the map.
 	 * @param {Event} e The Glop draw event.
 	 */
 	draw: function(e) {
@@ -326,7 +325,7 @@ var Cartagen = {
 		this.label_queue = []
     },
     /**
-     * Adds the label to the list of labels to be drawn during {@link post_draw}
+     * Adds the label to the list of labels to be drawn during post_draw
      * @param {Label}  label The label to draw
      * @param {Number} x     x-coord
      * @param {Number} y     y-coord
@@ -379,7 +378,7 @@ var Cartagen = {
 	},
 	/**
 	 * Parses feature data and creates Way and Node objects, registering them with
-	 * {@link Geohash}
+	 * Geohash
 	 * @param {Object} data OSM data to parse
 	 */
 	parse_objects: function(data) {

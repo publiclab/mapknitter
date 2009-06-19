@@ -4,7 +4,6 @@
         <a class="inner-link" href="#{[values.get("alias")]}-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
         <a class="inner-link" href="#{[values.get("alias")]}-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
         <a class="inner-link" href="#{[values.get("alias")]}-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
-        <a class="inner-link" href="#{[values.get("alias")]}-configs"><img src="resources/s.gif" class="item-icon icon-config">Config Options</a>
         <a class="bookmark" href="./index.html?class={[values.get("alias")]}"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
     </div>
     
@@ -25,14 +24,10 @@
 
     <h1>Class {[values.get("alias")]} (<a href="http://wiki.cartagen.org/wiki/show/ApiClass{[encodeURIComponent(values.get("alias").camelize())]}">Wiki Page</a>)</h1>     
     <table cellspacing="0">
-        <tr><td class="label">Package:</td><td class="hd-info">{[this.getPackageName(values.get("alias"))]}</td></tr>
         <tr><td class="label">Defined In:</td><td class="hd-info"><a href="{[this.linker.toParsedFileInRepo(values.get("srcFile")).toString(false,true)]}">{[JSDOC.Util.fileName(values.get("srcFile"))]}</a></td></tr>
         <tr><td class="label">Class:</td><td class="hd-info">{[this.getClassName(values.get("alias"))]}</td></tr>
         <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
         <tr><td class="label">Extends:</td><td class="hd-info"><tpl for="getAugments()"><a ext:cls="{name}" ext:member="" href="{[this.linker.toSymbol(values.name).toString(false)]}">{name}</a>&nbsp;</tpl></td></tr>        
-        <tr><td class="label">Version:</td><td class="hd-info">{[values.get("version")]}</td></tr>
-        <tr><td class="label">Author:</td><td class="hd-info">{[values.get("author")]}</td></tr>
-        <tr><td class="label">License:</td><td class="hd-info">{[values.get("license")]}</td></tr>
     </table>
     
     <div class="description">
