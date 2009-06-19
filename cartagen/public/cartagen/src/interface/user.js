@@ -84,7 +84,7 @@ var User = {
 	drawing_way: false,
 	/**
 	 * Ids of user-submitted nodes that have already been loaded
-	 * @type Number[]
+	 * @type String[]
 	 */
 	loaded_node_ids: [],
 	/**
@@ -119,11 +119,14 @@ var User = {
 	},
 	/**
 	 * Creates a node
-	 * @param {Number} [x]     X-coordinate of node. Defaults to {@link User.x}
-	 * @param {Number} [y]     Y-coordinate of node. Defaults to {@link User.y}
+	 * @param {Number} [x]     X-coordinate of node. Defaults to User.x
+	 * @param {Number} [y]     Y-coordinate of node. Defaults to User.y
 	 * @param {Boolean} [draw] Whether this node should be drawn on the canvas. Defaults to false.
+	 *                         If this is ture, the node is registered with Geohash.
 	 * @param {String} [id]    Id of the node. Defaults to a random number below 1000000000
 	 *                         prefixed with "temp_"
+	 * @return The created node
+	 * @type Node
 	 */
 	create_node: function(x, y, draw, id) {
 		if (Object.isUndefined(x)) x = User.x
