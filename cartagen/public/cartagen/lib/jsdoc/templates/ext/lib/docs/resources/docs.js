@@ -252,7 +252,7 @@ Ext.onReady(function(){
 
     Ext.QuickTips.init();
 
-    api_panel = new ApiPanel();
+    var api = new ApiPanel();
     var mainPanel = new MainPanel();
 
     api.on('click', function(node, e){
