@@ -288,11 +288,10 @@ var Cartagen = {
 		
 		Style.style_body()
 			
-        
         if (Viewport.padding > 0) {
-            strokeStyle('white')
-            lineWidth(2)
-            strokeRect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
+            $C.stroke_style('white')
+            $C.line_width(2)
+            $C.stroke_rect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
         }
         
         $C.translate(Glop.width / 2, Glop.height / 2)
@@ -308,12 +307,14 @@ var Cartagen = {
         Viewport.width = Math.max(Viewport.width, Viewport.height)
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
-        // strokeRect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
+        // $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 		
 		//Geohash lookup:
 		Geohash.objects.each(function(object) { 
 			object.draw()
 		})
+
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
 	},
     /**
      * Runs every frame, after everything else has been done.
@@ -629,7 +630,7 @@ var Cartagen = {
 		}
 	},
 	/**
-	 * Loads a script into <script> tags, no cross-domain limits.
+	 * Loads a script into <script src="" /> tags, no cross-domain limits.
 	 * @param {String} script Path to the script
 	 */
 	load_script: function(script) {
@@ -639,6 +640,22 @@ var Cartagen = {
 			'charset': 'utf-8', 
 			evalJSON: 'force' 
 		}));
+	},
+	/**
+	 * Loads data from a local KML file and dumps it into the Geohash object.
+	 * @param {String} url Path to the data file
+	 */
+	import_kml: function(url) {
+		new Ajax.Request(url,{
+			method: 'get',
+			onComplete: function(result) {
+				$l('completed load of KML')
+				response = result
+				$l(xml2json.xml_to_object(result.responseText))
+				$l('completed import of KML')
+			}
+		})
+		
 	}
 }
 

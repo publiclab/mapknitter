@@ -141,7 +141,8 @@ var Way = Class.create(Feature,
 
 		// fill the polygon if the beginning and end nodes are the same.
 		// we'll have to change this for open polys, like coastlines
-		$C.stroke()
+		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
+		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
 		// show bboxes for ways:
