@@ -104,11 +104,10 @@ var Cartagen = {
 
 		Style.style_body()
 
-
         if (Viewport.padding > 0) {
-            strokeStyle('white')
-            lineWidth(2)
-            strokeRect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
+            $C.stroke_style('white')
+            $C.line_width(2)
+            $C.stroke_rect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
         }
 
         $C.translate(Glop.width / 2, Glop.height / 2)
@@ -126,6 +125,8 @@ var Cartagen = {
 		Geohash.objects.each(function(object) {
 			object.draw()
 		})
+
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
 	},
     post_draw: function() {
         this.label_queue.each(function(item) {
@@ -337,6 +338,18 @@ var Cartagen = {
 			'charset': 'utf-8',
 			evalJSON: 'force'
 		}));
+	},
+	import_kml: function(url) {
+		new Ajax.Request(url,{
+			method: 'get',
+			onComplete: function(result) {
+				$l('completed load of KML')
+				response = result
+				$l(xml2json.xml_to_object(result.responseText))
+				$l('completed import of KML')
+			}
+		})
+
 	}
 }
 
@@ -701,12 +714,11 @@ var Style = {
 	parse_styles: function(feature,selector) {
 		if (selector.opacity) feature.opacity = selector.opacity
 		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
+		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
-		if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
-			feature.strokeStyle = selector.$C.stroke_style()
-		} else {
-			feature.strokeStyle = selector.strokeStyle
-		}
+		if (selector.strokeStyle) feature.strokeStyle = selector.strokeStyle
+		if (selector.outlineColor) feature.outlineColor = selector.outlineColor
+		if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
 
 		if (selector.pattern) {
 			feature.pattern_img = new Image()
@@ -738,6 +750,10 @@ var Style = {
 					feature.fillStyle = Style.styles[tag.key].fillStyle
 				if (Style.styles[tag.key].strokeStyle)
 					feature.strokeStyle = Style.styles[tag.key].strokeStyle
+				if (Style.styles[tag.key].outlineColor)
+					feature.outlineColor = Style.styles[tag.key].outlineColor
+				if (Style.styles[tag.key].outlineWidth)
+					feature.outlineWidth = Style.styles[tag.key].outlineWidth
 				if (Style.styles[tag.key].lineWidth)
 					feature.lineWidth = Style.styles[tag.key].lineWidth
 				if (Style.styles[tag.key].fontColor)
@@ -767,6 +783,10 @@ var Style = {
 					feature.fillStyle = Style.styles[tag.value].fillStyle
 				if (Style.styles[tag.value].strokeStyle)
 					feature.strokeStyle = Style.styles[tag.value].strokeStyle
+				if (Style.styles[tag.value].outlineColor)
+					feature.outlineColor = Style.styles[tag.value].outlineColor
+				if (Style.styles[tag.value].outlineWidth)
+					feature.outlineWidth = Style.styles[tag.value].outlineWidth
 				if (Style.styles[tag.value].lineWidth)
 					feature.label.lineWidth = Style.styles[tag.value].lineWidth
 				if (Style.styles[tag.value].fontColor)
@@ -1042,7 +1062,8 @@ var Way = Class.create(Feature,
 			}
 		},this)
 
-		$C.stroke()
+		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
+		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
 
@@ -1439,6 +1460,15 @@ $C = {
 		$C.canvas.stroke()
 	},
 
+	outline: function(color,width){
+		$C.save()
+			$C.stroke_style(color)
+			$C.line_width($C.canvas.lineWidth+(width*2))
+		$C.canvas.stroke()
+		$C.restore()
+		$C.canvas.stroke()
+	},
+
 	fill: function(){
 		$C.canvas.fill()
 	},
@@ -1766,6 +1796,36 @@ var User = {
 	},
 	center_map_on_user: function() {
 		User.set_loc_and_center()
+	},
+	mark: function() {
+		$C.stroke_style('white')
+		$C.line_width(3.5/Cartagen.zoom_level)
+		$C.begin_path()
+		$C.translate(User.x,User.y)
+		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
+		$C.move_to(10/Cartagen.zoom_level,0)
+		$C.line_to(6/Cartagen.zoom_level,0)
+		$C.move_to(-10/Cartagen.zoom_level,0)
+		$C.line_to(-6/Cartagen.zoom_level,0)
+		$C.move_to(0,10/Cartagen.zoom_level)
+		$C.line_to(0,6/Cartagen.zoom_level)
+		$C.move_to(0,-10/Cartagen.zoom_level)
+		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.stroke()
+
+		$C.stroke_style('#4C6ACB')
+		$C.line_width(2/Cartagen.zoom_level)
+		$C.begin_path()
+		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
+		$C.move_to(10/Cartagen.zoom_level,0)
+		$C.line_to(6/Cartagen.zoom_level,0)
+		$C.move_to(-10/Cartagen.zoom_level,0)
+		$C.line_to(-6/Cartagen.zoom_level,0)
+		$C.move_to(0,10/Cartagen.zoom_level)
+		$C.line_to(0,6/Cartagen.zoom_level)
+		$C.move_to(0,-10/Cartagen.zoom_level)
+		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.stroke()
 	},
 	set_loc_and_center: function(loc) {
 		Map.x = User.x

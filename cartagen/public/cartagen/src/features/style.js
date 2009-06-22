@@ -44,13 +44,11 @@ var Style = {
 		// copy properties from selector
 		if (selector.opacity) feature.opacity = selector.opacity
 		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
+		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
-		if (selector.strokeStyle && Object.isFunction(selector.strokeStyle)) {
-			// bind the styles object to the context of this Way:
-			feature.strokeStyle = selector.$C.stroke_style()
-		} else {
-			feature.strokeStyle = selector.strokeStyle
-		}
+		if (selector.strokeStyle) feature.strokeStyle = selector.strokeStyle
+		if (selector.outlineColor) feature.outlineColor = selector.outlineColor
+		if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
 		
 		// patterns
 		if (selector.pattern) {
@@ -88,6 +86,10 @@ var Style = {
 					feature.fillStyle = Style.styles[tag.key].fillStyle
 				if (Style.styles[tag.key].strokeStyle) 
 					feature.strokeStyle = Style.styles[tag.key].strokeStyle
+				if (Style.styles[tag.key].outlineColor) 
+					feature.outlineColor = Style.styles[tag.key].outlineColor
+				if (Style.styles[tag.key].outlineWidth) 
+					feature.outlineWidth = Style.styles[tag.key].outlineWidth
 				if (Style.styles[tag.key].lineWidth) 
 					feature.lineWidth = Style.styles[tag.key].lineWidth
 				if (Style.styles[tag.key].fontColor) 
@@ -117,6 +119,10 @@ var Style = {
 					feature.fillStyle = Style.styles[tag.value].fillStyle
 				if (Style.styles[tag.value].strokeStyle) 
 					feature.strokeStyle = Style.styles[tag.value].strokeStyle
+				if (Style.styles[tag.value].outlineColor) 
+					feature.outlineColor = Style.styles[tag.value].outlineColor
+				if (Style.styles[tag.value].outlineWidth) 
+					feature.outlineWidth = Style.styles[tag.value].outlineWidth
 				if (Style.styles[tag.value].lineWidth) 
 					feature.label.lineWidth = Style.styles[tag.value].lineWidth
 				if (Style.styles[tag.value].fontColor) 
