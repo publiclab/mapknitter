@@ -195,6 +195,39 @@ var User = {
 		User.set_loc_and_center()
 	},
 	/**
+	 * Draws a small circle of desired color centered on the user's latitude and longitude.
+	 */
+	mark: function() {
+		$C.stroke_style('white')
+		$C.line_width(3.5/Cartagen.zoom_level)
+		$C.begin_path()
+		$C.translate(User.x,User.y)
+		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
+		$C.move_to(10/Cartagen.zoom_level,0)
+		$C.line_to(6/Cartagen.zoom_level,0)
+		$C.move_to(-10/Cartagen.zoom_level,0)
+		$C.line_to(-6/Cartagen.zoom_level,0)
+		$C.move_to(0,10/Cartagen.zoom_level)
+		$C.line_to(0,6/Cartagen.zoom_level)
+		$C.move_to(0,-10/Cartagen.zoom_level)
+		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.stroke()
+				
+		$C.stroke_style('#4C6ACB')
+		$C.line_width(2/Cartagen.zoom_level)
+		$C.begin_path()
+		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
+		$C.move_to(10/Cartagen.zoom_level,0)
+		$C.line_to(6/Cartagen.zoom_level,0)
+		$C.move_to(-10/Cartagen.zoom_level,0)
+		$C.line_to(-6/Cartagen.zoom_level,0)
+		$C.move_to(0,10/Cartagen.zoom_level)
+		$C.line_to(0,6/Cartagen.zoom_level)
+		$C.move_to(0,-10/Cartagen.zoom_level)
+		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.stroke()
+	},
+	/**
 	 * Sets the user's location and centers the map on the new location
 	 * @param {Location} loc Location object from navigator.geolocation
 	 */

@@ -174,6 +174,20 @@ $C = {
 	},
 	
 	/**
+	 * Draws an outlined (dotted, outlined, etc) stroke along the current path.
+	 * @function
+	 */
+	outline: function(color,width){
+		$C.save()
+		// this should eventually inherit from the master default styles
+			$C.stroke_style(color)
+			$C.line_width($C.canvas.lineWidth+(width*2))
+		$C.canvas.stroke()
+		$C.restore()
+		$C.canvas.stroke()
+	},
+	
+	/**
 	 * Closes the current path, then fills it.
 	 */
 	fill: function(){

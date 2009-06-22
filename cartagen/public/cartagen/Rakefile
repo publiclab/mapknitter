@@ -30,7 +30,7 @@ end
 
 
 def build
-	puts 'building...'
+	puts 'building... '+DateTime.new.to_s
 	$:.push 'lib/sprockets'
 	require 'sprockets'
 	
