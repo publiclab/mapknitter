@@ -38,7 +38,7 @@ $C = {
 	 */
 	fill_pattern: function(image, repeat) {
 		// this seems to often fail, so wrapped in a try:
-		if (!Object.isUndefined(image)) { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
 	},
 	/**
 	 * Alias of canvas.translate

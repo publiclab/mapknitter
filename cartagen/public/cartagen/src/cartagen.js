@@ -115,9 +115,9 @@ var Cartagen = {
 	 */
 	dynamic_layers: [],
 	/**
-	 * ???
+	 * precision of latitude/longitude requests,
 	 */
-	range: 0.003,
+	precision: 0.001,
 	/**
 	 * Upper bound of map
 	 * @type Number
@@ -312,10 +312,11 @@ var Cartagen = {
 		Cartagen.plot_array.each(function(plot) {
 			$C.stroke_style('red')
 			$C.line_width(4)
+			//[lon1, lat2, lon2, lat1]
 			var x = Projection.lon_to_x(plot[0])
-			var y = Projection.lat_to_y(plot[1])
+			var y = Projection.lat_to_y(plot[3])
 			var w = Projection.lon_to_x(plot[2])-x
-			var h = Projection.lat_to_y(plot[3])-y
+			var h = Projection.lat_to_y(plot[1])-y
 			$C.stroke_rect(x,y,w,h)
 		})
 		
@@ -470,13 +471,12 @@ var Cartagen = {
 	 */
 	get_current_plot: function() {
 		if (Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) {
-			var new_lat1,new_lat2,new_lng1,new_lng2
-			new_lat1 = Projection.y_to_lat(Map.y)-Cartagen.range
-			new_lng1 = Projection.x_to_lon(-Map.x)-Cartagen.range
-			new_lat2 = Projection.y_to_lat(Map.y)+Cartagen.range
-			new_lng2 = Projection.x_to_lon(-Map.x)+Cartagen.range
-			// this will look for cached plots, or get new ones if it fails
-			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
+			// find all geohashes we want to request:
+			$l('keys: '+Geohash.keys.size())
+			Geohash.keys.keys().each(function(key) {
+				// this will look for cached plots, or get new ones if it fails to find cached ones
+				if (key.length == 6) Cartagen.get_cached_plot(key)
+			})
 		}
 		Map.last_pos[0] = Map.x
 		Map.last_pos[1] = Map.y
@@ -501,18 +501,13 @@ var Cartagen = {
 		})
 	},
 	/** 
-	 * Reduces precision of a plot request to quantize plot requests,
-	 * checks against local storage for browers with HTML 5,
+	 * Checks against local storage for browers with HTML 5,
 	 * then fetches the plot and parses the data into the objects array.
 	 */
-	get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
-		plot_precision = 0.001
-		_lat1 = _lat1.to_precision(plot_precision)
-		_lng1 = _lng1.to_precision(plot_precision)
-		_lat2 = _lat2.to_precision(plot_precision)
-		_lng2 = _lng2.to_precision(plot_precision)
+	get_cached_plot: function(key) {
 		var cached = false
-		Cartagen.plot_array.push([_lng1,_lat1,_lng2,_lat2])
+		Cartagen.plot_array.push(Geohash.bbox(key))
+		$l('loading geohash plot: '+key)
 
 		// Remember that parse_objects() will fill localStorage.
 		// We can't do it here because it's an asychronous AJAX call.
@@ -520,46 +515,36 @@ var Cartagen = {
 		// if we're not live-loading:
 		if (!Cartagen.live) {
 			// check if we've loaded already this session:
-			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
+			if (Cartagen.plots.get(key)) {
 				// no live-loading, so:
 				$l("already loaded plot")
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
 				if (typeof localStorage != "undefined") {
-					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
+					$l('localStorage exists!')
+					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
-						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+						Cartagen.plots.set(key,true)
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
 						// it's not in the localStorage:
-						Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
+						Cartagen.load_plot(key)
 					}
 				} else {
 					// not loaded this session and no localStorage, so:
-					Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
-					Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+					Cartagen.load_plot(key)
+					Cartagen.plots.set(key,true)
 				}
 			}
 			// if the bleed level of this plot is > 0
-			if (_bleed > 0) {
-				$l('bleeding to neighbors with bleed = '+_bleed)
-				// bleed to 8 neighboring plots, decrement bleed:
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1,_lat2+plot_precision,_lng2,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1,_lng1+plot_precision,_lat2,_lng2+plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1,_lat2-plot_precision,_lng2,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1,_lng1-plot_precision,_lat2,_lng2-plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1+plot_precision,_lat2-plot_precision,_lng2+plot_precision,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
-			}
+			// if (_bleed > 0) {
+			// 	$l('bleeding to neighbors')
+			// 	// bleed to 4 neighboring plots, decrement bleed:
+			// }
 		} else {
 			// we're live-loading! Gotta get it no matter what:
-			Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
+			Cartagen.load_plot(key)
 		}
 	},	
 	/**
@@ -586,7 +571,13 @@ var Cartagen = {
 	 * @param {Number} _lat2  Lower bound
 	 * @param {Number} _lng2  Right bound
 	 */
-	load_plot: function(_lat1,_lng1,_lat2,_lng2) {
+	load_plot: function(key) {
+		var bbox = Geohash.bbox(key)
+		var _lng1 = bbox[0]//.to_precision(Cartagen.precision)
+		var _lat2 = bbox[1]//.to_precision(Cartagen.precision)
+		var _lng2 = bbox[2]//.to_precision(Cartagen.precision)
+		var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
+		
 		Cartagen.requested_plots++
 		$l('loading plot!')
 		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
