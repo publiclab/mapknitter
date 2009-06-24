@@ -8,6 +8,7 @@ class NodeController < ApplicationController
     n.lat = params[:lat]
     n.lon = params[:lon]
     n.author = params[:author]
+		n.description = 'shiny mushroom'
     n.save
     render :text => n.id
   end

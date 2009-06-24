@@ -179,12 +179,12 @@ var Cartagen = {
 	 * Queue of labels to draw
 	 * @type Label[]
 	 */
-    label_queue: [],
+        label_queue: [],
 	/**
 	 * Should deebug messages be sent to the console?
 	 * @type Boolean
 	 */
-    debug: false,
+        debug: false,
 	/**
 	 * An array of scripts that will be loaded when Cartagen is initialized.
 	 * 
@@ -319,6 +319,13 @@ var Cartagen = {
 			var h = Projection.lat_to_y(plot[1])-y
 			$C.stroke_rect(x,y,w,h)
 		})
+
+		/**
+		 *@name Cartagen#cartagen:predraw
+		 *Fires just before features are drawn
+		 *@event
+		 */
+		$('canvas').fire('cartagen:predraw')
 		
 		//Geohash lookup:
 		Geohash.objects.each(function(object) { 
@@ -396,6 +403,9 @@ var Cartagen = {
 	parse_objects: function(data) {
 		data.osm.node.each(function(node){
 	        var n = new Node
+			n.name = node.name
+			n.author = n.author
+			n.img = n.img
 			n.h = 10
 			n.w = 10
 			n.color = Glop.random_color()
@@ -411,6 +421,12 @@ var Cartagen = {
 			// but we're missing some nodes when we render... semantic ones i think. cross-check.
 			// objects.push(n)
 			Cartagen.nodes.set(n.id,n)
+			if (node.display) {
+				$l(node)
+				n.display = true
+				n.radius = 50
+				Geohash.put(n.lat, n.lon, n, 1)
+			}
 	    })
 		data.osm.way.each(function(way){
 			if (Cartagen.live || !Cartagen.ways.get(way.id)) {
@@ -507,7 +523,6 @@ var Cartagen = {
 	get_cached_plot: function(key) {
 		var cached = false
 		Cartagen.plot_array.push(Geohash.bbox(key))
-		$l('loading geohash plot: '+key)
 
 		// Remember that parse_objects() will fill localStorage.
 		// We can't do it here because it's an asychronous AJAX call.
@@ -517,7 +532,7 @@ var Cartagen = {
 			// check if we've loaded already this session:
 			if (Cartagen.plots.get(key)) {
 				// no live-loading, so:
-				$l("already loaded plot")
+				//$l("already loaded plot")
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
 				if (typeof localStorage != "undefined") {
@@ -572,6 +587,8 @@ var Cartagen = {
 	 * @param {Number} _lng2  Right bound
 	 */
 	load_plot: function(key) {
+		$l('loading geohash plot: '+key)
+		
 		var bbox = Geohash.bbox(key)
 		var _lng1 = bbox[0]//.to_precision(Cartagen.precision)
 		var _lat2 = bbox[1]//.to_precision(Cartagen.precision)
@@ -580,9 +597,14 @@ var Cartagen = {
 		
 		Cartagen.requested_plots++
 		$l('loading plot!')
-		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
+		var finished = false
+
+		Cartagen.plots.set(key, true)
+		
+		var req = new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
 			method: 'get',
-			onComplete: function(result) {
+			onSuccess: function(result) {
+
 				$l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
@@ -593,6 +615,16 @@ var Cartagen = {
 				Cartagen.requested_plots--
 			}
 		})
+
+		// abort after 20 secs
+		(function(){
+			if (!finished) {
+				req.transport.onreadystatechange = Prototype.emptyFunction
+				req.transport.abort()
+				Cartagen.requested_plots--
+				$l("Request aborted. Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+			}
+		}).delay(20)
 	},
 	/**
 	 * Searches all objects by tags, and sets highlight=true for all matches.
@@ -627,7 +659,7 @@ var Cartagen = {
 	 * Sends user to an image of the current canvas
 	 */
 	redirect_to_image: function() {
-		document.location = $C.toDataURL();
+		document.location = $C.to_data_URL();
 	},
 	/**
 	 * Loads each script in scripts array, sequentially.

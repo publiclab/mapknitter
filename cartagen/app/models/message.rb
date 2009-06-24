@@ -53,5 +53,39 @@ class Message < ActiveRecord::Base
       n.save
     end
   end
+
+	def search?
+		return self.text[0..5] == 'search'
+	end
+
+	def use_as_search
+		return false unless self.search?
+
+		query = text.split
+
+		# return false if no geohash
+		return false if query.length == 1
+
+		lat, lon = GeoHash.decode(query[-1])
+
+		min_lat, max_lat = lat - 0.01, lat + 0.01
+		min_lon, max_lon = lon - 0.01, lon + 0.01
+
+		# if >2 words, there must be tags in the query
+		if query.length > 2
+			tags = query[1..-2]
+			nodes = Node.find(:all, :limit => 10, :conditions =>
+				['(lat BETWEEN ? AND ?) AND (lon BETWEEN ? AND ?) AND (description LIKE ?) AND way_id = 0',
+			   min_lat, max_lat, min_lon, max_lon, '%' + tags.join(' ') + '%'])
+		else
+			tags = []
+			nodes = Node.find(:all, :limit => 10, :conditions =>
+				['(lat BETWEEN ? AND ?) AND (lon BETWEEN ? AND ?) AND way_id = 0',
+			   min_lat, max_lat, min_lon, max_lon])
+		end
+
+		puts nodes
+		return nodes
+	end
   
 end
