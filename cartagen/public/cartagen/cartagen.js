@@ -528,7 +528,7 @@ var Geohash = {
 		this.put(Projection.y_to_lat(feature.y),
 		         Projection.x_to_lon(feature.x),
 		         feature,
-		         this.get_key_length(feature.width,feature.height)-1)
+		         this.get_key_length(feature.width,feature.height))
 	},
 	get_key: function(lat,lon,length) {
 		if (!length) length = this.default_length
@@ -596,9 +596,18 @@ var Geohash = {
 		}, this)
 	},
 	trace: function() {
+		var lengths = new Hash
 		this.hash.keys().each(function(key) {
 			$l(key+': '+this.hash.get(key).length)
+			if (!lengths.get(key.length)) lengths.set(key.length,0)
+			lengths.set(key.length,lengths.get(key.length)+1)
 		}, this)
+
+		$l('Lengths >>')
+
+		lengths.keys().sort().each(function(length) {
+			$l(length+": "+lengths.get(length))
+		})
 
 		return this.hash.size()
 	},
