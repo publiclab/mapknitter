@@ -5,7 +5,7 @@ Mime::Type.register "text/kml", :kml
 
 class Openstreetmap
   include HTTParty
-  base_uri 'api.openstreetmap.org'
+  base_uri 'dad.media.mit.edu:3001'
   # base_uri 'xapi.openstreetmap.org'
   # base_uri 'www.informationfreeway.org'
   # base_uri 'osmxapi.hypercube.telascience.org'
