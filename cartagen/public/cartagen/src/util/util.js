@@ -19,12 +19,14 @@ Math.in_range = function(v,r1,r2) {
 
 /**
  * Finds the value of the argument, evaluating it as a function if possible.
- * @param {Object} obj Object to find value of
+ * @param {Object} obj       Object to find value of
+ * @param {Object} [context] Context in which to evaluate the function, if needed.
  * @return If the argument is a function, the result of evaluating it. Else,
  *         the argument itself.
  */
-Object.value = function(obj) {
-    if(Object.isFunction(obj)) return obj()
+Object.value = function(obj, context) {
+	context = context || this
+    if(Object.isFunction(obj)) return obj.bind(this)()
     return obj
 }
 

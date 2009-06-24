@@ -54,4 +54,9 @@ class MessagesController < ApplicationController
     render :xml => Keyvalue.find(:all, :conditions => {:message_id => params[:id]})
   end
 
+	def search
+		n = Message.new
+		n.text = params[:text]
+		render :xml => n.use_as_search
+	end
 end

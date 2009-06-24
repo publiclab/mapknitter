@@ -34,7 +34,7 @@ var Geohash = {
 	 * Binds to events
 	 */
 	init: function() {
-		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
+		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 	},
 	/**
 	 * Once-per-frame calls to regenerate objects, etc.
@@ -76,20 +76,10 @@ var Geohash = {
 	 * @see Geohash.get_key_length
 	 */
 	put_object: function(feature) {
-		var length = this.get_key_length(feature.width,feature.height)
-		
-		if (length == 7) length -= 1
-		else if (length == 6) length -= 1
-		else if (length == 5) length -= 0
-		else if (length == 4) length += 1
-		else if (length == 3) length += 1
-		else if (length == 2) length += 1
-		else if (length == 1) length += 1
-		
 		this.put(Projection.y_to_lat(feature.y),
 		         Projection.x_to_lon(feature.x),
 		         feature,
-		         length)
+		         this.get_key_length(feature.width,feature.height))
 	},
 	/**
 	 * Generates a geohash.
@@ -221,14 +211,14 @@ var Geohash = {
 		var lengths = new Hash
 		this.hash.keys().each(function(key) {
 			$l(key+': '+this.hash.get(key).length)
-			if (!lengths.get(key.length)) lengths.set(key.length,[0,0])
-			lengths.set(key.length,[lengths.get(key.length)[0]+1,lengths.get(key.length)[1]+this.hash.get(key).length])
+			if (!lengths.get(key.length)) lengths.set(key.length,0)
+			lengths.set(key.length,lengths.get(key.length)+1)
 		}, this)
 		
 		$l('Lengths >>')
 		
 		lengths.keys().sort().each(function(length) {
-			$l(length+": "+lengths.get(length)[0]+", features: "+lengths.get(length)[1])
+			$l(length+": "+lengths.get(length))
 		})
 		
 		return this.hash.size()
@@ -278,8 +268,6 @@ var Geohash = {
 	 * @type Number
 	 */
 	get_key_length: function(lat,lon) {
-		var lon_key,lat_key
-		
 		if      (lon < 0.0000003357) lon_key = 12
 		else if (lon < 0.000001341)  lon_key = 11
 		else if (lon < 0.00001072)   lon_key = 10
@@ -308,9 +296,7 @@ var Geohash = {
 		else if (lat < 45)           lat_key = 1
 		else                         lat_key = 0 // eventually we can map the whole planet at once
 		
-		var length = Math.min(lat_key,lon_key)
-				
-		return length
+		return Math.min(lat_key,lon_key)
 	},
 	/**
 	 * Generates Geohash.objects, populating it with the objects that
