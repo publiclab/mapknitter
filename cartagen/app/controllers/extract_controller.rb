@@ -36,4 +36,14 @@ class ExtractController < ApplicationController
       end
     end
 
+    def georss_to_json
+      params[:url] ||= "http://api.flickr.com/services/feeds/geo/?tags=mushroommap&lang=en-us&format=rss_200"
+      @features = ParseGeoRss.parse(params[:url])
+      respond_to do |format|
+        format.html { render :html => @features }
+        format.xml  { render :xml => @features }
+        #format.kml  { render :template => "map/plot.kml.erb" }
+        format.js  { render :json => @features }
+      end
+    end
 end

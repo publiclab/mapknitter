@@ -2,6 +2,8 @@
  * @namespace Loads GSS stylesheets and applies styles to features.
  */
 var Style = {
+	properties: new Hash(),
+	label_styles: [],
 	/**
 	 * Storage for loaded styles
 	 * @type Object (GSS)
@@ -14,21 +16,32 @@ var Style = {
 			fontRotation: 0
 		}
 	},
+	register_properties: function(props) {
+		$H(props).each(function(pair) {
+			var name = pair.key
+			var handlers = pair.value
+			
+			handlers = handlers || {}
+			handlers.parse = handlers.parse || function(feature, value) {
+				feature[name] = value
+			}
+			handlers.apply = handlers.apply || Prototype.emptyFunction
+			
+			if (handlers.label_style) {
+				this.label_styles.push(name)
+			}
+			
+			this.properties.set(name, handlers)
+		}.bind(this))
+	},
 	/**
 	 * Applies the global "body" styles
 	 */
 	style_body: function() {
-		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
-		if (Style.styles.body.strokeStyle) $C.stroke_style(Style.styles.body.strokeStyle)
-		if (Style.styles.body.lineWidth || Style.styles.body.lineWidth == 0) 
-			$C.line_width(Style.styles.body.lineWidth)
-		if (Style.styles.body.pattern && Object.isUndefined(Style.styles.body.pattern_img)) {
-			Style.styles.body.pattern_img = new Image()
-			Style.styles.body.pattern_img.src = Style.styles.body.pattern
-		}
-		if (Style.styles.body.pattern_img) {
-			$C.fill_pattern(Style.styles.body.pattern_img,'repeat')
-		}
+		this.properties.each(function(property) {
+			if (Style.styles.body[property.key] || Style.styles.body[property.key] == 0)
+				property.value.apply(Style.styles.body)
+		})
 		$C.rect(0, 0, Glop.width, Glop.height)
 		$C.stroke_rect(0, 0, Glop.width, Glop.height)
 		$C.line_join('round')
@@ -41,21 +54,35 @@ var Style = {
 	 *                          that apply to tags of the feature.
 	 */
 	parse_styles: function(feature,selector) {
+		this.properties.each(function(property) {
+			var f = feature
+			if (property.value.label_style) {
+				var f = feature.label
+			}
+			
+			var h = property.value.parse.bind(f)
+			
+			if (selector[property.key])
+				h(feature, selector[property.key])
+				
+			if (Style.styles[feature.name] && Style.styles[feature.name][property.key])
+				h(feature, Style.styles[feature.name][property.key])
+				
+			feature.tags.each(function(tag) {
+				if (Style.styles[tag.key] && Style.styles[tag.key][property.key])
+					h(feature, Style.styles[tag.key][property.key])
+					
+				if (Style.styles[tag.value] && Style.styles[tag.value][property.key])
+					h(feature, Style.styles[tag.value][property.key])
+			})
+			
+		})
 		// copy properties from selector
-		if (selector.opacity) feature.opacity = selector.opacity
-		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
 		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
 		if (selector.strokeStyle) feature.strokeStyle = selector.strokeStyle
 		if (selector.outlineColor) feature.outlineColor = selector.outlineColor
 		if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
-		
-		// patterns
-		if (selector.pattern) {
-			feature.pattern_img = new Image()
-			feature.pattern_img.src = selector.pattern
-		}
-		
 		// radius is relevant to nodes, i.e. single points
 		if (selector.radius) feature.radius = selector.radius
 		
@@ -64,8 +91,6 @@ var Style = {
 		if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
 
 		// copy styles based on feature name
-		if (Style.styles[feature.name] && Style.styles[feature.name].fillStyle) 
-			feature.fillStyle = Style.styles[feature.name].fillStyle
 		if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle)
 			feature.strokeStyle = Style.styles[feature.name].strokeStyle
 
@@ -77,103 +102,82 @@ var Style = {
 		if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
 		if (selector.text) feature.label.text = selector.text
 
-		feature.tags.each(function(tag) {
-			//look for a style like this:
-			if (Style.styles[tag.key]) {
-				if (Style.styles[tag.key].opacity) 
-					feature.opacity = Style.styles[tag.key].opacity
-				if (Style.styles[tag.key].fillStyle) 
-					feature.fillStyle = Style.styles[tag.key].fillStyle
-				if (Style.styles[tag.key].strokeStyle) 
-					feature.strokeStyle = Style.styles[tag.key].strokeStyle
-				if (Style.styles[tag.key].outlineColor) 
-					feature.outlineColor = Style.styles[tag.key].outlineColor
-				if (Style.styles[tag.key].outlineWidth) 
-					feature.outlineWidth = Style.styles[tag.key].outlineWidth
-				if (Style.styles[tag.key].lineWidth) 
-					feature.lineWidth = Style.styles[tag.key].lineWidth
-				if (Style.styles[tag.key].fontColor) 
-					feature.label.fontColor = Style.styles[tag.key].fontColor
-				if (Style.styles[tag.key].fontSize) 
-					feature.label.fontSize = Style.styles[tag.key].fontSize
-				if (Style.styles[tag.key].fontScale) 
-					feature.label.fontScale = Style.styles[tag.key].fontScale
-				if (Style.styles[tag.key].fontRotation) 
-					feature.label.fontRotation = Style.styles[tag.key].fontRotation
-				if (Style.styles[tag.key].fontBackground) 
-					feature.label.fontBackground = Style.styles[tag.key].fontBackground
-				if (Style.styles[tag.key].text) {
-					if (Object.isFunction(Style.styles[tag.key].text)) 
-						feature.label.text = Style.styles[tag.key].text.apply(feature)
-					else feature.label.text = Style.styles[tag.key].text
+		if (feature.tags) {
+			feature.tags.each(function(tag) {
+				//look for a style like this:
+				if (Style.styles[tag.key]) {
+					if (Style.styles[tag.key].outlineColor)
+						feature.outlineColor = Style.styles[tag.key].outlineColor
+					if (Style.styles[tag.key].outlineWidth)
+						feature.outlineWidth = Style.styles[tag.key].outlineWidth
+					if (Style.styles[tag.key].fontColor) 
+						feature.label.fontColor = Style.styles[tag.key].fontColor
+					if (Style.styles[tag.key].fontSize) 
+						feature.label.fontSize = Style.styles[tag.key].fontSize
+					if (Style.styles[tag.key].fontScale) 
+						feature.label.fontScale = Style.styles[tag.key].fontScale
+					if (Style.styles[tag.key].fontRotation) 
+						feature.label.fontRotation = Style.styles[tag.key].fontRotation
+					if (Style.styles[tag.key].fontBackground) 
+						feature.label.fontBackground = Style.styles[tag.key].fontBackground
+					if (Style.styles[tag.key].text) {
+						if (Object.isFunction(Style.styles[tag.key].text)) 
+							feature.label.text = Style.styles[tag.key].text.apply(feature)
+						else feature.label.text = Style.styles[tag.key].text
+					}
 				}
-				if (Style.styles[tag.key].pattern) {
-					feature.pattern_img = new Image()
-					feature.pattern_img.src = Style.styles[tag.key].pattern
+				if (Style.styles[tag.value]) {
+					if (Style.styles[tag.value].outlineColor)
+						feature.outlineColor = Style.styles[tag.value].outlineColor
+					if (Style.styles[tag.value].outlineWidth)
+						feature.outlineWidth = Style.styles[tag.value].outlineWidth
+					if (Style.styles[tag.value].fontColor) 
+						feature.label.fontColor = Style.styles[tag.value].fontColor
+					if (Style.styles[tag.value].fontSize) 
+						feature.label.fontSize = Style.styles[tag.value].fontSize
+					if (Style.styles[tag.value].fontScale) 
+						feature.label.fontScale = Style.styles[tag.value].fontScale
+					if (Style.styles[tag.value].fontRotation) 
+						feature.label.fontRotation = Style.styles[tag.value].fontRotation
+					if (Style.styles[tag.value].fontBackground) 
+						feature.label.fontBackground = Style.styles[tag.value].fontBackground
+					if (Style.styles[tag.value].text) {
+						if (Object.isFunction(Style.styles[tag.value].text)) 
+							feature.label.text = Style.styles[tag.value].text.apply(feature)
+						else feature.label.text = Style.styles[tag.value].text
+					}
 				}
-			}
-			if (Style.styles[tag.value]) {
-				if (Style.styles[tag.value].opacity) 
-					feature.opacity = Style.styles[tag.value].opacity
-				if (Style.styles[tag.value].fillStyle) 
-					feature.fillStyle = Style.styles[tag.value].fillStyle
-				if (Style.styles[tag.value].strokeStyle) 
-					feature.strokeStyle = Style.styles[tag.value].strokeStyle
-				if (Style.styles[tag.value].outlineColor) 
-					feature.outlineColor = Style.styles[tag.value].outlineColor
-				if (Style.styles[tag.value].outlineWidth) 
-					feature.outlineWidth = Style.styles[tag.value].outlineWidth
-				if (Style.styles[tag.value].lineWidth) 
-					feature.label.lineWidth = Style.styles[tag.value].lineWidth
-				if (Style.styles[tag.value].fontColor) 
-					feature.label.fontColor = Style.styles[tag.value].fontColor
-				if (Style.styles[tag.value].fontSize) 
-					feature.label.fontSize = Style.styles[tag.value].fontSize
-				if (Style.styles[tag.value].fontScale) 
-					feature.label.fontScale = Style.styles[tag.value].fontScale
-				if (Style.styles[tag.value].fontRotation) 
-					feature.label.fontRotation = Style.styles[tag.value].fontRotation
-				if (Style.styles[tag.value].fontBackground) 
-					feature.label.fontBackground = Style.styles[tag.value].fontBackground
-				if (Style.styles[tag.value].text) {
-					if (Object.isFunction(Style.styles[tag.value].text)) 
-						feature.label.text = Style.styles[tag.value].text.apply(feature)
-					else feature.label.text = Style.styles[tag.value].text
-				}
-				if (Style.styles[tag.value].pattern) {
-					feature.pattern_img = new Image()
-					feature.pattern_img.src = Style.styles[tag.value].pattern
-				}
-			}
+	
+				//check tags for hover:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
+					feature.hover = Style.styles[tag.key]['hover']
 
-			//check tags for hover:
-			if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
-				feature.hover = Style.styles[tag.key]['hover']
-			}
-			if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
-				feature.hover = Style.styles[tag.value]['hover']
-			}
-			//check tags for mouseDown:
-			if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
-				feature.mouseDown = Style.styles[tag.key]['mouseDown']
-			}
-			if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
-				feature.mouseDown = Style.styles[tag.value]['mouseDown']
-			}
-			// check tags for refresh:
-			if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
-
-				$H(Style.styles[tag.key]['refresh']).each(function(pair) {
-					Style.create_refresher(feature, pair.key, pair.value)
-				})
-			}
-			if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
-				if(!feature.style_generators) feature.style_generators = {}
-				$H(Style.styles[tag.value]['refresh']).each(function(pair) {
-					Style.create_refresher(feature, pair.key, pair.value)
-				})
-			}
-		})
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
+					feature.hover = Style.styles[tag.value]['hover']
+				}
+				//check tags for mouseDown:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
+					feature.mouseDown = Style.styles[tag.key]['mouseDown']
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
+					feature.mouseDown = Style.styles[tag.value]['mouseDown']
+				}
+				// check tags for refresh:
+				if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
+	
+					$H(Style.styles[tag.key]['refresh']).each(function(pair) {
+						Style.create_refresher(feature, pair.key, pair.value)
+					})
+				}
+				if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
+					if(!feature.style_generators) feature.style_generators = {}
+					$H(Style.styles[tag.value]['refresh']).each(function(pair) {
+						Style.create_refresher(feature, pair.key, pair.value)
+					})
+				}
+			})
+		}
 	},
 	/**
 	 * Creates a periodical executer that updates a property
@@ -209,22 +213,11 @@ var Style = {
 	 * @param {Feature} feature Feature that will be drawn
 	 */
 	apply_style: function(feature) {
-		$C.opacity(1)
-		if (feature.opacity) {
-			$C.opacity(Object.value(feature.opacity))
-		}
-		if (feature.strokeStyle) {
-			 $C.stroke_style(Object.value(feature.strokeStyle))
-		}
-		if (feature.fillStyle) {
-			$C.fill_style(Object.value(feature.fillStyle))
-		}
-		if (feature.pattern_img) {
-			$C.fill_pattern(feature.pattern_img,'repeat')
-		}
-		if (feature.lineWidth) {
-			$C.line_width(Object.value(feature.lineWidth))
-		}
+		this.properties.each(function(property) {
+			if (feature[property.key]) {
+				property.value.apply(feature)
+			}
+		})
 		
 		// trigger hover and mouseDown styles:
 		if (feature instanceof Way) {
@@ -252,7 +245,7 @@ var Style = {
 		}
 	},
 	/**
-	 * Same as {@see Style.apply_style} but just for fonts. This was necessary because
+	 * Same as apply_style but just for fonts. This was necessary because
 	 * strokeStyle and such have to be reset *after* drawing actual polygons but
 	 * *before* drawing text.
 	 * @param {Feature} feature The feature whose label will be drawn
@@ -276,34 +269,54 @@ var Style = {
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
 				Style.styles = ("{"+result.responseText+"}").evalJSON()
-				//Style.stylesheet_source = "{"+result.responseText+"}"
-				//Style.apply_gss(Style.stylesheet_source)
-				// populate the gss field
+				if (this.styles['body']) 
+					this.parse_styles(this.styles.body, this.styles.body)
+				if (this.styles['node'])
+					this.parse_styles(this.styles.node, this.styles.node)
+				if (this.styles['way'])
+					this.parse_styles(this.styles.way, this.styles.way)
+
 				if($('gss_textarea')) {
 					$('gss_textarea').value = result.responseText
 				}
 			}
 		})
-	},
-	/**
-	 * Given a string of gss, applies the string to all Ways and Nodes in the objects array
-	 * @param {String} gss String of GSS
-	 * @param {Boolean} clear If true, styles are reset before they are applied.
-	 */ 
-	apply_gss: function(gss) {
-		if (Object.isUndefined(arguments[1])) var clear_styles = true
-		else clear_styles = arguments[1]
-		Style.styles = gss.evalJSON()
-		objects.each(function(object) {
-			if (clear_styles) {
-				object.lineWeight = null
-				object.strokeStyle = null
-				object.fillStyle = null
-				object.hover = null
-				object.mouseDown = null
-			}
-			if (object instanceof Node) Style.parse_styles(object,Style.styles.node)
-			if (object instanceof Way) Style.parse_styles(object,Style.styles.way)
-		},this)
 	}
 }
+
+Style.register_properties({
+	fillStyle: {
+		apply: function(feature) {
+			$C.fill_style(Object.value(feature.fillStyle))
+		}
+	},
+	pattern: {
+		parse: function(feature, value) {
+			feature.pattern = new Image()
+			feature.pattern.src = Object.value(value)
+		},
+		apply: function(feature) {
+			if (!feature.pattern.src) {
+				var value = feature.pattern
+				feature.pattern = new Image()
+				feature.pattern.src = Object.value(value)
+			}
+			$C.fill_pattern(feature.pattern, 'repeat')
+		}
+	},
+	strokeStyle: {
+		apply: function(feature) {
+			$C.stroke_style(feature.strokeStyle)
+		}
+	},
+	opacity: {
+		apply: function(feature) {
+			$C.opacity(feature.opacity)
+		}
+	},
+	lineWidth: {
+		apply: function(feature) {
+			$C.line_width(feature.lineWidth)
+		}
+	}
+})
