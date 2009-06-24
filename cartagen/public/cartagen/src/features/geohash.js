@@ -93,7 +93,7 @@ var Geohash = {
 		if (!length) length = this.default_length
 		if (length < 1) length = 1
 		
-		return encodeGeoHash(lat,lon).truncate(length)
+		return encodeGeoHash(lat,lon).truncate(length,'')
 	},
 	/**
 	 * Fetch features in a geohash
@@ -132,15 +132,15 @@ var Geohash = {
 	 * @see Geohash.get_keys_upward
 	 */ 
 	get_upward: function(key) {
-		key.truncate(this.limit_bottom)
+		key.truncate(this.limit_bottom,'')
 
 		var this_level = this.hash.get(key)
 		
 		if (this_level && key.length > 0) {
-			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1)))
+			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1),''))
 			else return this_level
 		} else {
-			if (key.length > 1) return this.get_upward(key.truncate(key.length-1))
+			if (key.length > 1) return this.get_upward(key.truncate(key.length-1),'')
 			else return []
 		}
 	},
@@ -152,11 +152,11 @@ var Geohash = {
 	 * @see Geohash.get_upward
 	 */
 	get_keys_upward: function(key) {
-		key.truncate(this.limit_bottom)
+		key.truncate(this.limit_bottom,'')
 		
 		if (key.length > 0) {
 			this.keys.set(key, true)
-			k = key.truncate(key.length-1)
+			k = key.truncate(key.length-1,'')
 			if (key.length > 1 && !Geohash.keys.get(k)) {
 				this.get_keys_upward(k)
 			}
@@ -198,9 +198,6 @@ var Geohash = {
 				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
 						
-				// if (Geometry.overlaps(bbox.latitude[2],bbox.longitude[2],Map.lat,Map.lon,
-				//     Math.min(Map.lat_height,Map.lon_width)/2)) this.fill_bbox(k,keys)
-				
 				this.draw_bbox(k)
 			}
 		}, this)
