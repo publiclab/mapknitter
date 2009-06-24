@@ -123,7 +123,7 @@ var Cartagen = {
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
 		Cartagen.plot_array.each(function(plot) {
 			$C.stroke_style('red')
-			$C.line_width(2)
+			$C.line_width(4)
 			var x = Projection.lon_to_x(plot[0])
 			var y = Projection.lat_to_y(plot[1])
 			var w = Projection.lon_to_x(plot[2])-x
@@ -1415,7 +1415,7 @@ $C = {
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
-		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
+		if (!Object.isUndefined(image)) { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
 	},
 	translate: function(x,y) {
 		$C.canvas.translate(x,y)
