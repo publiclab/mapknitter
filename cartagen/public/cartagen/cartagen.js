@@ -35,7 +35,7 @@ var Cartagen = {
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
 	dynamic_layers: [],
-	range: 0.001,
+	range: 0.003,
 	lat1: 41.9227,
 	lat2: 41.861,
 	lng1: 12.4502,
@@ -76,7 +76,7 @@ var Cartagen = {
 
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
-			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
+			this.get_current_plot()
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
 				this.static_map_layers.each(function(layer_url) {
@@ -121,6 +121,15 @@ var Cartagen = {
         Viewport.width = Math.max(Viewport.width, Viewport.height)
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
+		Cartagen.plot_array.each(function(plot) {
+			$C.stroke_style('red')
+			$C.line_width(2)
+			var x = Projection.lon_to_x(plot[0])
+			var y = Projection.lat_to_y(plot[1])
+			var w = Projection.lon_to_x(plot[2])-x
+			var h = Projection.lat_to_y(plot[3])-y
+			$C.stroke_rect(x,y,w,h)
+		})
 
 		Geohash.objects.each(function(object) {
 			object.draw()
@@ -213,13 +222,14 @@ var Cartagen = {
 
 		objects.sort(Cartagen.sort_by_area)
 	},
+	plot_array: [],
 	get_current_plot: function() {
 		if (Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) {
 			var new_lat1,new_lat2,new_lng1,new_lng2
-			new_lat1 = Projection.y_to_lat(Map.y)-range
-			new_lng1 = Projection.x_to_lon(Map.x)-range
-			new_lat2 = Projection.y_to_lat(Map.y)+range
-			new_lng2 = Projection.x_to_lon(Map.x)+range
+			new_lat1 = Projection.y_to_lat(Map.y)-Cartagen.range
+			new_lng1 = Projection.x_to_lon(-Map.x)-Cartagen.range
+			new_lat2 = Projection.y_to_lat(Map.y)+Cartagen.range
+			new_lng2 = Projection.x_to_lon(-Map.x)+Cartagen.range
 			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
 		}
 		Map.last_pos[0] = Map.x
@@ -247,6 +257,7 @@ var Cartagen = {
 		_lat2 = _lat2.to_precision(plot_precision)
 		_lng2 = _lng2.to_precision(plot_precision)
 		var cached = false
+		Cartagen.plot_array.push([_lng1,_lat1,_lng2,_lat2])
 
 
 		if (!Cartagen.live) {
@@ -282,22 +293,27 @@ var Cartagen = {
 				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
 			}
 		} else {
-			load_plot(_lat1,_lng1,_lat2,_lng2)
+			Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
 		}
 	},
 	delayed_get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
 		bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
-		setTimeout("get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
+		setTimeout("Cartagen.get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
 	},
 	load_plot: function(_lat1,_lng1,_lat2,_lng2) {
 		Cartagen.requested_plots++
-		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
+		$l('loading plot!')
+		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
 			method: 'get',
 			onComplete: function(result) {
+				$l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+			},
+			onFailure: function() {
+				Cartagen.requested_plots--
 			}
 		})
 	},
@@ -1399,7 +1415,7 @@ $C = {
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
-		$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
 	},
 	translate: function(x,y) {
 		$C.canvas.translate(x,y)

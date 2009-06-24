@@ -63,6 +63,12 @@ class MapController < ApplicationController
       format.js  { render :json => @features }
     end
   end
+  
+  # # yields a plot where coastlines are collected in relations
+  # # see: http://wiki.openstreetmap.org/wiki/Relations/Proposed/Collected_Ways
+  # def plot_relation_adder
+  #   
+  # end
 
   # accepts lat1,lng1,lat2,lng2 and returns osm features for the bounding box in various formats
   def tag
