@@ -35,7 +35,7 @@ var Cartagen = {
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
 	dynamic_layers: [],
-	range: 0.003,
+	precision: 0.001,
 	lat1: 41.9227,
 	lat2: 41.861,
 	lng1: 12.4502,
@@ -125,9 +125,9 @@ var Cartagen = {
 			$C.stroke_style('red')
 			$C.line_width(4)
 			var x = Projection.lon_to_x(plot[0])
-			var y = Projection.lat_to_y(plot[1])
+			var y = Projection.lat_to_y(plot[3])
 			var w = Projection.lon_to_x(plot[2])-x
-			var h = Projection.lat_to_y(plot[3])-y
+			var h = Projection.lat_to_y(plot[1])-y
 			$C.stroke_rect(x,y,w,h)
 		})
 
@@ -225,12 +225,10 @@ var Cartagen = {
 	plot_array: [],
 	get_current_plot: function() {
 		if (Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) {
-			var new_lat1,new_lat2,new_lng1,new_lng2
-			new_lat1 = Projection.y_to_lat(Map.y)-Cartagen.range
-			new_lng1 = Projection.x_to_lon(-Map.x)-Cartagen.range
-			new_lat2 = Projection.y_to_lat(Map.y)+Cartagen.range
-			new_lng2 = Projection.x_to_lon(-Map.x)+Cartagen.range
-			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
+			$l('keys: '+Geohash.keys.size())
+			Geohash.keys.keys().each(function(key) {
+				if (key.length == 6) Cartagen.get_cached_plot(key)
+			})
 		}
 		Map.last_pos[0] = Map.x
 		Map.last_pos[1] = Map.y
@@ -250,57 +248,46 @@ var Cartagen = {
 			}
 		})
 	},
-	get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
-		plot_precision = 0.001
-		_lat1 = _lat1.to_precision(plot_precision)
-		_lng1 = _lng1.to_precision(plot_precision)
-		_lat2 = _lat2.to_precision(plot_precision)
-		_lng2 = _lng2.to_precision(plot_precision)
+	get_cached_plot: function(key) {
 		var cached = false
-		Cartagen.plot_array.push([_lng1,_lat1,_lng2,_lat2])
+		Cartagen.plot_array.push(Geohash.bbox(key))
+		$l('loading geohash plot: '+key)
 
 
 		if (!Cartagen.live) {
-			if (Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2) && Cartagen.plots.get(_lat1+","+_lng1+","+_lat2+","+_lng2)[0]) {
+			if (Cartagen.plots.get(key)) {
 				$l("already loaded plot")
 			} else {
 				if (typeof localStorage != "undefined") {
-					var ls = localStorage.getItem(_lat1+","+_lng1+","+_lat2+","+_lng2)
+					$l('localStorage exists!')
+					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
-						Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+						Cartagen.plots.set(key,true)
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
-						Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
+						Cartagen.load_plot(key)
 					}
 				} else {
-					Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
-					Cartagen.plots.set(_lat1+","+_lng1+","+_lat2+","+_lng2,[true,_bleed])
+					Cartagen.load_plot(key)
+					Cartagen.plots.set(key,true)
 				}
 			}
-			if (_bleed > 0) {
-				$l('bleeding to neighbors with bleed = '+_bleed)
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1+plot_precision,_lat2+plot_precision,_lng2+plot_precision,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1-plot_precision,_lat2-plot_precision,_lng2-plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1,_lat2+plot_precision,_lng2,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1,_lng1+plot_precision,_lat2,_lng2+plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1,_lat2-plot_precision,_lng2,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1,_lng1-plot_precision,_lat2,_lng2-plot_precision,_bleed-1)
-
-				Cartagen.delayed_get_cached_plot(_lat1-plot_precision,_lng1+plot_precision,_lat2-plot_precision,_lng2+plot_precision,_bleed-1)
-				Cartagen.delayed_get_cached_plot(_lat1+plot_precision,_lng1-plot_precision,_lat2+plot_precision,_lng2-plot_precision,_bleed-1)
-			}
 		} else {
-			Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
+			Cartagen.load_plot(key)
 		}
 	},
 	delayed_get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
 		bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
 		setTimeout("Cartagen.get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
 	},
-	load_plot: function(_lat1,_lng1,_lat2,_lng2) {
+	load_plot: function(key) {
+		var bbox = Geohash.bbox(key)
+		var _lng1 = bbox[0]//.to_precision(Cartagen.precision)
+		var _lat2 = bbox[1]//.to_precision(Cartagen.precision)
+		var _lng2 = bbox[2]//.to_precision(Cartagen.precision)
+		var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
+
 		Cartagen.requested_plots++
 		$l('loading plot!')
 		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
@@ -547,7 +534,7 @@ var Geohash = {
 		if (!length) length = this.default_length
 		if (length < 1) length = 1
 
-		return encodeGeoHash(lat,lon).truncate(length)
+		return encodeGeoHash(lat,lon).truncate(length,'')
 	},
 	get: function(lat,lon,length) {
 		if (!length) length = this.default_length
@@ -559,24 +546,24 @@ var Geohash = {
 		return this.hash.get(key) || []
 	},
 	get_upward: function(key) {
-		key.truncate(this.limit_bottom)
+		key.truncate(this.limit_bottom,'')
 
 		var this_level = this.hash.get(key)
 
 		if (this_level && key.length > 0) {
-			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1)))
+			if (key.length > 1) return this_level.concat(this.get_upward(key.truncate(key.length-1),''))
 			else return this_level
 		} else {
-			if (key.length > 1) return this.get_upward(key.truncate(key.length-1))
+			if (key.length > 1) return this.get_upward(key.truncate(key.length-1),'')
 			else return []
 		}
 	},
 	get_keys_upward: function(key) {
-		key.truncate(this.limit_bottom)
+		key.truncate(this.limit_bottom,'')
 
 		if (key.length > 0) {
 			this.keys.set(key, true)
-			k = key.truncate(key.length-1)
+			k = key.truncate(key.length-1,'')
 			if (key.length > 1 && !Geohash.keys.get(k)) {
 				this.get_keys_upward(k)
 			}
@@ -603,7 +590,6 @@ var Geohash = {
 				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
 				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
-
 
 				this.draw_bbox(k)
 			}
@@ -1415,7 +1401,7 @@ $C = {
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
-		if (!Object.isUndefined(image)) { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
 	},
 	translate: function(x,y) {
 		$C.canvas.translate(x,y)
