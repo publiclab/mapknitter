@@ -117,7 +117,7 @@ var Cartagen = {
 	/**
 	 * ???
 	 */
-	range: 0.001,
+	range: 0.003,
 	/**
 	 * Upper bound of map
 	 * @type Number
@@ -244,7 +244,8 @@ var Cartagen = {
 		// Startup:
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
-			this.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
+			this.get_current_plot()
+			// Cartagen.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
 			// if (Prototype.Browser.MobileSafari) {
@@ -308,6 +309,15 @@ var Cartagen = {
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
         // $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
+		Cartagen.plot_array.each(function(plot) {
+			$C.stroke_style('red')
+			$C.line_width(4)
+			var x = Projection.lon_to_x(plot[0])
+			var y = Projection.lat_to_y(plot[1])
+			var w = Projection.lon_to_x(plot[2])-x
+			var h = Projection.lat_to_y(plot[3])-y
+			$C.stroke_rect(x,y,w,h)
+		})
 		
 		//Geohash lookup:
 		Geohash.objects.each(function(object) { 
@@ -452,15 +462,19 @@ var Cartagen = {
 		objects.sort(Cartagen.sort_by_area)
 	},
 	/**
+	 * An array of bboxes of requested plots... helps in debugging what has been requested.
+	 */
+	plot_array: [],
+	/**
 	 * Gets the plot under the current center of the viewport
 	 */
 	get_current_plot: function() {
 		if (Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) {
 			var new_lat1,new_lat2,new_lng1,new_lng2
-			new_lat1 = Projection.y_to_lat(Map.y)-range
-			new_lng1 = Projection.x_to_lon(Map.x)-range
-			new_lat2 = Projection.y_to_lat(Map.y)+range
-			new_lng2 = Projection.x_to_lon(Map.x)+range
+			new_lat1 = Projection.y_to_lat(Map.y)-Cartagen.range
+			new_lng1 = Projection.x_to_lon(-Map.x)-Cartagen.range
+			new_lat2 = Projection.y_to_lat(Map.y)+Cartagen.range
+			new_lng2 = Projection.x_to_lon(-Map.x)+Cartagen.range
 			// this will look for cached plots, or get new ones if it fails
 			Cartagen.get_cached_plot(new_lat1,new_lng1,new_lat2,new_lng2,Cartagen.bleed_level)
 		}
@@ -498,6 +512,7 @@ var Cartagen = {
 		_lat2 = _lat2.to_precision(plot_precision)
 		_lng2 = _lng2.to_precision(plot_precision)
 		var cached = false
+		Cartagen.plot_array.push([_lng1,_lat1,_lng2,_lat2])
 
 		// Remember that parse_objects() will fill localStorage.
 		// We can't do it here because it's an asychronous AJAX call.
@@ -544,7 +559,7 @@ var Cartagen = {
 			}
 		} else {
 			// we're live-loading! Gotta get it no matter what:
-			load_plot(_lat1,_lng1,_lat2,_lng2)
+			Cartagen.load_plot(_lat1,_lng1,_lat2,_lng2)
 		}
 	},	
 	/**
@@ -561,7 +576,7 @@ var Cartagen = {
 	 */
 	delayed_get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
 		bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
-		setTimeout("get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
+		setTimeout("Cartagen.get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
 	},
 	/**
 	 * Requests a JSON plot for a bbox from the server
@@ -573,13 +588,18 @@ var Cartagen = {
 	 */
 	load_plot: function(_lat1,_lng1,_lat2,_lng2) {
 		Cartagen.requested_plots++
-		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2+'',{
+		$l('loading plot!')
+		new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
 			method: 'get',
 			onComplete: function(result) {
+				$l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+			},
+			onFailure: function() {
+				Cartagen.requested_plots--
 			}
 		})
 	},
