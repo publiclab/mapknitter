@@ -147,6 +147,7 @@ var User = {
 			objects.push(node)
         	Glop.draw()
 		}
+
 		return node
 	},
 	/**
@@ -157,11 +158,14 @@ var User = {
 	 */
 	submit_node: function(x, y) {
 		var node = User.create_node(x, y, true)
+		var name = prompt('Name for the node')
+		node.label.name = name
 		var params = {
 			color: User.color,
 			lon: node.lon,
 			lat: node.lat,
-			author: User.name
+			author: User.name,
+			name: name
 		}
 		new Ajax.Request(User.node_submit_uri, {
 			method: 'post',
@@ -248,7 +252,6 @@ var User = {
 		if (User.drawing_way) {
 			User.add_node(x, y)
 			User.submit_way(User.way)
-
 		}
 		else {
 			User.way = new Way({
@@ -271,10 +274,13 @@ var User = {
 	 * @param {Way} way Way to submit
 	 */
 	submit_way: function(way) {
+		var name = prompt('Name for the way')
+		way.label.text = name
  		var params = {
 			color: User.color,
 			author: User.name,
 			bbox: way.bbox,
+			name: name,
 			nodes: way.nodes.collect(function(node) {
 				return [node.lat, node.lon]
 			})
@@ -334,6 +340,7 @@ var User = {
 				}
 				else {
 					var n = new Node
+					n.id = 'cartagen_' + node.id
 					n.height = User.node_radius*2
 					n.width = User.node_radius*2
 					n.radius = User.node_radius
@@ -341,6 +348,11 @@ var User = {
 					n.user = node.author
 					n.lat = node.lat
 					n.lon = node.lon
+
+					if (node.name) {
+						n.label.text = node.name
+					}
+
 					// BAD!!! Why do we need a *-1????
 					n.x = -1*Projection.lon_to_x(n.lon)
 					n.y = Projection.lat_to_y(n.lat)
@@ -398,6 +410,10 @@ var User = {
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
+
+			if (way.name) {
+				w.label.text = way.name
+			}
 		})
 	}
 }

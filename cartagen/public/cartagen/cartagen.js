@@ -551,20 +551,10 @@ var Geohash = {
 		this.hash.set(key,merge_hash)
 	},
 	put_object: function(feature) {
-		var length = this.get_key_length(feature.width,feature.height)
-
-		if (length == 7) length -= 1
-		else if (length == 6) length -= 1
-		else if (length == 5) length -= 0
-		else if (length == 4) length += 1
-		else if (length == 3) length += 1
-		else if (length == 2) length += 1
-		else if (length == 1) length += 1
-
 		this.put(Projection.y_to_lat(feature.y),
 		         Projection.x_to_lon(feature.x),
 		         feature,
-		         length)
+		         this.get_key_length(feature.width,feature.height))
 	},
 	get_key: function(lat,lon,length) {
 		if (!length) length = this.default_length
@@ -635,14 +625,14 @@ var Geohash = {
 		var lengths = new Hash
 		this.hash.keys().each(function(key) {
 			$l(key+': '+this.hash.get(key).length)
-			if (!lengths.get(key.length)) lengths.set(key.length,[0,0])
-			lengths.set(key.length,[lengths.get(key.length)[0]+1,lengths.get(key.length)[1]+this.hash.get(key).length])
+			if (!lengths.get(key.length)) lengths.set(key.length,0)
+			lengths.set(key.length,lengths.get(key.length)+1)
 		}, this)
 
 		$l('Lengths >>')
 
 		lengths.keys().sort().each(function(length) {
-			$l(length+": "+lengths.get(length)[0]+", features: "+lengths.get(length)[1])
+			$l(length+": "+lengths.get(length))
 		})
 
 		return this.hash.size()
@@ -675,8 +665,6 @@ var Geohash = {
 		}
 	},
 	get_key_length: function(lat,lon) {
-		var lon_key,lat_key
-
 		if      (lon < 0.0000003357) lon_key = 12
 		else if (lon < 0.000001341)  lon_key = 11
 		else if (lon < 0.00001072)   lon_key = 10
@@ -705,9 +693,7 @@ var Geohash = {
 		else if (lat < 45)           lat_key = 1
 		else                         lat_key = 0 // eventually we can map the whole planet at once
 
-		var length = Math.min(lat_key,lon_key)
-
-		return length
+		return Math.min(lat_key,lon_key)
 	},
 	get_objects: function() {
 		this.objects = []
@@ -1016,6 +1002,8 @@ var Feature = Class.create(
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
+
+		this.label = new Label(this)
 	},
 	draw: function() {
 		Cartagen.object_count++
@@ -1023,6 +1011,10 @@ var Feature = Class.create(
 		Style.apply_style(this)
 		this.shape()
 		$C.restore()
+
+		if (Cartagen.zoom_level > 0.3) {
+			Cartagen.queue_label(this.label, this.x, this.y)
+		}
 	},
 	shape: function() {
 		$D.warn('Feature#shape should be overriden')
@@ -1055,7 +1047,6 @@ var Way = Class.create(Feature,
 		this.age = 0
 		this.highlight = false
 		this.nodes = []
-		this.label = null
 		this.closed_poly = false
 
 		Object.extend(this, data)
@@ -1076,7 +1067,6 @@ var Way = Class.create(Feature,
 		}
 
 		this.area = Geometry.poly_area(this.nodes)
-		this.label = new Label(this)
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
 
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
@@ -1139,10 +1129,6 @@ var Way = Class.create(Feature,
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
-
-		if (Cartagen.zoom_level > 0.3) {
-			Cartagen.queue_label(this.label, this.x, this.y)
-		}
 	}
 })
 var Label = Class.create(
@@ -1836,15 +1822,19 @@ var User = {
 			objects.push(node)
         	Glop.draw()
 		}
+
 		return node
 	},
 	submit_node: function(x, y) {
 		var node = User.create_node(x, y, true)
+		var name = prompt('Name for the node')
+		node.label.name = name
 		var params = {
 			color: User.color,
 			lon: node.lon,
 			lat: node.lat,
-			author: User.name
+			author: User.name,
+			name: name
 		}
 		new Ajax.Request(User.node_submit_uri, {
 			method: 'post',
@@ -1909,7 +1899,6 @@ var User = {
 		if (User.drawing_way) {
 			User.add_node(x, y)
 			User.submit_way(User.way)
-
 		}
 		else {
 			User.way = new Way({
@@ -1927,10 +1916,13 @@ var User = {
 		User.drawing_way = !User.drawing_way
 	},
 	submit_way: function(way) {
+		var name = prompt('Name for the way')
+		way.label.text = name
  		var params = {
 			color: User.color,
 			author: User.name,
 			bbox: way.bbox,
+			name: name,
 			nodes: way.nodes.collect(function(node) {
 				return [node.lat, node.lon]
 			})
@@ -1980,6 +1972,7 @@ var User = {
 				}
 				else {
 					var n = new Node
+					n.id = 'cartagen_' + node.id
 					n.height = User.node_radius*2
 					n.width = User.node_radius*2
 					n.radius = User.node_radius
@@ -1987,6 +1980,11 @@ var User = {
 					n.user = node.author
 					n.lat = node.lat
 					n.lon = node.lon
+
+					if (node.name) {
+						n.label.text = node.name
+					}
+
 					n.x = -1*Projection.lon_to_x(n.lon)
 					n.y = Projection.lat_to_y(n.lat)
 					n.strokeStyle = "rgba(0,0,0,0)"
@@ -2041,6 +2039,10 @@ var User = {
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
+
+			if (way.name) {
+				w.label.text = way.name
+			}
 		})
 	}
 }
