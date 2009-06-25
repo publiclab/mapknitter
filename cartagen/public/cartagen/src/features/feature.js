@@ -21,9 +21,16 @@ var Feature = Class.create(
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
+
+		/**
+		 * Label for this way
+		 * @type Label
+		 */
+		this.label = new Label(this)
 	},
 	/**
-	 * Draws this feature using shape(). Saves/restores the canvas and applies styles.
+	 * Draws this feature using shape(). Saves/restores the canvas and applies styles. Queues
+	 * this feature's label in the label drawing queue.
 	 */
 	draw: function() {
 		Cartagen.object_count++
@@ -31,6 +38,11 @@ var Feature = Class.create(
 		Style.apply_style(this)
 		this.shape()
 		$C.restore()
+
+		// draw label if we're zoomed in enough
+		if (Cartagen.zoom_level > 0.3) {
+			Cartagen.queue_label(this.label, this.x, this.y)
+		}
 	},
 	/**
 	 * Abstract method that should be overridden to draw the feature.

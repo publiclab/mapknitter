@@ -33,11 +33,6 @@ var Way = Class.create(Feature,
 		 */
 		this.nodes = []
 		/**
-		 * Label for this way
-		 * @type Label
-		 */
-		this.label = null
-		/**
 		 * If true, this way will be treated a a polygon and filled when drawn
 		 * @type Boolean
 		 */
@@ -62,7 +57,6 @@ var Way = Class.create(Feature,
 		}
 		
 		this.area = Geometry.poly_area(this.nodes)
-		this.label = new Label(this)
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
 		
 		// calculate longest dimension to file in a correct geohash:
@@ -149,10 +143,5 @@ var Way = Class.create(Feature,
 		// $C.line_width(1)
 		// $C.stroke_style('red')
 		// $C.stroke_rect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
-
-		// draw label if we're zoomed in enough'
-		if (Cartagen.zoom_level > 0.3) {
-			Cartagen.queue_label(this.label, this.x, this.y)
-		}
 	}
 })

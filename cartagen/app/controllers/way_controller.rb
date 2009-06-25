@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'JSON'
+require 'json'
 
 class WayController < ApplicationController
   skip_before_filter :verify_authenticity_token
@@ -14,7 +14,8 @@ class WayController < ApplicationController
       way.color = json['color']
       way.bbox = json['bbox']
       way.author = json['author']
-    
+			way.name = json['name']
+
       order = -1
       json['nodes'].each do |nd|
         node = Node.new

@@ -4,92 +4,94 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Cartagen</title>
-	<script src="/glop/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
-	<link rel="stylesheet" href="/glop/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<!--[if IE]><script type="text/javascript" src="../excanvas.js"></script><![endif]-->
+	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
+	<script src="/cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/cartagen/lib/geohash.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/cartagen/lib/xml2json.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		cartagen_base_uri = '/cartagen'
+	</script>
+	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
-		var fullscreen = <% if params[:fullscreen] %>true<% else %>false<% end %> // default false
-		var stylesheet = <% if params[:gss] %>"<%= params[:gss] %>"<% else %>"/glop/style.gss"<% end %>
-		var live = <% if params[:live] == "true" %>true<% else %>false<% end %> // default false
-		var powersave = <% if params[:powersave] == "false" %>false<% else %>true<% end %> // default true
-		var zoom_out_limit = 0.02
-		var simplify = 1
-		var static_map = false
-		// var static_map_layers = ["/coastline.js","/water.js","/primary.js"]
-		var range = <%= @map[:range] %>, lat1 = <%= @map[:lat1] %>, lat2 = <%= @map[:lat2] %>, lng1 = <%= @map[:lng1] %>, lng2 = <%= @map[:lng2] %>, zoom_level = <%= @map[:zoom_level] ||= 0 %>
-
-		scripts = [
-		'/glop/canvastext.js',
-		'/glop/canvas.js',
-		'/glop/glop.js',
-		'/glop/label.js',
-		'/glop/events.js',
-		'/glop/style.js',
-		'/glop/cartagen.js'
-		]
-
-		function load_script(script) {
-			$$('head')[0].insert(new Element('script', { 'src': script, 'type': 'text/javascript', 'charset': 'utf-8', evalJSON: 'force' }));
-		}
-		function load_next_script() {
-			if (scripts.length > 0) {
-	 			load_script(scripts.splice(0,1)[0])
-			}
-		}
-		function demo() {
-			try {
-				Map.rotate += 0.005
-			} catch(e) {
-				
-			}
-		}
-		<% if params[:demo] %>
-			// seconds between redraws:
-			new PeriodicalExecuter(demo, 0.2);
-		<% end %>
+		Cartagen.setup({
+			debug: true,
+			stylesheet: "/static/rome/style.gss",
+			// live: true,
+			static_map: false,
+			// static_map_layers: [
+			// 	"static/rome/park.js",
+			// 	"static/rome/rail.js",
+			// 	"static/rome/waterway.js",
+			// 	"static/rome/primary.js",
+			// 	"static/rome/secondary.js",
+			// 	"static/rome/building.js",
+			// 	"static/rome/area.js"
+			// 	],
+			lat1: <%= @map[:lat1] %>,
+			lat2: <%= @map[:lat2] %>,
+			lng1: <%= @map[:lng1] %>,
+			lng2: <%= @map[:lng2] %>,
+			// debug: true
+		})
 	</script>
 </head>
-<body oncontextmenu="return false;" onLoad="load_next_script();browser_check()">
+<body>
 
 <div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
 
-<script type="text/javascript" charset="utf-8">
-	function browser_check() {
-		$('browsers').absolutize;
-		$('browsers').style.top = "100px";	
-		$('browsers').style.margin = "0 auto";	
-		if (Prototype.Browser.IE || Prototype.Browser.WebKit) $('browsers').show();
-	}
-</script>
-
-<div id="browsers" style="">
-	<h3>Database Upgrade</h3>
-	<p>Cartagen's live edition is undergoing a database upgrade. Until then, take a look at the static version of Cartagen at <a href="http://cartagen.org/">Cartagen.org</a></p>
-</div>
-
-<!-- <div id="browsers" style="display:none;">
+<div id="browsers" style="display:none;">
 	<h3>WHOOPS</h3>
 	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
-</div> -->
+</div>
 
 <canvas id="canvas"></canvas>
 
-<div id="brief" style="<% if params[:fullscreen] %>display:none;<% end %>">
+<div class="overlay" id="gss" style="display:none;">
+	<h3>Import GSS:</h3>
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.load_styles($('import_gss').value)">
+		<p>
+			<input style="font-size:0.8em;" type="text" name="import_gss" value="http://" id="import_gss">
+			<input type="submit" value="Apply">
+		</p>
+	</form>
+	<h3>Edit GSS:</h3>
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.apply_gss($('gss_textarea').value)">
+		<textarea tabindex="1" id="gss_textarea" rows="30" cols="40"></textarea>
+		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();Cartagen.live_gss = false;">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
+	</form>
+</div>
+
+<div id="brief">
+	<script type="text/javascript" charset="utf-8">
+		if (Prototype.Browser.MobileSafari) {$('brief').hide()}
+	</script>
 	<div class="column first" id="brief_first">
 		<h2>Cartagen <br />
 			<small>a framework for dynamic mapping<br />
-			by <a href="http://unterbahn.com">Jeffrey Warren</a> (<a href="http://wiki.cartagen.org">Docs</a>, <a href="http://code.google.com/p/cartagen/">Source</a>, <a href="http://groups.google.com/group/cartagen-dev">List</a>)</small></h2>
-		<p><form action="/find" method="get" accept-charset="utf-8">
+			by <a href="http://unterbahn.com">Jeffrey Warren</a>
+			<br />
+			<a href="http://wiki.cartagen.org">Docs</a> |
+			<a href="http://code.google.com/p/cartagen/">Source</a> |
+			<a href="http://groups.google.com/group/cartagen-dev">List</a> |
+			<a href="http://unterbahn.com">Blog</a>
+			</small></h2>
+		<!-- <p><form action="/find" method="get" accept-charset="utf-8">
 			Go somewhere: <br />
-			<input style="width:170px;" type="text" name="id" value="">
-			<input type="button" name="some_name" value="Go">
-		</form></p>
+			<input style="width:170px;" tabindex="3" type="text" name="id" value="">
+			<input type="button" name="some_name" tabindex="4" value="Go">
+		</form></p> -->
 		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="Cartagen.highlight($('highlight').value)">
 			Search: <br />
-			<input style="width:170px;" type="text" id="highlight" value="">
-			<input type="submit" name="some_name" value="Go">
+			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
+			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
+		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a></p>
+		<p><a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a></p>
 	</div>
 	<div id="description">
 		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
