@@ -318,6 +318,12 @@ var Cartagen = {
 			var w = Projection.lon_to_x(plot[2])-x
 			var h = Projection.lat_to_y(plot[1])-y
 			$C.stroke_rect(x,y,w,h)
+			$C.draw_text('Helvetica', 
+			             9 / Cartagen.zoom_level, 
+						 'rgba(0,0,0,0.5)', 
+						 Projection.lon_to_x(plot[0]) + 3/Cartagen.zoom_level,
+						 Projection.lat_to_y(plot[3]) - 3/Cartagen.zoom_level, 
+						 plot[4])
 		})
 
 		/**
@@ -522,7 +528,6 @@ var Cartagen = {
 	 */
 	get_cached_plot: function(key) {
 		var cached = false
-		Cartagen.plot_array.push(Geohash.bbox(key))
 
 		// Remember that parse_objects() will fill localStorage.
 		// We can't do it here because it's an asychronous AJAX call.
@@ -540,6 +545,7 @@ var Cartagen = {
 					if (ls) {
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls.evalJSON())
+						Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						// it's not in the localStorage:
 						Cartagen.load_plot(key)
@@ -584,6 +590,7 @@ var Cartagen = {
 	 * @param {Number} _lng2  Right bound
 	 */
 	load_plot: function(key) {
+		Cartagen.plot_array.push(Geohash.bbox(key))
 		$l('loading geohash plot: '+key)
 		
 		var bbox = Geohash.bbox(key)

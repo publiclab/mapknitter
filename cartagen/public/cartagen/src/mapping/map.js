@@ -25,7 +25,7 @@ var Map = {
 		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
 		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
 		this.lat = Projection.y_to_lat(this.y)
-		this.lon = Projection.x_to_lon(this.x)
+		this.lon = Projection.x_to_lon(-this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
 	},
 	/**
