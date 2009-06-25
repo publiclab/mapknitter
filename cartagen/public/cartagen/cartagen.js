@@ -271,7 +271,6 @@ var Cartagen = {
 					$l('localStorage exists!')
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
-						Cartagen.plots.set(key,true)
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls)
 					} else {
@@ -279,7 +278,6 @@ var Cartagen = {
 					}
 				} else {
 					Cartagen.load_plot(key)
-					Cartagen.plots.set(key,true)
 				}
 			}
 		} else {
