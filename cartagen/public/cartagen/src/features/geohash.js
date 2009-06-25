@@ -231,7 +231,7 @@ var Geohash = {
 	 */
 	bbox: function(geohash) {
 		var geo = decodeGeoHash(geohash)
-		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0]]
+		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0],geohash]
 	},
 	/**
 	 * Draws the bounding box of a geohash
@@ -247,7 +247,7 @@ var Geohash = {
 			var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
 			var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
 			
-			$C.stroke_rect(-Glop.width - Projection.lon_to_x(bbox[0]),
+			$C.stroke_rect(Projection.lon_to_x(bbox[0]),
 			               Projection.lat_to_y(bbox[3]),
 						   width,
 						   height)
@@ -255,7 +255,7 @@ var Geohash = {
 			$C.draw_text('Helvetica', 
 			             9 / Cartagen.zoom_level, 
 						 'rgba(0,0,0,0.5)', 
-						 -Glop.width - Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
+						 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
 						 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level, 
 						 key)
 		}

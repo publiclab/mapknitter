@@ -129,6 +129,12 @@ var Cartagen = {
 			var w = Projection.lon_to_x(plot[2])-x
 			var h = Projection.lat_to_y(plot[1])-y
 			$C.stroke_rect(x,y,w,h)
+			$C.draw_text('Helvetica',
+			             9 / Cartagen.zoom_level,
+						 'rgba(0,0,0,0.5)',
+						 Projection.lon_to_x(plot[0]) + 3/Cartagen.zoom_level,
+						 Projection.lat_to_y(plot[3]) - 3/Cartagen.zoom_level,
+						 plot[4])
 		})
 
 		$('canvas').fire('cartagen:predraw')
@@ -261,7 +267,6 @@ var Cartagen = {
 	},
 	get_cached_plot: function(key) {
 		var cached = false
-		Cartagen.plot_array.push(Geohash.bbox(key))
 
 
 		if (!Cartagen.live) {
@@ -272,6 +277,7 @@ var Cartagen = {
 					if (ls) {
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls.evalJSON())
+						Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						Cartagen.load_plot(key)
 					}
@@ -288,6 +294,7 @@ var Cartagen = {
 		setTimeout("Cartagen.get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
 	},
 	load_plot: function(key) {
+		Cartagen.plot_array.push(Geohash.bbox(key))
 		$l('loading geohash plot: '+key)
 
 		var bbox = Geohash.bbox(key)
@@ -634,7 +641,7 @@ var Geohash = {
 	},
 	bbox: function(geohash) {
 		var geo = decodeGeoHash(geohash)
-		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0]]
+		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0],geohash]
 	},
 	draw_bbox: function(key) {
 		if (Geohash.grid) {
@@ -646,7 +653,7 @@ var Geohash = {
 			var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
 			var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
 
-			$C.stroke_rect(-Glop.width - Projection.lon_to_x(bbox[0]),
+			$C.stroke_rect(Projection.lon_to_x(bbox[0]),
 			               Projection.lat_to_y(bbox[3]),
 						   width,
 						   height)
@@ -654,7 +661,7 @@ var Geohash = {
 			$C.draw_text('Helvetica',
 			             9 / Cartagen.zoom_level,
 						 'rgba(0,0,0,0.5)',
-						 -Glop.width - Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
+						 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
 						 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
 						 key)
 		}
@@ -2117,7 +2124,7 @@ var Map = {
 		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
 		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
 		this.lat = Projection.y_to_lat(this.y)
-		this.lon = Projection.x_to_lon(this.x)
+		this.lon = Projection.x_to_lon(-this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
 	},
 	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Cartagen.zoom_level) },
