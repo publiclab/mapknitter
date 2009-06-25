@@ -73,10 +73,10 @@ class Message < ActiveRecord::Base
 
 		# if >2 words, there must be tags in the query
 		if query.length > 2
-			tags = query[1..-2]
+			tags = '%' + query[1..-2].join(' ') + '%'
 			nodes = Node.find(:all, :limit => 10, :conditions =>
-				['(lat BETWEEN ? AND ?) AND (lon BETWEEN ? AND ?) AND (description LIKE ?) AND way_id = 0',
-			   min_lat, max_lat, min_lon, max_lon, '%' + tags.join(' ') + '%'])
+				['(lat BETWEEN ? AND ?) AND (lon BETWEEN ? AND ?) AND ((description LIKE ?) OR (name LIKE ?)) AND way_id = 0',
+			   min_lat, max_lat, min_lon, max_lon, tags, tags])
 		else
 			tags = []
 			nodes = Node.find(:all, :limit => 10, :conditions =>

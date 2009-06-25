@@ -24,7 +24,7 @@ var Label = Class.create(
 		 */
 	    this.fontSize = 11,
 		/**
-		 * Background color for label. Set to null for no label.
+		 * Background color for label. Set to null for no label background.
 		 * @type String
 		 */
 	    this.fontBackground = null,
