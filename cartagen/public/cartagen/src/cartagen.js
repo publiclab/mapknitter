@@ -536,11 +536,10 @@ var Cartagen = {
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
 				if (typeof localStorage != "undefined") {
-					$l('localStorage exists!')
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-						Cartagen.parse_objects(ls)
+						Cartagen.parse_objects(ls.evalJSON())
 					} else {
 						// it's not in the localStorage:
 						Cartagen.load_plot(key)
@@ -594,17 +593,16 @@ var Cartagen = {
 		var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
 		
 		Cartagen.requested_plots++
-		$l('loading plot!')
 		var finished = false
-
-		Cartagen.plots.set(key, true)
-		
-		var req = new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
+		Cartagen.plots.set(key, true)	
+		// var req = new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
+		var req = new Ajax.Request('/api/0.6/map.json?bbox='+_lng1+","+_lat1+','+_lng2+','+_lat2,{
 			method: 'get',
 			onSuccess: function(result) {
 
 				$l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
+				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
@@ -615,14 +613,15 @@ var Cartagen = {
 		})
 
 		// abort after 20 secs
-		(function(){
+		var f = function(){
 			if (!finished) {
 				req.transport.onreadystatechange = Prototype.emptyFunction
 				req.transport.abort()
-				Cartagen.requested_plots--
+				// Cartagen.requested_plots--
 				$l("Request aborted. Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
-		}).delay(20)
+		}
+		f.delay(20)
 	},
 	/**
 	 * Searches all objects by tags, and sets highlight=true for all matches.

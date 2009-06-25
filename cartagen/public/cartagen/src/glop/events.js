@@ -113,6 +113,7 @@ var Events = {
 				case "h": Map.x -= 20/Cartagen.zoom_level; break
 				case "t": Map.y += 20/Cartagen.zoom_level; break
 				case "g": Map.y -= 20/Cartagen.zoom_level; break
+				case "x": localStorage.clear()
 			}
 		} else {
 			// just modifiers:
