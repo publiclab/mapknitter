@@ -50,6 +50,7 @@ var Cartagen = {
         label_queue: [],
         debug: false,
 	scripts: [],
+	load_user_features: false,
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		Event.observe(window, 'load', this.initialize.bind(this,configs))
@@ -237,7 +238,7 @@ var Cartagen = {
 			}
 		})
 
-		objects.sort(Cartagen.sort_by_area)
+		Geohash.sort_objects()
 	},
 	plot_array: [],
 	get_current_plot: function() {
@@ -720,6 +721,9 @@ var Geohash = {
 		}, this)
 
 		return this.objects.reverse()
+	},
+	sort_objects: function() {
+		this.keys.values().invoke('sort', Cartagen.sort_by_area)
 	}
 }
 
@@ -1790,8 +1794,10 @@ var User = {
 	drawing_way: false,
 	loaded_node_ids: [],
 	init: function() {
-		User.update()
-		new PeriodicalExecuter(User.update, 60)
+		if (Cartagen.load_user_features) {
+			User.update()
+			new PeriodicalExecuter(User.update, 60)
+		}
 	},
 	set_loc: function(loc) {
 		if (loc.coords) {
@@ -1950,6 +1956,7 @@ var User = {
 		Glop.draw()
 	},
 	update: function() {
+		if (!Cartagen.load_user_features) return
 		var params = {
 			bbox: Map.bbox.join(',')
 		}

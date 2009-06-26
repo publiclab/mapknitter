@@ -92,8 +92,10 @@ var User = {
 	 * data. Bound to cartagen:postinit
 	 */
 	init: function() {
-		User.update()
-		new PeriodicalExecuter(User.update, 60)
+		if (Cartagen.load_user_features) {
+			User.update()
+			new PeriodicalExecuter(User.update, 60)
+		}
 	},
 	/**
 	 * Sets the user's location
@@ -313,6 +315,7 @@ var User = {
 	 * Updates the map with other users' nodes and ways
 	 */
 	update: function() {
+		if (!Cartagen.load_user_features) return
 		var params = {
 			bbox: Map.bbox.join(',')
 		}
