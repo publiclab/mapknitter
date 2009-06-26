@@ -193,6 +193,11 @@ var Cartagen = {
 	 */
 	scripts: [],
 	/**
+	 * Whether to load user-submitted nodes and ways from the database
+	 * @type Boolean
+	 */
+	load_user_features: false,
+	/**
 	 * Registers initialize to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
@@ -482,7 +487,8 @@ var Cartagen = {
 		// })
 
 		// sort by polygons' node count:
-		objects.sort(Cartagen.sort_by_area)
+		// objects.sort(Cartagen.sort_by_area)
+		Geohash.sort_objects()
 	},
 	/**
 	 * An array of bboxes of requested plots... helps in debugging what has been requested.
