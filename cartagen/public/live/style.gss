@@ -16,7 +16,7 @@ way: {
 		lineWidth: 18,
 		strokeStyle: "red",
 		action: function() {
-			$l(this.parent)
+			// $l(this.parent)
 		}
 	}
 },
