@@ -142,7 +142,7 @@ var Cartagen = {
 	 * Current zoom level
 	 * @type Number
 	 */
-	zoom_level: 0.4,
+	zoom_level: 0.5,
 	/**
 	 * Hash of bbox => features
 	 * @type Hash
@@ -250,8 +250,8 @@ var Cartagen = {
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
 			this.get_current_plot(true)
-			new PeriodicalExecuter(Glop.draw,1)
-			new PeriodicalExecuter(this.get_current_plot,0.33)
+			new PeriodicalExecuter(Glop.draw,3)
+			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
 			this.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
@@ -495,7 +495,8 @@ var Cartagen = {
 	 * Gets the plot under the current center of the viewport
 	 */
 	get_current_plot: function(force) {
-		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force) {
+		force = force || false
+		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force != false || Glop.frame < 100) {
 			// find all geohashes we want to request:
 			if (Geohash.keys && Geohash.keys.keys()) {
 				try {
@@ -565,11 +566,6 @@ var Cartagen = {
 					Cartagen.load_plot(key)
 				}
 			}
-			// if the bleed level of this plot is > 0
-			// if (_bleed > 0) {
-			// 	$l('bleeding to neighbors')
-			// 	// bleed to 4 neighboring plots, decrement bleed:
-			// }
 		} else {
 			// we're live-loading! Gotta get it no matter what:
 			Cartagen.load_plot(key)
@@ -638,7 +634,7 @@ var Cartagen = {
 				$l("Request aborted. Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		}
-		f.delay(20)
+		f.delay(120)
 	},
 	/**
 	 * Searches all objects by tags, and sets highlight=true for all matches.
