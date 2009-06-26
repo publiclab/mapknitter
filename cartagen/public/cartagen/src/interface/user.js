@@ -143,6 +143,7 @@ var User = {
 		node.lat = Projection.y_to_lat(y)
 		node.fillStyle = User.color
 		node.strokeStyle = "rgba(0,0,0,0)"
+		node.user_submitted = true
 		
 		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
@@ -265,6 +266,7 @@ var User = {
 			User.way.strokeStyle = User.color
 			User.way.lineWidth = User.line_width
 			User.way.age = 40
+			User.way.user_submitted = true
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
 			Glop.draw()			
 		}
@@ -360,6 +362,7 @@ var User = {
 					n.x = -1*Projection.lon_to_x(n.lon)
 					n.y = Projection.lat_to_y(n.lat)
 					n.strokeStyle = "rgba(0,0,0,0)"
+					n.user_submitted = true
 					Geohash.put(n.lat, n.lon, n, 1)
 				}
 			}
@@ -394,6 +397,7 @@ var User = {
 			n.y = Projection.lat_to_y(n.lat)
 			n.strokeStyle = "rgba(0,0,0,0)"
 			n.order = node.order
+			n.user_submitted = true
 			if (nodes.get(node.way_id)) {
 				nodes.get(node.way_id).push(n)
 			}
@@ -413,6 +417,7 @@ var User = {
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
+			w.user_submitted = true
 
 			if (way.name) {
 				w.label.text = way.name
