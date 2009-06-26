@@ -551,7 +551,7 @@ var Cartagen = {
 					if (ls) {
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls.evalJSON())
-						Cartagen.plot_array.push(Geohash.bbox(key))
+						// Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						// it's not in the localStorage:
 						Cartagen.load_plot(key)
@@ -596,7 +596,7 @@ var Cartagen = {
 	 * @param {Number} _lng2  Right bound
 	 */
 	load_plot: function(key) {
-		Cartagen.plot_array.push(Geohash.bbox(key))
+		// Cartagen.plot_array.push(Geohash.bbox(key))
 		$l('loading geohash plot: '+key)
 		
 		var bbox = Geohash.bbox(key)
