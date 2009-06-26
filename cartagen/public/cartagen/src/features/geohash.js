@@ -35,6 +35,7 @@ var Geohash = {
 	 */
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	/**
 	 * Once-per-frame calls to regenerate objects, etc.
@@ -197,8 +198,6 @@ var Geohash = {
 				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && 
 				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
-						
-				this.draw_bbox(k)
 			}
 		}, this)
 	},
@@ -238,26 +237,31 @@ var Geohash = {
 	 * @param {String} key Geohash to draw bounding box of 
 	 */
 	draw_bbox: function(key) {
+		var bbox = this.bbox(key)
+
+		$C.line_width(1/Cartagen.zoom_level)
+		$C.stroke_style('rgba(0,0,0,0.5)')
+
+		var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
+		var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
+
+		$C.stroke_rect(Projection.lon_to_x(bbox[0]),
+					   Projection.lat_to_y(bbox[3]),
+					   width,
+					   height)
+
+		$C.draw_text('Helvetica',
+					 9 / Cartagen.zoom_level,
+					 'rgba(0,0,0,0.5)',
+					 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
+					 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
+					 key)
+	},
+	draw_bboxes: function() {
 		if (Geohash.grid) {
-			var bbox = this.bbox(key)
-			
-			$C.line_width(1/Cartagen.zoom_level)
-			$C.stroke_style('rgba(0,0,0,0.5)')
-			
-			var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
-			var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
-			
-			$C.stroke_rect(Projection.lon_to_x(bbox[0]),
-			               Projection.lat_to_y(bbox[3]),
-						   width,
-						   height)
-						   
-			$C.draw_text('Helvetica', 
-			             9 / Cartagen.zoom_level, 
-						 'rgba(0,0,0,0.5)', 
-						 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
-						 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level, 
-						 key)
+			this.keys.keys().each(function(key){
+				Geohash.draw_bbox(key)
+			})
 		}
 	},
 	/**

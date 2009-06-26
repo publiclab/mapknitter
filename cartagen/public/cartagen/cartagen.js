@@ -137,6 +137,7 @@ var Cartagen = {
         this.label_queue.each(function(item) {
             item[0].draw(item[1], item[2])
         })
+
 		this.label_queue = []
     },
     queue_label: function(label, x, y) {
@@ -539,6 +540,7 @@ var Geohash = {
 	limit_bottom: 8, // 12 is most ever...
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
 		this.get_objects()
@@ -622,8 +624,6 @@ var Geohash = {
 				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
 				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
 						this.fill_bbox(k,keys)
-
-				this.draw_bbox(k)
 			}
 		}, this)
 	},
@@ -648,26 +648,31 @@ var Geohash = {
 		return [geo.longitude[0],geo.latitude[1],geo.longitude[1],geo.latitude[0],geohash]
 	},
 	draw_bbox: function(key) {
+		var bbox = this.bbox(key)
+
+		$C.line_width(1/Cartagen.zoom_level)
+		$C.stroke_style('rgba(0,0,0,0.5)')
+
+		var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
+		var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
+
+		$C.stroke_rect(Projection.lon_to_x(bbox[0]),
+					   Projection.lat_to_y(bbox[3]),
+					   width,
+					   height)
+
+		$C.draw_text('Helvetica',
+					 9 / Cartagen.zoom_level,
+					 'rgba(0,0,0,0.5)',
+					 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
+					 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
+					 key)
+	},
+	draw_bboxes: function() {
 		if (Geohash.grid) {
-			var bbox = this.bbox(key)
-
-			$C.line_width(1/Cartagen.zoom_level)
-			$C.stroke_style('rgba(0,0,0,0.5)')
-
-			var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
-			var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
-
-			$C.stroke_rect(Projection.lon_to_x(bbox[0]),
-			               Projection.lat_to_y(bbox[3]),
-						   width,
-						   height)
-
-			$C.draw_text('Helvetica',
-			             9 / Cartagen.zoom_level,
-						 'rgba(0,0,0,0.5)',
-						 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
-						 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
-						 key)
+			this.keys.keys().each(function(key){
+				Geohash.draw_bbox(key)
+			})
 		}
 	},
 	get_key_length: function(lat,lon) {
@@ -1155,6 +1160,7 @@ var Label = Class.create(
     },
     draw: function(x, y) {
         if (this.text) {
+			$l('drawing label w/ text: ' + this.text + ' at (' + x + ',' + y + ')')
             $C.save()
 
             Style.apply_font_style(this)
@@ -1188,6 +1194,7 @@ var Label = Class.create(
 			                            height,
 			                            Object.value(this.text))
 
+			$l('width: ' + width)
 			if (this.fontBackground) {
 				$C.fill_style(Object.value(this.fontBackground))
 				$C.rect(x - (width + padding)/2,
@@ -1202,7 +1209,6 @@ var Label = Class.create(
 			             x - width/2,
 						 y + height/2,
 						 Object.value(this.text))
-
 			$C.restore()
         }
     }
@@ -1559,11 +1565,15 @@ $C = {
 	measure_text: function(font, size, text) {
 		if ($C.canvas.fillText) {
 			$C.canvas.font = size + 'pt ' + font
-			return $C.canvas.measureText(text)
+			var width = $C.canvas.measureText(text)
+			if (width.width) return width.width
+			return width
 		}
 		else {
-			return $C.canvas.measureCanvasText(font, size, text)
+			$C.canvas.measureCanvasText(font, size, text)
 		}
+
+
 	},
 	opacity: function(alpha) {
 		$C.canvas.alpha = alpha
