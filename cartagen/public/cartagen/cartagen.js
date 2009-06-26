@@ -515,8 +515,12 @@ Math.in_range = function(v,r1,r2) {
 }
 
 Object.value = function(obj, context) {
-	context = context || this
-    if(Object.isFunction(obj)) return obj.bind(this)()
+
+    if(Object.isFunction(obj)) {
+		context = context || this
+		f = obj.bind(context)
+		return f()
+	}
     return obj
 }
 
@@ -769,7 +773,7 @@ var Style = {
 		this.properties.each(function(property) {
 			var f = feature
 			if (property.value.label_style) {
-				var f = feature.label
+				f = feature.label
 			}
 
 			var h = property.value.parse.bind(f)
@@ -789,9 +793,6 @@ var Style = {
 			})
 
 		})
-		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
-		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
-		if (selector.strokeStyle) feature.strokeStyle = selector.strokeStyle
 		if (selector.outlineColor) feature.outlineColor = selector.outlineColor
 		if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
 		if (selector.radius) feature.radius = selector.radius
@@ -964,36 +965,36 @@ var Style = {
 Style.register_properties({
 	fillStyle: {
 		apply: function(feature) {
-			$C.fill_style(Object.value(feature.fillStyle))
+			$C.fill_style(Object.value(feature.fillStyle, feature))
 		}
 	},
 	pattern: {
 		parse: function(feature, value) {
 			feature.pattern = new Image()
-			feature.pattern.src = Object.value(value)
+			feature.pattern.src = Object.value(value, feature)
 		},
 		apply: function(feature) {
 			if (!feature.pattern.src) {
 				var value = feature.pattern
 				feature.pattern = new Image()
-				feature.pattern.src = Object.value(value)
+				feature.pattern.src = Object.value(value, feature)
 			}
-			$C.fill_pattern(feature.pattern, 'repeat')
+			$C.fill_pattern(Object.value(feature.pattern, feature), 'repeat')
 		}
 	},
 	strokeStyle: {
 		apply: function(feature) {
-			$C.stroke_style(feature.strokeStyle)
+			$C.stroke_style(Object.value(feature.strokeStyle, feature))
 		}
 	},
 	opacity: {
 		apply: function(feature) {
-			$C.opacity(feature.opacity)
+			$C.opacity(Object.value(feature.opacity, feature))
 		}
 	},
 	lineWidth: {
 		apply: function(feature) {
-			$C.line_width(feature.lineWidth)
+			$C.line_width(Object.value(feature.lineWidth, feature))
 		}
 	}
 })
@@ -1107,6 +1108,7 @@ var Way = Class.create(Feature,
 		this.age += 1;
 	},
 	shape: function() {
+
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
 			$C.stroke_style("red")
