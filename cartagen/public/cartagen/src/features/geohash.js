@@ -330,6 +330,9 @@ var Geohash = {
 		
 		// reverse because smaller objects are added first:
 		return this.objects.reverse()
+	},
+	sort_objects: function() {
+		this.keys.values().invoke('sort', Cartagen.sort_by_area)
 	}
 }
 
