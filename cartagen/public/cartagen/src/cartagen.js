@@ -584,6 +584,8 @@ var Cartagen = {
 			// we're live-loading! Gotta get it no matter what:
 			Cartagen.load_plot(key)
 		}
+
+		Cartagen.plots.set(key, true)
 	},	
 	/**
 	 * Peforms get_cached_plot() with a randomized delay of between 1 and 3 seconds.
@@ -620,8 +622,7 @@ var Cartagen = {
 		var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
 		
 		Cartagen.requested_plots++
-		var finished = false
-		Cartagen.plots.set(key, true)	
+		var finished = false	
 		// var req = new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
 		var req = new Ajax.Request('/api/0.6/map.json?bbox='+_lng1+","+_lat1+','+_lng2+','+_lat2,{
 			method: 'get',
@@ -639,9 +640,10 @@ var Cartagen = {
 			}
 		})
 
-		// abort after 20 secs
+		// abort after 120 secs
 		var f = function(){
 			if (!finished) {
+				Cartagen.plots.set(key, false)
 				req.transport.onreadystatechange = Prototype.emptyFunction
 				req.transport.abort()
 				// Cartagen.requested_plots--
