@@ -110,6 +110,7 @@ var Way = Class.create(Feature,
 	 * Draws on the canvas to display this way
 	 */
 	shape: function() {
+
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
 			$C.stroke_style("red")
