@@ -239,11 +239,16 @@ $C = {
 	measure_text: function(font, size, text) {
 		if ($C.canvas.fillText) {
 			$C.canvas.font = size + 'pt ' + font
-			return $C.canvas.measureText(text)
+			var width = $C.canvas.measureText(text)
+			// some browsers return TextMetrics
+			if (width.width) return width.width
+			return width
 		}
 		else {
-			return $C.canvas.measureCanvasText(font, size, text)
+			$C.canvas.measureCanvasText(font, size, text)
 		}
+
+
 	},
 	/**
 	 * Sets the canvas' globalAlpha.

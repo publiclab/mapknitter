@@ -348,6 +348,7 @@ var Cartagen = {
         this.label_queue.each(function(item) {
             item[0].draw(item[1], item[2])
         })
+
 		this.label_queue = []
     },
     /**
