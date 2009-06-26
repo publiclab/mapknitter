@@ -266,12 +266,12 @@ var Style = {
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
 				Style.styles = ("{"+result.responseText+"}").evalJSON()
-				if (this.styles['body']) 
-					this.parse_styles(this.styles.body, this.styles.body)
-				if (this.styles['node'])
-					this.parse_styles(this.styles.node, this.styles.node)
-				if (this.styles['way'])
-					this.parse_styles(this.styles.way, this.styles.way)
+				//if (this.styles['body'])
+				//	this.parse_styles(this.styles.body, this.styles.body)
+				//if (this.styles['node'])
+				//	this.parse_styles(this.styles.node, this.styles.node)
+				//if (this.styles['way'])
+				//	this.parse_styles(this.styles.way, this.styles.way)
 
 				if($('gss_textarea')) {
 					$('gss_textarea').value = result.responseText

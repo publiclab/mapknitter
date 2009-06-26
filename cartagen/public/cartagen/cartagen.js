@@ -47,7 +47,8 @@ var Cartagen = {
 	fullscreen: true,
 	bleed_level: 1,
 	initial_bleed_level: 2,
-        label_queue: [],
+	label_queue: [],
+	feature_queue: [],
         debug: false,
 	scripts: [],
 	load_user_features: false,
@@ -128,8 +129,18 @@ var Cartagen = {
 		$('canvas').fire('cartagen:predraw')
 
 		Geohash.objects.each(function(object) {
-			object.draw()
+			if (object.user_submitted) {
+				Cartagen.feature_queue.push(object)
+			}
+			else {
+				(object.draw.bind(object))()
+			}
 		})
+
+		this.feature_queue.each(function(item) {
+			(item.draw.bind(item))()
+		})
+		this.feature_queue = []
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
 	},
@@ -956,12 +967,6 @@ var Style = {
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
 				Style.styles = ("{"+result.responseText+"}").evalJSON()
-				if (this.styles['body'])
-					this.parse_styles(this.styles.body, this.styles.body)
-				if (this.styles['node'])
-					this.parse_styles(this.styles.node, this.styles.node)
-				if (this.styles['way'])
-					this.parse_styles(this.styles.way, this.styles.way)
 
 				if($('gss_textarea')) {
 					$('gss_textarea').value = result.responseText
@@ -1735,17 +1740,19 @@ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
 	var penUp = 1;
 	var needStroke = 0;
 	for ( j = 0; j < c.points.length; j++) {
-	    var a = c.points[j];
-	    if ( a[0] == -1 && a[1] == -1) {
-		penUp = 1;
-		continue;
-	    }
-	    if ( penUp) {
-		ctx.moveTo( x + a[0]*mag, y - a[1]*mag);
-		penUp = false;
-	    } else {
-		ctx.lineTo( x + a[0]*mag, y - a[1]*mag);
-	    }
+		var a = c.points[j];
+		if ( a[0] == -1 && a[1] == -1) {
+			penUp = 1;
+			continue;
+		}
+		if ( penUp) {
+			try{
+			ctx.moveTo( x + a[0]*mag, y - a[1]*mag);
+			} catch(e) {$l(e)}
+			penUp = false;
+		} else {
+			ctx.lineTo( x + a[0]*mag, y - a[1]*mag);
+		}
 	}
 	ctx.stroke();
 	x += c.width*mag;
@@ -1837,6 +1844,7 @@ var User = {
 		node.lat = Projection.y_to_lat(y)
 		node.fillStyle = User.color
 		node.strokeStyle = "rgba(0,0,0,0)"
+		node.user_submitted = true
 
 		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
@@ -1931,6 +1939,7 @@ var User = {
 			User.way.strokeStyle = User.color
 			User.way.lineWidth = User.line_width
 			User.way.age = 40
+			User.way.user_submitted = true
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
 			Glop.draw()
 		}
@@ -2010,6 +2019,7 @@ var User = {
 					n.x = -1*Projection.lon_to_x(n.lon)
 					n.y = Projection.lat_to_y(n.lat)
 					n.strokeStyle = "rgba(0,0,0,0)"
+					n.user_submitted = true
 					Geohash.put(n.lat, n.lon, n, 1)
 				}
 			}
@@ -2042,6 +2052,7 @@ var User = {
 			n.y = Projection.lat_to_y(n.lat)
 			n.strokeStyle = "rgba(0,0,0,0)"
 			n.order = node.order
+			n.user_submitted = true
 			if (nodes.get(node.way_id)) {
 				nodes.get(node.way_id).push(n)
 			}
@@ -2061,6 +2072,7 @@ var User = {
 			w = new Way(data)
 			w.strokeStyle = way.color
 			w.lineWidth = User.line_width
+			w.user_submitted = true
 
 			if (way.name) {
 				w.label.text = way.name

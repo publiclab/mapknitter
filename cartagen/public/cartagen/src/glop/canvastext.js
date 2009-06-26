@@ -149,17 +149,19 @@ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
 	var penUp = 1;
 	var needStroke = 0;
 	for ( j = 0; j < c.points.length; j++) {
-	    var a = c.points[j];
-	    if ( a[0] == -1 && a[1] == -1) {
-		penUp = 1;
-		continue;
-	    }
-	    if ( penUp) {
-		ctx.moveTo( x + a[0]*mag, y - a[1]*mag);
-		penUp = false;
-	    } else {
-		ctx.lineTo( x + a[0]*mag, y - a[1]*mag);
-	    }
+		var a = c.points[j];
+		if ( a[0] == -1 && a[1] == -1) {
+			penUp = 1;
+			continue;
+		}
+		if ( penUp) {
+			try{
+			ctx.moveTo( x + a[0]*mag, y - a[1]*mag);
+			} catch(e) {$l(e)}
+			penUp = false;
+		} else {
+			ctx.lineTo( x + a[0]*mag, y - a[1]*mag);
+		}
 	}
 	ctx.stroke();
 	x += c.width*mag;
