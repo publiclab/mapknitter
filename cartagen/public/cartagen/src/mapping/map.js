@@ -17,15 +17,15 @@ var Map = {
 	 * Updates the map properties. Runs every frame.
 	 */
 	draw: function() {
-		var lon1 = Projection.x_to_lon(Map.x - (Viewport.width/2))
-		var lon2 = Projection.x_to_lon(Map.x + (Viewport.width/2))
+		var lon1 = Projection.x_to_lon(-Map.x - (Viewport.width/2))
+		var lon2 = Projection.x_to_lon(-Map.x + (Viewport.width/2))
 		var lat1 = Projection.y_to_lat(Map.y - (Viewport.height/2))
 		var lat2 = Projection.y_to_lat(Map.y + (Viewport.height/2))
 		this.bbox = [lon1, lat2, lon2, lat1]
 		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
 		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
 		this.lat = Projection.y_to_lat(this.y)
-		this.lon = Projection.x_to_lon(this.x)
+		this.lon = Projection.x_to_lon(-this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
 	},
 	/**
