@@ -67,7 +67,7 @@ var Label = Class.create(
 	 */
     draw: function(x, y) {
         if (this.text) {
-			$l('drawing label w/ text: ' + this.text + ' at (' + x + ',' + y + ')')
+			// $l('drawing label w/ text: ' + this.text + ' at (' + x + ',' + y + ')')
             $C.save()
 
             Style.apply_font_style(this)
@@ -102,7 +102,7 @@ var Label = Class.create(
 			                            height,
 			                            Object.value(this.text))
 
-			$l('width: ' + width)
+			// $l('width: ' + width)
 			if (this.fontBackground) {
 				$C.fill_style(Object.value(this.fontBackground))
 				$C.rect(x - (width + padding)/2, 

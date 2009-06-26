@@ -40,7 +40,7 @@ var Cartagen = {
 	lat2: 41.861,
 	lng1: 12.4502,
 	lng2: 12.5341,
-	zoom_level: 0.4,
+	zoom_level: 0.5,
 	plots: new Hash(),
 	nodes: new Hash(),
 	ways: new Hash(),
@@ -78,8 +78,8 @@ var Cartagen = {
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
 			this.get_current_plot(true)
-			new PeriodicalExecuter(Glop.draw,1)
-			new PeriodicalExecuter(this.get_current_plot,0.33)
+			new PeriodicalExecuter(Glop.draw,3)
+			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
 			this.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
@@ -230,7 +230,8 @@ var Cartagen = {
 	},
 	plot_array: [],
 	get_current_plot: function(force) {
-		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force) {
+		force = force || false
+		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force != false || Glop.frame < 100) {
 			if (Geohash.keys && Geohash.keys.keys()) {
 				try {
 				$l('keys: '+Geohash.keys.size())
@@ -322,7 +323,7 @@ var Cartagen = {
 				$l("Request aborted. Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 			}
 		}
-		f.delay(20)
+		f.delay(120)
 	},
 	highlight: function(query) {
 		objects.each(function(object) {
@@ -1160,7 +1161,6 @@ var Label = Class.create(
     },
     draw: function(x, y) {
         if (this.text) {
-			$l('drawing label w/ text: ' + this.text + ' at (' + x + ',' + y + ')')
             $C.save()
 
             Style.apply_font_style(this)
@@ -1194,7 +1194,6 @@ var Label = Class.create(
 			                            height,
 			                            Object.value(this.text))
 
-			$l('width: ' + width)
 			if (this.fontBackground) {
 				$C.fill_style(Object.value(this.fontBackground))
 				$C.rect(x - (width + padding)/2,
