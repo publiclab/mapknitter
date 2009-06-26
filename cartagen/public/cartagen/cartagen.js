@@ -278,7 +278,6 @@ var Cartagen = {
 					if (ls) {
 						$l("localStorage cached plot")
 						Cartagen.parse_objects(ls.evalJSON())
-						Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						Cartagen.load_plot(key)
 					}
@@ -295,7 +294,6 @@ var Cartagen = {
 		setTimeout("Cartagen.get_cached_plot("+_lat1+","+_lng1+","+_lat2+","+_lng2+","+_bleed+")",bleed_delay)
 	},
 	load_plot: function(key) {
-		Cartagen.plot_array.push(Geohash.bbox(key))
 		$l('loading geohash plot: '+key)
 
 		var bbox = Geohash.bbox(key)
@@ -2131,7 +2129,7 @@ var Map = {
 		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
 		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
 		this.lat = Projection.y_to_lat(this.y)
-		this.lon = Projection.x_to_lon(-this.x)
+		this.lon = Projection.x_to_lon(this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
 	},
 	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Cartagen.zoom_level) },
