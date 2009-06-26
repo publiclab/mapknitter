@@ -719,10 +719,10 @@ var Geohash = {
 		}, this)
 
 		this.keys.keys().each(function(key) {
-			this.objects = this.objects.concat(this.get_from_key(key))
+			this.objects = (this.get_from_key(key)).concat(this.objects)
 		}, this)
 
-		return this.objects.reverse()
+		return this.objects
 	},
 	sort_objects: function() {
 		this.keys.values().invoke('sort', Cartagen.sort_by_area)
