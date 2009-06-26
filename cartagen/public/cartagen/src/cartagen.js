@@ -179,7 +179,11 @@ var Cartagen = {
 	 * Queue of labels to draw
 	 * @type Label[]
 	 */
-        label_queue: [],
+	label_queue: [],
+	/**
+	 * Queue of features to be drawn at the end of draw()
+	 */
+	feature_queue: [],
 	/**
 	 * Should deebug messages be sent to the console?
 	 * @type Boolean
@@ -335,9 +339,19 @@ var Cartagen = {
 		$('canvas').fire('cartagen:predraw')
 		
 		//Geohash lookup:
-		Geohash.objects.each(function(object) { 
-			object.draw()
+		Geohash.objects.each(function(object) {
+			if (object.user_submitted) {
+				Cartagen.feature_queue.push(object)
+			}
+			else {
+				(object.draw.bind(object))()
+			}
 		})
+
+		this.feature_queue.each(function(item) {
+			(item.draw.bind(item))()
+		})
+		this.feature_queue = []
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
 	},
