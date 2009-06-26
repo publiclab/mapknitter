@@ -31,12 +31,14 @@ $D = {
 			$D.warn = console.warn
 			$D.err = console.error
 			$D.trace = console.trace
+			$D.verbose_trace = $D._verbose_trace
 		}
 		else {
 			$D.log = $D._log
 			$D.warn = $D._warn
 			$D.err = $D._err
 			$D.trace = $D._trace
+			$D.verbose_trace = $D._verbose_trace
 		}
 		$l = $D.log
 	},
@@ -46,7 +48,7 @@ $D = {
 	disable: function() {
 		$D.enabled = false
 		
-		(['log', 'warn', 'err', 'trace']).each(function(m) {
+		(['log', 'warn', 'err', 'trace', 'verbose_trace']).each(function(m) {
 			$D[m] = Prototype.emptyFunction
 		})
 	},
@@ -93,6 +95,16 @@ $D = {
 	
 	_trace: function() {
 		console.trace()
+	},
+	
+	/**
+	 * @function
+	 * Sends a descriptive stack trace to the console.
+	 */
+	verbose_trace: Prototype.emptyFunction,
+	
+	_verbose_trace: function(msg) {
+		console.log("An exception occurred in the script. Error name: " + msg.name + ". Error description: " + msg.description + ". Error number: " + msg.number + ". Error message: " + msg.message + ". Line number: "+ msg.lineNumber)
 	}
 }
 

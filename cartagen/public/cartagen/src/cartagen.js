@@ -142,7 +142,7 @@ var Cartagen = {
 	 * Current zoom level
 	 * @type Number
 	 */
-	zoom_level: 0.1,
+	zoom_level: 0.4,
 	/**
 	 * Hash of bbox => features
 	 * @type Hash
@@ -249,26 +249,21 @@ var Cartagen = {
 		// Startup:
 		Style.load_styles(this.stylesheet) // stylesheet
 		if (!this.static_map) {
-			this.get_current_plot()
-			// Cartagen.get_cached_plot(this.lat1,this.lng1,this.lat2,this.lng2,Cartagen.initial_bleed_level)
+			this.get_current_plot(true)
+			new PeriodicalExecuter(Glop.draw,1)
 			new PeriodicalExecuter(this.get_current_plot,0.33)
 		} else {
-			// if (Prototype.Browser.MobileSafari) {
-			// 	this.get_static_plot(this.static_map_layers[0])
-			// 	this.get_static_plot(this.static_map_layers[1])
-			// } else {
-				this.static_map_layers.each(function(layer_url) {
+			this.static_map_layers.each(function(layer_url) {
+				$l('fetching '+layer_url)
+				this.get_static_plot(layer_url)
+			},this)
+			// to add user-added map data... messy!
+			if (this.dynamic_layers.length > 0) {
+				this.dynamic_layers.each(function(layer_url) {
 					$l('fetching '+layer_url)
-					this.get_static_plot(layer_url)
+					load_script(layer_url)
 				},this)
-				// to add user-added map data... messy!
-				if (this.dynamic_layers.length > 0) {
-					this.dynamic_layers.each(function(layer_url) {
-						$l('fetching '+layer_url)
-						load_script(layer_url)
-					},this)
-				}
-			// }
+			}
 		}
 		
 		/**
@@ -314,22 +309,23 @@ var Cartagen = {
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
         // $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
-		Cartagen.plot_array.each(function(plot) {
-			$C.stroke_style('red')
-			$C.line_width(4)
-			//[lon1, lat2, lon2, lat1]
-			var x = Projection.lon_to_x(plot[0])
-			var y = Projection.lat_to_y(plot[3])
-			var w = Projection.lon_to_x(plot[2])-x
-			var h = Projection.lat_to_y(plot[1])-y
-			$C.stroke_rect(x,y,w,h)
-			$C.draw_text('Helvetica', 
-			             9 / Cartagen.zoom_level, 
-						 'rgba(0,0,0,0.5)', 
-						 Projection.lon_to_x(plot[0]) + 3/Cartagen.zoom_level,
-						 Projection.lat_to_y(plot[3]) - 3/Cartagen.zoom_level, 
-						 plot[4])
-		})
+		
+		// Cartagen.plot_array.each(function(plot) {
+		// 	$C.stroke_style('red')
+		// 	$C.line_width(4)
+		// 	//[lon1, lat2, lon2, lat1]
+		// 	var x = Projection.lon_to_x(plot[0])
+		// 	var y = Projection.lat_to_y(plot[3])
+		// 	var w = Projection.lon_to_x(plot[2])-x
+		// 	var h = Projection.lat_to_y(plot[1])-y
+		// 	$C.stroke_rect(x,y,w,h)
+		// 	$C.draw_text('Helvetica', 
+		// 	             9 / Cartagen.zoom_level, 
+		// 				 'rgba(0,0,0,0.5)', 
+		// 				 Projection.lon_to_x(plot[0]) + 3/Cartagen.zoom_level,
+		// 				 Projection.lat_to_y(plot[3]) - 3/Cartagen.zoom_level, 
+		// 				 plot[4])
+		// })
 
 		/**
 		 *@name Cartagen#cartagen:predraw
@@ -497,14 +493,21 @@ var Cartagen = {
 	/**
 	 * Gets the plot under the current center of the viewport
 	 */
-	get_current_plot: function() {
-		if (Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) {
+	get_current_plot: function(force) {
+		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force) {
 			// find all geohashes we want to request:
-			$l('keys: '+Geohash.keys.size())
-			Geohash.keys.keys().each(function(key) {
-				// this will look for cached plots, or get new ones if it fails to find cached ones
-				if (key.length == 6) Cartagen.get_cached_plot(key)
-			})
+			if (Geohash.keys && Geohash.keys.keys()) {
+				try {
+				$l('keys: '+Geohash.keys.size())	
+				Geohash.keys.keys().each(function(key) {
+					// this will look for cached plots, or get new ones if it fails to find cached ones
+					if (key.length == 6) Cartagen.get_cached_plot(key)
+				})
+				} catch(e) {
+					$l(e)
+					// $D._verbose_trace(e)
+				}
+			}
 		}
 		Map.last_pos[0] = Map.x
 		Map.last_pos[1] = Map.y

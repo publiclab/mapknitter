@@ -333,7 +333,9 @@ var Geohash = {
 		return this.objects
 	},
 	sort_objects: function() {
-		this.keys.values().invoke('sort', Cartagen.sort_by_area)
+		this.keys.values().each(function(value) { 
+			if (value.sort) value.sort(Cartagen.sort_by_area())
+		})
 	}
 }
 
