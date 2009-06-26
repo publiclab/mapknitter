@@ -325,6 +325,7 @@ var Geohash = {
 		}, this)
 		
 		this.keys.keys().each(function(key) {
+			// Cartagen.plot_array.push(Geohash.bbox(key))
 			this.objects = this.objects.concat(this.get_from_key(key))
 		}, this)
 		

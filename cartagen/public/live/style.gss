@@ -1,7 +1,7 @@
 body: {
 	fillStyle: "#dee",
 	lineWidth: 0,
-	pattern: "../images/brown-paper.jpg"
+	pattern: "/images/brown-paper.jpg"
 },
 node: {
 	fillStyle: "#ddd",
@@ -11,7 +11,14 @@ node: {
 },
 way: {
 	strokeStyle: "#ccc",
-	lineWidth: 3
+	lineWidth: 3,
+	mouseDown: {
+		lineWidth: 18,
+		strokeStyle: "red",
+		action: function() {
+			$l(this.parent)
+		}
+	}
 },
 leisure: {
 	fillStyle: "#2a2",
@@ -37,12 +44,12 @@ waterway: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
 	lineWidth: 4,
-	pattern: "../images/pattern-water.gif"
+	pattern: "/images/pattern-water.gif"
 },
 water: {
 	strokeStyle: "#57d",
 	lineWidth: 20,
-	pattern: "../images/pattern-water.gif"
+	pattern: "/images/pattern-water.gif"
 },
 coastline: {
 	strokeStyle: "#57d",
