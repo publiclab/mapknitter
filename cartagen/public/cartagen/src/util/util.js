@@ -25,8 +25,12 @@ Math.in_range = function(v,r1,r2) {
  *         the argument itself.
  */
 Object.value = function(obj, context) {
-	context = context || this
-    if(Object.isFunction(obj)) return obj.bind(this)()
+	
+    if(Object.isFunction(obj)) {
+		context = context || this
+		f = obj.bind(context)
+		return f()
+	}
     return obj
 }
 

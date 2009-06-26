@@ -57,7 +57,7 @@ var Style = {
 		this.properties.each(function(property) {
 			var f = feature
 			if (property.value.label_style) {
-				var f = feature.label
+				f = feature.label
 			}
 			
 			var h = property.value.parse.bind(f)
@@ -78,9 +78,6 @@ var Style = {
 			
 		})
 		// copy properties from selector
-		if (selector.fillStyle) feature.fillStyle = selector.fillStyle
-		if (selector.lineWidth || selector.lineWidth == 0) feature.lineWidth = selector.lineWidth
-		if (selector.strokeStyle) feature.strokeStyle = selector.strokeStyle
 		if (selector.outlineColor) feature.outlineColor = selector.outlineColor
 		if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
 		// radius is relevant to nodes, i.e. single points
@@ -287,36 +284,36 @@ var Style = {
 Style.register_properties({
 	fillStyle: {
 		apply: function(feature) {
-			$C.fill_style(Object.value(feature.fillStyle))
+			$C.fill_style(Object.value(feature.fillStyle, feature))
 		}
 	},
 	pattern: {
 		parse: function(feature, value) {
 			feature.pattern = new Image()
-			feature.pattern.src = Object.value(value)
+			feature.pattern.src = Object.value(value, feature)
 		},
 		apply: function(feature) {
 			if (!feature.pattern.src) {
 				var value = feature.pattern
 				feature.pattern = new Image()
-				feature.pattern.src = Object.value(value)
+				feature.pattern.src = Object.value(value, feature)
 			}
-			$C.fill_pattern(feature.pattern, 'repeat')
+			$C.fill_pattern(Object.value(feature.pattern, feature), 'repeat')
 		}
 	},
 	strokeStyle: {
 		apply: function(feature) {
-			$C.stroke_style(feature.strokeStyle)
+			$C.stroke_style(Object.value(feature.strokeStyle, feature))
 		}
 	},
 	opacity: {
 		apply: function(feature) {
-			$C.opacity(feature.opacity)
+			$C.opacity(Object.value(feature.opacity, feature))
 		}
 	},
 	lineWidth: {
 		apply: function(feature) {
-			$C.line_width(feature.lineWidth)
+			$C.line_width(Object.value(feature.lineWidth, feature))
 		}
 	}
 })
