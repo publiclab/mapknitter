@@ -54,7 +54,7 @@ var Cartagen = {
 	load_user_features: false,
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
-		Event.observe(window, 'load', this.initialize.bind(this,configs))
+		this.initialize(configs)
 	},
 	initialize: function(configs) {
 		Object.extend(this, configs)
@@ -93,6 +93,8 @@ var Cartagen = {
 				},this)
 			}
 		}
+
+		Glop.draw()
 
 		document.fire('cartagen:postinit')
 	},
