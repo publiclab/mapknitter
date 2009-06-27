@@ -19,9 +19,8 @@ leisure: {
 	strokeStyle: "#181"
 },
 area: {
-	lineWidth: 3,
-	strokeStyle: "#444",
-	fillStyle: "#888",
+	lineWidth: 20,
+	strokeStyle: "#4C6ACB",
 	opacity: 0.4,
 	fontColor: "#444"
 },
@@ -51,6 +50,8 @@ coastline: {
 highway: {
 	strokeStyle: "white",
 	lineWidth: 7,
+	outlineWidth: 3,
+	outlineColor: "white",
 	fontColor: "#333",
 	fontBackground: "white",
 	fontScale: "fixed",
