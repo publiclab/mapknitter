@@ -684,6 +684,10 @@ var Geohash = {
 		                            height,
 		                            key)
 		var padding = 2
+		$C.rect(-padding/2,
+				-(height + padding/2),
+				width + padding + 3/Cartagen.zoom_level,
+		        height + padding - 3/Cartagen.zoom_level)
 		$C.draw_text('Lucida Grande',
 					 height,
 					 'rgba(0,0,0,0.5)',
@@ -1912,7 +1916,7 @@ var User = {
 		}
 	},
 	center_map_on_user: function() {
-		User.set_loc_and_center()
+		navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
 	},
 	mark: function() {
 		$C.stroke_style('white')
@@ -1945,6 +1949,7 @@ var User = {
 		$C.stroke()
 	},
 	set_loc_and_center: function(loc) {
+		User.set_loc(loc)
 		Map.x = User.x
 		Map.y = User.y
 		Glop.draw()

@@ -198,8 +198,8 @@ var User = {
 	 * Updates the user's location with geolocation and moves the map to be centered on the user.
 	 */
 	center_map_on_user: function() {
-		//navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
-		User.set_loc_and_center()
+		navigator.geolocation.getCurrentPosition(User.set_loc_and_center)
+		// User.set_loc_and_center()
 	},
 	/**
 	 * Draws a small circle of desired color centered on the user's latitude and longitude.
@@ -239,7 +239,7 @@ var User = {
 	 * @param {Location} loc Location object from navigator.geolocation
 	 */
 	set_loc_and_center: function(loc) {
-		//User.set_loc(loc)
+		User.set_loc(loc)
 		Map.x = User.x
 		Map.y = User.y
 		Glop.draw()
