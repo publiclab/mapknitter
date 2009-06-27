@@ -116,8 +116,7 @@ var Cartagen = {
         $C.translate(Glop.width / 2, Glop.height / 2)
         $C.rotate(Map.rotate)
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
-        $C.translate(Glop.width / -2, Glop.height / -2)
-        $C.translate((-1 * Map.x) + (Glop.width / 2), (-1 * Map.y) + (Glop.height / 2))
+        $C.translate((Glop.width / -2) + (-1 * Map.x) + (Glop.width / 2), (Glop.height / -2)+(-1 * Map.y) + (Glop.height / 2))
 
         Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
         Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
@@ -294,6 +293,8 @@ var Cartagen = {
 		} else {
 			Cartagen.load_plot(key)
 		}
+
+		Cartagen.plots.set(key, true)
 	},
 	delayed_get_cached_plot: function(_lat1,_lng1,_lat2,_lng2,_bleed) {
 		bleed_delay = 1000+(2000*Math.random(_lat1+_lng1)) //milliseconds, with a random factor to stagger requests
@@ -310,7 +311,6 @@ var Cartagen = {
 
 		Cartagen.requested_plots++
 		var finished = false
-		Cartagen.plots.set(key, true)
 		var req = new Ajax.Request('/api/0.6/map.json?bbox='+_lng1+","+_lat1+','+_lng2+','+_lat2,{
 			method: 'get',
 			onSuccess: function(result) {
@@ -329,6 +329,7 @@ var Cartagen = {
 
 		var f = function(){
 			if (!finished) {
+				Cartagen.plots.set(key, false)
 				req.transport.onreadystatechange = Prototype.emptyFunction
 				req.transport.abort()
 				$l("Request aborted. Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
@@ -358,7 +359,7 @@ var Cartagen = {
 		Cartagen.live_gss = !Cartagen.live_gss
 	},
 	redirect_to_image: function() {
-		document.location = $C.to_data_URL();
+		document.location = $C.to_data_url();
 	},
 	load_next_script: function() {
 		$l("loading: "+Cartagen.scripts[0])
@@ -662,7 +663,8 @@ var Geohash = {
 	draw_bbox: function(key) {
 		var bbox = this.bbox(key)
 
-		$C.line_width(1/Cartagen.zoom_level)
+		var line_width = 1/Cartagen.zoom_level
+		$C.line_width(line_width)
 		$C.stroke_style('rgba(0,0,0,0.5)')
 
 		var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
@@ -672,13 +674,25 @@ var Geohash = {
 					   Projection.lat_to_y(bbox[3]),
 					   width,
 					   height)
-
-		$C.draw_text('Helvetica',
-					 9 / Cartagen.zoom_level,
+		$C.save()
+		$C.translate(Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]))
+		$C.fill_style(Object.value(this.fontBackground))
+		var height = 12 / Cartagen.zoom_level
+		var width = $C.measure_text('Lucida Grande',
+		                            height,
+		                            key)
+		var padding = 2
+		$C.rect(-padding/2,
+				-(height + padding/2),
+				width + padding + 3/Cartagen.zoom_level,
+		        height + padding - 3/Cartagen.zoom_level)
+		$C.draw_text('Lucida Grande',
+					 height,
 					 'rgba(0,0,0,0.5)',
-					 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
-					 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
+					 3/Cartagen.zoom_level,
+					 -3/Cartagen.zoom_level,
 					 key)
+		$C.restore()
 	},
 	draw_bboxes: function() {
 		if (Geohash.grid) {
@@ -1224,12 +1238,14 @@ var Glop = {
 	init: function() {
 		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
 	},
-	draw: function() {
+	draw: function(custom_size) {
 		$C.clear()
 
 		if (Cartagen.fullscreen) {
-			Glop.width = document.viewport.getWidth()
-			Glop.height = document.viewport.getHeight()
+			if (!custom_size) { // see Canvas.to_print_data_url()
+				Glop.width = document.viewport.getWidth()
+				Glop.height = document.viewport.getHeight()
+			}
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 			$$('body')[0].style.width = Glop.width+"px"
@@ -1240,6 +1256,8 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
+
+		$l(Glop.width+", "+Glop.height)
 
 		Glop.frame += 1
 
@@ -1558,10 +1576,9 @@ $C = {
 	draw_text: function(font, size, color, x, y, text){
 		if ($C.canvas.fillText) {
 			$C.canvas.fillStyle = color
-			$C.canvas.font = size + 'pt ' + font
+			$C.canvas.font = size+'pt ' + font
 			$C.canvas.fillText(text, x, y)
-		}
-		else {
+		} else {
 			$C.canvas.strokeStyle = color
 			$C.canvas.drawText(font, size, x, y, text)
 		}
@@ -1589,7 +1606,17 @@ $C = {
 		$C.canvas.restore()
 	},
 	to_data_url: function() {
-		return $C.canvas.canvas.toDataUrl()
+		return $C.canvas.canvas.toDataURL()
+	},
+	to_print_data_url: function(width,height) {
+		var _height = Glop.height, _width = Glop.width
+		Glop.width = width
+		Glop.height = height
+		Glop.draw(true) // with a custom size
+		var url = $C.canvas.canvas.toDataURL()
+		Glop.width = _width
+		Glop.height = _height
+		return url
 	}
 }
 

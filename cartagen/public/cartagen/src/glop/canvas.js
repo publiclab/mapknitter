@@ -222,10 +222,9 @@ $C = {
 	draw_text: function(font, size, color, x, y, text){
 		if ($C.canvas.fillText) {
 			$C.canvas.fillStyle = color
-			$C.canvas.font = size + 'pt ' + font
+			$C.canvas.font = size+'pt ' + font
 			$C.canvas.fillText(text, x, y)
-		}
-		else {
+		} else {
 			$C.canvas.strokeStyle = color
 			$C.canvas.drawText(font, size, x, y, text)
 		}
@@ -278,7 +277,24 @@ $C = {
 	 * @type String
 	 */
 	to_data_url: function() {
-		return $C.canvas.canvas.toDataUrl()
+		return $C.canvas.canvas.toDataURL()
+	},
+	/**
+	 * Identical to to_data_url, but produces an image much larger than the screen, for print quality
+	 * @param {Number} width Width of resulting image in pixels
+	 * @param {Number} height Height of resulting image in pixels
+	 * @return Data url
+	 * @type String
+	 */
+	to_print_data_url: function(width,height) {
+		var _height = Glop.height, _width = Glop.width
+		Glop.width = width
+		Glop.height = height
+		Glop.draw(true) // with a custom size
+		var url = $C.canvas.canvas.toDataURL()
+		Glop.width = _width
+		Glop.height = _height
+		return url
 	}
 }
 

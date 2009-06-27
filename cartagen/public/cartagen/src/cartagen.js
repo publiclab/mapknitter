@@ -302,8 +302,8 @@ var Cartagen = {
         $C.translate(Glop.width / 2, Glop.height / 2)
         $C.rotate(Map.rotate)
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
-        $C.translate(Glop.width / -2, Glop.height / -2)
-        $C.translate((-1 * Map.x) + (Glop.width / 2), (-1 * Map.y) + (Glop.height / 2))
+        // $C.translate(, )
+        $C.translate((Glop.width / -2) + (-1 * Map.x) + (Glop.width / 2), (Glop.height / -2)+(-1 * Map.y) + (Glop.height / 2))
         
         // viewport stuff:
         Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
@@ -685,7 +685,7 @@ var Cartagen = {
 	 * Sends user to an image of the current canvas
 	 */
 	redirect_to_image: function() {
-		document.location = $C.to_data_URL();
+		document.location = $C.to_data_url();
 	},
 	/**
 	 * Loads each script in scripts array, sequentially.
