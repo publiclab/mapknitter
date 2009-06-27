@@ -110,6 +110,8 @@ var User = {
 			User.lat = loc.latitude
 			User.lon = loc.longitude
 		}
+		User.x = Projection.lon_to_x(User.lon)
+		User.y = Projection.lat_to_y(User.lat)
 		// User.calculate_coords()
 		$l('detected location: '+this.lat+","+this.lon)
 	},
