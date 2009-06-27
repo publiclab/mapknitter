@@ -239,7 +239,9 @@ var Geohash = {
 	draw_bbox: function(key) {
 		var bbox = this.bbox(key)
 
-		$C.line_width(1/Cartagen.zoom_level)
+		var line_width = 1/Cartagen.zoom_level
+		// line_width < 1
+		$C.line_width(line_width)
 		$C.stroke_style('rgba(0,0,0,0.5)')
 
 		var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
@@ -249,13 +251,25 @@ var Geohash = {
 					   Projection.lat_to_y(bbox[3]),
 					   width,
 					   height)
-
-		$C.draw_text('Helvetica',
-					 9 / Cartagen.zoom_level,
+		$C.save()
+		$C.translate(Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]))
+		$C.fill_style(Object.value(this.fontBackground))
+		var height = 12 / Cartagen.zoom_level
+		var width = $C.measure_text('Lucida Grande', 
+		                            height,
+		                            key)
+		var padding = 2
+		$C.rect(-padding/2, 
+				-(height + padding/2), 
+				width + padding + 3/Cartagen.zoom_level,
+		        height + padding - 3/Cartagen.zoom_level)
+		$C.draw_text('Lucida Grande',
+					 height,
 					 'rgba(0,0,0,0.5)',
-					 Projection.lon_to_x(bbox[0]) + 3/Cartagen.zoom_level,
-					 Projection.lat_to_y(bbox[3]) - 3/Cartagen.zoom_level,
+					 3/Cartagen.zoom_level,
+					 -3/Cartagen.zoom_level,
 					 key)
+		$C.restore()
 	},
 	draw_bboxes: function() {
 		if (Geohash.grid) {
