@@ -80,11 +80,17 @@
 			<a href="http://groups.google.com/group/cartagen-dev">List</a> |
 			<a href="http://unterbahn.com">Blog</a>
 			</small></h2>
-		<!-- <p><form action="/find" method="get" accept-charset="utf-8">
+		<script type="text/javascript" charset="utf-8">
+			function find(q) {
+				q = q.replace(' ','-')
+				document.location = "/find/"+q+"/"
+			}
+		</script>
+		<p><form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
 			Go somewhere: <br />
-			<input style="width:170px;" tabindex="3" type="text" name="id" value="">
+			<input id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
 			<input type="button" name="some_name" tabindex="4" value="Go">
-		</form></p> -->
+		</form></p>
 		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="Cartagen.highlight($('highlight').value)">
 			Search: <br />
 			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
