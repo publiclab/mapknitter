@@ -1,123 +1,57 @@
 body: {
-	fillStyle: "#dee",
+	fillStyle: "white",
 	lineWidth: 0,
-	pattern: "/images/brown-paper.jpg"
 },
 node: {
-	fillStyle: "#ddd",
-	strokeStyle: "#090",
-	lineWidth: 0,
-	radius: 1
+	strokeStyle: "black",
+	lineWidth: 3,
 },
 way: {
-	strokeStyle: "#ccc",
+	strokeStyle: "black",
 	lineWidth: 3,
-	mouseDown: {
-		lineWidth: 18,
-		strokeStyle: "red",
-		action: function() {
-			// $l(this.parent)
-		}
-	}
-},
-leisure: {
-	fillStyle: "#2a2",
-	lineWidth: 3,
-	strokeStyle: "#181"
+	fontColor: "#333",
+	fontBackground: "white",
+	fontScale: "fixed",
+	fillStyle: "rgba(0,0,0,0)",
 },
 area: {
 	lineWidth: 3,
 	strokeStyle: "#444",
-	fillStyle: "#888",
-	opacity: 0.4,
-	fontColor: "#444"
+	fontColor: "#444",
 },
 park: {
-	fillStyle: "#2a2",
 	lineWidth: 3,
-	strokeStyle: "#181",
+	strokeStyle: "black",
 	fontSize: 12,
 	text: function() { return this.tags.get('name') },
 	fontRotation: 'fixed'
 },
 waterway: {
-	fillStyle: "#57d",
-	strokeStyle: "#24a",
-	lineWidth: 4,
-	pattern: "/images/pattern-water.gif"
+	strokeStyle: "black",
+	lineWidth: 4
 },
 water: {
-	strokeStyle: "#57d",
+	strokeStyle: "black",
 	lineWidth: 20,
-	pattern: "/images/pattern-water.gif"
-},
-coastline: {
-	strokeStyle: "#57d",
-	lineWidth: 20
+	pattern: "/live/diag.gif"
 },
 highway: {
-	strokeStyle: "white",
+	strokeStyle: "black",
 	lineWidth: 7,
 	fontColor: "#333",
 	fontBackground: "white",
 	fontScale: "fixed",
 	text: function() { return this.tags.get('name') }
 },
-primary: {
-	strokeStyle: "#d44",
-	lineWidth: function() {
-		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
-		else return 10
-	}
-},
-secondary: {
-	strokeStyle: "#d44",
-	lineWidth: function() {
-		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
-		else return 7
-	}
-},
 footway: {
-	strokeStyle: "#842",
-	lineWidth: function() {
-		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
-		else return 3
-	}
-},
-pedestrian: {
-	strokeStyle: "#842",
-	fontBackground: "rgba(1,1,1,0)",
-	fontColor: "#444",
-	lineWidth: function() {
-		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
-		else return 3
-	}
-},
-parkchange: {
-	glow: "yellow"
+	strokeStyle: "black",
+	lineWidth: 3
 },
 building: {
 	lineWidth: 0.001,
-	fillStyle: "#444",
+	fillStyle: "black",
+	fontColor: "#333",
+	fontBackground: "white",
+	fontScale: "fixed",
 	text: function() { return this.tags.get('name') },
-	hover: {
-		fillStyle: '#222',
-		action: function() {
-			console.log('hover')
-		}
-	},
-	mouseDown: {
-		lineWidth: 18,
-		strokeStyle: "red",
-		action: function() {
-			console.log('mousedown')
-		}
-	}
-},
-landuse: {
-	fillStyle: "#ddd"
-},
-rail: {
-	lineWidth: 4,
-	strokeStyle: "purple"
 }

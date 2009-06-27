@@ -27,12 +27,14 @@ var Glop = {
 	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
 	 * the object array unless told not to (by  subscriber of glop:draw.
 	 */
-	draw: function() {
+	draw: function(custom_size) {
 		$C.clear()
 		
 		if (Cartagen.fullscreen) {
-			Glop.width = document.viewport.getWidth()
-			Glop.height = document.viewport.getHeight()
+			if (!custom_size) { // see Canvas.to_print_data_url()
+				Glop.width = document.viewport.getWidth()
+				Glop.height = document.viewport.getHeight()
+			}
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 			$$('body')[0].style.width = Glop.width+"px"
@@ -43,6 +45,8 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
+		
+		$l(Glop.width+", "+Glop.height)
 		
 		Glop.frame += 1
 		
