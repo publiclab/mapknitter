@@ -254,15 +254,16 @@ var Geohash = {
 		$C.save()
 		$C.translate(Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]))
 		$C.fill_style(Object.value(this.fontBackground))
-		var height = 12 / Cartagen.zoom_level
+		var height = 16 / Cartagen.zoom_level
 		var width = $C.measure_text('Lucida Grande', 
 		                            height,
 		                            key)
 		var padding = 2
-		$C.rect(-padding/2, 
-				-(height + padding/2), 
-				width + padding + 3/Cartagen.zoom_level,
-		        height + padding - 3/Cartagen.zoom_level)
+		// $C.fill_style('white')
+		// $C.rect(-padding/2, 
+		// 		-(height + padding/2), 
+		// 		width + padding + 3/Cartagen.zoom_level,
+		//         height + padding - 3/Cartagen.zoom_level)
 		$C.draw_text('Lucida Grande',
 					 height,
 					 'rgba(0,0,0,0.5)',

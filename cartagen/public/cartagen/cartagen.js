@@ -682,10 +682,6 @@ var Geohash = {
 		                            height,
 		                            key)
 		var padding = 2
-		$C.rect(-padding/2,
-				-(height + padding/2),
-				width + padding + 3/Cartagen.zoom_level,
-		        height + padding - 3/Cartagen.zoom_level)
 		$C.draw_text('Lucida Grande',
 					 height,
 					 'rgba(0,0,0,0.5)',
