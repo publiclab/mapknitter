@@ -11,32 +11,22 @@
 	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
 	<script src="/cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/cartagen/lib/geohash.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/cartagen/lib/xml2json.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		cartagen_base_uri = '/cartagen'
 	</script>
 	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
-		Cartagen.setup({
-			debug: true,
-			stylesheet: "/static/rome/style.gss",
-			// live: true,
-			static_map: false,
-			// static_map_layers: [
-			// 	"static/rome/park.js",
-			// 	"static/rome/rail.js",
-			// 	"static/rome/waterway.js",
-			// 	"static/rome/primary.js",
-			// 	"static/rome/secondary.js",
-			// 	"static/rome/building.js",
-			// 	"static/rome/area.js"
-			// 	],
-			lat1: <%= @map[:lat1] %>,
-			lat2: <%= @map[:lat2] %>,
-			lng1: <%= @map[:lng1] %>,
-			lng2: <%= @map[:lng2] %>,
-			// debug: true
+		Event.observe(window, 'load', function() {
+			Cartagen.setup({
+				stylesheet: "/static/rome/style.gss",
+				static_map: false,
+				lat1: <%= @map[:lat1] %>,
+				lat2: <%= @map[:lat2] %>,
+				lng1: <%= @map[:lng1] %>,
+				lng2: <%= @map[:lng2] %>,
+				// debug: true
+			})
 		})
 	</script>
 </head>
