@@ -209,7 +209,8 @@ var Cartagen = {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		// wait for window load:
-		Event.observe(window, 'load', this.initialize.bind(this,configs))
+		// Event.observe(window, 'load', this.initialize.bind(this,configs))
+		this.initialize(configs)
 	},
 	/**
 	 * Performs initialization tasks, mainly fetching map data. This should never be called directly,
@@ -269,6 +270,8 @@ var Cartagen = {
 				},this)
 			}
 		}
+		
+		Glop.draw()
 		
 		/**
 		 * @name cartagen:postinit
