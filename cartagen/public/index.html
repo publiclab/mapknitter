@@ -17,19 +17,18 @@
 		Cartagen.setup({
 			debug: true,
 			stylesheet: "/static/rome/style.gss",
-			static_map: true,
-			static_map_layers: [
-				"static/rome/park.js",
-				"static/rome/rail.js",
-				"static/rome/waterway.js",
-				"static/rome/primary.js",
-				"static/rome/secondary.js",
-				"static/rome/building.js",
-				"static/rome/area.js"
-                //"static/mushroom-map/mushroom-map.js"
-				],
-			lat1: 41.9227,
-			lat2: 41.861,
+			static_map: false,
+			// static_map_layers: [
+			// 	"static/rome/park.js",
+			// 	"static/rome/rail.js",
+			// 	"static/rome/waterway.js",
+			// 	"static/rome/primary.js",
+			// 	"static/rome/secondary.js",
+			// 	"static/rome/building.js",
+			// 	"static/rome/area.js"
+			// 	],
+			lat1: 41.861,
+			lat2: 41.9227,
 			lng1: 12.4502,
 			lng2: 12.5341,
 			debug: true
@@ -38,7 +37,7 @@
 </head>
 <body>
 
-<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
+<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of geographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
 
 <div id="browsers" style="display:none;">
 	<h3>WHOOPS</h3>
