@@ -305,15 +305,10 @@ var Cartagen = {
 	load_plot: function(key) {
 		$l('loading geohash plot: '+key)
 
-		var bbox = Geohash.bbox(key)
-		var _lng1 = bbox[0]//.to_precision(Cartagen.precision)
-		var _lat2 = bbox[1]//.to_precision(Cartagen.precision)
-		var _lng2 = bbox[2]//.to_precision(Cartagen.precision)
-		var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
 
 		Cartagen.requested_plots++
 		var finished = false
-		var req = new Ajax.Request('/api/0.6/map.json?bbox='+_lng1+","+_lat1+','+_lng2+','+_lat2,{
+		var req = new Ajax.Request('/api/0.6/geohash/'+key+'.json',{
 			method: 'get',
 			onSuccess: function(result) {
 
