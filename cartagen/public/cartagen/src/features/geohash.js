@@ -31,6 +31,10 @@ var Geohash = {
 	 */
 	limit_bottom: 8, // 12 is most ever...
 	/**
+	 * position when Geohash.get_objects() was last run; in format: [x,y,zoom]
+	 */
+	last_get_objects: [0,0,0],
+	/**
 	 * Binds to events
 	 */
 	init: function() {
@@ -38,11 +42,16 @@ var Geohash = {
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	/**
-	 * Once-per-frame calls to regenerate objects, etc.
+	 * Recalculates which geohashes to request based on the viewport; formerly called every 
+	 * frame, but now only when viewport changes.
 	 * @see Geohash.get_objects
 	 */
 	draw: function() {
-		this.get_objects()
+		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+			this.get_objects()
+			$l('re-getting-objects')
+		}
 	},
 	/**
 	 * Adds a feature to a geohash index. Use put_object() to automatically
@@ -78,7 +87,7 @@ var Geohash = {
 	 */
 	put_object: function(feature) {
 		this.put(Projection.y_to_lat(feature.y),
-		         Projection.x_to_lon(feature.x),
+		         Projection.x_to_lon(-feature.x),
 		         feature,
 		         this.get_key_length(feature.width,feature.height))
 	},
@@ -325,6 +334,7 @@ var Geohash = {
 	 * @see Geohash.objects
 	 */
 	get_objects: function() {
+		this.last_get_objects = [Map.x,Map.y,Cartagen.zoom_level]
 		this.objects = []
 
 		// get geohash for each of the 4 corners,
