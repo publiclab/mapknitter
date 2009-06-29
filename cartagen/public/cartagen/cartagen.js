@@ -553,12 +553,16 @@ var Geohash = {
 	grid: true,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
+	last_get_objects: [0,0,0],
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		this.get_objects()
+		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+			this.get_objects()
+			$l('re-getting-objects')
+		}
 	},
 	put: function(lat,lon,feature,length) {
 		if (!length) length = this.default_length
@@ -575,7 +579,7 @@ var Geohash = {
 	},
 	put_object: function(feature) {
 		this.put(Projection.y_to_lat(feature.y),
-		         Projection.x_to_lon(feature.x),
+		         Projection.x_to_lon(-feature.x),
 		         feature,
 		         this.get_key_length(feature.width,feature.height))
 	},
@@ -679,15 +683,11 @@ var Geohash = {
 		$C.save()
 		$C.translate(Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]))
 		$C.fill_style(Object.value(this.fontBackground))
-		var height = 12 / Cartagen.zoom_level
+		var height = 16 / Cartagen.zoom_level
 		var width = $C.measure_text('Lucida Grande',
 		                            height,
 		                            key)
 		var padding = 2
-		$C.rect(-padding/2,
-				-(height + padding/2),
-				width + padding + 3/Cartagen.zoom_level,
-		        height + padding - 3/Cartagen.zoom_level)
 		$C.draw_text('Lucida Grande',
 					 height,
 					 'rgba(0,0,0,0.5)',
@@ -735,6 +735,7 @@ var Geohash = {
 		return Math.min(lat_key,lon_key)
 	},
 	get_objects: function() {
+		this.last_get_objects = [Map.x,Map.y,Cartagen.zoom_level]
 		this.objects = []
 
 		this.keys = new Hash
@@ -1258,8 +1259,6 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
-
-		$l(Glop.width+", "+Glop.height)
 
 		Glop.frame += 1
 

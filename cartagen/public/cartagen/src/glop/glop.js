@@ -46,8 +46,6 @@ var Glop = {
 			$('canvas').height = Glop.height
 		}
 		
-		$l(Glop.width+", "+Glop.height)
-		
 		Glop.frame += 1
 		
 		Events.drag()
