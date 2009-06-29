@@ -312,7 +312,6 @@ var Cartagen = {
 			method: 'get',
 			onSuccess: function(result) {
 
-				$l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Cartagen.requested_plots--
