@@ -555,8 +555,6 @@ var Cartagen = {
 	 * then fetches the plot and parses the data into the objects array.
 	 */
 	get_cached_plot: function(key) {
-		var cached = false
-
 		// Remember that parse_objects() will fill localStorage.
 		// We can't do it here because it's an asychronous AJAX call.
 
@@ -631,7 +629,7 @@ var Cartagen = {
 		var req = new Ajax.Request('/api/0.6/geohash/'+key+'.json',{
 			method: 'get',
 			onSuccess: function(result) {
-
+				finished = true
 				// $l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
