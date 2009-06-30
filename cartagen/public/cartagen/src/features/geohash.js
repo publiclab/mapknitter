@@ -31,9 +31,9 @@ var Geohash = {
 	 */
 	limit_bottom: 8, // 12 is most ever...
 	/**
-	 * position when Geohash.get_objects() was last run; in format: [x,y,zoom]
+	 * position when Geohash.get_objects() was last run; in format: [x,y,zoom,force]
 	 */
-	last_get_objects: [0,0,0],
+	last_get_objects: [0,0,0,false],
 	/**
 	 * Binds to events
 	 */
@@ -47,9 +47,10 @@ var Geohash = {
 	 * @see Geohash.get_objects
 	 */
 	draw: function() {
-		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
+			this.last_get_objects[3] = false
 			$l('re-getting-objects')
 		}
 	},
