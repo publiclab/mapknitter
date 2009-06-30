@@ -67,10 +67,9 @@ var Label = Class.create(
 	 */
     draw: function(x, y) {
         if (this.text) {
-			// $l('drawing label w/ text: ' + this.text + ' at (' + x + ',' + y + ')')
             $C.save()
 
-            Style.apply_font_style(this)
+            $C.stroke_style(this.fontColor)
 
 			//rotate the labels on unclosed ways:
 			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
@@ -90,33 +89,33 @@ var Label = Class.create(
 			}
 			
 			if (this.fontScale == "fixed") {
-				var height = Object.value(this.fontSize)
-				var padding = Object.value(this.padding)
+				var height = this.fontSize
+				var padding = this.padding
 			} else {
-				var height = Object.value(this.fontSize) / Cartagen.zoom_level
-				var padding = Object.value(this.padding) / Cartagen.zoom_level
+				var height = this.fontSize / Cartagen.zoom_level
+				var padding = this.padding / Cartagen.zoom_level
 			}
 
 
-			var width = $C.measure_text(Object.value(this.fontFamily), 
+			var width = $C.measure_text(this.fontFamily,
 			                            height,
-			                            Object.value(this.text))
+			                            Object.value(this.text, this.owner))
 
 			// $l('width: ' + width)
 			if (this.fontBackground) {
-				$C.fill_style(Object.value(this.fontBackground))
+				$C.fill_style(this.fontBackground)
 				$C.rect(x - (width + padding)/2, 
 						y - (height/2 + padding/2), 
 						width + padding,
 				        height + padding)
 			}
 			
-			$C.draw_text(Object.value(this.fontFamily),
+			$C.draw_text(this.fontFamily,
 			             height,
-						 Object.value(this.fontColor),
+						 this.fontColor,
 			             x - width/2,
 						 y + height/2,
-						 Object.value(this.text))
+						 this.text)
 			$C.restore()
         }
     }

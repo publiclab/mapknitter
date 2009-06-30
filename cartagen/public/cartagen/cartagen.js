@@ -274,8 +274,6 @@ var Cartagen = {
 		})
 	},
 	get_cached_plot: function(key) {
-		var cached = false
-
 
 		if (!Cartagen.live) {
 			if (Cartagen.plots.get(key)) {
@@ -311,7 +309,7 @@ var Cartagen = {
 		var req = new Ajax.Request('/api/0.6/geohash/'+key+'.json',{
 			method: 'get',
 			onSuccess: function(result) {
-
+				finished = true
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Cartagen.requested_plots--
@@ -762,8 +760,11 @@ var Geohash = {
 
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
-	properties: new Hash(),
-	label_styles: [],
+	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
+	             'outlineWidth', 'radius', 'hover', 'mouseDown'],
+
+	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
+		               'fontRotation'],
 	styles: {
 		body: {
 			fillStyle: "#eee",
@@ -772,29 +773,16 @@ var Style = {
 			fontRotation: 0
 		}
 	},
-	register_properties: function(props) {
-		$H(props).each(function(pair) {
-			var name = pair.key
-			var handlers = pair.value
-
-			handlers = handlers || {}
-			handlers.parse = handlers.parse || function(feature, value) {
-				feature[name] = value
-			}
-			handlers.apply = handlers.apply || Prototype.emptyFunction
-
-			if (handlers.label_style) {
-				this.label_styles.push(name)
-			}
-
-			this.properties.set(name, handlers)
-		}.bind(this))
-	},
 	style_body: function() {
-		this.properties.each(function(property) {
-			if (Style.styles.body[property.key] || Style.styles.body[property.key] == 0)
-				property.value.apply(Style.styles.body)
-		})
+		$C.fill_style(Style.styles.body.fillStyle)
+		if (Style.styles.body.pattern) {
+			if (!Style.styles.body.pattern.src) {
+				var value = Style.styles.body.pattern
+				Style.styles.body.pattern = new Image()
+				Style.styles.body.pattern.src = Object.value(value)
+			}
+			$C.fill_pattern(Style.styles.body.pattern, 'repeat')
+		}
 		$C.rect(0, 0, Glop.width, Glop.height)
 		$C.stroke_rect(0, 0, Glop.width, Glop.height)
 		$C.line_join('round')
@@ -802,231 +790,81 @@ var Style = {
 	},
 	parse_styles: function(feature,selector) {
 		try {
-			this.properties.each(function(property) {
+		(this.properties.concat(this.label_properties)).each(function(property) {
+			var val = selector[property]
+
+			if (Style.styles[feature.name] && Style.styles[feature.name][property])
+				val = Style.styles[feature.name][property]
+
+			feature.tags.each(function(tag) {
+				if (Style.styles[tag.key] && Style.styles[tag.key][property])
+					val = Style.styles[tag.key][property]
+
+				if (Style.styles[tag.value] && Style.styles[tag.value][property])
+					val = Style.styles[tag.value][property]
+			})
+
+			if (val) {
 				var f = feature
-				if (property.value.label_style) {
+				if (this.label_properties.include(property)) {
 					f = feature.label
 				}
 
-				var h = property.value.parse.bind(f)
-
-				if (selector[property.key])
-					h(feature, selector[property.key])
-
-				if (Style.styles[feature.name] && Style.styles[feature.name][property.key])
-					h(feature, Style.styles[feature.name][property.key])
-
-				feature.tags.each(function(tag) {
-					if (Style.styles[tag.key] && Style.styles[tag.key][property.key])
-						h(feature, Style.styles[tag.key][property.key])
-
-					if (Style.styles[tag.value] && Style.styles[tag.value][property.key])
-						h(feature, Style.styles[tag.value][property.key])
-				})
-
-			})
-			if (selector.outlineColor) feature.outlineColor = selector.outlineColor
-			if (selector.outlineWidth) feature.outlineColor = selector.outlineWidth
-			if (selector.radius) feature.radius = selector.radius
-
-			if (selector['hover']) feature.hover = selector['hover']
-			if (selector['mouseDown']) feature.mouseDown = selector['mouseDown']
-
-			if (Style.styles[feature.name] && Style.styles[feature.name].strokeStyle)
-				feature.strokeStyle = Style.styles[feature.name].strokeStyle
-
-			if (selector.fontColor) feature.label.fontColor = selector.fontColor
-			if (selector.fontSize) feature.label.fontSize = selector.fontSize
-			if (selector.fontScale) feature.label.fontScale = selector.fontScale
-			if (selector.fontRotation) feature.label.fontRotation = selector.fontRotation
-			if (selector.fontBackground) feature.label.fontBackground = selector.fontBackground
-			if (selector.text) feature.label.text = selector.text
-
-			if (feature.tags) {
-				feature.tags.each(function(tag) {
-					if (Style.styles[tag.key]) {
-						if (Style.styles[tag.key].outlineColor)
-							feature.outlineColor = Style.styles[tag.key].outlineColor
-						if (Style.styles[tag.key].outlineWidth)
-							feature.outlineWidth = Style.styles[tag.key].outlineWidth
-						if (Style.styles[tag.key].fontColor)
-							feature.label.fontColor = Style.styles[tag.key].fontColor
-						if (Style.styles[tag.key].fontSize)
-							feature.label.fontSize = Style.styles[tag.key].fontSize
-						if (Style.styles[tag.key].fontScale)
-							feature.label.fontScale = Style.styles[tag.key].fontScale
-						if (Style.styles[tag.key].fontRotation)
-							feature.label.fontRotation = Style.styles[tag.key].fontRotation
-						if (Style.styles[tag.key].fontBackground)
-							feature.label.fontBackground = Style.styles[tag.key].fontBackground
-						if (Style.styles[tag.key].text) {
-							if (Object.isFunction(Style.styles[tag.key].text))
-								feature.label.text = Style.styles[tag.key].text.apply(feature)
-							else feature.label.text = Style.styles[tag.key].text
-						}
-					}
-					if (Style.styles[tag.value]) {
-						if (Style.styles[tag.value].outlineColor)
-							feature.outlineColor = Style.styles[tag.value].outlineColor
-						if (Style.styles[tag.value].outlineWidth)
-							feature.outlineWidth = Style.styles[tag.value].outlineWidth
-						if (Style.styles[tag.value].fontColor)
-							feature.label.fontColor = Style.styles[tag.value].fontColor
-						if (Style.styles[tag.value].fontSize)
-							feature.label.fontSize = Style.styles[tag.value].fontSize
-						if (Style.styles[tag.value].fontScale)
-							feature.label.fontScale = Style.styles[tag.value].fontScale
-						if (Style.styles[tag.value].fontRotation)
-							feature.label.fontRotation = Style.styles[tag.value].fontRotation
-						if (Style.styles[tag.value].fontBackground)
-							feature.label.fontBackground = Style.styles[tag.value].fontBackground
-						if (Style.styles[tag.value].text) {
-							if (Object.isFunction(Style.styles[tag.value].text))
-								feature.label.text = Style.styles[tag.value].text.apply(feature)
-							else feature.label.text = Style.styles[tag.value].text
-						}
-					}
-
-					if (Style.styles[tag.key] && Style.styles[tag.key]['hover']) {
-						feature.hover = Style.styles[tag.key]['hover']
-
-					}
-					if (Style.styles[tag.value] && Style.styles[tag.value]['hover']) {
-						feature.hover = Style.styles[tag.value]['hover']
-					}
-					if (Style.styles[tag.key] && Style.styles[tag.key]['mouseDown']) {
-						feature.mouseDown = Style.styles[tag.key]['mouseDown']
-					}
-					if (Style.styles[tag.value] && Style.styles[tag.value]['mouseDown']) {
-						feature.mouseDown = Style.styles[tag.value]['mouseDown']
-					}
-					if (Style.styles[tag.key] && Style.styles[tag.key]['refresh']) {
-
-						$H(Style.styles[tag.key]['refresh']).each(function(pair) {
-							Style.create_refresher(feature, pair.key, pair.value)
-						})
-					}
-					if (Style.styles[tag.value] && Style.styles[tag.value]['refresh']) {
-						if(!feature.style_generators) feature.style_generators = {}
-						$H(Style.styles[tag.value]['refresh']).each(function(pair) {
-							Style.create_refresher(feature, pair.key, pair.value)
-						})
-					}
-				})
+				if (val.gss_update_interval) {
+					Style.create_refresher(f, property, val, val.gss_update_interval)
+				}
+				else {
+					f[property] = Object.value(val, feature)
+				}
 			}
-		} catch(e) {
-			$l('selector: '+selector)
-			$l(e)
-		}
+		}, this)
+		} catch(e) {$l(e)}
 	},
-	create_refresher: function(feature, property, interval) {
-		if (Object.isFunction(feature[property])) { //sanity check
-            if (['fontBackground', 'fontColor', 'fontScale',
-			     'fontSize', 'fontRotation', 'text'].include(property)) {
-                	feature = feature.label
-            }
-			if(!feature.style_generators) feature.style_generators = {}
-			if(!feature.style_generators.executers) feature.style_generators.executers = {}
-			feature.style_generators[property] = feature[property]
+	create_refresher: function(feature, property, generator, interval) {
+		if(!feature.style_generators) feature.style_generators = {}
+		if(!feature.style_generators.executers) feature.style_generators.executers = {}
+
+		feature.style_generators[property] = generator
+
+		Style.refresh_style(feature, property)
+		feature.style_generators.executers[property] = new PeriodicalExecuter(function() {
 			Style.refresh_style(feature, property)
-			feature.style_generators.executers[property] = new PeriodicalExecuter(function() {
-				Style.refresh_style(feature, property)
-			}, interval)
-		}
+		}, interval)
 	},
 	refresh_style: function(feature, property) {
-		feature[property] = feature.style_generators[property]()
-	},
-	apply_style: function(feature) {
-		this.properties.each(function(property) {
-			if (feature[property.key]) {
-				property.value.apply(feature)
-			}
-		})
-
-		if (feature instanceof Way) {
-			if (feature.hover && feature.closed_poly &&
-			    Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
-					Style.apply_style(feature.hover)
-					if (!Object.isUndefined(feature.hover.action)) feature.hover.action()
-			}
-			if (feature.mouseDown && Mouse.down == true && feature.closed_poly &&
-			    Geometry.is_point_in_poly(feature.nodes,Map.pointer_x(),Map.pointer_y())) {
-					Style.apply_style(feature.mouseDown)
-					if (!Object.isUndefined(feature.mouseDown.action)) feature.mouseDown.action()
-			}
-		} else if (feature instanceof Node) {
-			if (feature.hover &&
-			    Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
-					Style.apply_style(feature.hover)
-					if (feature.hover.action) feature.hover.action()
-			}
-			if (feature.mouseDown && Mouse.down == true &&
-			    Geometry.overlaps(feature.x,feature.y,Map.pointer_x(),Map.pointer_y(),100)) {
-					Style.apply_style(feature.mouseDown)
-					if (feature.mouseDown.action) feature.mouseDown.action()
-			}
-		}
-	},
-	apply_font_style: function(feature) {
-		if (feature.fontColor) {
-			if (Object.isFunction(feature.fontColor)) $C.stroke_style(feature.fontColor())
-			else $C.stroke_style(feature.fontColor)
-		}
+		feature[property] = Object.value(feature.style_generators[property], feature)
 	},
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url[0,4] == "http") {
-			stylesheet_url = "/utility/proxy?url="+stylesheet_url
+			stylesheet_url = "/map/style?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
-				Style.styles = ("{"+result.responseText+"}").evalJSON()
-				if($('gss_textarea')) {
-					$('gss_textarea').value = result.responseText
-				}
+
+				Style.apply_gss(result.responseText)
 			}
 		})
+	},
+	apply_gss: function(gss_string) {
+		var styles = ("{"+gss_string+"}").evalJSON()
+		$H(styles).each(function(style) {
+			if (style.value.refresh) {
+				$H(style.value.refresh).each(function(pair) {
+					style.value[pair.key].gss_update_interval = pair.value
+				})
+			}
+		})
+
+		Style.styles = styles
+
+		if($('gss_textarea')) {
+			$('gss_textarea').value = gss_string
+		}
 	}
 }
 
-Style.register_properties({
-	fillStyle: {
-		apply: function(feature) {
-			$C.fill_style(Object.value(feature.fillStyle, feature))
-		}
-	},
-	pattern: {
-		parse: function(feature, value) {
-			feature.pattern = new Image()
-			feature.pattern.src = Object.value(value, feature)
-		},
-		apply: function(feature) {
-			if (!feature.pattern.src) {
-				var value = feature.pattern
-				feature.pattern = new Image()
-				feature.pattern.src = Object.value(value, feature)
-			}
-			$C.fill_pattern(Object.value(feature.pattern, feature), 'repeat')
-		}
-	},
-	strokeStyle: {
-		apply: function(feature) {
-			$C.stroke_style(Object.value(feature.strokeStyle, feature))
-		}
-	},
-	opacity: {
-		apply: function(feature) {
-			$C.opacity(Object.value(feature.opacity, feature))
-		}
-	},
-	lineWidth: {
-		apply: function(feature) {
-			$C.line_width(Object.value(feature.lineWidth, feature))
-		}
-	}
-})
 
 var Feature = Class.create(
 {
@@ -1036,13 +874,36 @@ var Feature = Class.create(
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
+		this.opacity = 1
+		this.strokeStyle = 'black'
+		this.lineWidth = 0
+		this._unhovered_styles = {}
+		this._unclicked_styles = {}
 
 		this.label = new Label(this)
 	},
 	draw: function() {
 		Cartagen.object_count++
 		$C.save()
-		Style.apply_style(this)
+
+
+		$C.fill_style(this.fillStyle)
+
+		if (this.pattern) {
+			if (!this.pattern.src) {
+				var value = this.pattern
+				this.pattern = new Image()
+				this.pattern.src = value
+			}
+			$C.fill_pattern(this.pattern, 'repeat')
+		}
+
+		$C.stroke_style(this.strokeStyle)
+		$C.opacity(this.opacity)
+		$C.line_width(this.lineWidth)
+
+		this.style()
+
 		this.shape()
 		$C.restore()
 
@@ -1050,8 +911,27 @@ var Feature = Class.create(
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
 	},
+	style: Prototype.emptyFunction,
 	shape: function() {
 		$D.warn('Feature#shape should be overriden')
+	},
+	apply_hover_styles: function() {
+		$H(this.hover).each(function(pair) {
+			if (this[pair.key]) this._unhovered_styles[pair.key] = this[pair.key]
+			this[pair.key] = pair.value
+		}, this)
+	},
+	remove_hover_styles: function() {
+		Object.extend(this, this._unhovered_styles)
+	},
+	apply_click_styles: function() {
+		$H(this.mouseDown).each(function(pair) {
+			if (this[pair.key]) this._unclicked_styles[pair.key] = this[pair.key]
+			this[pair.key] = pair.value
+		}, this)
+	},
+	remove_click_styles: function() {
+		Object.extend(this, this._unclicked_styles)
 	}
 })
 
@@ -1064,6 +944,9 @@ var Node = Class.create(Feature,
 	draw: function($super) {
 		Cartagen.node_count++
 		$super()
+	},
+	style: function() {
+
 	},
 	shape: function() {
 		$C.begin_path()
@@ -1082,6 +965,9 @@ var Way = Class.create(Feature,
 		this.highlight = false
 		this.nodes = []
 		this.closed_poly = false
+
+		this.outline_color = null
+		this.outline_width = null
 
 		Object.extend(this, data)
 
@@ -1136,6 +1022,33 @@ var Way = Class.create(Feature,
 		$super()
 		this.age += 1;
 	},
+	style: function() {
+		if (this.hover && this.closed_poly &&
+			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
+				if (!this.hover_styles_applied) {
+					this.apply_hover_styles()
+					this.hover_styles_applied = true
+				}
+				if (!Object.isUndefined(this.hover.action)) this.hover.action.bind(this)()
+		}
+		else if (this.hover_styles_applied) {
+			this.remove_hover_styles()
+			this.hover_styles_applied = false
+		}
+
+		if (this.mouseDown && Mouse.down == true && this.closed_poly &&
+			Geometry.is_point_in_poly(this.nodes,Map.pointer_x(),Map.pointer_y())) {
+				if (!this.click_styles_applied) {
+					this.apply_click_styles()
+					this.click_styles_applied = true
+				}
+				if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
+		}
+		else if (this.click_styles_applied) {
+			this.remove_click_styles()
+			this.hover_click_applied = false
+		}
+	},
 	shape: function() {
 
 		if (this.highlight) {
@@ -1183,7 +1096,7 @@ var Label = Class.create(
         if (this.text) {
             $C.save()
 
-            Style.apply_font_style(this)
+            $C.stroke_style(this.fontColor)
 
 			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
 				$C.translate(x, y)
@@ -1202,32 +1115,32 @@ var Label = Class.create(
 			}
 
 			if (this.fontScale == "fixed") {
-				var height = Object.value(this.fontSize)
-				var padding = Object.value(this.padding)
+				var height = this.fontSize
+				var padding = this.padding
 			} else {
-				var height = Object.value(this.fontSize) / Cartagen.zoom_level
-				var padding = Object.value(this.padding) / Cartagen.zoom_level
+				var height = this.fontSize / Cartagen.zoom_level
+				var padding = this.padding / Cartagen.zoom_level
 			}
 
 
-			var width = $C.measure_text(Object.value(this.fontFamily),
+			var width = $C.measure_text(this.fontFamily,
 			                            height,
-			                            Object.value(this.text))
+			                            Object.value(this.text, this.owner))
 
 			if (this.fontBackground) {
-				$C.fill_style(Object.value(this.fontBackground))
+				$C.fill_style(this.fontBackground)
 				$C.rect(x - (width + padding)/2,
 						y - (height/2 + padding/2),
 						width + padding,
 				        height + padding)
 			}
 
-			$C.draw_text(Object.value(this.fontFamily),
+			$C.draw_text(this.fontFamily,
 			             height,
-						 Object.value(this.fontColor),
+						 this.fontColor,
 			             x - width/2,
 						 y + height/2,
-						 Object.value(this.text))
+						 this.text)
 			$C.restore()
         }
     }
@@ -1323,6 +1236,7 @@ var Events = {
 		Glop.draw()
 	},
 	mousedown: function(event) {
+		$l('lon: ' + Projection.x_to_lon(Mouse.x) + ', lat: ' + Projection.y_to_lat(Mouse.y))
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x

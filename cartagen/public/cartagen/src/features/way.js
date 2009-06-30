@@ -37,6 +37,9 @@ var Way = Class.create(Feature,
 		 * @type Boolean
 		 */
 		this.closed_poly = false
+
+		this.outline_color = null
+		this.outline_width = null
 		
 		Object.extend(this, data)
 		
@@ -105,6 +108,38 @@ var Way = Class.create(Feature,
 		Cartagen.way_count++
 		$super()
 		this.age += 1;
+	},
+	/**
+	 * Applies hover and mouseDown styles
+	 */
+	style: function() {
+		// hover
+		if (this.hover && this.closed_poly &&
+			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
+				if (!this.hover_styles_applied) {
+					this.apply_hover_styles()
+					this.hover_styles_applied = true
+				}
+				if (!Object.isUndefined(this.hover.action)) this.hover.action.bind(this)()
+		}
+		else if (this.hover_styles_applied) {
+			this.remove_hover_styles()
+			this.hover_styles_applied = false
+		}
+
+		// mouseDown
+		if (this.mouseDown && Mouse.down == true && this.closed_poly &&
+			Geometry.is_point_in_poly(this.nodes,Map.pointer_x(),Map.pointer_y())) {
+				if (!this.click_styles_applied) {
+					this.apply_click_styles()
+					this.click_styles_applied = true
+				}
+				if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
+		}
+		else if (this.click_styles_applied) {
+			this.remove_click_styles()
+			this.hover_click_applied = false
+		}
 	},
 	/**
 	 * Draws on the canvas to display this way
