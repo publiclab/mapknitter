@@ -1052,7 +1052,7 @@ var Way = Class.create(Feature,
 		}
 	},
 	shape: function() {
-
+		$C.opacity(1)
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
 			$C.stroke_style("red")
@@ -1512,7 +1512,7 @@ $C = {
 
 	},
 	opacity: function(alpha) {
-		$C.canvas.alpha = alpha
+		$C.canvas.globalAlpha = alpha
 	},
 	save: function() {
 		$C.canvas.save()

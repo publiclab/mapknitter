@@ -254,7 +254,7 @@ $C = {
 	 * @param {Number} alpha New alpha value, between 0 and 1.
 	 */
 	opacity: function(alpha) {
-		$C.canvas.alpha = alpha
+		$C.canvas.globalAlpha = alpha
 	},
 	/**
 	 * Saves the state of the canvas
