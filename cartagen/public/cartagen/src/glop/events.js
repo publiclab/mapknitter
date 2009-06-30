@@ -51,6 +51,7 @@ var Events = {
 	 * @param {Event} event
 	 */
 	mousedown: function(event) {
+		$l('lon: ' + Projection.x_to_lon(Mouse.x) + ', lat: ' + Projection.y_to_lat(Mouse.y))
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x

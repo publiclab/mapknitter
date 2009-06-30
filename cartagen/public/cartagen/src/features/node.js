@@ -29,6 +29,12 @@ var Node = Class.create(Feature,
 		$super()
 	},
 	/**
+	 * Applies hover and mouseDown styles
+	 */
+	style: function() {
+
+	},
+	/**
 	 * Draws this node
 	 */
 	shape: function() {
