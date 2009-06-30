@@ -22,7 +22,8 @@ area: {
 	lineWidth: 20,
 	strokeStyle: "#4C6ACB",
 	opacity: 0.4,
-	fontColor: "#444"
+	fontColor: "#444",
+	fillStyle: "rgba(0,0,0,0)"
 },
 park: {
 	fillStyle: "#2a2",
