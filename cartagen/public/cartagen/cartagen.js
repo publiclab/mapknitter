@@ -547,6 +547,7 @@ var Geohash = {
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
 	last_get_objects: [0,0,0,false],
+	last_loaded_geohash_frame: 0,
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
@@ -556,6 +557,7 @@ var Geohash = {
 			this.get_objects()
 			this.last_get_objects[3] = false
 			$l('re-getting-objects')
+			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
 	put: function(lat,lon,feature,length) {
@@ -1173,8 +1175,6 @@ var Glop = {
 			$('canvas').height = Glop.height
 		}
 
-		Glop.frame += 1
-
 		Events.drag()
 
 		$('canvas').fire('glop:predraw')
@@ -1193,7 +1193,7 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame < Glop.frame-20) {
 			Glop.draw()
 		} else {
 			if (Event.last_event > Glop.frame-25) {
@@ -1201,6 +1201,7 @@ var Glop = {
 			} else {
 			}
 		}
+		Glop.frame += 1
 	}
 }
 

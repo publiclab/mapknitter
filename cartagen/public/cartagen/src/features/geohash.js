@@ -35,6 +35,10 @@ var Geohash = {
 	 */
 	last_get_objects: [0,0,0,false],
 	/**
+	 * Frame the last plot was loaded on
+	*/
+	last_loaded_geohash_frame: 0,
+	/**
 	 * Binds to events
 	 */
 	init: function() {
@@ -52,6 +56,7 @@ var Geohash = {
 			this.get_objects()
 			this.last_get_objects[3] = false
 			$l('re-getting-objects')
+			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
 	/**
