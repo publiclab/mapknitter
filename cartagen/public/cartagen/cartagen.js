@@ -315,6 +315,7 @@ var Cartagen = {
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				Geohash.last_get_objects[3] = true // force re-get of geohashes
 			},
 			onFailure: function() {
 				Cartagen.requested_plots--
@@ -545,14 +546,15 @@ var Geohash = {
 	grid: true,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
-	last_get_objects: [0,0,0],
+	last_get_objects: [0,0,0,false],
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
+			this.last_get_objects[3] = false
 			$l('re-getting-objects')
 		}
 	},
@@ -870,13 +872,13 @@ var Feature = Class.create(
 {
 	initialize: function() {
 		this.tags = new Hash()
-		this.fillStyle = '#555'
+		this.fillStyle = 'rgba(0,0,0,0)'
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
 		this.opacity = 1
 		this.strokeStyle = 'black'
-		this.lineWidth = 0
+		this.lineWidth = 6
 		this._unhovered_styles = {}
 		this._unclicked_styles = {}
 
