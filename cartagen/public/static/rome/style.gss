@@ -11,7 +11,12 @@ node: {
 },
 way: {
 	strokeStyle: "#ccc",
-	lineWidth: 3
+	lineWidth: 3,
+},
+administrative: {
+	lineWidth: 50,
+	strokeStyle: "#D45023",
+	fillStyle: "rgba(0,0,0,0)",
 },
 leisure: {
 	fillStyle: "#2a2",
@@ -19,11 +24,11 @@ leisure: {
 	strokeStyle: "#181"
 },
 area: {
-	lineWidth: 20,
+	lineWidth: 8,
 	strokeStyle: "#4C6ACB",
+	fillStyle: "rgba(0,0,0,0)",
 	opacity: 0.4,
 	fontColor: "#444",
-	fillStyle: "rgba(0,0,0,0)"
 },
 park: {
 	fillStyle: "#2a2",
