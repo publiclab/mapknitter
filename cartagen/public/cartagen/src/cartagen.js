@@ -623,7 +623,7 @@ var Cartagen = {
 		// var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
 		
 		Cartagen.requested_plots++
-		var finished = false	
+		var finished = false
 		// var req = new Ajax.Request('/map/plot.js?lat1='+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2,{
 		// var req = new Ajax.Request('/api/0.6/map.json?bbox='+_lng1+","+_lat1+','+_lng2+','+_lat2,{
 		var req = new Ajax.Request('/api/0.6/geohash/'+key+'.json',{
@@ -636,6 +636,7 @@ var Cartagen = {
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
+				Geohash.last_get_objects[3] = true // force re-get of geohashes
 			},
 			onFailure: function() {
 				Cartagen.requested_plots--
