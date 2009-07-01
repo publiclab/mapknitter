@@ -775,7 +775,7 @@ var Geohash = {
 				}
 			}
 		}
-		$l(this.object.length)
+		$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {
