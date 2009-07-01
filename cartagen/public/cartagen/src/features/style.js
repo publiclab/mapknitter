@@ -44,7 +44,6 @@ var Style = {
 	 *                          that apply to tags of the feature.
 	 */
 	parse_styles: function(feature,selector) {
-		try {
 		(this.properties.concat(this.label_properties)).each(function(property) {
 			var val = selector[property]
 
@@ -73,7 +72,6 @@ var Style = {
 				}
 			}
 		}, this)
-		} catch(e) {$l(e)}
 	},
 	/**
 	 * Creates a periodical executer that updates a property
@@ -107,7 +105,7 @@ var Style = {
 	 */
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url[0,4] == "http") {
-			stylesheet_url = "/map/style?url="+stylesheet_url
+			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
