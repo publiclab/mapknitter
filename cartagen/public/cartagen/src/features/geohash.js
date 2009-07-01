@@ -381,13 +381,12 @@ var Geohash = {
 				while (quota > 0) {
 					var o = lengths[i][j % (lengths[i].length)].shift()
 					if (o) this.objects.push(o)
-					$l(j % (lengths[i].length))
-					$l(quota)
 					++j
 					--quota
 				}
 			}
 		}
+		$l(this.object.length)
 		return this.objects
 	},
 	sort_objects: function() {
