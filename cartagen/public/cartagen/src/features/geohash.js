@@ -102,7 +102,7 @@ var Geohash = {
 	 * @param {Number} lat    Latitude to hash
 	 * @param {Number} lon    Longitude to hash
 	 * @param {Number} length Length of hash
-	 * @return The generetaed geohash, truncated to the specified length
+	 * @return The generated geohash, truncated to the specified length
 	 * @type String
 	 */
 	get_key: function(lat,lon,length) {
@@ -358,19 +358,56 @@ var Geohash = {
 		this.keys.keys().each(function(key, index) {
 			this.get_keys_upward(key)
 		}, this)
-		
+
+		var quota = Geohash.feature_quota()
+
+		// sort by key length
+
+		var lengths = {}
 		this.keys.keys().each(function(key) {
-			// Cartagen.plot_array.push(Geohash.bbox(key))
-			this.objects = (this.get_from_key(key)).concat(this.objects)
-		}, this)
-		
-		// reverse because smaller objects are added first:
+			if (!lengths[key.length]) lengths[key.length] = []
+
+			lengths[key.length].push(Geohash.get_from_key(key))
+		})
+
+		for (i = 1; i <= this.key_length && quota > 0; ++i) {
+			var features = lengths[i].flatten()
+			if (quota >= features.length) {
+				this.objects = this.objects.concat(features)
+				quota -= features.length
+			}
+			else {
+				j = 0
+				while (quota > 0) {
+					var o = lengths[i][j % (lengths[i].length)].shift()
+					if (o) this.objects.push(o)
+					$l(j % (lengths[i].length))
+					$l(quota)
+					++j
+					--quota
+				}
+			}
+		}
 		return this.objects
 	},
 	sort_objects: function() {
 		this.keys.values().each(function(value) { 
 			if (value.sort) value.sort(Cartagen.sort_by_area())
 		})
+	},
+	/**
+	 * Calculates the appropritate density of features based on the hardware' power (estimated by screen
+	 * resolution).
+	 * @return The density, in features per 1,000 square pixels.
+	 */
+	feature_density: function() {
+		return 0.5 * Viewport.power()
+	},
+	/**
+	 * Calculates the number of features that should be drawn.
+	 */
+	feature_quota: function() {
+		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
 	}
 }
 
