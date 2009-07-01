@@ -749,16 +749,46 @@ var Geohash = {
 			this.get_keys_upward(key)
 		}, this)
 
-		this.keys.keys().each(function(key) {
-			this.objects = (this.get_from_key(key)).concat(this.objects)
-		}, this)
+		var quota = Geohash.feature_quota()
 
+
+		var lengths = {}
+		this.keys.keys().each(function(key) {
+			if (!lengths[key.length]) lengths[key.length] = []
+
+			lengths[key.length].push(Geohash.get_from_key(key))
+		})
+
+		for (i = 1; i <= this.key_length && quota > 0; ++i) {
+			var features = lengths[i].flatten()
+			if (quota >= features.length) {
+				this.objects = this.objects.concat(features)
+				quota -= features.length
+			}
+			else {
+				j = 0
+				while (quota > 0) {
+					var o = lengths[i][j % (lengths[i].length)].shift()
+					if (o) this.objects.push(o)
+					$l(j % (lengths[i].length))
+					$l(quota)
+					++j
+					--quota
+				}
+			}
+		}
 		return this.objects
 	},
 	sort_objects: function() {
 		this.keys.values().each(function(value) {
 			if (value.sort) value.sort(Cartagen.sort_by_area())
 		})
+	},
+	feature_density: function() {
+		return 0.5 * Viewport.power()
+	},
+	feature_quota: function() {
+		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
 	}
 }
 
@@ -793,7 +823,6 @@ var Style = {
 		$C.line_cap('round')
 	},
 	parse_styles: function(feature,selector) {
-		try {
 		(this.properties.concat(this.label_properties)).each(function(property) {
 			var val = selector[property]
 
@@ -822,7 +851,6 @@ var Style = {
 				}
 			}
 		}, this)
-		} catch(e) {$l(e)}
 	},
 	create_refresher: function(feature, property, generator, interval) {
 		if(!feature.style_generators) feature.style_generators = {}
@@ -840,7 +868,7 @@ var Style = {
 	},
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url[0,4] == "http") {
-			stylesheet_url = "/map/style?url="+stylesheet_url
+			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
