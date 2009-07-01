@@ -421,6 +421,19 @@ var Cartagen = {
 		}
 	},
 	/**
+	 * Repositions Cartagen to center on lat,lon with given zoom level
+     * @param {Number} lat     latitude to center the map on
+     * @param {Number} lon     longitude to center the map on
+     * @param {Number} zoom_level     zoom_level to set the map to
+	 */
+	go_to: function(lat,lon,zoom_level) {
+		Map.lat = lat
+		Map.lon = lon
+		Map.x = -Projection.lon_to_x(Map.lon)
+		Map.y = Projection.lat_to_y(Map.lat)
+		Cartagen.zoom_level = zoom_level
+	},
+	/**
 	 * Parses feature data and creates Way and Node objects, registering them with
 	 * Geohash
 	 * @param {Object} data OSM data to parse
