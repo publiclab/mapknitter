@@ -186,6 +186,13 @@ var Cartagen = {
 			return 1 // b wins no matter what if a is not a Way
 		}
 	},
+	go_to: function(lat,lon,zoom_level) {
+		Map.lat = lat
+		Map.lon = lon
+		Map.x = -Projection.lon_to_x(Map.lon)
+		Map.y = Projection.lat_to_y(Map.lat)
+		Cartagen.zoom_level = zoom_level
+	},
 	parse_objects: function(data) {
 		data.osm.node.each(function(node){
 	        var n = new Node
@@ -546,18 +553,15 @@ var Geohash = {
 	grid: true,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
-	last_get_objects: [0,0,0,false],
-	last_loaded_geohash_frame: 0,
+	last_get_objects: [0,0,0],
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
-			this.last_get_objects[3] = false
 			$l('re-getting-objects')
-			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
 	put: function(lat,lon,feature,length) {
@@ -749,45 +753,16 @@ var Geohash = {
 			this.get_keys_upward(key)
 		}, this)
 
-		var quota = Geohash.feature_quota()
-
-
-		var lengths = {}
 		this.keys.keys().each(function(key) {
-			if (!lengths[key.length]) lengths[key.length] = []
+			this.objects = (this.get_from_key(key)).concat(this.objects)
+		}, this)
 
-			lengths[key.length].push(Geohash.get_from_key(key))
-		})
-
-		for (i = 1; i <= this.key_length && quota > 0; ++i) {
-			var features = lengths[i].flatten()
-			if (quota >= features.length) {
-				this.objects = this.objects.concat(features)
-				quota -= features.length
-			}
-			else {
-				j = 0
-				while (quota > 0) {
-					var o = lengths[i][j % (lengths[i].length)].shift()
-					if (o) this.objects.push(o)
-					++j
-					--quota
-				}
-			}
-		}
-		$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {
 		this.keys.values().each(function(value) {
 			if (value.sort) value.sort(Cartagen.sort_by_area())
 		})
-	},
-	feature_density: function() {
-		return 0.5 * Viewport.power()
-	},
-	feature_quota: function() {
-		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
 	}
 }
 
@@ -822,6 +797,7 @@ var Style = {
 		$C.line_cap('round')
 	},
 	parse_styles: function(feature,selector) {
+		try {
 		(this.properties.concat(this.label_properties)).each(function(property) {
 			var val = selector[property]
 
@@ -850,6 +826,7 @@ var Style = {
 				}
 			}
 		}, this)
+		} catch(e) {$l(e)}
 	},
 	create_refresher: function(feature, property, generator, interval) {
 		if(!feature.style_generators) feature.style_generators = {}
@@ -867,7 +844,7 @@ var Style = {
 	},
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url[0,4] == "http") {
-			stylesheet_url = "/utility/proxy?url="+stylesheet_url
+			stylesheet_url = "/map/style?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
@@ -901,13 +878,13 @@ var Feature = Class.create(
 {
 	initialize: function() {
 		this.tags = new Hash()
-		this.fillStyle = 'rgba(0,0,0,0)'
+		this.fillStyle = '#555'
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
 		this.opacity = 1
 		this.strokeStyle = 'black'
-		this.lineWidth = 6
+		this.lineWidth = 0
 		this._unhovered_styles = {}
 		this._unclicked_styles = {}
 
@@ -1081,7 +1058,7 @@ var Way = Class.create(Feature,
 		}
 	},
 	shape: function() {
-		$C.opacity(1)
+
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
 			$C.stroke_style("red")
@@ -1202,6 +1179,8 @@ var Glop = {
 			$('canvas').height = Glop.height
 		}
 
+		Glop.frame += 1
+
 		Events.drag()
 
 		$('canvas').fire('glop:predraw')
@@ -1220,7 +1199,7 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame < Glop.frame-20) {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
 			Glop.draw()
 		} else {
 			if (Event.last_event > Glop.frame-25) {
@@ -1228,7 +1207,6 @@ var Glop = {
 			} else {
 			}
 		}
-		Glop.frame += 1
 	}
 }
 
@@ -1540,7 +1518,7 @@ $C = {
 
 	},
 	opacity: function(alpha) {
-		$C.canvas.globalAlpha = alpha
+		$C.canvas.alpha = alpha
 	},
 	save: function() {
 		$C.canvas.save()
@@ -2066,8 +2044,8 @@ var Projection = {
 	spherical_mercator: {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
 		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
-		lat_to_y: function(lat) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+lat*(Math.PI/180)/2)) * Projection.scale_factor },
-		y_to_lat: function(y) { return  180/Math.PI * (2 * Math.atan(Math.exp(y/Projection.scale_factor*Math.PI/180)) - Math.PI/2) }
+		lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * Projection.scale_factor * 1.7 },
+		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) }
 	},
 	elliptical_mercator: {
 		lon_to_x: function(lon) {
