@@ -104,14 +104,13 @@ var Style = {
 	 * @param {String} stylesheet_url URL of stylesheet
 	 */
 	load_styles: function(stylesheet_url) {
-		if (stylesheet_url[0,4] == "http") {
+		if (stylesheet_url.slice(0,4) == "http") {
 			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
-
 				Style.apply_gss(result.responseText)
 			}
 		})
