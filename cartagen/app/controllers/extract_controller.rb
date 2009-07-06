@@ -46,4 +46,15 @@ class ExtractController < ApplicationController
         format.js  { render :json => @features }
       end
     end
+
+		def kml_to_json
+			params[:url] ||= 'cartagen.localhost/doc.kml'
+      @features = ParseKml.parse(params[:url])
+      respond_to do |format|
+        format.html { render :html => @features }
+        format.xml  { render :xml => @features }
+        #format.kml  { render :template => "map/plot.kml.erb" }
+        format.js  { render :json => @features }
+      end
+    end
 end
