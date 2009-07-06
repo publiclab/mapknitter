@@ -134,14 +134,14 @@ var Relation = Class.create(Feature,
 		$C.begin_path()
 		
 		if (Map.resolution == 0) Map.resolution = 1
-		var is_inside = true, first_node = true, last_node
+		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
 			if (is_inside || index == this.nodes.length-1) {
 				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
 					if (first_node) {
-						var corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
+						start_corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						Cartagen.node_count++
-						$C.move_to(corner[0],corner[1])
+						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
 					}
 					Cartagen.node_count++
@@ -152,11 +152,12 @@ var Relation = Class.create(Feature,
 			last_node = node
 			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
-		corner = this.nearest_corner(last_node.x,last_node.y)
+		end_corner = this.nearest_corner(last_node.x,last_node.y)
 		Cartagen.node_count++
-		$C.line_to(corner[0],corner[1])
-		// y1,x1,y2,x2
-		// Viewport.bbox[]
+		Viewport.full_bbox().reverse().slice(end_corner[2],start_corner[2]).each(function(coord) {
+			$C.line_to(coord[0],coord[1])
+		},this)
+		
 		// if (corner[2] == 0) {
 		// 	$C.line_to(corner[0],corner[1])
 		// }
