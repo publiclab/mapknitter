@@ -16,7 +16,8 @@ var Style = {
 			fillStyle: "#eee",
 			fontColor: "#eee",
 			fontSize: 12,
-			fontRotation: 0
+			fontRotation: 0,
+			opacity: 1
 		}
 	},
 	/**
@@ -24,6 +25,7 @@ var Style = {
 	 */
 	style_body: function() {
 		$C.fill_style(Style.styles.body.fillStyle)
+		$C.opacity(Style.styles.body.opacity)
 		if (Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern

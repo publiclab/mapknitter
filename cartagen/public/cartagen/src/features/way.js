@@ -11,12 +11,12 @@ var Way = Class.create(Feature,
 {
 	/**
 	 * Sets up this way's properties and adds it to the geohash index
-	 * @param {Object} data     A set of properties that will be copied to this Way.
+	 * @param {Object} data         A set of properties that will be copied to this Way.
 	 * @constructs
 	 */
     initialize: function($super, data) {
 		$super()
-		
+		geohash = geohash || true
 		/**
 		 * Number of frames this Way has existed for
 		 * @type Number
@@ -63,14 +63,47 @@ var Way = Class.create(Feature,
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
 		
 		// calculate longest dimension to file in a correct geohash:
+		// Can we do this in lon/lat only, i.e. save some calculation?
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
 		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 		
-		Style.parse_styles(this,Style.styles.way)
-		objects.push(this) // made obsolete by Geohash
-		Geohash.put_object(this)
-		Cartagen.ways.set(this.id,this)
+		if (this.coastline) {
+			Cartagen.coastlines.push(this)
+		} else {
+			Style.parse_styles(this,Style.styles.way)
+			Geohash.put_object(this)
+			Cartagen.ways.set(this.id,this)
+		}
     },
+	/**
+	 * for coastlines, the [prev,next] way in the series
+	 */
+	neighbors: [null,null],
+	/**
+	 * Adds a reference to itself into the 'chain' array and calls coastline_chain on the next or prev member
+	 * @param {Array}    chain  The array representing the chain of connected Ways
+	 * @param {Boolean}  prev   If the call is going to the prev member
+	 * @param {Boolean}  next   If the call is going to the next member
+	 */	
+	chain: function(chain,prev,next) {
+		// check if this way has appeared in the chain already:
+		var uniq = true
+		chain.each(function(way) {
+			if (way.id == this.id) uniq = false
+		},this)
+		
+		if (uniq) {
+			if (prev) chain.push(this)
+			else chain.unshift(this)
+			if (prev && this.neighbors[0]) { // this is the initial call
+				this.neighbors[0].chain(chain,true,false)
+			}
+			if (next && this.neighbors[1]) {
+				this.neighbors[1].chain(chain,false,true)
+			}
+		}
+		return chain
+	},
 	/** 
 	 * Finds the middle-most line segment
 	 * @return a tuple of nodes

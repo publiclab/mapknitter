@@ -29,5 +29,5 @@ var Viewport = {
 	 */
 	power: function() {
 		return window.screen.width/1024
-	}
+	},
 }
