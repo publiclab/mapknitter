@@ -123,6 +123,7 @@ var Events = {
 				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
+				case "b": Interface.download_bbox()
 			}
 		}
 		Glop.draw()
