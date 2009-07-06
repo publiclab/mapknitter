@@ -1,5 +1,5 @@
 body: {
-	fillStyle: "#dee",
+	fillStyle: "rgba(0,0,0,0)",
 	lineWidth: 0,
 	pattern: "/images/brown-paper.jpg"
 },
@@ -12,6 +12,13 @@ node: {
 way: {
 	strokeStyle: "#ccc",
 	lineWidth: 3,
+},
+relation: {
+	fillStyle: "#57d",
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	opacity:0.2,
+	pattern: "/images/pattern-water.gif"
 },
 administrative: {
 	lineWidth: 50,
