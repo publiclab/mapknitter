@@ -44,6 +44,7 @@ var Cartagen = {
 	plots: new Hash(),
 	nodes: new Hash(),
 	ways: new Hash(),
+	relations: new Hash(),
 	fullscreen: true,
 	bleed_level: 1,
 	initial_bleed_level: 2,
@@ -52,6 +53,7 @@ var Cartagen = {
         debug: false,
 	scripts: [],
 	load_user_features: false,
+	coastlines: [],
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		this.initialize(configs)
@@ -128,6 +130,10 @@ var Cartagen = {
 
 
 		$('canvas').fire('cartagen:predraw')
+
+		Cartagen.relations.values().each(function(object) {
+			object.draw()
+		})
 
 		Geohash.objects.each(function(object) {
 			if (object.user_submitted) {
@@ -237,13 +243,41 @@ var Cartagen = {
 				if (way.tag instanceof Array) {
 					way.tag.each(function(tag) {
 						data.tags.set(tag.k,tag.v)
+						if (tag.v == 'coastline') data.coastline = true
 					})
 				} else {
 					data.tags.set(way.tag.k,way.tag.v)
+					if (tag.v == 'coastline') data.coastline = true
 				}
 				new Way(data)
 			}
 		})
+
+		Cartagen.coastlines.each(function(coastline_a) {
+
+			Cartagen.coastlines.each(function(coastline_b) {
+				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
+					coastline_a.neighbors[1] = coastline_b
+					coastline_b.neighbors[0] = coastline_a
+				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
+					coastline_a.neighbors[0] = coastline_b
+					coastline_b.neighbors[1] = coastline_a
+				} // else if (coastline_a.nodes.last().id == coastline_b.nodes.last().id) {
+			})
+
+		})
+
+		var coastline_chains = Cartagen.coastlines
+		while (coastline_chains.length > 0) {
+			var data = {
+				members: coastline_chains.first().chain([],true,true)
+			}
+			data.members.each(function(member) {
+				coastline_chains.splice(coastline_chains.indexOf(member),1)
+			})
+			new Relation(data)
+		}
+
 
 		Geohash.sort_objects()
 	},
@@ -309,7 +343,6 @@ var Cartagen = {
 	},
 	load_plot: function(key) {
 		$l('loading geohash plot: '+key)
-
 
 		Cartagen.requested_plots++
 		var finished = false
@@ -810,11 +843,13 @@ var Style = {
 			fillStyle: "#eee",
 			fontColor: "#eee",
 			fontSize: 12,
-			fontRotation: 0
+			fontRotation: 0,
+			opacity: 1
 		}
 	},
 	style_body: function() {
 		$C.fill_style(Style.styles.body.fillStyle)
+		$C.opacity(Style.styles.body.opacity)
 		if (Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern
@@ -997,7 +1032,7 @@ var Way = Class.create(Feature,
 {
     initialize: function($super, data) {
 		$super()
-
+		geohash = geohash || true
 		this.age = 0
 		this.highlight = false
 		this.nodes = []
@@ -1029,11 +1064,33 @@ var Way = Class.create(Feature,
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
 		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 
-		Style.parse_styles(this,Style.styles.way)
-		objects.push(this) // made obsolete by Geohash
-		Geohash.put_object(this)
-		Cartagen.ways.set(this.id,this)
+		if (this.coastline) {
+			Cartagen.coastlines.push(this)
+		} else {
+			Style.parse_styles(this,Style.styles.way)
+			Geohash.put_object(this)
+			Cartagen.ways.set(this.id,this)
+		}
     },
+	neighbors: [null,null],
+	chain: function(chain,prev,next) {
+		var uniq = true
+		chain.each(function(way) {
+			if (way.id == this.id) uniq = false
+		},this)
+
+		if (uniq) {
+			if (prev) chain.push(this)
+			else chain.unshift(this)
+			if (prev && this.neighbors[0]) { // this is the initial call
+				this.neighbors[0].chain(chain,true,false)
+			}
+			if (next && this.neighbors[1]) {
+				this.neighbors[1].chain(chain,false,true)
+			}
+		}
+		return chain
+	},
 	 middle_segment: function() {
         if (this.nodes.length == 1) {
             return [this.nodes[0], this.nodes[0]]
@@ -1114,6 +1171,127 @@ var Way = Class.create(Feature,
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
+	}
+})
+var Relation = Class.create(Feature,
+{
+	members: [],
+    initialize: function($super, data) {
+		$super()
+
+		this.id = Cartagen.relations.size()
+		this.age = 0
+		this.highlight = false
+		this.closed_poly = true // because all relations are currently coastlines
+
+		this.outline_color = null
+		this.outline_width = null
+
+		Object.extend(this, data)
+
+		this.collect_ways()
+
+		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x &&
+			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
+				this.closed_poly = true
+
+		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+
+		if (this.closed_poly) {
+			var centroid = Geometry.poly_centroid(this.nodes)
+			this.x = centroid[0]*2
+			this.y = centroid[1]*2
+		} else {
+			this.x = (this.middle_segment()[0].x+this.middle_segment()[1].x)/2
+			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
+		}
+
+		this.area = Geometry.poly_area(this.nodes)
+		this.bbox = Geometry.calculate_bounding_box(this.nodes)
+
+		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
+		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
+
+		Style.parse_styles(this,Style.styles.relation)
+		Cartagen.relations.set('coastline_'+this.id,this)
+    },
+	nodes: [],
+	tags: new Hash(),
+	collect_ways: function() {
+		$l('collecting ways')
+		this.members.each(function(member) {
+			this.nodes = this.nodes.concat(member.nodes)
+			if (member.tags.size() > 0) this.tags.merge(member.tags)
+		},this)
+	},
+	draw: function($super) {
+		$super()
+		this.age += 1;
+	},
+	 middle_segment: Way.prototype.middle_segment,
+	 middle_segment_angle: Way.prototype.middle_segment_angle,
+	style: Way.prototype.style,
+	shape: function() {
+
+		if (this.highlight) {
+			$C.line_width(3/Cartagen.zoom_level)
+			$C.stroke_style("red")
+		}
+		if (Object.isUndefined(this.opacity)) this.opacity = 1
+		if (this.age < 20) {
+			$C.opacity(this.opacity*(this.age/20))
+		} else {
+			$C.opacity(this.opacity)
+		}
+
+		$C.begin_path()
+
+		if (Map.resolution == 0) Map.resolution = 1
+		var is_inside = true, first_node = true, last_node
+		this.nodes.each(function(node,index){
+			if (is_inside || index == this.nodes.length-1) {
+				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+					if (first_node) {
+						var corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
+						Cartagen.node_count++
+						$C.move_to(corner[0],corner[1])
+						first_node = false
+					}
+					Cartagen.node_count++
+					$C.line_to(node.x,node.y)
+					is_inside = true
+				}
+			} else {
+				last_node = node
+			}
+			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
+		},this)
+		corner = this.nearest_corner(last_node.x,last_node.y)
+		Cartagen.node_count++
+		$C.line_to(corner[0],corner[1])
+
+		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
+		else $C.stroke()
+		if (this.closed_poly) $C.fill()
+	},
+	nearest_corner: function(x,y) {
+		var corner = []
+		if (Viewport.bbox[1] - x > Viewport.bbox[3] - x) {
+			corner[0] = Viewport.bbox[1]
+			corner[2] = 0
+		} else {
+			corner[0] = Viewport.bbox[3]
+			corner[2] = 1
+		}
+		if (Viewport.bbox[0] - y > Viewport.bbox[2] - y) {
+			corner[1] = Viewport.bbox[0]
+		} else {
+			corner[1] = Viewport.bbox[2]
+			corner[2] -= 1
+			corner[2] *= -1 // swap 1 and 0
+			corner[2] += 2
+		}
+		return corner
 	}
 })
 var Label = Class.create(
@@ -2202,7 +2380,7 @@ var Viewport = {
 	height: 0,
 	power: function() {
 		return window.screen.width/1024
-	}
+	},
 }
 
 var Map = {

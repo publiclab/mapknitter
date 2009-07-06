@@ -159,6 +159,11 @@ var Cartagen = {
 	 */
 	ways: new Hash(),
 	/**
+	 * Hash of relation id => relation
+	 * @type Relation
+	 */
+	relations: new Hash(),
+	/**
 	 * Should Cartagen expand to fill the browser window?
 	 * @type Boolean
 	 */
@@ -201,6 +206,10 @@ var Cartagen = {
 	 * @type Boolean
 	 */
 	load_user_features: false,
+	/**
+	 * Array of coastline ways to be assembled occasionally into coastline 'collected way' relations
+	 */
+	coastlines: [],
 	/**
 	 * Registers initialize to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
@@ -341,6 +350,10 @@ var Cartagen = {
 		 */
 		$('canvas').fire('cartagen:predraw')
 		
+		Cartagen.relations.values().each(function(object) {
+			object.draw()
+		})
+
 		//Geohash lookup:
 		Geohash.objects.each(function(object) {
 			if (object.user_submitted) {
@@ -485,13 +498,48 @@ var Cartagen = {
 				if (way.tag instanceof Array) {
 					way.tag.each(function(tag) {
 						data.tags.set(tag.k,tag.v)
+						if (tag.v == 'coastline') data.coastline = true
 					})
 				} else {
 					data.tags.set(way.tag.k,way.tag.v)
+					if (tag.v == 'coastline') data.coastline = true
 				}
 				new Way(data)
 			}
 		})
+				
+		// flush coastline collected_ways relations and re-generate them with new coastlines:
+		Cartagen.coastlines.each(function(coastline_a) {
+			
+			Cartagen.coastlines.each(function(coastline_b) {
+				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
+					coastline_a.neighbors[1] = coastline_b
+					coastline_b.neighbors[0] = coastline_a					
+				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
+					coastline_a.neighbors[0] = coastline_b
+					coastline_b.neighbors[1] = coastline_a					
+				} // else if (coastline_a.nodes.last().id == coastline_b.nodes.last().id) {
+				 // 
+				 // 				} else if (coastline_a.nodes.first().id == coastline_b.nodes.first().id) {
+				 // 					
+				 // 				}				
+			})
+			
+		})
+		
+		// turn this into a new Cartagen function:
+		var coastline_chains = Cartagen.coastlines
+		while (coastline_chains.length > 0) {
+			var data = {
+				members: coastline_chains.first().chain([],true,true)				
+			}
+			// remove chain members from coastline chain:
+			data.members.each(function(member) {
+				coastline_chains.splice(coastline_chains.indexOf(member),1)
+			})
+			new Relation(data)
+		}
+		
 		// data.osm.relation.each(function(way){
 		// 	var w = new Way
 		// 	w.id = way.id
@@ -628,12 +676,6 @@ var Cartagen = {
 	load_plot: function(key) {
 		// Cartagen.plot_array.push(Geohash.bbox(key))
 		$l('loading geohash plot: '+key)
-		
-		// var bbox = Geohash.bbox(key)
-		// var _lng1 = bbox[0]//.to_precision(Cartagen.precision)
-		// var _lat2 = bbox[1]//.to_precision(Cartagen.precision)
-		// var _lng2 = bbox[2]//.to_precision(Cartagen.precision)
-		// var _lat1 = bbox[3]//.to_precision(Cartagen.precision)
 		
 		Cartagen.requested_plots++
 		var finished = false
