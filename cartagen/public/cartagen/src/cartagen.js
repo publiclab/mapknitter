@@ -508,6 +508,8 @@ var Cartagen = {
 			}
 		})
 				
+		// flush duplicates:
+		Cartagen.coastlines = Cartagen.coastlines.uniq()
 		// flush coastline collected_ways relations and re-generate them with new coastlines:
 		Cartagen.coastlines.each(function(coastline_a) {
 			
@@ -528,14 +530,14 @@ var Cartagen = {
 		})
 		
 		// turn this into a new Cartagen function:
-		var coastline_chains = Cartagen.coastlines
+		var coastline_chains = Cartagen.coastlines.clone()
 		while (coastline_chains.length > 0) {
 			var data = {
-				members: coastline_chains.first().chain([],true,true)				
+				members: coastline_chains.first().chain([],true,true)
 			}
 			// remove chain members from coastline chain:
-			data.members.each(function(member) {
-				coastline_chains.splice(coastline_chains.indexOf(member),1)
+			data.members.each(function(member,index) {
+				coastline_chains.splice(index,1)
 			})
 			new Relation(data)
 		}
