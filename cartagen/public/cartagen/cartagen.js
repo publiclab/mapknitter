@@ -253,6 +253,7 @@ var Cartagen = {
 			}
 		})
 
+		Cartagen.coastlines = Cartagen.coastlines.uniq()
 		Cartagen.coastlines.each(function(coastline_a) {
 
 			Cartagen.coastlines.each(function(coastline_b) {
@@ -267,13 +268,13 @@ var Cartagen = {
 
 		})
 
-		var coastline_chains = Cartagen.coastlines
+		var coastline_chains = Cartagen.coastlines.clone()
 		while (coastline_chains.length > 0) {
 			var data = {
 				members: coastline_chains.first().chain([],true,true)
 			}
-			data.members.each(function(member) {
-				coastline_chains.splice(coastline_chains.indexOf(member),1)
+			data.members.each(function(member,index) {
+				coastline_chains.splice(index,1)
 			})
 			new Relation(data)
 		}
@@ -1247,14 +1248,14 @@ var Relation = Class.create(Feature,
 		$C.begin_path()
 
 		if (Map.resolution == 0) Map.resolution = 1
-		var is_inside = true, first_node = true, last_node
+		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
 			if (is_inside || index == this.nodes.length-1) {
 				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
 					if (first_node) {
-						var corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
+						start_corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						Cartagen.node_count++
-						$C.move_to(corner[0],corner[1])
+						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
 					}
 					Cartagen.node_count++
@@ -1265,9 +1266,12 @@ var Relation = Class.create(Feature,
 			last_node = node
 			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
-		corner = this.nearest_corner(last_node.x,last_node.y)
+		end_corner = this.nearest_corner(last_node.x,last_node.y)
 		Cartagen.node_count++
-		$C.line_to(corner[0],corner[1])
+		Viewport.full_bbox().reverse().slice(end_corner[2],start_corner[2]).each(function(coord) {
+			$C.line_to(coord[0],coord[1])
+		},this)
+
 
 		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
 		else $C.stroke()
@@ -2373,8 +2377,11 @@ var Projection = {
 	}
 }
 var Viewport = {
-	padding: 0,
+	padding: 100,
 	bbox: [],
+	full_bbox: function() {
+		return [this.bbox[1],this.bbox[0]],[this.bbox[3],this.bbox[0]],[this.bbox[3],this.bbox[2]],[this.bbox[1],this.bbox[2]]
+	},
 	width: 0,
 	height: 0,
 	power: function() {

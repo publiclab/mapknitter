@@ -6,12 +6,19 @@ var Viewport = {
 	 * Frame to show bbox culling
 	 * @type Number
 	 */
-	padding: 0,
+	padding: 100,
 	/**
 	 * Bbox in [y1, x1, y2, x2] format
 	 * @type Number[]
 	 */
 	bbox: [],
+	/**
+	 * Bbox in [[x,y],[x,y],[x,y],[x,y]] format, clockwise from top left
+	 * @type Array[]
+	 */
+	full_bbox: function() {
+		return [this.bbox[1],this.bbox[0]],[this.bbox[3],this.bbox[0]],[this.bbox[3],this.bbox[2]],[this.bbox[1],this.bbox[2]]
+	},
 	/**
 	 * X-width of the viewport
 	 * @type Number
