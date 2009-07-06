@@ -17,6 +17,10 @@ var Glop = {
 	 */
 	height: 0,
 	/**
+	 * If set to true, drawing is disabled
+	 */
+	paused: false,
+	/**
 	 * Sets up powersaving.
 	 */
 	init: function() {
@@ -27,7 +31,13 @@ var Glop = {
 	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
 	 * the object array unless told not to (by  subscriber of glop:draw.
 	 */
-	draw: function(custom_size) {
+	draw: function(custom_size, force_draw) {
+		if (Glop.paused && (force_draw != true)) {
+			$('canvas').fire('glop:predraw')
+			return
+		}
+
+		
 		$C.clear()
 		
 		if (Cartagen.fullscreen) {

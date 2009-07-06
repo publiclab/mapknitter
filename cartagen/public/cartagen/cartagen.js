@@ -553,15 +553,18 @@ var Geohash = {
 	grid: true,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
-	last_get_objects: [0,0,0],
+	last_get_objects: [0,0,0,false],
+	last_loaded_geohash_frame: 0,
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
+			this.last_get_objects[3] = false
 			$l('re-getting-objects')
+			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
 	put: function(lat,lon,feature,length) {
@@ -753,16 +756,45 @@ var Geohash = {
 			this.get_keys_upward(key)
 		}, this)
 
-		this.keys.keys().each(function(key) {
-			this.objects = (this.get_from_key(key)).concat(this.objects)
-		}, this)
+		var quota = Geohash.feature_quota()
 
+
+		var lengths = {}
+		this.keys.keys().each(function(key) {
+			if (!lengths[key.length]) lengths[key.length] = []
+
+			lengths[key.length].push(Geohash.get_from_key(key))
+		})
+
+		for (i = 1; i <= this.key_length && quota > 0; ++i) {
+			var features = lengths[i].flatten()
+			if (quota >= features.length) {
+				this.objects = this.objects.concat(features)
+				quota -= features.length
+			}
+			else {
+				j = 0
+				while (quota > 0) {
+					var o = lengths[i][j % (lengths[i].length)].shift()
+					if (o) this.objects.push(o)
+					++j
+					--quota
+				}
+			}
+		}
+		$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {
 		this.keys.values().each(function(value) {
 			if (value.sort) value.sort(Cartagen.sort_by_area())
 		})
+	},
+	feature_density: function() {
+		return 0.5 * Viewport.power()
+	},
+	feature_quota: function() {
+		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
 	}
 }
 
@@ -797,7 +829,6 @@ var Style = {
 		$C.line_cap('round')
 	},
 	parse_styles: function(feature,selector) {
-		try {
 		(this.properties.concat(this.label_properties)).each(function(property) {
 			var val = selector[property]
 
@@ -826,7 +857,6 @@ var Style = {
 				}
 			}
 		}, this)
-		} catch(e) {$l(e)}
 	},
 	create_refresher: function(feature, property, generator, interval) {
 		if(!feature.style_generators) feature.style_generators = {}
@@ -844,7 +874,7 @@ var Style = {
 	},
 	load_styles: function(stylesheet_url) {
 		if (stylesheet_url.slice(0,4) == "http") {
-			stylesheet_url = "/map/style?url="+stylesheet_url
+			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
 		new Ajax.Request(stylesheet_url,{
 			method: 'get',
@@ -877,13 +907,13 @@ var Feature = Class.create(
 {
 	initialize: function() {
 		this.tags = new Hash()
-		this.fillStyle = '#555'
+		this.fillStyle = 'rgba(0,0,0,0)'
 		this.fontColor = '#eee'
 		this.fontSize = 12
 		this.fontRotation = 0
 		this.opacity = 1
 		this.strokeStyle = 'black'
-		this.lineWidth = 0
+		this.lineWidth = 6
 		this._unhovered_styles = {}
 		this._unclicked_styles = {}
 
@@ -1057,7 +1087,7 @@ var Way = Class.create(Feature,
 		}
 	},
 	shape: function() {
-
+		$C.opacity(1)
 		if (this.highlight) {
 			$C.line_width(3/Cartagen.zoom_level)
 			$C.stroke_style("red")
@@ -1156,10 +1186,17 @@ var Glop = {
 	frame: 0,
 	width: 0,
 	height: 0,
+	paused: false,
 	init: function() {
 		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
 	},
-	draw: function(custom_size) {
+	draw: function(custom_size, force_draw) {
+		if (Glop.paused && (force_draw != true)) {
+			$('canvas').fire('glop:predraw')
+			return
+		}
+
+
 		$C.clear()
 
 		if (Cartagen.fullscreen) {
@@ -1177,8 +1214,6 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
-
-		Glop.frame += 1
 
 		Events.drag()
 
@@ -1198,7 +1233,7 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0)) {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame < Glop.frame-20) {
 			Glop.draw()
 		} else {
 			if (Event.last_event > Glop.frame-25) {
@@ -1206,6 +1241,7 @@ var Glop = {
 			} else {
 			}
 		}
+		Glop.frame += 1
 	}
 }
 
@@ -1303,6 +1339,7 @@ var Events = {
 				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
+				case "b": Interface.download_bbox()
 			}
 		}
 		Glop.draw()
@@ -1511,13 +1548,13 @@ $C = {
 			return width
 		}
 		else {
-			$C.canvas.measureCanvasText(font, size, text)
+			return $C.canvas.measureCanvasText(font, size, text)
 		}
 
 
 	},
 	opacity: function(alpha) {
-		$C.canvas.alpha = alpha
+		$C.canvas.globalAlpha = alpha
 	},
 	save: function() {
 		$C.canvas.save()
@@ -2032,6 +2069,84 @@ var User = {
 }
 
 document.observe('cartagen:postinit', User.init.bindAsEventListener(User))
+
+var Interface = {
+	download_bbox: function() {
+		Glop.paused = true
+
+		alert('Please select a bounding box to download')
+
+		var canvas = $('canvas')
+		canvas.observe('mousemove', Interface.bbox_select_mousemove)
+		canvas.observe('mousedown', Interface.bbox_select_mousedown)
+		canvas.observe('mouseup', Interface.bbox_select_mouseup)
+		canvas.stopObserving('mousemove', Events.mousemove)
+		canvas.stopObserving('mousedown', Events.mousedown)
+		canvas.stopObserving('mouseup', Events.mouseup)
+
+		Interface.bbox_select_active = true
+		Interface.bbox_select_dragging = false
+	},
+	bbox_select_mousemove: function(e) {
+		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Cartagen.zoom_level)
+			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Cartagen.zoom_level)
+
+			Interface.bbox_select_end = [pointer_x, pointer_y]
+
+			Glop.draw(false, true)
+
+			var width = Interface.bbox_select_end[0] - Interface.bbox_select_start[0]
+			var height = Interface.bbox_select_end[1] - Interface.bbox_select_start[1]
+
+			$C.save()
+			$C.fill_style('#000')
+			$C.opacity(0.1)
+			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.opacity(1)
+			$C.stroke_style('#000')
+			$C.stroke_rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.restore()
+		}
+	}.bindAsEventListener(Interface),
+	bbox_select_mousedown: function(e) {
+		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
+			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Cartagen.zoom_level)
+			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Cartagen.zoom_level)
+
+			Interface.bbox_select_dragging = true
+			Interface.bbox_select_start = [pointer_x, pointer_y]
+			Interface.bbox_select_end = Interface.bbox_select_start
+		}
+	}.bindAsEventListener(Interface),
+	bbox_select_mouseup: function() {
+		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+			Glop.paused = false
+			$l(Interface.bbox_select_start[0])
+			$l(Interface.bbox_select_end[0])
+
+			var min_lon = Math.min(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
+			var min_lat = Math.min(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
+			var max_lon = Math.max(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
+			var max_lat = Math.max(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
+
+			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
+
+			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
+
+			var canvas = $('canvas')
+			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
+			canvas.stopObserving('mousedown', Interface.bbox_select_mousedown)
+			canvas.stopObserving('mouseup', Interface.bbox_select_mouseup)
+			canvas.observe('mousemove', Events.mousemove)
+			canvas.observe('mousedown', Events.mousedown)
+			canvas.observe('mouseup', Events.mouseup)
+
+			Interface.bbox_select_active = true
+			Interface.bbox_select_dragging = false
+		}
+	}.bindAsEventListener(Interface)
+}
 var Projection = {
 	current_projection: 'spherical_mercator',
 	scale_factor: 100000,
@@ -2043,8 +2158,8 @@ var Projection = {
 	spherical_mercator: {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
 		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
-		lat_to_y: function(lat) { return ((180/Math.PI * (2 * Math.atan(Math.exp(lat*Math.PI/180)) - Math.PI/2))) * Projection.scale_factor * 1.7 },
-		y_to_lat: function(y) { return (180/Math.PI * Math.log(Math.tan(Math.PI/4+(y/(Projection.scale_factor*1.7))*(Math.PI/180)/2))) }
+		lat_to_y: function(lat) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+lat*(Math.PI/180)/2)) * Projection.scale_factor },
+		y_to_lat: function(y) { return  180/Math.PI * (2 * Math.atan(Math.exp(y/Projection.scale_factor*Math.PI/180)) - Math.PI/2) }
 	},
 	elliptical_mercator: {
 		lon_to_x: function(lon) {

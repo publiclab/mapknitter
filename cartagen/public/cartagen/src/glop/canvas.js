@@ -80,7 +80,7 @@ $C = {
 	},
 	
 	/**
-	 * Alias of canvas.strokeRect (unfilled rectangle
+	 * Alias of canvas.strokeRect (unfilled rectangle)
 	 * @param {Number} x X-coord of the top-left corner
 	 * @param {Number} y Y-coord of the top-left corner
 	 * @param {Number} w Width of the rectangle
