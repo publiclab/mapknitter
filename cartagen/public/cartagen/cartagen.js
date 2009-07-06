@@ -1249,7 +1249,7 @@ var Relation = Class.create(Feature,
 		if (Map.resolution == 0) Map.resolution = 1
 		var is_inside = true, first_node = true, last_node
 		this.nodes.each(function(node,index){
-			if (is_inside || index <= this.nodes.length-1) {
+			if (is_inside || index == this.nodes.length-1) {
 				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
 					if (first_node) {
 						var corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
@@ -1261,9 +1261,8 @@ var Relation = Class.create(Feature,
 					$C.line_to(node.x,node.y)
 					is_inside = true
 				}
-			} else {
-				last_node = node
 			}
+			last_node = node
 			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
 		corner = this.nearest_corner(last_node.x,last_node.y)
