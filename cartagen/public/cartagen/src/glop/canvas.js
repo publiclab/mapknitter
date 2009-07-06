@@ -244,7 +244,7 @@ $C = {
 			return width
 		}
 		else {
-			$C.canvas.measureCanvasText(font, size, text)
+			return $C.canvas.measureCanvasText(font, size, text)
 		}
 
 
