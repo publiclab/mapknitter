@@ -15,6 +15,7 @@ var Interface = {
 		alert('Please select a bounding box to download')
 
 		var canvas = $('canvas')
+
 		canvas.observe('mousemove', Interface.bbox_select_mousemove)
 		canvas.observe('mousedown', Interface.bbox_select_mousedown)
 		canvas.observe('mouseup', Interface.bbox_select_mouseup)
@@ -39,7 +40,7 @@ var Interface = {
 
 			$C.save()
 			$C.fill_style('#000')
-			$C.opacity(0.1)
+			$C.opacity(0.2)
 			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
 			$C.opacity(1)
 			$C.stroke_style('#000')
