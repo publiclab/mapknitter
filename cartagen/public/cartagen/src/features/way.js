@@ -43,8 +43,8 @@ var Way = Class.create(Feature,
 		
 		Object.extend(this, data)
 		
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && 
-			this.nodes[0].y == this.nodes[this.nodes.length-1].y) 
+		if (this.nodes.length > 1 && this.nodes.first().x == this.nodes.last().x && 
+			this.nodes.first().y == this.nodes.last().y) 
 				this.closed_poly = true
 				
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
@@ -67,12 +67,12 @@ var Way = Class.create(Feature,
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
 		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 		
+		Cartagen.ways.set(this.id,this)
 		if (this.coastline) {
 			Cartagen.coastlines.push(this)
 		} else {
 			Style.parse_styles(this,Style.styles.way)
 			Geohash.put_object(this)
-			Cartagen.ways.set(this.id,this)
 		}
     },
 	/**

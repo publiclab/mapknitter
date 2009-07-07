@@ -314,17 +314,9 @@ var Cartagen = {
         $C.translate(Glop.width / 2, Glop.height / 2)
         $C.rotate(Map.rotate)
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
-        // $C.translate(, )
         $C.translate((Glop.width / -2) + (-1 * Map.x) + (Glop.width / 2), (Glop.height / -2)+(-1 * Map.y) + (Glop.height / 2))
         
-        // viewport stuff:
-        Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        // culling won't work anymore after we fixed rotation...
-        Viewport.width = Math.max(Viewport.width, Viewport.height)
-        Viewport.height = Viewport.width
-        Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
-        // $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
+		Viewport.draw() //adjust viewport
 		
 		// Cartagen.plot_array.each(function(plot) {
 		// 	$C.stroke_style('red')
@@ -508,11 +500,8 @@ var Cartagen = {
 			}
 		})
 				
-		// flush duplicates:
-		Cartagen.coastlines = Cartagen.coastlines.uniq()
 		// flush coastline collected_ways relations and re-generate them with new coastlines:
 		Cartagen.coastlines.each(function(coastline_a) {
-			
 			Cartagen.coastlines.each(function(coastline_b) {
 				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
 					coastline_a.neighbors[1] = coastline_b
@@ -520,17 +509,13 @@ var Cartagen = {
 				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
 					coastline_a.neighbors[0] = coastline_b
 					coastline_b.neighbors[1] = coastline_a					
-				} // else if (coastline_a.nodes.last().id == coastline_b.nodes.last().id) {
-				 // 
-				 // 				} else if (coastline_a.nodes.first().id == coastline_b.nodes.first().id) {
-				 // 					
-				 // 				}				
+				}				
 			})
-			
 		})
 		
 		// turn this into a new Cartagen function:
 		var coastline_chains = Cartagen.coastlines.clone()
+		Cartagen.relations = new Hash()
 		while (coastline_chains.length > 0) {
 			var data = {
 				members: coastline_chains.first().chain([],true,true)
