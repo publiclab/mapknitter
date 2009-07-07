@@ -1177,8 +1177,7 @@ var Relation = Class.create(Feature,
 		this.id = Cartagen.relations.size()
 		this.age = 0
 		this.highlight = false
-		this.closed_poly = true // because all relations are currently coastlines
-		this.coastline = true
+		this.coastline = true // because all relations are currently coastlines
 
 		this.outline_color = null
 		this.outline_width = null
@@ -1192,7 +1191,6 @@ var Relation = Class.create(Feature,
 				this.closed_poly = true
 
 		if (this.tags.get('natural') == 'coastline') {
-			this.closed_poly = true
 			this.coastline = true
 		}
 
@@ -1244,7 +1242,7 @@ var Relation = Class.create(Feature,
 		this.nodes.each(function(node,index){
 			if (is_inside) {
 				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
-					if (first_node && this.coastline) {
+					if (first_node && this.coastline && !this.closed_poly) {
 						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
@@ -1257,7 +1255,7 @@ var Relation = Class.create(Feature,
 			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
 
-		if (this.coastline) {
+		if (this.coastline && !this.closed_poly) {
 			end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
 			var bbox = Viewport.full_bbox()
 			var start = end_corner[2]
