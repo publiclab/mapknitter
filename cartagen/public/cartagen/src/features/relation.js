@@ -49,7 +49,7 @@ var Relation = Class.create(Feature,
 			this.nodes[0].y == this.nodes[this.nodes.length-1].y) 
 				this.closed_poly = true
 		
-		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+		if (this.tags.get('natural') == 'coastline') this.closed_poly = true
 		
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -85,9 +85,8 @@ var Relation = Class.create(Feature,
 	 * Collects member ways into one long way.
 	 */
 	collect_ways: function() {
-		$l('collecting ways')
 		this.members.each(function(member) {
-			this.nodes = this.nodes.concat(member.nodes)
+			this.nodes = member.nodes.concat(this.nodes)
 			if (member.tags.size() > 0) this.tags.merge(member.tags)
 		},this)
 	},
@@ -125,69 +124,46 @@ var Relation = Class.create(Feature,
 		}
 		// fade in after load:
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
-		if (this.age < 20) {
-			$C.opacity(this.opacity*(this.age/20))
-		} else {
-			$C.opacity(this.opacity)
-		}
 
 		$C.begin_path()
 		
 		if (Map.resolution == 0) Map.resolution = 1
 		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
-			if (is_inside || index == this.nodes.length-1) {
-				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+			if (is_inside) {
+				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
 					if (first_node) {
-						start_corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
-						Cartagen.node_count++
+						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
 					}
-					Cartagen.node_count++
 					$C.line_to(node.x,node.y)
 					is_inside = true
 				}
 			}
 			last_node = node
-			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
+			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
-		end_corner = this.nearest_corner(last_node.x,last_node.y)
-		Cartagen.node_count++
-		Viewport.full_bbox().reverse().slice(end_corner[2],start_corner[2]).each(function(coord) {
+		
+		end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
+		var bbox = Viewport.full_bbox()
+		// var start = Math.min(end_corner[2],start_corner[2])
+		// var end = Math.max(end_corner[2],start_corner[2])
+		var start = end_corner[2]
+		var end = start_corner[2]
+		if (start > end) var slice_end = bbox.length
+		else var slice_end = end+1
+		var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
+		if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+		cycle.each(function(coord) {
 			$C.line_to(coord[0],coord[1])
 		},this)
 		
-		// if (corner[2] == 0) {
-		// 	$C.line_to(corner[0],corner[1])
-		// }
-
 		// fill the polygon if the beginning and end nodes are the same.
 		// we'll have to change this for open polys, like coastlines
 		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
-	},
-	/**
-	 * Yields the x,y of the nearest Viewport corner in an array as [x,y,corner] where corner is 0,1,2,3 clockwise from top left
-	 */
-	nearest_corner: function(x,y) {
-		var corner = []
-		if (Viewport.bbox[1] - x > Viewport.bbox[3] - x) {
-			corner[0] = Viewport.bbox[1]
-			corner[2] = 0
-		} else {
-			corner[0] = Viewport.bbox[3]
-			corner[2] = 1
-		}
-		if (Viewport.bbox[0] - y > Viewport.bbox[2] - y) {
-			corner[1] = Viewport.bbox[0]
-		} else {
-			corner[1] = Viewport.bbox[2]
-			corner[2] -= 1
-			corner[2] *= -1 // swap 1 and 0
-			corner[2] += 2
-		}
-		return corner
-	}	
+		
+	}
 })

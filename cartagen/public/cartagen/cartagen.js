@@ -122,11 +122,7 @@ var Cartagen = {
         $C.scale(Cartagen.zoom_level, Cartagen.zoom_level)
         $C.translate((Glop.width / -2) + (-1 * Map.x) + (Glop.width / 2), (Glop.height / -2)+(-1 * Map.y) + (Glop.height / 2))
 
-        Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.width = Math.max(Viewport.width, Viewport.height)
-        Viewport.height = Viewport.width
-        Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
+		Viewport.draw() //adjust viewport
 
 
 		$('canvas').fire('cartagen:predraw')
@@ -253,9 +249,7 @@ var Cartagen = {
 			}
 		})
 
-		Cartagen.coastlines = Cartagen.coastlines.uniq()
 		Cartagen.coastlines.each(function(coastline_a) {
-
 			Cartagen.coastlines.each(function(coastline_b) {
 				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
 					coastline_a.neighbors[1] = coastline_b
@@ -263,12 +257,12 @@ var Cartagen = {
 				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
 					coastline_a.neighbors[0] = coastline_b
 					coastline_b.neighbors[1] = coastline_a
-				} // else if (coastline_a.nodes.last().id == coastline_b.nodes.last().id) {
+				}
 			})
-
 		})
 
 		var coastline_chains = Cartagen.coastlines.clone()
+		Cartagen.relations = new Hash()
 		while (coastline_chains.length > 0) {
 			var data = {
 				members: coastline_chains.first().chain([],true,true)
@@ -594,7 +588,7 @@ var Geohash = {
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
 			this.last_get_objects[3] = false
 			$l('re-getting-objects')
@@ -1044,8 +1038,8 @@ var Way = Class.create(Feature,
 
 		Object.extend(this, data)
 
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x &&
-			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
+		if (this.nodes.length > 1 && this.nodes.first().x == this.nodes.last().x &&
+			this.nodes.first().y == this.nodes.last().y)
 				this.closed_poly = true
 
 		if (this.tags.get('natural') == "coastline") this.closed_poly = true
@@ -1065,12 +1059,12 @@ var Way = Class.create(Feature,
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
 		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 
+		Cartagen.ways.set(this.id,this)
 		if (this.coastline) {
 			Cartagen.coastlines.push(this)
 		} else {
 			Style.parse_styles(this,Style.styles.way)
 			Geohash.put_object(this)
-			Cartagen.ways.set(this.id,this)
 		}
     },
 	neighbors: [null,null],
@@ -1196,7 +1190,7 @@ var Relation = Class.create(Feature,
 			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
 				this.closed_poly = true
 
-		if (this.tags.get('natural') == "coastline") this.closed_poly = true
+		if (this.tags.get('natural') == 'coastline') this.closed_poly = true
 
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -1219,9 +1213,8 @@ var Relation = Class.create(Feature,
 	nodes: [],
 	tags: new Hash(),
 	collect_ways: function() {
-		$l('collecting ways')
 		this.members.each(function(member) {
-			this.nodes = this.nodes.concat(member.nodes)
+			this.nodes = member.nodes.concat(this.nodes)
 			if (member.tags.size() > 0) this.tags.merge(member.tags)
 		},this)
 	},
@@ -1239,62 +1232,43 @@ var Relation = Class.create(Feature,
 			$C.stroke_style("red")
 		}
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
-		if (this.age < 20) {
-			$C.opacity(this.opacity*(this.age/20))
-		} else {
-			$C.opacity(this.opacity)
-		}
 
 		$C.begin_path()
 
 		if (Map.resolution == 0) Map.resolution = 1
 		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
-			if (is_inside || index == this.nodes.length-1) {
-				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+			if (is_inside) {
+				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
 					if (first_node) {
-						start_corner = this.nearest_corner(this.nodes[0].x,this.nodes[0].y)
-						Cartagen.node_count++
+						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
 					}
-					Cartagen.node_count++
 					$C.line_to(node.x,node.y)
 					is_inside = true
 				}
 			}
 			last_node = node
-			is_inside = (Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
-		},this)
-		end_corner = this.nearest_corner(last_node.x,last_node.y)
-		Cartagen.node_count++
-		Viewport.full_bbox().reverse().slice(end_corner[2],start_corner[2]).each(function(coord) {
-			$C.line_to(coord[0],coord[1])
+			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
 
+		end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
+		var bbox = Viewport.full_bbox()
+		var start = end_corner[2]
+		var end = start_corner[2]
+		if (start > end) var slice_end = bbox.length
+		else var slice_end = end+1
+		var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
+		if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+		cycle.each(function(coord) {
+			$C.line_to(coord[0],coord[1])
+		},this)
 
 		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
-	},
-	nearest_corner: function(x,y) {
-		var corner = []
-		if (Viewport.bbox[1] - x > Viewport.bbox[3] - x) {
-			corner[0] = Viewport.bbox[1]
-			corner[2] = 0
-		} else {
-			corner[0] = Viewport.bbox[3]
-			corner[2] = 1
-		}
-		if (Viewport.bbox[0] - y > Viewport.bbox[2] - y) {
-			corner[1] = Viewport.bbox[0]
-		} else {
-			corner[1] = Viewport.bbox[2]
-			corner[2] -= 1
-			corner[2] *= -1 // swap 1 and 0
-			corner[2] += 2
-		}
-		return corner
+
 	}
 })
 var Label = Class.create(
@@ -2377,16 +2351,42 @@ var Projection = {
 	}
 }
 var Viewport = {
-	padding: 100,
+	padding: 0,
 	bbox: [],
 	full_bbox: function() {
-		return [this.bbox[1],this.bbox[0]],[this.bbox[3],this.bbox[0]],[this.bbox[3],this.bbox[2]],[this.bbox[1],this.bbox[2]]
+		return [[this.bbox[1],this.bbox[0]],[this.bbox[3],this.bbox[0]],[this.bbox[3],this.bbox[2]],[this.bbox[1],this.bbox[2]]]
 	},
 	width: 0,
 	height: 0,
+	nearest_corner: function(x,y) {
+		var corner = []
+		if (Math.abs(Viewport.bbox[1] - x) < Math.abs(Viewport.bbox[3] - x)) {
+			corner[0] = Viewport.bbox[1]
+			corner[2] = 0
+		} else {
+			corner[0] = Viewport.bbox[3]
+			corner[2] = 1
+		}
+		if (Math.abs(Viewport.bbox[0] - y) < Math.abs(Viewport.bbox[2] - y)) {
+			corner[1] = Viewport.bbox[0]
+		} else {
+			corner[1] = Viewport.bbox[2]
+			corner[2] -= 1
+			corner[2] *= -1 // swap 1 and 0
+			corner[2] += 2
+		}
+		return corner
+	},
 	power: function() {
 		return window.screen.width/1024
 	},
+	draw: function() {
+		Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
+        Viewport.width = Math.max(Viewport.width, Viewport.height)
+        Viewport.height = Viewport.width
+        Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
+	}
 }
 
 var Map = {
