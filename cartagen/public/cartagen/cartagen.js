@@ -1178,6 +1178,7 @@ var Relation = Class.create(Feature,
 		this.age = 0
 		this.highlight = false
 		this.closed_poly = true // because all relations are currently coastlines
+		this.coastline = true
 
 		this.outline_color = null
 		this.outline_width = null
