@@ -16,8 +16,8 @@ way: {
 relation: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
+	opacity:0.6,
 	lineWidth: 4,
-	opacity:0.2,
 	pattern: "/images/pattern-water.gif"
 },
 administrative: {
@@ -57,8 +57,11 @@ water: {
 	pattern: "/images/pattern-water.gif"
 },
 coastline: {
-	strokeStyle: "#57d",
-	lineWidth: 20
+	fillStyle: "#57d",
+	strokeStyle: "#24a",
+	opacity:0.8,
+	lineWidth: 4,
+	pattern: "/images/pattern-water.gif"
 },
 highway: {
 	strokeStyle: "white",
