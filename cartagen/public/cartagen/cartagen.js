@@ -1190,7 +1190,10 @@ var Relation = Class.create(Feature,
 			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
 				this.closed_poly = true
 
-		if (this.tags.get('natural') == 'coastline') this.closed_poly = true
+		if (this.tags.get('natural') == 'coastline') {
+			this.closed_poly = true
+			this.coastline = true
+		}
 
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -1240,7 +1243,7 @@ var Relation = Class.create(Feature,
 		this.nodes.each(function(node,index){
 			if (is_inside) {
 				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
-					if (first_node) {
+					if (first_node && this.coastline) {
 						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
 						first_node = false
@@ -1253,21 +1256,23 @@ var Relation = Class.create(Feature,
 			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
 
-		end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
-		var bbox = Viewport.full_bbox()
-		var start = end_corner[2]
-		var end = start_corner[2]
-		if (start > end) var slice_end = bbox.length
-		else var slice_end = end+1
-		var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
-		if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
-		cycle.each(function(coord) {
-			$C.line_to(coord[0],coord[1])
-		},this)
+		if (this.coastline) {
+			end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
+			var bbox = Viewport.full_bbox()
+			var start = end_corner[2]
+			var end = start_corner[2]
+			if (start > end) var slice_end = bbox.length
+			else var slice_end = end+1
+			var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
+			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+			cycle.each(function(coord) {
+				$C.line_to(coord[0],coord[1])
+			},this)
+		}
 
 		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
 		else $C.stroke()
-		if (this.closed_poly) $C.fill()
+		if (this.closed_poly || this.coastline) $C.fill()
 
 	}
 })
