@@ -37,6 +37,7 @@ var Relation = Class.create(Feature,
 		 * @type Boolean
 		 */
 		this.closed_poly = true // because all relations are currently coastlines
+		this.coastline = true
 
 		this.outline_color = null
 		this.outline_width = null
