@@ -23,6 +23,7 @@ task :release do
 	working_dir = "release/.temp/cartagen"
 	Dir.mkdir("#{working_dir}/cartagen")
 	FileUtils.cp_r %w(public/cartagen/src public/cartagen/cartagen.js public/cartagen/lib), "#{working_dir}/cartagen"
+	FileUtils.cp_r Dir["release/notes/#{tmpl}/#{version}"], working_dir
 	FileUtils.cp 'public/cartagen/style.css', working_dir
 	FileUtils.rm_r "#{working_dir}/cartagen/lib/jsdoc"
 	FileUtils.rm_r "#{working_dir}/cartagen/lib/sprockets"
