@@ -86,9 +86,9 @@ var Events = {
 		}
 		if (delta && !Cartagen.live_gss) {
 			if (delta <0) {
-				Cartagen.zoom_level += delta/40
+				Cartagen.zoom_level += delta/80
 			} else {
-				Cartagen.zoom_level += delta/40
+				Cartagen.zoom_level += delta/80
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
@@ -99,8 +99,11 @@ var Events = {
 	 * @param {Event} e
 	 */
 	keypress: function(e) {
+		if (e.element().tagName != 'BODY') return
+
 		var code;
 		if (!e) var e = window.event;
+
 		if (e.keyCode) code = e.keyCode;
 		else if (e.which) code = e.which;
 		var character = String.fromCharCode(code);

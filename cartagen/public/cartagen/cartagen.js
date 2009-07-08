@@ -15,7 +15,7 @@ var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
 
-if (typeof cartagen_base_uri == 'undefined') {
+if (typeof cartagen_base_uri == 'undefhttp://www.google.com/search?q=instiki+change+html&btnG=Search&hl=en&client=firefox-a&rls=org.mozilla%3Aen-US%3Aofficial&hs=xEI&sa=2ined') {
     cartagen_base_uri = 'cartagen'
 }
 
@@ -60,10 +60,14 @@ var Cartagen = {
 	},
 	initialize: function(configs) {
 		Object.extend(this, configs)
+		if (Cartagen.debug) {
+			Geohash.grid = true
+		}
+
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 
-		if(window.PhoneGap) {
-			scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
+		if (window.PhoneGap) {
+			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 						    cartagen_base_uri + '/lib/phonegap/geolocation.js',
 						    cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
 						    cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
@@ -284,7 +288,6 @@ var Cartagen = {
 		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force != false || Glop.frame < 100) {
 			if (Geohash.keys && Geohash.keys.keys()) {
 				try {
-				$l('keys: '+Geohash.keys.size())
 				Geohash.keys.keys().each(function(key) {
 					if (key.length == 6) Cartagen.get_cached_plot(key)
 				})
@@ -580,7 +583,7 @@ var Geohash = {
 	_dirs: ['top','bottom','left','right'],
 	hash: new Hash(),
 	objects: [],
-	grid: true,
+	grid: false,
 	default_length: 6, // default length of geohash
 	limit_bottom: 8, // 12 is most ever...
 	last_get_objects: [0,0,0,false],
@@ -655,6 +658,17 @@ var Geohash = {
 			}
 		}
 	},
+	get_all_neighbor_keys: function(key) {
+		var top = calculateAdjacent(key, 'top')
+		var bottom = calculateAdjacent(key, 'bottom')
+		var left = calculateAdjacent(key, 'left')
+		var right = calculateAdjacent(key, 'right')
+		var top_left = calculateAdjacent(top, 'left')
+		var top_right = calculateAdjacent(top, 'right')
+		var bottom_left = calculateAdjacent(bottom, 'left')
+		var bottom_right = calculateAdjacent(bottom, 'right')
+		return [top, top_right, right, bottom_right, bottom, bottom_left, left, top_left]
+	},
 	get_neighbors: function(key) {
 		var neighbors = []
 
@@ -667,15 +681,17 @@ var Geohash = {
 		return neighbors
 	},
 	fill_bbox: function(key,keys) {
-		this._dirs.each(function(dir) {
-			var k = calculateAdjacent(key, dir)
+		this.get_all_neighbor_keys(key).each(function(k) {
 			if (!keys.get(k)) {
 				keys.set(k, true)
 
 				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
-				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) &&
-				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
+				if (Math.in_range(bbox.latitude[0],Map.bbox[3],Map.bbox[1]) &&
+					Math.in_range(bbox.latitude[1],Map.bbox[3],Map.bbox[1]) &&
+				    Math.in_range(bbox.longitude[0],Map.bbox[0],Map.bbox[2]) &&
+					Math.in_range(bbox.longitude[1],Map.bbox[0],Map.bbox[2])) {
 						this.fill_bbox(k,keys)
+				}
 			}
 		}, this)
 	},
@@ -1468,17 +1484,20 @@ var Events = {
 		}
 		if (delta && !Cartagen.live_gss) {
 			if (delta <0) {
-				Cartagen.zoom_level += delta/40
+				Cartagen.zoom_level += delta/80
 			} else {
-				Cartagen.zoom_level += delta/40
+				Cartagen.zoom_level += delta/80
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
 		Glop.draw()
 	},
 	keypress: function(e) {
+		if (e.element().tagName != 'BODY') return
+
 		var code;
 		if (!e) var e = window.event;
+
 		if (e.keyCode) code = e.keyCode;
 		else if (e.which) code = e.which;
 		var character = String.fromCharCode(code);

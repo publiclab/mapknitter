@@ -49,7 +49,7 @@ var Geometry = {
 		return bbox
 	},
 	/**
-	 * Determines if a point is withing a certain distance of another.
+	 * Determines if a point is within a certain distance of another.
 	 * @param {Number} x1    X-coordinate of the first point
 	 * @param {Number} y1    Y-coordinate of the first point
 	 * @param {Number} x2    X-coordinate of the second point
