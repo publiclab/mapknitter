@@ -17,7 +17,7 @@ var Geohash = {
 	 * If true, a grid of geohashes is drawn on the map
 	 * @type Boolean
 	 */
-	grid: true,
+	grid: false,
 	/**
 	 * Default length for a geohash, if none is specified or calculated. Note that
 	 * put_object() will automatically calculate an appropriate geohash for the feature,
@@ -179,6 +179,25 @@ var Geohash = {
 		}
 	},
 	/**
+	 * Gets the eights neighboring keys of the specified key, including diagonal neighbors.
+	 * @param {String} key Central geohash
+	 * @return Array of neighbors, starting from the key directly above the central key and
+	 *         proceeding clockwise.
+	 * @type String[]
+	 * 
+	 */
+	get_all_neighbor_keys: function(key) {
+		var top = calculateAdjacent(key, 'top')
+		var bottom = calculateAdjacent(key, 'bottom')
+		var left = calculateAdjacent(key, 'left')
+		var right = calculateAdjacent(key, 'right')
+		var top_left = calculateAdjacent(top, 'left')
+		var top_right = calculateAdjacent(top, 'right')
+		var bottom_left = calculateAdjacent(bottom, 'left')
+		var bottom_right = calculateAdjacent(bottom, 'right')
+		return [top, top_right, right, bottom_right, bottom, bottom_left, left, top_left]
+	},
+	/**
 	 * Fetch adjacent geohashes
 	 * @param {String} key Central geohash
 	 * @return Array of neighbors
@@ -203,16 +222,18 @@ var Geohash = {
 	 **/
 	fill_bbox: function(key,keys) {
 		// we may be able to improve efficiency by only checking certain directions
-		this._dirs.each(function(dir) {
-			var k = calculateAdjacent(key, dir)
+		this.get_all_neighbor_keys(key).each(function(k) {
 			if (!keys.get(k)) {
 				keys.set(k, true)
 				
 				// if still inside viewport:
 				var bbox = decodeGeoHash(k) //[lon1, lat2, lon2, lat1]
-				if (Math.in_range(bbox.latitude[2],Map.bbox[3],Map.bbox[1]) && 
-				    Math.in_range(bbox.longitude[2],Map.bbox[0],Map.bbox[2]))
+				if (Math.in_range(bbox.latitude[0],Map.bbox[3],Map.bbox[1]) &&
+					Math.in_range(bbox.latitude[1],Map.bbox[3],Map.bbox[1]) &&
+				    Math.in_range(bbox.longitude[0],Map.bbox[0],Map.bbox[2]) &&
+					Math.in_range(bbox.longitude[1],Map.bbox[0],Map.bbox[2])) {
 						this.fill_bbox(k,keys)
+				}
 			}
 		}, this)
 	},

@@ -43,7 +43,8 @@ park: {
 	strokeStyle: "#181",
 	fontSize: 12,
 	text: function() { return this.tags.get('name') },
-	fontRotation: 'fixed'
+	fontRotation: 'fixed',
+	opacity: 1
 },
 waterway: {
 	fillStyle: "#57d",

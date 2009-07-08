@@ -20,7 +20,7 @@ var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
 
-if (typeof cartagen_base_uri == 'undefined') {
+if (typeof cartagen_base_uri == 'undefhttp://www.google.com/search?q=instiki+change+html&btnG=Search&hl=en&client=firefox-a&rls=org.mozilla%3Aen-US%3Aofficial&hs=xEI&sa=2ined') {
 	/**
 	 * Path to the cartagen directory. Defaults to "cartagen", which works only
 	 * if the cartagen directory is named "cartagen" and is located in the
@@ -229,11 +229,15 @@ var Cartagen = {
 	initialize: function(configs) {
 		// basic configuration:
 		Object.extend(this, configs)
+		if (Cartagen.debug) {
+			Geohash.grid = true
+		}
+
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 		
 		// load phonegap js if needed
-		if(window.PhoneGap) {
-			scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
+		if (window.PhoneGap) {
+			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 						    cartagen_base_uri + '/lib/phonegap/geolocation.js',
 						    cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
 						    cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
@@ -567,7 +571,6 @@ var Cartagen = {
 			// find all geohashes we want to request:
 			if (Geohash.keys && Geohash.keys.keys()) {
 				try {
-				$l('keys: '+Geohash.keys.size())	
 				Geohash.keys.keys().each(function(key) {
 					// this will look for cached plots, or get new ones if it fails to find cached ones
 					if (key.length == 6) Cartagen.get_cached_plot(key)
