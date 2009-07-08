@@ -249,14 +249,14 @@ var Cartagen = {
 			}
 		})
 
+		Cartagen.coastlines.each(function(c){c.neighbors = []})
 		Cartagen.coastlines.each(function(coastline_a) {
 			Cartagen.coastlines.each(function(coastline_b) {
-				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
-					coastline_a.neighbors[1] = coastline_b
-					coastline_b.neighbors[0] = coastline_a
-				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
-					coastline_a.neighbors[0] = coastline_b
-					coastline_b.neighbors[1] = coastline_a
+				if (coastline_a.id != coastline_b.id) {
+					if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
+						coastline_a.neighbors[1] = coastline_b
+						coastline_b.neighbors[0] = coastline_a
+					}
 				}
 			})
 		})
@@ -267,8 +267,10 @@ var Cartagen = {
 			var data = {
 				members: coastline_chains.first().chain([],true,true)
 			}
-			data.members.each(function(member,index) {
-				coastline_chains.splice(index,1)
+			data.members.each(function(member) {
+				coastline_chains.each(function(coastline,index) {
+					if (coastline.id == member.id) coastline_chains.splice(index,1)
+				})
 			})
 			new Relation(data)
 		}
@@ -1067,16 +1069,16 @@ var Way = Class.create(Feature,
 			Geohash.put_object(this)
 		}
     },
-	neighbors: [null,null],
+	neighbors: [false,false],
 	chain: function(chain,prev,next) {
 		var uniq = true
 		chain.each(function(way) {
 			if (way.id == this.id) uniq = false
 		},this)
-
 		if (uniq) {
 			if (prev) chain.push(this)
 			else chain.unshift(this)
+			$l(chain.length + ","+prev+next)
 			if (prev && this.neighbors[0]) { // this is the initial call
 				this.neighbors[0].chain(chain,true,false)
 			}
@@ -1186,8 +1188,8 @@ var Relation = Class.create(Feature,
 
 		this.collect_ways()
 
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x &&
-			this.nodes[0].y == this.nodes[this.nodes.length-1].y)
+		if (this.nodes.length > 1 && this.nodes.first().x == this.nodes.last().x &&
+			this.nodes.first().y == this.nodes.last().y)
 				this.closed_poly = true
 
 		if (this.tags.get('natural') == 'coastline') {
@@ -1241,7 +1243,7 @@ var Relation = Class.create(Feature,
 		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
 			if (is_inside) {
-				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
+				if (true) {//(index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
 					if (first_node && this.coastline && !this.closed_poly) {
 						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
@@ -2236,6 +2238,7 @@ var Interface = {
 		alert('Please select a bounding box to download')
 
 		var canvas = $('canvas')
+
 		canvas.observe('mousemove', Interface.bbox_select_mousemove)
 		canvas.observe('mousedown', Interface.bbox_select_mousedown)
 		canvas.observe('mouseup', Interface.bbox_select_mouseup)
@@ -2260,7 +2263,7 @@ var Interface = {
 
 			$C.save()
 			$C.fill_style('#000')
-			$C.opacity(0.1)
+			$C.opacity(0.2)
 			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
 			$C.opacity(1)
 			$C.stroke_style('#000')
