@@ -78,7 +78,7 @@ var Way = Class.create(Feature,
 	/**
 	 * for coastlines, the [prev,next] way in the series
 	 */
-	neighbors: [null,null],
+	neighbors: [false,false],
 	/**
 	 * Adds a reference to itself into the 'chain' array and calls coastline_chain on the next or prev member
 	 * @param {Array}    chain  The array representing the chain of connected Ways
@@ -91,10 +91,10 @@ var Way = Class.create(Feature,
 		chain.each(function(way) {
 			if (way.id == this.id) uniq = false
 		},this)
-		
 		if (uniq) {
 			if (prev) chain.push(this)
 			else chain.unshift(this)
+			$l(chain.length + ","+prev+next)
 			if (prev && this.neighbors[0]) { // this is the initial call
 				this.neighbors[0].chain(chain,true,false)
 			}

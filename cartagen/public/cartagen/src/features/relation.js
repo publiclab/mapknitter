@@ -45,8 +45,8 @@ var Relation = Class.create(Feature,
 		
 		this.collect_ways()
 		
-		if (this.nodes.length > 1 && this.nodes[0].x == this.nodes[this.nodes.length-1].x && 
-			this.nodes[0].y == this.nodes[this.nodes.length-1].y) 
+		if (this.nodes.length > 1 && this.nodes.first().x == this.nodes.last().x && 
+			this.nodes.first().y == this.nodes.last().y) 
 				this.closed_poly = true
 		
 		if (this.tags.get('natural') == 'coastline') {
@@ -133,7 +133,7 @@ var Relation = Class.create(Feature,
 		var is_inside = true, first_node = true, last_node,start_corner,end_corner
 		this.nodes.each(function(node,index){
 			if (is_inside) {
-				if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
+				if (true) {//(index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
 					if (first_node && this.coastline && !this.closed_poly) {
 						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
 						$C.move_to(start_corner[0],start_corner[1])
@@ -146,6 +146,10 @@ var Relation = Class.create(Feature,
 			last_node = node
 			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
 		},this)
+				// $C.save()
+				// $C.fill_style('red')
+				// $C.rect(last_node.x,last_node.y,50,50)
+				// $C.restore()
 		
 		if (this.coastline && !this.closed_poly) {
 			end_corner = Viewport.nearest_corner(last_node.x,last_node.y)

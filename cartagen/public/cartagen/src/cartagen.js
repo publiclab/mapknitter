@@ -501,15 +501,15 @@ var Cartagen = {
 		})
 				
 		// flush coastline collected_ways relations and re-generate them with new coastlines:
+		Cartagen.coastlines.each(function(c){c.neighbors = []})
 		Cartagen.coastlines.each(function(coastline_a) {
 			Cartagen.coastlines.each(function(coastline_b) {
-				if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
-					coastline_a.neighbors[1] = coastline_b
-					coastline_b.neighbors[0] = coastline_a					
-				} else if (coastline_a.nodes.first().id == coastline_b.nodes.last().id) {
-					coastline_a.neighbors[0] = coastline_b
-					coastline_b.neighbors[1] = coastline_a					
-				}				
+				if (coastline_a.id != coastline_b.id) {
+					if (coastline_a.nodes.last().id == coastline_b.nodes.first().id) {
+						coastline_a.neighbors[1] = coastline_b
+						coastline_b.neighbors[0] = coastline_a
+					}
+				}
 			})
 		})
 		
@@ -521,8 +521,10 @@ var Cartagen = {
 				members: coastline_chains.first().chain([],true,true)
 			}
 			// remove chain members from coastline chain:
-			data.members.each(function(member,index) {
-				coastline_chains.splice(index,1)
+			data.members.each(function(member) {
+				coastline_chains.each(function(coastline,index) {
+					if (coastline.id == member.id) coastline_chains.splice(index,1)
+				})
 			})
 			new Relation(data)
 		}
