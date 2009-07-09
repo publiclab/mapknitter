@@ -1211,6 +1211,7 @@ var Relation = Class.create(Feature,
 		if (this.tags.get('natural') == 'coastline') {
 			this.coastline = true
 		}
+		if (this.tags.get('natural') == "land") this.island = true
 
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -1289,6 +1290,17 @@ var Relation = Class.create(Feature,
 
 		if (this.outlineColor && this.outlineWidth) $C.outline(this.outlineColor,this.outlineWidth)
 		else $C.stroke()
+		if (this.island) {
+			if (Style.styles.body.opacity) $C.opacity(Style.styles.body.opacity)
+			if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+			$C.opacity(1)
+			if (Style.styles.body.pattern && Style.styles.body.pattern.src) {
+				var value = Style.styles.body.pattern
+				this.pattern = new Image()
+				this.pattern.src = value
+				$C.fill_pattern(this.pattern, 'repeat')
+			}
+		}
 		if (this.closed_poly || this.coastline) $C.fill()
 
 	}
