@@ -1,0 +1,147 @@
+html {
+	font-family:georgia;
+	margin:0;
+	font-size:0.8em;
+}
+body {
+	margin:0;
+	padding:0;
+}
+a {
+	color:#555;
+}
+a:hover {
+	color:#222;
+}
+
+a.button {
+	background:#BE3F31 top repeat-x;
+	padding:6px 12px;
+	border:2px solid #900;
+	color:#fff;
+	font-family:georgia, serif;
+	text-decoration:none;
+	font-size:1.3em;
+}
+a.button:hover {
+	background:#b00;
+	color:#ccc;
+}
+a.button:active {
+	background:#900;
+	border-color:#5D1D15;
+}
+
+a.button.green {
+	background:#7BAB3A top repeat-x;
+	border:2px solid #070;
+}
+a.button.green:hover {
+	background:#6A9631 top repeat-x;
+}
+a.button.green:active {
+	background:#4F5F37 top repeat-x;
+}
+
+input {
+	font-size:1.6em;
+}
+
+h2 {
+	font-size:3em;
+	font-weight:normal;
+	line-height:0.5em;
+	margin-bottom:4px;
+}
+h2 small {
+	font-size:0.35em;
+	color:#444;
+}
+
+h3 {
+	font-size:1.4em;
+	font-weight:normal;
+}
+
+.label {
+	background:#FFEABC;
+	padding:4px;
+}
+
+#info {
+	margin-right:12px;
+	display:inline;
+	float:right;
+	text-align:right;
+	color:#888;
+}
+#info b {
+	color:#222;
+}
+
+#pointerLabel {
+	width:60px;
+}
+#pointerLabel span {
+	border:1px solid #ddd;
+	padding:3px;
+	background:#fff;
+	-moz-opacity: 0.8;
+	opacity:.8;
+	filter:alpha(opacity=80);
+}
+
+canvas {
+	margin:0;
+	display:block;
+}
+
+.overlay {
+	line-height:1.4em;
+	padding:8px;
+	margin:12px;
+	position:absolute; top:0; right:0;
+	background:white;
+	-moz-opacity: 0.80;
+	opacity:.80;
+	filter:alpha(opacity=80);
+	font-family: lucida grande, lucida sans console, sans-serif;
+}
+.overlay h3 {
+	margin-top:6px;
+}
+
+#brief {
+	line-height:1.4em;
+	width:95%;
+	padding:8px;
+	margin:12px;
+	position:absolute; bottom:0; left:0;
+	background:white;
+	-moz-opacity: 0.80;
+	opacity:.80;
+	filter:alpha(opacity=80);
+	font-family: lucida grande, lucida sans console, sans-serif;
+}
+#brief div.column {
+	font-size:0.9em;
+	float:left;
+	width:19%;
+	padding:0 2%;
+	margin-bottom:16px;
+}
+#brief div.column.first {
+	width:22%;
+}
+#brief h3 {
+	margin-top:20px;
+}
+
+#browsers {
+	margin:0 auto;
+	width:300px;
+	border:3px solid #ccc;
+	background: #eee;
+	padding:20px;
+	position:absolute; top:10px; left:90px;
+}
