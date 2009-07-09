@@ -1,7 +1,11 @@
 /**
  * @namespace Contains methods and variables for spacially indexing features using geohashes.
  */
-var Geohash = {
+var Geohash = {}
+
+Object.extend(Geohash, Enumerable)
+
+Object.extend(Geohash, {
 	_dirs: ['top','bottom','left','right'],
 	/**
 	 * Map of geohashes -> features
@@ -428,7 +432,17 @@ var Geohash = {
 	 */
 	feature_quota: function() {
 		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
+	},
+	/**
+	 * Iterator for prototype.
+	 */
+	_each: function(f) {
+		this.hash.each(function(pair) {
+			pair.value.each(function(val) { f(val) })
+		})
 	}
-}
+})
+
+
 
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
