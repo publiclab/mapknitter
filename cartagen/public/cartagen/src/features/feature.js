@@ -17,16 +17,7 @@ var Feature = Class.create(
 	 */
 	initialize: function() {
 		this.tags = new Hash()
-		this.fillStyle = 'rgba(0,0,0,0)'
-		this.fontColor = '#eee'
-		this.fontSize = 12
-		this.fontRotation = 0
-		this.opacity = 1
-		this.strokeStyle = 'black'
-		this.lineWidth = 6
-		this._unhovered_styles = {}
-		this._unclicked_styles = {}
-
+		this.apply_default_styles()
 		/**
 		 * Label for this way
 		 * @type Label
@@ -98,6 +89,17 @@ var Feature = Class.create(
 	},
 	remove_click_styles: function() {
 		Object.extend(this, this._unclicked_styles)
+	},
+	apply_default_styles: function() {
+		this.fillStyle = 'rgba(0,0,0,0)'
+		this.fontColor = '#eee'
+		this.fontSize = 12
+		this.fontRotation = 0
+		this.opacity = 1
+		this.strokeStyle = 'black'
+		this.lineWidth = 6
+		this._unhovered_styles = {}
+		this._unclicked_styles = {}
 	}
 })
 
