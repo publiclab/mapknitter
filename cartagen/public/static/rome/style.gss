@@ -16,7 +16,6 @@ way: {
 relation: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
-	opacity:0.6,
 	lineWidth: 4,
 	pattern: "/images/pattern-water.gif"
 },
