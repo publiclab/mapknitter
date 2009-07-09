@@ -943,7 +943,7 @@ var Style = {
 			}
 		})
 	},
-	apply_gss: function(gss_string) {
+	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
 			if (style.value.refresh) {
@@ -955,8 +955,14 @@ var Style = {
 
 		Style.styles = styles
 
-		if($('gss_textarea')) {
+		if ($('gss_textarea')) {
 			$('gss_textarea').value = gss_string
+		}
+
+		if (force_update) {
+			Geohash.each(function(o) {
+				o.refresh_styles()
+			})
 		}
 	}
 }
@@ -966,16 +972,7 @@ var Feature = Class.create(
 {
 	initialize: function() {
 		this.tags = new Hash()
-		this.fillStyle = 'rgba(0,0,0,0)'
-		this.fontColor = '#eee'
-		this.fontSize = 12
-		this.fontRotation = 0
-		this.opacity = 1
-		this.strokeStyle = 'black'
-		this.lineWidth = 6
-		this._unhovered_styles = {}
-		this._unclicked_styles = {}
-
+		this.apply_default_styles()
 		this.label = new Label(this)
 	},
 	draw: function() {
@@ -1028,13 +1025,23 @@ var Feature = Class.create(
 	},
 	remove_click_styles: function() {
 		Object.extend(this, this._unclicked_styles)
+	},
+	apply_default_styles: function() {
+		this.fillStyle = 'rgba(0,0,0,0)'
+		this.fontColor = '#eee'
+		this.fontSize = 12
+		this.fontRotation = 0
+		this.opacity = 1
+		this.strokeStyle = 'black'
+		this.lineWidth = 6
+		this._unhovered_styles = {}
+		this._unclicked_styles = {}
 	}
 })
 
 var Node = Class.create(Feature,
 {
 	initialize: function($super) {
-		this.radius = 6
 		$super()
 	},
 	draw: function($super) {
@@ -1050,6 +1057,14 @@ var Node = Class.create(Feature,
 		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
 		$C.fill()
 		$C.stroke()
+	},
+	apply_default_styles: function($super) {
+		$super()
+		this.radius = 6
+	},
+	refresh_styles: function() {
+		this.apply_default_styles()
+		Style.parse_styles(this, Style.styles.node)
 	}
 })
 var Way = Class.create(Feature,
@@ -1061,9 +1076,6 @@ var Way = Class.create(Feature,
 		this.highlight = false
 		this.nodes = []
 		this.closed_poly = false
-
-		this.outline_color = null
-		this.outline_width = null
 
 		Object.extend(this, data)
 
@@ -1195,6 +1207,15 @@ var Way = Class.create(Feature,
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
+	},
+	apply_default_styles: function($super) {
+		$super()
+		this.outline_color = null
+		this.outline_width = null
+	},
+	refresh_styles: function() {
+		this.apply_default_styles()
+		Style.parse_styles(this, Style.styles.way)
 	}
 })
 var Relation = Class.create(Feature,
@@ -1314,6 +1335,11 @@ var Relation = Class.create(Feature,
 		}
 		if (this.closed_poly || this.coastline) $C.fill()
 
+	},
+	apply_default_styles: Feature.prototype.apply_default_styles,
+	refresh_styles: function() {
+		this.apply_default_styles()
+		Style.parse_styles(this, Style.styles.relation)
 	}
 })
 var Label = Class.create(

@@ -37,9 +37,6 @@ var Way = Class.create(Feature,
 		 * @type Boolean
 		 */
 		this.closed_poly = false
-
-		this.outline_color = null
-		this.outline_width = null
 		
 		Object.extend(this, data)
 		
@@ -212,5 +209,14 @@ var Way = Class.create(Feature,
 		// $C.line_width(1)
 		// $C.stroke_style('red')
 		// $C.stroke_rect(this.bbox[1],this.bbox[0],this.bbox[3]-this.bbox[1],this.bbox[2]-this.bbox[0])
+	},
+	apply_default_styles: function($super) {
+		$super()
+		this.outline_color = null
+		this.outline_width = null
+	},
+	refresh_styles: function() {
+		this.apply_default_styles()
+		Style.parse_styles(this, Style.styles.way)
 	}
 })
