@@ -131,7 +131,7 @@ var Way = Class.create(Feature,
         if (segment[1]) {
             var _x = segment[0].x-segment[1].x
             var _y = segment[0].y-segment[1].y
-            return (Math.tan(_y/_x)/1.7)
+            return (Math.tan(_y/_x))
         } else return 0
 	},
 	/**
