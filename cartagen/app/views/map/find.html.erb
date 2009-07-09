@@ -18,7 +18,6 @@
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
 		Event.observe(window, 'load', function() {
-			console.log('loaded')
 			Cartagen.setup({
 				stylesheet: "/static/rome/style.gss",
 				static_map: false,
@@ -68,7 +67,6 @@
 			<br />
 			<a href="http://wiki.cartagen.org">Docs</a> |
 			<a href="http://code.google.com/p/cartagen/">Source</a> |
-			<a href="http://groups.google.com/group/cartagen-dev">List</a> |
 			<a href="http://unterbahn.com">Blog</a>
 			</small></h2>
 		<script type="text/javascript" charset="utf-8">
@@ -83,7 +81,7 @@
 			<input type="button" name="some_name" tabindex="4" value="Go">
 		</form></p>
 		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="Cartagen.highlight($('highlight').value)">
-			Search: <br />
+			Search within map: <br />
 			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
 			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
