@@ -579,7 +579,11 @@ Number.prototype.to_precision = function(prec){
 }
 
 Cartagen.demo = function() { Map.rotate += 0.005 }
-var Geohash = {
+var Geohash = {}
+
+Object.extend(Geohash, Enumerable)
+
+Object.extend(Geohash, {
 	_dirs: ['top','bottom','left','right'],
 	hash: new Hash(),
 	objects: [],
@@ -841,8 +845,15 @@ var Geohash = {
 	},
 	feature_quota: function() {
 		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
+	},
+	_each: function(f) {
+		this.hash.each(function(pair) {
+			pair.value.each(function(val) { f(val) })
+		})
 	}
-}
+})
+
+
 
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
@@ -2326,6 +2337,8 @@ var Interface = {
 			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
 
 			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
+
+			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + min_lat + ', \nlat2: ' + max_lat + ', \nlng1: ' + min_lon + ', \nlng2: ' + max_lon)
 
 			var canvas = $('canvas')
 			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
