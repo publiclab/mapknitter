@@ -373,7 +373,7 @@ var Cartagen = {
 		f.delay(120)
 	},
 	highlight: function(query) {
-		objects.each(function(object) {
+		Geohash.objects.each(function(object) {
 			object.highlight = false
 			if (query != "" && object.tags && object instanceof Way) {
 				object.tags.each(function(tag) {
@@ -597,7 +597,7 @@ Object.extend(Geohash, {
 		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
 			this.last_get_objects[3] = false
 			$l('re-getting-objects')
