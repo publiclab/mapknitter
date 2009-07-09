@@ -185,5 +185,10 @@ var Relation = Class.create(Feature,
 		}
 		if (this.closed_poly || this.coastline) $C.fill()
 		
+	},
+	apply_default_styles: Feature.prototype.apply_default_styles,
+	refresh_styles: function() {
+		this.apply_default_styles()
+		Style.parse_styles(this, Style.styles.relation)
 	}
 })

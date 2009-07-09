@@ -117,7 +117,7 @@ var Style = {
 			}
 		})
 	},
-	apply_gss: function(gss_string) {
+	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
 			if (style.value.refresh) {
@@ -129,8 +129,14 @@ var Style = {
 
 		Style.styles = styles
 
-		if($('gss_textarea')) {
+		if ($('gss_textarea')) {
 			$('gss_textarea').value = gss_string
+		}
+		
+		if (force_update) {
+			Geohash.each(function(o) {
+				o.refresh_styles()
+			})
 		}
 	}
 }

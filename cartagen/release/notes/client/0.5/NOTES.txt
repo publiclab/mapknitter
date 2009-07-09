@@ -1,4 +1,4 @@
-Cartagen: A Framework for Dynamic Mapping (Client Edition)
+﻿Cartagen: A Framework for Dynamic Mapping (Client Edition)
 
 Version 0.5
 Released 7/8/09
@@ -23,7 +23,7 @@ CHANGES
 
 - Search by tag or name
 
-- Projection via spherical mercator
+- Projection via Spherical Mercator
 
 - Location detection via browser-based geolocation
 
@@ -39,13 +39,13 @@ KNOWN BUGS
 - Coastline support is HIGHLY experimental. Unexpected things can happen around
   coastlines.
   
-- Automatic label rotation sommetimes does not work properly. Investigation of
+- Automatic label rotation sometimes does not work properly. Investigation of
   this issue is ongoing.
   
 CONTRIBUTORS
 
 Cartagen is developed at the MIT Media Lab in Cambridge, MA, USA by Jeffrey
-Warren and Ben Weissmann. <http://wiki.cartagen.org/> Has up-to-date
+Warren and Ben Weissmann. <http://wiki.cartagen.org/> has up-to-date
 information and resources on how to contribute to the project.
   
 MORE INFORMATION
