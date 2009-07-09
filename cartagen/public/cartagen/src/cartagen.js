@@ -707,7 +707,7 @@ var Cartagen = {
 	 * @param {Object} query The tag to search for
 	 */
 	highlight: function(query) {
-		objects.each(function(object) {
+		Geohash.objects.each(function(object) {
 			object.highlight = false
 			if (query != "" && object.tags && object instanceof Way) {
 				object.tags.each(function(tag) {
