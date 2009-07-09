@@ -52,8 +52,8 @@ waterway: {
 	pattern: "/images/pattern-water.gif"
 },
 water: {
-	strokeStyle: "#57d",
-	lineWidth: 20,
+	strokeStyle: "#24a",
+	lineWidth: 4,
 	pattern: "/images/pattern-water.gif"
 },
 coastline: {
