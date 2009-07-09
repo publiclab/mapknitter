@@ -72,6 +72,8 @@ var Interface = {
 			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
 
 			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
+			
+			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + min_lat + ', \nlat2: ' + max_lat + ', \nlng1: ' + min_lon + ', \nlng2: ' + max_lon)
 
 			var canvas = $('canvas')
 			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
