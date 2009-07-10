@@ -16,7 +16,6 @@
 	<script type="text/javascript" charset="utf-8">
 		Event.observe(window, 'load', function() {
 			Cartagen.setup({
-				debug: true,
 				stylesheet: "/static/rome/style.gss",
 				static_map: false,
 				// static_map_layers: [
@@ -32,7 +31,7 @@
 				lat2: 41.9027,
 				lng1: 12.4902,
 				lng2: 12.5041,
-				debug: true
+				// debug: true
 			})
 		})
 	</script>
@@ -72,9 +71,8 @@
 			<small>a framework for dynamic mapping<br />
 			by <a href="http://unterbahn.com">Jeffrey Warren</a>
 			<br />
-			<a href="http://wiki.cartagen.org">Docs</a> | 
-			<a href="http://code.google.com/p/cartagen/">Source</a> | 
-			<a href="http://groups.google.com/group/cartagen-dev">List</a> | 
+			<a href="http://wiki.cartagen.org">Docs</a> |
+			<a href="http://code.google.com/p/cartagen/">Source</a> |
 			<a href="http://unterbahn.com">Blog</a>
 			</small></h2>
 		<script type="text/javascript" charset="utf-8">
@@ -87,11 +85,6 @@
 			Go somewhere: <br />
 			<input id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
 			<input type="button" name="some_name" tabindex="4" value="Go">
-		</form></p>
-		<p><form id="tag_search" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit ="Cartagen.highlight($('highlight').value)">
-			Search: <br />
-			<input style="width:170px;" type="text" tabindex="5" id="highlight" value="">
-			<input type="submit" name="some_name" value="Go" tabindex="6">
 		</form></p>
 		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a><br />
 		<a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a><br />
