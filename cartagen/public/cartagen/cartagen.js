@@ -107,16 +107,13 @@ var Cartagen = {
 	},
 	draw: function(e) {
 		e.no_draw = true
-		$l('drawing')
 
 		this.object_count = 0
 		this.way_count = 0
 		this.node_count = 0
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
-
 		Style.style_body()
-
         if (Viewport.padding > 0) {
             $C.stroke_style('white')
             $C.line_width(2)
@@ -139,11 +136,14 @@ var Cartagen = {
 		})
 
 		Geohash.objects.each(function(object) {
+			$l(object)
 			if (object.user_submitted) {
 				Cartagen.feature_queue.push(object)
 			}
 			else {
-				(object.draw.bind(object))()
+				try {
+				object.draw()
+				} catch(e) {$l(e)}
 			}
 		})
 
@@ -310,6 +310,10 @@ var Cartagen = {
 			method: 'get',
 			onComplete: function(result) {
 				$l('got ' + url)
+
+				$l('result:')
+				$l(result)
+				$l(result.responseText)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				$l(objects.length+" objects")
 				Cartagen.requested_plots--
@@ -814,32 +818,15 @@ Object.extend(Geohash, {
 			this.get_keys_upward(key)
 		}, this)
 
-		var quota = Geohash.feature_quota()
 
 
-		var lengths = {}
+
+
+
 		this.keys.keys().each(function(key) {
-			if (!lengths[key.length]) lengths[key.length] = []
+				this.objects = (this.get_from_key(key)).concat(this.objects)
+		}, this)
 
-			lengths[key.length].push(Geohash.get_from_key(key))
-		})
-
-		for (i = 1; i <= this.key_length && quota > 0; ++i) {
-			var features = lengths[i].flatten()
-			if (quota >= features.length) {
-				this.objects = this.objects.concat(features)
-				quota -= features.length
-			}
-			else {
-				j = 0
-				while (quota > 0) {
-					var o = lengths[i][j % (lengths[i].length)].shift()
-					if (o) this.objects.push(o)
-					++j
-					--quota
-				}
-			}
-		}
 		$l(this.objects.length)
 		return this.objects
 	},
@@ -849,7 +836,7 @@ Object.extend(Geohash, {
 		})
 	},
 	feature_density: function() {
-		return 0.5 * Viewport.power()
+		return 2 * Viewport.power()
 	},
 	feature_quota: function() {
 		return ((Glop.width * Glop.height) * (Geohash.feature_density() / 1000)).round()
@@ -880,8 +867,8 @@ var Style = {
 		}
 	},
 	style_body: function() {
-		$C.fill_style(Style.styles.body.fillStyle)
-		$C.opacity(Style.styles.body.opacity)
+		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+		if (Style.styles.body.opacity) $C.opacity(Style.styles.body.opacity)
 		if (Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern

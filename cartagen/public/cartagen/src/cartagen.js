@@ -307,16 +307,13 @@ var Cartagen = {
 	 */
 	draw: function(e) {
 		e.no_draw = true
-		$l('drawing')
 		
 		this.object_count = 0
 		this.way_count = 0
 		this.node_count = 0
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
-		
 		Style.style_body()
-			
         if (Viewport.padding > 0) {
             $C.stroke_style('white')
             $C.line_width(2)
@@ -361,11 +358,14 @@ var Cartagen = {
 
 		//Geohash lookup:
 		Geohash.objects.each(function(object) {
+			$l(object)
 			if (object.user_submitted) {
 				Cartagen.feature_queue.push(object)
 			}
 			else {
-				(object.draw.bind(object))()
+				try {
+				object.draw()
+				} catch(e) {$l(e)}
 			}
 		})
 
@@ -605,6 +605,10 @@ var Cartagen = {
 			onComplete: function(result) {
 				// $l(result.responseText.evalJSON().osm.ways.length+" ways")
 				$l('got ' + url)
+				
+				$l('result:')
+				$l(result)
+				$l(result.responseText)
 				Cartagen.parse_objects(result.responseText.evalJSON())
 				$l(objects.length+" objects")
 				Cartagen.requested_plots--

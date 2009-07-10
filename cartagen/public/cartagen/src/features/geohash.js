@@ -384,33 +384,41 @@ Object.extend(Geohash, {
 			this.get_keys_upward(key)
 		}, this)
 
-		var quota = Geohash.feature_quota()
+		//var quota = Geohash.feature_quota()
+
+
+		// This should be re-added for 0.6 release
 
 		// sort by key length
 
-		var lengths = {}
+//		var lengths = {}
+//		this.keys.keys().each(function(key) {
+//			if (!lengths[key.length]) lengths[key.length] = []
+//
+//			lengths[key.length].push(Geohash.get_from_key(key))
+//		})
+//
+//		for (i = 1; i <= this.key_length && quota > 0; ++i) {
+//			var features = lengths[i].flatten()
+//			if (quota >= features.length) {
+//				this.objects = this.objects.concat(features)
+//				quota -= features.length
+//			}
+//			else {
+//				j = 0
+//				while (quota > 0) {
+//					var o = lengths[i][j % (lengths[i].length)].shift()
+//					if (o) this.objects.push(o)
+//					++j
+//					--quota
+//				}
+//			}
+//		}
+
 		this.keys.keys().each(function(key) {
-			if (!lengths[key.length]) lengths[key.length] = []
+				this.objects = (this.get_from_key(key)).concat(this.objects)
+		}, this)
 
-			lengths[key.length].push(Geohash.get_from_key(key))
-		})
-
-		for (i = 1; i <= this.key_length && quota > 0; ++i) {
-			var features = lengths[i].flatten()
-			if (quota >= features.length) {
-				this.objects = this.objects.concat(features)
-				quota -= features.length
-			}
-			else {
-				j = 0
-				while (quota > 0) {
-					var o = lengths[i][j % (lengths[i].length)].shift()
-					if (o) this.objects.push(o)
-					++j
-					--quota
-				}
-			}
-		}
 		$l(this.objects.length)
 		return this.objects
 	},
@@ -425,7 +433,7 @@ Object.extend(Geohash, {
 	 * @return The density, in features per 1,000 square pixels.
 	 */
 	feature_density: function() {
-		return 0.5 * Viewport.power()
+		return 2 * Viewport.power()
 	},
 	/**
 	 * Calculates the number of features that should be drawn.
