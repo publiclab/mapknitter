@@ -3,7 +3,7 @@
  */
 var Style = {
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
-	             'outlineWidth', 'radius', 'hover', 'mouseDown'],
+	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort'],
 
 	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
 		               'fontRotation'],

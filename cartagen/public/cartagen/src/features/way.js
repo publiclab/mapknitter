@@ -189,13 +189,16 @@ var Way = Class.create(Feature,
 		}
 
 		$C.begin_path()
-		$C.move_to(this.nodes[0].x,this.nodes[0].y)
+		if (Cartagen.distort) $C.move_to(this.nodes[0].x,this.nodes[0].y+Math.max(0,75-Geometry.distance(this.nodes[0].x,this.nodes[0].y,Map.pointer_x(),Map.pointer_y())/4))
+		else $C.move_to(this.nodes[0].x,this.nodes[0].y)
 
 		if (Map.resolution == 0) Map.resolution = 1
 		this.nodes.each(function(node,index){
-			if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+			if ((index % Map.resolution == 0) || index == this.nodes.length-1 || this.nodes.length <= 30) {
 				Cartagen.node_count++
-				$C.line_to(node.x,node.y)
+				// if (this.distort) $C.line_to(node.x,node.y+this.distort/Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y()))
+				if (Cartagen.distort) $C.line_to(node.x,node.y+Math.max(0,75-Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y())/4))
+				else $C.line_to(node.x,node.y)
 			}
 		},this)
 

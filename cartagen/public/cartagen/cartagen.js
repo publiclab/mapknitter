@@ -15,7 +15,7 @@ var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
 
-if (typeof cartagen_base_uri == 'undefhttp://www.google.com/search?q=instiki+change+html&btnG=Search&hl=en&client=firefox-a&rls=org.mozilla%3Aen-US%3Aofficial&hs=xEI&sa=2ined') {
+if (typeof cartagen_base_uri == 'undefined') {
     cartagen_base_uri = 'cartagen'
 }
 
@@ -54,6 +54,7 @@ var Cartagen = {
 	scripts: [],
 	load_user_features: false,
 	coastlines: [],
+	coastline_nodes: [],
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		this.initialize(configs)
@@ -106,6 +107,7 @@ var Cartagen = {
 	},
 	draw: function(e) {
 		e.no_draw = true
+		$l('drawing')
 
 		this.object_count = 0
 		this.way_count = 0
@@ -131,6 +133,7 @@ var Cartagen = {
 
 		$('canvas').fire('cartagen:predraw')
 
+		Cartagen.coastline_viewport_punctures = []
 		Cartagen.relations.values().each(function(object) {
 			object.draw()
 		})
@@ -492,6 +495,9 @@ var Geometry = {
 		})
 		if (signed) return area/2
 		else return Math.abs(area/2)
+	},
+	distance: function(x,y,x2,y2) {
+		return Math.sqrt(Math.abs(x-x2)*Math.abs(x-x2)+Math.abs(y-y2)*Math.abs(y-y2))
 	}
 }
 $D = {
@@ -860,7 +866,7 @@ Object.extend(Geohash, {
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
-	             'outlineWidth', 'radius', 'hover', 'mouseDown'],
+	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort'],
 
 	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
 		               'fontRotation'],
@@ -1195,13 +1201,15 @@ var Way = Class.create(Feature,
 		}
 
 		$C.begin_path()
-		$C.move_to(this.nodes[0].x,this.nodes[0].y)
+		if (Cartagen.distort) $C.move_to(this.nodes[0].x,this.nodes[0].y+Math.max(0,75-Geometry.distance(this.nodes[0].x,this.nodes[0].y,Map.pointer_x(),Map.pointer_y())/4))
+		else $C.move_to(this.nodes[0].x,this.nodes[0].y)
 
 		if (Map.resolution == 0) Map.resolution = 1
 		this.nodes.each(function(node,index){
-			if ((index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1 || this.nodes.length <= 30) {
+			if ((index % Map.resolution == 0) || index == this.nodes.length-1 || this.nodes.length <= 30) {
 				Cartagen.node_count++
-				$C.line_to(node.x,node.y)
+				if (Cartagen.distort) $C.line_to(node.x,node.y+Math.max(0,75-Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y())/4))
+				else $C.line_to(node.x,node.y)
 			}
 		},this)
 
@@ -1291,31 +1299,38 @@ var Relation = Class.create(Feature,
 		$C.begin_path()
 
 		if (Map.resolution == 0) Map.resolution = 1
-		var is_inside = true, first_node = true, last_node,start_corner,end_corner
+		var is_inside = true, first_node = true, final_node, start_corner, end_corner, prev_node_inside = null
+		var enter_viewport = null,exit_viewport = null
 		this.nodes.each(function(node,index){
-			if (is_inside) {
-				if (true) {//(index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
-					if (first_node && this.coastline && !this.closed_poly) {
-						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
-						$C.move_to(start_corner[0],start_corner[1])
-						first_node = false
-					}
-					$C.line_to(node.x,node.y)
-					is_inside = true
+			is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width)
+			if (prev_node_inside != null && prev_node_inside != is_inside) {
+				if (is_inside) {
+					if (enter_viewport == null) enter_viewport = [this.nodes[index-1].x,this.nodes[index-1].y]
+				} else {
+					exit_viewport = [node.x,node.y]
 				}
+			} else if (prev_node_inside == null && is_inside) enter_viewport = [node.x,node.y]
+			prev_node_inside = is_inside
+			if (first_node && this.coastline && !this.closed_poly) {
+				start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
+				$C.move_to(start_corner[0],start_corner[1])
+				first_node = false
 			}
-			last_node = node
-			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
+			if (is_inside) $C.line_to(node.x,node.y)
+			final_node = node
 		},this)
 
+		Cartagen.coastline_nodes.push([enter_viewport,exit_viewport,this])
+
+
 		if (this.coastline && !this.closed_poly) {
-			end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
+			end_corner = Viewport.nearest_corner(final_node.x,final_node.y)
 			var bbox = Viewport.full_bbox()
 			var start = end_corner[2]
 			var end = start_corner[2]
 			if (start > end) var slice_end = bbox.length
 			else var slice_end = end+1
-			var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
+			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
 			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
 			cycle.each(function(coord) {
 				$C.line_to(coord[0],coord[1])
@@ -1461,7 +1476,7 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame < Glop.frame-20) {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
 			Glop.draw()
 		} else {
 			if (Event.last_event > Glop.frame-25) {

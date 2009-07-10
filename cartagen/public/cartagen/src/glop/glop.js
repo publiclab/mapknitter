@@ -99,7 +99,7 @@ var Glop = {
 	 * Draws only if needed. Designed to be called periodically.
 	 */
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame < Glop.frame-20) {
+		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
 			Glop.draw()
 		} else {
 			if (Event.last_event > Glop.frame-25) {
