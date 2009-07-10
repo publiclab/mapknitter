@@ -24,8 +24,8 @@ var Style = {
 	 * Applies the global "body" styles
 	 */
 	style_body: function() {
-		$C.fill_style(Style.styles.body.fillStyle)
-		$C.opacity(Style.styles.body.opacity)
+		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+		if (Style.styles.body.opacity) $C.opacity(Style.styles.body.opacity)
 		if (Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern
