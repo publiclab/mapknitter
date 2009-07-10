@@ -20,7 +20,7 @@ var objects = []
 
 PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
 
-if (typeof cartagen_base_uri == 'undefhttp://www.google.com/search?q=instiki+change+html&btnG=Search&hl=en&client=firefox-a&rls=org.mozilla%3Aen-US%3Aofficial&hs=xEI&sa=2ined') {
+if (typeof cartagen_base_uri == 'undefined') {
 	/**
 	 * Path to the cartagen directory. Defaults to "cartagen", which works only
 	 * if the cartagen directory is named "cartagen" and is located in the
@@ -211,6 +211,13 @@ var Cartagen = {
 	 */
 	coastlines: [],
 	/**
+	 * Array of nodes of coastlines within the viewport, combining multiple 
+	 * coastlines and the viewport corners where applicable; used to 
+	 * 'walk' around the viewport. Solves peninsula/estuary problem where 
+	 * multiple unconnected coastlines enter the viewport and must be reconciled
+	 */
+	coastline_nodes: [],
+	/**
 	 * Registers initialize to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
@@ -300,6 +307,7 @@ var Cartagen = {
 	 */
 	draw: function(e) {
 		e.no_draw = true
+		$l('drawing')
 		
 		this.object_count = 0
 		this.way_count = 0
@@ -346,6 +354,7 @@ var Cartagen = {
 		 */
 		$('canvas').fire('cartagen:predraw')
 		
+		Cartagen.coastline_viewport_punctures = []
 		Cartagen.relations.values().each(function(object) {
 			object.draw()
 		})
