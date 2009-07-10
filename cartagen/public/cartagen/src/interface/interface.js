@@ -72,8 +72,13 @@ var Interface = {
 			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
 
 			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
-			
-			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + min_lat + ', \nlat2: ' + max_lat + ', \nlng1: ' + min_lon + ', \nlng2: ' + max_lon)
+
+			var lon1 = Map.bbox[0]
+			var lat2 = Map.bbox[1]
+			var lon2 = Map.bbox[2]
+			var lat1 = Map.bbox[3]
+
+			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + lat1 + ', \nlat2: ' + lat2 + ', \nlng1: ' + lon1 + ', \nlng2: ' + lon2 + ',\nzoom_level: ' + Cartagen.zoom_level)
 
 			var canvas = $('canvas')
 			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
