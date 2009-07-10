@@ -54,6 +54,17 @@ var Viewport = {
 		return corner
 	},
 	/**
+	 * Yields the integer index of the nearest Viewport side, as 0,1,2, or 3
+	 * where top=0,right=1,bottom=2,left=3
+	 * 
+	 * @param {Number} x  x-coordinate of query
+	 * @param {Number} y  y-coordinate of query
+	 */
+	// nearest_side: function(x,y) {
+	// 	if ()
+	// 	return side
+	// },
+	/**
 	 * Varies around 1.0 as function of hardware resolution. This assumes that resolution is
 	 * somewhat proportianal to power, which is generally true. This should eventually be replaced
 	 * with something that measures initial load speed in fps to get a better estimate.

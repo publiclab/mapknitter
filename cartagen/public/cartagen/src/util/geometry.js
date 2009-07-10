@@ -125,5 +125,8 @@ var Geometry = {
 		})
 		if (signed) return area/2
 		else return Math.abs(area/2)
+	},
+	distance: function(x,y,x2,y2) {
+		return Math.sqrt(Math.abs(x-x2)*Math.abs(x-x2)+Math.abs(y-y2)*Math.abs(y-y2))
 	}
 }

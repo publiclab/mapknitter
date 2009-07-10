@@ -131,37 +131,47 @@ var Relation = Class.create(Feature,
 		$C.begin_path()
 		
 		if (Map.resolution == 0) Map.resolution = 1
-		var is_inside = true, first_node = true, last_node,start_corner,end_corner
+		var is_inside = true, first_node = true, final_node, start_corner, end_corner, prev_node_inside = null
+		var enter_viewport = null,exit_viewport = null
 		this.nodes.each(function(node,index){
-			if (is_inside) {
-				if (true) {//(index % Map.resolution == 0) || index == 0 || index == this.nodes.length-1) {// || this.nodes.length <= 30) {
-					if (first_node && this.coastline && !this.closed_poly) {
-						start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
-						$C.move_to(start_corner[0],start_corner[1])
-						first_node = false
-					}
-					$C.line_to(node.x,node.y)
-					is_inside = true
+			is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width)
+			// if we've crossed the Viewport boundary (needed to reconcile multiple unconnected coastlines):
+			if (prev_node_inside != null && prev_node_inside != is_inside) {
+				// record the nearest node _outside_ the viewport:
+				if (is_inside) {
+					// only store the first one:
+					if (enter_viewport == null) enter_viewport = [this.nodes[index-1].x,this.nodes[index-1].y]
+				} else {
+					// overwrite, so we only get the last one:
+					exit_viewport = [node.x,node.y]
 				}
+			} else if (prev_node_inside == null && is_inside) enter_viewport = [node.x,node.y]
+			prev_node_inside = is_inside
+			if (first_node && this.coastline && !this.closed_poly) {
+				start_corner = Viewport.nearest_corner(this.nodes[0].x,this.nodes[0].y)
+				$C.move_to(start_corner[0],start_corner[1])
+				first_node = false
 			}
-			last_node = node
-			is_inside = true //(Math.abs(node.x - Map.x) < Viewport.width/2 && Math.abs(node.y - Map.y) < Viewport.height/2)
+			if (is_inside) $C.line_to(node.x,node.y)
+			final_node = node
 		},this)
-				// $C.save()
-				// $C.fill_style('red')
-				// $C.rect(last_node.x,last_node.y,50,50)
-				// $C.restore()
+		
+		// store enter and exit points:
+		Cartagen.coastline_nodes.push([enter_viewport,exit_viewport,this])
+		
+		// $C.save()
+		// $C.fill_style('red')
+		// $C.rect(last_node.x,last_node.y,50,50)
+		// $C.restore()
 		
 		if (this.coastline && !this.closed_poly) {
-			end_corner = Viewport.nearest_corner(last_node.x,last_node.y)
+			end_corner = Viewport.nearest_corner(final_node.x,final_node.y)
 			var bbox = Viewport.full_bbox()
-			// var start = Math.min(end_corner[2],start_corner[2])
-			// var end = Math.max(end_corner[2],start_corner[2])
 			var start = end_corner[2]
 			var end = start_corner[2]
 			if (start > end) var slice_end = bbox.length
 			else var slice_end = end+1
-			var cycle = bbox.slice(start+1,slice_end) // path clockwise to walk around the viewport
+			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
 			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
 			cycle.each(function(coord) {
 				$C.line_to(coord[0],coord[1])
