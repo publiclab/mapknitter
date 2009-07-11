@@ -57,6 +57,7 @@ var Cartagen = {
 	coastline_nodes: [],
 	setup: function(configs) {
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
+		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
 		this.initialize(configs)
 	},
 	initialize: function(configs) {
