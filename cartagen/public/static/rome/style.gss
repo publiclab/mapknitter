@@ -68,7 +68,6 @@ highway: {
 	lineWidth: 6,
 	outlineWidth: 3,
 	outlineColor: "white",
-	fontSize: 5,
 	fontColor: "#333",
 	fontBackground: "white",
 	fontScale: "fixed",
@@ -76,14 +75,12 @@ highway: {
 },
 primary: {
 	strokeStyle: "#d44",
-	fontSize: 11,
 	lineWidth: function() {
 		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
 		else return 10
 	}
 },
 secondary: {
-	fontSize: 11,
 	strokeStyle: "#d44",
 	lineWidth: function() {
 		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
