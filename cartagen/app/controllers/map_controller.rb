@@ -1,5 +1,5 @@
 class MapController < ApplicationController
-  # caches_page :plot
+  caches_page :find
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
   def find
