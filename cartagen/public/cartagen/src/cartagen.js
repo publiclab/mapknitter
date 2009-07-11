@@ -225,6 +225,10 @@ var Cartagen = {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
+		if (this.get_url_param('grid')) {
+			Geohash.grid = true
+			Geohash.grid_color = this.get_url_param('grid')
+		}
 		// wait for window load:
 		// Event.observe(window, 'load', this.initialize.bind(this,configs))
 		this.initialize(configs)
@@ -352,14 +356,61 @@ var Cartagen = {
 		 */
 		$('canvas').fire('cartagen:predraw')
 		
-		Cartagen.coastline_viewport_punctures = []
+		Cartagen.assembled_coastline = []
 		Cartagen.relations.values().each(function(object) {
-			object.draw()
+			// invent a better way to trigger collect_nodes, based on Viewport change:
+			if (Glop.frame == 0 || Glop.frame % 30 == 0) object.collect_nodes()
+			if (object.coastline_nodes.length > 0) Cartagen.assembled_coastline.push([object.coastline_nodes,object.entry_angle])
 		})
+		
+		// if we have any coastline relations to run through and draw:
+		if (Cartagen.assembled_coastline.length > 0) {
+			var sort_coastlines_by_angle = function(a,b) { return (a[1] - b[1]) }
+			Cartagen.assembled_coastline.sort(sort_coastlines_by_angle)
+
+			$C.begin_path()
+			
+			var start_corner,end_corner
+			Cartagen.assembled_coastline.each(function(coastline,index) { 
+				var child_start_corner = Viewport.nearest_corner(coastline[0].first()[0],coastline[0].first()[1])
+				end_corner = Viewport.nearest_corner(coastline[0].last()[0],coastline[0].last()[1])
+				$C.move_to(child_start_corner[0],child_start_corner[1])
+				coastline[0].each(function(node) { 
+					$C.line_to(node[0],node[1])
+ 				}) 
+				$C.line_to(end_corner[0],end_corner[1])
+
+				if (index == 0) start_corner = child_start_corner
+			},this)
+			var bbox = Viewport.full_bbox()
+			var start = end_corner[2]
+			var end = start_corner[2]
+			if (start > end) var slice_end = bbox.length
+			else var slice_end = end+1
+			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
+			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+			cycle.each(function(coord) {
+				$C.line_to(coord[0],coord[1])
+			})
+
+			var coastline_style = Style.styles.relation
+			if (coastline_style.lineWidth) $C.line_width(coastline_style.lineWidth)
+			if (coastline_style.strokeStyle) $C.stroke_style(coastline_style.strokeStyle)
+			if (coastline_style.opacity) $C.opacity(coastline_style.opacity)
+			$C.stroke()
+			if (coastline_style.pattern) {
+				if (!coastline_style.pattern.src) {
+					var value = coastline_style.pattern
+					coastline_style.pattern = new Image()
+					coastline_style.pattern.src = value
+				}
+				$C.fill_pattern(coastline_style.pattern, 'repeat')	
+			} else $C.fill_style(coastline_style.fillStyle)
+			$C.fill()
+		}
 
 		//Geohash lookup:
 		Geohash.objects.each(function(object) {
-			$l(object)
 			if (object.user_submitted) {
 				Cartagen.feature_queue.push(object)
 			}
@@ -386,6 +437,14 @@ var Cartagen = {
         })
 
 		this.label_queue = []
+
+		/**
+		 *@name Cartagen#cartagen:predraw
+		 *Fires just after labels are drawn
+		 *@event
+		 */
+		$('canvas').fire('cartagen:postdraw')
+		
     },
     /**
      * Adds the label to the list of labels to be drawn during post_draw
@@ -479,7 +538,6 @@ var Cartagen = {
 			// objects.push(n)
 			Cartagen.nodes.set(n.id,n)
 			if (node.display) {
-				$l(node)
 				n.display = true
 				n.radius = 50
 				Geohash.put(n.lat, n.lon, n, 1)

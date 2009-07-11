@@ -23,6 +23,11 @@ Object.extend(Geohash, {
 	 */
 	grid: false,
 	/**
+	 * Color of the grid of geohashes to be drawn on the map
+	 * @type String
+	 */
+	grid_color: 'black',
+	/**
 	 * Default length for a geohash, if none is specified or calculated. Note that
 	 * put_object() will automatically calculate an appropriate geohash for the feature,
 	 * so this only affects put().
@@ -47,7 +52,7 @@ Object.extend(Geohash, {
 	 */
 	init: function() {
 		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
-		$('canvas').observe('glop:postdraw', this.draw_bboxes.bindAsEventListener(this))
+		$('canvas').observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	/**
 	 * Recalculates which geohashes to request based on the viewport; formerly called every 
@@ -55,7 +60,7 @@ Object.extend(Geohash, {
 	 * @see Geohash.get_objects
 	 */
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
 		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
 			this.last_get_objects[3] = false
@@ -281,8 +286,8 @@ Object.extend(Geohash, {
 
 		var line_width = 1/Cartagen.zoom_level
 		// line_width < 1
-		$C.line_width(line_width)
-		$C.stroke_style('rgba(0,0,0,0.5)')
+		$C.line_width(Math.max(line_width,1))
+		$C.stroke_style(this.grid_color)
 
 		var width = Projection.lon_to_x(bbox[2]) - Projection.lon_to_x(bbox[0])
 		var height = Projection.lat_to_y(bbox[1]) - Projection.lat_to_y(bbox[3])
@@ -306,7 +311,7 @@ Object.extend(Geohash, {
 		//         height + padding - 3/Cartagen.zoom_level)
 		$C.draw_text('Lucida Grande',
 					 height,
-					 'rgba(0,0,0,0.5)',
+					 this.grid_color,
 					 3/Cartagen.zoom_level,
 					 -3/Cartagen.zoom_level,
 					 key)
