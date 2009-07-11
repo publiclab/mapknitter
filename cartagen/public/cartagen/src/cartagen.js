@@ -224,6 +224,7 @@ var Cartagen = {
 	setup: function(configs) {
 		// geolocate with IP if available
 		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
+		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
 		// wait for window load:
 		// Event.observe(window, 'load', this.initialize.bind(this,configs))
 		this.initialize(configs)
