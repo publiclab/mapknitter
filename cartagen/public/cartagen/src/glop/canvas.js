@@ -41,6 +41,17 @@ $C = {
 		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
 	},
 	/**
+	 * Draws an image at x,y
+	 * @param {Image}  image  Image to display: a JavaScript Image object. 
+	 * 							Can also accept a Canvas element, but check Canvas docs.
+	 * @param {Number} x coordinate at which to display image
+	 * @param {Number} y coordinate at which to display image
+	 */
+	draw_image: function(image, x,y) {
+		// this seems to often fail, so wrapped in a try:
+		try { $C.canvas.drawImage(image, x, y) } catch(e) {$l(e)}
+	},
+	/**
 	 * Alias of canvas.translate
 	 * @param {Number} x Number of pixels to tranlate in the x direction
 	 * @param {Number} y Number of pixels to tranlate in the y direction
@@ -122,7 +133,7 @@ $C = {
 	 */
 	line_width: function(lineWidth){
 		if (parseInt(lineWidth) == 0) 
-			$C.canvas.lineWidth = 0.0000000001
+			$C.canvas.lineWidth = 0.000000001
 		else 
 			$C.canvas.lineWidth = lineWidth
 	},

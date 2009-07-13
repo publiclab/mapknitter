@@ -208,6 +208,15 @@ var Way = Class.create(Feature,
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
+		if (this.image) {
+			if (!this.image.src) {
+				var src = this.image
+				this.image = new Image()
+				this.image.src = src
+			} else if (this.image.width > 0) {
+				$C.draw_image(this.image, this.x-this.image.width/2, this.y-this.image.height/2)	
+			}
+		}
 		// show bboxes for ways:
 		// $C.line_width(1)
 		// $C.stroke_style('red')

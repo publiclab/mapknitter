@@ -5258,7 +5258,7 @@ Object.extend(Geohash, {
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
-	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort'],
+	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'image'],
 
 	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
 		               'fontRotation'],
@@ -5610,6 +5610,15 @@ var Way = Class.create(Feature,
 		else $C.stroke()
 		if (this.closed_poly) $C.fill()
 
+		if (this.image) {
+			if (!this.image.src) {
+				var src = this.image
+				this.image = new Image()
+				this.image.src = src
+			} else if (this.image.width > 0) {
+				$C.draw_image(this.image, this.x-this.image.width/2, this.y-this.image.height/2)
+			}
+		}
 	},
 	apply_default_styles: function($super) {
 		$super()
@@ -6060,6 +6069,9 @@ $C = {
 	fill_pattern: function(image, repeat) {
 		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
 	},
+	draw_image: function(image, x,y) {
+		try { $C.canvas.drawImage(image, x, y) } catch(e) {$l(e)}
+	},
 	translate: function(x,y) {
 		$C.canvas.translate(x,y)
 	},
@@ -6094,7 +6106,7 @@ $C = {
 
 	line_width: function(lineWidth){
 		if (parseInt(lineWidth) == 0)
-			$C.canvas.lineWidth = 0.0000000001
+			$C.canvas.lineWidth = 0.000000001
 		else
 			$C.canvas.lineWidth = lineWidth
 	},
