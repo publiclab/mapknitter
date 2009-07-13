@@ -10,7 +10,25 @@
  * of the MIT License along with Cartagen.  If not, see
  * <http://www.opensource.org/licenses/mit-license.php>.
  */
+ 
+/* The following sections (until "BEGIN CARTAGEN") are not part of Cartagen. They are, however, 
+ * also available under an MIT license.
+ */
 
+/* **** BEGIN PROTOTYPE **** */
+
+//= require <../lib/prototype>
+
+/* **** END PROTOTYPE **** */
+
+/* **** BEGIN GEOHASH **** */
+
+//= require <../lib/geohash>
+
+/* **** END GEOHASH **** */
+
+/* **** BEGIN CARTAGEN **** */
+ 
 /**
  * Array of all objects that should be drawn.
  * @type Feature[]

@@ -1,6 +1,6 @@
 module Sprockets
   class Preprocessor
-    attr_reader :environment, :concatenation, :source_files, :asset_paths
+    attr_reader :environment, :concatenation, :source_files, :asset_paths, :lines
     
     def initialize(environment, options = {})
       @environment = environment
@@ -8,18 +8,21 @@ module Sprockets
       @source_files = []
       @asset_paths = []
       @options = options
+      @lines = [nil]
     end
     
     def require(source_file)
       return if source_files.include?(source_file)
       source_files << source_file
-      
       source_file.each_source_line do |source_line|
         if source_line.require?
           require_from_source_line(source_line)
         elsif source_line.provide?
           provide_from_source_line(source_line)
         else
+          unless source_line.comment? && strip_comments?
+            @lines << source_file.pathname.to_s
+          end
           record_source_line(source_line)
         end
       end
