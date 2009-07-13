@@ -1,10 +1,11 @@
 module Sprockets
   class SourceFile
-    attr_reader :environment, :pathname
+    attr_reader :environment, :pathname, :cur_line
 
     def initialize(environment, pathname)
       @environment = environment
       @pathname = pathname
+      @cur_line = 1
     end
 
     def source_lines
@@ -34,7 +35,11 @@ module Sprockets
     end
 
     def each_source_line(&block)
-      source_lines.each(&block)
+      source_lines.each do |line|
+        block.call line
+        @cur_line += 1
+      end
+        
     end
 
     def find(location, kind = :file)

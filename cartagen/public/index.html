@@ -9,8 +9,6 @@
 	<title>Cartagen</title>
 	<link rel="stylesheet" href="cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
-	<script src="cartagen/lib/prototype.js" type="text/javascript" charset="utf-8"></script>
-	<script src="cartagen/lib/geohash.js" type="text/javascript" charset="utf-8"></script>
 	<script src="cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
@@ -23,7 +21,7 @@
 				lat2: 41.9027,
 				lng1: 12.4902,
 				lng2: 12.5041,
-				// debug: true
+				//debug: true
 			})
 		})
 	</script>
@@ -37,7 +35,7 @@
 	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
 </div>
 
-<canvas id="canvas"></canvas>
+<canvas id="canvas" tabindex="5"></canvas>
 
 <div class="overlay" id="gss" style="display:none;">
 	<h3>Import GSS:</h3>
