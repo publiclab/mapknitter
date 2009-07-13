@@ -14,6 +14,8 @@ var Events = {
 		canvas.observe('mousedown', Events.mousedown)
 		canvas.observe('mouseup', Events.mouseup)
 		canvas.observe('dblclick', Events.doubleclick)
+		canvas.observe('keypress', function(e){$l('cavas#keypress')})
+		canvas.observe('focus', function(e){$l('canvas#focus')})
 		
 		// Observe scrollwheel:
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -35,7 +37,10 @@ var Events = {
 		Event.observe(window, 'resize', Events.resize);
 		
 		// we can override right-click:
-		// Event.observe(window, 'oncontextmenu', function() { return false })
+		Event.observe(canvas, 'contextmenu', function(e) {
+				e.preventDefault()
+				return false
+		})
 	},
 	/**
 	 * Triggered when moused is moved on the canvas
