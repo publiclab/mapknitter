@@ -28,6 +28,12 @@ task :docs do
 	puts `java -jar jsrun.jar app/main.js -t=templates/ext/ -d=../../../jsdox/ -a -r=2 ../../src/`
 end
 
+desc "Finds while file a source line is in"
+task :which, :line do |t, args|
+	lines = Marshal.load IO.read('.line_data.dat')
+	puts lines[args.line.to_i]
+end
+
 
 def build
 	puts 'building... '+DateTime.now.to_s
@@ -38,6 +44,11 @@ def build
 	  :load_path    => ['src'],
 	  :source_files => ['src/cartagen.js']
 	)
+	
+	lines = Marshal.dump secretary.preprocessor.lines
+	File.open '.line_data.dat', 'w' do |f|
+		f.print lines
+	end
 	
 	concatenation = secretary.concatenation
 	
