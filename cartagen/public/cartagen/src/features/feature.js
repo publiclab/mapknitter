@@ -49,9 +49,6 @@ var Feature = Class.create(
 		$C.opacity(this.opacity)
 		$C.line_width(this.lineWidth)
 
-		// let subclass do class-specific styling
-		this.style()
-
 		// draw the shape
 		this.shape()
 		$C.restore()
@@ -62,8 +59,7 @@ var Feature = Class.create(
 		}
 	},
 	/**
-	 * By default, does nothing, but can be overriden to perform styling operations after general
-	 * feature styles have been applied but before shape() is called.
+	 * By default, does nothing, but can be overriden to perform mouseDown and hover styling
 	 */
 	style: Prototype.emptyFunction,
 	/**

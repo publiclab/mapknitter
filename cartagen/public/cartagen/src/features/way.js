@@ -147,19 +147,20 @@ var Way = Class.create(Feature,
 		if (this.hover && this.closed_poly &&
 			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
 				if (!this.hover_styles_applied) {
+					Mouse.hovered_features.push(this)
 					this.apply_hover_styles()
 					this.hover_styles_applied = true
 				}
 				if (!Object.isUndefined(this.hover.action)) this.hover.action.bind(this)()
 		}
 		else if (this.hover_styles_applied) {
+			Mouse.hovered_features = Mouse.hovered_features.without(this)
 			this.remove_hover_styles()
 			this.hover_styles_applied = false
 		}
 
 		// mouseDown
-		if (this.mouseDown && Mouse.down == true && this.closed_poly &&
-			Geometry.is_point_in_poly(this.nodes,Map.pointer_x(),Map.pointer_y())) {
+		if (this.mouseDown && Mouse.down == true && this.closed_poly && this.hover_styles_applied) {
 				if (!this.click_styles_applied) {
 					this.apply_click_styles()
 					this.click_styles_applied = true
@@ -168,7 +169,24 @@ var Way = Class.create(Feature,
 		}
 		else if (this.click_styles_applied) {
 			this.remove_click_styles()
-			this.hover_click_applied = false
+			this.click_styles_applied = false
+		}
+		
+		if (this.menu) {
+			if (this.hover_styles_applied) {
+				this.menu.each(function(id) {
+					ContextMenu.cond_items[id].avail = true
+					ContextMenu.cond_items[id].context = this
+				}, this)
+			}
+			else {
+				this.menu.each(function(id) {
+					if (ContextMenu.cond_items[id].context == this) {
+						ContextMenu.cond_items[id].avail = false
+						ContextMenu.cond_items[id].context = window
+					}
+				}, this)
+			}
 		}
 	},
 	/**

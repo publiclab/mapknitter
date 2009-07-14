@@ -6,6 +6,7 @@ html {
 body {
 	margin:0;
 	padding:0;
+	overflow: hidden;
 }
 a {
 	color:#555;
@@ -145,3 +146,48 @@ canvas {
 	padding:20px;
 	position:absolute; top:10px; left:90px;
 }
+
+#control_contextmenu {  
+    background-color: white;  
+    min-width: 100px;  
+	filter:alpha(opacity=80);
+	-moz-opacity:0.8;
+	opacity: 0.8;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+} 
+ 
+#control_contextmenu ul {  
+    list-style:none;  
+    padding:0;  
+    margin:0;  
+    cursor:pointer;  
+} 
+ 
+#control_contextmenu ul li {  
+    text-align:left;  
+    padding:3px 10px 3px 5px;  
+    margin:0;  
+    cursor:pointer;  
+    font-family: lucida grande, lucida sans console, sans-serif;
+    text-decoration:none;  
+    color: black;  
+    font-size:12px; 
+} 
+ 
+#control_contextmenu ul li.selected, 
+#control_contextmenu ul li:hover {  
+    color:#fff;  
+    background-color:#2222ff;  
+    cursor:pointer;  
+}
+ 
+#control_contextmenu ul li.disabled, 
+#control_contextmenu ul li:hover.disabled {  
+    background-color: #eee;  
+    color:#999;  
+    cursor:pointer;  
+}  
