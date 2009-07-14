@@ -4248,6 +4248,7 @@ Element.addMethods();
 
 /* **** END PROTOTYPE **** */
 
+
 /* **** BEGIN GEOHASH **** */
 
 
@@ -4360,6 +4361,544 @@ function encodeGeoHash(latitude, longitude) {
 }
 
 /* **** END GEOHASH **** */
+
+
+/* **** BEGIN LIVEPIPE **** */
+
+/*
+ * @author Ryan Johnson <http://syntacticx.com/>
+ * @copyright 2008 PersonalGrid Corporation <http://personalgrid.com/>
+ * @package LivePipe UI
+ * @license MIT
+ * @url http://livepipe.net/core
+ * @require prototype.js
+ */
+
+if(typeof(Control) == 'undefined')
+    Control = {};
+
+var $proc = function(proc){
+    return typeof(proc) == 'function' ? proc : function(){return proc};
+};
+
+var $value = function(value){
+    return typeof(value) == 'function' ? value() : value;
+};
+
+Object.Event = {
+    extend: function(object){
+        object._objectEventSetup = function(event_name){
+            this._observers = this._observers || {};
+            this._observers[event_name] = this._observers[event_name] || [];
+        };
+        object.observe = function(event_name,observer){
+            if(typeof(event_name) == 'string' && typeof(observer) != 'undefined'){
+                this._objectEventSetup(event_name);
+                if(!this._observers[event_name].include(observer))
+                    this._observers[event_name].push(observer);
+            }else
+                for(var e in event_name)
+                    this.observe(e,event_name[e]);
+        };
+        object.stopObserving = function(event_name,observer){
+            this._objectEventSetup(event_name);
+            if(event_name && observer)
+                this._observers[event_name] = this._observers[event_name].without(observer);
+            else if(event_name)
+                this._observers[event_name] = [];
+            else
+                this._observers = {};
+        };
+        object.observeOnce = function(event_name,outer_observer){
+            var inner_observer = function(){
+                outer_observer.apply(this,arguments);
+                this.stopObserving(event_name,inner_observer);
+            }.bind(this);
+            this._objectEventSetup(event_name);
+            this._observers[event_name].push(inner_observer);
+        };
+        object.notify = function(event_name){
+            this._objectEventSetup(event_name);
+            var collected_return_values = [];
+            var args = $A(arguments).slice(1);
+            try{
+                for(var i = 0; i < this._observers[event_name].length; ++i)
+                    collected_return_values.push(this._observers[event_name][i].apply(this._observers[event_name][i],args) || null);
+            }catch(e){
+                if(e == $break)
+                    return false;
+                else
+                    throw e;
+            }
+            return collected_return_values;
+        };
+        if(object.prototype){
+            object.prototype._objectEventSetup = object._objectEventSetup;
+            object.prototype.observe = object.observe;
+            object.prototype.stopObserving = object.stopObserving;
+            object.prototype.observeOnce = object.observeOnce;
+            object.prototype.notify = function(event_name){
+                if(object.notify){
+                    var args = $A(arguments).slice(1);
+                    args.unshift(this);
+                    args.unshift(event_name);
+                    object.notify.apply(object,args);
+                }
+                this._objectEventSetup(event_name);
+                var args = $A(arguments).slice(1);
+                var collected_return_values = [];
+                try{
+                    if(this.options && this.options[event_name] && typeof(this.options[event_name]) == 'function')
+                        collected_return_values.push(this.options[event_name].apply(this,args) || null);
+                    for(var i = 0; i < this._observers[event_name].length; ++i)
+                        collected_return_values.push(this._observers[event_name][i].apply(this._observers[event_name][i],args) || null);
+                }catch(e){
+                    if(e == $break)
+                        return false;
+                    else
+                        throw e;
+                }
+                return collected_return_values;
+            };
+        }
+    }
+};
+
+/* Begin Core Extensions */
+
+Element.addMethods({
+    observeOnce: function(element,event_name,outer_callback){
+        var inner_callback = function(){
+            outer_callback.apply(this,arguments);
+            Element.stopObserving(element,event_name,inner_callback);
+        };
+        Element.observe(element,event_name,inner_callback);
+    }
+});
+
+Object.extend(Event, (function() {
+    var cache = Event.cache;
+
+    function getEventID(element) {
+        if (element._prototypeEventID) return element._prototypeEventID[0];
+        arguments.callee.id = arguments.callee.id || 1;
+        return element._prototypeEventID = [++arguments.callee.id];
+    }
+
+    function getDOMEventName(eventName) {
+        if (eventName && eventName.include(':')) return "dataavailable";
+        if(!Prototype.Browser.IE){
+            eventName = {
+                mouseenter: 'mouseover',
+                mouseleave: 'mouseout'
+            }[eventName] || eventName;
+        }
+        return eventName;
+    }
+
+    function getCacheForID(id) {
+        return cache[id] = cache[id] || { };
+    }
+
+    function getWrappersForEventName(id, eventName) {
+        var c = getCacheForID(id);
+        return c[eventName] = c[eventName] || [];
+    }
+
+    function createWrapper(element, eventName, handler) {
+        var id = getEventID(element);
+        var c = getWrappersForEventName(id, eventName);
+        if (c.pluck("handler").include(handler)) return false;
+
+        var wrapper = function(event) {
+            if (!Event || !Event.extend ||
+                (event.eventName && event.eventName != eventName))
+                    return false;
+
+            Event.extend(event);
+            handler.call(element, event);
+        };
+
+        if(!(Prototype.Browser.IE) && ['mouseenter','mouseleave'].include(eventName)){
+            wrapper = wrapper.wrap(function(proceed,event) {
+                var rel = event.relatedTarget;
+                var cur = event.currentTarget;
+                if(rel && rel.nodeType == Node.TEXT_NODE)
+                    rel = rel.parentNode;
+                if(rel && rel != cur && !rel.descendantOf(cur))
+                    return proceed(event);
+            });
+        }
+
+        wrapper.handler = handler;
+        c.push(wrapper);
+        return wrapper;
+    }
+
+    function findWrapper(id, eventName, handler) {
+        var c = getWrappersForEventName(id, eventName);
+        return c.find(function(wrapper) { return wrapper.handler == handler });
+    }
+
+    function destroyWrapper(id, eventName, handler) {
+        var c = getCacheForID(id);
+        if (!c[eventName]) return false;
+        c[eventName] = c[eventName].without(findWrapper(id, eventName, handler));
+    }
+
+    function destroyCache() {
+        for (var id in cache)
+            for (var eventName in cache[id])
+                cache[id][eventName] = null;
+    }
+
+    if (window.attachEvent) {
+        window.attachEvent("onunload", destroyCache);
+    }
+
+    return {
+        observe: function(element, eventName, handler) {
+            element = $(element);
+            var name = getDOMEventName(eventName);
+
+            var wrapper = createWrapper(element, eventName, handler);
+            if (!wrapper) return element;
+
+            if (element.addEventListener) {
+                element.addEventListener(name, wrapper, false);
+            } else {
+                element.attachEvent("on" + name, wrapper);
+            }
+
+            return element;
+        },
+
+        stopObserving: function(element, eventName, handler) {
+            element = $(element);
+            var id = getEventID(element), name = getDOMEventName(eventName);
+
+            if (!handler && eventName) {
+                getWrappersForEventName(id, eventName).each(function(wrapper) {
+                    element.stopObserving(eventName, wrapper.handler);
+                });
+                return element;
+
+            } else if (!eventName) {
+                Object.keys(getCacheForID(id)).each(function(eventName) {
+                    element.stopObserving(eventName);
+                });
+                return element;
+            }
+
+            var wrapper = findWrapper(id, eventName, handler);
+            if (!wrapper) return element;
+
+            if (element.removeEventListener) {
+                element.removeEventListener(name, wrapper, false);
+            } else {
+                element.detachEvent("on" + name, wrapper);
+            }
+
+            destroyWrapper(id, eventName, handler);
+
+            return element;
+        },
+
+        fire: function(element, eventName, memo) {
+            element = $(element);
+            if (element == document && document.createEvent && !element.dispatchEvent)
+                element = document.documentElement;
+
+            var event;
+            if (document.createEvent) {
+                event = document.createEvent("HTMLEvents");
+                event.initEvent("dataavailable", true, true);
+            } else {
+                event = document.createEventObject();
+                event.eventType = "ondataavailable";
+            }
+
+            event.eventName = eventName;
+            event.memo = memo || { };
+
+            if (document.createEvent) {
+                element.dispatchEvent(event);
+            } else {
+                element.fireEvent(event.eventType, event);
+            }
+
+            return Event.extend(event);
+        }
+    };
+})());
+
+Object.extend(Event, Event.Methods);
+
+Element.addMethods({
+    fire:            Event.fire,
+    observe:        Event.observe,
+    stopObserving:    Event.stopObserving
+});
+
+Object.extend(document, {
+    fire:            Element.Methods.fire.methodize(),
+    observe:        Element.Methods.observe.methodize(),
+    stopObserving:    Element.Methods.stopObserving.methodize()
+});
+
+(function(){
+    function wheel(event){
+        var delta;
+        if(event.wheelDelta) // IE & Opera
+            delta = event.wheelDelta / 120;
+        else if (event.detail) // W3C
+            delta =- event.detail / 3;
+        if(!delta)
+            return;
+        var custom_event = Event.element(event).fire('mouse:wheel',{
+            delta: delta
+        });
+        if(custom_event.stopped){
+            Event.stop(event);
+            return false;
+        }
+    }
+    document.observe('mousewheel',wheel);
+    document.observe('DOMMouseScroll',wheel);
+})();
+
+/* End Core Extensions */
+
+var IframeShim = Class.create({
+    initialize: function() {
+        this.element = new Element('iframe',{
+            style: 'position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);display:none',
+            src: 'javascript:void(0);',
+            frameborder: 0
+        });
+        $(document.body).insert(this.element);
+    },
+    hide: function() {
+        this.element.hide();
+        return this;
+    },
+    show: function() {
+        this.element.show();
+        return this;
+    },
+    positionUnder: function(element) {
+        var element = $(element);
+        var offset = element.cumulativeOffset();
+        var dimensions = element.getDimensions();
+        this.element.setStyle({
+            left: offset[0] + 'px',
+            top: offset[1] + 'px',
+            width: dimensions.width + 'px',
+            height: dimensions.height + 'px',
+            zIndex: element.getStyle('zIndex') - 1
+        }).show();
+        return this;
+    },
+    setBounds: function(bounds) {
+        for(prop in bounds)
+            bounds[prop] += 'px';
+        this.element.setStyle(bounds);
+        return this;
+    },
+    destroy: function() {
+        if(this.element)
+            this.element.remove();
+        return this;
+    }
+});
+/*
+ * @author Ryan Johnson <http://syntacticx.com/>
+ * @copyright 2008 PersonalGrid Corporation <http://personalgrid.com/>
+ * @package LivePipe UI
+ * @license MIT
+ * @url http://livepipe.net/control/contextmenu
+ * @require prototype.js, livepipe.js
+ */
+
+/*global window, document, Prototype, Class, Event, $, $A, $R, Control, $value */
+
+if(typeof(Prototype) == "undefined") {
+    throw "Control.ContextMenu requires Prototype to be loaded."; }
+if(typeof(Object.Event) == "undefined") {
+    throw "Control.ContextMenu requires Object.Event to be loaded."; }
+
+Control.ContextMenu = Class.create({
+    initialize: function(container,options){
+        Control.ContextMenu.load();
+        this.options = Object.extend({
+            leftClick: false,
+            disableOnShiftKey: true,
+            disableOnAltKey: true,
+            selectedClassName: 'selected',
+            activatedClassName: 'activated',
+            animation: true,
+            animationCycles: 2,
+            animationLength: 300,
+            delayCallback: true
+        },options || {});
+        this.activated = false;
+        this.items = this.options.items || [];
+        this.container = $(container);
+        this.container.observe(this.options.leftClick ? 'click' : (Prototype.Browser.Opera ? 'click' : 'contextmenu'),function(event){
+            if(!Control.ContextMenu.enabled || Prototype.Browser.Opera && !event.ctrlKey) {
+                return; }
+            this.open(event);
+        }.bindAsEventListener(this));
+    },
+    open: function(event){
+        if(Control.ContextMenu.current && !Control.ContextMenu.current.close()) {
+            return; }
+        if(this.notify('beforeOpen',event) === false) {
+            return false; }
+        this.buildMenu();
+        if(this.items.length === 0){
+            this.close(event);
+            return false;
+        }
+        this.clicked = Event.element(event);
+        Control.ContextMenu.current = this;
+        Control.ContextMenu.positionContainer(event);
+        Control.ContextMenu.container.show();
+        if(this.notify('afterOpen',event) === false) {
+            return false; }
+        event.stop();
+        return true;
+    },
+    close: function(event){
+        if(event) {
+            event.stop(); }
+        if(this.notify('beforeClose') === false) {
+            return false; }
+        Control.ContextMenu.current = false;
+        this.activated = false;
+        Control.ContextMenu.container.removeClassName(this.options.activatedClassName);
+        Control.ContextMenu.container.select('li').invoke('stopObserving');
+        Control.ContextMenu.container.hide();
+        Control.ContextMenu.container.update('');
+        if(this.notify('afterClose') === false) {
+            return false; }
+        return true;
+    },
+    buildMenu: function(){
+        var list = document.createElement('ul');
+        Control.ContextMenu.container.appendChild(list);
+        this.items.each(function(item){
+            if(!(!item.condition || item.condition && item.condition() !== false)) {
+                return; }
+            var item_container = $(document.createElement('li'));
+            item_container.update($value(item.label));
+            list.appendChild(item_container);
+            item_container[$value(item.enabled) ? 'removeClassName' : 'addClassName']('disabled');
+            item_container.observe('mousedown',function(event,item){
+                if(!$value(item.enabled)) {
+                    return event.stop(); }
+                this.activated = $value(item.label);
+            }.bindAsEventListener(this,item));
+            item_container.observe('click',this.selectMenuItem.bindAsEventListener(this,item,item_container));
+            item_container.observe('contextmenu',this.selectMenuItem.bindAsEventListener(this,item,item_container));
+        }.bind(this));
+    },
+    addItem: function(params){
+        if (!('enabled' in params)) { params.enabled = true; }
+        this.items.push(params);
+        return this;
+    },
+    destroy: function(){
+        this.container.stopObserving(Prototype.Browser.Opera || this.options.leftClick ? 'click' : 'contextmenu');
+        this.items = [];
+    },
+    selectMenuItem: function(event,item,item_container){
+        if(!$value(item.enabled)) {
+            return event.stop(); }
+        if(!this.activated || this.activated == $value(item.label)){
+            if(this.options.animation){
+                Control.ContextMenu.container.addClassName(this.options.activatedClassName);
+                $A($R(0,this.options.animationCycles * 2)).each(function(i){
+                    window.setTimeout(function(){
+                        item_container.toggleClassName(this.options.selectedClassName);
+                    }.bind(this),i * parseInt(this.options.animationLength / (this.options.animationCycles * 2), 10));
+                }.bind(this));
+                window.setTimeout(function(){
+                    if(this.close() && this.options.delayCallback) {
+                        item.callback(this.clicked); }
+                }.bind(this),this.options.animationLength);
+                if(!this.options.delayCallback) {
+                    item.callback(this.clicked); }
+            }else if(this.close()) {
+                item.callback(this.clicked); }
+        }
+        event.stop();
+        return false;
+    }
+});
+Object.extend(Control.ContextMenu,{
+    loaded: false,
+    capture_all: false,
+    menus: [],
+    current: false,
+    enabled: false,
+    offset: 4,
+    load: function(capture_all){
+        if(Control.ContextMenu.loaded) {
+            return; }
+        Control.ContextMenu.loaded = true;
+        if(typeof(capture_all) == 'undefined') {
+            capture_all = false; }
+        Control.ContextMenu.capture_all = capture_all;
+        Control.ContextMenu.container = $(document.createElement('div'));
+        Control.ContextMenu.container.id = 'control_contextmenu';
+        Control.ContextMenu.container.style.position = 'absolute';
+        Control.ContextMenu.container.style.zIndex = 99999;
+        Control.ContextMenu.container.hide();
+        document.body.appendChild(Control.ContextMenu.container);
+        Control.ContextMenu.enable();
+    },
+    enable: function(){
+        Control.ContextMenu.enabled = true;
+        Event.observe(document.body,'click',Control.ContextMenu.onClick);
+        if(Control.ContextMenu.capture_all) {
+            Event.observe(document.body,'contextmenu',Control.ContextMenu.onContextMenu); }
+    },
+    disable: function(){
+        Event.stopObserving(document.body,'click',Control.ContextMenu.onClick);
+        if(Control.ContextMenu.capture_all) {
+            Event.stopObserving(document.body,'contextmenu',Control.ContextMenu.onContextMenu);    }
+    },
+    onContextMenu: function(event){
+        event.stop();
+        return false;
+    },
+    onClick: function(){
+        if(Control.ContextMenu.current) {
+            Control.ContextMenu.current.close(); }
+    },
+    positionContainer: function(event){
+        var dimensions = Control.ContextMenu.container.getDimensions();
+        var top = Event.pointerY(event);
+        var left = Event.pointerX(event);
+        var bottom = dimensions.height + top;
+        var right = dimensions.width + left;
+        var viewport_dimensions = document.viewport.getDimensions();
+        var viewport_scroll_offsets = document.viewport.getScrollOffsets();
+        if(bottom > viewport_dimensions.height + viewport_scroll_offsets.top) {
+            top -= bottom - ((viewport_dimensions.height  + viewport_scroll_offsets.top) - Control.ContextMenu.offset); }
+        if(right > viewport_dimensions.width + viewport_scroll_offsets.left) {
+            left -= right - ((viewport_dimensions.width + viewport_scroll_offsets.left) - Control.ContextMenu.offset); }
+        Control.ContextMenu.container.setStyle({
+            top: top + 'px',
+            left: left + 'px'
+        });
+    }
+});
+Object.Event.extend(Control.ContextMenu);
+
+/* **** END LIVEPIPE **** */
+
 
 /* **** BEGIN CARTAGEN **** */
 
@@ -5003,6 +5542,7 @@ Object.extend(Geohash, {
 	_dirs: ['top','bottom','left','right'],
 	hash: new Hash(),
 	objects: [],
+	object_hash: new Hash(),
 	grid: false,
 	grid_color: 'black',
 	default_length: 6, // default length of geohash
@@ -5017,7 +5557,6 @@ Object.extend(Geohash, {
 		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
 			this.get_objects()
 			this.last_get_objects[3] = false
-			$l('re-getting-objects')
 			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
@@ -5078,6 +5617,17 @@ Object.extend(Geohash, {
 				this.get_keys_upward(k)
 			}
 		}
+	},
+	get_current_features_upward: function(key) {
+		keys = []
+		for (var i=this.limit_bottom; i > 0; i--) {
+			keys.push(key.truncate(i, ''))
+		}
+		features =  []
+		keys.each(function(k) {
+			if (this.object_hash.get(k)) features = this.object_hash.get(k).concat(features)
+		}, this)
+		return features
 	},
 	get_all_neighbor_keys: function(key) {
 		var top = calculateAdjacent(key, 'top')
@@ -5227,12 +5777,13 @@ Object.extend(Geohash, {
 
 
 
-
+		var features;
 		this.keys.keys().each(function(key) {
-				this.objects = (this.get_from_key(key)).concat(this.objects)
+				features = this.get_from_key(key)
+				this.object_hash.set(key, features)
+				this.objects = features.concat(this.objects)
 		}, this)
 
-		$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {
@@ -5258,7 +5809,7 @@ Object.extend(Geohash, {
 document.observe('cartagen:init', Geohash.init.bindAsEventListener(Geohash))
 var Style = {
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
-	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'image'],
+	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'menu', 'image'],
 
 	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
 		               'fontRotation'],
@@ -5293,15 +5844,17 @@ var Style = {
 			var val = selector[property]
 
 			if (Style.styles[feature.name] && Style.styles[feature.name][property])
-				val = Style.styles[feature.name][property]
+				val = this.extend_value(val, Style.styles[feature.name][property])
 
 			feature.tags.each(function(tag) {
-				if (Style.styles[tag.key] && Style.styles[tag.key][property])
-					val = Style.styles[tag.key][property]
+				if (Style.styles[tag.key] && Style.styles[tag.key][property]) {
+					val = this.extend_value(val, Style.styles[tag.key][property])
+				}
 
-				if (Style.styles[tag.value] && Style.styles[tag.value][property])
-					val = Style.styles[tag.value][property]
-			})
+				if (Style.styles[tag.value] && Style.styles[tag.value][property]) {
+					val = this.extend_value(val, Style.styles[tag.value][property])
+				}
+			}, this)
 
 			if (val) {
 				var f = feature
@@ -5318,6 +5871,13 @@ var Style = {
 			}
 		}, this)
 	},
+	extend_value: function(old_val, new_val) {
+		if (old_val instanceof Array && new_val instanceof Array) {
+			return old_val.concat(new_val)
+		}
+
+		return new_val
+	},
 	create_refresher: function(feature, property, generator, interval) {
 		if(!feature.style_generators) feature.style_generators = {}
 		if(!feature.style_generators.executers) feature.style_generators.executers = {}
@@ -5333,6 +5893,7 @@ var Style = {
 		feature[property] = Object.value(feature.style_generators[property], feature)
 	},
 	load_styles: function(stylesheet_url) {
+		$l('loading')
 		if (stylesheet_url.slice(0,4) == "http") {
 			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
@@ -5347,13 +5908,19 @@ var Style = {
 	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
+
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
 					style.value[pair.key].gss_update_interval = pair.value
 				})
 			}
+			if (style.value.menu) {
+				$H(style.value.menu).each(function(pair) {
+					style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
+				})
+				style.value.menu = Object.values(style.value.menu)
+			}
 		})
-
 		Style.styles = styles
 
 		if ($('gss_textarea')) {
@@ -5395,8 +5962,6 @@ var Feature = Class.create(
 		$C.stroke_style(this.strokeStyle)
 		$C.opacity(this.opacity)
 		$C.line_width(this.lineWidth)
-
-		this.style()
 
 		this.shape()
 		$C.restore()
@@ -5557,18 +6122,19 @@ var Way = Class.create(Feature,
 		if (this.hover && this.closed_poly &&
 			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
 				if (!this.hover_styles_applied) {
+					Mouse.hovered_features.push(this)
 					this.apply_hover_styles()
 					this.hover_styles_applied = true
 				}
 				if (!Object.isUndefined(this.hover.action)) this.hover.action.bind(this)()
 		}
 		else if (this.hover_styles_applied) {
+			Mouse.hovered_features = Mouse.hovered_features.without(this)
 			this.remove_hover_styles()
 			this.hover_styles_applied = false
 		}
 
-		if (this.mouseDown && Mouse.down == true && this.closed_poly &&
-			Geometry.is_point_in_poly(this.nodes,Map.pointer_x(),Map.pointer_y())) {
+		if (this.mouseDown && Mouse.down == true && this.closed_poly && this.hover_styles_applied) {
 				if (!this.click_styles_applied) {
 					this.apply_click_styles()
 					this.click_styles_applied = true
@@ -5577,7 +6143,24 @@ var Way = Class.create(Feature,
 		}
 		else if (this.click_styles_applied) {
 			this.remove_click_styles()
-			this.hover_click_applied = false
+			this.click_styles_applied = false
+		}
+
+		if (this.menu) {
+			if (this.hover_styles_applied) {
+				this.menu.each(function(id) {
+					ContextMenu.cond_items[id].avail = true
+					ContextMenu.cond_items[id].context = this
+				}, this)
+			}
+			else {
+				this.menu.each(function(id) {
+					if (ContextMenu.cond_items[id].context == this) {
+						ContextMenu.cond_items[id].avail = false
+						ContextMenu.cond_items[id].context = window
+					}
+				}, this)
+			}
 		}
 	},
 	shape: function() {
@@ -5863,6 +6446,8 @@ var Events = {
 		canvas.observe('dblclick', Events.doubleclick)
 		canvas.observe('keypress', function(e){$l('cavas#keypress')})
 		canvas.observe('focus', function(e){$l('canvas#focus')})
+		canvas.observe('blur', function(e){$l('canvas#blur')})
+
 
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
 		window.onmousewheel = document.onmousewheel = Events.wheel
@@ -5878,19 +6463,23 @@ var Events = {
 		canvas.ongestureend = Events.ongestureend
 
 		Event.observe(window, 'resize', Events.resize);
-
-		Event.observe(canvas, 'contextmenu', function(e) {
-				e.preventDefault()
-				return false
-		})
+	},
+	enable: function() {
+		Events.init()
+	},
+	disable: function() {
 	},
 	mousemove: function(event) {
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
+		var lon = Projection.x_to_lon(-1*Map.pointer_x())
+		var lat = Projection.y_to_lat(Map.pointer_y())
+		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
+		if (features) features.concat(Mouse.hovered_features).invoke('style')
 		Glop.draw()
 	},
 	mousedown: function(event) {
-		$l('lon: ' + Projection.x_to_lon(Mouse.x) + ', lat: ' + Projection.y_to_lat(Mouse.y))
+		if (!event.isLeftClick()) return
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
@@ -5899,8 +6488,10 @@ var Events = {
         Map.y_old = Map.y
         Map.rotate_old = Map.rotate
 		Mouse.dragging = true
+		Events.mousemove(event)
 	},
-	mouseup: function() {
+	mouseup: function(event) {
+		if (!event.isLeftClick()) return
         Mouse.up = true
         Mouse.down = false
         Mouse.release_frame = Glop.frame
@@ -6393,7 +6984,8 @@ var Mouse = {
 	release_frame: null,
 	dragging: false,
 	drag_x: null,
-	drag_y: null
+	drag_y: null,
+	hovered_features: []
 }
 var User = {
 	color: Glop.random_color(),
@@ -6686,6 +7278,46 @@ var User = {
 }
 
 document.observe('cartagen:postinit', User.init.bindAsEventListener(User))
+var ContextMenu = {
+	cond_items: {},
+	init: function() {
+		this.menu = new Control.ContextMenu('canvas')
+		this.menu.addItem({
+				label: 'Edit GSS',
+				callback: Cartagen.show_gss_editor
+		})
+		this.menu.addItem({
+				label: 'Download Image',
+				callback: Cartagen.redirect_to_image
+		})
+		this.menu.addItem({
+				label: 'Download Data',
+				callback: Interface.download_bbox
+		})
+	},
+	add_cond_item: function(name, callback) {
+		var id = Math.round(Math.random() * 999999999)
+
+
+		callback.avail = false
+		callback.context = window
+		ContextMenu.cond_items[id] = callback
+
+		this.menu.addItem({
+				label: name,
+				callback: function() {
+					(ContextMenu.cond_items[id].bind(ContextMenu.cond_items[id].context))()
+				},
+				condition: function() {
+					return ContextMenu.cond_items[id].avail
+				}
+		})
+
+		return id
+	}
+}
+
+document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 
 var Interface = {
 	download_bbox: function() {

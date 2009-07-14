@@ -3,7 +3,7 @@
  */
 var Style = {
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
-	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'image'],
+	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'menu', 'image'],
 
 	label_properties: ['text', 'fontColor', 'fontSize', 'fontScale', 'fontBackground',
 		               'fontRotation'],
@@ -51,15 +51,17 @@ var Style = {
 			var val = selector[property]
 
 			if (Style.styles[feature.name] && Style.styles[feature.name][property])
-				val = Style.styles[feature.name][property]
+				val = this.extend_value(val, Style.styles[feature.name][property])
 
 			feature.tags.each(function(tag) {
-				if (Style.styles[tag.key] && Style.styles[tag.key][property])
-					val = Style.styles[tag.key][property]
+				if (Style.styles[tag.key] && Style.styles[tag.key][property]) {
+					val = this.extend_value(val, Style.styles[tag.key][property])
+				}
 
-				if (Style.styles[tag.value] && Style.styles[tag.value][property])
-					val = Style.styles[tag.value][property]
-			})
+				if (Style.styles[tag.value] && Style.styles[tag.value][property]) {
+					val = this.extend_value(val, Style.styles[tag.value][property])
+				}
+			}, this)
 
 			if (val) {
 				var f = feature
@@ -75,6 +77,17 @@ var Style = {
 				}
 			}
 		}, this)
+	},
+	/**
+	 * If old_val and new_val are arrays, returns the two arrays, merged. Else, returns
+	 * new_val.
+	 */
+	extend_value: function(old_val, new_val) {
+		if (old_val instanceof Array && new_val instanceof Array) {
+			return old_val.concat(new_val)
+		}
+		
+		return new_val
 	},
 	/**
 	 * Creates a periodical executer that updates a property
@@ -107,6 +120,7 @@ var Style = {
 	 * @param {String} stylesheet_url URL of stylesheet
 	 */
 	load_styles: function(stylesheet_url) {
+		$l('loading')
 		if (stylesheet_url.slice(0,4) == "http") {
 			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
@@ -121,13 +135,19 @@ var Style = {
 	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
+
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
 					style.value[pair.key].gss_update_interval = pair.value
 				})
 			}
+			if (style.value.menu) {
+				$H(style.value.menu).each(function(pair) {
+					style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
+				})
+				style.value.menu = Object.values(style.value.menu)
+			}
 		})
-
 		Style.styles = styles
 
 		if ($('gss_textarea')) {

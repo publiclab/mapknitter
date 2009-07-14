@@ -21,11 +21,21 @@
 
 /* **** END PROTOTYPE **** */
 
+
 /* **** BEGIN GEOHASH **** */
 
 //= require <../lib/geohash>
 
 /* **** END GEOHASH **** */
+
+
+/* **** BEGIN LIVEPIPE **** */
+
+//= require <../lib/context-menus/livepipe>
+//= require <../lib/context-menus/contextmenu>
+
+/* **** END LIVEPIPE **** */
+
 
 /* **** BEGIN CARTAGEN **** */
  
