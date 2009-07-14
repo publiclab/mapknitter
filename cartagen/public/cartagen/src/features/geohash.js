@@ -18,6 +18,11 @@ Object.extend(Geohash, {
 	 */
 	objects: [],
 	/**
+	 * A subset of Geohash.hash that contains only features that should be drawn for
+	 * the current frame.
+	 */
+	object_hash: new Hash(),
+	/**
 	 * If true, a grid of geohashes is drawn on the map
 	 * @type Boolean
 	 */
@@ -64,7 +69,7 @@ Object.extend(Geohash, {
 		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
 			this.last_get_objects[3] = false
-			$l('re-getting-objects')
+			//$l('re-getting-objects')
 			Cartagen.last_loaded_geohash_frame = Glop.frame
 		}
 	},
@@ -187,6 +192,23 @@ Object.extend(Geohash, {
 			}
 		}
 	},
+	/**
+	 * Gets all features that should be drawn in the current frame that are in the specified
+	 * key and all shorter keys.
+	 * @param {String} key Geohash to look in
+	 * @type Feature[]
+	 */
+	get_current_features_upward: function(key) {
+		keys = []
+		for (var i=this.limit_bottom; i > 0; i--) {
+			keys.push(key.truncate(i, ''))
+		}
+		features =  []
+		keys.each(function(k) {
+			if (this.object_hash.get(k)) features = this.object_hash.get(k).concat(features)
+		}, this)
+		return features
+	}, 
 	/**
 	 * Gets the eights neighboring keys of the specified key, including diagonal neighbors.
 	 * @param {String} key Central geohash
@@ -419,12 +441,14 @@ Object.extend(Geohash, {
 //				}
 //			}
 //		}
-
+		var features;
 		this.keys.keys().each(function(key) {
-				this.objects = (this.get_from_key(key)).concat(this.objects)
+				features = this.get_from_key(key)
+				this.object_hash.set(key, features)
+				this.objects = features.concat(this.objects)
 		}, this)
 
-		$l(this.objects.length)
+		//$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {

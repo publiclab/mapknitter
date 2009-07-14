@@ -21,7 +21,9 @@ module Sprockets
           provide_from_source_line(source_line)
         else
           unless source_line.comment? && strip_comments?
-            @lines << source_file.pathname.to_s + ':' + source_file.cur_line.to_s
+            name = source_file.pathname.to_s
+            name = name[name.rindex('/cartagen/')+10..-1]
+            @lines << name + ':' + source_file.cur_line.to_s
           end
           record_source_line(source_line)
         end

@@ -56,5 +56,6 @@ var Mouse = {
 	 * Length of the drag in the Y-direction
 	 * @type Number
 	 */
-	drag_y: null
+	drag_y: null,
+	hovered_features: []
 }

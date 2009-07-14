@@ -1,6 +1,7 @@
 //= require "keyboard"
 //= require "mouse"
 //= require "user"
+//= require "context_menu"
 
 /**
  * @namespace Misc. UI methods that do not related to user-submitted data

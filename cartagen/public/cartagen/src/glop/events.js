@@ -16,6 +16,8 @@ var Events = {
 		canvas.observe('dblclick', Events.doubleclick)
 		canvas.observe('keypress', function(e){$l('cavas#keypress')})
 		canvas.observe('focus', function(e){$l('canvas#focus')})
+		canvas.observe('blur', function(e){$l('canvas#blur')})
+		
 		
 		// Observe scrollwheel:
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -35,12 +37,11 @@ var Events = {
 		
 		// window events:
 		Event.observe(window, 'resize', Events.resize);
-		
-		// we can override right-click:
-		Event.observe(canvas, 'contextmenu', function(e) {
-				e.preventDefault()
-				return false
-		})
+	},
+	enable: function() {
+		Events.init()
+	},
+	disable: function() {
 	},
 	/**
 	 * Triggered when moused is moved on the canvas
@@ -49,6 +50,10 @@ var Events = {
 	mousemove: function(event) { 
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
+		var lon = Projection.x_to_lon(-1*Map.pointer_x())
+		var lat = Projection.y_to_lat(Map.pointer_y())
+		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
+		if (features) features.concat(Mouse.hovered_features).invoke('style')
 		Glop.draw()
 	},
 	/**
@@ -56,7 +61,7 @@ var Events = {
 	 * @param {Event} event
 	 */
 	mousedown: function(event) {
-		$l('lon: ' + Projection.x_to_lon(Mouse.x) + ', lat: ' + Projection.y_to_lat(Mouse.y))
+		if (!event.isLeftClick()) return
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
@@ -65,11 +70,13 @@ var Events = {
         Map.y_old = Map.y
         Map.rotate_old = Map.rotate
 		Mouse.dragging = true
+		Events.mousemove(event)
 	},
 	/**
 	 * Triggered when mouse is released on canvas
 	 */
-	mouseup: function() {
+	mouseup: function(event) {
+		if (!event.isLeftClick()) return
         Mouse.up = true
         Mouse.down = false
         Mouse.release_frame = Glop.frame
