@@ -38,6 +38,8 @@ var Way = Class.create(Feature,
 		 */
 		this.closed_poly = false
 		
+		this.is_hovered = false
+		
 		Object.extend(this, data)
 		
 		if (this.nodes.length > 1 && this.nodes.first().x == this.nodes.last().x && 
@@ -143,8 +145,11 @@ var Way = Class.create(Feature,
 	 * Applies hover and mouseDown styles
 	 */
 	style: function() {
+		if (this.hover || this.menu) {
+			this.is_hovered = this.is_inside(Map.pointer_x(), Map.pointer_y())
+		}
 		// hover
-		if (this.hover && this.is_inside(Map.pointer_x(), Map.pointer_y())) {
+		if (this.hover && this.is_hovered) {
 				if (!this.hover_styles_applied) {
 					Mouse.hovered_features.push(this)
 					this.apply_hover_styles()
@@ -159,7 +164,7 @@ var Way = Class.create(Feature,
 		}
 
 		// mouseDown
-		if (this.mouseDown && Mouse.down == true && this.hover_styles_applied) {
+		if (this.mouseDown && Mouse.down == true && this.is_hovered) {
 				if (!this.click_styles_applied) {
 					this.apply_click_styles()
 					this.click_styles_applied = true
@@ -172,7 +177,7 @@ var Way = Class.create(Feature,
 		}
 		
 		if (this.menu) {
-			if (this.hover_styles_applied) {
+			if (this.is_hovered) {
 				this.menu.each(function(id) {
 					ContextMenu.cond_items[id].avail = true
 					ContextMenu.cond_items[id].context = this
