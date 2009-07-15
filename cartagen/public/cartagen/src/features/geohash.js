@@ -447,14 +447,14 @@ Object.extend(Geohash, {
 				this.object_hash.set(key, features)
 				this.objects = features.concat(this.objects)
 		}, this)
+		
+		this.sort_objects()
 
 		//$l(this.objects.length)
 		return this.objects
 	},
 	sort_objects: function() {
-		this.keys.values().each(function(value) { 
-			if (value.sort) value.sort(Cartagen.sort_by_area())
-		})
+		this.objects.sort(Cartagen.sort_by_area)
 	},
 	/**
 	 * Calculates the appropritate density of features based on the hardware' power (estimated by screen

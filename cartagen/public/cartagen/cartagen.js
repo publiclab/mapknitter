@@ -5226,8 +5226,6 @@ var Cartagen = {
 		}
 
 
-		Geohash.sort_objects()
-		Geohash
 	},
 	plot_array: [],
 	get_current_plot: function(force) {
@@ -5784,12 +5782,12 @@ Object.extend(Geohash, {
 				this.objects = features.concat(this.objects)
 		}, this)
 
+		this.sort_objects()
+
 		return this.objects
 	},
 	sort_objects: function() {
-		this.keys.values().each(function(value) {
-			if (value.sort) value.sort(Cartagen.sort_by_area())
-		})
+		this.objects.sort(Cartagen.sort_by_area)
 	},
 	feature_density: function() {
 		return 2 * Viewport.power()
