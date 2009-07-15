@@ -2,18 +2,6 @@ var ContextMenu = {
 	cond_items: {},
 	init: function() {
 		this.menu = new Control.ContextMenu('canvas')
-		this.menu.addItem({
-				label: 'Edit GSS',
-				callback: Cartagen.show_gss_editor
-		})
-		this.menu.addItem({
-				label: 'Download Image',
-				callback: Cartagen.redirect_to_image
-		})
-		this.menu.addItem({
-				label: 'Download Data',
-				callback: Interface.download_bbox
-		})
 	},
 	add_cond_item: function(name, callback) {
 		var id = Math.round(Math.random() * 999999999)
@@ -37,6 +25,12 @@ var ContextMenu = {
 		})
 		
 		return id
+	},
+	add_static_item: function(name, _callback) {
+		this.menu.addItem({
+			label: name,
+			callback: _callback,
+		})
 	}
 }
 

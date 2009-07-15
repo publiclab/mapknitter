@@ -5429,6 +5429,52 @@ var Geometry = {
 	        && (c = !c);
 	    return c;
 	},
+
+	 point_line_distance: function(x, y, nodes){
+		 var seg
+		 var stop = nodes.length - 1
+		 min = Number.MAX_VALUE
+		 for(var i = 0; i < stop; ++i) {
+			 seg = {
+				 x1: nodes[i].x,
+				 y1: nodes[i].y,
+				 x2: nodes[i+1].x,
+				 y2: nodes[i+1].y
+			 }
+
+			 result = Geometry.distance_to_segment(x, y, seg.x1, seg.y1, seg.x2, seg.y2)
+
+			 if(result < min) {
+				 min = result
+				 if(min === 0) {
+					 break
+				 }
+			 } else {
+				 if(seg.x2 > x && ((y > seg.y1 && y < seg.y2) || (y < seg.y1 && y > seg.y2))) {
+					 break
+				 }
+			 }
+		 }
+		 return min
+	},
+	distance_to_segment: function(x0, y0, x1, y1, x2, y2) {
+		var dx = x2 - x1
+		var dy = y2 - y1
+		var along = ((dx * (x0 - x1)) + (dy * (y0 - y1))) / (Math.pow(dx, 2) + Math.pow(dy, 2))
+		var x, y
+		if(along <= 0.0) {
+			x = x1
+			y = y1
+		} else if(along >= 1.0) {
+			x = x2
+			y = y2
+		} else {
+			x = x1 + along * dx
+			y = y1 + along * dy
+		}
+		return Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2))
+	},
+
 	poly_area: function(nodes, signed) {
 		var area = 0
 		nodes.each(function(node,index) {
@@ -5906,17 +5952,23 @@ var Style = {
 	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
-
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
 					style.value[pair.key].gss_update_interval = pair.value
 				})
 			}
 			if (style.value.menu) {
-				$H(style.value.menu).each(function(pair) {
-					style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
-				})
-				style.value.menu = Object.values(style.value.menu)
+				if (style.key == "body") {
+					$H(style.value.menu).each(function(pair) {
+						ContextMenu.add_static_item(pair.key, pair.value)
+					})
+				}
+				else {
+					$H(style.value.menu).each(function(pair) {
+						style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
+					})
+					style.value.menu = Object.values(style.value.menu)
+				}
 			}
 		})
 		Style.styles = styles
@@ -6117,8 +6169,7 @@ var Way = Class.create(Feature,
 		this.age += 1;
 	},
 	style: function() {
-		if (this.hover && this.closed_poly &&
-			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
+		if (this.hover && this.is_inside(Map.pointer_x(), Map.pointer_y())) {
 				if (!this.hover_styles_applied) {
 					Mouse.hovered_features.push(this)
 					this.apply_hover_styles()
@@ -6132,7 +6183,7 @@ var Way = Class.create(Feature,
 			this.hover_styles_applied = false
 		}
 
-		if (this.mouseDown && Mouse.down == true && this.closed_poly && this.hover_styles_applied) {
+		if (this.mouseDown && Mouse.down == true && this.hover_styles_applied) {
 				if (!this.click_styles_applied) {
 					this.apply_click_styles()
 					this.click_styles_applied = true
@@ -6204,11 +6255,21 @@ var Way = Class.create(Feature,
 	apply_default_styles: function($super) {
 		$super()
 		this.outline_color = null
-		this.outline_width = null
+		this.outline_width = 0
 	},
 	refresh_styles: function() {
 		this.apply_default_styles()
 		Style.parse_styles(this, Style.styles.way)
+	},
+	is_inside: function(x, y) {
+		if (this.closed_poly) {
+			return Geometry.is_point_in_poly(this.nodes, x, y)
+		}
+		else {
+			width = this.lineWidth + this.outline_width
+
+			return Geometry.point_line_distance(x, y, this.nodes) < width
+		}
 	}
 })
 var Relation = Class.create(Feature,
@@ -7280,18 +7341,6 @@ var ContextMenu = {
 	cond_items: {},
 	init: function() {
 		this.menu = new Control.ContextMenu('canvas')
-		this.menu.addItem({
-				label: 'Edit GSS',
-				callback: Cartagen.show_gss_editor
-		})
-		this.menu.addItem({
-				label: 'Download Image',
-				callback: Cartagen.redirect_to_image
-		})
-		this.menu.addItem({
-				label: 'Download Data',
-				callback: Interface.download_bbox
-		})
 	},
 	add_cond_item: function(name, callback) {
 		var id = Math.round(Math.random() * 999999999)
@@ -7312,6 +7361,12 @@ var ContextMenu = {
 		})
 
 		return id
+	},
+	add_static_item: function(name, _callback) {
+		this.menu.addItem({
+			label: name,
+			callback: _callback,
+		})
 	}
 }
 
