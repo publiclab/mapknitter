@@ -6,7 +6,7 @@
  */
 var Way = Class.create(Feature, 
 /**
- * @lends Node#
+ * @lends Way#
  */
 {
 	/**
@@ -144,8 +144,7 @@ var Way = Class.create(Feature,
 	 */
 	style: function() {
 		// hover
-		if (this.hover && this.closed_poly &&
-			Geometry.is_point_in_poly(this.nodes, Map.pointer_x(), Map.pointer_y())) {
+		if (this.hover && this.is_inside(Map.pointer_x(), Map.pointer_y())) {
 				if (!this.hover_styles_applied) {
 					Mouse.hovered_features.push(this)
 					this.apply_hover_styles()
@@ -160,7 +159,7 @@ var Way = Class.create(Feature,
 		}
 
 		// mouseDown
-		if (this.mouseDown && Mouse.down == true && this.closed_poly && this.hover_styles_applied) {
+		if (this.mouseDown && Mouse.down == true && this.hover_styles_applied) {
 				if (!this.click_styles_applied) {
 					this.apply_click_styles()
 					this.click_styles_applied = true
@@ -243,10 +242,20 @@ var Way = Class.create(Feature,
 	apply_default_styles: function($super) {
 		$super()
 		this.outline_color = null
-		this.outline_width = null
+		this.outline_width = 0
 	},
 	refresh_styles: function() {
 		this.apply_default_styles()
 		Style.parse_styles(this, Style.styles.way)
+	},
+	is_inside: function(x, y) {
+		if (this.closed_poly) {
+			return Geometry.is_point_in_poly(this.nodes, x, y)
+		}
+		else {
+			width = this.lineWidth + this.outline_width
+			
+			return Geometry.point_line_distance(x, y, this.nodes) < width
+		}
 	}
 })
