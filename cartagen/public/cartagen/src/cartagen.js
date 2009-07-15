@@ -652,8 +652,6 @@ var Cartagen = {
 
 		// sort by polygons' node count:
 		// objects.sort(Cartagen.sort_by_area)
-		Geohash.sort_objects()
-		Geohash
 	},
 	/**
 	 * An array of bboxes of requested plots... helps in debugging what has been requested.
