@@ -1,7 +1,13 @@
 body: {
 	fillStyle: "rgba(0,0,0,0)",
+	//fillStyle: "#5E2605",
 	lineWidth: 0,
-	pattern: "/images/brown-paper.jpg"
+	pattern: "/images/brown-paper.jpg",
+	menu: {
+		"Edit GSS": Cartagen.show_gss_editor,
+		"Download Image": Cartagen.redirect_to_image,
+		"Download Data": Interface.download_bbox
+	}
 },
 node: {
 	fillStyle: "#ddd",
@@ -12,6 +18,9 @@ node: {
 way: {
 	strokeStyle: "#ccc",
 	lineWidth: 3,
+	menu: {
+		"Inspect": function() {$l(this)}
+	}
 },
 relation: {
 	fillStyle: "#57d",
@@ -112,16 +121,28 @@ building: {
 	fillStyle: "#444",
 	text: function() { return this.tags.get('name') },
 	hover: {
-		fillStyle: '#222',
-		action: function() {
-			console.log('hover')
-		}
+		fillStyle: '#222'
 	},
 	mouseDown: {
 		lineWidth: 18,
-		strokeStyle: "red",
-		action: function() {
-			console.log('mousedown')
+		strokeStyle: "red"
+	},
+	menu: {
+		"Search on Google": function() {
+			if (this.tags.get('name')) {
+				window.open("http://google.com/search?q=" + this.tags.get('name'), "_blank")
+			}
+			else {
+				alert('Sorry! The name of this building is unknown.')
+			}
+		},
+		"Search on Wikipedia": function() {
+			if (this.tags.get('name')) {
+				window.open("http://en.wikipedia.org/wiki/Special:Search?go=Go&search=" + this.tags.get('name'), "_blank")
+			}
+			else {
+				alert('Sorry! The name of this building is unknown.')
+			}
 		}
 	}
 },

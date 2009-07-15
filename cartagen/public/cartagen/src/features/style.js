@@ -135,17 +135,23 @@ var Style = {
 	apply_gss: function(gss_string, force_update) {
 		var styles = ("{"+gss_string+"}").evalJSON()
 		$H(styles).each(function(style) {
-
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
 					style.value[pair.key].gss_update_interval = pair.value
 				})
 			}
 			if (style.value.menu) {
-				$H(style.value.menu).each(function(pair) {
-					style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
-				})
-				style.value.menu = Object.values(style.value.menu)
+				if (style.key == "body") {
+					$H(style.value.menu).each(function(pair) {
+						ContextMenu.add_static_item(pair.key, pair.value)
+					})
+				}
+				else {
+					$H(style.value.menu).each(function(pair) {
+						style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
+					})
+					style.value.menu = Object.values(style.value.menu)
+				}
 			}
 		})
 		Style.styles = styles

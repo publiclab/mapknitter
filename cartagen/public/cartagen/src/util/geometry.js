@@ -106,6 +106,73 @@ var Geometry = {
 	        && (c = !c);
 	    return c;
 	},
+	
+	/**
+	 * Returns the intersection of a line and the line pependicular to it that intersects a point.
+	 * @param {x}  x-coordinate of the point
+	 * @param {y}  y-coordinate of the point
+	 * @param {x0} x-coordate of the first endpoint of the line
+	 * @param {y0} y-coordate of the first endpoint of the line
+	 * @param {x1} x-coordate of the second endpoint of the line
+	 * @param {y1} y-coordate of the second endpoint of the line
+	 *
+	 * @return Object with x and y properties
+	 * @type Object
+	 *
+	 * @author OpenLayers <http://openlayers.org> (adapted from Geometry.LineString#distanceTo)
+	 */
+	 point_line_distance: function(x, y, nodes){
+		 var seg
+		 var stop = nodes.length - 1
+		 min = Number.MAX_VALUE
+		 for(var i = 0; i < stop; ++i) {
+			 seg = {
+				 x1: nodes[i].x,
+				 y1: nodes[i].y,
+				 x2: nodes[i+1].x,
+				 y2: nodes[i+1].y
+			 }
+			 
+			 result = Geometry.distance_to_segment(x, y, seg.x1, seg.y1, seg.x2, seg.y2)
+			 
+			 if(result < min) {
+				 min = result
+				 if(min === 0) {
+					 break
+				 }
+			 } else {
+				 // if distance increases and we cross y0 to the right of x0, no need to keep looking.
+				 if(seg.x2 > x && ((y > seg.y1 && y < seg.y2) || (y < seg.y1 && y > seg.y2))) {
+					 break
+				 }
+			 }
+		 }
+		 return min
+	},
+	/**
+	 * Returns the distance between a point (x0, x1) and a line (with endpoints (x1, y1) and (x2, y2))
+	 *
+	 * @type Number
+	 * @author OpenLayers <http://openlayers.org> (adapted from Geometry.distanceToSegment)
+	 */
+	distance_to_segment: function(x0, y0, x1, y1, x2, y2) {
+		var dx = x2 - x1
+		var dy = y2 - y1
+		var along = ((dx * (x0 - x1)) + (dy * (y0 - y1))) / (Math.pow(dx, 2) + Math.pow(dy, 2))
+		var x, y
+		if(along <= 0.0) {
+			x = x1
+			y = y1
+		} else if(along >= 1.0) {
+			x = x2
+			y = y2
+		} else {
+			x = x1 + along * dx
+			y = y1 + along * dy
+		}
+		return Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2))
+	},
+
 	/**
 	 * Finds the area of a polygon
 	 * @param {Node[]}  nodes    Array of nodes that make up the polygon 
