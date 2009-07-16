@@ -1,5 +1,6 @@
 //= require "geometry"
 //= require "debug"
+//= require "tasks"
 
 /**
  * @name Math.in_range
