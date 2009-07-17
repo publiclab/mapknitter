@@ -9,7 +9,7 @@ task :autobuild do
 	require 'lib/filesystemwatcher'
 	watcher = FileSystemWatcher.new
 	watcher.addDirectory 'src', '**/*.js'
-	watcher.sleepTime = 5
+	watcher.sleepTime = 2
 	watcher.start do |status,file|
 	    if ([FileSystemWatcher::CREATED,
 	    	FileSystemWatcher::MODIFIED,

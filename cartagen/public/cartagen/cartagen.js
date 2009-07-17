@@ -4946,8 +4946,8 @@ var Cartagen = {
 	load_user_features: false,
 	coastlines: [],
 	coastline_nodes: [],
+	parse_manager: null,
 	setup: function(configs) {
-		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
 		if (this.get_url_param('grid')) {
 			Geohash.grid = true
@@ -4973,6 +4973,8 @@ var Cartagen = {
 		Cartagen.load_next_script()
 
 		this.browser_check()
+
+		Cartagen.parse_manager = new TaskManager(50)
 
 		document.fire('cartagen:init')
 
@@ -5146,59 +5148,58 @@ var Cartagen = {
 		Map.y = Projection.lat_to_y(Map.lat)
 		Cartagen.zoom_level = zoom_level
 	},
-	parse_objects: function(data) {
-		data.osm.node.each(function(node){
-	        var n = new Node
-			n.name = node.name
-			n.author = n.author
-			n.img = n.img
-			n.h = 10
-			n.w = 10
-			n.color = Glop.random_color()
-			n.timestamp = node.timestamp
-			n.user = node.user
-			n.id = node.id
-			n.lat = node.lat
-			n.lon = node.lon
-			n.x = Projection.lon_to_x(n.lon)
-			n.y = Projection.lat_to_y(n.lat)
-			Style.parse_styles(n,Style.styles.node)
-			Cartagen.nodes.set(n.id,n)
-			if (node.display) {
-				n.display = true
-				n.radius = 50
-				Geohash.put(n.lat, n.lon, n, 1)
+	parse_node: function(node){
+		var n = new Node
+		n.name = node.name
+		n.author = n.author
+		n.img = n.img
+		n.h = 10
+		n.w = 10
+		n.color = Glop.random_color()
+		n.timestamp = node.timestamp
+		n.user = node.user
+		n.id = node.id
+		n.lat = node.lat
+		n.lon = node.lon
+		n.x = Projection.lon_to_x(n.lon)
+		n.y = Projection.lat_to_y(n.lat)
+		Style.parse_styles(n,Style.styles.node)
+		Cartagen.nodes.set(n.id,n)
+		if (node.display) {
+			n.display = true
+			n.radius = 50
+			Geohash.put(n.lat, n.lon, n, 1)
+		}
+	},
+	parse_way: function(way){
+		if (Cartagen.live || !Cartagen.ways.get(way.id)) {
+			var data = {
+				id: way.id,
+				user: way.user,
+				timestamp: way.timestamp,
+				nodes: [],
+				tags: new Hash()
 			}
-	    })
-		data.osm.way.each(function(way){
-			if (Cartagen.live || !Cartagen.ways.get(way.id)) {
-				var data = {
-					id: way.id,
-					user: way.user,
-					timestamp: way.timestamp,
-					nodes: [],
-					tags: new Hash()
+			if (way.name) data.name = way.name
+			way.nd.each(function(nd, index) {
+				if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
+					node = Cartagen.nodes.get(nd.ref)
+					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
-				if (way.name) data.name = way.name
-				way.nd.each(function(nd, index) {
-					if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
-						node = Cartagen.nodes.get(nd.ref)
-						if (!Object.isUndefined(node)) data.nodes.push(node)
-					}
-				})
-				if (way.tag instanceof Array) {
-					way.tag.each(function(tag) {
-						data.tags.set(tag.k,tag.v)
-						if (tag.v == 'coastline') data.coastline = true
-					})
-				} else {
-					data.tags.set(way.tag.k,way.tag.v)
+			})
+			if (way.tag instanceof Array) {
+				way.tag.each(function(tag) {
+					data.tags.set(tag.k,tag.v)
 					if (tag.v == 'coastline') data.coastline = true
-				}
-				new Way(data)
+				})
+			} else {
+				data.tags.set(way.tag.k,way.tag.v)
+				if (tag.v == 'coastline') data.coastline = true
 			}
-		})
-
+			new Way(data)
+		}
+	},
+	refresh_coastlines: function() {
 		Cartagen.coastlines.each(function(c){c.neighbors = []})
 		Cartagen.coastlines.each(function(coastline_a) {
 			Cartagen.coastlines.each(function(coastline_b) {
@@ -5224,6 +5225,25 @@ var Cartagen = {
 			})
 			new Relation(data)
 		}
+	},
+	parse_objects: function(data, key) {
+
+		var cond;
+		if (key) {
+			cond = function() {
+				return (Geohash.keys.get(key) === true)
+			}
+		}
+		else  {
+			cond = true
+		}
+
+		node_task = new Task(data.osm.node, Cartagen.parse_node, cond)
+		way_task = new Task(data.osm.way, Cartagen.parse_way, cond, [node_task.id])
+		coastline_task = new Task(['placeholder'], Cartagen.refresh_coastlines, cond, [way_task.id])
+		Cartagen.parse_manager.add(node_task)
+		Cartagen.parse_manager.add(way_task)
+		Cartagen.parse_manager.add(coastline_task)
 
 
 	},
@@ -5272,7 +5292,7 @@ var Cartagen = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-						Cartagen.parse_objects(ls.evalJSON())
+						Cartagen.parse_objects(ls.evalJSON(), key)
 					} else {
 						Cartagen.load_plot(key)
 					}
@@ -5299,7 +5319,7 @@ var Cartagen = {
 			method: 'get',
 			onSuccess: function(result) {
 				finished = true
-				Cartagen.parse_objects(result.responseText.evalJSON())
+				Cartagen.parse_objects(result.responseText.evalJSON(), key)
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
@@ -5558,6 +5578,157 @@ $D = {
 $l = $D.log
 
 document.observe('cartagen:init', $D.init)
+var TaskManager = Class.create(
+{
+	initialize: function(quota, tasks) {
+		this.quota = quota
+
+		this.tasks = tasks || []
+
+
+		this.listener = this.run.bindAsEventListener(this)
+
+		this.start()
+	},
+	run: function() {
+		var i = 0
+
+		var start_time = new Date().getTime()
+
+		while (this.tasks.length > 0 && (new Date().getTime() - start_time) < this.quota) {
+			r = this.tasks[(i++) % this.tasks.length].exec_next()
+			if (r === false) {
+				this.tasks.splice((i-1) % this.tasks.length, 1)
+			}
+		}
+
+		if (this.tasks.length < 1) this.stop()
+	},
+	add: function(task) {
+		this.tasks.push(task)
+
+		if (!this.active) this.start()
+	},
+	start: function() {
+		this.active = true
+		$('canvas').observe('glop:predraw', this.listener)
+	},
+	stop: function() {
+		this.active = false
+		$('canvas').stopObserving('glop:predraw', this.listener)
+	},
+
+
+	display: function() {
+		this.tasks.each(function(task,index) {
+
+		})
+	},
+})
+
+var Task = Class.create(
+{
+	initialize: function(members, process, condition, deps) {
+		this.members = members || []
+		this.process = process || Prototype.emptyFunction
+		if (Object.isUndefined(condition)) condition = true
+		this.condition = condition
+
+		Task.register(this)
+
+		this.deps = deps || []
+	},
+	exec_next: function() {
+		if (!this.should_run()) return true
+
+		this.process(this.members.shift())
+
+		if (this.members.length > 0) return true
+		else {
+			Task.complete(this.id)
+			return false
+		}
+	},
+	should_run: function() {
+		if (Object.value(this.condition, this) === false) return false
+		for (var i = 0; i < this.deps.length; i++) {
+			if (Task.is_done(this.deps[i]) === false) {
+				return false
+			}
+		}
+
+		return true
+	},
+
+
+	visible: false,
+	display: function() {
+		if (this.visible || Cartagen.debug) {
+		}
+	}
+})
+
+Task.cur_uid = 1
+Task.registry = {}
+Task.register = function(task) {
+	task.id = Task.cur_uid++
+	Task.registry[task.id] = false
+}
+Task.complete = function(id) {
+	Task.registry[id] = true
+}
+Task.is_done = function(id) {
+	return Task.registry[id]
+}
+
+
+
+var Timer = Class.create(
+{
+	initialize: function(interval,units) {
+		if (units == 'seconds') {
+		} else if (!Object.isUndefined(interval)) this.interval = interval
+	},
+	interval: 40,
+	lag: 0
+})
+
+/*
+TaskTest = {
+	a: $R(1, 10).toArray(),
+	b: $R(1, 10).toArray(),
+	c: $R(1, 10).toArray(),
+	d: $R(1, 10).toArray(),
+	a2: [],
+	b2: [],
+	c2: [],
+	d2: [],
+	fa: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.a2.push(o)
+	},
+	fb: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.b2.push(o)
+	},
+	fc: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.c2.push(o)
+	},
+	fd: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.d2.push(o)
+	}
+}
+
+function tt_init() {
+	TaskTest.ta = new Task(TaskTest.a, TaskTest.fa, true),
+	TaskTest.tb = new Task(TaskTest.b, TaskTest.fb, true, [TaskTest.ta.id]),
+	TaskTest.tc = new Task(TaskTest.c, TaskTest.fc, true, [TaskTest.tb.id]),
+	TaskTest.td = new Task(TaskTest.d, TaskTest.fd, true, [TaskTest.tb.id]),
+	TaskTest.tm = new TaskManager(1000, [TaskTest.ta, TaskTest.tb, TaskTest.tc, TaskTest.td])
+}
+*/
 
 Math.in_range = function(v,r1,r2) {
 	return (v > Math.min(r1,r2) && v < Math.max(r1,r2))
@@ -7074,6 +7245,13 @@ var User = {
 			User.update()
 			new PeriodicalExecuter(User.update, 60)
 		}
+	},
+	geolocate: function() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(User.set_loc)
+			return true
+		}
+		else return false
 	},
 	set_loc: function(loc) {
 		if (loc.coords) {
