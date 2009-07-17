@@ -246,12 +246,14 @@ var Cartagen = {
 	 */
 	coastline_nodes: [],
 	/**
+	 * A TaskManager that performs feature parsing
+	 */
+	parse_manager: null,
+	/**
 	 * Registers initialize to run with the given configs when window is loaded
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	setup: function(configs) {
-		// geolocate with IP if available
-		if (navigator.geolocation) navigator.geolocation.getCurrentPosition(User.set_loc)
 		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
 		if (this.get_url_param('grid')) {
 			Geohash.grid = true
@@ -289,6 +291,8 @@ var Cartagen = {
 		// browser stuff:
 		this.browser_check()
 		//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar
+		
+		Cartagen.parse_manager = new TaskManager(50)
 		
 		/**
 		 * @name Cartagen#cartagen:init
@@ -539,67 +543,61 @@ var Cartagen = {
 		Map.y = Projection.lat_to_y(Map.lat)
 		Cartagen.zoom_level = zoom_level
 	},
-	/**
-	 * Parses feature data and creates Way and Node objects, registering them with
-	 * Geohash
-	 * @param {Object} data OSM data to parse
-	 */
-	parse_objects: function(data) {
-		data.osm.node.each(function(node){
-	        var n = new Node
-			n.name = node.name
-			n.author = n.author
-			n.img = n.img
-			n.h = 10
-			n.w = 10
-			n.color = Glop.random_color()
-			n.timestamp = node.timestamp
-			n.user = node.user
-			n.id = node.id
-			n.lat = node.lat
-			n.lon = node.lon
-			n.x = Projection.lon_to_x(n.lon)
-			n.y = Projection.lat_to_y(n.lat)
-			Style.parse_styles(n,Style.styles.node)
-			// can't currently afford to have all nodes in the map as well as all ways.
-			// but we're missing some nodes when we render... semantic ones i think. cross-check.
-			// objects.push(n)
-			Cartagen.nodes.set(n.id,n)
-			if (node.display) {
-				n.display = true
-				n.radius = 50
-				Geohash.put(n.lat, n.lon, n, 1)
+	parse_node: function(node){
+		var n = new Node
+		n.name = node.name
+		n.author = n.author
+		n.img = n.img
+		n.h = 10
+		n.w = 10
+		n.color = Glop.random_color()
+		n.timestamp = node.timestamp
+		n.user = node.user
+		n.id = node.id
+		n.lat = node.lat
+		n.lon = node.lon
+		n.x = Projection.lon_to_x(n.lon)
+		n.y = Projection.lat_to_y(n.lat)
+		Style.parse_styles(n,Style.styles.node)
+		// can't currently afford to have all nodes in the map as well as all ways.
+		// but we're missing some nodes when we render... semantic ones i think. cross-check.
+		// objects.push(n)
+		Cartagen.nodes.set(n.id,n)
+		if (node.display) {
+			n.display = true
+			n.radius = 50
+			Geohash.put(n.lat, n.lon, n, 1)
+		}
+	},
+	parse_way: function(way){
+		if (Cartagen.live || !Cartagen.ways.get(way.id)) {
+			var data = {
+				id: way.id,
+				user: way.user,
+				timestamp: way.timestamp,
+				nodes: [],
+				tags: new Hash()
 			}
-	    })
-		data.osm.way.each(function(way){
-			if (Cartagen.live || !Cartagen.ways.get(way.id)) {
-				var data = {
-					id: way.id,
-					user: way.user,
-					timestamp: way.timestamp,
-					nodes: [],
-					tags: new Hash()
+			if (way.name) data.name = way.name
+			way.nd.each(function(nd, index) {
+				if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
+					node = Cartagen.nodes.get(nd.ref)
+					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
-				if (way.name) data.name = way.name
-				way.nd.each(function(nd, index) {
-					if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
-						node = Cartagen.nodes.get(nd.ref)
-						if (!Object.isUndefined(node)) data.nodes.push(node)
-					}
-				})
-				if (way.tag instanceof Array) {
-					way.tag.each(function(tag) {
-						data.tags.set(tag.k,tag.v)
-						if (tag.v == 'coastline') data.coastline = true
-					})
-				} else {
-					data.tags.set(way.tag.k,way.tag.v)
+			})
+			if (way.tag instanceof Array) {
+				way.tag.each(function(tag) {
+					data.tags.set(tag.k,tag.v)
 					if (tag.v == 'coastline') data.coastline = true
-				}
-				new Way(data)
+				})
+			} else {
+				data.tags.set(way.tag.k,way.tag.v)
+				if (tag.v == 'coastline') data.coastline = true
 			}
-		})
-				
+			new Way(data)
+		}
+	},
+	refresh_coastlines: function() {
 		// flush coastline collected_ways relations and re-generate them with new coastlines:
 		Cartagen.coastlines.each(function(c){c.neighbors = []})
 		Cartagen.coastlines.each(function(coastline_a) {
@@ -613,7 +611,6 @@ var Cartagen = {
 			})
 		})
 		
-		// turn this into a new Cartagen function:
 		var coastline_chains = Cartagen.coastlines.clone()
 		Cartagen.relations = new Hash()
 		while (coastline_chains.length > 0) {
@@ -628,7 +625,31 @@ var Cartagen = {
 			})
 			new Relation(data)
 		}
+	},
+	/**
+	 * Parses feature data and creates Way and Node objects, registering them with
+	 * Geohash
+	 * @param {Object} data OSM data to parse
+	 */
+	parse_objects: function(data, key) {
 		
+		var cond;
+		if (key) {
+			cond = function() {
+				return (Geohash.keys.get(key) === true)
+			}
+		}
+		else  {
+			cond = true
+		}
+		
+		node_task = new Task(data.osm.node, Cartagen.parse_node, cond)
+		way_task = new Task(data.osm.way, Cartagen.parse_way, cond, [node_task.id])
+		coastline_task = new Task(['placeholder'], Cartagen.refresh_coastlines, cond, [way_task.id])
+		Cartagen.parse_manager.add(node_task)
+		Cartagen.parse_manager.add(way_task)
+		Cartagen.parse_manager.add(coastline_task)
+				
 		// data.osm.relation.each(function(way){
 		// 	var w = new Way
 		// 	w.id = way.id
@@ -722,7 +743,7 @@ var Cartagen = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-						Cartagen.parse_objects(ls.evalJSON())
+						Cartagen.parse_objects(ls.evalJSON(), key)
 						// Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						// it's not in the localStorage:
@@ -776,7 +797,7 @@ var Cartagen = {
 			onSuccess: function(result) {
 				finished = true
 				// $l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
-				Cartagen.parse_objects(result.responseText.evalJSON())
+				Cartagen.parse_objects(result.responseText.evalJSON(), key)
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
