@@ -98,6 +98,19 @@ var User = {
 		}
 	},
 	/**
+	 * Geolocates the user. Geolocation is asynchronous. Location is available as User.lat and
+	 * User.lon once the asynchronous request has completed. Returns true if geolocaion is supported
+	 * by the user agent, else returns false.
+	 */
+	geolocate: function() {
+		// geolocate if available
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(User.set_loc)
+			return true
+		}
+		else return false
+	},
+	/**
 	 * Sets the user's location
 	 * @param {Location} loc The Loction object passed by navigator.geolocation
 	 */

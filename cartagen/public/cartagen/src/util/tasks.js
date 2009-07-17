@@ -1,63 +1,128 @@
 /**
- * @namespace Manages long-running tasks; breaks them up to avoid stalling the UI;
+ * Manages long-running tasks; breaks them up to avoid stalling the UI;
  * uses Web Workers where available.
+ * @class
  */
-var TaskManager = Class.create({
-	initialize: function(tasks) {
+var TaskManager = Class.create(
+/**
+ * @lends TaskManager#
+ */
+{
+	initialize: function(quota, tasks) {
+		/**
+		 * Amount of time, in miliseconds, allocated to the TaskManager each frame.
+		 */
+		this.quota = quota
+		
 		/**
 		 * Tasks to be performed; each is a Task object with members
 		 */
 		this.tasks = tasks || []
 		
-		/**
-		 * Where applicable, an array of Web Workers (HTML5) to pass tasks to
-		 */
-		this.timers = [10] //[10,20,40,80]
+		// This could support Web Workers
+		//this.workers = []
 		
-		this.workers = []
+		this.listener = this.run.bindAsEventListener(this)
+		
+		this.start()
 	},
 	/**
 	 * Tasks to be performed; each is a Task object with members
 	 */ 
 	run: function() {
-		this.tasks.each(function() {
-			// ############ check against our timers and perform:
-			
-		})
+		var i = 0
+		
+		var start_time = new Date().getTime()
+		
+		while (this.tasks.length > 0 && (new Date().getTime() - start_time) < this.quota) {
+			r = this.tasks[(i++) % this.tasks.length].exec_next()
+			if (r === false) {
+				this.tasks.splice((i-1) % this.tasks.length, 1)
+			}
+		}
+		
+		if (this.tasks.length < 1) this.stop()
 	},
 	add: function(task) {
 		this.tasks.push(task)
+		
+		if (!this.active) this.start()
 	},
+	start: function() {
+		this.active = true
+		$('canvas').observe('glop:predraw', this.listener)
+	},
+	stop: function() {
+		this.active = false
+		$('canvas').stopObserving('glop:predraw', this.listener)
+	},
+	
+	// Currently unused
+	
 	display: function() {
 		this.tasks.each(function(task,index) {
 			// move to top left, display a row of processes as either bars or pies:
 			
 		})
-	}
+	},
 })
 
 /**
- * @namespace Contains a single task made up of a list of members to be
+ * Contains a single task made up of a list of members to be
  * processed and a process() function to apply to them
+ * @class
  */
-var Task = Class.create({
-	initialize: function(members,process,per_frame) {
+var Task = Class.create(
+/**
+ * @lends Task#
+ */
+{
+	initialize: function(members, process, condition, deps) {
+		/**
+		 * A list of values upon which to perform the "process" function
+		 * @type Object[]
+		 */ 
 		this.members = members || []
+		/**
+		 * A function to process objects with
+		 * @type Function
+		 */
 		this.process = process || Prototype.emptyFunction
-		this.per_frame = per_frame || 40
+		/**
+		 * A function or boolean that determines whther the task should be run.
+		 * @type Function | Boolean
+		 */
+		if (Object.isUndefined(condition)) condition = true
+		this.condition = condition
+	
+		Task.register(this)
+		
+		this.deps = deps || []
 	},
-	/**
-	 * A list of values upon which to perform the function, as: 'member.process()'
-	 */ 
-	members: [],
-	/**
-	 * function to apply to each member
-	 */ 
-	process: function() {},
-	/**
-	 * Expected # of task members to be completed per frame. 
-	 */ 
-	per_frame: 40,
+	exec_next: function() {
+		if (!this.should_run()) return true
+		
+		this.process(this.members.shift())
+		
+		if (this.members.length > 0) return true
+		else {
+			Task.complete(this.id)
+			return false
+		}
+	},
+	should_run: function() {
+		if (Object.value(this.condition, this) === false) return false
+		for (var i = 0; i < this.deps.length; i++) {
+			if (Task.is_done(this.deps[i]) === false) {
+				return false
+			}
+		}
+		
+		return true
+	},
+
+	// Currently unused
+	
 	/**
 	 * Whether this task's progress bar is visible by default.
 	 */ 
@@ -69,21 +134,35 @@ var Task = Class.create({
 		if (this.visible || Cartagen.debug) {
 			// display a 
 		}
-	},
-	/**
-	 * If expire is nonzero, then if it's more than Task.expire
-	 * frames old, the task is discarded.
-	 */ 
-	condition: function() {
-		
-	},
+	}
 })
 
+Task.cur_uid = 1
+Task.registry = {}
+Task.register = function(task) {
+	task.id = Task.cur_uid++
+	Task.registry[task.id] = false
+}
+Task.complete = function(id) {
+	Task.registry[id] = true
+}
+Task.is_done = function(id) {
+	return Task.registry[id]
+}
+
+
+// Not currently used
+
 /**
- * @namespace Representation of a single timer, which tracks
+ * Representation of a single timer, which tracks
  * how far behind it's expected interval is.
+ * @class
  */
-var Timer = {
+var Timer = Class.create(
+/**
+ * @lends Timer#
+ */
+{
 	initialize: function(interval,units) {
 		if (units == 'seconds') {
 			// ############ translate
@@ -96,5 +175,42 @@ var Timer = {
 	/**
 	 * Tracks how far behind projected timer completion we are
 	 */ 
-	lag: 0,
+	lag: 0
+})
+
+/*
+TaskTest = {
+	a: $R(1, 10).toArray(),
+	b: $R(1, 10).toArray(),
+	c: $R(1, 10).toArray(),
+	d: $R(1, 10).toArray(),
+	a2: [],
+	b2: [],
+	c2: [],
+	d2: [],
+	fa: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.a2.push(o)
+	},	
+	fb: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.b2.push(o)
+	},	
+	fc: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.c2.push(o)
+	},
+	fd: function(o) {
+		for (var i=0; i<9999999; i++){}
+		TaskTest.d2.push(o)
+	}
 }
+
+function tt_init() {
+	TaskTest.ta = new Task(TaskTest.a, TaskTest.fa, true),
+	TaskTest.tb = new Task(TaskTest.b, TaskTest.fb, true, [TaskTest.ta.id]),
+	TaskTest.tc = new Task(TaskTest.c, TaskTest.fc, true, [TaskTest.tb.id]),
+	TaskTest.td = new Task(TaskTest.d, TaskTest.fd, true, [TaskTest.tb.id]),
+	TaskTest.tm = new TaskManager(1000, [TaskTest.ta, TaskTest.tb, TaskTest.tc, TaskTest.td])
+}
+*/
