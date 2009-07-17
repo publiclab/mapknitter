@@ -22,6 +22,11 @@ way: {
 		"Inspect": function() {$l(this)}
 	}
 },
+island: {
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	pattern: "/images/brown-paper.jpg"
+},
 relation: {
 	fillStyle: "#57d",
 	strokeStyle: "#24a",
@@ -62,13 +67,6 @@ waterway: {
 },
 water: {
 	strokeStyle: "#24a",
-	lineWidth: 4,
-	pattern: "/images/pattern-water.gif"
-},
-coastline: {
-	fillStyle: "#57d",
-	strokeStyle: "#24a",
-	opacity:0.8,
 	lineWidth: 4,
 	pattern: "/images/pattern-water.gif"
 },

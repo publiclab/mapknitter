@@ -5030,38 +5030,72 @@ var Cartagen = {
 
 		Cartagen.assembled_coastline = []
 		Cartagen.relations.values().each(function(object) {
-			if (Glop.frame == 0 || Glop.frame % 30 == 0) object.collect_nodes()
-			if (object.coastline_nodes.length > 0) Cartagen.assembled_coastline.push([object.coastline_nodes,object.entry_angle])
+			object.collect_nodes()
+			if (object.coastline_nodes.length > 0) Cartagen.assembled_coastline.push([object.coastline_nodes,[object.entry_angle,object.exit_angle]])
 		})
 
 		if (Cartagen.assembled_coastline.length > 0) {
-			var sort_coastlines_by_angle = function(a,b) { return (a[1] - b[1]) }
-			Cartagen.assembled_coastline.sort(sort_coastlines_by_angle)
+			Cartagen.assembled_coastline.sort(Coastline.sort_coastlines_by_angle)
 
 			$C.begin_path()
 
-			var start_corner,end_corner
+			var start_corner,end_corner,start_angle,end_angle
 			Cartagen.assembled_coastline.each(function(coastline,index) {
-				var child_start_corner = Viewport.nearest_corner(coastline[0].first()[0],coastline[0].first()[1])
-				end_corner = Viewport.nearest_corner(coastline[0].last()[0],coastline[0].last()[1])
-				$C.move_to(child_start_corner[0],child_start_corner[1])
-				coastline[0].each(function(node) {
+				coastline.push(Viewport.nearest_corner(coastline[0].first()[0],coastline[0].first()[1]))
+				coastline.push(Viewport.nearest_corner(coastline[0].last()[0],coastline[0].last()[1]))
+			})
+
+			var corners = []
+
+			Cartagen.assembled_coastline.each(function(coastline,index) {
+				corners.push(coastline[2][2])
+				$C.move_to(coastline[2][0],coastline[2][1])
+
+
+
+				coastline[0].each(function(node,c_index) {
 					$C.line_to(node[0],node[1])
  				})
-				$C.line_to(end_corner[0],end_corner[1])
+				$C.line_to(coastline[3][0],coastline[3][1])
 
-				if (index == 0) start_corner = child_start_corner
+				if (Cartagen.assembled_coastline[index+1]) {
+					if (index != Cartagen.assembled_coastline.length-1) {
+						corners.push(coastline[3][2],coastline[2][2])
+						$l('walking to beginning!: '+coastline[3][2]+"/"+coastline[2][2]+':'+Coastline.walk(coastline[3][2],coastline[2][2],false).inspect())
+						Coastline.walk(coastline[3][2],coastline[2][2],false).each(function(n) {
+							$C.line_to(n[0],n[1])
+						})
+					}
+					if (coastline[2][2] != Cartagen.assembled_coastline[index+1][2][2]) {
+						corners.push(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2])
+						$l('walking to next!: '+coastline[2][2]+"/"+Cartagen.assembled_coastline[index+1][2][2]+':'+Coastline.walk(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2]).inspect())
+						Coastline.walk(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2]).each(function(n) {
+							$C.line_to(n[0],n[1])
+						})
+					}
+				}
+
+				if (index == 0) {
+					start_corner = coastline[2]
+					start_angle = coastline[1][0]
+				}
+				if (index == Cartagen.assembled_coastline.length-1) {
+					end_corner = coastline[3]
+					end_angle = coastline[1][1]
+				}
 			},this)
-			var bbox = Viewport.full_bbox()
-			var start = end_corner[2]
-			var end = start_corner[2]
-			if (start > end) var slice_end = bbox.length
-			else var slice_end = end+1
-			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
-			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
-			cycle.each(function(coord) {
-				$C.line_to(coord[0],coord[1])
-			})
+
+
+
+			if ((end_corner[2] == start_corner[2]) && (end_angle < start_angle)) {
+			} else if (end_corner[2] != start_corner[2] || end_angle > start_angle) {
+				corners.push(end_corner[2],start_corner[2])
+				$l('walking around!: '+end_corner[2]+"/"+start_corner[2]+':'+Coastline.walk(end_corner[2],start_corner[2]).inspect())
+				Coastline.walk(end_corner[2],start_corner[2]).each(function(n) {
+					$C.line_to(n[0],n[1])
+				})
+			}
+			$l('ending: '+corners)
 
 			var coastline_style = Style.styles.relation
 			if (coastline_style.lineWidth) $C.line_width(coastline_style.lineWidth)
@@ -6272,8 +6306,6 @@ var Way = Class.create(Feature,
 			this.nodes.first().y == this.nodes.last().y)
 				this.closed_poly = true
 
-		if (this.tags.get('natural') == "coastline") this.closed_poly = true
-
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
 			this.x = centroid[0]*2
@@ -6281,6 +6313,11 @@ var Way = Class.create(Feature,
 		} else {
 			this.x = (this.middle_segment()[0].x+this.middle_segment()[1].x)/2
 			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
+		}
+
+		if (this.coastline && this.closed_poly) {
+			this.island = true
+			this.coastline = false
 		}
 
 		this.area = Geometry.poly_area(this.nodes)
@@ -6293,7 +6330,9 @@ var Way = Class.create(Feature,
 		if (this.coastline) {
 			Cartagen.coastlines.push(this)
 		} else {
-			Style.parse_styles(this,Style.styles.way)
+			if (this.island && Style.styles.island) {
+				Style.parse_styles(this,Style.styles.island)
+			} else Style.parse_styles(this,Style.styles.way)
 			Geohash.put_object(this)
 		}
     },
@@ -6306,7 +6345,6 @@ var Way = Class.create(Feature,
 		if (uniq) {
 			if (prev) chain.push(this)
 			else chain.unshift(this)
-			$l(chain.length + ","+prev+next)
 			if (prev && this.neighbors[0]) { // this is the initial call
 				this.neighbors[0].chain(chain,true,false)
 			}
@@ -6424,6 +6462,7 @@ var Way = Class.create(Feature,
 				this.image = new Image()
 				this.image.src = src
 			} else if (this.image.width > 0) {
+				if (Cartagen.distort) $C.translate(0,Math.max(0,75-Geometry.distance(this.x,this.y,Map.pointer_x(),Map.pointer_y())/4))
 				$C.draw_image(this.image, this.x-this.image.width/2, this.y-this.image.height/2)
 			}
 		}
@@ -6475,7 +6514,10 @@ var Relation = Class.create(Feature,
 		if (this.tags.get('natural') == 'coastline') {
 			this.coastline = true
 		}
-		if (this.tags.get('natural') == "land") this.island = true
+		if (this.tags.get('place') == 'island') {
+			this.island = true
+			this.coastline = false
+		}
 
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -6513,25 +6555,52 @@ var Relation = Class.create(Feature,
 	shape: function() {
 	},
 	collect_nodes: function() {
-		var is_inside = true, last_index, prev_node_inside = null
-		var enter_viewport = null,exit_viewport = null
-		this.coastline_nodes = []
+		if (!this.closed_poly) {
+			var is_inside = true, last_index, prev_node_inside = null
+			var enter_viewport = null,exit_viewport = null
+			this.coastline_nodes = []
 
-		this.nodes.each(function(node,index){
-			is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width)
-			if (prev_node_inside != null && prev_node_inside != is_inside) {
-				if (is_inside && this.coastline_nodes.length == 0) this.coastline_nodes.unshift([this.nodes[index-1].x,this.nodes[index-1].y])
-			} else if (prev_node_inside == null && is_inside) {
-				this.coastline_nodes.unshift([node.x,node.y])
-			}
-			prev_node_inside = is_inside
-			if (is_inside) {
-				this.coastline_nodes.push([node.x,node.y])
-				last_index = index
-			}
-		},this)
+			var first_inside = true,entering = false,exiting = false
+			this.nodes.each(function(node,index){
+				is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width/2)
+				if (prev_node_inside != null && prev_node_inside != is_inside) {
+					if (is_inside && this.coastline_nodes.length == 0) this.coastline_nodes.unshift([this.nodes[index-1].x,this.nodes[index-1].y])
+					if (is_inside) {
+						entering = true
+						exiting = false
+					} else {
+						entering = false
+						exiting = true
+					}
+				} else if (prev_node_inside == is_inside) {
+					exiting = false
+					entering = false
+				} else if (prev_node_inside == null && is_inside) {
+					this.coastline_nodes.unshift([node.x,node.y])
+				}
+				prev_node_inside = is_inside
+				if (is_inside) {
+					if (first_inside && this.nodes[index-1]) this.coastline_nodes.push([this.nodes[index-1].x,this.nodes[index-1].y])
+					if (entering && prev_node_inside != null) {
+						var enter_corner = Viewport.nearest_corner(node.x,node.y)[2]
+						var exit_corner = Viewport.nearest_corner(this.nodes[index-1].x,this.nodes[index-1].y)[2]
+						if (enter_corner != exit_corner) this.coastline_nodes.push(Coastline.walk(Viewport.nearest_corner(node.x,node.y)[2],Viewport.nearest_corner(this.nodes[index-1].x,this.nodes[index-1].y)[2]))
+					}
+					this.coastline_nodes.push([node.x,node.y])
+					first_inside = false
+					last_index = index
+				}
+				if (exiting && this.nodes[index+1]) {
+					this.coastline_nodes.push([this.nodes[index+1].x,this.nodes[index+1].y])
+					last_index = index+1
+				}
+			},this)
 
-		this.entry_angle = Math.tan(Math.abs(this.coastline_nodes.first()[0]-Map.x)/(this.coastline_nodes.first()[1]-Map.y))
+			if (this.coastline_nodes.length > 0) {
+				this.entry_angle = -Math.atan(((this.coastline_nodes.first()[0]-Map.x)/(this.coastline_nodes.first()[1]-Map.y)))
+				this.exit_angle = -Math.atan(((this.coastline_nodes.last()[0]-Map.x)/(this.coastline_nodes.last()[1]-Map.y)))
+			} else this.entry_angle = 0
+		}
 	},
 	apply_default_styles: Feature.prototype.apply_default_styles,
 	refresh_styles: function() {
@@ -6539,6 +6608,57 @@ var Relation = Class.create(Feature,
 		Style.parse_styles(this, Style.styles.relation)
 	}
 })
+var Coastline = {
+	walk: function(start,end,clockwise) {
+		if (Object.isUndefined(clockwise)) clockwise = true
+		$l(start+'/'+end+',clockwise '+clockwise+': '+this.walk_n(start,end,clockwise))
+		debugger
+		var nodes = []
+		var bbox = Viewport.full_bbox()
+		if (clockwise) {
+			if (start >= end) var slice_end = bbox.length
+			else var slice_end = end+1
+			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
+			if ((start > end) || (start == end && start > 0)) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+		} else {
+			if (start <= end) var slice_end = bbox.length
+			else var slice_end = start+1
+			var cycle = bbox.slice(end,slice_end) // path clockwise to walk around the viewport
+			if ((start < end) || (start == end && end > 0)) cycle = cycle.concat(bbox.slice(0,start+1)) //loop around from 3 back to 0
+			cycle = cycle.reverse()
+		}
+		cycle.each(function(coord,index) {
+			nodes.push([coord[0],coord[1]])
+
+
+		})
+		return nodes
+	},
+	walk_n: function(start,end,clockwise) {
+		if (Object.isUndefined(clockwise)) clockwise = true
+		var nodes = []
+		var bbox = [0,1,2,3]//Viewport.full_bbox()
+		if (clockwise) {
+			if (start >= end) var slice_end = bbox.length
+			else var slice_end = end+1
+			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
+			if ((start > end) || (start == end && start > 0)) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
+		} else {
+			if (start <= end) var slice_end = bbox.length
+			else var slice_end = start+1
+			var cycle = bbox.slice(end,slice_end) // path clockwise to walk around the viewport
+			if ((start < end) || (start == end && end > 0)) cycle = cycle.concat(bbox.slice(0,start+1)) //loop around from 3 back to 0
+			cycle = cycle.reverse()
+		}
+		cycle.each(function(coord,index) {
+			nodes.push(coord)
+
+
+		})
+		return nodes
+	},
+	sort_coastlines_by_angle: function(a,b) { return (a[1][0] - b[1][0]) }
+}
 var Label = Class.create(
 {
     initialize: function(owner) {
@@ -7721,7 +7841,7 @@ var Viewport = {
 	draw: function() {
 		Viewport.width = Glop.width * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
         Viewport.height = Glop.height * (1 / Cartagen.zoom_level) - (2 * Viewport.padding * (1 / Cartagen.zoom_level))
-        Viewport.width = Math.max(Viewport.width, Viewport.height)
+        Viewport.width = Math.sqrt(Math.pow(Math.max(Viewport.width, Viewport.height),2)*2)
         Viewport.height = Viewport.width
         Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
 	}
