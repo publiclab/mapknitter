@@ -60,7 +60,10 @@ var Relation = Class.create(Feature,
 		if (this.tags.get('natural') == 'coastline') {
 			this.coastline = true
 		}
-		if (this.tags.get('natural') == "land") this.island = true
+		if (this.tags.get('place') == 'island') {
+			this.island = true
+			this.coastline = false
+		}
 		
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
@@ -135,33 +138,61 @@ var Relation = Class.create(Feature,
 	 * (currently the only kind) and allows multiple relations to be drawn as a single closed poly
 	 */
 	collect_nodes: function() {
-		var is_inside = true, last_index, prev_node_inside = null
-		var enter_viewport = null,exit_viewport = null
-		this.coastline_nodes = []
+		if (!this.closed_poly) {
+			var is_inside = true, last_index, prev_node_inside = null
+			var enter_viewport = null,exit_viewport = null
+			this.coastline_nodes = []
+			
+			var first_inside = true,entering = false,exiting = false
+			this.nodes.each(function(node,index){
+				is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width/2)
+				// if we've crossed the Viewport boundary (needed to reconcile multiple unconnected coastlines):
+				if (prev_node_inside != null && prev_node_inside != is_inside) {
+					if (is_inside && this.coastline_nodes.length == 0) this.coastline_nodes.unshift([this.nodes[index-1].x,this.nodes[index-1].y])
+					if (is_inside) {
+						entering = true
+						exiting = false
+					} else {
+						entering = false
+						exiting = true
+					}
+				} else if (prev_node_inside == is_inside) {
+					exiting = false
+					entering = false
+				} else if (prev_node_inside == null && is_inside) {
+					this.coastline_nodes.unshift([node.x,node.y])
+					// check if the very fist node is inside already... 
+					// this shouldn't be the case but could happen with incomplete map data
+				}
+				prev_node_inside = is_inside
+				// add nodes which are in the viewport, betweeen enter_viewport and exit_viewport:
+				if (is_inside) {
+					// if it's the first node, add the one just before too:
+					if (first_inside && this.nodes[index-1]) this.coastline_nodes.push([this.nodes[index-1].x,this.nodes[index-1].y])
+					// if entering and we've gone around a corner, we'd cut off the corner:
+					if (entering && prev_node_inside != null) {
+						var enter_corner = Viewport.nearest_corner(node.x,node.y)[2]
+						var exit_corner = Viewport.nearest_corner(this.nodes[index-1].x,this.nodes[index-1].y)[2]
+						if (enter_corner != exit_corner) this.coastline_nodes.push(Coastline.walk(Viewport.nearest_corner(node.x,node.y)[2],Viewport.nearest_corner(this.nodes[index-1].x,this.nodes[index-1].y)[2]))
+					}
+					this.coastline_nodes.push([node.x,node.y])
+					first_inside = false
+					last_index = index
+				}
+				if (exiting && this.nodes[index+1]) {
+					this.coastline_nodes.push([this.nodes[index+1].x,this.nodes[index+1].y])
+					last_index = index+1
+				}
+			},this)
 
-		this.nodes.each(function(node,index){
-			is_inside = Geometry.overlaps(node.x,node.y,Map.x,Map.y,Viewport.width)
-			// if we've crossed the Viewport boundary (needed to reconcile multiple unconnected coastlines):
-			if (prev_node_inside != null && prev_node_inside != is_inside) {
-				if (is_inside && this.coastline_nodes.length == 0) this.coastline_nodes.unshift([this.nodes[index-1].x,this.nodes[index-1].y])
-			} else if (prev_node_inside == null && is_inside) {
-				this.coastline_nodes.unshift([node.x,node.y])
-				// check if the very fist node is inside already... 
-				// this shouldn't be the case but could happen with incomplete map data
-			}
-			prev_node_inside = is_inside
-			// add nodes which are in the viewport, betweeen enter_viewport and exit_viewport:
-			if (is_inside) {
-				this.coastline_nodes.push([node.x,node.y])
-				last_index = index
-			}
-		},this)
-		// add the last node... that's just outside the viewport:
-		// this.coastline_nodes.push([this.nodes[last_index].x,this.nodes[last_index].y])
-		
-		// calculate angle (like on a clock face) of the point where the relation enters the viewport:
-			// it actually uses the point just before it enters the viewport; this could be a problem
-		this.entry_angle = Math.tan(Math.abs(this.coastline_nodes.first()[0]-Map.x)/(this.coastline_nodes.first()[1]-Map.y))
+			// calculate angle (like on a clock face) of the point where the relation enters the viewport:
+				// it actually uses the point just before it enters the viewport; this could be a problem
+			if (this.coastline_nodes.length > 0) {
+				// $l(parseInt(this.coastline_nodes.first()[0]-Map.x)+','+parseInt(this.coastline_nodes.first()[1]-Map.y)+','+parseInt(this.coastline_nodes.last()[0]-Map.x)+','+parseInt(this.coastline_nodes.last()[1]-Map.y))
+				this.entry_angle = -Math.atan(((this.coastline_nodes.first()[0]-Map.x)/(this.coastline_nodes.first()[1]-Map.y)))
+				this.exit_angle = -Math.atan(((this.coastline_nodes.last()[0]-Map.x)/(this.coastline_nodes.last()[1]-Map.y)))
+			} else this.entry_angle = 0
+		}
 	},
 	apply_default_styles: Feature.prototype.apply_default_styles,
 	refresh_styles: function() {
