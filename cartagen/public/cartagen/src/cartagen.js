@@ -391,40 +391,120 @@ var Cartagen = {
 		Cartagen.assembled_coastline = []
 		Cartagen.relations.values().each(function(object) {
 			// invent a better way to trigger collect_nodes, based on Viewport change:
-			if (Glop.frame == 0 || Glop.frame % 30 == 0) object.collect_nodes()
-			if (object.coastline_nodes.length > 0) Cartagen.assembled_coastline.push([object.coastline_nodes,object.entry_angle])
+			// if (Glop.frame == 0 || Glop.frame % 30 == 0) object.collect_nodes()
+			object.collect_nodes()
+			if (object.coastline_nodes.length > 0) Cartagen.assembled_coastline.push([object.coastline_nodes,[object.entry_angle,object.exit_angle]])
 		})
 		
 		// if we have any coastline relations to run through and draw:
 		if (Cartagen.assembled_coastline.length > 0) {
-			var sort_coastlines_by_angle = function(a,b) { return (a[1] - b[1]) }
-			Cartagen.assembled_coastline.sort(sort_coastlines_by_angle)
+			Cartagen.assembled_coastline.sort(Coastline.sort_coastlines_by_angle)
 
 			$C.begin_path()
 			
-			var start_corner,end_corner
-			Cartagen.assembled_coastline.each(function(coastline,index) { 
-				var child_start_corner = Viewport.nearest_corner(coastline[0].first()[0],coastline[0].first()[1])
-				end_corner = Viewport.nearest_corner(coastline[0].last()[0],coastline[0].last()[1])
-				$C.move_to(child_start_corner[0],child_start_corner[1])
-				coastline[0].each(function(node) { 
-					$C.line_to(node[0],node[1])
- 				}) 
-				$C.line_to(end_corner[0],end_corner[1])
-
-				if (index == 0) start_corner = child_start_corner
-			},this)
-			var bbox = Viewport.full_bbox()
-			var start = end_corner[2]
-			var end = start_corner[2]
-			if (start > end) var slice_end = bbox.length
-			else var slice_end = end+1
-			var cycle = bbox.slice(start,slice_end) // path clockwise to walk around the viewport
-			if (start > end) cycle = cycle.concat(bbox.slice(0,end+1)) //loop around from 3 back to 0
-			cycle.each(function(coord) {
-				$C.line_to(coord[0],coord[1])
+			var start_corner,end_corner,start_angle,end_angle
+			Cartagen.assembled_coastline.each(function(coastline,index) {
+				coastline.push(Viewport.nearest_corner(coastline[0].first()[0],coastline[0].first()[1]))
+				coastline.push(Viewport.nearest_corner(coastline[0].last()[0],coastline[0].last()[1]))
 			})
+			
+			var corners = []
+			
+			Cartagen.assembled_coastline.each(function(coastline,index) { 
+				//coastline[2] = child start_corner ([x,y])
+				//coastline[3] = child end_corner ([x,y])
+				corners.push(coastline[2][2])
+				$C.move_to(coastline[2][0],coastline[2][1])
+				
+				// $l(coastline[0].length+':'+coastline[2][2]+'=start '+coastline[0].first()[0]+','+coastline[0].first()[1]+'=first')
+				
+				// $C.save()
+				// $C.opacity(0.4)
+				// $C.fill_style('green')
+				// $C.rect(coastline[2][0]-50,coastline[2][1]-50,100,100)
+				// $C.restore()
+				
+				coastline[0].each(function(node,c_index) { 
+					$C.line_to(node[0],node[1])
+					// $C.save()
+					// $C.fill_style('green')
+					// $C.rect(node[0]-5,node[1]-5,10,10)
+					// $C.draw_text("Helvetica",20,'white',node[0]-10,node[1]-10,parseInt((coastline[1][0]*180)/Math.PI)+','+index+':'+c_index)
+					// $C.save()
+ 				}) 
+				$C.line_to(coastline[3][0],coastline[3][1])
+				
+				// if there are remaining coastlines, clockwise of this one:
+				if (Cartagen.assembled_coastline[index+1]) {
+					// walk back to the start point before going on to the next:
+					if (index != Cartagen.assembled_coastline.length-1) {
+						corners.push(coastline[3][2],coastline[2][2])
+						$l('walking to beginning!: '+coastline[3][2]+"/"+coastline[2][2]+':'+Coastline.walk(coastline[3][2],coastline[2][2],false).inspect())
+						Coastline.walk(coastline[3][2],coastline[2][2],false).each(function(n) {
+							$C.line_to(n[0],n[1])
+						})
+					}
+					// walk on to the next coastline:
+					if (coastline[2][2] != Cartagen.assembled_coastline[index+1][2][2]) {
+						corners.push(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2])
+						$l('walking to next!: '+coastline[2][2]+"/"+Cartagen.assembled_coastline[index+1][2][2]+':'+Coastline.walk(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2]).inspect())
+						Coastline.walk(coastline[2][2],Cartagen.assembled_coastline[index+1][2][2]).each(function(n) {
+							$C.line_to(n[0],n[1])
+						})
+					}
+				}
 
+				if (index == 0) {
+					start_corner = coastline[2]
+					start_angle = coastline[1][0]
+				}
+				if (index == Cartagen.assembled_coastline.length-1) {
+					end_corner = coastline[3]
+					end_angle = coastline[1][1]
+				}
+			},this)
+
+			// $C.save()
+			// $C.opacity(0.4)
+			// $C.fill_style('yellow')
+			// $C.rect(end_corner[0]-35,end_corner[1]-35,70,70)
+			// $C.restore()
+			// 
+			// $C.save()
+			// $C.opacity(1)
+			// $C.fill_style('purple')
+			// $C.rect(start_corner[0]-20,start_corner[1]-20,40,40)
+			// $C.restore()
+			
+			
+			// if 
+			// walk back to the start point ONLY if the start angle is less than the end angle.
+			// it's not enough to know they're both at corner 1; did it turn clockwise or not?
+			// $l('angles: end:'+end_corner[2]+'/'+parseInt((end_angle*180)/Math.PI) +', start:'+start_corner[2]+'/'+ parseInt((start_angle*180)/Math.PI))
+				// $C.save()
+				// $C.opacity(1)
+				// $C.fill_style('red')
+				// $C.translate(Map.x,Map.y)
+				// $C.rotate(end_angle)
+				// $C.rect(0,-100,4,100)
+				// $C.rotate(-end_angle)
+				// $C.fill_style('green')
+				// $C.rotate(start_angle)
+				// $C.rect(0,-100,4,100)
+				// $C.rotate(-start_angle)
+				// $C.translate(-Map.x,-Map.y)
+				// $C.restore()
+			if ((end_corner[2] == start_corner[2]) && (end_angle < start_angle)) {
+				// $l('no-walk!!')
+			} else if (end_corner[2] != start_corner[2] || end_angle > start_angle) {
+				corners.push(end_corner[2],start_corner[2])
+				$l('walking around!: '+end_corner[2]+"/"+start_corner[2]+':'+Coastline.walk(end_corner[2],start_corner[2]).inspect())
+				Coastline.walk(end_corner[2],start_corner[2]).each(function(n) {
+					$C.line_to(n[0],n[1])
+				})
+			}
+			$l('ending: '+corners)
+			
 			var coastline_style = Style.styles.relation
 			if (coastline_style.lineWidth) $C.line_width(coastline_style.lineWidth)
 			if (coastline_style.strokeStyle) $C.stroke_style(coastline_style.strokeStyle)

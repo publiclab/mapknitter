@@ -46,8 +46,6 @@ var Way = Class.create(Feature,
 			this.nodes.first().y == this.nodes.last().y) 
 				this.closed_poly = true
 				
-		if (this.tags.get('natural') == "coastline") this.closed_poly = true
-		
 		if (this.closed_poly) {
 			var centroid = Geometry.poly_centroid(this.nodes)
 			this.x = centroid[0]*2
@@ -58,6 +56,11 @@ var Way = Class.create(Feature,
 			this.y = (this.middle_segment()[0].y+this.middle_segment()[1].y)/2
 		}
 		
+		if (this.coastline && this.closed_poly) {
+			this.island = true
+			this.coastline = false
+		}
+
 		this.area = Geometry.poly_area(this.nodes)
 		this.bbox = Geometry.calculate_bounding_box(this.nodes)
 		
@@ -70,7 +73,9 @@ var Way = Class.create(Feature,
 		if (this.coastline) {
 			Cartagen.coastlines.push(this)
 		} else {
-			Style.parse_styles(this,Style.styles.way)
+			if (this.island && Style.styles.island) {
+				Style.parse_styles(this,Style.styles.island)
+			} else Style.parse_styles(this,Style.styles.way)
 			Geohash.put_object(this)
 		}
     },
@@ -93,7 +98,7 @@ var Way = Class.create(Feature,
 		if (uniq) {
 			if (prev) chain.push(this)
 			else chain.unshift(this)
-			$l(chain.length + ","+prev+next)
+			// $l(chain.length + ","+prev+next)
 			if (prev && this.neighbors[0]) { // this is the initial call
 				this.neighbors[0].chain(chain,true,false)
 			}
@@ -236,6 +241,7 @@ var Way = Class.create(Feature,
 				this.image = new Image()
 				this.image.src = src
 			} else if (this.image.width > 0) {
+				if (Cartagen.distort) $C.translate(0,Math.max(0,75-Geometry.distance(this.x,this.y,Map.pointer_x(),Map.pointer_y())/4))
 				$C.draw_image(this.image, this.x-this.image.width/2, this.y-this.image.height/2)	
 			}
 		}
