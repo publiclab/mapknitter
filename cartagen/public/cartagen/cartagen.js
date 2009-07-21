@@ -6506,12 +6506,10 @@ function tt_init() {
 	TaskTest.tm = new TaskManager(1000, [TaskTest.ta, TaskTest.tb, TaskTest.tc, TaskTest.td])
 }
 */
-
-
 var TimerManager = {
 	last_date: new Date,
-	lags: [],
-	spacing: 2,
+	intervals: [],
+	spacing: 3,
 	interval: 10,
 	setup: function(f,i) {
 		this.f = f || Prototype.emptyFunction
@@ -6523,11 +6521,12 @@ var TimerManager = {
 	},
 	run: function() {
 		var new_date = new Date
-		var lag = Math.min(300,(((new_date - this.last_date) - this.interval) || 0))
+		var measured_interval = ((new_date - this.last_date) - this.interval)
+		measured_interval = Math.max(measured_interval,10)
 		this.last_date = new_date
 		this.f()
-		this.lags.unshift(lag)
-		if (this.lags.length > 100) this.lags.pop()
+		this.intervals.unshift(parseInt(measured_interval))
+		if (this.intervals.length > 100) this.intervals.pop()
 		this.interval = this.sample()*this.spacing
 		setTimeout(this.bound_run,this.interval)
 	},
@@ -6535,7 +6534,7 @@ var TimerManager = {
 		var sample = 0
 		var sequence = [1,2,3,5,8,13,21,34,55]
 		for (var i = 0;i < sequence.length;i++) {
-			var add = this.lags[sequence[i]] || 0
+			var add = this.intervals[sequence[i]] || 0
 			sample += add
 		}
 		return sample/9
