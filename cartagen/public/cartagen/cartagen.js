@@ -4907,13 +4907,13 @@ var Config = {
 		stylesheet: ['gss']
 	}),
 	flags: $H({
-		debug:
-	})
+		debug: function(){}
+	}),
 	init: function(config) {
 		Object.extend(this, config)
 		Object.extend(this, this.get_url_params())
 
-		this.apply_aliases())
+		this.apply_aliases()
 
 		if (this.debug) {
 			$D.enable()
@@ -4938,7 +4938,7 @@ var Config = {
 				if (this[value]) this[pair.key] = value
 			})
 		}, this)
-	},
+	}
 
 }
 
