@@ -1,13 +1,16 @@
 var Config = {
+	aliases: $H({
+		stylesheet: ['gss']
+	}),
+	flags: $H({
+		debug:
+	})
 	init: function(config) {
 		// stores passed configs and query string configs in the Config object
 		Object.extend(this, config)
+		Object.extend(this, this.get_url_params())
 		
-		query_params = window.location.href.toQueryParams()
-		if (query_params.gss) { // for backwards compatability
-			query_params.stylesheet = query_params.gss
-		}
-		Object.extend(this, query_params)
+		this.apply_aliases())
 		
 		// Turn on debugging mode
 		if (this.debug) {
@@ -27,8 +30,16 @@ var Config = {
 		}
 	},
 	get_url_params: function() {
-		
-	}
+		return window.location.href.toQueryParams()
+	},
+	apply_aliases: function() {
+		this.aliases.each(function(pair) {
+			pair.value.each(function(value) {
+				if (this[value]) this[pair.key] = value
+			})
+		}, this)
+	},
+	
 }
 
 

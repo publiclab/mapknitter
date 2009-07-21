@@ -4903,14 +4903,17 @@ Object.Event.extend(Control.ContextMenu);
 /* **** BEGIN CARTAGEN **** */
 
 var Config = {
+	aliases: $H({
+		stylesheet: ['gss']
+	}),
+	flags: $H({
+		debug:
+	})
 	init: function(config) {
 		Object.extend(this, config)
+		Object.extend(this, this.get_url_params())
 
-		query_params = window.location.href.toQueryParams()
-		if (query_params.gss) { // for backwards compatability
-			query_params.stylesheet = query_params.gss
-		}
-		Object.extend(this, query_params)
+		this.apply_aliases())
 
 		if (this.debug) {
 			$D.enable()
@@ -4927,8 +4930,16 @@ var Config = {
 		}
 	},
 	get_url_params: function() {
+		return window.location.href.toQueryParams()
+	},
+	apply_aliases: function() {
+		this.aliases.each(function(pair) {
+			pair.value.each(function(value) {
+				if (this[value]) this[pair.key] = value
+			})
+		}, this)
+	},
 
-	}
 }
 
 
