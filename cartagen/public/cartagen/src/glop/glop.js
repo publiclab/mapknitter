@@ -114,7 +114,7 @@ var Glop = {
 
 document.observe('cartagen:init', Glop.init.bindAsEventListener(Glop))
 
-//= require "timer_manager"
+//= require "tasks"
 //= require "events"
 //= require "canvas"
 //= require "canvastext"

@@ -38,6 +38,8 @@
 
 
 /* **** BEGIN CARTAGEN **** */
+
+//= require <config/config>
  
 /**
  * Array of all objects that should be drawn.
@@ -46,7 +48,8 @@
  */
 var objects = []
 
-PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined // temp object unitl PhoneGap is initialized
+// temp object unitl PhoneGap is initialized.
+PhoneGap = window.DeviceInfo && DeviceInfo.uuid != undefined
 
 if (typeof cartagen_base_uri == 'undefined') {
 	/**
@@ -254,35 +257,40 @@ var Cartagen = {
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	setup: function(configs) {
-		if ($('brief') && this.get_url_param('fullscreen')) $('brief').hide()
-		if (this.get_url_param('grid')) {
-			Geohash.grid = true
-			Geohash.grid_color = this.get_url_param('grid')
-		}
-		// wait for window load:
-		// Event.observe(window, 'load', this.initialize.bind(this,configs))
-		this.initialize(configs)
+		// check if DOM loaded
+		//if (typeof document.getElementsByTagName != "undefined" &&
+		//	typeof document.getElementById != "undefined" &&
+		//    (document.getElementsByTagName("body")[0] !== null || document.body !== null )) {
+			
+			this.initialize(configs)
+		//}
+		//else {
+		//	// wait for DOM load:
+		//	console.log('observing')
+		//	console.log(document.readyState)
+		//	Event.observe(window, 'load', function(){console.log('fired')})
+		//	$(document).observe('dom:loaded', this.initialize.bindAsEventListener(this, configs))	
+		//}
 	},
 	/**
 	 * Performs initialization tasks, mainly fetching map data. This should never be called directly,
-	 * rather it is intended to be registed as a callback for window.onload by setup
+	 * rather it is intended to be called by setup
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	initialize: function(configs) {
+		console.log('initializing')
+		Config.init(configs)
 		// basic configuration:
 		Object.extend(this, configs)
-		if (Cartagen.debug) {
-			Geohash.grid = true
-		}
 
 		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 		
 		// load phonegap js if needed
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
-						    cartagen_base_uri + '/lib/phonegap/geolocation.js',
-						    cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
-						    cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
+						             cartagen_base_uri + '/lib/phonegap/geolocation.js',
+						             cartagen_base_uri + '/lib/phonegap/iphone/phonegap.js',
+						             cartagen_base_uri + '/lib/phonegap/iphone/geolocation.js')
 		}
 
 		// load extra scripts:
@@ -790,13 +798,7 @@ var Cartagen = {
 			method: 'get',
 			onComplete: function(result) {
 				// $l(result.responseText.evalJSON().osm.ways.length+" ways")
-				$l('got ' + url)
-				
-				$l('result:')
-				$l(result)
-				$l(result.responseText)
 				Cartagen.parse_objects(result.responseText.evalJSON())
-				$l(objects.length+" objects")
 				Cartagen.requested_plots--
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
@@ -979,7 +981,8 @@ var Cartagen = {
 }
 
 //= require <util/util>
-//= require <features/feature>
+//= require <config/style>
+//= require <data/feature>
 //= require <glop/glop>
 //= require <interface/interface>
 //= require <mapping/map>
