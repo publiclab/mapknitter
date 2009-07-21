@@ -6523,7 +6523,7 @@ var TimerManager = {
 	},
 	run: function() {
 		var new_date = new Date
-		var lag = Math.min(1000,(((new_date - this.last_date) - this.interval) || 0))
+		var lag = Math.min(300,(((new_date - this.last_date) - this.interval) || 0))
 		this.last_date = new_date
 		this.f()
 		this.lags.unshift(lag)
@@ -6533,7 +6533,7 @@ var TimerManager = {
 	},
 	sample: function() {
 		var sample = 0
-		var sequence = [1,2,3,5,8]//,13,21,34,55]
+		var sequence = [1,2,3,5,8,13,21,34,55]
 		for (var i = 0;i < sequence.length;i++) {
 			var add = this.lags[sequence[i]] || 0
 			sample += add
