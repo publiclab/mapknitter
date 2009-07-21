@@ -14,14 +14,6 @@ $D = {
 	 */
 	enabled: false,
 	/**
-	 * Performs initialization, including broswer-specific overrides for better debugging
-	 */
-	init: function(){
-		if (Cartagen.debug) {
-			$D.enable()
-		}
-	},
-	/**
 	 * Enables $D's methods
 	 */
 	enable: function() {
@@ -112,6 +104,3 @@ $D = {
  * Alias for $D.log
  */
 $l = $D.log
-
-// bind to event
-document.observe('cartagen:init', $D.init)

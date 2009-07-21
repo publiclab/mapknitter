@@ -1,6 +1,3 @@
-//= require "geohash"
-//= require "style"
-
 /**
  * A abstract base class for map features - nodes and ways. Should not be
  * instantiated.
@@ -99,8 +96,10 @@ var Feature = Class.create(
 	}
 })
 
-//= require "node"
-//= require "way"
-//= require "relation"
+//= require "types/node"
+//= require "types/way"
+//= require "types/relation"
+//= require "types/label"
+
 //= require "coastline"
-//= require "label"
+//= require "importer"

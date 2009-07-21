@@ -1,3 +1,4 @@
+//= require "geohash"
 //= require "projection"
 //= require "viewport"
 
