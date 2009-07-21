@@ -5176,11 +5176,11 @@ var Cartagen = {
 		}
 	},
 	go_to: function(lat,lon,zoom_level) {
+		Cartagen.zoom_level = zoom_level
 		Map.lat = lat
 		Map.lon = lon
-		Map.x = -Projection.lon_to_x(Map.lon)
+		Map.x = Projection.lon_to_x(Map.lon)
 		Map.y = Projection.lat_to_y(Map.lat)
-		Cartagen.zoom_level = zoom_level
 	},
 	parse_node: function(node){
 		var n = new Node
