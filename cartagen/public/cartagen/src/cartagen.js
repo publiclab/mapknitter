@@ -885,7 +885,7 @@ var Cartagen = {
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 				Geohash.last_get_objects[3] = true // force re-get of geohashes
-				Glop.draw()
+				Glop.trigger_draw()
 			},
 			onFailure: function() {
 				Cartagen.requested_plots--

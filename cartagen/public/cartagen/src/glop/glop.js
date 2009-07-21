@@ -25,7 +25,8 @@ var Glop = {
 	 */
 	init: function() {
 		// seconds between redraws:
-		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
+		// new PeriodicalExecuter(Glop.draw_powersave, 0.1)
+		TimerManager.setup(Glop.draw_powersave)
 	},
 	/**
 	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
@@ -96,17 +97,20 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	/**
+	 * Triggered when moused is moved on the canvas
+	 * @param {Event} event
+	 */
+	trigger_draw: function() {
+		this.trigger = true
+	},
+	trigger: false,
+	/**
 	 * Draws only if needed. Designed to be called periodically.
 	 */
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
+		if (this.trigger || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
+			this.trigger = false
 			Glop.draw()
-		} else {
-			if (Event.last_event > Glop.frame-25) {
-				Glop.draw()
-			} else {
-				// $l('sleeping')
-			}
 		}
 		Glop.frame += 1
 	}
@@ -115,6 +119,7 @@ var Glop = {
 document.observe('cartagen:init', Glop.init.bindAsEventListener(Glop))
 
 //= require "tasks"
+//= require "timer_manager"
 //= require "events"
 //= require "canvas"
 //= require "canvastext"

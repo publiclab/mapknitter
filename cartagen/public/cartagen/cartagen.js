@@ -5390,7 +5390,7 @@ var Cartagen = {
 				if (Cartagen.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Cartagen.plots.size()+", of which "+Cartagen.requested_plots+" are still loading.")
 				Geohash.last_get_objects[3] = true // force re-get of geohashes
-				Glop.draw()
+				Glop.trigger_draw()
 			},
 			onFailure: function() {
 				Cartagen.requested_plots--
@@ -6296,7 +6296,7 @@ var Glop = {
 	height: 0,
 	paused: false,
 	init: function() {
-		new PeriodicalExecuter(Glop.draw_powersave, 0.1)
+		TimerManager.setup(Glop.draw_powersave)
 	},
 	draw: function(custom_size, force_draw) {
 		if (Glop.paused && (force_draw != true)) {
@@ -6340,14 +6340,14 @@ var Glop = {
 	random_color: function() {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
+	trigger_draw: function() {
+		this.trigger = true
+	},
+	trigger: false,
 	draw_powersave: function() {
-		if (Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
+		if (this.trigger || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
+			this.trigger = false
 			Glop.draw()
-		} else {
-			if (Event.last_event > Glop.frame-25) {
-				Glop.draw()
-			} else {
-			}
 		}
 		Glop.frame += 1
 	}
@@ -6506,6 +6506,41 @@ function tt_init() {
 	TaskTest.tm = new TaskManager(1000, [TaskTest.ta, TaskTest.tb, TaskTest.tc, TaskTest.td])
 }
 */
+
+
+var TimerManager = {
+	last_date: new Date,
+	lags: [],
+	spacing: 2,
+	interval: 10,
+	setup: function(f,i) {
+		this.f = f || Prototype.emptyFunction
+		this.interval = i || this.interval
+		setTimeout(this.bound_run,i || this.interval)
+	},
+	bound_run: function() {
+		TimerManager.run.apply(TimerManager)
+	},
+	run: function() {
+		var new_date = new Date
+		var lag = Math.min(1000,(((new_date - this.last_date) - this.interval) || 0))
+		this.last_date = new_date
+		this.f()
+		this.lags.unshift(lag)
+		if (this.lags.length > 100) this.lags.pop()
+		this.interval = this.sample()*this.spacing
+		setTimeout(this.bound_run,this.interval)
+	},
+	sample: function() {
+		var sample = 0
+		var sequence = [1,2,3,5,8]//,13,21,34,55]
+		for (var i = 0;i < sequence.length;i++) {
+			var add = this.lags[sequence[i]] || 0
+			sample += add
+		}
+		return sample/9
+	},
+}
 var Events = {
 	last_event: 0,
 
@@ -6547,7 +6582,7 @@ var Events = {
 		var lat = Projection.y_to_lat(Map.pointer_y())
 		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
 		if (features) features.concat(Mouse.hovered_features).invoke('style')
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	mousedown: function(event) {
 		if (!event.isLeftClick()) return
@@ -6586,7 +6621,7 @@ var Events = {
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	keypress: function(e) {
 		if (e.element().tagName != 'BODY') return
@@ -6618,7 +6653,7 @@ var Events = {
 				case "b": Interface.download_bbox()
 			}
 		}
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	keyup: function() {
 		Keyboard.keys.set("r",false)
@@ -6637,7 +6672,7 @@ var Events = {
 			Map.x_old = Map.x
 			Map.y_old = Map.y
 			Mouse.dragging = true
-			Glop.draw()
+			Glop.trigger_draw()
 		  }
 	},
 	ontouchmove: function(e) {
@@ -6655,7 +6690,7 @@ var Events = {
 			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 
-			Glop.draw()
+			Glop.trigger_draw()
 		}
 	},
 	ontouchend: function(e) {
@@ -6666,7 +6701,7 @@ var Events = {
 			Mouse.dragging = false
 		}
 		User.update()
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	ongesturestart: function(e) {
 		zoom_level_old = Cartagen.zoom_level
@@ -6676,7 +6711,7 @@ var Events = {
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	gestureend: function(e){
 		Map.rotate_old = null
@@ -6709,7 +6744,7 @@ var Events = {
 		return Mouse.release_frame-Mouse.click_frame
 	},
 	resize: function() {
-		Glop.draw()
+		Glop.trigger_draw()
 	}
 }
 document.observe('cartagen:init', Events.init)
