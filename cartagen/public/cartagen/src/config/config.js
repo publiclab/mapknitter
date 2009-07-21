@@ -3,14 +3,14 @@ var Config = {
 		stylesheet: ['gss']
 	}),
 	flags: $H({
-		debug:
-	})
+		debug: function(){}
+	}),
 	init: function(config) {
 		// stores passed configs and query string configs in the Config object
 		Object.extend(this, config)
 		Object.extend(this, this.get_url_params())
 		
-		this.apply_aliases())
+		this.apply_aliases()
 		
 		// Turn on debugging mode
 		if (this.debug) {
@@ -38,7 +38,7 @@ var Config = {
 				if (this[value]) this[pair.key] = value
 			})
 		}, this)
-	},
+	}
 	
 }
 
