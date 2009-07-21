@@ -54,7 +54,7 @@ var Events = {
 		var lat = Projection.y_to_lat(Map.pointer_y())
 		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
 		if (features) features.concat(Mouse.hovered_features).invoke('style')
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Triggered when canvas is clicked on
@@ -104,7 +104,7 @@ var Events = {
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Triggered when a key is pressed
@@ -141,7 +141,7 @@ var Events = {
 				case "b": Interface.download_bbox()
 			}
 		}
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Triggered when a key is released
@@ -167,7 +167,7 @@ var Events = {
 			Map.x_old = Map.x
 			Map.y_old = Map.y
 			Mouse.dragging = true
-			Glop.draw()	
+			Glop.trigger_draw()	
 		  }
 	},
 	/**
@@ -189,7 +189,7 @@ var Events = {
 			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 
-			Glop.draw()
+			Glop.trigger_draw()
 		}
 	},
 	/**
@@ -204,7 +204,7 @@ var Events = {
 			Mouse.dragging = false
 		}
 		User.update()
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Triggered when a touch gesture is started. Mainly for touchscreen mobile platforms
@@ -222,7 +222,7 @@ var Events = {
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Triggered when a touch gesture is ended. Mainly for touchscreen mobile platforms
@@ -269,7 +269,7 @@ var Events = {
 		return Mouse.release_frame-Mouse.click_frame
 	},
 	resize: function() {
-		Glop.draw()
+		Glop.trigger_draw()
 	}
 }
 // bind event
