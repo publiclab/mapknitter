@@ -34,6 +34,58 @@ Object.value = function(obj, context) {
     return obj
 }
 
+// based on jQuery.extend
+Object.deep_extend = function() {
+    // copy reference to target object
+    var target = arguments[0] || {}, i = 1, length = arguments.length, deep = true, options, name, src, copy;
+
+    // Handle case when target is a string or something (possible in deep copy)
+    if ( typeof target !== "object" && !Object.isFunction(target) ) {
+        target = {};
+    }
+
+    for ( ; i < length; i++ ) {
+        // Only deal with non-null/undefined values
+        if ( (options = arguments[ i ]) != null ) {
+            // Extend the base object
+            for ( name in options ) {
+                src = target[ name ];
+                copy = options[ name ];
+
+                // Prevent never-ending loop
+                if ( target === copy ) {
+                    continue;
+                }
+
+                // Recurse if we're merging object values
+                if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+                    var clone;
+
+                    if ( src ) {
+                        clone = src;
+                    } else if ( Object.isArray(copy) ) {
+                        clone = [];
+                    } else if ( typeof copy == 'object' ) {
+                        clone = {};
+                    } else {
+                        clone = copy;
+                    }
+
+                    // Never move original objects, clone them
+                    target[ name ] = Object.deep_extend(clone, copy );
+
+                // Don't bring in undefined values
+                } else if ( copy !== undefined ) {
+                    target[ name ] = copy;
+                }
+            }
+        }
+    }
+
+    // Return the modified object
+    return target;
+}
+
 /**
  * Returns the number, rounded to a certain precision
  * @param {Number} prec Number of significant figures in the result

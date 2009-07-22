@@ -2,8 +2,18 @@ var Config = {
 	aliases: $H({
 		stylesheet: ['gss']
 	}),
-	flags: $H({
-		debug: function(){}
+	handlers: $H({
+		debug: function(value) {
+			$D.enable()
+			Geohash.grid = true
+		},
+		grid: function(value) {
+			Geohash.grid = true
+			if (Object.isString(value)) Geohash.grid_color = value
+		},
+		fullscreen: function(value) {
+			if ($('brief')) $('brief').hide()
+		}
 	}),
 	init: function(config) {
 		// stores passed configs and query string configs in the Config object
@@ -38,7 +48,7 @@ var Config = {
 				if (this[value]) this[pair.key] = value
 			})
 		}, this)
-	}
+	},
 	
 }
 

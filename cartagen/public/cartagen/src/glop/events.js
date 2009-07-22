@@ -53,7 +53,7 @@ var Events = {
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
 		var lat = Projection.y_to_lat(Map.pointer_y())
 		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
-		if (features) features.concat(Mouse.hovered_features).invoke('style')
+		if (features) features.reverse().concat(Mouse.hovered_features).invoke('style')
 		Glop.trigger_draw(5)
 	},
 	/**

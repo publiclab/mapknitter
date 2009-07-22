@@ -48,7 +48,8 @@ var Style = {
 	 */
 	parse_styles: function(feature,selector) {
 		(this.properties.concat(this.label_properties)).each(function(property) {
-			var val = selector[property]
+			var val = null
+			if (selector) val = selector[property]
 
 			if (Style.styles[feature.name] && Style.styles[feature.name][property])
 				val = this.extend_value(val, Style.styles[feature.name][property])
@@ -133,7 +134,16 @@ var Style = {
 		})
 	},
 	apply_gss: function(gss_string, force_update) {
+		$l('applying gss')
 		var styles = ("{"+gss_string+"}").evalJSON()
+		
+		if (styles.debug) {
+			if (Config.debug) {
+				Object.deep_extend(styles, styles.debug)
+			}
+			delete styles.debug
+		}
+		
 		$H(styles).each(function(style) {
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {

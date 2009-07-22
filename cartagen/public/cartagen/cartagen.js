@@ -4906,8 +4906,18 @@ var Config = {
 	aliases: $H({
 		stylesheet: ['gss']
 	}),
-	flags: $H({
-		debug: function(){}
+	handlers: $H({
+		debug: function(value) {
+			$D.enable()
+			Geohash.grid = true
+		},
+		grid: function(value) {
+			Geohash.grid = true
+			if (Object.isString(value)) Geohash.grid_color = value
+		},
+		fullscreen: function(value) {
+			if ($('brief')) $('brief').hide()
+		}
 	}),
 	init: function(config) {
 		Object.extend(this, config)
@@ -4938,7 +4948,7 @@ var Config = {
 				if (this[value]) this[pair.key] = value
 			})
 		}, this)
-	}
+	},
 
 }
 
@@ -4994,7 +5004,6 @@ var Cartagen = {
 			this.initialize(configs)
 	},
 	initialize: function(configs) {
-		console.log('initializing')
 		Config.init(configs)
 		Object.extend(this, configs)
 
@@ -5651,6 +5660,48 @@ Object.value = function(obj, context) {
     return obj
 }
 
+Object.deep_extend = function() {
+    var target = arguments[0] || {}, i = 1, length = arguments.length, deep = true, options, name, src, copy;
+
+    if ( typeof target !== "object" && !Object.isFunction(target) ) {
+        target = {};
+    }
+
+    for ( ; i < length; i++ ) {
+        if ( (options = arguments[ i ]) != null ) {
+            for ( name in options ) {
+                src = target[ name ];
+                copy = options[ name ];
+
+                if ( target === copy ) {
+                    continue;
+                }
+
+                if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+                    var clone;
+
+                    if ( src ) {
+                        clone = src;
+                    } else if ( Object.isArray(copy) ) {
+                        clone = [];
+                    } else if ( typeof copy == 'object' ) {
+                        clone = {};
+                    } else {
+                        clone = copy;
+                    }
+
+                    target[ name ] = Object.deep_extend(clone, copy );
+
+                } else if ( copy !== undefined ) {
+                    target[ name ] = copy;
+                }
+            }
+        }
+    }
+
+    return target;
+}
+
 Number.prototype.to_precision = function(prec){
 	return (this * (1/prec)).round()/(1/prec)
 }
@@ -5690,7 +5741,8 @@ var Style = {
 	},
 	parse_styles: function(feature,selector) {
 		(this.properties.concat(this.label_properties)).each(function(property) {
-			var val = selector[property]
+			var val = null
+			if (selector) val = selector[property]
 
 			if (Style.styles[feature.name] && Style.styles[feature.name][property])
 				val = this.extend_value(val, Style.styles[feature.name][property])
@@ -5755,7 +5807,16 @@ var Style = {
 		})
 	},
 	apply_gss: function(gss_string, force_update) {
+		$l('applying gss')
 		var styles = ("{"+gss_string+"}").evalJSON()
+
+		if (styles.debug) {
+			if (Config.debug) {
+				Object.deep_extend(styles, styles.debug)
+			}
+			delete styles.debug
+		}
+
 		$H(styles).each(function(style) {
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
@@ -5893,6 +5954,7 @@ var Way = Class.create(Feature,
 		$super()
 		geohash = geohash || true
 		this.age = 0
+		this.birthdate = new Date
 		this.highlight = false
 		this.nodes = []
 		this.closed_poly = false
@@ -6028,8 +6090,8 @@ var Way = Class.create(Feature,
 			$C.stroke_style("red")
 		}
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
-		if (this.age < 20) {
-			$C.opacity(this.opacity*(this.age/20))
+		if ((Glop.date - this.birthdate) < 4000) {
+			$C.opacity(0.1+this.opacity*((Glop.date - this.birthdate)/4000))
 		} else {
 			$C.opacity(this.opacity)
 		}
@@ -6175,7 +6237,7 @@ var Relation = Class.create(Feature,
 var Label = Class.create(
 {
     initialize: function(owner) {
-		this.fontFamily = 'Lucida Grande',
+		this.fontFamily = 'Lucida Grande, sans-serif',
 	    this.fontSize = 11,
 	    this.fontBackground = null,
 	    this.text = null,
@@ -6292,6 +6354,7 @@ var Coastline = {
 }
 var Glop = {
 	frame: 0,
+	date: new Date,
 	width: 0,
 	height: 0,
 	paused: false,
@@ -6303,10 +6366,7 @@ var Glop = {
 			$('canvas').fire('glop:predraw')
 			return
 		}
-
-
 		$C.clear()
-
 		if (Cartagen.fullscreen) {
 			if (!custom_size) { // see Canvas.to_print_data_url()
 				Glop.width = document.viewport.getWidth()
@@ -6322,11 +6382,8 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
-
 		Events.drag()
-
 		$('canvas').fire('glop:predraw')
-
 		draw_event = $('canvas').fire('glop:draw')
 
 		if (!draw_event.no_draw) {
@@ -6340,16 +6397,23 @@ var Glop = {
 	random_color: function() {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
-	trigger_draw: function() {
-		this.trigger = true
-	},
-	trigger: false,
-	draw_powersave: function() {
-		if (this.trigger || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
-			this.trigger = false
-			Glop.draw()
+	tail: 0,
+	trigger_draw: function(t) {
+		if (Object.isNumber(t)) {
+			if (t > this.tail) this.tail = t
+		} else {
+			if (this.tail <= 0) this.tail = 1
 		}
+	},
+	draw_powersave: function() {
+		var delay = 20
+		if (this.tail > 0 || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
+			this.tail -= 1
+			Glop.draw()
+		}// else $l('powersave'+this.tail)
+		$l('tail:'+this.tail)
 		Glop.frame += 1
+		Glop.date = new Date
 	}
 }
 
@@ -6378,6 +6442,9 @@ var TaskManager = Class.create(
 				this.tasks.splice((i-1) % this.tasks.length, 1)
 			}
 		}
+
+		Geohash.get_objects()
+		Glop.trigger_draw()
 
 		if (this.tasks.length < 1) this.stop()
 	},
@@ -6509,12 +6576,13 @@ function tt_init() {
 var TimerManager = {
 	last_date: new Date,
 	intervals: [],
-	spacing: 3,
+	spacing: 2,
 	interval: 10,
 	setup: function(f,i) {
 		this.f = f || Prototype.emptyFunction
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
+		this.spacing = Viewport.power()
 	},
 	bound_run: function() {
 		TimerManager.run.apply(TimerManager)
@@ -6526,6 +6594,7 @@ var TimerManager = {
 		this.last_date = new_date
 		this.f()
 		this.intervals.unshift(parseInt(measured_interval))
+		$l(parseInt(measured_interval))
 		if (this.intervals.length > 100) this.intervals.pop()
 		this.interval = this.sample()*this.spacing
 		setTimeout(this.bound_run,this.interval)
@@ -6580,8 +6649,8 @@ var Events = {
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
 		var lat = Projection.y_to_lat(Map.pointer_y())
 		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
-		if (features) features.concat(Mouse.hovered_features).invoke('style')
-		Glop.trigger_draw()
+		if (features) features.reverse().concat(Mouse.hovered_features).invoke('style')
+		Glop.trigger_draw(5)
 	},
 	mousedown: function(event) {
 		if (!event.isLeftClick()) return
@@ -6594,6 +6663,7 @@ var Events = {
         Map.rotate_old = Map.rotate
 		Mouse.dragging = true
 		Events.mousemove(event)
+		Glop.trigger_draw(5)
 	},
 	mouseup: function(event) {
 		if (!event.isLeftClick()) return
@@ -6620,7 +6690,7 @@ var Events = {
 			}
 			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
 		}
-		Glop.trigger_draw()
+		Glop.trigger_draw(5)
 	},
 	keypress: function(e) {
 		if (e.element().tagName != 'BODY') return
@@ -6652,7 +6722,7 @@ var Events = {
 				case "b": Interface.download_bbox()
 			}
 		}
-		Glop.trigger_draw()
+		Glop.trigger_draw(5)
 	},
 	keyup: function() {
 		Keyboard.keys.set("r",false)
@@ -6671,7 +6741,7 @@ var Events = {
 			Map.x_old = Map.x
 			Map.y_old = Map.y
 			Mouse.dragging = true
-			Glop.trigger_draw()
+			Glop.trigger_draw(5)
 		  }
 	},
 	ontouchmove: function(e) {
@@ -6689,7 +6759,7 @@ var Events = {
 			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
 			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
 
-			Glop.trigger_draw()
+			Glop.trigger_draw(5)
 		}
 	},
 	ontouchend: function(e) {
@@ -6700,7 +6770,7 @@ var Events = {
 			Mouse.dragging = false
 		}
 		User.update()
-		Glop.trigger_draw()
+		Glop.trigger_draw(5)
 	},
 	ongesturestart: function(e) {
 		zoom_level_old = Cartagen.zoom_level
@@ -6710,7 +6780,7 @@ var Events = {
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
 		Cartagen.zoom_level = zoom_level_old*e.scale
-		Glop.trigger_draw()
+		Glop.trigger_draw(5)
 	},
 	gestureend: function(e){
 		Map.rotate_old = null
@@ -6743,7 +6813,7 @@ var Events = {
 		return Mouse.release_frame-Mouse.click_frame
 	},
 	resize: function() {
-		Glop.trigger_draw()
+		Glop.trigger_draw(5)
 	}
 }
 document.observe('cartagen:init', Events.init)
