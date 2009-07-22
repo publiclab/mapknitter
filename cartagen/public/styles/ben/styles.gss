@@ -1,0 +1,156 @@
+body: {
+	fillStyle: "white",
+	lineWidth: 0,
+	pattern: "/styles/ben/ground.jpg",
+	menu: {
+		"Edit GSS": Cartagen.show_gss_editor,
+		"Download Image": Cartagen.redirect_to_image,
+		"Download Data": Interface.download_bbox
+	}
+},
+node: {
+	fillStyle: "#ddd",
+	strokeStyle: "#090",
+	lineWidth: 0,
+	radius: 1
+},
+way: {
+	strokeStyle: "#ccc",
+	lineWidth: 5,
+	outlineColor: "rgba(0,0,0,0.5)",
+	outlineWidth: 2,
+	menu: {
+		"Toggle Transparency": function() {
+			if (this._transparency_active) {
+				this.opacity = 1
+				this._transparency_active = false
+			}
+			else {
+				this.opacity = 0.2
+				this._transparency_active = true
+			}
+		},
+		"Search on Google": function() {
+			if (this.tags.get('name')) {
+				window.open("http://google.com/search?q=" + this.tags.get('name'), "_blank")
+			}
+			else {
+				alert('Sorry! The name of this feature is unknown.')
+			}
+		},
+		"Search on Wikipedia": function() {
+			if (this.tags.get('name')) {
+				window.open("http://en.wikipedia.org/wiki/Special:Search?go=Go&search=" + this.tags.get('name'), "_blank")
+			}
+			else {
+				alert('Sorry! The name of this feature is unknown.')
+			}
+		}
+	},
+	mouseDown: {
+		outlineColor: "red",
+		outlineWidth: 5
+	},
+	text: function() {
+		return this.tags.get('name')
+	},
+	fontColor: "white"
+},
+leisure: {
+	fillStyle: "#2a2",
+	lineWidth: 3,
+	strokeStyle: "#181"
+},
+waterway: {
+	fillStyle: "blue",
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	pattern: "/styles/ben/waves.jpg",
+	outlineWidth: 0
+},
+water: {
+	fillStyle: "blue",
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	pattern: "/styles/ben/waves.jpg",
+	outlineWidth: 0
+},
+leisure: {
+	fillStyle: "green",
+	pattern: "/styles/ben/forest.jpg",
+	lineWidth: 3,
+	strokeStyle: "#181",
+	opacity: 1
+},
+park: {
+	fillStyle: "green",
+	pattern: "/styles/ben/forest.jpg",
+	lineWidth: 3,
+	strokeStyle: "#181",
+	opacity: 1
+},
+building: {
+	fillStyle: "#222",
+},
+highway: {
+	fontBackground: "rgba(0,0,0,0.5)",
+	fontScale: "fixed",
+	text: function() { return this.tags.get('name') }
+},
+primary: {
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 10
+	}
+},
+secondary: {
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 7
+	}
+},
+footway: {
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 3
+	}
+},
+pedestrian: {
+	lineWidth: function() {
+		if (this.tags.get('width')) return parseInt(this.tags.get('width'))*0.8
+		else return 3
+	}
+},
+debug: {
+	way: {
+		menu: {
+			"Inspect": function() {$l(this)}
+		}
+	}
+},
+rail: {
+	outlineColor: "purple"
+},
+area: {
+	fillStyle: "rgba(0, 255, 0, 0.1)"
+},
+island: {
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	pattern: "/styles/ben/ground.jpg"
+},
+relation: {
+	fillStyle: "#57d",
+	strokeStyle: "#24a",
+	lineWidth: 4,
+	pattern: "/styles/ben/waves.jpg"
+},
+administrative: {
+	lineWidth: 10,
+	strokeStyle: "green",
+	fillStyle: "rgba(0,0,0,0)",
+	mouseDown: {
+		outlineColor: "rgba(0,0,0,0.5)",
+		outlineWidth: 2
+	}
+}

@@ -278,7 +278,6 @@ var Cartagen = {
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	initialize: function(configs) {
-		console.log('initializing')
 		Config.init(configs)
 		// basic configuration:
 		Object.extend(this, configs)

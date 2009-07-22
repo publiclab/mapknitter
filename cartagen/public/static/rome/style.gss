@@ -1,6 +1,5 @@
 body: {
-	fillStyle: "rgba(0,0,0,0)",
-	//fillStyle: "#5E2605",
+	fillStyle: "white",
 	lineWidth: 0,
 	pattern: "/images/brown-paper.jpg",
 	menu: {
@@ -19,7 +18,17 @@ way: {
 	strokeStyle: "#ccc",
 	lineWidth: 3,
 	menu: {
-		"Inspect": function() {$l(this)}
+		"Inspect": function() {$l(this)},
+		"Toggle Transparency": function() {
+			if (this._transparency_active) {
+				this.opacity = 1
+				this._transparency_active = false
+			}
+			else {
+				this.opacity = 0.2
+				this._transparency_active = true
+			}
+		}
 	}
 },
 island: {
