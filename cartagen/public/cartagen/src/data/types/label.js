@@ -17,7 +17,7 @@ var Label = Class.create(
 		 * Font to use if native canvas text is supported
 		 * @type String
 		 */
-		this.fontFamily = 'Lucida Grande',
+		this.fontFamily = 'Lucida Grande, sans-serif',
 		/**
 		 * Font size, in pts.
 		 * @type Number
