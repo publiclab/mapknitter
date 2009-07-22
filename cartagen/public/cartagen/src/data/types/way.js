@@ -23,6 +23,11 @@ var Way = Class.create(Feature,
 		 */
 		this.age = 0
 		/**
+		 * Timestamp of way creation
+		 * @type Date
+		 */
+		this.birthdate = new Date
+		/**
 		 * If true, this way will have a red border
 		 * @type Boolean
 		 */
@@ -204,8 +209,9 @@ var Way = Class.create(Feature,
 		}
 		// fade in after load:
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
-		if (this.age < 20) {
-			$C.opacity(this.opacity*(this.age/20))
+		if ((Glop.date - this.birthdate) < 4000) {
+			$C.opacity(0.1+this.opacity*((Glop.date - this.birthdate)/4000))
+			// $l(0.1+this.opacity*((this.birthdate - Glop.date)/10000))
 		} else {
 			$C.opacity(this.opacity)
 		}
