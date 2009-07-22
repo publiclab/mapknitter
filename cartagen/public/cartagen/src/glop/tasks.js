@@ -41,6 +41,9 @@ var TaskManager = Class.create(
 			}
 		}
 		
+		Geohash.get_objects()
+		Glop.trigger_draw()
+		
 		if (this.tasks.length < 1) this.stop()
 	},
 	add: function(task) {

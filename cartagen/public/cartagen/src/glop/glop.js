@@ -8,6 +8,11 @@ var Glop = {
 	 */
 	frame: 0,
 	/**
+	 * A Date object updated (regenerated) every frame.
+	 * @type Date
+	 */
+	date: new Date,
+	/**
 	 * The width of the canvas
 	 * @type Number
 	 */
@@ -37,10 +42,7 @@ var Glop = {
 			$('canvas').fire('glop:predraw')
 			return
 		}
-
-		
 		$C.clear()
-		
 		if (Cartagen.fullscreen) {
 			if (!custom_size) { // see Canvas.to_print_data_url()
 				Glop.width = document.viewport.getWidth()
@@ -56,16 +58,13 @@ var Glop = {
 			$('canvas').width = Glop.width
 			$('canvas').height = Glop.height
 		}
-		
-		Events.drag()
-		
+		Events.drag()	
 		/**
 		 * @name Glop#glop:predraw
 		 * @event
 		 * Fired each frame before features are drawn.
 		 */
 		$('canvas').fire('glop:predraw')
-		
 		/**
 		 * @name Glop#glop:draw
 		 * @event
@@ -97,29 +96,40 @@ var Glop = {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
 	},
 	/**
+	 * The number of frames to continue rendering, even if there's no further user interaction
+	 */
+	tail: 0,
+	/**
 	 * Triggered when moused is moved on the canvas
 	 * @param {Event} event
 	 */
-	trigger_draw: function() {
-		this.trigger = true
+	trigger_draw: function(t) {
+		if (Object.isNumber(t)) {
+			if (t > this.tail) this.tail = t
+		} else {
+			if (this.tail <= 0) this.tail = 1
+		}
+		// $l('trigger:'+this.tail)
 	},
-	trigger: false,
 	/**
 	 * Draws only if needed. Designed to be called periodically.
 	 */
 	draw_powersave: function() {
-		if (this.trigger || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-20) {
-			this.trigger = false
+		var delay = 20
+		if (this.tail > 0 || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
+			this.tail -= 1
 			Glop.draw()
-		}
+		}// else $l('powersave'+this.tail)
+		$l('tail:'+this.tail)
 		Glop.frame += 1
+		Glop.date = new Date
 	}
 }
 
 document.observe('cartagen:init', Glop.init.bindAsEventListener(Glop))
 
 //= require "tasks"
-//= require "timer_manager"
+//= require "timer"
 //= require "events"
 //= require "canvas"
 //= require "canvastext"
