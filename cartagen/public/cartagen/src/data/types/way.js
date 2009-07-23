@@ -210,8 +210,7 @@ var Way = Class.create(Feature,
 		// fade in after load:
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if ((Glop.date - this.birthdate) < 4000) {
-			$C.opacity(0.1+this.opacity*((Glop.date - this.birthdate)/4000))
-			// $l(0.1+this.opacity*((this.birthdate - Glop.date)/10000))
+			$C.opacity(Math.max(0,0.1+this.opacity*((Glop.date - this.birthdate)/4000)))
 		} else {
 			$C.opacity(this.opacity)
 		}
