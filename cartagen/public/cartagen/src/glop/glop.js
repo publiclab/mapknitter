@@ -31,7 +31,7 @@ var Glop = {
 	init: function() {
 		// seconds between redraws:
 		// new PeriodicalExecuter(Glop.draw_powersave, 0.1)
-		TimerManager.setup(Glop.draw_powersave)
+		TimerManager.setup(Glop.draw_powersave,this)
 	},
 	/**
 	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
@@ -104,12 +104,12 @@ var Glop = {
 	 * @param {Event} event
 	 */
 	trigger_draw: function(t) {
-		if (Object.isNumber(t)) {
+		// t = t || 1
+		if (Object.isNumber(t) && !Object.isUndefined(t)) {
 			if (t > this.tail) this.tail = t
 		} else {
 			if (this.tail <= 0) this.tail = 1
 		}
-		// $l('trigger:'+this.tail)
 	},
 	/**
 	 * Draws only if needed. Designed to be called periodically.
@@ -117,10 +117,10 @@ var Glop = {
 	draw_powersave: function() {
 		var delay = 20
 		if (this.tail > 0 || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
-			this.tail -= 1
+			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
-		}// else $l('powersave'+this.tail)
-		$l('tail:'+this.tail)
+		} //else $l('powersave: '+this.tail)
+		// $l('tail:'+this.tail)
 		Glop.frame += 1
 		Glop.date = new Date
 	}
