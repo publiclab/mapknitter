@@ -6359,7 +6359,7 @@ var Glop = {
 	height: 0,
 	paused: false,
 	init: function() {
-		TimerManager.setup(Glop.draw_powersave)
+		TimerManager.setup(Glop.draw_powersave,this)
 	},
 	draw: function(custom_size, force_draw) {
 		if (Glop.paused && (force_draw != true)) {
@@ -6399,7 +6399,7 @@ var Glop = {
 	},
 	tail: 0,
 	trigger_draw: function(t) {
-		if (Object.isNumber(t)) {
+		if (Object.isNumber(t) && !Object.isUndefined(t)) {
 			if (t > this.tail) this.tail = t
 		} else {
 			if (this.tail <= 0) this.tail = 1
@@ -6408,10 +6408,9 @@ var Glop = {
 	draw_powersave: function() {
 		var delay = 20
 		if (this.tail > 0 || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
-			this.tail -= 1
+			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
-		}// else $l('powersave'+this.tail)
-		$l('tail:'+this.tail)
+		} //else $l('powersave: '+this.tail)
 		Glop.frame += 1
 		Glop.date = new Date
 	}
@@ -6576,25 +6575,23 @@ function tt_init() {
 var TimerManager = {
 	last_date: new Date,
 	intervals: [],
-	spacing: 2,
+	spacing: 1,
 	interval: 10,
-	setup: function(f,i) {
+	setup: function(f,c,s,i) {
 		this.f = f || Prototype.emptyFunction
+		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
-		this.spacing = Viewport.power()
 	},
 	bound_run: function() {
 		TimerManager.run.apply(TimerManager)
 	},
 	run: function() {
 		var new_date = new Date
-		var measured_interval = ((new_date - this.last_date) - this.interval)
-		measured_interval = Math.max(measured_interval,10)
+		var measured_interval = Math.max(((new_date - this.last_date) - this.interval),10)
 		this.last_date = new_date
-		this.f()
+		this.f.apply(this.context)
 		this.intervals.unshift(parseInt(measured_interval))
-		$l(parseInt(measured_interval))
 		if (this.intervals.length > 100) this.intervals.pop()
 		this.interval = this.sample()*this.spacing
 		setTimeout(this.bound_run,this.interval)
@@ -6603,8 +6600,7 @@ var TimerManager = {
 		var sample = 0
 		var sequence = [1,2,3,5,8,13,21,34,55]
 		for (var i = 0;i < sequence.length;i++) {
-			var add = this.intervals[sequence[i]] || 0
-			sample += add
+			sample += this.intervals[sequence[i]] || 0
 		}
 		return sample/9
 	},
