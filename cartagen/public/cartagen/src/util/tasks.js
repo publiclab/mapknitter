@@ -40,6 +40,8 @@ var TaskManager = Class.create(
 				this.tasks.splice((i-1) % this.tasks.length, 1)
 			}
 		}
+
+		this.display()
 		
 		if (this.tasks.length < 1) this.stop()
 	},
@@ -56,6 +58,9 @@ var TaskManager = Class.create(
 		this.active = false
 		$('canvas').stopObserving('glop:predraw', this.listener)
 	},
+	completed: function() {
+		
+	}
 	
 	// Currently unused
 	

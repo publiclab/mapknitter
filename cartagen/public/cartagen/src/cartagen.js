@@ -540,6 +540,8 @@ var Cartagen = {
 			}
 		})
 
+		Interface.display_loading()
+
 		this.feature_queue.each(function(item) {
 			(item.draw.bind(item))()
 		})

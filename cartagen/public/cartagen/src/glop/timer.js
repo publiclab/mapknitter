@@ -36,7 +36,7 @@ var TimerManager = {
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
-		// this.spacing = s || Math.max(0,2.5-Viewport.power())
+		this.spacing = 0.3//Math.max(1,2.5-Viewport.power())
 	},
 	/**
 	 * Binds the scope of TimerManager.run() to TimerManager
