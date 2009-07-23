@@ -7,6 +7,27 @@
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
+	display_loading: function(percent) {
+		percent = percent || (Glop.frame/200)
+		$C.save()
+		$C.fill_style('white')
+		$C.line_width(0)
+		$C.opacity(0.8)
+		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+50, y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+50
+		$C.begin_path()
+			$C.line_to(x,y)
+			$C.arc(x,y,30,0,Math.PI*2*percent,false)
+			$C.line_to(x,y)
+			//
+		$C.fill()
+		$C.draw_text("Lucida Grande, sans-serif",
+		             12/Cartagen.zoom_level,
+					 "#333",
+		             x,
+					 y,
+					 parseInt(percent)+"%")
+		$C.restore()
+	},
 	/**
 	 * Prompts the user to select a bbox, then downloads that bbox
 	 */

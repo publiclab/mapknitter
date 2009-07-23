@@ -5170,6 +5170,8 @@ var Cartagen = {
 			}
 		})
 
+		Interface.display_loading()
+
 		this.feature_queue.each(function(item) {
 			(item.draw.bind(item))()
 		})
@@ -6091,7 +6093,7 @@ var Way = Class.create(Feature,
 		}
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if ((Glop.date - this.birthdate) < 4000) {
-			$C.opacity(0.1+this.opacity*((Glop.date - this.birthdate)/4000))
+			$C.opacity(Math.max(0,0.1+this.opacity*((Glop.date - this.birthdate)/4000)))
 		} else {
 			$C.opacity(this.opacity)
 		}
@@ -6582,6 +6584,7 @@ var TimerManager = {
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
+		this.spacing = 0.3//Math.max(1,2.5-Viewport.power())
 	},
 	bound_run: function() {
 		TimerManager.run.apply(TimerManager)
@@ -7492,6 +7495,26 @@ var ContextMenu = {
 document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 
 var Interface = {
+	display_loading: function(percent) {
+		percent = percent || (Glop.frame/200)
+		$C.save()
+		$C.fill_style('white')
+		$C.line_width(0)
+		$C.opacity(0.8)
+		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+50, y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+50
+		$C.begin_path()
+			$C.line_to(x,y)
+			$C.arc(x,y,30,0,Math.PI*2*percent,false)
+			$C.line_to(x,y)
+		$C.fill()
+		$C.draw_text("Lucida Grande, sans-serif",
+		             12/Cartagen.zoom_level,
+					 "#333",
+		             x,
+					 y,
+					 parseInt(percent)+"%")
+		$C.restore()
+	},
 	download_bbox: function() {
 		Glop.paused = true
 
