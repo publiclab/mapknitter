@@ -6576,7 +6576,7 @@ function tt_init() {
 var TimerManager = {
 	last_date: new Date,
 	times: [],
-	spacing: 0.5,
+	spacing: 0.8,
 	interval: 10,
 	setup: function(f,c,s,i) {
 		this.f = f || Prototype.emptyFunction
@@ -6596,7 +6596,7 @@ var TimerManager = {
 		$l(execution_time+', '+Math.max(50,parseInt(this.spacing*this.sample())))
 		setTimeout(this.bound_run,Math.max(50,parseInt(this.spacing*this.sample())))
 	},
-	sequence: [1,2,3,5,8,13,21,34,55],
+	sequence: [1,2,3,5,8,13],//,21,34,55],
 	sample: function() {
 		var sample = 0
 		for (var i = 0;i < this.sequence.length;i++) {
