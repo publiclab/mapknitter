@@ -14,9 +14,8 @@ var Events = {
 		canvas.observe('mousedown', Events.mousedown)
 		canvas.observe('mouseup', Events.mouseup)
 		canvas.observe('dblclick', Events.doubleclick)
-		canvas.observe('keypress', function(e){$l('cavas#keypress')})
-		canvas.observe('focus', function(e){$l('canvas#focus')})
-		canvas.observe('blur', function(e){$l('canvas#blur')})
+		canvas.observe('mouseover', Events.mouseover)
+		canvas.observe('mouseout', Events.mouseout)
 		
 		
 		// Observe scrollwheel:
@@ -38,16 +37,12 @@ var Events = {
 		// window events:
 		Event.observe(window, 'resize', Events.resize);
 	},
-	enable: function() {
-		Events.init()
-	},
-	disable: function() {
-	},
 	/**
 	 * Triggered when moused is moved on the canvas
 	 * @param {Event} event
 	 */
 	mousemove: function(event) { 
+		Events.enabled = true
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
@@ -90,6 +85,7 @@ var Events = {
 	 * @param {Event} event
 	 */
 	wheel: function(event){
+		if (Events.enabled == false) return
 		var delta = 0;
 		if (!event) event = window.event;
 		if (event.wheelDelta) {
@@ -113,7 +109,7 @@ var Events = {
 	 * @param {Event} e
 	 */
 	keypress: function(e) {
-		if (e.element().tagName != 'BODY') return
+		if (Events.enabled === false) return
 
 		var code;
 		if (!e) var e = window.event;
@@ -149,6 +145,8 @@ var Events = {
 	 * Triggered when a key is released
 	 */
 	keyup: function() {
+		if (Events.enabled === false) return
+		
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
 	},
@@ -272,6 +270,12 @@ var Events = {
 	},
 	resize: function() {
 		Glop.trigger_draw(5)
+	},
+	mouseover: function() {
+		Events.enabled = true
+	},
+	mouseout: function() {
+		Events.enabled = false
 	}
 }
 // bind event
