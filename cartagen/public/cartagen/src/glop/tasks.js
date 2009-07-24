@@ -24,6 +24,8 @@ var TaskManager = Class.create(
 		
 		this.listener = this.run.bindAsEventListener(this)
 		
+		this.completed = 0
+		
 		this.start()
 	},
 	/**
@@ -31,15 +33,26 @@ var TaskManager = Class.create(
 	 */ 
 	run: function() {
 		var i = 0
-		
 		var start_time = new Date().getTime()
+		var cur_tasks = []
+		var r, task
 		
-		while (this.tasks.length > 0 && (new Date().getTime() - start_time) < this.quota) {
-			r = this.tasks[(i++) % this.tasks.length].exec_next()
-			if (r === false) {
-				this.tasks.splice((i-1) % this.tasks.length, 1)
+		for (var j = 0; j < this.tasks.length; j++) {
+			if (this.tasks[j].pass_condition()) {
+				cur_tasks.push(this.tasks[j])
 			}
 		}
+		
+		while (cur_tasks.length > 0 && (new Date().getTime() - start_time) < this.quota) {
+			task = cur_tasks[(i++) % cur_tasks.length]
+			r = task.exec_next()
+			if (r === false) {
+				this.tasks = this.tasks.without(task)
+				cur_tasks = cur_tasks.without(task)
+			}
+		}
+		
+		this.get_completed(cur_tasks)
 		
 		Geohash.get_objects()
 		Glop.trigger_draw()
@@ -59,18 +72,16 @@ var TaskManager = Class.create(
 		this.active = false
 		$('canvas').stopObserving('glop:predraw', this.listener)
 	},
-	completed: function() {
-		return (Glop.frame/2)
-	},
-	
-	// Currently unused
-	
-	display: function() {
-		this.tasks.each(function(task,index) {
-			// move to top left, display a row of processes as either bars or pies:
-			
-		})
-	},
+	get_completed: function(tasks) {
+		var total = 0
+		var left = 0
+		for (var i = 0; i < tasks.length; ++i) {
+			total += tasks[i].total_members
+			left += tasks[i].members.length
+		}
+		this.completed = ((total-left)/total) * 100
+		$l(this.completed)
+	}
 })
 
 /**
@@ -89,6 +100,7 @@ var Task = Class.create(
 		 * @type Object[]
 		 */ 
 		this.members = members || []
+		this.total_members = members.length || 0
 		/**
 		 * A function to process objects with
 		 * @type Function
@@ -117,12 +129,18 @@ var Task = Class.create(
 		}
 	},
 	should_run: function() {
-		if (Object.value(this.condition, this) === false) return false
+		if (!this.pass_condition) return false
+		
 		for (var i = 0; i < this.deps.length; i++) {
 			if (Task.is_done(this.deps[i]) === false) {
 				return false
 			}
 		}
+		
+		return true
+	},
+	pass_condition: function() {
+		if (Object.value(this.condition, this) === false) return false
 		
 		return true
 	},
