@@ -40,7 +40,7 @@ var Projection = {
 	/**
 	 * Finds the longitude of the center of the Map
 	 */
-	center_lon: function() { return (Cartagen.lng2+Cartagen.lng1)/2 },
+	center_lon: function() { return Config.lng },
 	/** @ignore */
 	spherical_mercator: {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },

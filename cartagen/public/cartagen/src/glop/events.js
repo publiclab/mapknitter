@@ -98,13 +98,13 @@ var Events = {
 		} else if (event.detail) {
 			delta = -event.detail/3;
 		}
-		if (delta && !Cartagen.live_gss) {
+		if (delta && !Config.live_gss) {
 			if (delta <0) {
 				Cartagen.zoom_level += delta/80
 			} else {
 				Cartagen.zoom_level += delta/80
 			}
-			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
+			if (Cartagen.zoom_level < Config.zoom_out_limit) Cartagen.zoom_level = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 	},
@@ -138,7 +138,7 @@ var Events = {
 			switch(character){
 				case "r": Keyboard.keys.set("r",true); break
 				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
+				case "g": if (!Config.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
 				case "b": Interface.download_bbox()
 			}

@@ -93,83 +93,6 @@ var Cartagen = {
 	 */
 	requested_plots: 0,
 	/**
-	 * The path to the stylesheet that GSS will be loaded from. 
-	 * @type String
-	 */
-	stylesheet: "/style.gss",
-	/**
-	 * If true, we are loading live data. Else, we are loading static data.
-	 * @type Boolean
-	 */
-	live: false,
-	/**
-	 * When true, only draws when needed, rather than as much as possible.
-	 * @type Boolean
-	 */
-	powersave: true,
-	/**
-	 * The smallest (farthest out) the zoom level can become.
-	 * @type Number
-	 */
-	zoom_out_limit: 0.02,
-	/**
-	 * Currently unused.
-	 * @type Number
-	 */
-	zoom_in_limit: 0,
-	/**
-	 * When drawing ways, only 1/simplify nodes will be used - so a value
-	 * of 2 would mean that only half of nodes are used to draw ways (and
-	 * the other half are skipped). Can help on slower computers.
-	 * @type Number 
-	 */
-	simplify: 1,
-	/**
-	 * When true, a live gss editor is active. Generally only used for cartagen.org.
-	 * @type Boolean
-	 */
-	live_gss: false,
-	/**
-	 * If true, map data is no dynamic and does not need to be reloaded periodically.
-	 * @type Boolean
-	 */
-	static_map: true,
-	/**
-	 * Path to layers that will be statically loaded on initialization. This should be
-	 * overriden by the user in the arguments passed to setup
-	 * @type String[]
-	 */
-	static_map_layers: ["/static/rome/park.js"],
-	/**
-	 * URIs of layers that will be refreshed periodically.
-	 * @type String[]
-	 */
-	dynamic_layers: [],
-	/**
-	 * precision of latitude/longitude requests,
-	 */
-	precision: 0.001,
-	/**
-	 * Upper bound of map
-	 * @type Number
-	 */
-	lat1: 41.9227,
-	/**
-	 * Lower bound of map
-	 * @type Number
-	 */
-	lat2: 41.861,
-	/**
-	 * Left bound of map
-	 * @type Number
-	 */
-	lng1: 12.4502,
-	/**
-	 * Right bound of map
-	 * @type Number
-	 */
-	lng2: 12.5341,
-	/**
 	 * Current zoom level
 	 * @type Number
 	 */
@@ -224,7 +147,7 @@ var Cartagen = {
 	 * Should deebug messages be sent to the console?
 	 * @type Boolean
 	 */
-        debug: false,
+	debug: false,
 	/**
 	 * An array of scripts that will be loaded when Cartagen is initialized.
 	 * 
@@ -279,10 +202,6 @@ var Cartagen = {
 	 */
 	initialize: function(configs) {
 		Config.init(configs)
-		// basic configuration:
-		Object.extend(this, configs)
-
-		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 		
 		// load phonegap js if needed
 		if (window.PhoneGap) {
@@ -297,6 +216,7 @@ var Cartagen = {
 		
 		// browser stuff:
 		this.browser_check()
+		
 		//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar
 		
 		Cartagen.parse_manager = new TaskManager(50)
@@ -316,19 +236,20 @@ var Cartagen = {
 		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
 
 		// Startup:
-		Style.load_styles(this.stylesheet) // stylesheet
-		if (!this.static_map) {
+		Style.load_styles(Config.stylesheet) // stylesheet
+		
+		if (!Config.static_map) {
 			this.get_current_plot(true)
 			new PeriodicalExecuter(Glop.draw,3)
 			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
-			this.static_map_layers.each(function(layer_url) {
+			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				this.get_static_plot(layer_url)
 			},this)
 			// to add user-added map data... messy!
-			if (this.dynamic_layers.length > 0) {
-				this.dynamic_layers.each(function(layer_url) {
+			if (Config.dynamic_layers.length > 0) {
+				Config.dynamic_layers.each(function(layer_url) {
 					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
@@ -356,7 +277,7 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
         if (Viewport.padding > 0) {
             $C.stroke_style('white')
@@ -659,7 +580,7 @@ var Cartagen = {
 		}
 	},
 	parse_way: function(way){
-		if (Cartagen.live || !Cartagen.ways.get(way.id)) {
+		if (Config.live || !Cartagen.ways.get(way.id)) {
 			var data = {
 				id: way.id,
 				user: way.user,
@@ -669,7 +590,7 @@ var Cartagen = {
 			}
 			if (way.name) data.name = way.name
 			way.nd.each(function(nd, index) {
-				if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
+				if ((index % Config.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Config.simplify*2)  {
 					node = Cartagen.nodes.get(nd.ref)
 					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
@@ -815,7 +736,7 @@ var Cartagen = {
 		// We can't do it here because it's an asychronous AJAX call.
 
 		// if we're not live-loading:
-		if (!Cartagen.live) {
+		if (!Config.live) {
 			// check if we've loaded already this session:
 			if (Cartagen.plots.get(key)) {
 				// no live-loading, so:
@@ -932,7 +853,7 @@ var Cartagen = {
 		$('brief').style.width = '28%'
 		$('brief_first').style.width = '92%';
 		$('gss').toggle()
-		Cartagen.live_gss = !Cartagen.live_gss
+		Config.live_gss = !Config.live_gss
 	},
 	/**
 	 * Sends user to an image of the current canvas

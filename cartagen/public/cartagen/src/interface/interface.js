@@ -95,12 +95,10 @@ var Interface = {
 
 			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
 
-			var lon1 = Map.bbox[0]
-			var lat2 = Map.bbox[1]
-			var lon2 = Map.bbox[2]
-			var lat1 = Map.bbox[3]
+			var lon = (Map.bbox[0] + Map.bbox[2]) / 2
+			var lat = (Map.bbox[1] + Map.bbox[3]) / 2
 
-			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + lat1 + ', \nlat2: ' + lat2 + ', \nlng1: ' + lon1 + ', \nlng2: ' + lon2 + ',\nzoom_level: ' + Cartagen.zoom_level)
+			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Cartagen.zoom_level)
 
 			var canvas = $('canvas')
 			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)

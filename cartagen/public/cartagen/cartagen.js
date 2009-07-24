@@ -4903,6 +4903,17 @@ Object.Event.extend(Control.ContextMenu);
 /* **** BEGIN CARTAGEN **** */
 
 var Config = {
+	stylesheet: "/style.gss",
+	live: false,
+	powersave: true,
+	zoom_out_limit: 0.02,
+	simplify: 1,
+	live_gss: false,
+	static_map: true,
+	static_map_layers: ["/static/rome/park.js"],
+	dynamic_layers: [],
+	lat: 41.89685,
+	lng: 12.49715,
 	aliases: $H({
 		stylesheet: ['gss']
 	}),
@@ -4917,6 +4928,14 @@ var Config = {
 		},
 		fullscreen: function(value) {
 			if ($('brief')) $('brief').hide()
+		},
+		static_map_layers: function(value) {
+			if (typeof value == "string") {
+				Config.static_map_layers = value.split(',')
+			}
+		},
+		zoom_level: function(value) {
+			Cartagen.zoom_level = value
 		}
 	}),
 	init: function(config) {
@@ -4925,19 +4944,7 @@ var Config = {
 
 		this.apply_aliases()
 
-		if (this.debug) {
-			$D.enable()
-			Geohash.grid = true
-		}
-
-		if (this.grid) {
-			Geohash.grid = true
-			if (Object.isString(this.grid)) Geohash.grid_color = this.grid
-		}
-
-		if (this.fullscreen && $('brief')) {
-			$('brief').hide()
-		}
+		this.run_handlers()
 	},
 	get_url_params: function() {
 		return window.location.href.toQueryParams()
@@ -4949,7 +4956,12 @@ var Config = {
 			})
 		}, this)
 	},
-
+	run_handlers: function() {
+		this.handlers.each(Config.run_handler)
+	},
+	run_handler: function(handler) {
+		if (Config[handler.key]) handler.value(Config[handler.key])
+	}
 }
 
 
@@ -4968,21 +4980,6 @@ var Cartagen = {
 	way_count: 0,
 	node_count: 0,
 	requested_plots: 0,
-	stylesheet: "/style.gss",
-	live: false,
-	powersave: true,
-	zoom_out_limit: 0.02,
-	zoom_in_limit: 0,
-	simplify: 1,
-	live_gss: false,
-	static_map: true,
-	static_map_layers: ["/static/rome/park.js"],
-	dynamic_layers: [],
-	precision: 0.001,
-	lat1: 41.9227,
-	lat2: 41.861,
-	lng1: 12.4502,
-	lng2: 12.5341,
 	zoom_level: 0.5,
 	plots: new Hash(),
 	nodes: new Hash(),
@@ -4993,7 +4990,7 @@ var Cartagen = {
 	initial_bleed_level: 2,
 	label_queue: [],
 	feature_queue: [],
-        debug: false,
+	debug: false,
 	scripts: [],
 	load_user_features: false,
 	coastlines: [],
@@ -5005,9 +5002,6 @@ var Cartagen = {
 	},
 	initialize: function(configs) {
 		Config.init(configs)
-		Object.extend(this, configs)
-
-		if (this.get_url_param('gss')) this.stylesheet = this.get_url_param('gss')
 
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
@@ -5020,6 +5014,7 @@ var Cartagen = {
 
 		this.browser_check()
 
+
 		Cartagen.parse_manager = new TaskManager(50)
 
 		document.fire('cartagen:init')
@@ -5027,18 +5022,19 @@ var Cartagen = {
 		$('canvas').observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
 		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
 
-		Style.load_styles(this.stylesheet) // stylesheet
-		if (!this.static_map) {
+		Style.load_styles(Config.stylesheet) // stylesheet
+
+		if (!Config.static_map) {
 			this.get_current_plot(true)
 			new PeriodicalExecuter(Glop.draw,3)
 			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
-			this.static_map_layers.each(function(layer_url) {
+			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				this.get_static_plot(layer_url)
 			},this)
-			if (this.dynamic_layers.length > 0) {
-				this.dynamic_layers.each(function(layer_url) {
+			if (Config.dynamic_layers.length > 0) {
+				Config.dynamic_layers.each(function(layer_url) {
 					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
@@ -5056,7 +5052,7 @@ var Cartagen = {
 		this.way_count = 0
 		this.node_count = 0
 
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Cartagen.simplify = 2
+		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
         if (Viewport.padding > 0) {
             $C.stroke_style('white')
@@ -5254,7 +5250,7 @@ var Cartagen = {
 		}
 	},
 	parse_way: function(way){
-		if (Cartagen.live || !Cartagen.ways.get(way.id)) {
+		if (Config.live || !Cartagen.ways.get(way.id)) {
 			var data = {
 				id: way.id,
 				user: way.user,
@@ -5264,7 +5260,7 @@ var Cartagen = {
 			}
 			if (way.name) data.name = way.name
 			way.nd.each(function(nd, index) {
-				if ((index % Cartagen.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Cartagen.simplify*2)  {
+				if ((index % Config.simplify) == 0 || index == 0 || index == way.nd.length-1 || way.nd.length <= Config.simplify*2)  {
 					node = Cartagen.nodes.get(nd.ref)
 					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
@@ -5361,7 +5357,7 @@ var Cartagen = {
 	},
 	get_cached_plot: function(key) {
 
-		if (!Cartagen.live) {
+		if (!Config.live) {
 			if (Cartagen.plots.get(key)) {
 			} else {
 				if (typeof localStorage != "undefined") {
@@ -5437,7 +5433,7 @@ var Cartagen = {
 		$('brief').style.width = '28%'
 		$('brief_first').style.width = '92%';
 		$('gss').toggle()
-		Cartagen.live_gss = !Cartagen.live_gss
+		Config.live_gss = !Config.live_gss
 	},
 	redirect_to_image: function() {
 		document.location = $C.to_data_url();
@@ -6409,7 +6405,7 @@ var Glop = {
 	},
 	draw_powersave: function() {
 		var delay = 20
-		if (this.tail > 0 || Cartagen.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
+		if (this.tail > 0 || Config.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay) {
 			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
 		} //else $l('powersave: '+this.tail)
@@ -6681,13 +6677,13 @@ var Events = {
 		} else if (event.detail) {
 			delta = -event.detail/3;
 		}
-		if (delta && !Cartagen.live_gss) {
+		if (delta && !Config.live_gss) {
 			if (delta <0) {
 				Cartagen.zoom_level += delta/80
 			} else {
 				Cartagen.zoom_level += delta/80
 			}
-			if (Cartagen.zoom_level < Cartagen.zoom_out_limit) Cartagen.zoom_level = Cartagen.zoom_out_limit
+			if (Cartagen.zoom_level < Config.zoom_out_limit) Cartagen.zoom_level = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 	},
@@ -6716,7 +6712,7 @@ var Events = {
 			switch(character){
 				case "r": Keyboard.keys.set("r",true); break
 				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (!Cartagen.live_gss) Cartagen.show_gss_editor(); break
+				case "g": if (!Config.live_gss) Cartagen.show_gss_editor(); break
 				case "h": get_static_plot('/static/rome/highway.js'); break
 				case "b": Interface.download_bbox()
 			}
@@ -7579,12 +7575,10 @@ var Interface = {
 
 			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
 
-			var lon1 = Map.bbox[0]
-			var lat2 = Map.bbox[1]
-			var lon2 = Map.bbox[2]
-			var lat1 = Map.bbox[3]
+			var lon = (Map.bbox[0] + Map.bbox[2]) / 2
+			var lat = (Map.bbox[1] + Map.bbox[3]) / 2
 
-			alert('Copy these values into your Cartagen.setup call: \n\nlat1: ' + lat1 + ', \nlat2: ' + lat2 + ', \nlng1: ' + lon1 + ', \nlng2: ' + lon2 + ',\nzoom_level: ' + Cartagen.zoom_level)
+			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Cartagen.zoom_level)
 
 			var canvas = $('canvas')
 			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
@@ -7879,7 +7873,7 @@ var Projection = {
 	x_to_lon: function(x) { return Projection[Projection.current_projection].x_to_lon(x) },
 	lat_to_y: function(lat) { return -1*Projection[Projection.current_projection].lat_to_y(lat) },
 	y_to_lat: function(y) { return -1*Projection[Projection.current_projection].y_to_lat(y) },
-	center_lon: function() { return (Cartagen.lng2+Cartagen.lng1)/2 },
+	center_lon: function() { return Config.lng },
 	spherical_mercator: {
 		lon_to_x: function(lon) { return (lon - Projection.center_lon()) * -1 * Projection.scale_factor },
 		x_to_lon: function(x) { return (x/(-1*Projection.scale_factor)) + Projection.center_lon() },
@@ -7961,8 +7955,8 @@ var Viewport = {
 
 var Map = {
 	init: function() {
-		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
-		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
+		this.x = Projection.lon_to_x(Config.lng)
+		this.y = Projection.lat_to_y(Config.lat)
 		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
 	},
 	draw: function() {
