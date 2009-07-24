@@ -5182,7 +5182,7 @@ var Cartagen = {
 
 		$('canvas').fire('cartagen:postdraw')
 
-		Interface.display_loading(Cartagen.parse_manager.completed())
+		Interface.display_loading(Cartagen.parse_manager.completed)
 
     },
     queue_label: function(label, x, y) {
@@ -6579,7 +6579,7 @@ var TimerManager = {
 	spacing: 0.8,
 	interval: 10,
 	setup: function(f,c,s,i) {
-		this.f = f || Prototype.emptyFunction
+		this.f = f || function(){}
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
@@ -6683,6 +6683,7 @@ var Events = {
 			if (Cartagen.zoom_level < Config.zoom_out_limit) Cartagen.zoom_level = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
+		event.preventDefault()
 	},
 	keypress: function(e) {
 		if (Events.enabled === false) return
@@ -6715,12 +6716,14 @@ var Events = {
 			}
 		}
 		Glop.trigger_draw(5)
+		e.preventDefault()
 	},
-	keyup: function() {
+	keyup: function(e) {
 		if (Events.enabled === false) return
 
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
+		e.preventDefault()
 	},
 	ontouchstart: function(e){
 		e.preventDefault();
@@ -7505,15 +7508,15 @@ var Interface = {
 			var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+(40/Cartagen.zoom_level), y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+(40/Cartagen.zoom_level)
 			$C.begin_path()
 				$C.line_to(x,y)
-				$C.arc(x,y,25/Cartagen.zoom_level,0,Math.PI*2,false)
+				$C.arc(x,y,24/Cartagen.zoom_level,-Math.PI/2,Math.PI*2-Math.PI/2,false)
 				$C.line_to(x,y)
 			$C.fill()
 			$C.opacity(0.9)
-			$C.line_width(4/Cartagen.zoom_level)
+			$C.line_width(6/Cartagen.zoom_level)
 			$C.stroke_style('white')
 			$C.line_cap('square')
 			$C.begin_path()
-				$C.arc(x,y,27/Cartagen.zoom_level,0,Math.PI*2*(percent/100),false)
+				$C.arc(x,y,27/Cartagen.zoom_level,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
 			$C.stroke()
 			var width = $C.measure_text("Lucida Grande, sans-serif",
 			             12,

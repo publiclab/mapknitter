@@ -32,7 +32,7 @@ var TimerManager = {
 	 * @param {Number} i The interval at which to run the function
 	 */
 	setup: function(f,c,s,i) {
-		this.f = f || Prototype.emptyFunction
+		this.f = f || function(){}
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)

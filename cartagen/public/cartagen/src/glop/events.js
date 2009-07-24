@@ -103,6 +103,7 @@ var Events = {
 			if (Cartagen.zoom_level < Config.zoom_out_limit) Cartagen.zoom_level = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
+		event.preventDefault()
 	},
 	/**
 	 * Triggered when a key is pressed
@@ -140,15 +141,17 @@ var Events = {
 			}
 		}
 		Glop.trigger_draw(5)
+		e.preventDefault()
 	},
 	/**
 	 * Triggered when a key is released
 	 */
-	keyup: function() {
+	keyup: function(e) {
 		if (Events.enabled === false) return
 		
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
+		e.preventDefault()
 	},
 	/**
 	 * Triggered when a touch is started. Mainly for touchscreen mobile platforms
