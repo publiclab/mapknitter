@@ -486,7 +486,7 @@ var Cartagen = {
 		$('canvas').fire('cartagen:postdraw')
 		
 		// display percentage of features we've imported so far:
-		Interface.display_loading(Cartagen.parse_manager.completed())
+		Interface.display_loading(Cartagen.parse_manager.completed)
 		
     },
     /**
