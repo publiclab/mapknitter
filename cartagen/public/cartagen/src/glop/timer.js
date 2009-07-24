@@ -15,7 +15,7 @@ var TimerManager = {
 	/**
 	 * Factor by which to space out executions. 2 means double the measured interval.
 	 */
-	spacing: 0.5,
+	spacing: 0.8,
 	/**
 	 * Interval after which to execute the function TimerManager.f() next time it's run;
 	 * changed every frame based on measured lag.
@@ -62,7 +62,7 @@ var TimerManager = {
 	 * Sampling pattern to make a best-guess at 
 	 * what the next interval should be.
 	 */
-	sequence: [1,2,3,5,8,13,21,34,55],
+	sequence: [1,2,3,5,8,13],//,21,34,55],
 	/**
 	 * Samples from recorded intervals to make a best-guess at 
 	 * what the next interval should be.
