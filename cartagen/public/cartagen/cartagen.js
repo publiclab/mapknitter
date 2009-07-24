@@ -5026,7 +5026,7 @@ var Cartagen = {
 
 		if (!Config.static_map) {
 			this.get_current_plot(true)
-			new PeriodicalExecuter(Glop.draw,3)
+			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
 			Config.static_map_layers.each(function(layer_url) {
@@ -5041,7 +5041,7 @@ var Cartagen = {
 			}
 		}
 
-		Glop.draw()
+		Glop.trigger_draw()
 
 		document.fire('cartagen:postinit')
 	},
@@ -5166,8 +5166,6 @@ var Cartagen = {
 			}
 		})
 
-		Interface.display_loading()
-
 		this.feature_queue.each(function(item) {
 			(item.draw.bind(item))()
 		})
@@ -5183,6 +5181,8 @@ var Cartagen = {
 		this.label_queue = []
 
 		$('canvas').fire('cartagen:postdraw')
+
+		Interface.display_loading(Cartagen.parse_manager.completed())
 
     },
     queue_label: function(label, x, y) {
@@ -6458,6 +6458,9 @@ var TaskManager = Class.create(
 		this.active = false
 		$('canvas').stopObserving('glop:predraw', this.listener)
 	},
+	completed: function() {
+		return (Glop.frame/2)
+	},
 
 
 	display: function() {
@@ -6572,34 +6575,32 @@ function tt_init() {
 */
 var TimerManager = {
 	last_date: new Date,
-	intervals: [],
-	spacing: 1,
+	times: [],
+	spacing: 0.5,
 	interval: 10,
 	setup: function(f,c,s,i) {
 		this.f = f || Prototype.emptyFunction
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
-		this.spacing = 0.3//Math.max(1,2.5-Viewport.power())
 	},
 	bound_run: function() {
 		TimerManager.run.apply(TimerManager)
 	},
 	run: function() {
-		var new_date = new Date
-		var measured_interval = Math.max(((new_date - this.last_date) - this.interval),10)
-		this.last_date = new_date
+		var start_date = new Date
 		this.f.apply(this.context)
-		this.intervals.unshift(parseInt(measured_interval))
-		if (this.intervals.length > 100) this.intervals.pop()
-		this.interval = this.sample()*this.spacing
-		setTimeout(this.bound_run,this.interval)
+		var execution_time = new Date - start_date
+		this.times.unshift(parseInt(execution_time))
+		if (this.times.length > 100) this.times.pop()
+		$l(execution_time+', '+Math.max(50,parseInt(this.spacing*this.sample())))
+		setTimeout(this.bound_run,Math.max(50,parseInt(this.spacing*this.sample())))
 	},
+	sequence: [1,2,3,5,8,13,21,34,55],
 	sample: function() {
 		var sample = 0
-		var sequence = [1,2,3,5,8,13,21,34,55]
-		for (var i = 0;i < sequence.length;i++) {
-			sample += this.intervals[sequence[i]] || 0
+		for (var i = 0;i < this.sequence.length;i++) {
+			sample += this.times[this.sequence[i]] || 0
 		}
 		return sample/9
 	},
@@ -7225,7 +7226,7 @@ var User = {
 		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
-        	Glop.draw()
+        	Glop.trigger_draw()
 		}
 
 		return node
@@ -7299,7 +7300,7 @@ var User = {
 		User.set_loc(loc)
 		Map.x = User.x
 		Map.y = User.y
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	toggle_way_drawing: function(x, y) {
 		if (User.drawing_way) {
@@ -7318,7 +7319,7 @@ var User = {
 			User.way.age = 40
 			User.way.user_submitted = true
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
-			Glop.draw()
+			Glop.trigger_draw()
 		}
 		User.drawing_way = !User.drawing_way
 	},
@@ -7351,7 +7352,7 @@ var User = {
 		node = User.create_node(x, y, true)
 		User.way.nodes.push(node)
 		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	update: function() {
 		if (!Cartagen.load_user_features) return
@@ -7401,7 +7402,7 @@ var User = {
 				}
 			}
 		})
-		Glop.draw()
+		Glop.trigger_draw()
 		if (ways.length > 0) {
 			new Ajax.Request(User.way_update_uri, {
 				parameters: {
@@ -7496,24 +7497,35 @@ document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMe
 
 var Interface = {
 	display_loading: function(percent) {
-		percent = percent || (Glop.frame/200)
-		$C.save()
-		$C.fill_style('white')
-		$C.line_width(0)
-		$C.opacity(0.8)
-		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+50, y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+50
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.arc(x,y,30,0,Math.PI*2*percent,false)
-			$C.line_to(x,y)
-		$C.fill()
-		$C.draw_text("Lucida Grande, sans-serif",
-		             12/Cartagen.zoom_level,
-					 "#333",
-		             x,
-					 y,
-					 parseInt(percent)+"%")
-		$C.restore()
+		if (percent < 100) {
+			$C.save()
+			$C.fill_style('white')
+			$C.line_width(0)
+			$C.opacity(0.7)
+			var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+(40/Cartagen.zoom_level), y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+(40/Cartagen.zoom_level)
+			$C.begin_path()
+				$C.line_to(x,y)
+				$C.arc(x,y,25/Cartagen.zoom_level,0,Math.PI*2,false)
+				$C.line_to(x,y)
+			$C.fill()
+			$C.opacity(0.9)
+			$C.line_width(4/Cartagen.zoom_level)
+			$C.stroke_style('white')
+			$C.line_cap('square')
+			$C.begin_path()
+				$C.arc(x,y,27/Cartagen.zoom_level,0,Math.PI*2*(percent/100),false)
+			$C.stroke()
+			var width = $C.measure_text("Lucida Grande, sans-serif",
+			             12,
+			             parseInt(percent)+"%")
+			$C.draw_text("Lucida Grande, sans-serif",
+			             12/Cartagen.zoom_level,
+						 "#333",
+			             x-(width/(2*Cartagen.zoom_level)),
+						 y+(6/Cartagen.zoom_level),
+						 parseInt(percent)+"%")
+			$C.restore()
+		}
 	},
 	download_bbox: function() {
 		Glop.paused = true
