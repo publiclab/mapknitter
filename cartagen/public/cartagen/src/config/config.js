@@ -53,8 +53,8 @@ var Config = {
 	apply_aliases: function() {
 		this.aliases.each(function(pair) {
 			pair.value.each(function(value) {
-				if (this[value]) this[pair.key] = value
-			})
+				if (this[value]) this[pair.key] = this[value]
+			}, this)
 		}, this)
 	},
 	run_handlers: function() {
