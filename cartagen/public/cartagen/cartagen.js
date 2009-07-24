@@ -6613,9 +6613,8 @@ var Events = {
 		canvas.observe('mousedown', Events.mousedown)
 		canvas.observe('mouseup', Events.mouseup)
 		canvas.observe('dblclick', Events.doubleclick)
-		canvas.observe('keypress', function(e){$l('cavas#keypress')})
-		canvas.observe('focus', function(e){$l('canvas#focus')})
-		canvas.observe('blur', function(e){$l('canvas#blur')})
+		canvas.observe('mouseover', Events.mouseover)
+		canvas.observe('mouseout', Events.mouseout)
 
 
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -6633,12 +6632,8 @@ var Events = {
 
 		Event.observe(window, 'resize', Events.resize);
 	},
-	enable: function() {
-		Events.init()
-	},
-	disable: function() {
-	},
 	mousemove: function(event) {
+		Events.enabled = true
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
@@ -6669,6 +6664,7 @@ var Events = {
         User.update()
 	},
 	wheel: function(event){
+		if (Events.enabled == false) return
 		var delta = 0;
 		if (!event) event = window.event;
 		if (event.wheelDelta) {
@@ -6688,7 +6684,7 @@ var Events = {
 		Glop.trigger_draw(5)
 	},
 	keypress: function(e) {
-		if (e.element().tagName != 'BODY') return
+		if (Events.enabled === false) return
 
 		var code;
 		if (!e) var e = window.event;
@@ -6720,6 +6716,8 @@ var Events = {
 		Glop.trigger_draw(5)
 	},
 	keyup: function() {
+		if (Events.enabled === false) return
+
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
 	},
@@ -6809,6 +6807,12 @@ var Events = {
 	},
 	resize: function() {
 		Glop.trigger_draw(5)
+	},
+	mouseover: function() {
+		Events.enabled = true
+	},
+	mouseout: function() {
+		Events.enabled = false
 	}
 }
 document.observe('cartagen:init', Events.init)
