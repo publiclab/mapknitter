@@ -8,25 +8,36 @@
  */
 var Interface = {
 	display_loading: function(percent) {
-		percent = percent || (Glop.frame/200)
-		$C.save()
-		$C.fill_style('white')
-		$C.line_width(0)
-		$C.opacity(0.8)
-		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+50, y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+50
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.arc(x,y,30,0,Math.PI*2*percent,false)
-			$C.line_to(x,y)
-			//
-		$C.fill()
-		$C.draw_text("Lucida Grande, sans-serif",
-		             12/Cartagen.zoom_level,
-					 "#333",
-		             x,
-					 y,
-					 parseInt(percent)+"%")
-		$C.restore()
+		if (percent < 100) {
+			// $l('bar')
+			$C.save()
+			$C.fill_style('white')
+			$C.line_width(0)
+			$C.opacity(0.7)
+			var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+(40/Cartagen.zoom_level), y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+(40/Cartagen.zoom_level)
+			$C.begin_path()
+				$C.line_to(x,y)
+				$C.arc(x,y,25/Cartagen.zoom_level,0,Math.PI*2,false)
+				$C.line_to(x,y)
+			$C.fill()
+			$C.opacity(0.9)
+			$C.line_width(4/Cartagen.zoom_level)
+			$C.stroke_style('white')
+			$C.line_cap('square')
+			$C.begin_path()
+				$C.arc(x,y,27/Cartagen.zoom_level,0,Math.PI*2*(percent/100),false)
+			$C.stroke()
+			var width = $C.measure_text("Lucida Grande, sans-serif",
+			             12,
+			             parseInt(percent)+"%")
+			$C.draw_text("Lucida Grande, sans-serif",
+			             12/Cartagen.zoom_level,
+						 "#333",
+			             x-(width/(2*Cartagen.zoom_level)),
+						 y+(6/Cartagen.zoom_level),
+						 parseInt(percent)+"%")
+			$C.restore()
+		}
 	},
 	/**
 	 * Prompts the user to select a bbox, then downloads that bbox

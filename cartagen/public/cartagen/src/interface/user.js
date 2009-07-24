@@ -163,7 +163,7 @@ var User = {
 		if (draw) {
 			Geohash.put(node.lat, node.lon, node, 1)
 			objects.push(node)
-        	Glop.draw()
+        	Glop.trigger_draw()
 		}
 
 		return node
@@ -257,7 +257,7 @@ var User = {
 		User.set_loc(loc)
 		Map.x = User.x
 		Map.y = User.y
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Toggles whether the user is drawing a way. When ending a way, submits the way to the server
@@ -283,7 +283,7 @@ var User = {
 			User.way.age = 40
 			User.way.user_submitted = true
 			Geohash.put(Projection.y_to_lat(User.way.y), Projection.x_to_lon(User.way.x), User.way, 1)
-			Glop.draw()			
+			Glop.trigger_draw()			
 		}
 		User.drawing_way = !User.drawing_way
 	},
@@ -326,7 +326,7 @@ var User = {
 		node = User.create_node(x, y, true)
 		User.way.nodes.push(node)
 		User.way.bbox = Geometry.calculate_bounding_box(User.way.nodes)
-		Glop.draw()
+		Glop.trigger_draw()
 	},
 	/**
 	 * Updates the map with other users' nodes and ways
@@ -382,7 +382,7 @@ var User = {
 				}
 			}
 		})
-		Glop.draw()
+		Glop.trigger_draw()
 		if (ways.length > 0) {
 			new Ajax.Request(User.way_update_uri, {
 				parameters: {
