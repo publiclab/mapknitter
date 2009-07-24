@@ -80,7 +80,6 @@ var TaskManager = Class.create(
 			left += tasks[i].members.length
 		}
 		this.completed = ((total-left)/total) * 100
-		$l(this.completed)
 	}
 })
 
