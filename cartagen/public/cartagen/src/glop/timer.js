@@ -11,11 +11,11 @@ var TimerManager = {
 	 * The recorded intervals of the last 100 executions. We sample from this to
 	 * make a good guess at what the next interval should be.
 	 */
-	intervals: [],
+	times: [],
 	/**
 	 * Factor by which to space out executions. 2 means double the measured interval.
 	 */
-	spacing: 1,
+	spacing: 0.5,
 	/**
 	 * Interval after which to execute the function TimerManager.f() next time it's run;
 	 * changed every frame based on measured lag.
@@ -36,7 +36,7 @@ var TimerManager = {
 		this.context = c || this
 		this.interval = i || this.interval
 		setTimeout(this.bound_run,i || this.interval)
-		this.spacing = 0.3//Math.max(1,2.5-Viewport.power())
+		// this.spacing = Math.max(1,2.5-Viewport.power())
 	},
 	/**
 	 * Binds the scope of TimerManager.run() to TimerManager
@@ -50,25 +50,27 @@ var TimerManager = {
 	 * TimerManager.interval milliseconds.
 	 */
 	run: function() {
-		var new_date = new Date
-		// don't let measured_interval drop below 10:
-		var measured_interval = Math.max(((new_date - this.last_date) - this.interval),10)
-		this.last_date = new_date
+		var start_date = new Date
 		this.f.apply(this.context)
-		this.intervals.unshift(parseInt(measured_interval))
-		if (this.intervals.length > 100) this.intervals.pop()
-		this.interval = this.sample()*this.spacing
-		setTimeout(this.bound_run,this.interval)
+		var execution_time = new Date - start_date
+		this.times.unshift(parseInt(execution_time))
+		if (this.times.length > 100) this.times.pop()
+		$l(execution_time+', '+Math.max(50,parseInt(this.spacing*this.sample())))
+		setTimeout(this.bound_run,Math.max(50,parseInt(this.spacing*this.sample())))
 	},
+	/**
+	 * Sampling pattern to make a best-guess at 
+	 * what the next interval should be.
+	 */
+	sequence: [1,2,3,5,8,13,21,34,55],
 	/**
 	 * Samples from recorded intervals to make a best-guess at 
 	 * what the next interval should be.
 	 */
 	sample: function() {
 		var sample = 0
-		var sequence = [1,2,3,5,8,13,21,34,55]
-		for (var i = 0;i < sequence.length;i++) {
-			sample += this.intervals[sequence[i]] || 0
+		for (var i = 0;i < this.sequence.length;i++) {
+			sample += this.times[this.sequence[i]] || 0
 		}
 		return sample/9
 	},

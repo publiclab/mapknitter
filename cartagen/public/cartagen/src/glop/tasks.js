@@ -59,6 +59,9 @@ var TaskManager = Class.create(
 		this.active = false
 		$('canvas').stopObserving('glop:predraw', this.listener)
 	},
+	completed: function() {
+		return (Glop.frame/2)
+	},
 	
 	// Currently unused
 	

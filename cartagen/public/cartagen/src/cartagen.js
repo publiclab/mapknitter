@@ -240,7 +240,7 @@ var Cartagen = {
 		
 		if (!Config.static_map) {
 			this.get_current_plot(true)
-			new PeriodicalExecuter(Glop.draw,3)
+			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Cartagen.get_current_plot(false) },3)
 		} else {
 			Config.static_map_layers.each(function(layer_url) {
@@ -256,7 +256,7 @@ var Cartagen = {
 			}
 		}
 		
-		Glop.draw()
+		Glop.trigger_draw()
 		
 		/**
 		 * @name cartagen:postinit
@@ -461,8 +461,6 @@ var Cartagen = {
 			}
 		})
 
-		Interface.display_loading()
-
 		this.feature_queue.each(function(item) {
 			(item.draw.bind(item))()
 		})
@@ -486,6 +484,9 @@ var Cartagen = {
 		 *@event
 		 */
 		$('canvas').fire('cartagen:postdraw')
+		
+		// display percentage of features we've imported so far:
+		Interface.display_loading(Cartagen.parse_manager.completed())
 		
     },
     /**
