@@ -34,7 +34,7 @@ class MapController < ApplicationController
     if geo.success
       # use geo.precision to define a width and height for the viewport
       # set zoom_x and zoom_y accordingly in javascript... and the scale factor.
-      @map = {:range => range, :zoom_level => zoom_level,:lat1 => geo.lat-range, :lng1 => geo.lng-range, :lat2 => geo.lat+range, :lng2 => geo.lng+range }
+      @map = {:range => range, :zoom_level => zoom_level,:lat => geo.lat, :lng => geo.lng}
     end
   end
 

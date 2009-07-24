@@ -1,4 +1,19 @@
 var Config = {
+	stylesheet: "/style.gss",
+	live: false,
+	powersave: true,
+	zoom_out_limit: 0.02,
+	simplify: 1,
+	live_gss: false,
+	static_map: true,
+	static_map_layers: ["/static/rome/park.js"],
+	/**
+	 * Array of files to load after Cartagen's initialization
+	 * @deprecated
+	 */
+	dynamic_layers: [],
+	lat: 41.89685,
+	lng: 12.49715,
 	aliases: $H({
 		stylesheet: ['gss']
 	}),
@@ -13,6 +28,14 @@ var Config = {
 		},
 		fullscreen: function(value) {
 			if ($('brief')) $('brief').hide()
+		},
+		static_map_layers: function(value) {
+			if (typeof value == "string") {
+				Config.static_map_layers = value.split(',')
+			}
+		},
+		zoom_level: function(value) {
+			Cartagen.zoom_level = value
 		}
 	}),
 	init: function(config) {
@@ -22,22 +45,7 @@ var Config = {
 		
 		this.apply_aliases()
 		
-		// Turn on debugging mode
-		if (this.debug) {
-			$D.enable()
-			Geohash.grid = true
-		}
-		
-		// Turn on grid
-		if (this.grid) {
-			Geohash.grid = true
-			if (Object.isString(this.grid)) Geohash.grid_color = this.grid
-		}
-	
-		// Turn on fullscreen
-		if (this.fullscreen && $('brief')) {
-			$('brief').hide()
-		}
+		this.run_handlers()
 	},
 	get_url_params: function() {
 		return window.location.href.toQueryParams()
@@ -49,7 +57,12 @@ var Config = {
 			})
 		}, this)
 	},
-	
+	run_handlers: function() {
+		this.handlers.each(Config.run_handler)
+	},
+	run_handler: function(handler) {
+		if (Config[handler.key]) handler.value(Config[handler.key])
+	}
 }
 
 

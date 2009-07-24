@@ -10,8 +10,8 @@ var Map = {
 	 * Initializes the map properties
 	 */
 	init: function() {
-		this.x = Projection.lon_to_x((Cartagen.lng1+Cartagen.lng2)/2)
-		this.y = Projection.lat_to_y((Cartagen.lat1+Cartagen.lat2)/2)
+		this.x = Projection.lon_to_x(Config.lng)
+		this.y = Projection.lat_to_y(Config.lat)
 		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
 	},
 	/**
