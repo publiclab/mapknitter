@@ -86,21 +86,21 @@ var Events = {
 	 */
 	wheel: function(event){
 		if (Events.enabled == false) return
-		var delta = 0;
-		if (!event) event = window.event;
+		var delta = 0
+		if (!event) event = window.event
 		if (event.wheelDelta) {
-			delta = event.wheelDelta/120;
-			if (window.opera) delta = -delta;
+			delta = event.wheelDelta/120
+			if (window.opera) delta = -delta
 		} else if (event.detail) {
-			delta = -event.detail/3;
+			delta = -event.detail/3
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Cartagen.zoom_level += delta/80
+				Map.zoom = (Map.zoom * 1) + (delta/80)
 			} else {
-				Cartagen.zoom_level += delta/80
+				Map.zoom = (Map.zoom * 1) + (delta/80)
 			}
-			if (Cartagen.zoom_level < Config.zoom_out_limit) Cartagen.zoom_level = Config.zoom_out_limit
+			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 		event.preventDefault()
@@ -124,10 +124,10 @@ var Events = {
 				case "w": zoom_out(); break
 				case "d": Map.rotate += 0.1; break
 				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x += 20/Cartagen.zoom_level; break
-				case "h": Map.x -= 20/Cartagen.zoom_level; break
-				case "t": Map.y += 20/Cartagen.zoom_level; break
-				case "g": Map.y -= 20/Cartagen.zoom_level; break
+				case "f": Map.x += 20/Map.zoom; break
+				case "h": Map.x -= 20/Map.zoom; break
+				case "t": Map.y += 20/Map.zoom; break
+				case "g": Map.y -= 20/Map.zoom; break
 				case "x": localStorage.clear()
 			}
 		} else {
@@ -189,8 +189,8 @@ var Events = {
 			var d_x = -Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
 			var d_y = -Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 
-			Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
-			Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
+			Map.x = Map.x_old+(d_x/Map.zoom)
+			Map.y = Map.y_old+(d_y/Map.zoom)
 
 			Glop.trigger_draw(5)
 		}
@@ -214,7 +214,7 @@ var Events = {
 	 * @param {Event} e
 	 */
 	ongesturestart: function(e) {
-		zoom_level_old = Cartagen.zoom_level
+		zoom_level_old = Map.zoom
 	},
 	/**
 	 * Triggered when a touch gesture is changed or moved. Mainly for touchscreen mobile platforms
@@ -224,7 +224,7 @@ var Events = {
 		var node = e.target;
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
-		Cartagen.zoom_level = zoom_level_old*e.scale
+		Map.zoom = zoom_level_old*e.scale
 		Glop.trigger_draw(5)
 	},
 	/**
@@ -251,17 +251,17 @@ var Events = {
 			if (Keyboard.keys.get("r")) { // rotating
 				Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
 			} else if (Keyboard.keys.get("z")) {
-				if (Cartagen.zoom_level > 0) {
-					Cartagen.zoom_level = Math.abs(Cartagen.zoom_level - (Mouse.drag_y/Glop.height))
+				if (Map.zoom > 0) {
+					Map.zoom = Math.abs(Map.zoom - (Mouse.drag_y/Glop.height))
 				} else {
-					Cartagen.zoom_level = 0
+					Map.zoom = 0
 				}
 			} else {
 				var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
 				var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 				
-				Map.x = Map.x_old+(d_x/Cartagen.zoom_level)
-				Map.y = Map.y_old+(d_y/Cartagen.zoom_level)
+				Map.x = Map.x_old+(d_x/Map.zoom)
+				Map.y = Map.y_old+(d_y/Map.zoom)
 			}
 		}
 	},

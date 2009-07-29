@@ -92,7 +92,7 @@ var User = {
 	 * data. Bound to cartagen:postinit
 	 */
 	init: function() {
-		if (Cartagen.load_user_features) {
+		if (Config.load_user_features) {
 			User.update()
 			new PeriodicalExecuter(User.update, 60)
 		}
@@ -221,32 +221,32 @@ var User = {
 	 */
 	mark: function() {
 		$C.stroke_style('white')
-		$C.line_width(3.5/Cartagen.zoom_level)
+		$C.line_width(3.5/Map.zoom)
 		$C.begin_path()
 		$C.translate(User.x,User.y)
-		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
-		$C.move_to(10/Cartagen.zoom_level,0)
-		$C.line_to(6/Cartagen.zoom_level,0)
-		$C.move_to(-10/Cartagen.zoom_level,0)
-		$C.line_to(-6/Cartagen.zoom_level,0)
-		$C.move_to(0,10/Cartagen.zoom_level)
-		$C.line_to(0,6/Cartagen.zoom_level)
-		$C.move_to(0,-10/Cartagen.zoom_level)
-		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.arc(0,0,10/Map.zoom,0,Math.PI*2,true)
+		$C.move_to(10/Map.zoom,0)
+		$C.line_to(6/Map.zoom,0)
+		$C.move_to(-10/Map.zoom,0)
+		$C.line_to(-6/Map.zoom,0)
+		$C.move_to(0,10/Map.zoom)
+		$C.line_to(0,6/Map.zoom)
+		$C.move_to(0,-10/Map.zoom)
+		$C.line_to(0,-6/Map.zoom)
 		$C.stroke()
 				
 		$C.stroke_style('#4C6ACB')
-		$C.line_width(2/Cartagen.zoom_level)
+		$C.line_width(2/Map.zoom)
 		$C.begin_path()
-		$C.arc(0,0,10/Cartagen.zoom_level,0,Math.PI*2,true)
-		$C.move_to(10/Cartagen.zoom_level,0)
-		$C.line_to(6/Cartagen.zoom_level,0)
-		$C.move_to(-10/Cartagen.zoom_level,0)
-		$C.line_to(-6/Cartagen.zoom_level,0)
-		$C.move_to(0,10/Cartagen.zoom_level)
-		$C.line_to(0,6/Cartagen.zoom_level)
-		$C.move_to(0,-10/Cartagen.zoom_level)
-		$C.line_to(0,-6/Cartagen.zoom_level)
+		$C.arc(0,0,10/Map.zoom,0,Math.PI*2,true)
+		$C.move_to(10/Map.zoom,0)
+		$C.line_to(6/Map.zoom,0)
+		$C.move_to(-10/Map.zoom,0)
+		$C.line_to(-6/Map.zoom,0)
+		$C.move_to(0,10/Map.zoom)
+		$C.line_to(0,6/Map.zoom)
+		$C.move_to(0,-10/Map.zoom)
+		$C.line_to(0,-6/Map.zoom)
 		$C.stroke()
 	},
 	/**
@@ -332,7 +332,7 @@ var User = {
 	 * Updates the map with other users' nodes and ways
 	 */
 	update: function() {
-		if (!Cartagen.load_user_features) return
+		if (!Config.load_user_features) return
 		var params = {
 			bbox: Map.bbox.join(',')
 		}

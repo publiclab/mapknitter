@@ -1,4 +1,5 @@
 var Config = {
+	// See http://wiki.cartagen.org/wiki/show/CustomizingCartagen for info on the config options
 	stylesheet: "/style.gss",
 	live: false,
 	powersave: true,
@@ -14,6 +15,9 @@ var Config = {
 	dynamic_layers: [],
 	lat: 41.89685,
 	lng: 12.49715,
+	fullscreen: false,
+	debug: false,
+	load_user_features: false,
 	aliases: $H({
 		stylesheet: ['gss']
 	}),
@@ -35,7 +39,7 @@ var Config = {
 			}
 		},
 		zoom_level: function(value) {
-			Cartagen.zoom_level = value
+			Map.zoom = value
 		}
 	}),
 	init: function(config) {

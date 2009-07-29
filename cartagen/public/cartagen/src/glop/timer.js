@@ -55,7 +55,6 @@ var TimerManager = {
 		var execution_time = new Date - start_date
 		this.times.unshift(parseInt(execution_time))
 		if (this.times.length > 100) this.times.pop()
-		$l(execution_time+', '+Math.max(50,parseInt(this.spacing*this.sample())))
 		setTimeout(this.bound_run,Math.max(50,parseInt(this.spacing*this.sample())))
 	},
 	/**

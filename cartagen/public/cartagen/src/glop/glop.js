@@ -43,21 +43,19 @@ var Glop = {
 			return
 		}
 		$C.clear()
-		if (Cartagen.fullscreen) {
-			if (!custom_size) { // see Canvas.to_print_data_url()
-				Glop.width = document.viewport.getWidth()
-				Glop.height = document.viewport.getHeight()
-			}
-			$('canvas').width = Glop.width
-			$('canvas').height = Glop.height
-			$$('body')[0].style.width = Glop.width+"px"
+		if (!custom_size) { // see Canvas.to_print_data_url()
+			Glop.width = document.viewport.getWidth()
+			Glop.height = document.viewport.getHeight()
 		}
-		else {
-			Glop.width = $('canvas').getWidth()
-			Glop.height = $('canvas').getHeight()
-			$('canvas').width = Glop.width
-			$('canvas').height = Glop.height
-		}
+		$('canvas').width = Glop.width
+		$('canvas').height = Glop.height
+		$$('body')[0].style.width = Glop.width+"px"
+	
+		// for embedded
+		//Glop.width = $('canvas').getWidth()
+		//Glop.height = $('canvas').getHeight()
+		//$('canvas').width = Glop.width
+		//$('canvas').height = Glop.height
 		Events.drag()	
 		/**
 		 * @name Glop#glop:predraw
@@ -116,7 +114,7 @@ var Glop = {
 	 */
 	draw_powersave: function() {
 		var delay = 20
-		if (this.tail > 0 || Config.powersave == false || (Cartagen.requested_plots && Cartagen.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay || Cartagen.parse_manager.completed < 100) {
+		if (this.tail > 0 || Config.powersave == false || (Importer.requested_plots && Importer.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay || Importer.parse_manager.completed < 100) {
 			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
 		} //else $l('powersave: '+this.tail)
