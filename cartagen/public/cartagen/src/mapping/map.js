@@ -13,6 +13,7 @@ var Map = {
 		this.x = Projection.lon_to_x(Config.lng)
 		this.y = Projection.lat_to_y(Config.lat)
 		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
+		this.draw()
 	},
 	/**
 	 * Updates the map properties. Runs every frame.
@@ -27,18 +28,18 @@ var Map = {
 		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
 		this.lat = Projection.y_to_lat(this.y)
 		this.lon = Projection.x_to_lon(-this.x)
-		this.resolution = Math.round(Math.abs(Math.log(Cartagen.zoom_level)))
+		this.resolution = Math.round(Math.abs(Math.log(Map.zoom)))
 	},
 	/**
 	 * Mouse's x-coordinate, in the map's coordinate system
 	 * @type Number
 	 */
-	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Cartagen.zoom_level) },
+	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Map.zoom) },
 	/**
 	 * Mouse's y-coordinate, in the map's coordinate system
 	 * @type Number
 	 */
-	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y)/Cartagen.zoom_level) },
+	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y)/Map.zoom) },
 	/**
 	 * Bounding box of map, in [lon1, lat2, lon2, lat1] format
 	 * @type Number[]
@@ -100,12 +101,17 @@ var Map = {
 	 * generated based on zoom level.
 	 * @type Number
 	 */
-	resolution: Math.round(Math.abs(Math.log(Cartagen.zoom_level))),
+	resolution: 0,
 	/**
 	 * Last map position, as an [x, y] tuple
 	 * @type Number[]
 	 */
-	last_pos: [0,0]
+	last_pos: [0,0],
+	/**
+	 * Current zoom level
+	 * @type Number
+	 */
+	 zoom: 0.5
 }
 
 // bind to events

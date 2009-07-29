@@ -9,6 +9,7 @@ var Node = Class.create(Feature,
  * @lends Node#
  */
 {
+	__type__: 'Node',
 	/**
 	 * Sets the default radius and invokes Feature#initialize
 	 * @constructs
@@ -17,10 +18,9 @@ var Node = Class.create(Feature,
 		$super()
 	},
 	/**
-	 * Increments Cartagen.node_count and invokes Feature#draw
+	 * invokes Feature#draw
 	 */
 	draw: function($super) {
-		Cartagen.node_count++
 		$super()
 	},
 	/**

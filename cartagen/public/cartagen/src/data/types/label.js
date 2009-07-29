@@ -92,8 +92,8 @@ var Label = Class.create(
 				var height = this.fontSize
 				var padding = this.padding
 			} else {
-				var height = this.fontSize / Cartagen.zoom_level
-				var padding = this.padding / Cartagen.zoom_level
+				var height = this.fontSize / Map.zoom
+				var padding = this.padding / Map.zoom
 			}
 
 

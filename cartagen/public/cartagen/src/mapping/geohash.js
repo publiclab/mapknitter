@@ -65,7 +65,7 @@ Object.extend(Geohash, {
 	 * @see Geohash.get_objects
 	 */
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Cartagen.zoom_level/this.last_get_objects[2] > 1.1 || Cartagen.zoom_level/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
+		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
 		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
 			this.get_objects()
 			this.last_get_objects[3] = false
@@ -306,7 +306,7 @@ Object.extend(Geohash, {
 	draw_bbox: function(key) {
 		var bbox = this.bbox(key)
 
-		var line_width = 1/Cartagen.zoom_level
+		var line_width = 1/Map.zoom
 		// line_width < 1
 		$C.line_width(Math.max(line_width,1))
 		$C.stroke_style(this.grid_color)
@@ -321,7 +321,7 @@ Object.extend(Geohash, {
 		$C.save()
 		$C.translate(Projection.lon_to_x(bbox[0]),Projection.lat_to_y(bbox[3]))
 		$C.fill_style(Object.value(this.fontBackground))
-		var height = 16 / Cartagen.zoom_level
+		var height = 16 / Map.zoom
 		var width = $C.measure_text('Lucida Grande', 
 		                            height,
 		                            key)
@@ -329,13 +329,13 @@ Object.extend(Geohash, {
 		// $C.fill_style('white')
 		// $C.rect(-padding/2, 
 		// 		-(height + padding/2), 
-		// 		width + padding + 3/Cartagen.zoom_level,
-		//         height + padding - 3/Cartagen.zoom_level)
+		// 		width + padding + 3/Map.zoom,
+		//         height + padding - 3/Map.zoom)
 		$C.draw_text('Lucida Grande',
 					 height,
 					 this.grid_color,
-					 3/Cartagen.zoom_level,
-					 -3/Cartagen.zoom_level,
+					 3/Map.zoom,
+					 -3/Map.zoom,
 					 key)
 		$C.restore()
 	},
@@ -392,13 +392,13 @@ Object.extend(Geohash, {
 	 * @see Geohash.objects
 	 */
 	get_objects: function() {
-		this.last_get_objects = [Map.x,Map.y,Cartagen.zoom_level]
+		this.last_get_objects = [Map.x,Map.y,Map.zoom]
 		this.objects = []
 
 		// get geohash for each of the 4 corners,
 		this.keys = new Hash
 		
-		this.key_length = this.get_key_length(0.0015/Cartagen.zoom_level, 0.0015/Cartagen.zoom_level)
+		this.key_length = this.get_key_length(0.0015/Map.zoom, 0.0015/Map.zoom)
 		
 		this.key = this.get_key(Map.lat, Map.lon, this.key_length)
 		
@@ -454,7 +454,7 @@ Object.extend(Geohash, {
 		return this.objects
 	},
 	sort_objects: function() {
-		this.objects.sort(Cartagen.sort_by_area)
+		this.objects.sort(Geometry.sort_by_area)
 	},
 	/**
 	 * Calculates the appropritate density of features based on the hardware' power (estimated by screen

@@ -26,7 +26,6 @@ var Feature = Class.create(
 	 * this feature's label in the label drawing queue.
 	 */
 	draw: function() {
-		Cartagen.object_count++
 		$C.save()
 
 		// apply styles
@@ -51,7 +50,7 @@ var Feature = Class.create(
 		$C.restore()
 
 		// draw label if we're zoomed in enough
-		if (Cartagen.zoom_level > 0.3) {
+		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
 	},
@@ -93,7 +92,28 @@ var Feature = Class.create(
 		this.lineWidth = 6
 		this._unhovered_styles = {}
 		this._unclicked_styles = {}
+	},
+	get_type: function() {
+		return this.__type__
 	}
+})
+
+Object.extend(Feature, {
+	/**
+	 * Hash of node id => node
+	 * @type Hash
+	 */
+	nodes: new Hash(),
+	/**
+	 * Hash of way id => way
+	 * @type Way
+	 */
+	ways: new Hash(),
+	/**
+	 * Hash of relation id => relation
+	 * @type Relation
+	 */
+	relations: new Hash()
 })
 
 //= require "types/node"
