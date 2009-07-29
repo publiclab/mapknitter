@@ -154,7 +154,7 @@ var Task = Class.create(
 	 * Displays a progress bar for % of members processed
 	 */ 
 	display: function() {
-		if (this.visible || Cartagen.debug) {
+		if (this.visible || Config.debug) {
 			// display a 
 		}
 	}

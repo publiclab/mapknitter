@@ -97,6 +97,26 @@ $D = {
 	
 	_verbose_trace: function(msg) {
 		console.log("An exception occurred in the script. Error name: " + msg.name + ". Error description: " + msg.description + ". Error number: " + msg.number + ". Error message: " + msg.message + ". Line number: "+ msg.lineNumber)
+	},
+	
+	object_count: function() {
+		return $D.node_count() + $D.way_count() + $D.relation_count()
+	},
+	
+	way_count: function() {
+		return Geohash.objects.findAll(function(o){return o.get_type() == 'Way'}).length
+	},
+	
+	relation_count: function() {
+		return Geohash.objects.findAll(function(o){return o.get_type() == 'Relation'}).length
+	},
+	
+	node_count: function() {
+		var c = 0
+		Geohash.objects.each(function(o) {
+			c += o.nodes.length
+		})
+		return c
 	}
 }
 

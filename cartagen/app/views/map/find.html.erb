@@ -15,14 +15,12 @@
 	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
-		Event.observe(window, 'load', function() {
-			Cartagen.setup({
-				stylesheet: "/static/rome/style.gss",
-				static_map: false,
-				lat: <%= @map[:lat] %>,
-				lng: <%= @map[:lng] %>
-				// debug: true
-			})
+		Cartagen.setup({
+			stylesheet: "/static/rome/style.gss",
+			static_map: false,
+			lat: <%= @map[:lat] %>,
+			lng: <%= @map[:lng] %>
+			// debug: true
 		})
 	</script>
 </head>
@@ -68,7 +66,7 @@
 		<script type="text/javascript" charset="utf-8">
 			function find(q) {
 				q = q.replace(' ','-')
-				document.location = "/find/"+q+"/"
+				document.location = "/find/"+q
 			}
 		</script>
 		<p><form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">

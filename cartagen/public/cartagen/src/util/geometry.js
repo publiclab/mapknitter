@@ -195,5 +195,25 @@ var Geometry = {
 	},
 	distance: function(x,y,x2,y2) {
 		return Math.sqrt(Math.abs(x-x2)*Math.abs(x-x2)+Math.abs(y-y2)*Math.abs(y-y2))
+	},
+	/**
+	 * Compared two ways based on area
+	 * @param {Way} a
+	 * @param {Way} b
+	 */
+	sort_by_area: function(a,b) {
+		if (a instanceof Way) {
+			if (b instanceof Way) {
+				if ( a.area < b.area )
+			    return 1;
+			  if ( a.area > b.area )
+			    return -1;
+			  return 0; // a == b
+			} else {
+				return -1 // a wins no matter what if b is not a Way
+			}
+		} else {
+			return 1 // b wins no matter what if a is not a Way
+		}
 	}
 }

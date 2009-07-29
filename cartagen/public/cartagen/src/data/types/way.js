@@ -9,6 +9,7 @@ var Way = Class.create(Feature,
  * @lends Way#
  */
 {
+	__type__: 'Way',
 	/**
 	 * Sets up this way's properties and adds it to the geohash index
 	 * @param {Object} data         A set of properties that will be copied to this Way.
@@ -71,9 +72,9 @@ var Way = Class.create(Feature,
 		this.width = Math.abs(Projection.x_to_lon(this.bbox[1])-Projection.x_to_lon(this.bbox[3]))
 		this.height = Math.abs(Projection.y_to_lat(this.bbox[0])-Projection.y_to_lat(this.bbox[2]))
 		
-		Cartagen.ways.set(this.id,this)
+		Feature.ways.set(this.id,this)
 		if (this.coastline) {
-			Cartagen.coastlines.push(this)
+			Coastline.coastlines.push(this)
 		} else {
 			Style.parse_styles(this,Style.styles.way)
 			Geohash.put_object(this)
@@ -142,7 +143,6 @@ var Way = Class.create(Feature,
 	 * Draws this way on the canvas
 	 */
 	draw: function($super) {
-		Cartagen.way_count++
 		$super()
 		this.age += 1;
 	},
@@ -204,7 +204,7 @@ var Way = Class.create(Feature,
 	shape: function() {
 		$C.opacity(1)
 		if (this.highlight) {
-			$C.line_width(3/Cartagen.zoom_level)
+			$C.line_width(3/Map.zoom)
 			$C.stroke_style("red")
 		}
 		// fade in after load:
@@ -216,15 +216,14 @@ var Way = Class.create(Feature,
 		}
 
 		$C.begin_path()
-		if (Cartagen.distort) $C.move_to(this.nodes[0].x,this.nodes[0].y+Math.max(0,75-Geometry.distance(this.nodes[0].x,this.nodes[0].y,Map.pointer_x(),Map.pointer_y())/4))
+		if (Config.distort) $C.move_to(this.nodes[0].x,this.nodes[0].y+Math.max(0,75-Geometry.distance(this.nodes[0].x,this.nodes[0].y,Map.pointer_x(),Map.pointer_y())/4))
 		else $C.move_to(this.nodes[0].x,this.nodes[0].y)
 
 		if (Map.resolution == 0) Map.resolution = 1
 		this.nodes.each(function(node,index){
 			if ((index % Map.resolution == 0) || index == this.nodes.length-1 || this.nodes.length <= 30) {
-				Cartagen.node_count++
 				// if (this.distort) $C.line_to(node.x,node.y+this.distort/Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y()))
-				if (Cartagen.distort) $C.line_to(node.x,node.y+Math.max(0,75-Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y())/4))
+				if (Config.distort) $C.line_to(node.x,node.y+Math.max(0,75-Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y())/4))
 				else $C.line_to(node.x,node.y)
 			}
 		},this)
