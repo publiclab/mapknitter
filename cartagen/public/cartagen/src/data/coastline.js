@@ -207,7 +207,6 @@ var Coastline = {
 	walk: function(start,end,clockwise) {
 		if (Object.isUndefined(clockwise)) clockwise = true
 		$l(start+'/'+end+',clockwise '+clockwise+': '+this.walk_n(start,end,clockwise))
-		debugger
 		var nodes = []
 		var bbox = Viewport.full_bbox()
 		// if (clockwise == false) bbox = bbox.reverse()
