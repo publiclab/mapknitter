@@ -81,9 +81,11 @@ var Viewport = {
 		Viewport.width = Glop.width * (1 / Map.zoom) - (2 * Viewport.padding * (1 / Map.zoom))
         Viewport.height = Glop.height * (1 / Map.zoom) - (2 * Viewport.padding * (1 / Map.zoom))
         // culling won't work anymore after we fixed rotation... everything's got to be square.
-        Viewport.width = Math.sqrt(Math.pow(Math.max(Viewport.width, Viewport.height),2)*2)
-        Viewport.height = Viewport.width
-        Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
+        if (Map.rotate != 0) {
+			Viewport.width = Math.sqrt(Math.pow(Math.max(Viewport.width, Viewport.height),2)*2)
+	   		Viewport.height = Viewport.width
+		}
+		Viewport.bbox = [Map.y - Viewport.height / 2, Map.x - Viewport.width / 2, Map.y + Viewport.height / 2, Map.x + Viewport.width / 2]
         // $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)
 	}
 }
