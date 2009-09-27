@@ -33,11 +33,13 @@ var Node = Class.create(Feature,
 	 * Draws this node
 	 */
 	shape: function() {
+		$C.save()
 		$C.begin_path()
 		$C.translate(this.x, this.y-this.radius)
 		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
 		$C.fill()
 		$C.stroke()
+		$C.restore()
 	},
 	apply_default_styles: function($super) {
 		$super()
