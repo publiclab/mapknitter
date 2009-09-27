@@ -6213,18 +6213,20 @@ var Importer = {
 	parse_manager: null,
 	init: function() {
 		Importer.parse_manager = new TaskManager(50)
+		try {
+			if (JSON.parse) {
+				Importer.native_json = true
+			}
+		} catch(e) {
+			Importer.native_json = false
+		}
 	},
 	parse: function(string) {
-			var a = new Date
-		if (JSON.parse) {
-			var result = string.evalJSON()
-			var b = new Date
-			$l('parsed: '+(b.getTime()-a.getTime()))
+		if (Importer.native_json) {
+			var result = JSON.parse(string)
 			return result
 		} else {
 			var result = string.evalJSON()
-			var b = new Date
-			$l('parsed: '+(b.getTime()-a.getTime()))
 			return result
 		}
 	},
@@ -6923,8 +6925,11 @@ $C = {
 	},
 
 	line_width: function(lineWidth){
-		if (parseInt(lineWidth) == 0) $C.canvas.lineWidth = 0.000000001
-		else $C.canvas.lineWidth = lineWidth
+		if (parseInt(lineWidth) == 0) {
+			$C.canvas.lineWidth = 0.000000001
+		} else {
+			$C.canvas.lineWidth = lineWidth
+		}
 	},
 
 	begin_path: function(){
