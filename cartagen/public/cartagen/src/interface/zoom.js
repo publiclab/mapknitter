@@ -13,7 +13,7 @@ var Zoom = {
 	draw: function() {
 		
 		// Glop.height*0.3
-		$l('hey')
+		// $l('hey')
 		$C.save()
 		$C.fill_style('white')
 		$C.line_width(Zoom.width/Cartagen.zoom_level)

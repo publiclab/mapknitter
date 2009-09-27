@@ -34,7 +34,6 @@ var Coastline = {
 	 * 
 	 */
 	draw: function() {
-		$l('draw me!!!')
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
 			// invent a better way to trigger collect_nodes, based on Viewport change:
