@@ -132,10 +132,8 @@ $C = {
 	 *                           operations
 	 */
 	line_width: function(lineWidth){
-		if (parseInt(lineWidth) == 0) 
-			$C.canvas.lineWidth = 0.000000001
-		else 
-			$C.canvas.lineWidth = lineWidth
+		if (parseInt(lineWidth) == 0) $C.canvas.lineWidth = 0.000000001
+		else $C.canvas.lineWidth = lineWidth
 	},
 	
 	/**
