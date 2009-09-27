@@ -21,6 +21,17 @@ var Importer = {
 		Importer.parse_manager = new TaskManager(50)
 	},
 	/**
+	 * Parses JSON with either the Prototype (crockford-style) JSON parser,
+	 * or a native parser if available
+	 */
+	parse: function(string) {
+		if (JSON.parse) {
+			return JSON.parse(string)
+		} else {
+			return string.evalJSON()
+		}
+	},
+	/**
 	 * Gets the plot under the current center of the viewport
 	 */
 	get_current_plot: function(force) {
@@ -52,10 +63,14 @@ var Importer = {
 			method: 'get',
 			onComplete: function(result) {
 				// $l(result.responseText.evalJSON().osm.ways.length+" ways")
-				Importer.parse_objects(result.responseText.evalJSON())
+					var a = new Date
+				Importer.parse_objects(Importer.parse(result.responseText))
+					var b = new Date
+					$l('parsed: '+(b.getTime()-a.getTime()))
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
+				Glop.trigger_draw()
 			}
 		})
 	},
@@ -79,7 +94,10 @@ var Importer = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-						Importer.parse_objects(ls.evalJSON(), key)
+							var a = new Date
+						Importer.parse_objects(Importer.parse(ls), key)
+							var b = new Date
+							$l('parsed: '+(b.getTime()-a.getTime()))
 						// Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						// it's not in the localStorage:
@@ -95,6 +113,7 @@ var Importer = {
 			Importer.load_plot(key)
 		}
 
+		Glop.trigger_draw()
 		Importer.plots.set(key, true)
 	},
 	/**
@@ -117,7 +136,10 @@ var Importer = {
 			onSuccess: function(result) {
 				finished = true
 				// $l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
-				Importer.parse_objects(result.responseText.evalJSON(), key)
+					var a = new Date
+				Importer.parse_objects(Importer.parse(result.responseText), key)
+					var b = new Date
+					$l('parsed: '+(b.getTime()-a.getTime()))
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame

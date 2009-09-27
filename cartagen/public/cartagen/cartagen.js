@@ -5662,11 +5662,13 @@ var Node = Class.create(Feature,
 
 	},
 	shape: function() {
+		$C.save()
 		$C.begin_path()
 		$C.translate(this.x, this.y-this.radius)
 		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
 		$C.fill()
 		$C.stroke()
+		$C.restore()
 	},
 	apply_default_styles: function($super) {
 		$super()
@@ -6040,7 +6042,6 @@ var Coastline = {
 	coastline_nodes: [],
 	assembled_coastline: [],
 	draw: function() {
-		$l('draw me!!!')
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
 			$l(this.id+' relation')
@@ -6213,6 +6214,13 @@ var Importer = {
 	init: function() {
 		Importer.parse_manager = new TaskManager(50)
 	},
+	parse: function(string) {
+		if (JSON.parse) {
+			return JSON.parse(string)
+		} else {
+			return string.evalJSON()
+		}
+	},
 	get_current_plot: function(force) {
 		force = force || false
 		if ((Map.x != Map.last_pos[0] && Map.y != Map.last_pos[1]) || force != false || Glop.frame < 100) {
@@ -6235,10 +6243,14 @@ var Importer = {
 		new Ajax.Request(url,{
 			method: 'get',
 			onComplete: function(result) {
-				Importer.parse_objects(result.responseText.evalJSON())
+					var a = new Date
+				Importer.parse_objects(Importer.parse(result.responseText))
+					var b = new Date
+					$l('parsed: '+(b.getTime()-a.getTime()))
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
+				Glop.trigger_draw()
 			}
 		})
 	},
@@ -6251,7 +6263,10 @@ var Importer = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-						Importer.parse_objects(ls.evalJSON(), key)
+							var a = new Date
+						Importer.parse_objects(Importer.parse(ls), key)
+							var b = new Date
+							$l('parsed: '+(b.getTime()-a.getTime()))
 					} else {
 						Importer.load_plot(key)
 					}
@@ -6263,6 +6278,7 @@ var Importer = {
 			Importer.load_plot(key)
 		}
 
+		Glop.trigger_draw()
 		Importer.plots.set(key, true)
 	},
 	load_plot: function(key) {
@@ -6274,7 +6290,10 @@ var Importer = {
 			method: 'get',
 			onSuccess: function(result) {
 				finished = true
-				Importer.parse_objects(result.responseText.evalJSON(), key)
+					var a = new Date
+				Importer.parse_objects(Importer.parse(result.responseText), key)
+					var b = new Date
+					$l('parsed: '+(b.getTime()-a.getTime()))
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
@@ -7540,7 +7559,6 @@ var Zoom = {
 	height:0.4,
 	draw: function() {
 
-		$l('hey')
 		$C.save()
 		$C.fill_style('white')
 		$C.line_width(Zoom.width/Cartagen.zoom_level)
