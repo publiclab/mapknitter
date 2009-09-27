@@ -6215,10 +6215,17 @@ var Importer = {
 		Importer.parse_manager = new TaskManager(50)
 	},
 	parse: function(string) {
+			var a = new Date
 		if (JSON.parse) {
-			return JSON.parse(string)
+			var result = string.evalJSON()
+			var b = new Date
+			$l('parsed: '+(b.getTime()-a.getTime()))
+			return result
 		} else {
-			return string.evalJSON()
+			var result = string.evalJSON()
+			var b = new Date
+			$l('parsed: '+(b.getTime()-a.getTime()))
+			return result
 		}
 	},
 	get_current_plot: function(force) {
@@ -6243,10 +6250,7 @@ var Importer = {
 		new Ajax.Request(url,{
 			method: 'get',
 			onComplete: function(result) {
-					var a = new Date
 				Importer.parse_objects(Importer.parse(result.responseText))
-					var b = new Date
-					$l('parsed: '+(b.getTime()-a.getTime()))
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
@@ -6263,10 +6267,7 @@ var Importer = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-							var a = new Date
 						Importer.parse_objects(Importer.parse(ls), key)
-							var b = new Date
-							$l('parsed: '+(b.getTime()-a.getTime()))
 					} else {
 						Importer.load_plot(key)
 					}
@@ -6290,10 +6291,7 @@ var Importer = {
 			method: 'get',
 			onSuccess: function(result) {
 				finished = true
-					var a = new Date
 				Importer.parse_objects(Importer.parse(result.responseText), key)
-					var b = new Date
-					$l('parsed: '+(b.getTime()-a.getTime()))
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame

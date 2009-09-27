@@ -25,10 +25,18 @@ var Importer = {
 	 * or a native parser if available
 	 */
 	parse: function(string) {
+			var a = new Date
 		if (JSON.parse) {
-			return JSON.parse(string)
+			var result = string.evalJSON()
+			// var result = JSON.parse(string)
+			var b = new Date
+			$l('parsed: '+(b.getTime()-a.getTime()))
+			return result
 		} else {
-			return string.evalJSON()
+			var result = string.evalJSON()
+			var b = new Date
+			$l('parsed: '+(b.getTime()-a.getTime()))
+			return result
 		}
 	},
 	/**
@@ -62,11 +70,7 @@ var Importer = {
 		new Ajax.Request(url,{
 			method: 'get',
 			onComplete: function(result) {
-				// $l(result.responseText.evalJSON().osm.ways.length+" ways")
-					var a = new Date
 				Importer.parse_objects(Importer.parse(result.responseText))
-					var b = new Date
-					$l('parsed: '+(b.getTime()-a.getTime()))
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
@@ -94,10 +98,7 @@ var Importer = {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
-							var a = new Date
 						Importer.parse_objects(Importer.parse(ls), key)
-							var b = new Date
-							$l('parsed: '+(b.getTime()-a.getTime()))
 						// Cartagen.plot_array.push(Geohash.bbox(key))
 					} else {
 						// it's not in the localStorage:
@@ -136,10 +137,7 @@ var Importer = {
 			onSuccess: function(result) {
 				finished = true
 				// $l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
-					var a = new Date
 				Importer.parse_objects(Importer.parse(result.responseText), key)
-					var b = new Date
-					$l('parsed: '+(b.getTime()-a.getTime()))
 				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
