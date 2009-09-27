@@ -19,23 +19,30 @@ var Importer = {
 	parse_manager: null,
 	init: function() {
 		Importer.parse_manager = new TaskManager(50)
+		try {
+			if (JSON.parse) {
+				Importer.native_json = true
+			}
+		} catch(e) {
+			Importer.native_json = false
+		}
 	},
 	/**
 	 * Parses JSON with either the Prototype (crockford-style) JSON parser,
 	 * or a native parser if available
 	 */
 	parse: function(string) {
-			var a = new Date
-		if (JSON.parse) {
-			var result = string.evalJSON()
-			// var result = JSON.parse(string)
-			var b = new Date
-			$l('parsed: '+(b.getTime()-a.getTime()))
+			// var a = new Date
+		if (Importer.native_json) {
+			// var result = string.evalJSON()
+			var result = JSON.parse(string)
+			// var b = new Date
+			// $l('parsed: '+(b.getTime()-a.getTime()))
 			return result
 		} else {
 			var result = string.evalJSON()
-			var b = new Date
-			$l('parsed: '+(b.getTime()-a.getTime()))
+			// var b = new Date
+			// $l('parsed: '+(b.getTime()-a.getTime()))
 			return result
 		}
 	},
