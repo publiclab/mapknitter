@@ -6212,6 +6212,15 @@ var Importer = {
 	plots: new Hash(),
 	parse_manager: null,
 	init: function() {
+		if (!Config.suppress_interface) {
+			var answer = confirm('Your localStorage is filling up ('+localStorage.length+' entries) and may cause slowness in some browsers. Click OK to flush it and begin repopulating it from new data.')
+			if (answer) {
+				localStorage.clear()
+			} else {
+				alert("Your localStorage is intact.")
+			}
+
+		}
 		Importer.parse_manager = new TaskManager(50)
 		try {
 			if (JSON.parse) {
