@@ -8,27 +8,24 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Cartagen</title>
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script src="mushrooms.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		cartagen_base_uri = '../cartagen'
 	</script>
 	<script src="../cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="mushrooms.js" type="text/javascript" charset="utf-8"></script> -->
 	<!--[if IE]><script type="text/javascript" src="cartagen/excanvas.js"></script><![endif]-->
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
-		Event.observe(window, 'load', function() {
-			Cartagen.setup({
-				stylesheet: "/app/style.gss",
-				static_map: false,
-				// static_map_layers: ["/app/central-park.js"],
-				lat1: 40.7701329,
-				lat2: 40.7721329,
-				lng1: -73.9751874,
-				lng2: -73.9731874,
-				fullscreen: false,
-				load_user_features: true
-			})
+		Cartagen.setup({
+			stylesheet: "/app/style.gss",
+			static_map: false,
+			// static_map_layers: ["/app/central-park.js"],
+			lat: 40.7701329,
+			lng: -73.9751874,
+			fullscreen: false,
+			load_user_features: true
 		})
+		Cartagen.load_script('mushrooms.js')
 	</script>
 </head>
 <body>
