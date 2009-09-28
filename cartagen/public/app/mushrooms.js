@@ -28,6 +28,7 @@ Mushrooms = {
 		return false
 	}
 }
-Event.observe(window, 'load', Mushrooms.initialize)
+Mushrooms.initialize()
+// Event.observe(window, 'load', Mushrooms.initialize)
 
 		
