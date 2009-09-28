@@ -28,7 +28,7 @@ var Importer = {
 		}
 	},
 	flush_localstorage: function() {
-		if (!Config.suppress_interface && localStorage.length > 200) {
+		if (typeof localStorage != "undefined" && !Config.suppress_interface && localStorage.length > 200) {
 			var answer = confirm('Your localStorage is filling up ('+localStorage.length+' entries) and may cause slowness in some browsers. Click OK to flush it and begin repopulating it from new data.')
 			if (answer) {
 				localStorage.clear()
