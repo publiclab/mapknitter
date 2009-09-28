@@ -6212,15 +6212,6 @@ var Importer = {
 	plots: new Hash(),
 	parse_manager: null,
 	init: function() {
-		if (!Config.suppress_interface) {
-			var answer = confirm('Your localStorage is filling up ('+localStorage.length+' entries) and may cause slowness in some browsers. Click OK to flush it and begin repopulating it from new data.')
-			if (answer) {
-				localStorage.clear()
-			} else {
-				alert("Your localStorage is intact.")
-			}
-
-		}
 		Importer.parse_manager = new TaskManager(50)
 		try {
 			if (JSON.parse) {
@@ -6228,6 +6219,16 @@ var Importer = {
 			}
 		} catch(e) {
 			Importer.native_json = false
+		}
+	},
+	flush_localstorage: function() {
+		if (!Config.suppress_interface && localStorage.length > 200) {
+			var answer = confirm('Your localStorage is filling up ('+localStorage.length+' entries) and may cause slowness in some browsers. Click OK to flush it and begin repopulating it from new data.')
+			if (answer) {
+				localStorage.clear()
+			} else {
+				alert("Your localStorage is intact.")
+			}
 		}
 	},
 	parse: function(string) {
@@ -6398,6 +6399,7 @@ var Importer = {
 	}
 }
 
+Importer.flush_localstorage()
 document.observe('cartagen:init', Importer.init.bindAsEventListener(Importer))
 var Glop = {
 	frame: 0,
