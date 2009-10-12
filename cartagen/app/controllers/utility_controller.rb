@@ -9,7 +9,7 @@ class UtilityController < ApplicationController
     render :text => res.body
   end
   
-  def geocode
+  def geocode_sites
     file = File.new("public/sites.txt", "r")
     line = file.gets.chomp!
     sites = []
@@ -27,5 +27,12 @@ class UtilityController < ApplicationController
     render :json => sites
   end
   
+  def geocode
+    if params[:location]
+      @geo = GeoKit::GeoLoc.geocode(params[:location])
+      puts @geo.lat
+      render :json => @geo if params[:format] == 'json'
+    end
+  end
 
 end
