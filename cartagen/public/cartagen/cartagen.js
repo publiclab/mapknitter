@@ -4918,7 +4918,8 @@ var Config = {
 	debug: false,
 	load_user_features: false,
 	aliases: $H({
-		stylesheet: ['gss']
+		stylesheet: ['gss'],
+		zoom_level: ['zoom']
 	}),
 	handlers: $H({
 		debug: function(value) {
@@ -4989,7 +4990,6 @@ var Cartagen = {
 	},
 	initialize: function(configs) {
 		Config.init(configs)
-
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 						             cartagen_base_uri + '/lib/phonegap/geolocation.js',
@@ -5013,18 +5013,17 @@ var Cartagen = {
 			Importer.get_current_plot(true)
 			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Importer.get_current_plot(false) },3)
-		} else {
+		}// else {
+			$l('getting statics')
 			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				Importer.get_static_plot(layer_url)
 			},this)
 			if (Config.dynamic_layers.length > 0) {
 				Config.dynamic_layers.each(function(layer_url) {
-					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
 			}
-		}
 
 		Glop.trigger_draw()
 
@@ -5656,6 +5655,12 @@ var Node = Class.create(Feature,
 		$super()
 	},
 	draw: function($super) {
+		if (this.img && typeof this.img == 'string') {
+			$l('loading image '+this.img)
+			var img = this.img
+			this.img = new Image
+			this.img.src = img
+		}
 		$super()
 	},
 	style: function() {
@@ -5663,11 +5668,19 @@ var Node = Class.create(Feature,
 	},
 	shape: function() {
 		$C.save()
-		$C.begin_path()
-		$C.translate(this.x, this.y-this.radius)
-		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
-		$C.fill()
-		$C.stroke()
+		if (this.img && this.img.width) {
+			$C.translate(this.x,this.y)
+			$C.scale(2,2)
+			$C.draw_image(this.img,this.img.width/-2,this.img.height/-2)
+		}
+		else {
+			$C.begin_path()
+			$C.translate(this.x, this.y-this.radius)
+			$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
+			$C.fill()
+			$C.stroke()
+		}
+		Label.prototype.draw.apply(this,0,0)
 		$C.restore()
 	},
 	apply_default_styles: function($super) {
@@ -6044,7 +6057,7 @@ var Coastline = {
 	draw: function() {
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
-			$l(this.id+' relation')
+			$l(object.id+' relation')
 			object.collect_nodes()
 			if (object.coastline_nodes.length > 0) Coastline.assembled_coastline.push([object.coastline_nodes,[object.entry_angle,object.exit_angle]])
 		})
@@ -6154,6 +6167,10 @@ var Coastline = {
 			})
 			new Relation(data)
 		}
+		$l('refreshed coastlines')
+		Feature.relations.each(function(r) {
+			$l(r.inspect())
+		})
 	},
 	walk: function(start,end,clockwise) {
 		if (Object.isUndefined(clockwise)) clockwise = true
@@ -6257,12 +6274,17 @@ var Importer = {
 		Map.last_pos[1] = Map.y
 	},
 	get_static_plot: function(url) {
-		$l('fetching ' + url)
+		$l('getting static plot for '+url)
 		Importer.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
-			onComplete: function(result) {
-				Importer.parse_objects(Importer.parse(result.responseText))
+			onSuccess: function(result) {
+				try {
+					$l('formed correctly: '+result.responseText)
+					Importer.parse_objects(Importer.parse(result.responseText))
+				} catch(e) {
+					$l('Malformed JSON, did not parse. Try removing trailing commas and extra whitespace. Test your JSON by typing \"Importer.parse(\'{"your": "json", "goes": "here"}\')\" ==> '+result.responseText)
+				}
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
@@ -6329,13 +6351,14 @@ var Importer = {
 	parse_node: function(node){
 		var n = new Node
 		n.name = node.name
-		n.author = n.author
-		n.img = n.img
+		n.author = node.author
+		n.img = node.img
 		n.h = 10
 		n.w = 10
 		n.color = Glop.random_color()
 		n.timestamp = node.timestamp
 		n.user = node.user
+		if (!Object.isUndefined(node.image)) $l('got image!!')
 		n.id = node.id
 		n.lat = node.lat
 		n.lon = node.lon
@@ -6346,6 +6369,7 @@ var Importer = {
 		if (node.display) {
 			n.display = true
 			n.radius = 50
+			$l(n.img)
 			Geohash.put(n.lat, n.lon, n, 1)
 		}
 	},
@@ -6378,22 +6402,25 @@ var Importer = {
 		}
 	},
 	parse_objects: function(data, key) {
-
 		var cond;
 		if (key) {
 			cond = function() {
 				return (Geohash.keys.get(key) === true)
 			}
+		} else  {
+			cond = function() {
+				return true
+			}
 		}
-		else  {
-			cond = true
+		if (data.osm.node) {
+			node_task = new Task(data.osm.node, Importer.parse_node, cond)
+			Importer.parse_manager.add(node_task)
 		}
-
-		node_task = new Task(data.osm.node, Importer.parse_node, cond)
-		way_task = new Task(data.osm.way, Importer.parse_way, cond, [node_task.id])
+		if (data.osm.way) {
+			way_task = new Task(data.osm.way, Importer.parse_way, cond, [node_task.id])
+			Importer.parse_manager.add(way_task)
+		}
 		coastline_task = new Task(['placeholder'], Coastline.refresh_coastlines, cond, [way_task.id])
-		Importer.parse_manager.add(node_task)
-		Importer.parse_manager.add(way_task)
 		Importer.parse_manager.add(coastline_task)
 
 	}
@@ -6536,7 +6563,6 @@ var Task = Class.create(
 		this.condition = condition
 
 		Task.register(this)
-
 		this.deps = deps || []
 	},
 	exec_next: function() {

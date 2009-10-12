@@ -21,6 +21,12 @@ var Node = Class.create(Feature,
 	 * invokes Feature#draw
 	 */
 	draw: function($super) {
+		if (this.img && typeof this.img == 'string') {
+			$l('loading image '+this.img)
+			var img = this.img
+			this.img = new Image
+			this.img.src = img
+		}
 		$super()
 	},
 	/**
@@ -34,11 +40,19 @@ var Node = Class.create(Feature,
 	 */
 	shape: function() {
 		$C.save()
-		$C.begin_path()
-		$C.translate(this.x, this.y-this.radius)
-		$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
-		$C.fill()
-		$C.stroke()
+		if (this.img && this.img.width) {
+			$C.translate(this.x,this.y)
+			$C.scale(2,2)
+			$C.draw_image(this.img,this.img.width/-2,this.img.height/-2)
+		}
+		else {
+			$C.begin_path()
+			$C.translate(this.x, this.y-this.radius)
+			$C.arc(0, this.radius, this.radius, 0, Math.PI*2, true)
+			$C.fill()
+			$C.stroke()
+		}
+		Label.prototype.draw.apply(this,0,0)
 		$C.restore()
 	},
 	apply_default_styles: function($super) {
