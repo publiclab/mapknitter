@@ -113,7 +113,10 @@ var Task = Class.create(
 		this.condition = condition
 	
 		Task.register(this)
-		
+		/**
+		 *  Dependencies of this task.
+		 *  If it has uncompleted deps, it does not run.
+		 */
 		this.deps = deps || []
 	},
 	exec_next: function() {

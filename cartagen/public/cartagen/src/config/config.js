@@ -19,7 +19,8 @@ var Config = {
 	debug: false,
 	load_user_features: false,
 	aliases: $H({
-		stylesheet: ['gss']
+		stylesheet: ['gss'],
+		zoom_level: ['zoom']
 	}),
 	handlers: $H({
 		debug: function(value) {

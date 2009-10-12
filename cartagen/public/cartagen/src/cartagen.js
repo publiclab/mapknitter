@@ -103,7 +103,6 @@ var Cartagen = {
 	 */
 	initialize: function(configs) {
 		Config.init(configs)
-		
 		// load phonegap js if needed
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
@@ -141,7 +140,8 @@ var Cartagen = {
 			Importer.get_current_plot(true)
 			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Importer.get_current_plot(false) },3)
-		} else {
+		}// else {
+			$l('getting statics')
 			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				Importer.get_static_plot(layer_url)
@@ -149,11 +149,10 @@ var Cartagen = {
 			// to add user-added map data... messy!
 			if (Config.dynamic_layers.length > 0) {
 				Config.dynamic_layers.each(function(layer_url) {
-					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
 			}
-		}
+		// }
 		
 		Glop.trigger_draw()
 		
