@@ -1,0 +1,42 @@
+Cartagen: A Framework for Dynamic Mapping (Client Edition)
+
+Version 0.6.2
+Released 10/12/09
+
+Please note that this is a beta release. There are know bugs and missing
+features. It is not intended for production systems.
+
+CHANGES
+
+- Implemented native JSON parsing for browsers that support it
+
+- Better viewport calculation
+
+- Automatically prompt to empty localStorage when overfilled (slows down geohash loading due to overloading sqLite implementation of localStorage)
+
+- Mobile app fixes
+
+- Added new logo
+
+KNOWN BUGS
+
+- Automatic label rotation sometimes does not work properly. Investigation of
+  this issue is ongoing.
+
+- Key commands such as refreshing the page don't work while the mouse if over the map area.
+  
+INCOMPATIBILITIES
+
+The lat1, lat2, lng1, and lng2 parameters that were used in Cartagen.setup in 
+the 0.5.x series are no longer used. They have been replaced by simply “lat” 
+and “lng”. Please update your setup calls accordingly.
+
+CONTRIBUTORS
+
+Cartagen is developed at the MIT Media Lab in Cambridge, MA, USA by Jeffrey
+Warren and Ben Weissmann. <http://wiki.cartagen.org/> has up-to-date
+information and resources on how to contribute to the project.
+  
+MORE INFORMATION
+
+<http://wiki.cartagen.org/> is the best source of information on Cartagen.

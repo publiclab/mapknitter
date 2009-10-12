@@ -82,12 +82,17 @@ var Importer = {
 	 * Fetches a JSON plot from a static file, given a full url.
 	 */
 	get_static_plot: function(url) {
-		$l('fetching ' + url)
+		$l('getting static plot for '+url)
 		Importer.requested_plots++
 		new Ajax.Request(url,{
 			method: 'get',
-			onComplete: function(result) {
-				Importer.parse_objects(Importer.parse(result.responseText))
+			onSuccess: function(result) {
+				try {
+					$l('formed correctly: '+result.responseText)
+					Importer.parse_objects(Importer.parse(result.responseText))
+				} catch(e) {
+					$l('Malformed JSON, did not parse. Try removing trailing commas and extra whitespace. Test your JSON by typing \"Importer.parse(\'{"your": "json", "goes": "here"}\')\" ==> '+result.responseText)
+				}
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
@@ -182,13 +187,14 @@ var Importer = {
 	parse_node: function(node){
 		var n = new Node
 		n.name = node.name
-		n.author = n.author
-		n.img = n.img
+		n.author = node.author
+		n.img = node.img
 		n.h = 10
 		n.w = 10
 		n.color = Glop.random_color()
 		n.timestamp = node.timestamp
 		n.user = node.user
+		if (!Object.isUndefined(node.image)) $l('got image!!')
 		n.id = node.id
 		n.lat = node.lat
 		n.lon = node.lon
@@ -202,6 +208,7 @@ var Importer = {
 		if (node.display) {
 			n.display = true
 			n.radius = 50
+			$l(n.img)
 			Geohash.put(n.lat, n.lon, n, 1)
 		}
 	},
@@ -239,22 +246,26 @@ var Importer = {
 	 * @param {Object} data OSM data to parse
 	 */
 	parse_objects: function(data, key) {
-		
 		var cond;
 		if (key) {
 			cond = function() {
 				return (Geohash.keys.get(key) === true)
 			}
+		} else  {
+			// cond = true
+			cond = function() {
+				return true
+			}
 		}
-		else  {
-			cond = true
+		if (data.osm.node) {
+			node_task = new Task(data.osm.node, Importer.parse_node, cond)
+			Importer.parse_manager.add(node_task)
 		}
-		
-		node_task = new Task(data.osm.node, Importer.parse_node, cond)
-		way_task = new Task(data.osm.way, Importer.parse_way, cond, [node_task.id])
+		if (data.osm.way) {
+			way_task = new Task(data.osm.way, Importer.parse_way, cond, [node_task.id])
+			Importer.parse_manager.add(way_task)
+		}
 		coastline_task = new Task(['placeholder'], Coastline.refresh_coastlines, cond, [way_task.id])
-		Importer.parse_manager.add(node_task)
-		Importer.parse_manager.add(way_task)
 		Importer.parse_manager.add(coastline_task)
 		// we should load relations -- scheduled for 0.8 rlease
 
