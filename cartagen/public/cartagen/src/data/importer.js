@@ -23,12 +23,27 @@ var Importer = {
 			if (JSON.parse) {
 				Importer.native_json = true
 			}
+			else {
+				Importer.native_json = false
+			}
 		} catch(e) {
 			Importer.native_json = false
 		}
+		
+		try {
+			if (localStorage && localStorage.length && localStorage.getItem) {
+				Importer.localStorage = true
+			}
+			else {
+				Importer.localStorage = false
+			}
+		}
+		catch (e) {
+			Importer.localStorage = false
+		}
 	},
 	flush_localstorage: function() {
-		if (typeof localStorage != "undefined" && !Config.suppress_interface && localStorage.length > 200) {
+		if (Importer.localStorage && !Config.suppress_interface && localStorage.length > 200) {
 			var answer = confirm('Your localStorage is filling up ('+localStorage.length+' entries) and may cause slowness in some browsers. Click OK to flush it and begin repopulating it from new data.')
 			if (answer) {
 				localStorage.clear()
@@ -116,7 +131,7 @@ var Importer = {
 				//$l("already loaded plot")
 			} else {
 				// if we haven't, check if HTML 5 localStorage exists in this browser:
-				if (typeof localStorage != "undefined") {
+				if (Importer.localStorage) {
 					var ls = localStorage.getItem('geohash_'+key)
 					if (ls) {
 						$l("localStorage cached plot")
@@ -160,7 +175,7 @@ var Importer = {
 				finished = true
 				// $l('loaded '+_lat1+'&lng1='+_lng1+'&lat2='+_lat2+'&lng2='+_lng2)
 				Importer.parse_objects(Importer.parse(result.responseText), key)
-				if (localStorage) localStorage.setItem('geohash_'+key,result.responseText)
+				if (Importer.localStorage) localStorage.setItem('geohash_'+key,result.responseText)
 				Importer.requested_plots--
 				if (Importer.requested_plots == 0) Event.last_event = Glop.frame
 				$l("Total plots: "+Importer.plots.size()+", of which "+Importer.requested_plots+" are still loading.")
