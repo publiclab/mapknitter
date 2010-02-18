@@ -28,5 +28,7 @@ class ChangeLatLonTypes < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :ways
+    drop_table :nodes
   end
 end
