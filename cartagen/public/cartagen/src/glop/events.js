@@ -9,13 +9,12 @@ var Events = {
 	 */
 	init: function() {
 		// Observe mouse events:
-		var canvas = $('canvas')
-		canvas.observe('mousemove', Events.mousemove)
-		canvas.observe('mousedown', Events.mousedown)
-		canvas.observe('mouseup', Events.mouseup)
-		canvas.observe('dblclick', Events.doubleclick)
-		canvas.observe('mouseover', Events.mouseover)
-		canvas.observe('mouseout', Events.mouseout)
+		Glop.observe('mousemove', Events.mousemove)
+		Glop.observe('mousedown', Events.mousedown)
+		Glop.observe('mouseup', Events.mouseup)
+		Glop.observe('dblclick', Events.doubleclick)
+		Glop.observe('mouseover', Events.mouseover)
+		Glop.observe('mouseout', Events.mouseout)
 		
 		
 		// Observe scrollwheel:
@@ -27,12 +26,13 @@ var Events = {
 		Event.observe(document, 'keyup', Events.keyup)
 		
 		// touchscreen (mobile phone) events:
-		canvas.ontouchstart = Events.ontouchstart
-		canvas.ontouchmove = Events.ontouchmove
-		canvas.ontouchend = Events.ontouchend
-		canvas.ongesturestart = Events.ongesturestart
-		canvas.ongesturechange = Events.ongesturechange
-		canvas.ongestureend = Events.ongestureend
+		element = $('main')
+		element.ontouchstart = Events.ontouchstart
+		element.ontouchmove = Events.ontouchmove
+		element.ontouchend = Events.ontouchend
+		element.ongesturestart = Events.ongesturestart
+		element.ongesturechange = Events.ongesturechange
+		element.ongestureend = Events.ongestureend
 		
 		// window events:
 		Event.observe(window, 'resize', Events.resize);
@@ -56,13 +56,14 @@ var Events = {
 	 * @param {Event} event
 	 */
 	mousedown: function(event) {
-		if (!event.isLeftClick()) return
+		if (!event.isLeftClick() || event.ctrlKey) return
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
         Mouse.click_y = Mouse.y
         Map.x_old = Map.x
         Map.y_old = Map.y
+		Map.zoom_old = Map.zoom
         Map.rotate_old = Map.rotate
 		Mouse.dragging = true
 		Events.mousemove(event)
@@ -73,7 +74,7 @@ var Events = {
 	 * Triggered when mouse is released on canvas
 	 */
 	mouseup: function(event) {
-		if (!event.isLeftClick()) return
+		if (event && (!event.isLeftClick() || event.ctrlKey)) return
         Mouse.up = true
         Mouse.down = false
         Mouse.release_frame = Glop.frame
@@ -135,13 +136,12 @@ var Events = {
 			switch(character){
 				case "r": Keyboard.keys.set("r",true); break
 				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (!Config.live_gss) Cartagen.show_gss_editor(); break
-				case "h": get_static_plot('/static/rome/highway.js'); break
-				case "b": Interface.download_bbox()
+				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
+				case "b": if (Config.debug) Interface.download_bbox()
 			}
 		}
 		Glop.trigger_draw(5)
-		e.preventDefault()
+		// e.preventDefault()
 	},
 	/**
 	 * Triggered when a key is released
@@ -214,7 +214,7 @@ var Events = {
 	 * @param {Event} e
 	 */
 	ongesturestart: function(e) {
-		zoom_level_old = Map.zoom
+		Map.zoom_old = Map.zoom
 	},
 	/**
 	 * Triggered when a touch gesture is changed or moved. Mainly for touchscreen mobile platforms
@@ -224,7 +224,7 @@ var Events = {
 		var node = e.target;
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
-		Map.zoom = zoom_level_old*e.scale
+		Map.zoom = Map.zoom_old*e.scale
 		Glop.trigger_draw(5)
 	},
 	/**
@@ -285,7 +285,9 @@ var Events = {
 document.observe('cartagen:init', Events.init)
 
 
-// not sure what this is:
+// This is to adjust for an iPhone turning its orientation - 
+// the x and y dimensions will more or less reverse... this code
+// would keep the url-bar hidden even so
 
 //if (Prototype.Browser.MobileSafari) {
 	// addEventListener("load", function() { setTimeout(updateLayout, 0) }, false)

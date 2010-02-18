@@ -26,7 +26,17 @@ var Feature = Class.create(
 	 * this feature's label in the label drawing queue.
 	 */
 	draw: function() {
-		$C.save()
+		// Formerly drew separately to different canvases. 
+		// That functionality has been put off for now.
+		//
+		// if (this.hover || this.mouseDown) {
+		// 	// $l('main')
+		// 	$C.open('main')
+		// } else {
+		// 	// $l('background')
+		// 	$C.open('background')
+		// }
+		// $C.save()
 
 		// apply styles
 
@@ -48,7 +58,7 @@ var Feature = Class.create(
 		// draw the shape
 		this.shape()
 		$C.restore()
-
+		// $C.close()
 		// draw label if we're zoomed in enough
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)

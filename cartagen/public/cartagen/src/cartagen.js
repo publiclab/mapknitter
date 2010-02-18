@@ -93,6 +93,7 @@ var Cartagen = {
 	 */
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
+			$('canvas').insert('<canvas id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})	
 	},
@@ -103,6 +104,9 @@ var Cartagen = {
 	 */
 	initialize: function(configs) {
 		Config.init(configs)
+		// add a new layer for dynamic drawing (hovers, clicks)
+		// $C.add('background')
+
 		// load phonegap js if needed
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
@@ -118,7 +122,7 @@ var Cartagen = {
 		this.browser_check()
 		
 		//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar
-		
+
 		/**
 		 * @name Cartagen#cartagen:init
 		 * @event
@@ -130,8 +134,8 @@ var Cartagen = {
 		document.fire('cartagen:init')
 		
 		// bind event listeners
-		$('canvas').observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
-		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
+		Glop.observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
+		Glop.observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
 
 		// Startup:
 		Style.load_styles(Config.stylesheet) // stylesheet
@@ -173,16 +177,25 @@ var Cartagen = {
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
-        if (Viewport.padding > 0) {
-            $C.stroke_style('white')
-            $C.line_width(2)
-            $C.stroke_rect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
-        }
         
-        $C.translate(Glop.width / 2, Glop.height / 2)
-        $C.rotate(Map.rotate)
-        $C.scale(Map.zoom, Map.zoom)
-        $C.translate(-Map.x,-Map.y)
+		// display fps if Config.fps = true
+		if (Config.fps) {
+			if ($('cartagen_fps')) {
+				$('cartagen_fps').innerHTML = Glop.fps
+			} else {
+				$$('body')[0].insert({top:'<div style="position:absolute;margin:10px;font-weight:bold;background:white" id="cartagen_fps"></div>'})
+			}
+		}
+
+		$C.canvases.keys().each(function(canvas) {
+			$C.open(canvas)
+			$C.translate(Glop.width / 2, Glop.height / 2)
+	        $C.rotate(Map.rotate)
+	        $C.scale(Map.zoom, Map.zoom)
+	        $C.translate(-Map.x,-Map.y)
+		})
+		
+		$C.close()
         
 		Viewport.draw() //adjust viewport
 		
@@ -191,7 +204,7 @@ var Cartagen = {
 		 *Fires just before features are drawn
 		 *@event
 		 */
-		$('canvas').fire('cartagen:predraw')
+		Glop.fire('cartagen:predraw')
 		
 		//Geohash lookup:
 		Geohash.objects.each(function(object) {
@@ -199,9 +212,9 @@ var Cartagen = {
 				Cartagen.feature_queue.push(object)
 			}
 			else {
-				try {
+				// try {
 				object.draw()
-				} catch(e) {$l(e)}
+				// } catch(e) {$l(e)}
 			}
 		})
 
@@ -209,7 +222,7 @@ var Cartagen = {
 			(item.draw.bind(item))()
 		})
 		this.feature_queue = []
-
+		
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
 									   // now we  
 	},
@@ -221,6 +234,14 @@ var Cartagen = {
             item[0].draw(item[1], item[2])
         })
 
+		$C.save()
+			$C.opacity(0.4)
+			$C.stroke_style('red')
+			$C.fill_style('red')
+			$C.rect(Map.x - Mouse.x,Map.y - Mouse.y,Map.x - Mouse.x+10,Map.y - Mouse.y+10)
+			$C.fill()
+		$C.restore()
+
 		this.label_queue = []
 
 		/**
@@ -228,9 +249,10 @@ var Cartagen = {
 		 *Fires just after labels are drawn
 		 *@event
 		 */
-		$('canvas').fire('cartagen:postdraw')
+		Glop.fire('cartagen:postdraw')
 		
 		// display percentage of features we've imported so far:
+		$C.close()
 		Interface.display_loading(Importer.parse_manager.completed)
 		
     },

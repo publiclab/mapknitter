@@ -13,7 +13,7 @@ var Coastline = {
 		// 	postdraw: 'c'
 		// }, this)
 		
-		$('canvas').observe('cartagen:predraw', Coastline.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', Coastline.draw.bindAsEventListener(this))
 	},
 	/**
 	 * Array of coastline ways to be assembled occasionally into coastline 'collected way' relations
