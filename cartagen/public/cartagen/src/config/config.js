@@ -5,6 +5,8 @@ var Config = {
 	powersave: true,
 	zoom_out_limit: 0.02,
 	simplify: 1,
+	padding_top: 0,
+	padding_left: 0,
 	live_gss: false,
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],

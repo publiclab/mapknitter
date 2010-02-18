@@ -54,14 +54,12 @@ var Interface = {
 
 		alert('Please select a bounding box to download')
 
-		var canvas = $('canvas')
-
-		canvas.observe('mousemove', Interface.bbox_select_mousemove)
-		canvas.observe('mousedown', Interface.bbox_select_mousedown)
-		canvas.observe('mouseup', Interface.bbox_select_mouseup)
-		canvas.stopObserving('mousemove', Events.mousemove)
-		canvas.stopObserving('mousedown', Events.mousedown)
-		canvas.stopObserving('mouseup', Events.mouseup)
+		Glop.observe('mousemove', Interface.bbox_select_mousemove)
+		Glop.observe('mousedown', Interface.bbox_select_mousedown)
+		Glop.observe('mouseup', Interface.bbox_select_mouseup)
+		Glop.stopObserving('mousemove', Events.mousemove)
+		Glop.stopObserving('mousedown', Events.mousedown)
+		Glop.stopObserving('mouseup', Events.mouseup)
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false
@@ -118,13 +116,12 @@ var Interface = {
 
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
-			var canvas = $('canvas')
-			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
-			canvas.stopObserving('mousedown', Interface.bbox_select_mousedown)
-			canvas.stopObserving('mouseup', Interface.bbox_select_mouseup)
-			canvas.observe('mousemove', Events.mousemove)
-			canvas.observe('mousedown', Events.mousedown)
-			canvas.observe('mouseup', Events.mouseup)
+			Glop.stopObserving('mousemove', Interface.bbox_select_mousemove)
+			Glop.stopObserving('mousedown', Interface.bbox_select_mousedown)
+			Glop.stopObserving('mouseup', Interface.bbox_select_mouseup)
+			Glop.observe('mousemove', Events.mousemove)
+			Glop.observe('mousedown', Events.mousedown)
+			Glop.observe('mouseup', Events.mouseup)
 
 			Interface.bbox_select_active = true
 			Interface.bbox_select_dragging = false

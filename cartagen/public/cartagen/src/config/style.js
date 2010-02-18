@@ -2,6 +2,11 @@
  * @namespace Loads GSS stylesheets and applies styles to features.
  */
 var Style = {
+	/**
+	 * Whether any dynamic styles have been recalculated. Triggers draw.
+	 * @type Boolean
+	 */
+	styles_changed: false,
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
 	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'menu', 'image'],
 
@@ -13,7 +18,7 @@ var Style = {
 	 */
 	styles: {
 		body: {
-			fillStyle: "#eee",
+			// fillStyle: "#eee",
 			fontColor: "#eee",
 			fontSize: 12,
 			fontRotation: 0,
@@ -33,12 +38,10 @@ var Style = {
 				Style.styles.body.pattern = new Image()
 				Style.styles.body.pattern.src = Object.value(value)
 			}
+			$C.open('main')
 			$C.fill_pattern(Style.styles.body.pattern, 'repeat')
 		}
-		$C.rect(0, 0, Glop.width, Glop.height)
-		$C.stroke_rect(0, 0, Glop.width, Glop.height)
-		$C.line_join('round')
-		$C.line_cap('round')
+		$C.close()
 	},
 	/**
 	 * Take styles from GSS and set appropriate properties of a feature
@@ -114,6 +117,7 @@ var Style = {
 	 * @param {String}  property Property to update
 	 */
 	refresh_style: function(feature, property) {
+		Style.styles_changed = true
 		feature[property] = Object.value(feature.style_generators[property], feature)
 	},
 	/**
@@ -121,7 +125,8 @@ var Style = {
 	 * @param {String} stylesheet_url URL of stylesheet
 	 */
 	load_styles: function(stylesheet_url) {
-		$l('loading')
+		var orig_url = stylesheet_url
+		$l('loading '+stylesheet_url)
 		if (stylesheet_url.slice(0,4) == "http") {
 			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
@@ -130,9 +135,51 @@ var Style = {
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
 				Style.apply_gss(result.responseText)
+				Glop.fire('styles:loaded')
+				Glop.fire('styles:loaded:'+orig_url)
 			}
 		})
 	},
+	/**
+	 * Cascades a set of styles over another set. More or less merges the two.
+	 * @param {Object} old_styles Existing styles over which to cascade
+	 * @param {Object} new_styles Additional styles to cascade over old ones
+	 */
+	cascade: function(old_styles,new_styles) {
+		// overwrite existing selectors, read as hash:
+		$l('cascading')
+		// $l(old_styles)
+		// $l(new_styles)
+		$l('both')
+		$H(old_styles).each(function(selector) {
+			if (new_styles[selector.key]) {
+				$H(selector.value).each(function(style) {
+					if (new_styles[selector.key][style.key]){
+						old_styles[selector.key][style.key] = new_styles[selector.key][style.key]
+					}
+				})
+			}
+			// add new styles
+			// $l(selector.key)
+			if (new_styles[selector.key]) {
+				// $l(selector.key)
+				$H(new_styles[selector.key]).each(function(new_style) {
+					old_styles[selector.key][new_style.key] = new_style.value
+				})
+			}
+		})
+		// add new selectors
+		$H(new_styles).each(function(style) {
+			if (!old_styles[style.key]) old_styles[style.key] = style.value
+		})
+	},
+	/**
+	 * Copies each style from a gss string into the Styles.styles object, 
+	 * which is the master 'merged' style storage for the map
+	 * @param {String} gss_string
+	 * @param {Boolean} force_update Whether to force all objects in the 
+	 * 			map to refresh with the new styles
+	 */
 	apply_gss: function(gss_string, force_update) {
 		$l('applying gss')
 		var styles = ("{"+gss_string+"}").evalJSON()
@@ -144,6 +191,7 @@ var Style = {
 			delete styles.debug
 		}
 		
+		// convert to a hash and iterate over:
 		$H(styles).each(function(style) {
 			if (style.value.refresh) {
 				$H(style.value.refresh).each(function(pair) {
@@ -155,8 +203,7 @@ var Style = {
 					$H(style.value.menu).each(function(pair) {
 						ContextMenu.add_static_item(pair.key, pair.value)
 					})
-				}
-				else {
+				} else {
 					$H(style.value.menu).each(function(pair) {
 						style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
 					})
@@ -164,7 +211,7 @@ var Style = {
 				}
 			}
 		})
-		Style.styles = styles
+		Style.cascade(Style.styles,styles)
 
 		if ($('gss_textarea')) {
 			$('gss_textarea').value = gss_string

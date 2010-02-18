@@ -67,6 +67,7 @@ var Label = Class.create(
 	 */
     draw: function(x, y) {
         if (this.text) {
+			$C.open('background')
             $C.save()
 
             $C.stroke_style(this.fontColor)

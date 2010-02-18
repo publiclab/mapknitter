@@ -170,11 +170,11 @@ var Way = Class.create(Feature,
 
 		// mouseDown
 		if (this.mouseDown && Mouse.down == true && this.is_hovered) {
-				if (!this.click_styles_applied) {
-					this.apply_click_styles()
-					this.click_styles_applied = true
-				}
-				if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
+			if (!this.click_styles_applied) {
+				this.apply_click_styles()
+				this.click_styles_applied = true
+			}
+			if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
 		}
 		else if (this.click_styles_applied) {
 			this.remove_click_styles()
@@ -203,10 +203,6 @@ var Way = Class.create(Feature,
 	 */
 	shape: function() {
 		$C.opacity(1)
-		if (this.highlight) {
-			$C.line_width(3/Map.zoom)
-			$C.stroke_style("red")
-		}
 		// fade in after load:
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if ((Glop.date - this.birthdate) < 4000) {
@@ -222,7 +218,7 @@ var Way = Class.create(Feature,
 		if (Map.resolution == 0) Map.resolution = 1
 		this.nodes.each(function(node,index){
 			if ((index % Map.resolution == 0) || index == this.nodes.length-1 || this.nodes.length <= 30) {
-				// if (this.distort) $C.line_to(node.x,node.y+this.distort/Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y()))
+				// eye candy demo:
 				if (Config.distort) $C.line_to(node.x,node.y+Math.max(0,75-Geometry.distance(node.x,node.y,Map.pointer_x(),Map.pointer_y())/4))
 				else $C.line_to(node.x,node.y)
 			}

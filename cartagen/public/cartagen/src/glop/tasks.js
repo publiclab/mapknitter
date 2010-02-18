@@ -66,11 +66,11 @@ var TaskManager = Class.create(
 	},
 	start: function() {
 		this.active = true
-		$('canvas').observe('glop:predraw', this.listener)
+		Glop.observe('glop:predraw', this.listener)
 	},
 	stop: function() {
 		this.active = false
-		$('canvas').stopObserving('glop:predraw', this.listener)
+		Glop.stopObserving('glop:predraw', this.listener)
 	},
 	get_completed: function(tasks) {
 		var total = 0

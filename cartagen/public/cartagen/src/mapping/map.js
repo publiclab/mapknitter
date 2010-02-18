@@ -12,7 +12,7 @@ var Map = {
 	init: function() {
 		this.x = Projection.lon_to_x(Config.lng)
 		this.y = Projection.lat_to_y(Config.lat)
-		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('glop:predraw', this.draw.bindAsEventListener(this))
 		this.draw()
 	},
 	/**
@@ -75,6 +75,11 @@ var Map = {
 	 * @type Number
 	 */
 	rotate_old: 0,
+	/**
+	 * Zoom factor from beginning of drag or gesture motion
+	 * @type Number
+	 */
+	zoom_old: 0,
 	/**
 	 * X-coordinate from beginning of drag motion
 	 * @type Number

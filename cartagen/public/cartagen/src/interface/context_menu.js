@@ -1,7 +1,7 @@
 var ContextMenu = {
 	cond_items: {},
 	init: function() {
-		this.menu = new Control.ContextMenu('canvas')
+		this.menu = new Control.ContextMenu('main')
 	},
 	add_cond_item: function(name, callback) {
 		var id = Math.round(Math.random() * 999999999)
@@ -29,7 +29,7 @@ var ContextMenu = {
 	add_static_item: function(name, _callback) {
 		this.menu.addItem({
 			label: name,
-			callback: _callback,
+			callback: _callback
 		})
 	}
 }

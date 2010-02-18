@@ -3,7 +3,7 @@
  */
 var Zoom = {
 	initialize: function() {
-		$('canvas').observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
 	},
 	zoom_to: function() {
 		

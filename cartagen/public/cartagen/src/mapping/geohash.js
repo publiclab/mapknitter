@@ -56,8 +56,8 @@ Object.extend(Geohash, {
 	 * Binds to events
 	 */
 	init: function() {
-		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
-		$('canvas').observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	/**
 	 * Recalculates which geohashes to request based on the viewport; formerly called every 
