@@ -4993,11 +4993,7 @@ var Cartagen = {
 	},
 	initialize: function(configs) {
 		Config.init(configs)
-<<<<<<< .mine
-		$C.add('background')
 
-=======
->>>>>>> .r355
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 						             cartagen_base_uri + '/lib/phonegap/geolocation.js',
@@ -5021,17 +5017,18 @@ var Cartagen = {
 			Importer.get_current_plot(true)
 			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Importer.get_current_plot(false) },3)
-		}// else {
-			$l('getting statics')
+		} else {
 			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				Importer.get_static_plot(layer_url)
 			},this)
 			if (Config.dynamic_layers.length > 0) {
 				Config.dynamic_layers.each(function(layer_url) {
+					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
 			}
+		}
 
 		Glop.trigger_draw()
 
@@ -5040,7 +5037,6 @@ var Cartagen = {
 	draw: function(e) {
 		e.no_draw = true
 
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
 
 		if (Config.fps) {
@@ -5051,15 +5047,10 @@ var Cartagen = {
 			}
 		}
 
-		$C.canvases.keys().each(function(canvas) {
-			$C.open(canvas)
 			$C.translate(Glop.width / 2, Glop.height / 2)
-	        $C.rotate(Map.rotate)
-	        $C.scale(Map.zoom, Map.zoom)
-	        $C.translate(-Map.x,-Map.y)
-		})
-
-		$C.close()
+			        $C.rotate(Map.rotate)
+			        $C.scale(Map.zoom, Map.zoom)
+			        $C.translate(-Map.x,-Map.y)
 
 		Viewport.draw() //adjust viewport
 
@@ -5086,19 +5077,10 @@ var Cartagen = {
             item[0].draw(item[1], item[2])
         })
 
-		$C.save()
-			$C.opacity(0.4)
-			$C.stroke_style('red')
-			$C.fill_style('red')
-			$C.rect(Map.x + Mouse.x,Map.y + Mouse.y,Map.x + Mouse.x+10,Map.y + Mouse.y+10)
-			$C.fill()
-		$C.restore()
-
 		this.label_queue = []
 
 		Glop.fire('cartagen:postdraw')
 
-		$C.close()
 		Interface.display_loading(Importer.parse_manager.completed)
 
     },
@@ -5624,12 +5606,6 @@ var Feature = Class.create(
 		this.label = new Label(this)
 	},
 	draw: function() {
-		if (this.hover || this.mouseDown) {
-			$C.open('main')
-		} else {
-			$C.open('background')
-		}
-		$C.save()
 
 
 		$C.fill_style(this.fillStyle)
@@ -5649,7 +5625,6 @@ var Feature = Class.create(
 
 		this.shape()
 		$C.restore()
-		$C.close()
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
@@ -7059,64 +7034,51 @@ $C = {
 		$C.canvas = $C.canvases.get('main')
 	},
 	clear: function(name){
-		if ($C.frozen) return
 		name = name || 'main'
 		$C.canvases.get(name).clearRect(0, 0, Glop.width, Glop.height)
 	},
 	fill_style: function(color) {
-		if ($C.frozen) return
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
-		if ($C.frozen) return
 			$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
 	},
 	draw_image: function(image, x,y) {
-		if ($C.frozen) return
 			$C.canvas.drawImage(image, x, y)
 	},
 	translate: function(x,y) {
-		if ($C.frozen) return
 		$C.canvas.translate(x,y)
 	},
 
 	scale: function(x,y) {
-		if ($C.frozen) return
 		$C.canvas.scale(x,y)
 	},
 
 	rotate: function(rotation){
-		if ($C.frozen) return
 		$C.canvas.rotate(rotation)
 	},
 
 	rect: function(x, y, w, h){
-		if ($C.frozen) return
 		$C.canvas.fillRect(x, y, w, h)
 	},
 
 	stroke_rect: function(x, y, w, h){
-		if ($C.frozen) return
 		$C.canvas.strokeRect(x, y, w, h)
 	},
 
 	stroke_style: function(color) {
-		if ($C.frozen) return
 		$C.canvas.strokeStyle = color
 	},
 
 	line_join: function(style) {
-		if ($C.frozen) return
 		$C.canvas.lineJoin = style
 	},
 
 	line_cap: function(style) {
-		if ($C.frozen) return
 		$C.canvas.lineCap = style
 	},
 
 	line_width: function(lineWidth){
-		if ($C.frozen) return
 		if (parseInt(lineWidth) == 0) {
 			$C.canvas.lineWidth = 0.000000001
 		} else {
@@ -7125,32 +7087,26 @@ $C = {
 	},
 
 	begin_path: function(){
-		if ($C.frozen) return
 		$C.canvas.beginPath()
 	},
 
 	move_to: function(x, y){
-		if ($C.frozen) return
 		$C.canvas.moveTo(x, y)
 	},
 
 	line_to: function(x, y){
-		if ($C.frozen) return
 		$C.canvas.lineTo(x, y)
 	},
 
 	quadratic_curve_to: function(cp_x, cp_y, x, y){
-		if ($C.frozen) return
 		$C.canvas.quadraticCurveTo(cp_x, cp_y, x, y)
 	},
 
 	stroke: function(){
-		if ($C.frozen) return
 		$C.canvas.stroke()
 	},
 
 	outline: function(color,width){
-		if ($C.frozen) return
 		$C.save()
 			$C.stroke_style(color)
 			$C.line_width($C.canvas.lineWidth+(width*2))
@@ -7160,16 +7116,13 @@ $C = {
 	},
 
 	fill: function(){
-		if ($C.frozen) return
 		$C.canvas.fill()
 	},
 
 	arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
-		if ($C.frozen) return
 		$C.canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
 	},
 	draw_text: function(font, size, color, x, y, text){
-		if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.fillStyle = color
 			$C.canvas.font = size+'pt ' + font
@@ -7180,7 +7133,6 @@ $C = {
 		}
 	},
 	measure_text: function(font, size, text) {
-		if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.font = size + 'pt ' + font
 			var width = $C.canvas.measureText(text)
@@ -7194,15 +7146,12 @@ $C = {
 
 	},
 	opacity: function(alpha) {
-		if ($C.frozen) return
 		$C.canvas.globalAlpha = alpha
 	},
 	save: function() {
-		if ($C.frozen) return
 		$C.canvas.save()
 	},
 	restore: function() {
-		if ($C.frozen) return
 		$C.canvas.restore()
 	},
 	to_data_url: function() {
