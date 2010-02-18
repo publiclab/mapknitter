@@ -33,21 +33,21 @@
 	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
 </div>
 
-<canvas id="canvas"></canvas>
+<!-- <canvas id="canvas"></canvas> -->
 
 <div class="overlay" id="gss" style="display:none;">
 	<h3>Import GSS:</h3>
-	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.load_styles($('import_gss').value)">
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.load_styles($('import_gss').value);Glop.trigger_draw();">
 		<p>
 			<input style="font-size:0.8em;" type="text" name="import_gss" value="http://" id="import_gss">
 			<input type="submit" value="Apply">
 		</p>
 	</form>
 	<h3>Edit GSS:</h3>
-	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.apply_gss($('gss_textarea').value)">
+	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.apply_gss($('gss_textarea').value, true);Glop.trigger_draw();">
 		<textarea tabindex="1" id="gss_textarea" rows="30" cols="40"></textarea>
 		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();Cartagen.live_gss = false;">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
-	</form>
+	</form>	
 </div>
 
 <div id="brief">
@@ -72,7 +72,7 @@
 		<p><form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
 			Go somewhere: <br />
 			<input id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
-			<input type="button" name="some_name" tabindex="4" value="Go">
+			<input type="submit" name="some_name" tabindex="4" value="Go">
 		</form></p>
 		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a><br />
 		<a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a><br />
@@ -99,6 +99,8 @@
 		</div>
 	</div>
 </div>
+
+<div id="canvas"></div>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

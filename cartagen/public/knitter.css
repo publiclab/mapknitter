@@ -1,0 +1,62 @@
+body {
+	font-family:lucida grande, lucida sans console;
+}
+#header a {
+	color:#4C6ACB;
+	font-weight:bold;
+}
+#header {
+	color:white;
+	width:100%;
+	background:#333;
+	height:34px;
+	padding:6px 8px;
+}
+#header span {
+	padding:10px 8px;
+	float:left;
+}
+#header span.right {
+	float:right;
+}
+#header span.form {
+	margin:0;
+	padding:6px;
+	padding-right:12px;
+}
+.modal {
+	position:absolute;
+	z-index:8;
+	top:20%;
+	width:100%;
+	text-align:center;
+	color:white;
+}
+.modal h3 {
+	border-bottom:2px solid white;
+	margin:6px 0;
+	padding:4px;
+}
+.modal .footer {
+	border-top:2px solid white;
+	padding:4px;
+}
+.modal a {
+	color:white;
+	font-weight:bold;
+}
+.modal div {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border:14px solid #444;
+	background:#444;
+	margin:0 auto;
+	width:520px;
+	height:60%;
+}
+.modal form {
+	text-align:right;
+}
+#styles textarea {
+	margin-bottom:6px;
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Cartagen: <%= @map[:name] %></title>
+	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
+	<script type="text/javascript">
+		cartagen_base_uri = '/cartagen'
+	</script>
+	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script type="text/javascript" charset="utf-8">
+		Cartagen.setup({
+			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
+			static_map: false,
+			padding_top: -46,
+			lat: <%= @map[:lat] %>,
+			lng: <%= @map[:lon] %>
+			// debug: true
+		})
+		Cartagen.Builder = {
+			name: '<%= @map[:name] %>',
+			gss: {
+				<%= @map[:styles] %>
+			},
+			add_menus: function() {
+				$l('adding knitter')
+				Style.load_styles('/knitter.gss')
+			},
+			add_style: function(feature) {
+				Cartagen.Builder.editing = feature
+				if (feature.__type__) $('editing').innerHTML = feature.__type__+'s'
+				$('wysiwyg').show()
+			}
+		}
+		document.observe('styles:loaded:/stylesheet/<%= @map[:name] %>.gss',Cartagen.Builder.add_menus)
+	</script>
+</head>
+<body>
+
+<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of gographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
+
+<div id="browsers" style="display:none;">
+	<h3>WHOOPS</h3>
+	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
+</div>
+
+<div id="header">
+	<a style="float:left;" href="http://cartagen.org"><img src="/images/cartagen-dark.png"/></a>
+	<script type="text/javascript" charset="utf-8">
+		function find(q) {
+			q = q.replace(' ','-')
+			document.location = "/find/"+q
+		}
+	</script>
+	<span><a href="javascript:void(0);" onClick="$('styles').toggle()">Show styles</a></span> 
+	<span><a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a></span> 
+	<span id='geolocate'><a href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}">Move to current location</a></span> 
+	<script type="text/javascript" charset="utf-8">
+		if (!User.geolocate()) $('geolocate').hide()
+	</script>
+	<span class='form right'><form style="display:inline;" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
+		<input style="font-size:0.9em" id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
+		<input type="submit" name="some_name" tabindex="4" value="Go"> 
+	</form></span>
+	<span class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
+</div>
+
+<div class='modal' id="styles" style="display:none;">
+	<div>
+		<h3>Viewing all styles</h3>
+		<textarea rows="20" cols="70"><%= @map[:styles] %></textarea>
+		<a href="javascript:$('styles').hide()">save</a> | 
+		<a href="javascript:$('styles').hide()">cancel</a>
+	</div>
+</div>
+
+<div class='modal' id="wysiwyg" style="display:none;">
+	<div>
+		<h3>Edit styles for <span id='editing'></span></h3>
+		
+		<form action="show_submit" method="get" accept-charset="utf-8">
+			
+			<label for="fill_color">Fill color</label> <input type="text" name="fill_color" value="" id="fill_color"><br />
+			<label for="stroke_color">Stroke color</label> <input type="text" name="stroke_color" value="" id="stroke_color"><br />
+			<label for="line_width">Line width</label> <input type="text" name="line_width" value="" id="line_width"><br />
+			<label for="image">Image (url)</label> <input type="text" name="image" value="" id="image"><br />
+			<label for="pattern">Pattern (url)</label> <input type="text" name="pattern" value="" id="pattern"><br />
+			<label for="text">Label</label> <input type="text" name="text" value="" id="text"><br />
+
+		</form>
+		
+		<p class="footer">
+			<a href="javascript:$('wysiwyg').hide()">save</a> | 
+			<a href="javascript:$('wysiwyg').hide()">cancel</a>
+		</p>
+	</div>
+</div>
+
+<div id="canvas"></div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-180781-29");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

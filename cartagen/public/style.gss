@@ -1,7 +1,6 @@
 body: {
 	fillStyle: "#fff",
-	lineWidth: 0,
-	
+	lineWidth: 0	
 },
 node: {
 	fillStyle: "#ddd",
