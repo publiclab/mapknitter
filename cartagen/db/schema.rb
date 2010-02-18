@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090612011846) do
+ActiveRecord::Schema.define(:version => 20091016214109) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -17,6 +17,18 @@ ActiveRecord::Schema.define(:version => 20090612011846) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "message_id", :default => 0
+  end
+
+  create_table "maps", :force => true do |t|
+    t.string   "name",                                                     :default => ""
+    t.decimal  "lat",                      :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lon",                      :precision => 20, :scale => 10, :default => 0.0
+    t.integer  "zoom",       :limit => 10, :precision => 10, :scale => 0,  :default => 0
+    t.integer  "version",                                                  :default => 1
+    t.string   "password",                                                 :default => ""
+    t.text     "styles"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", :force => true do |t|

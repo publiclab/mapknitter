@@ -1,5 +1,20 @@
 class MapController < ApplicationController
   caches_page :find
+
+  def new
+    @map = {:lat => 41.891,
+            :lon => 12.4902,
+            :name => 'untitled'}
+    render :template => 'map/show'
+  end
+  
+  def show
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+  end
+  
+  def stylesheet
+    render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles
+  end
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
   def find
