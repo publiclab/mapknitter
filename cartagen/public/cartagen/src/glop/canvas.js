@@ -1,5 +1,5 @@
 /**
- * @namespace Cavas functions, wapped into shorter, simpler names and abstracted for cross-browser
+ * @namespace Cavas functions, wrapped into shorter, simpler names and abstracted for cross-browser
  *            compatability
  * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes>
  *      MDC Docs</a>
@@ -13,21 +13,94 @@ $C = {
 		 * The 2d rendering context of the canvas
 		 * @type CanvasRenderingContext2D
 		 */
-		this.canvas =  $('canvas').getContext('2d')
+		$('canvas').style.position = 'relative'
+		$('main').style.position = 'absolute'
+		$('main').style.top = 0
+		$('main').style.left = 0
+		this.canvas =  $('main').getContext('2d')
+		this.element = $('main')
+		this.canvases.set('main',this.canvas)
 		CanvasTextFunctions.enable(this.canvas)
 	},
 	/**
-	 * Clears the canvas
+	 * Current Glop canvas name.
 	 */
-	clear: function(){
-		$C.canvas.clearRect(0, 0, Glop.width, Glop.height)
+	current: 'main',
+	/**
+	 * Glop initializes with only 1 canvas but you can add more;
+	 * they're stored here.
+	 */
+	canvases: new Hash,
+	/**
+	 * You can 'freeze' a canvas so that draw commands to it are ignored.
+	 */
+	freezer: new Hash,
+	/**
+	 * This marks whether the current canvas is frozen.
+	 */
+	frozen: false,
+	/**
+	 * Freezes a named canvas - won't allow it to be drawn to.
+	 */
+	freeze: function(name) {
+		if ($C.freezer.get(name) != true) {
+			$l('freezing '+name)
+			$C.freezer.set(name,true)
+			if ($C.current == name) $C.frozen = true
+		}
 	},
-	
+	/**
+	 * Allows named canvas to be drawn to.
+	 */
+	thaw: function(name) {
+		$l('thawing '+name)
+		$C.freezer.unset(name)
+		if ($C.current == name) $C.frozen = false
+	},
+	/**
+	 * To add a new canvas element. For now, added to the bottom of the
+	 * body element
+	 * @param {String} name The name of the new layer
+	 */
+	add: function(name) {
+		$('canvas').insert({top:'<canvas style="position:absolute;top:0;left:0" id="'+name+'" ></canvas>'})
+		var new_canvas = $(name).getContext('2d')
+		$C.canvases.set(name,new_canvas)
+	},
+	/**
+	 * Open a different canvas to draw to. If called without a parameter,
+	 * opens the main canvas.
+	 * @param {String} name The name of the canvas to draw to by default
+	 */
+	open: function(name) {
+		name = name || 'main'
+		$C.current = name
+		if ($C.freezer.get(name)) $C.frozen = true
+		else $C.frozen = false
+		// $l('opening '+name+' canvas')
+		this.element = $(name)
+		$C.canvas = $C.canvases.get(name)
+	},
+	close: function() {
+		$C.current = 'main'
+		this.element = $('main')
+		if ($C.freezer.get('main')) $C.frozen = true
+		$C.canvas = $C.canvases.get('main')
+	},
+	/**
+	 * Clears the canvas; if 'name' is supplied, clears the canvas with name 'name'
+	 */
+	clear: function(name){
+		// if ($C.frozen) return
+		name = name || 'main'
+		$C.canvases.get(name).clearRect(0, 0, Glop.width, Glop.height)
+	},	
 	/**
 	 * Sets canvas.fillStyle
 	 * @param {String} color Color to use for future fill operations
 	 */
 	fill_style: function(color) {
+		// if ($C.frozen) return
 		$C.canvas.fillStyle = color
 	},
 	/**
@@ -37,8 +110,12 @@ $C = {
 	 *                        "no-repeat"
 	 */
 	fill_pattern: function(image, repeat) {
+		// if ($C.frozen) return
 		// this seems to often fail, so wrapped in a try:
-		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
+		// try/fail is inefficient, removed:
+		// try { 
+			$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		// } catch(e) {}
 	},
 	/**
 	 * Draws an image at x,y
@@ -48,8 +125,12 @@ $C = {
 	 * @param {Number} y coordinate at which to display image
 	 */
 	draw_image: function(image, x,y) {
+		// if ($C.frozen) return
 		// this seems to often fail, so wrapped in a try:
-		try { $C.canvas.drawImage(image, x, y) } catch(e) {$l(e)}
+		// try/fail is inefficient, removed:
+		// try { 
+			$C.canvas.drawImage(image, x, y) 
+		// } catch(e) {$l(e)}
 	},
 	/**
 	 * Alias of canvas.translate
@@ -57,6 +138,7 @@ $C = {
 	 * @param {Number} y Number of pixels to tranlate in the y direction
 	 */
 	translate: function(x,y) {
+		// if ($C.frozen) return
 		$C.canvas.translate(x,y)
 	},
 	
@@ -68,6 +150,7 @@ $C = {
 	 *                   direction
 	 */
 	scale: function(x,y) {
+		// if ($C.frozen) return
 		$C.canvas.scale(x,y)
 	},
 	
@@ -76,6 +159,7 @@ $C = {
 	 * @param {Number} rotation Amount, in radians, to rotate
 	 */
 	rotate: function(rotation){
+		// if ($C.frozen) return
 		$C.canvas.rotate(rotation)
 	},
 	
@@ -87,6 +171,7 @@ $C = {
 	 * @param {Number} h Height of the rectangle
 	 */
 	rect: function(x, y, w, h){
+		// if ($C.frozen) return
 		$C.canvas.fillRect(x, y, w, h)
 	},
 	
@@ -99,6 +184,7 @@ $C = {
 
 	 */
 	stroke_rect: function(x, y, w, h){
+		// if ($C.frozen) return
 		$C.canvas.strokeRect(x, y, w, h)
 	},
 	
@@ -107,6 +193,7 @@ $C = {
 	 * @param {String} color Color to use for future stroke operations
 	 */
 	stroke_style: function(color) {
+		// if ($C.frozen) return
 		$C.canvas.strokeStyle = color
 	},
 	
@@ -115,6 +202,7 @@ $C = {
 	 * @param {String} style Style string - 'round', 'bevel', or 'miter'
 	 */
 	line_join: function(style) {
+		// if ($C.frozen) return
 		$C.canvas.lineJoin = style
 	},
 	
@@ -123,6 +211,7 @@ $C = {
 	 * @param {String} style Style string - 'round', 'butt', or 'square'
 	 */
 	line_cap: function(style) {
+		// if ($C.frozen) return
 		$C.canvas.lineCap = style
 	},
 	
@@ -132,6 +221,7 @@ $C = {
 	 *                           operations
 	 */
 	line_width: function(lineWidth){
+		// if ($C.frozen) return
 		if (parseInt(lineWidth) == 0) {
 			$C.canvas.lineWidth = 0.000000001	
 		} else {
@@ -143,6 +233,7 @@ $C = {
 	 * Alias of canvas.beginPath
 	 */
 	begin_path: function(){
+		// if ($C.frozen) return
 		$C.canvas.beginPath()
 	},
 	
@@ -152,6 +243,7 @@ $C = {
 	 * @param {Number} y Y-coord of location to move to
 	 */
 	move_to: function(x, y){
+		// if ($C.frozen) return
 		$C.canvas.moveTo(x, y)
 	},
 	
@@ -161,6 +253,7 @@ $C = {
 	 * @param {Number} y Y-coord of location to draw line to
 	 */
 	line_to: function(x, y){
+		// if ($C.frozen) return
 		$C.canvas.lineTo(x, y)
 	},
 	
@@ -175,6 +268,7 @@ $C = {
 	 * @function
 	 */
 	quadratic_curve_to: function(cp_x, cp_y, x, y){
+		// if ($C.frozen) return
 		$C.canvas.quadraticCurveTo(cp_x, cp_y, x, y)
 	},
 	
@@ -183,6 +277,7 @@ $C = {
 	 * @function
 	 */
 	stroke: function(){
+		// if ($C.frozen) return
 		$C.canvas.stroke()
 	},
 	
@@ -191,6 +286,7 @@ $C = {
 	 * @function
 	 */
 	outline: function(color,width){
+		// if ($C.frozen) return
 		$C.save()
 		// this should eventually inherit from the master default styles
 			$C.stroke_style(color)
@@ -204,6 +300,7 @@ $C = {
 	 * Closes the current path, then fills it.
 	 */
 	fill: function(){
+		// if ($C.frozen) return
 		$C.canvas.fill()
 	},
 	
@@ -220,6 +317,7 @@ $C = {
 	 *                                     drawn clockwise
 	 */
 	arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
+		// if ($C.frozen) return
 		$C.canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
 	},
 	/**
@@ -232,6 +330,7 @@ $C = {
 	 * @param {String} text Text to draw
 	 */
 	draw_text: function(font, size, color, x, y, text){
+		// if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.fillStyle = color
 			$C.canvas.font = size+'pt ' + font
@@ -248,6 +347,7 @@ $C = {
 	 * @param {Object} text Text to be measured
 	 */
 	measure_text: function(font, size, text) {
+		// if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.font = size + 'pt ' + font
 			var width = $C.canvas.measureText(text)
@@ -266,6 +366,7 @@ $C = {
 	 * @param {Number} alpha New alpha value, between 0 and 1.
 	 */
 	opacity: function(alpha) {
+		// if ($C.frozen) return
 		$C.canvas.globalAlpha = alpha
 	},
 	/**
@@ -273,6 +374,7 @@ $C = {
 	 * @see $C.restore
 	 */
 	save: function() {
+		// if ($C.frozen) return
 		$C.canvas.save()
 	},
 	/**
@@ -280,6 +382,7 @@ $C = {
 	 * @see $C.save
 	 */
 	restore: function() {
+		// if ($C.frozen) return
 		$C.canvas.restore()
 	},
 	/**

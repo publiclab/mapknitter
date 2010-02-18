@@ -4908,6 +4908,8 @@ var Config = {
 	powersave: true,
 	zoom_out_limit: 0.02,
 	simplify: 1,
+	padding_top: 0,
+	padding_left: 0,
 	live_gss: false,
 	static_map: true,
 	static_map_layers: ["/static/rome/park.js"],
@@ -4985,11 +4987,17 @@ var Cartagen = {
 	scripts: [],
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
+			$('canvas').insert('<canvas id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})
 	},
 	initialize: function(configs) {
 		Config.init(configs)
+<<<<<<< .mine
+		$C.add('background')
+
+=======
+>>>>>>> .r355
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
 						             cartagen_base_uri + '/lib/phonegap/geolocation.js',
@@ -5004,8 +5012,8 @@ var Cartagen = {
 
 		document.fire('cartagen:init')
 
-		$('canvas').observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
-		$('canvas').observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
+		Glop.observe('glop:draw', Cartagen.draw.bindAsEventListener(this))
+		Glop.observe('glop:postdraw', Cartagen.post_draw.bindAsEventListener(this))
 
 		Style.load_styles(Config.stylesheet) // stylesheet
 
@@ -5034,29 +5042,35 @@ var Cartagen = {
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
-        if (Viewport.padding > 0) {
-            $C.stroke_style('white')
-            $C.line_width(2)
-            $C.stroke_rect(Viewport.padding, Viewport.padding, Glop.width - (Viewport.padding * 2), Glop.height - (Viewport.padding * 2))
-        }
 
-        $C.translate(Glop.width / 2, Glop.height / 2)
-        $C.rotate(Map.rotate)
-        $C.scale(Map.zoom, Map.zoom)
-        $C.translate(-Map.x,-Map.y)
+		if (Config.fps) {
+			if ($('cartagen_fps')) {
+				$('cartagen_fps').innerHTML = Glop.fps
+			} else {
+				$$('body')[0].insert({top:'<div style="position:absolute;margin:10px;font-weight:bold;background:white" id="cartagen_fps"></div>'})
+			}
+		}
+
+		$C.canvases.keys().each(function(canvas) {
+			$C.open(canvas)
+			$C.translate(Glop.width / 2, Glop.height / 2)
+	        $C.rotate(Map.rotate)
+	        $C.scale(Map.zoom, Map.zoom)
+	        $C.translate(-Map.x,-Map.y)
+		})
+
+		$C.close()
 
 		Viewport.draw() //adjust viewport
 
-		$('canvas').fire('cartagen:predraw')
+		Glop.fire('cartagen:predraw')
 
 		Geohash.objects.each(function(object) {
 			if (object.user_submitted) {
 				Cartagen.feature_queue.push(object)
 			}
 			else {
-				try {
 				object.draw()
-				} catch(e) {$l(e)}
 			}
 		})
 
@@ -5072,10 +5086,19 @@ var Cartagen = {
             item[0].draw(item[1], item[2])
         })
 
+		$C.save()
+			$C.opacity(0.4)
+			$C.stroke_style('red')
+			$C.fill_style('red')
+			$C.rect(Map.x + Mouse.x,Map.y + Mouse.y,Map.x + Mouse.x+10,Map.y + Mouse.y+10)
+			$C.fill()
+		$C.restore()
+
 		this.label_queue = []
 
-		$('canvas').fire('cartagen:postdraw')
+		Glop.fire('cartagen:postdraw')
 
+		$C.close()
 		Interface.display_loading(Importer.parse_manager.completed)
 
     },
@@ -5428,6 +5451,7 @@ Number.prototype.to_precision = function(prec){
 
 Cartagen.demo = function() { Map.rotate += 0.005 }
 var Style = {
+	styles_changed: false,
 	properties: ['fillStyle', 'pattern', 'strokeStyle', 'opacity', 'lineWidth', 'outlineColor',
 	             'outlineWidth', 'radius', 'hover', 'mouseDown', 'distort', 'menu', 'image'],
 
@@ -5435,7 +5459,6 @@ var Style = {
 		               'fontRotation'],
 	styles: {
 		body: {
-			fillStyle: "#eee",
 			fontColor: "#eee",
 			fontSize: 12,
 			fontRotation: 0,
@@ -5452,12 +5475,10 @@ var Style = {
 				Style.styles.body.pattern = new Image()
 				Style.styles.body.pattern.src = Object.value(value)
 			}
+			$C.open('main')
 			$C.fill_pattern(Style.styles.body.pattern, 'repeat')
 		}
-		$C.rect(0, 0, Glop.width, Glop.height)
-		$C.stroke_rect(0, 0, Glop.width, Glop.height)
-		$C.line_join('round')
-		$C.line_cap('round')
+		$C.close()
 	},
 	parse_styles: function(feature,selector) {
 		(this.properties.concat(this.label_properties)).each(function(property) {
@@ -5511,10 +5532,12 @@ var Style = {
 		}, interval)
 	},
 	refresh_style: function(feature, property) {
+		Style.styles_changed = true
 		feature[property] = Object.value(feature.style_generators[property], feature)
 	},
 	load_styles: function(stylesheet_url) {
-		$l('loading')
+		var orig_url = stylesheet_url
+		$l('loading '+stylesheet_url)
 		if (stylesheet_url.slice(0,4) == "http") {
 			stylesheet_url = "/utility/proxy?url="+stylesheet_url
 		}
@@ -5523,7 +5546,30 @@ var Style = {
 			onComplete: function(result) {
 				$l('applying '+stylesheet_url)
 				Style.apply_gss(result.responseText)
+				Glop.fire('styles:loaded')
+				Glop.fire('styles:loaded:'+orig_url)
 			}
+		})
+	},
+	cascade: function(old_styles,new_styles) {
+		$l('cascading')
+		$l('both')
+		$H(old_styles).each(function(selector) {
+			if (new_styles[selector.key]) {
+				$H(selector.value).each(function(style) {
+					if (new_styles[selector.key][style.key]){
+						old_styles[selector.key][style.key] = new_styles[selector.key][style.key]
+					}
+				})
+			}
+			if (new_styles[selector.key]) {
+				$H(new_styles[selector.key]).each(function(new_style) {
+					old_styles[selector.key][new_style.key] = new_style.value
+				})
+			}
+		})
+		$H(new_styles).each(function(style) {
+			if (!old_styles[style.key]) old_styles[style.key] = style.value
 		})
 	},
 	apply_gss: function(gss_string, force_update) {
@@ -5548,8 +5594,7 @@ var Style = {
 					$H(style.value.menu).each(function(pair) {
 						ContextMenu.add_static_item(pair.key, pair.value)
 					})
-				}
-				else {
+				} else {
 					$H(style.value.menu).each(function(pair) {
 						style.value.menu[pair.key] = ContextMenu.add_cond_item(pair.key, pair.value)
 					})
@@ -5557,7 +5602,7 @@ var Style = {
 				}
 			}
 		})
-		Style.styles = styles
+		Style.cascade(Style.styles,styles)
 
 		if ($('gss_textarea')) {
 			$('gss_textarea').value = gss_string
@@ -5579,6 +5624,11 @@ var Feature = Class.create(
 		this.label = new Label(this)
 	},
 	draw: function() {
+		if (this.hover || this.mouseDown) {
+			$C.open('main')
+		} else {
+			$C.open('background')
+		}
 		$C.save()
 
 
@@ -5599,7 +5649,7 @@ var Feature = Class.create(
 
 		this.shape()
 		$C.restore()
-
+		$C.close()
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
 		}
@@ -5799,11 +5849,11 @@ var Way = Class.create(Feature,
 		}
 
 		if (this.mouseDown && Mouse.down == true && this.is_hovered) {
-				if (!this.click_styles_applied) {
-					this.apply_click_styles()
-					this.click_styles_applied = true
-				}
-				if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
+			if (!this.click_styles_applied) {
+				this.apply_click_styles()
+				this.click_styles_applied = true
+			}
+			if (!Object.isUndefined(this.mouseDown.action)) this.mouseDown.action.bind(this)()
 		}
 		else if (this.click_styles_applied) {
 			this.remove_click_styles()
@@ -5829,10 +5879,6 @@ var Way = Class.create(Feature,
 	},
 	shape: function() {
 		$C.opacity(1)
-		if (this.highlight) {
-			$C.line_width(3/Map.zoom)
-			$C.stroke_style("red")
-		}
 		if (Object.isUndefined(this.opacity)) this.opacity = 1
 		if ((Glop.date - this.birthdate) < 4000) {
 			$C.opacity(Math.max(0,0.1+this.opacity*((Glop.date - this.birthdate)/4000)))
@@ -5993,6 +6039,7 @@ var Label = Class.create(
     },
     draw: function(x, y) {
         if (this.text) {
+			$C.open('background')
             $C.save()
 
             $C.stroke_style(this.fontColor)
@@ -6049,7 +6096,7 @@ var Coastline = {
 	initialize: function() {
 
 
-		$('canvas').observe('cartagen:predraw', Coastline.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', Coastline.draw.bindAsEventListener(this))
 	},
 	coastlines: [],
 	coastline_nodes: [],
@@ -6230,6 +6277,7 @@ var Importer = {
 	parse_manager: null,
 	init: function() {
 		Importer.parse_manager = new TaskManager(50)
+		$l('set up parse_manager')
 		try {
 			if (JSON.parse) {
 				Importer.native_json = true
@@ -6445,38 +6493,75 @@ Importer.flush_localstorage()
 document.observe('cartagen:init', Importer.init.bindAsEventListener(Importer))
 var Glop = {
 	frame: 0,
+	start_time: 0,
+	timestamp: 0,
+	times: [],
+	fps: 0,
+	changed_size: 0,
 	date: new Date,
 	width: 0,
 	height: 0,
 	paused: false,
+	observe: function(a,b,c) {
+		$('main').observe(a,b,c)
+	},
+	fire: function(a,b,c) {
+		$('main').fire(a,b,c)
+	},
+	stopObserving: function(a,b,c) {
+		$('main').stopObserving(a,b,c)
+	},
 	init: function() {
 		TimerManager.setup(Glop.draw_powersave,this)
 	},
+	snapshot: '',
 	draw: function(custom_size, force_draw) {
 		if (Glop.paused && (force_draw != true)) {
-			$('canvas').fire('glop:predraw')
+			Glop.fire('glop:predraw')
 			return
 		}
-		$C.clear()
-		if (!custom_size) { // see Canvas.to_print_data_url()
-			Glop.width = document.viewport.getWidth()
-			Glop.height = document.viewport.getHeight()
+
+		Glop.timestamp = Glop.date.getTime()
+		Glop.times.unshift(Glop.timestamp)
+		if (Glop.times.length > 100) Glop.times.pop()
+		Glop.fps = parseInt(Glop.times.length/(Glop.timestamp - Glop.times.last())*1000)
+
+		var new_snapshot = Map.x +','+ Map.x_old +','+ Map.y +','+ Map.y_old +','+ Map.rotate +','+ Map.rotate_old +','+ Map.zoom +','+ Map.old_zoom
+
+		if (new_snapshot != Glop.snapshot || force_draw || Glop.changed_size) {
+			$C.thaw('background')
+		} else {
+			$C.freeze('background')
 		}
-		$('canvas').width = Glop.width
-		$('canvas').height = Glop.height
-		$$('body')[0].style.width = Glop.width+"px"
+		Glop.snapshot = new_snapshot
+
+		Glop.resize(custom_size)
 
 		Events.drag()
-		$('canvas').fire('glop:predraw')
-		draw_event = $('canvas').fire('glop:draw')
-
+		Glop.fire('glop:predraw')
+		draw_event = $('main').fire('glop:draw')
 		if (!draw_event.no_draw) {
 			objects.each(function(object) {
 				object.draw()
 			})
 		}
 
-		$('canvas').fire('glop:postdraw')
+		Glop.fire('glop:postdraw')
+	},
+	resize: function(custom_size) {
+		if (!custom_size) { // see Canvas.to_print_data_url()
+			Glop.changed_size = (Glop.width != document.viewport.getWidth() || Glop.height != document.viewport.getHeight()-Config.padding_top)
+			$l(Glop.changed_size)
+			Glop.width = document.viewport.getWidth()
+			Glop.height = document.viewport.getHeight()-Config.padding_top
+		}
+		$C.canvases.each(function(canvas) {
+			if ($C.freezer.get(canvas.key) != true || Glop.changed_size) {
+				$(canvas.key).width = Glop.width
+				$(canvas.key).height = Glop.height
+			}
+		})
+		$$('body')[0].style.width = Glop.width+"px"
 	},
 	random_color: function() {
 		return "rgb("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+")"
@@ -6494,8 +6579,10 @@ var Glop = {
 		if (this.tail > 0 || Config.powersave == false || (Importer.requested_plots && Importer.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay || Importer.parse_manager.completed < 100) {
 			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
+			Glop.frame += 1
+		} else {
+			Glop.times = []
 		} //else $l('powersave: '+this.tail)
-		Glop.frame += 1
 		Glop.date = new Date
 	}
 }
@@ -6551,11 +6638,11 @@ var TaskManager = Class.create(
 	},
 	start: function() {
 		this.active = true
-		$('canvas').observe('glop:predraw', this.listener)
+		Glop.observe('glop:predraw', this.listener)
 	},
 	stop: function() {
 		this.active = false
-		$('canvas').stopObserving('glop:predraw', this.listener)
+		Glop.stopObserving('glop:predraw', this.listener)
 	},
 	get_completed: function(tasks) {
 		var total = 0
@@ -6712,13 +6799,12 @@ var Events = {
 	last_event: 0,
 
 	init: function() {
-		var canvas = $('canvas')
-		canvas.observe('mousemove', Events.mousemove)
-		canvas.observe('mousedown', Events.mousedown)
-		canvas.observe('mouseup', Events.mouseup)
-		canvas.observe('dblclick', Events.doubleclick)
-		canvas.observe('mouseover', Events.mouseover)
-		canvas.observe('mouseout', Events.mouseout)
+		Glop.observe('mousemove', Events.mousemove)
+		Glop.observe('mousedown', Events.mousedown)
+		Glop.observe('mouseup', Events.mouseup)
+		Glop.observe('dblclick', Events.doubleclick)
+		Glop.observe('mouseover', Events.mouseover)
+		Glop.observe('mouseout', Events.mouseout)
 
 
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -6727,12 +6813,13 @@ var Events = {
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
 
-		canvas.ontouchstart = Events.ontouchstart
-		canvas.ontouchmove = Events.ontouchmove
-		canvas.ontouchend = Events.ontouchend
-		canvas.ongesturestart = Events.ongesturestart
-		canvas.ongesturechange = Events.ongesturechange
-		canvas.ongestureend = Events.ongestureend
+		element = $('main')
+		element.ontouchstart = Events.ontouchstart
+		element.ontouchmove = Events.ontouchmove
+		element.ontouchend = Events.ontouchend
+		element.ongesturestart = Events.ongesturestart
+		element.ongesturechange = Events.ongesturechange
+		element.ongestureend = Events.ongestureend
 
 		Event.observe(window, 'resize', Events.resize);
 	},
@@ -6747,20 +6834,21 @@ var Events = {
 		Glop.trigger_draw(5)
 	},
 	mousedown: function(event) {
-		if (!event.isLeftClick()) return
+		if (!event.isLeftClick() || event.ctrlKey) return
         Mouse.down = true
         Mouse.click_frame = Glop.frame
         Mouse.click_x = Mouse.x
         Mouse.click_y = Mouse.y
         Map.x_old = Map.x
         Map.y_old = Map.y
+		Map.zoom_old = Map.zoom
         Map.rotate_old = Map.rotate
 		Mouse.dragging = true
 		Events.mousemove(event)
 		Glop.trigger_draw(5)
 	},
 	mouseup: function(event) {
-		if (!event.isLeftClick()) return
+		if (event && (!event.isLeftClick() || event.ctrlKey)) return
         Mouse.up = true
         Mouse.down = false
         Mouse.release_frame = Glop.frame
@@ -6813,13 +6901,11 @@ var Events = {
 			switch(character){
 				case "r": Keyboard.keys.set("r",true); break
 				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (!Config.live_gss) Cartagen.show_gss_editor(); break
-				case "h": get_static_plot('/static/rome/highway.js'); break
-				case "b": Interface.download_bbox()
+				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
+				case "b": if (Config.debug) Interface.download_bbox()
 			}
 		}
 		Glop.trigger_draw(5)
-		e.preventDefault()
 	},
 	keyup: function(e) {
 		if (Events.enabled === false) return
@@ -6873,13 +6959,13 @@ var Events = {
 		Glop.trigger_draw(5)
 	},
 	ongesturestart: function(e) {
-		zoom_level_old = Map.zoom
+		Map.zoom_old = Map.zoom
 	},
 	ongesturechange: function(e){
 		var node = e.target;
 		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
 		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
-		Map.zoom = zoom_level_old*e.scale
+		Map.zoom = Map.zoom_old*e.scale
 		Glop.trigger_draw(5)
 	},
 	gestureend: function(e){
@@ -6928,55 +7014,109 @@ document.observe('cartagen:init', Events.init)
 
 $C = {
 	init: function() {
-		this.canvas =  $('canvas').getContext('2d')
+		$('canvas').style.position = 'relative'
+		$('main').style.position = 'absolute'
+		$('main').style.top = 0
+		$('main').style.left = 0
+		this.canvas =  $('main').getContext('2d')
+		this.element = $('main')
+		this.canvases.set('main',this.canvas)
 		CanvasTextFunctions.enable(this.canvas)
 	},
-	clear: function(){
-		$C.canvas.clearRect(0, 0, Glop.width, Glop.height)
+	current: 'main',
+	canvases: new Hash,
+	freezer: new Hash,
+	frozen: false,
+	freeze: function(name) {
+		if ($C.freezer.get(name) != true) {
+			$l('freezing '+name)
+			$C.freezer.set(name,true)
+			if ($C.current == name) $C.frozen = true
+		}
 	},
-
+	thaw: function(name) {
+		$l('thawing '+name)
+		$C.freezer.unset(name)
+		if ($C.current == name) $C.frozen = false
+	},
+	add: function(name) {
+		$('canvas').insert({top:'<canvas style="position:absolute;top:0;left:0" id="'+name+'" ></canvas>'})
+		var new_canvas = $(name).getContext('2d')
+		$C.canvases.set(name,new_canvas)
+	},
+	open: function(name) {
+		name = name || 'main'
+		$C.current = name
+		if ($C.freezer.get(name)) $C.frozen = true
+		else $C.frozen = false
+		this.element = $(name)
+		$C.canvas = $C.canvases.get(name)
+	},
+	close: function() {
+		$C.current = 'main'
+		this.element = $('main')
+		if ($C.freezer.get('main')) $C.frozen = true
+		$C.canvas = $C.canvases.get('main')
+	},
+	clear: function(name){
+		if ($C.frozen) return
+		name = name || 'main'
+		$C.canvases.get(name).clearRect(0, 0, Glop.width, Glop.height)
+	},
 	fill_style: function(color) {
+		if ($C.frozen) return
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
-		try { $C.canvas.fillStyle = $C.canvas.createPattern(image, repeat) } catch(e) {}
+		if ($C.frozen) return
+			$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
 	},
 	draw_image: function(image, x,y) {
-		try { $C.canvas.drawImage(image, x, y) } catch(e) {$l(e)}
+		if ($C.frozen) return
+			$C.canvas.drawImage(image, x, y)
 	},
 	translate: function(x,y) {
+		if ($C.frozen) return
 		$C.canvas.translate(x,y)
 	},
 
 	scale: function(x,y) {
+		if ($C.frozen) return
 		$C.canvas.scale(x,y)
 	},
 
 	rotate: function(rotation){
+		if ($C.frozen) return
 		$C.canvas.rotate(rotation)
 	},
 
 	rect: function(x, y, w, h){
+		if ($C.frozen) return
 		$C.canvas.fillRect(x, y, w, h)
 	},
 
 	stroke_rect: function(x, y, w, h){
+		if ($C.frozen) return
 		$C.canvas.strokeRect(x, y, w, h)
 	},
 
 	stroke_style: function(color) {
+		if ($C.frozen) return
 		$C.canvas.strokeStyle = color
 	},
 
 	line_join: function(style) {
+		if ($C.frozen) return
 		$C.canvas.lineJoin = style
 	},
 
 	line_cap: function(style) {
+		if ($C.frozen) return
 		$C.canvas.lineCap = style
 	},
 
 	line_width: function(lineWidth){
+		if ($C.frozen) return
 		if (parseInt(lineWidth) == 0) {
 			$C.canvas.lineWidth = 0.000000001
 		} else {
@@ -6985,26 +7125,32 @@ $C = {
 	},
 
 	begin_path: function(){
+		if ($C.frozen) return
 		$C.canvas.beginPath()
 	},
 
 	move_to: function(x, y){
+		if ($C.frozen) return
 		$C.canvas.moveTo(x, y)
 	},
 
 	line_to: function(x, y){
+		if ($C.frozen) return
 		$C.canvas.lineTo(x, y)
 	},
 
 	quadratic_curve_to: function(cp_x, cp_y, x, y){
+		if ($C.frozen) return
 		$C.canvas.quadraticCurveTo(cp_x, cp_y, x, y)
 	},
 
 	stroke: function(){
+		if ($C.frozen) return
 		$C.canvas.stroke()
 	},
 
 	outline: function(color,width){
+		if ($C.frozen) return
 		$C.save()
 			$C.stroke_style(color)
 			$C.line_width($C.canvas.lineWidth+(width*2))
@@ -7014,13 +7160,16 @@ $C = {
 	},
 
 	fill: function(){
+		if ($C.frozen) return
 		$C.canvas.fill()
 	},
 
 	arc: function(x, y, radius, startAngle, endAngle, counterclockwise){
+		if ($C.frozen) return
 		$C.canvas.arc(x, y, radius, startAngle, endAngle, counterclockwise)
 	},
 	draw_text: function(font, size, color, x, y, text){
+		if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.fillStyle = color
 			$C.canvas.font = size+'pt ' + font
@@ -7031,6 +7180,7 @@ $C = {
 		}
 	},
 	measure_text: function(font, size, text) {
+		if ($C.frozen) return
 		if ($C.canvas.fillText) {
 			$C.canvas.font = size + 'pt ' + font
 			var width = $C.canvas.measureText(text)
@@ -7044,12 +7194,15 @@ $C = {
 
 	},
 	opacity: function(alpha) {
+		if ($C.frozen) return
 		$C.canvas.globalAlpha = alpha
 	},
 	save: function() {
+		if ($C.frozen) return
 		$C.canvas.save()
 	},
 	restore: function() {
+		if ($C.frozen) return
 		$C.canvas.restore()
 	},
 	to_data_url: function() {
@@ -7570,7 +7723,7 @@ document.observe('cartagen:postinit', User.init.bindAsEventListener(User))
 var ContextMenu = {
 	cond_items: {},
 	init: function() {
-		this.menu = new Control.ContextMenu('canvas')
+		this.menu = new Control.ContextMenu('main')
 	},
 	add_cond_item: function(name, callback) {
 		var id = Math.round(Math.random() * 999999999)
@@ -7595,7 +7748,7 @@ var ContextMenu = {
 	add_static_item: function(name, _callback) {
 		this.menu.addItem({
 			label: name,
-			callback: _callback,
+			callback: _callback
 		})
 	}
 }
@@ -7603,7 +7756,7 @@ var ContextMenu = {
 document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 var Zoom = {
 	initialize: function() {
-		$('canvas').observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
 	},
 	zoom_to: function() {
 
@@ -7682,14 +7835,12 @@ var Interface = {
 
 		alert('Please select a bounding box to download')
 
-		var canvas = $('canvas')
-
-		canvas.observe('mousemove', Interface.bbox_select_mousemove)
-		canvas.observe('mousedown', Interface.bbox_select_mousedown)
-		canvas.observe('mouseup', Interface.bbox_select_mouseup)
-		canvas.stopObserving('mousemove', Events.mousemove)
-		canvas.stopObserving('mousedown', Events.mousedown)
-		canvas.stopObserving('mouseup', Events.mouseup)
+		Glop.observe('mousemove', Interface.bbox_select_mousemove)
+		Glop.observe('mousedown', Interface.bbox_select_mousedown)
+		Glop.observe('mouseup', Interface.bbox_select_mouseup)
+		Glop.stopObserving('mousemove', Events.mousemove)
+		Glop.stopObserving('mousedown', Events.mousedown)
+		Glop.stopObserving('mouseup', Events.mouseup)
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false
@@ -7746,13 +7897,12 @@ var Interface = {
 
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
-			var canvas = $('canvas')
-			canvas.stopObserving('mousemove', Interface.bbox_select_mousemove)
-			canvas.stopObserving('mousedown', Interface.bbox_select_mousedown)
-			canvas.stopObserving('mouseup', Interface.bbox_select_mouseup)
-			canvas.observe('mousemove', Events.mousemove)
-			canvas.observe('mousedown', Events.mousedown)
-			canvas.observe('mouseup', Events.mouseup)
+			Glop.stopObserving('mousemove', Interface.bbox_select_mousemove)
+			Glop.stopObserving('mousedown', Interface.bbox_select_mousedown)
+			Glop.stopObserving('mouseup', Interface.bbox_select_mouseup)
+			Glop.observe('mousemove', Events.mousemove)
+			Glop.observe('mousedown', Events.mousedown)
+			Glop.observe('mouseup', Events.mouseup)
 
 			Interface.bbox_select_active = true
 			Interface.bbox_select_dragging = false
@@ -7775,8 +7925,8 @@ Object.extend(Geohash, {
 	last_get_objects: [0,0,0,false],
 	last_loaded_geohash_frame: 0,
 	init: function() {
-		$('canvas').observe('cartagen:predraw', this.draw.bindAsEventListener(this))
-		$('canvas').observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
 		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
@@ -8125,7 +8275,7 @@ var Map = {
 	init: function() {
 		this.x = Projection.lon_to_x(Config.lng)
 		this.y = Projection.lat_to_y(Config.lat)
-		$('canvas').observe('glop:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('glop:predraw', this.draw.bindAsEventListener(this))
 		this.draw()
 	},
 	draw: function() {
@@ -8149,6 +8299,7 @@ var Map = {
 	lon: 0,
 	rotate: 0,
 	rotate_old: 0,
+	zoom_old: 0,
 	x_old: 0,
 	y_old: 0,
 	lon_width: 0,

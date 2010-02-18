@@ -19,6 +19,7 @@ var Importer = {
 	parse_manager: null,
 	init: function() {
 		Importer.parse_manager = new TaskManager(50)
+		$l('set up parse_manager')
 		try {
 			if (JSON.parse) {
 				Importer.native_json = true

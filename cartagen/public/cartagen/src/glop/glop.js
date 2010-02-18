@@ -8,6 +8,31 @@ var Glop = {
 	 */
 	frame: 0,
 	/**
+	 * The startup time in milliseconds since... 1970?
+	 * @type Number
+	 */
+	start_time: 0,
+	/**
+	 * The current time in milliseconds since... 1970?
+	 * @type Number
+	 */
+	timestamp: 0,
+	/**
+	 * The last 100 frames worth of timestamps, used to calculate fps.
+	 * @type Number
+	 */
+	times: [],
+	/**
+	 * The framerate over the last 10 seconds.
+	 * @type Number
+	 */
+	fps: 0,
+	/**
+	 * Whether the Glop environment has changed x,y size since the last frame.
+	 * @type Boolean
+	 */
+	changed_size: 0,
+	/**
 	 * A Date object updated (regenerated) every frame.
 	 * @type Date
 	 */
@@ -26,6 +51,24 @@ var Glop = {
 	 */
 	paused: false,
 	/**
+	 * Binds all events to the main canvas. Use Glop.observe for all events.
+	 */
+	observe: function(a,b,c) {
+		$('main').observe(a,b,c)
+	},
+	/**
+	 * Binds all events to the main canvas. Use Glop.observe for all events.
+	 */
+	fire: function(a,b,c) {
+		$('main').fire(a,b,c)
+	},
+	/**
+	 * Binds all events to the main canvas. Use Glop.observe for all events.
+	 */
+	stopObserving: function(a,b,c) {
+		$('main').stopObserving(a,b,c)
+	},
+	/**
 	 * Sets up powersaving.
 	 */
 	init: function() {
@@ -34,35 +77,52 @@ var Glop = {
 		TimerManager.setup(Glop.draw_powersave,this)
 	},
 	/**
+	 * Used to check if anything has changed since the last frame
+	 */
+	snapshot: '',
+	/**
 	 * Draws a frame. Sets height/width, moves the map as needed, fires draw events, and draws
 	 * the object array unless told not to (by  subscriber of glop:draw.
 	 */
 	draw: function(custom_size, force_draw) {
 		if (Glop.paused && (force_draw != true)) {
-			$('canvas').fire('glop:predraw')
+			Glop.fire('glop:predraw')
 			return
 		}
-		$C.clear()
-		if (!custom_size) { // see Canvas.to_print_data_url()
-			Glop.width = document.viewport.getWidth()
-			Glop.height = document.viewport.getHeight()
+
+		Glop.timestamp = Glop.date.getTime()
+		Glop.times.unshift(Glop.timestamp)
+		// the last 100 frames
+		if (Glop.times.length > 100) Glop.times.pop()
+		Glop.fps = parseInt(Glop.times.length/(Glop.timestamp - Glop.times.last())*1000)
+		
+		// clear only if anything's changed!
+		var new_snapshot = Map.x +','+ Map.x_old +','+ Map.y +','+ Map.y_old +','+ Map.rotate +','+ Map.rotate_old +','+ Map.zoom +','+ Map.old_zoom
+
+		// consider thawing background:
+		//      a) if there are remaining tasks to be completed
+		//		b) measuring whether a canvas has been drawn on, or drawn 'completely'
+		if (new_snapshot != Glop.snapshot || force_draw || Glop.changed_size) {
+			$C.thaw('background')
+		} else {
+			$C.freeze('background')
 		}
-		$('canvas').width = Glop.width
-		$('canvas').height = Glop.height
-		$$('body')[0].style.width = Glop.width+"px"
+		Glop.snapshot = new_snapshot
+		
+		Glop.resize(custom_size)
 	
 		// for embedded
-		//Glop.width = $('canvas').getWidth()
-		//Glop.height = $('canvas').getHeight()
-		//$('canvas').width = Glop.width
-		//$('canvas').height = Glop.height
+		//Glop.width = $C.element.getWidth()
+		//Glop.height = $C.element.getHeight()
+		//$C.element.width = Glop.width
+		//$C.element.height = Glop.height
 		Events.drag()	
 		/**
 		 * @name Glop#glop:predraw
 		 * @event
 		 * Fired each frame before features are drawn.
 		 */
-		$('canvas').fire('glop:predraw')
+		Glop.fire('glop:predraw')
 		/**
 		 * @name Glop#glop:draw
 		 * @event
@@ -70,8 +130,7 @@ var Glop = {
 		 * to draw features on the canvas. If the 'no_draw' property of the event
 		 * is set to true, GLOP will not raw the objects array.
 		 */
-		draw_event = $('canvas').fire('glop:draw')
-		
+		draw_event = $('main').fire('glop:draw')
 		if (!draw_event.no_draw) {
 			objects.each(function(object) { 
 				object.draw()
@@ -83,7 +142,30 @@ var Glop = {
 		 * @event
 		 * Fired at the end of each frame, after features are drawn.
 		 */
-		$('canvas').fire('glop:postdraw')
+		Glop.fire('glop:postdraw')
+	},
+	/**
+	 * Adjusts size of canvas element to match browser window size
+	 * @return Color in rgb(r, g, b) format
+	 * @type String
+	 */
+	resize: function(custom_size) {
+		if (!custom_size) { // see Canvas.to_print_data_url()
+			Glop.changed_size = (Glop.width != document.viewport.getWidth() || Glop.height != document.viewport.getHeight()-Config.padding_top)
+			$l(Glop.changed_size)
+			Glop.width = document.viewport.getWidth()
+			Glop.height = document.viewport.getHeight()-Config.padding_top
+		}
+		$C.canvases.each(function(canvas) {
+			if ($C.freezer.get(canvas.key) != true || Glop.changed_size) {
+			// we miss the initial draw before freezing
+			// if ($(canvas.key).width != Glop.width || $(canvas.key).height != Glop.height) {
+				// $l()
+				$(canvas.key).width = Glop.width
+				$(canvas.key).height = Glop.height
+			}
+		})
+		$$('body')[0].style.width = Glop.width+"px"
 	},
 	/**
 	 * Creates a random color
@@ -117,9 +199,11 @@ var Glop = {
 		if (this.tail > 0 || Config.powersave == false || (Importer.requested_plots && Importer.requested_plots > 0) || Cartagen.last_loaded_geohash_frame > Glop.frame-delay || Importer.parse_manager.completed < 100) {
 			if (this.tail > 0) this.tail -= 1
 			Glop.draw()
+			Glop.frame += 1
+		} else {
+			Glop.times = []
 		} //else $l('powersave: '+this.tail)
 		// $l('tail:'+this.tail)
-		Glop.frame += 1
 		Glop.date = new Date
 	}
 }
