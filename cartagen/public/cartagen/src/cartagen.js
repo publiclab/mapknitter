@@ -211,6 +211,7 @@ var Cartagen = {
 		this.feature_queue = []
 
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
+									   // now we  
 	},
     /**
      * Runs every frame, after everything else has been done.
