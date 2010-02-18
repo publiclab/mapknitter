@@ -106,7 +106,7 @@ var Cartagen = {
 		Config.init(configs)
 		// add a new layer for dynamic drawing (hovers, clicks)
 		// $C.add('background')
-
+		
 		// load phonegap js if needed
 		if (window.PhoneGap) {
 			Cartagen.scripts.unshift(cartagen_base_uri + '/lib/phonegap/phonegap.base.js',
@@ -144,8 +144,7 @@ var Cartagen = {
 			Importer.get_current_plot(true)
 			new PeriodicalExecuter(Glop.trigger_draw,3)
 			new PeriodicalExecuter(function() { Importer.get_current_plot(false) },3)
-		}// else {
-			$l('getting statics')
+		} else {
 			Config.static_map_layers.each(function(layer_url) {
 				$l('fetching '+layer_url)
 				Importer.get_static_plot(layer_url)
@@ -153,10 +152,11 @@ var Cartagen = {
 			// to add user-added map data... messy!
 			if (Config.dynamic_layers.length > 0) {
 				Config.dynamic_layers.each(function(layer_url) {
+					$l('fetching '+layer_url)
 					load_script(layer_url)
 				},this)
 			}
-		// }
+		}
 		
 		Glop.trigger_draw()
 		
@@ -175,7 +175,7 @@ var Cartagen = {
 	draw: function(e) {
 		e.no_draw = true
 
-		if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
+		// if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2
 		Style.style_body()
         
 		// display fps if Config.fps = true
@@ -187,15 +187,15 @@ var Cartagen = {
 			}
 		}
 
-		$C.canvases.keys().each(function(canvas) {
-			$C.open(canvas)
+		// $C.canvases.keys().each(function(canvas) {
+		// 	$C.open(canvas)
 			$C.translate(Glop.width / 2, Glop.height / 2)
-	        $C.rotate(Map.rotate)
-	        $C.scale(Map.zoom, Map.zoom)
-	        $C.translate(-Map.x,-Map.y)
-		})
-		
-		$C.close()
+			        $C.rotate(Map.rotate)
+			        $C.scale(Map.zoom, Map.zoom)
+			        $C.translate(-Map.x,-Map.y)
+		// })
+		// 
+		// $C.close()
         
 		Viewport.draw() //adjust viewport
 		
@@ -224,7 +224,6 @@ var Cartagen = {
 		this.feature_queue = []
 		
 		if (Prototype.Browser.MobileSafari || window.PhoneGap) User.mark()
-									   // now we  
 	},
     /**
      * Runs every frame, after everything else has been done.
@@ -233,14 +232,6 @@ var Cartagen = {
         this.label_queue.each(function(item) {
             item[0].draw(item[1], item[2])
         })
-
-		$C.save()
-			$C.opacity(0.4)
-			$C.stroke_style('red')
-			$C.fill_style('red')
-			$C.rect(Map.x - Mouse.x,Map.y - Mouse.y,Map.x - Mouse.x+10,Map.y - Mouse.y+10)
-			$C.fill()
-		$C.restore()
 
 		this.label_queue = []
 
@@ -252,7 +243,7 @@ var Cartagen = {
 		Glop.fire('cartagen:postdraw')
 		
 		// display percentage of features we've imported so far:
-		$C.close()
+		// $C.close()
 		Interface.display_loading(Importer.parse_manager.completed)
 		
     },
