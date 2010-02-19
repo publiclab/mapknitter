@@ -5459,6 +5459,7 @@ var Style = {
 			}
 			$C.open('main')
 			$C.fill_pattern(Style.styles.body.pattern, 'repeat')
+			$C.rect(0,0,Glop.width,Glop.height)
 		}
 		$C.close()
 	},
@@ -7003,16 +7004,8 @@ $C = {
 	freezer: new Hash,
 	frozen: false,
 	freeze: function(name) {
-		if ($C.freezer.get(name) != true) {
-			$l('freezing '+name)
-			$C.freezer.set(name,true)
-			if ($C.current == name) $C.frozen = true
-		}
 	},
 	thaw: function(name) {
-		$l('thawing '+name)
-		$C.freezer.unset(name)
-		if ($C.current == name) $C.frozen = false
 	},
 	add: function(name) {
 		$('canvas').insert({top:'<canvas style="position:absolute;top:0;left:0" id="'+name+'" ></canvas>'})
@@ -7020,18 +7013,8 @@ $C = {
 		$C.canvases.set(name,new_canvas)
 	},
 	open: function(name) {
-		name = name || 'main'
-		$C.current = name
-		if ($C.freezer.get(name)) $C.frozen = true
-		else $C.frozen = false
-		this.element = $(name)
-		$C.canvas = $C.canvases.get(name)
 	},
 	close: function() {
-		$C.current = 'main'
-		this.element = $('main')
-		if ($C.freezer.get('main')) $C.frozen = true
-		$C.canvas = $C.canvases.get('main')
 	},
 	clear: function(name){
 		name = name || 'main'
@@ -7041,7 +7024,9 @@ $C = {
 		$C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
+		if (image.width) {
 			$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		}
 	},
 	draw_image: function(image, x,y) {
 			$C.canvas.drawImage(image, x, y)
