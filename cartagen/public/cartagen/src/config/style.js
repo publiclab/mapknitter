@@ -40,6 +40,7 @@ var Style = {
 			}
 			$C.open('main')
 			$C.fill_pattern(Style.styles.body.pattern, 'repeat')
+			$C.rect(0,0,Glop.width,Glop.height)
 		}
 		$C.close()
 	},

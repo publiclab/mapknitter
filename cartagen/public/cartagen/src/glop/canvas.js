@@ -43,19 +43,19 @@ $C = {
 	 * Freezes a named canvas - won't allow it to be drawn to.
 	 */
 	freeze: function(name) {
-		if ($C.freezer.get(name) != true) {
-			$l('freezing '+name)
-			$C.freezer.set(name,true)
-			if ($C.current == name) $C.frozen = true
-		}
+		// if ($C.freezer.get(name) != true) {
+		// 	$l('freezing '+name)
+		// 	$C.freezer.set(name,true)
+		// 	if ($C.current == name) $C.frozen = true
+		// }
 	},
 	/**
 	 * Allows named canvas to be drawn to.
 	 */
 	thaw: function(name) {
-		$l('thawing '+name)
-		$C.freezer.unset(name)
-		if ($C.current == name) $C.frozen = false
+		// $l('thawing '+name)
+		// $C.freezer.unset(name)
+		// if ($C.current == name) $C.frozen = false
 	},
 	/**
 	 * To add a new canvas element. For now, added to the bottom of the
@@ -73,19 +73,19 @@ $C = {
 	 * @param {String} name The name of the canvas to draw to by default
 	 */
 	open: function(name) {
-		name = name || 'main'
-		$C.current = name
-		if ($C.freezer.get(name)) $C.frozen = true
-		else $C.frozen = false
-		// $l('opening '+name+' canvas')
-		this.element = $(name)
-		$C.canvas = $C.canvases.get(name)
+		// name = name || 'main'
+		// $C.current = name
+		// if ($C.freezer.get(name)) $C.frozen = true
+		// else $C.frozen = false
+		// // $l('opening '+name+' canvas')
+		// this.element = $(name)
+		// $C.canvas = $C.canvases.get(name)
 	},
 	close: function() {
-		$C.current = 'main'
-		this.element = $('main')
-		if ($C.freezer.get('main')) $C.frozen = true
-		$C.canvas = $C.canvases.get('main')
+		// $C.current = 'main'
+		// this.element = $('main')
+		// if ($C.freezer.get('main')) $C.frozen = true
+		// $C.canvas = $C.canvases.get('main')
 	},
 	/**
 	 * Clears the canvas; if 'name' is supplied, clears the canvas with name 'name'
@@ -114,7 +114,9 @@ $C = {
 		// this seems to often fail, so wrapped in a try:
 		// try/fail is inefficient, removed:
 		// try { 
+		if (image.width) {
 			$C.canvas.fillStyle = $C.canvas.createPattern(image, repeat)
+		}
 		// } catch(e) {}
 	},
 	/**
