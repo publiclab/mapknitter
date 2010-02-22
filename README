@@ -1,0 +1,23 @@
+                _                         
+  ___ __ _ _ __| |_ __ _  __ _  ___ _ __  
+ / __/ _` | '__| __/ _` |/ _` |/ _ \ '_ \ 
+| (_| (_| | |  | || (_| | (_| |  __/ | | |
+ \___\__,_|_|   \__\__,_|\__, |\___|_| |_|
+                         |___/
+
+Cartagen is a vector-based, client-side framework for rendering maps in native HTML 5. Maps are styled in GSS, a cascading stylesheet specification for geospatial information – a decision which leverages literacy in CSS to make map styling more accessible. 
+
+=================================================
+Requirements
+
+
+
+
+=================================================
+Installation
+
+
+
+
+=================================================
+Documentation
