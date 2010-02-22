@@ -7,17 +7,56 @@
 
 Cartagen is a vector-based, client-side framework for rendering maps in native HTML 5. Maps are styled in GSS, a cascading stylesheet specification for geospatial information – a decision which leverages literacy in CSS to make map styling more accessible. 
 
+http://cartagen.org is a demonstration of the latest release of Cartagen. Test it out, visit places, and create your own maps!
+
+=================================================
+What to install
+
+Cartagen is available in two 'editions' - each of which fulfills a different set of requirements.
+
+*** Client Edition ***
+
+The client edition is the simplest version of Cartagen, and the easiest to get started with – you don’t need a web server to run it. However, you must provide it with static data or every location you want it to load - it cannot dynamically fetch data from a server. Download a copy from: http://github.com/jywarren/cartagen/downloads
+
+Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenClient
+
+*** Server Edition ***
+
+The server edition is not yet officially released. If you are interested in it, you can get it from the development repository via subversion. It is not recommended for end-users, as installation and setup procedures are not fully in place. Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenServer
+
+
+
 =================================================
 Requirements
 
+*** Client Edition ***
 
+Cartagen Client requires a modern JavaScript browser (recommended: Safari 3+, Firefox 3.1+, Chrome)
 
+*** Server Edition ***
+
+Cartagen Server requires a server with Ruby and the following gems:
+
+"json"
+"httparty"
+"geokit"
+"davetroy-geohash"
+
+However you can install these gems by running: 'rake gems:install' in the root directory of Cartagen.
 
 =================================================
 Installation
 
+*** Client Edition ***
 
+Cartagen 
+
+Note: There is a full installation tutorial with screenshots available at http://wiki.cartagen.org/wiki/show/CartagenClient
+
+*** Server Edition ***
 
 
 =================================================
 Documentation
+
+Cartagen usage and documentation is available at http://wiki.cartagen.org, and a periodically downloaded version is available at http://github.com/jywarren/cartagen/downloads
