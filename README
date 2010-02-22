@@ -49,12 +49,16 @@ Installation
 
 *** Client Edition ***
 
-Cartagen 
-
 Note: There is a full installation tutorial with screenshots available at http://wiki.cartagen.org/wiki/show/CartagenClient
+
+- Download a copy from: http://github.com/jywarren/cartagen/downloads
+- Decompress the .zip file (This is important - Cartagen cannot run within a .zip file!)
+- Open the folder cartagen-client-0.x.x and open index.html in a web browser.
+- You're done! Now learn how to get your own data set from OpenStreetMap here: http://wiki.cartagen.org/wiki/show/CartagenClient
 
 *** Server Edition ***
 
+Coming soon...
 
 =================================================
 Documentation
