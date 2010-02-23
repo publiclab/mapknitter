@@ -14,98 +14,79 @@
 	<script type="text/javascript" charset="utf-8">
 		Cartagen.setup({
 			stylesheet: "../static/rome/style.gss",
-			static_map: false,
-			static_map_layers: ["more.json"],
-			lat: 41.891,
-			lng: 12.4902,
-			// debug: true
+			static_map: true,
+			static_map_layers: ["map.json"],
+			lat: 42.360140177156026, 
+			lng: -71.08812053061226,
+			zoom_level: 1.0749999999999986
 		})
+		
+		var Draggable = Class.create({
+			initialize: function(x,y) {
+				this.x = x
+				this.y = y
+				this.lat = 0
+				this.lon = 0
+				this.color = "#900"
+				this.width = 100
+				this.height = 100
+				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+			},
+			// this gets called every frame:
+			draw: function() {
+				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
+				// first, save the transformation matrix:
+				$C.save()
+					// go to the object's location:
+					// $C.translate(this.x,this.y)
+						// draw the object:
+						$C.fill_style(this.color)
+						$C.opacity(1)
+						$C.line_width(100)
+						$C.rect(this.x,this.y,this.width,this.height)
+				$C.restore()
+
+				// this.nodes should be a list of coordinate pairs
+				// this math is wrong but it gives you an idea.
+				// in reality the 'map' xy-coords are at 'map scale' and the interface is at 1:1 scale. 
+				// you must always be sure you're in the right scale.
+				// if (Geometry.is_point_in_poly(this.nodes, Mouse.x, Mouse.y)) {
+				// 	if (Mouse.dragging) {
+				// 		this.drag()
+				// 		// we can also save the 'dragging' as a state:
+				// 		this.dragging = true
+				// 	} else if (Mouse.down) {
+				// 		this.click()
+				// 	} else if (this.dragging) {
+				// 		this.dragging = false
+				// 	} else {
+				// 		this.hover()
+				// 	}
+				// }
+			},
+			click: function() {
+				// do stuff
+
+			},
+			hover: function() {
+				// do stuff
+				this.color = '#f00'
+			},
+			drag: function() {
+				// do stuff
+
+			}
+		})
+
+		function setup() {
+			draggy = new Draggable(Map.x,Map.y)
+		}
+		document.observe('cartagen:init', setup)
 	</script>
 </head>
 <body>
 
-<div id="google" style="display:none;">Cartagen is a set of tools for mapping, enabling users to view and configure live streams of geographic data in a dynamic, personally relevant way. Today's mapping software is largely based on static data sets, and neither incorporates the time dimension in its display nor provides for real-time data streams. Cartagen helps users to analyze and view collected and shared geographic and temporal data from multiple sources.</div>
-
-<div id="browsers" style="display:none;">
-	<h3>WHOOPS</h3>
-	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
-</div>
-
-<div class="overlay" id="gss" style="display:none;">
-	<h3>Import GSS:</h3>
-	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.load_styles($('import_gss').value);Glop.trigger_draw();">
-		<p>
-			<input style="font-size:0.8em;" type="text" name="import_gss" value="http://" id="import_gss">
-			<input type="submit" value="Apply">
-		</p>
-	</form>
-	<h3>Edit GSS:</h3>
-	<form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="Style.apply_gss($('gss_textarea').value, true);Glop.trigger_draw();">
-		<textarea tabindex="1" id="gss_textarea" rows="30" cols="40"></textarea>
-		<p><input tabindex="2" type="submit" value="Apply style"> <a href="javascript:void(0);" onClick="$('gss').toggle();Cartagen.live_gss = false;">cancel</a> | <a href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Usage &raquo;</a></p>
-	</form>	
-</div>
-
-<div id="brief">
-	<script type="text/javascript" charset="utf-8">
-		if (Prototype.Browser.MobileSafari) {$('brief').hide()}
-	</script>
-	<div class="column first" id="brief_first">
-		<h2><img src="../images/cartagen.png" alt="Cartagen"><br />
-			<small>a framework for dynamic mapping<br />
-			by <a href="http://unterbahn.com">Jeffrey Warren</a>
-			<br />
-			<a href="http://wiki.cartagen.org">More Info</a> |
-			<a href="http://code.google.com/p/cartagen/">Source</a> |
-			<a href="http://unterbahn.com/tag/cartagen/">Blog</a>
-			</small></h2>
-		<script type="text/javascript" charset="utf-8">
-			function find(q) {
-				q = q.replace(' ','-')
-				document.location = "/find/"+q
-			}
-		</script>
-		<p><form action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
-			Go somewhere: <br />
-			<input id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
-			<input type="submit" name="some_name" tabindex="4" value="Go">
-		</form></p>
-		<p><a href="javascript:void(0);" onClick="Cartagen.show_gss_editor()">Edit GSS &raquo;</a><br />
-		<a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a><br />
-		<a href="javascript:void(0);" onClick="Interface.download_bbox()">Download data &raquo;</a></p>
-	</div>
-	<div id="description">
-		<div style="float:right;margin:5px;"><a href="javascript:void(0);" onClick="$('description').hide();$('brief').style.width = '28%';$('brief_first').style.width = '92%';">[hide]</a></div>
-		<div class="column">
-			<h3>GSS: geo style sheets</h3>
-			<p>Just like CSS for styling web pages, GSS is a specification for designing maps. Adapted for dynamic data sources, GSS can define changing geographic elements, display multiple datasets, and even respond to contextual tags like "condition:poor".</p>
-			<p><a href="/static/rome/style.gss" target="_blank">Click here</a> to view styles for the above map.</p>
-		</div>
-		<div class="column">
-			<h3>Vector web mapping</h3>
-			<p>Instead of sending pre-rendered tiles for every zoom level, Cartagen draws maps dynamically on the client side. This means maps can move, adapt, and redraw, and can include as many layers of data as needed. Vector mapping is done in native HTML 5, which runs on the iPhone and the Android platforms, and uses less bandwidth overall. Data displayed here is from <a href="http://openstreetmap.org">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>)</p>
-		</div>
-		<div class="column">
-			<h3>Stylesheet Gallery</h3>
-			<p>See a variety of stylesheets demonstrating Cartagen's abilities:</p>
-			<a href="http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/authors.gss"><img src="http://farm3.static.flickr.com/2594/3966967238_7a7bfffac3_s.jpg"/></a>
-			<a href="http://newsflow.cartagen.org"><img src="http://farm3.static.flickr.com/2461/3966975886_15091b990d_s.jpg"/></a>
-			<a href="http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/warcraft.gss"><img src="http://farm3.static.flickr.com/2510/3753496047_fe4565959b_s.jpg"/></a>
-			<a href="http://fwish.cartagen.org"><img src="http://farm3.static.flickr.com/2619/3824100955_2f2753c009_s.jpg"/></a>
-		</div>
-	</div>
-</div>
-
 <div id="canvas"></div>
 
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-180781-29");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 </body>
 </html>
