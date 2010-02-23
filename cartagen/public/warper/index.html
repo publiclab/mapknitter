@@ -27,9 +27,10 @@
 				this.y = y
 				this.lat = 0
 				this.lon = 0
-				this.color = "#900"
+				this.color = "#200"
 				this.width = 100
 				this.height = 100
+				this.rotate=120
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			},
 			// this gets called every frame:
@@ -37,14 +38,18 @@
 				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
 				// first, save the transformation matrix:
 				$C.save()
+				
 					// go to the object's location:
-					// $C.translate(this.x,this.y)
+					$C.translate(this.x,this.y)
+					$C.rotate(this.rotate)						
 						// draw the object:
 						$C.fill_style(this.color)
 						$C.opacity(1)
 						$C.line_width(100)
-						$C.rect(this.x,this.y,this.width,this.height)
+						$C.rect(0,0,this.width,this.height)
 				$C.restore()
+				
+				
 
 				// this.nodes should be a list of coordinate pairs
 				// this math is wrong but it gives you an idea.

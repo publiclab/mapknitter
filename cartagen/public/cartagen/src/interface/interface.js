@@ -8,6 +8,41 @@
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
+	/**
+	 * The tool currently in use. Options include 'pan', 'pen', 'select'
+	 */
+	tool: 'pan',
+	switch_tool: function(new_tool) {
+		old_tool = Interface.tool
+		
+		// Close old tool:
+		
+		if (old_tool == 'select') {
+			Glop.stopObserving('mousemove', Interface.bbox_select_mousemove)
+			Glop.stopObserving('mousedown', Interface.bbox_select_mousedown)
+			Glop.stopObserving('mouseup', Interface.bbox_select_mouseup)
+		} else if (old_tool == 'pan') {
+			Glop.stopObserving('mousemove', Events.mousemove)
+			Glop.stopObserving('mousedown', Events.mousedown)
+			Glop.stopObserving('mouseup', Events.mouseup)
+		}
+		
+		// Start new tool:
+		if (new_tool == 'select') {
+			Glop.observe('mousemove', Interface.bbox_select_mousemove)
+			Glop.observe('mousedown', Interface.bbox_select_mousedown)
+			Glop.observe('mouseup', Interface.bbox_select_mouseup)
+		} else if (new_tool == 'pan') {
+			Glop.observe('mousemove', Events.mousemove)
+			Glop.observe('mousedown', Events.mousedown)
+			Glop.observe('mouseup', Events.mouseup)
+		}
+		
+		Interface.tool = new_tool
+	},
+	/**
+	 * Draws the display for how much of the map data has downloaded.
+	 */
 	display_loading: function(percent) {
 		if (percent < 100) {
 			// $l('bar')
@@ -54,12 +89,7 @@ var Interface = {
 
 		alert('Please select a bounding box to download')
 
-		Glop.observe('mousemove', Interface.bbox_select_mousemove)
-		Glop.observe('mousedown', Interface.bbox_select_mousedown)
-		Glop.observe('mouseup', Interface.bbox_select_mouseup)
-		Glop.stopObserving('mousemove', Events.mousemove)
-		Glop.stopObserving('mousedown', Events.mousedown)
-		Glop.stopObserving('mouseup', Events.mouseup)
+		Interface.switch_tool('select')
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false
@@ -116,12 +146,7 @@ var Interface = {
 
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
-			Glop.stopObserving('mousemove', Interface.bbox_select_mousemove)
-			Glop.stopObserving('mousedown', Interface.bbox_select_mousedown)
-			Glop.stopObserving('mouseup', Interface.bbox_select_mouseup)
-			Glop.observe('mousemove', Events.mousemove)
-			Glop.observe('mousedown', Events.mousedown)
-			Glop.observe('mouseup', Events.mouseup)
+			Interface.switch_tool('pan')
 
 			Interface.bbox_select_active = true
 			Interface.bbox_select_dragging = false
