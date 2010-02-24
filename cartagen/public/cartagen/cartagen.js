@@ -7725,6 +7725,72 @@ var Zoom = {
 }
 
 document.observe('cartagen:init', Zoom.initialize.bindAsEventListener(Zoom))
+var Tool = {
+
+}
+Tool.Select = {
+	bbox_select_mousemove: function(e) {
+		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
+			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
+
+			Interface.bbox_select_end = [pointer_x, pointer_y]
+
+			Glop.draw(false, true)
+
+			var width = Interface.bbox_select_end[0] - Interface.bbox_select_start[0]
+			var height = Interface.bbox_select_end[1] - Interface.bbox_select_start[1]
+
+			$C.save()
+			$C.fill_style('#000')
+			$C.opacity(0.2)
+			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.opacity(1)
+			$C.stroke_style('#000')
+			$C.stroke_rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.restore()
+		}
+	}.bindAsEventListener(Tool.Select),
+	bbox_select_mousedown: function(e) {
+		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
+			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
+			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
+
+			Interface.bbox_select_dragging = true
+			Interface.bbox_select_start = [pointer_x, pointer_y]
+			Interface.bbox_select_end = Interface.bbox_select_start
+		}
+	}.bindAsEventListener(Tool.Select),
+	bbox_select_mouseup: function() {
+		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+			Glop.paused = false
+			$l(Interface.bbox_select_start[0])
+			$l(Interface.bbox_select_end[0])
+
+			var min_lon = Math.min(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
+			var min_lat = Math.min(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
+			var max_lon = Math.max(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
+			var max_lat = Math.max(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
+
+			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
+
+			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
+
+			var lon = (Map.bbox[0] + Map.bbox[2]) / 2
+			var lat = (Map.bbox[1] + Map.bbox[3]) / 2
+
+			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
+
+			Interface.switch_tool('pan')
+
+			Interface.bbox_select_active = true
+			Interface.bbox_select_dragging = false
+		}
+	}.bindAsEventListener(Tool.Select)
+}
+Tool.Pen = {
+
+}
 
 var Interface = {
 	tool: 'pan',
@@ -7733,23 +7799,31 @@ var Interface = {
 
 
 		if (old_tool == 'select') {
-			Glop.stopObserving('mousemove', Interface.bbox_select_mousemove)
-			Glop.stopObserving('mousedown', Interface.bbox_select_mousedown)
-			Glop.stopObserving('mouseup', Interface.bbox_select_mouseup)
+			Glop.stopObserving('mousemove', Tool.Select.mousemove)
+			Glop.stopObserving('mousedown', Tool.Select.mousedown)
+			Glop.stopObserving('mouseup', Tool.Select.mouseup)
 		} else if (old_tool == 'pan') {
 			Glop.stopObserving('mousemove', Events.mousemove)
 			Glop.stopObserving('mousedown', Events.mousedown)
 			Glop.stopObserving('mouseup', Events.mouseup)
+		} else if (old_tool == 'pen') {
+			Glop.stopObserving('mousemove', Pen.mousemove)
+			Glop.stopObserving('mousedown', Pen.mousedown)
+			Glop.stopObserving('mouseup', Pen.mouseup)
 		}
 
 		if (new_tool == 'select') {
-			Glop.observe('mousemove', Interface.bbox_select_mousemove)
-			Glop.observe('mousedown', Interface.bbox_select_mousedown)
-			Glop.observe('mouseup', Interface.bbox_select_mouseup)
+			Glop.observe('mousemove', Tool.Select.mousemove)
+			Glop.observe('mousedown', Tool.Select.mousedown)
+			Glop.observe('mouseup', Tool.Select.mouseup)
 		} else if (new_tool == 'pan') {
 			Glop.observe('mousemove', Events.mousemove)
 			Glop.observe('mousedown', Events.mousedown)
 			Glop.observe('mouseup', Events.mouseup)
+		} else if (new_tool == 'pen') {
+			Glop.stopObserving('mousemove', Pen.mousemove)
+			Glop.stopObserving('mousedown', Pen.mousedown)
+			Glop.stopObserving('mouseup', Pen.mouseup)
 		}
 
 		Interface.tool = new_tool
@@ -7800,65 +7874,7 @@ var Interface = {
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false
-	},
-	bbox_select_mousemove: function(e) {
-		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
-			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
-			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
-
-			Interface.bbox_select_end = [pointer_x, pointer_y]
-
-			Glop.draw(false, true)
-
-			var width = Interface.bbox_select_end[0] - Interface.bbox_select_start[0]
-			var height = Interface.bbox_select_end[1] - Interface.bbox_select_start[1]
-
-			$C.save()
-			$C.fill_style('#000')
-			$C.opacity(0.2)
-			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
-			$C.opacity(1)
-			$C.stroke_style('#000')
-			$C.stroke_rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
-			$C.restore()
-		}
-	}.bindAsEventListener(Interface),
-	bbox_select_mousedown: function(e) {
-		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
-			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
-			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
-
-			Interface.bbox_select_dragging = true
-			Interface.bbox_select_start = [pointer_x, pointer_y]
-			Interface.bbox_select_end = Interface.bbox_select_start
-		}
-	}.bindAsEventListener(Interface),
-	bbox_select_mouseup: function() {
-		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
-			Glop.paused = false
-			$l(Interface.bbox_select_start[0])
-			$l(Interface.bbox_select_end[0])
-
-			var min_lon = Math.min(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
-			var min_lat = Math.min(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
-			var max_lon = Math.max(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
-			var max_lat = Math.max(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
-
-			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
-
-			window.open('/api/0.6/map.json?bbox=' + query, 'Cartagen data')
-
-			var lon = (Map.bbox[0] + Map.bbox[2]) / 2
-			var lat = (Map.bbox[1] + Map.bbox[3]) / 2
-
-			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
-
-			Interface.switch_tool('pan')
-
-			Interface.bbox_select_active = true
-			Interface.bbox_select_dragging = false
-		}
-	}.bindAsEventListener(Interface)
+	}
 }
 var Geohash = {}
 
