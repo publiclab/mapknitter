@@ -15,7 +15,9 @@ var Events = {
 		Glop.observe('dblclick', Events.doubleclick)
 		Glop.observe('mouseover', Events.mouseover)
 		Glop.observe('mouseout', Events.mouseout)
-		
+
+		// (Tool-specific events are handled in the Tool namespace)
+		Tool.initialize()
 		
 		// Observe scrollwheel:
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
@@ -45,10 +47,6 @@ var Events = {
 		Events.enabled = true
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
-		var lon = Projection.x_to_lon(-1*Map.pointer_x())
-		var lat = Projection.y_to_lat(Map.pointer_y())
-		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
-		if (features) features.reverse().concat(Mouse.hovered_features).invoke('style')
 		Glop.trigger_draw(5)
 	},
 	/**
@@ -56,18 +54,13 @@ var Events = {
 	 * @param {Event} event
 	 */
 	mousedown: function(event) {
-		if (!event.isLeftClick() || event.ctrlKey) return
-        Mouse.down = true
-        Mouse.click_frame = Glop.frame
-        Mouse.click_x = Mouse.x
-        Mouse.click_y = Mouse.y
-        Map.x_old = Map.x
-        Map.y_old = Map.y
-		Map.zoom_old = Map.zoom
-        Map.rotate_old = Map.rotate
-		Mouse.dragging = true
 		Events.mousemove(event)
-		// $l('mousedown')
+		if (!event.isLeftClick() || event.ctrlKey) return
+	        Mouse.down = true
+	        Mouse.click_frame = Glop.frame
+	        Mouse.click_x = Mouse.x
+	        Mouse.click_y = Mouse.y
+		Mouse.dragging = true
 		Glop.trigger_draw(5)
 	},
 	/**
@@ -75,11 +68,11 @@ var Events = {
 	 */
 	mouseup: function(event) {
 		if (event && (!event.isLeftClick() || event.ctrlKey)) return
-        Mouse.up = true
-        Mouse.down = false
-        Mouse.release_frame = Glop.frame
-        Mouse.dragging = false
-        User.update()
+	        Mouse.up = true
+	        Mouse.down = false
+	        Mouse.release_frame = Glop.frame
+	        Mouse.dragging = false
+	        User.update()
 	},
 	/**
 	 * Triggered when the mouse wheel is used
@@ -248,21 +241,7 @@ var Events = {
 		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
 			Mouse.drag_x = (Mouse.x - Mouse.click_x)
 			Mouse.drag_y = (Mouse.y - Mouse.click_y)
-			if (Keyboard.keys.get("r")) { // rotating
-				Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
-			} else if (Keyboard.keys.get("z")) {
-				if (Map.zoom > 0) {
-					Map.zoom = Math.abs(Map.zoom - (Mouse.drag_y/Glop.height))
-				} else {
-					Map.zoom = 0
-				}
-			} else {
-				var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
-				var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
-				
-				Map.x = Map.x_old+(d_x/Map.zoom)
-				Map.y = Map.y_old+(d_y/Map.zoom)
-			}
+			Tool.drag()
 		}
 	},
 	/**

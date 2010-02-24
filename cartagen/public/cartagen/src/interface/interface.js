@@ -6,51 +6,12 @@
 //= require "tool"
 //= require "select"
 //= require "pen"
+//= require "pan"
 
 /**
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
-	/**
-	 * The tool currently in use. Options include 'pan', 'pen', 'select'
-	 */
-	tool: 'pan',
-	switch_tool: function(new_tool) {
-		old_tool = Interface.tool
-		
-		// Close old tool:
-		
-		if (old_tool == 'select') {
-			Glop.stopObserving('mousemove', Tool.Select.mousemove)
-			Glop.stopObserving('mousedown', Tool.Select.mousedown)
-			Glop.stopObserving('mouseup', Tool.Select.mouseup)
-		} else if (old_tool == 'pan') {
-			Glop.stopObserving('mousemove', Events.mousemove)
-			Glop.stopObserving('mousedown', Events.mousedown)
-			Glop.stopObserving('mouseup', Events.mouseup)
-		} else if (old_tool == 'pen') {
-			Glop.stopObserving('mousemove', Pen.mousemove)
-			Glop.stopObserving('mousedown', Pen.mousedown)
-			Glop.stopObserving('mouseup', Pen.mouseup)
-		}
-		
-		// Start new tool:
-		if (new_tool == 'select') {
-			Glop.observe('mousemove', Tool.Select.mousemove)
-			Glop.observe('mousedown', Tool.Select.mousedown)
-			Glop.observe('mouseup', Tool.Select.mouseup)
-		} else if (new_tool == 'pan') {
-			Glop.observe('mousemove', Events.mousemove)
-			Glop.observe('mousedown', Events.mousedown)
-			Glop.observe('mouseup', Events.mouseup)
-		} else if (new_tool == 'pen') {
-			Glop.stopObserving('mousemove', Pen.mousemove)
-			Glop.stopObserving('mousedown', Pen.mousedown)
-			Glop.stopObserving('mouseup', Pen.mouseup)
-		}
-		
-		Interface.tool = new_tool
-	},
 	/**
 	 * Draws the display for how much of the map data has downloaded.
 	 */
@@ -100,7 +61,7 @@ var Interface = {
 
 		alert('Please select a bounding box to download')
 
-		Interface.switch_tool('select')
+		Tool.change('Select')
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false

@@ -1,8 +1,8 @@
 /**
- * @namespace The 'select' tool and associated methods.
+ * @namespace The 'Select' tool and associated methods.
  */
 Tool.Select = {
-	bbox_select_mousemove: function(e) {
+	mousemove: function(e) {
 		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
@@ -24,7 +24,7 @@ Tool.Select = {
 			$C.restore()
 		}
 	}.bindAsEventListener(Tool.Select),
-	bbox_select_mousedown: function(e) {
+	mousedown: function(e) {
 		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
@@ -34,7 +34,7 @@ Tool.Select = {
 			Interface.bbox_select_end = Interface.bbox_select_start
 		}
 	}.bindAsEventListener(Tool.Select),
-	bbox_select_mouseup: function() {
+	mouseup: function() {
 		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
 			Glop.paused = false
 			$l(Interface.bbox_select_start[0])
@@ -54,10 +54,13 @@ Tool.Select = {
 
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
-			Interface.switch_tool('pan')
+			Tool.change('Pan')
 
 			Interface.bbox_select_active = true
 			Interface.bbox_select_dragging = false
 		}
-	}.bindAsEventListener(Tool.Select)
+	}.bindAsEventListener(Tool.Select),
+	drag: function() {
+
+	}
 }
