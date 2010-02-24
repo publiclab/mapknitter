@@ -6782,6 +6782,7 @@ var Events = {
 		Glop.observe('mouseover', Events.mouseover)
 		Glop.observe('mouseout', Events.mouseout)
 
+		Tool.initialize()
 
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
 		window.onmousewheel = document.onmousewheel = Events.wheel
@@ -6803,33 +6804,25 @@ var Events = {
 		Events.enabled = true
 		Mouse.x = -1*Event.pointerX(event)
 		Mouse.y = -1*Event.pointerY(event)
-		var lon = Projection.x_to_lon(-1*Map.pointer_x())
-		var lat = Projection.y_to_lat(Map.pointer_y())
-		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
-		if (features) features.reverse().concat(Mouse.hovered_features).invoke('style')
 		Glop.trigger_draw(5)
 	},
 	mousedown: function(event) {
-		if (!event.isLeftClick() || event.ctrlKey) return
-        Mouse.down = true
-        Mouse.click_frame = Glop.frame
-        Mouse.click_x = Mouse.x
-        Mouse.click_y = Mouse.y
-        Map.x_old = Map.x
-        Map.y_old = Map.y
-		Map.zoom_old = Map.zoom
-        Map.rotate_old = Map.rotate
-		Mouse.dragging = true
 		Events.mousemove(event)
+		if (!event.isLeftClick() || event.ctrlKey) return
+	        Mouse.down = true
+	        Mouse.click_frame = Glop.frame
+	        Mouse.click_x = Mouse.x
+	        Mouse.click_y = Mouse.y
+		Mouse.dragging = true
 		Glop.trigger_draw(5)
 	},
 	mouseup: function(event) {
 		if (event && (!event.isLeftClick() || event.ctrlKey)) return
-        Mouse.up = true
-        Mouse.down = false
-        Mouse.release_frame = Glop.frame
-        Mouse.dragging = false
-        User.update()
+	        Mouse.up = true
+	        Mouse.down = false
+	        Mouse.release_frame = Glop.frame
+	        Mouse.dragging = false
+	        User.update()
 	},
 	wheel: function(event){
 		if (Events.enabled == false) return
@@ -6954,21 +6947,7 @@ var Events = {
 		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
 			Mouse.drag_x = (Mouse.x - Mouse.click_x)
 			Mouse.drag_y = (Mouse.y - Mouse.click_y)
-			if (Keyboard.keys.get("r")) { // rotating
-				Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
-			} else if (Keyboard.keys.get("z")) {
-				if (Map.zoom > 0) {
-					Map.zoom = Math.abs(Map.zoom - (Mouse.drag_y/Glop.height))
-				} else {
-					Map.zoom = 0
-				}
-			} else {
-				var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
-				var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
-
-				Map.x = Map.x_old+(d_x/Map.zoom)
-				Map.y = Map.y_old+(d_y/Map.zoom)
-			}
+			Tool.drag()
 		}
 	},
 	click_length: function() {
@@ -7726,10 +7705,33 @@ var Zoom = {
 
 document.observe('cartagen:init', Zoom.initialize.bindAsEventListener(Zoom))
 var Tool = {
+	initialize: function() {
+		Glop.observe('mousemove', Tool.Pan.mousemove)
+		Glop.observe('mousedown', Tool.Pan.mousedown)
+		Glop.observe('mouseup', Tool.Pan.mouseup)
+	},
+	active: 'Pan',
+	change: function(new_tool) {
+		old_tool = Tool.active
 
+		tool_events = ['mousemove','mouseup','mousedown']
+
+		tool_events.each(function(tool_event) {
+			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
+			Glop.observe(tool_event,Tool[new_tool][tool_event])
+		})
+
+		Tool.active = new_tool
+	},
+	/*
+	 * Pass drag call to the active tool:
+	 */
+	drag: function() {
+		Tool[Tool.active].drag()
+	}
 }
 Tool.Select = {
-	bbox_select_mousemove: function(e) {
+	mousemove: function(e) {
 		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
@@ -7751,7 +7753,7 @@ Tool.Select = {
 			$C.restore()
 		}
 	}.bindAsEventListener(Tool.Select),
-	bbox_select_mousedown: function(e) {
+	mousedown: function(e) {
 		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
@@ -7761,7 +7763,7 @@ Tool.Select = {
 			Interface.bbox_select_end = Interface.bbox_select_start
 		}
 	}.bindAsEventListener(Tool.Select),
-	bbox_select_mouseup: function() {
+	mouseup: function() {
 		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
 			Glop.paused = false
 			$l(Interface.bbox_select_start[0])
@@ -7781,53 +7783,65 @@ Tool.Select = {
 
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
-			Interface.switch_tool('pan')
+			Tool.change('Pan')
 
 			Interface.bbox_select_active = true
 			Interface.bbox_select_dragging = false
 		}
-	}.bindAsEventListener(Tool.Select)
+	}.bindAsEventListener(Tool.Select),
+	drag: function() {
+
+	}
 }
 Tool.Pen = {
+	mousedown: function() {
+		console.log('Pen mousedown')
+	}.bindAsEventListener(Tool.Pen),
+	mouseup: function() {
+		console.log('Pen mouseup')
+	}.bindAsEventListener(Tool.Pen),
+	mousemove: function() {
+		console.log('Pen mousemove')
+	}.bindAsEventListener(Tool.Pen)
+}
+Tool.Pan = {
+	mousedown: function(event) {
+	        Map.x_old = Map.x
+	        Map.y_old = Map.y
+		Map.zoom_old = Map.zoom
+	        Map.rotate_old = Map.rotate
+	}.bindAsEventListener(Tool.Pan),
+	mouseup: function() {
 
+	}.bindAsEventListener(Tool.Pan),
+	mousemove: function() {
+		var lon = Projection.x_to_lon(-1*Map.pointer_x())
+		var lat = Projection.y_to_lat(Map.pointer_y())
+		var features = Geohash.get_current_features_upward(encodeGeoHash(lat, lon))
+		if (features) features.reverse().concat(Mouse.hovered_features).invoke('style')
+	}.bindAsEventListener(Tool.Pan),
+	/*
+	 * Handles drags. Should rewrite this as an event listener rather than passing from Event > Tool > here
+	 */
+	drag: function() {
+		if (Keyboard.keys.get("r")) { // rotating
+			Map.rotate = Map.rotate_old + (-1*Mouse.drag_y/Glop.height)
+		} else if (Keyboard.keys.get("z")) {
+			if (Map.zoom > 0) {
+				Map.zoom = Math.abs(Map.zoom - (Mouse.drag_y/Glop.height))
+			} else {
+				Map.zoom = 0
+			}
+		} else {
+			var d_x = Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+			var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
+			Map.x = Map.x_old+(d_x/Map.zoom)
+			Map.y = Map.y_old+(d_y/Map.zoom)
+		}
+	}
 }
 
 var Interface = {
-	tool: 'pan',
-	switch_tool: function(new_tool) {
-		old_tool = Interface.tool
-
-
-		if (old_tool == 'select') {
-			Glop.stopObserving('mousemove', Tool.Select.mousemove)
-			Glop.stopObserving('mousedown', Tool.Select.mousedown)
-			Glop.stopObserving('mouseup', Tool.Select.mouseup)
-		} else if (old_tool == 'pan') {
-			Glop.stopObserving('mousemove', Events.mousemove)
-			Glop.stopObserving('mousedown', Events.mousedown)
-			Glop.stopObserving('mouseup', Events.mouseup)
-		} else if (old_tool == 'pen') {
-			Glop.stopObserving('mousemove', Pen.mousemove)
-			Glop.stopObserving('mousedown', Pen.mousedown)
-			Glop.stopObserving('mouseup', Pen.mouseup)
-		}
-
-		if (new_tool == 'select') {
-			Glop.observe('mousemove', Tool.Select.mousemove)
-			Glop.observe('mousedown', Tool.Select.mousedown)
-			Glop.observe('mouseup', Tool.Select.mouseup)
-		} else if (new_tool == 'pan') {
-			Glop.observe('mousemove', Events.mousemove)
-			Glop.observe('mousedown', Events.mousedown)
-			Glop.observe('mouseup', Events.mouseup)
-		} else if (new_tool == 'pen') {
-			Glop.stopObserving('mousemove', Pen.mousemove)
-			Glop.stopObserving('mousedown', Pen.mousedown)
-			Glop.stopObserving('mouseup', Pen.mouseup)
-		}
-
-		Interface.tool = new_tool
-	},
 	display_loading: function(percent) {
 		if (percent < 100) {
 			$C.save()
@@ -7870,7 +7884,7 @@ var Interface = {
 
 		alert('Please select a bounding box to download')
 
-		Interface.switch_tool('select')
+		Tool.change('Select')
 
 		Interface.bbox_select_active = true
 		Interface.bbox_select_dragging = false
