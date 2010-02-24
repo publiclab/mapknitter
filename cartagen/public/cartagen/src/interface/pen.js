@@ -2,6 +2,12 @@
  * @namespace The 'Pen' tool and associated methods.
  */
 Tool.Pen = {
+	activate: function() {
+		console.log('Pen activated')
+	},
+	deactivate: function() {
+		console.log('Pen deactivated')
+	},
 	mousedown: function() {
 		console.log('Pen mousedown')
 	}.bindAsEventListener(Tool.Pen),

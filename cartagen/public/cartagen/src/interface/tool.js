@@ -24,7 +24,13 @@ var Tool = {
 			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 			Glop.observe(tool_event,Tool[new_tool][tool_event])
 		})
-
+		if (!Object.isUndefined(Tool[old_tool].deactivate)) {
+			Tool[old_tool].deactivate()
+		}
+		if (!Object.isUndefined(Tool[new_tool].activate)) {
+			Tool[new_tool].activate()
+		}
+		
 		Tool.active = new_tool
 	},
 	/*

@@ -7720,6 +7720,12 @@ var Tool = {
 			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 			Glop.observe(tool_event,Tool[new_tool][tool_event])
 		})
+		if (!Object.isUndefined(Tool[old_tool].deactivate)) {
+			Tool[old_tool].deactivate()
+		}
+		if (!Object.isUndefined(Tool[new_tool].activate)) {
+			Tool[new_tool].activate()
+		}
 
 		Tool.active = new_tool
 	},
@@ -7731,48 +7737,57 @@ var Tool = {
 	}
 }
 Tool.Select = {
+	activate: function() {
+		Tool.Select.active = true
+		Tool.Select.dragging = false
+	},
+	deactivate: function() {
+		Tool.Select.active = false
+		Tool.Select.dragging = false
+	},
 	mousemove: function(e) {
-		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+		if (Tool.Select.active && Tool.Select.dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
 
-			Interface.bbox_select_end = [pointer_x, pointer_y]
+			Tool.Select.end = [pointer_x, pointer_y]
 
 			Glop.draw(false, true)
 
-			var width = Interface.bbox_select_end[0] - Interface.bbox_select_start[0]
-			var height = Interface.bbox_select_end[1] - Interface.bbox_select_start[1]
+			var width = Tool.Select.end[0] - Tool.Select.start[0]
+			var height = Tool.Select.end[1] - Tool.Select.start[1]
 
 			$C.save()
 			$C.fill_style('#000')
 			$C.opacity(0.2)
-			$C.rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.rect(Tool.Select.start[0], Tool.Select.start[1], width, height)
 			$C.opacity(1)
+			$C.line_width(3/Map.zoom)
 			$C.stroke_style('#000')
-			$C.stroke_rect(Interface.bbox_select_start[0], Interface.bbox_select_start[1], width, height)
+			$C.stroke_rect(Tool.Select.start[0], Tool.Select.start[1], width, height)
 			$C.restore()
 		}
 	}.bindAsEventListener(Tool.Select),
 	mousedown: function(e) {
-		if (Interface.bbox_select_active && !Interface.bbox_select_dragging) {
+		if (Tool.Select.active && !Tool.Select.dragging) {
 			var pointer_x = Map.x+(((Glop.width/-2)+Event.pointerX(e))/Map.zoom)
 			var pointer_y = Map.y+(((Glop.height/-2)+Event.pointerY(e))/Map.zoom)
 
-			Interface.bbox_select_dragging = true
-			Interface.bbox_select_start = [pointer_x, pointer_y]
-			Interface.bbox_select_end = Interface.bbox_select_start
+			Tool.Select.dragging = true
+			Tool.Select.start = [pointer_x, pointer_y]
+			Tool.Select.end = Tool.Select.start
 		}
 	}.bindAsEventListener(Tool.Select),
 	mouseup: function() {
-		if (Interface.bbox_select_active && Interface.bbox_select_dragging) {
+		if (Tool.Select.active && Tool.Select.dragging) {
 			Glop.paused = false
-			$l(Interface.bbox_select_start[0])
-			$l(Interface.bbox_select_end[0])
+			$l(Tool.Select.start[0])
+			$l(Tool.Select.end[0])
 
-			var min_lon = Math.min(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
-			var min_lat = Math.min(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
-			var max_lon = Math.max(Projection.x_to_lon(Interface.bbox_select_start[0]), Projection.x_to_lon(Interface.bbox_select_end[0]))
-			var max_lat = Math.max(Projection.y_to_lat(Interface.bbox_select_start[1]), Projection.y_to_lat(Interface.bbox_select_end[1]))
+			var min_lon = Math.min(Projection.x_to_lon(Tool.Select.start[0]), Projection.x_to_lon(Tool.Select.end[0]))
+			var min_lat = Math.min(Projection.y_to_lat(Tool.Select.start[1]), Projection.y_to_lat(Tool.Select.end[1]))
+			var max_lon = Math.max(Projection.x_to_lon(Tool.Select.start[0]), Projection.x_to_lon(Tool.Select.end[0]))
+			var max_lat = Math.max(Projection.y_to_lat(Tool.Select.start[1]), Projection.y_to_lat(Tool.Select.end[1]))
 
 			var query = min_lon + ',' + min_lat + ',' + max_lon + ',' + max_lat
 
@@ -7784,9 +7799,6 @@ Tool.Select = {
 			alert('Copy these values into your Cartagen.setup call: \n\nlat: ' + lat + ', \nlng: ' + lon + ',\nzoom_level: ' + Map.zoom)
 
 			Tool.change('Pan')
-
-			Interface.bbox_select_active = true
-			Interface.bbox_select_dragging = false
 		}
 	}.bindAsEventListener(Tool.Select),
 	drag: function() {
@@ -7794,6 +7806,12 @@ Tool.Select = {
 	}
 }
 Tool.Pen = {
+	activate: function() {
+		console.log('Pen activated')
+	},
+	deactivate: function() {
+		console.log('Pen deactivated')
+	},
 	mousedown: function() {
 		console.log('Pen mousedown')
 	}.bindAsEventListener(Tool.Pen),
@@ -7881,13 +7899,8 @@ var Interface = {
 	},
 	download_bbox: function() {
 		Glop.paused = true
-
 		alert('Please select a bounding box to download')
-
 		Tool.change('Select')
-
-		Interface.bbox_select_active = true
-		Interface.bbox_select_dragging = false
 	}
 }
 var Geohash = {}
