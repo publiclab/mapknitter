@@ -4,7 +4,7 @@ class MapController < ApplicationController
   def new
     @map = {:lat => 41.891,
             :lon => 12.4902,
-            :name => 'untitled'}
+            :name => params[:id]}
     render :template => 'map/show'
   end
   
