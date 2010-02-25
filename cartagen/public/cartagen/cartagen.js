@@ -7727,6 +7727,13 @@ var Tool = {
 			Tool[new_tool].activate()
 		}
 
+		if (!Object.isUndefined(Tool[old_tool].deactivate)) {
+			Tool[old_tool].deactivate()
+		}
+		if (!Object.isUndefined(Tool[new_tool].activate)) {
+			Tool[new_tool].activate()
+		}
+
 		Tool.active = new_tool
 	},
 	/*
