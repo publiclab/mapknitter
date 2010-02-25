@@ -1,0 +1,614 @@
+@charset "UTF-8";
+
+
+
+/** Document */
+/**************************************/
+@media all {
+	* {
+		font           : 100%/1 "Lucida Grande", "Lucida Sans Demibold Roman", "Lucida Sans Unicode", "Verdana", "Arial";
+		list-style     : none;
+		padding        : 0px 0px 0px 0px;
+		margin         : 0px 0px 0px 0px;
+	}
+	
+	body,
+	th,
+	td {
+		font-size      : 12px;
+		color          : #ffffff;
+	}
+	
+	body {
+		background     : #23061b url("img/body.gif");
+		padding        : 20px 0px 20px 0px;
+	}
+	
+	div#body {
+		background     : #570e44;
+		min-width      : 800px;
+		margin         : 0px 4% 0px 4%;
+	}
+}
+
+
+
+/** Anchors */
+/**************************************/
+@media all {
+	a {
+		outline        : none;
+	}
+	
+	a:link {
+		color          : #ffffff;
+	}
+	
+	a:visited {
+		color          : #996699;
+	}
+	
+	a:hover,
+	a:active {
+		color          : #ff00ff;
+	}
+}
+
+
+
+/** Header */
+/**************************************/
+@media all {
+	div#header {
+		background     : url("img/header_l.gif") no-repeat;
+		border-bottom  : 2px solid #460b36;
+	}
+	
+	div#header ul {
+		background     : url("img/header_r.gif") right top no-repeat;
+	}
+	
+	div#header li {
+		float          : left;
+	}
+	
+	div#header a {
+		font-weight    : bold;
+		text-decoration: none;
+		line-height    : 36px;
+		color          : #a8458e;
+		background     : url("img/header_arrow.gif") right top no-repeat;
+		height         : 36px;
+		padding        : 0px 30px 0px 20px;
+		float          : left;
+		display        : block;
+	}
+	
+	div#header a:hover {
+		color          : #ffffff;
+	}
+}
+
+
+
+/** Layout */
+/**************************************/
+@media all {
+	div#layout {
+		padding        : 30px 30px 30px 30px;
+	}
+}
+
+
+
+/** Overview */
+/**************************************/
+@media all {
+	div#overview {
+		padding        : 0px 0px 50px 0px;
+	}
+	
+	div#overview div.desc {
+		width          : 55%;
+		float          : left;
+	}
+	
+	div#overview div.spec {
+		width          : 330px;
+		float          : right;
+	}
+	
+	div#overview h1 {
+		font-size      : 42px;
+		font-weight    : bold;
+		letter-spacing : -1px;
+		line-height    : 0.9;
+		margin         : 0px 0px 10px 0px;
+	}
+	
+	div#overview p.date {
+		font-size      : 10px;
+		color          : #996699;
+		margin         : 0px 0px 10px 0px;
+	}
+	
+	div#overview p.desc {
+		font-size      : 14px;
+		line-height    : 1.4;
+	}
+	
+	div#overview div.head {
+		background     : url("img/spec_head.gif") no-repeat;
+		height         : 10px;
+		overflow       : hidden;
+	}
+	
+	div#overview div.body {
+		background     : #460b36 url("img/spec_body.gif") left center repeat-y;
+		min-height     : 50px;
+	}
+	
+	div#overview div.foot {
+		background     : url("img/spec_foot.gif") no-repeat;
+		height         : 10px;
+		overflow       : hidden;
+	}
+	
+	div#overview table {
+		border-collapse: collapse;
+		margin         : 0px 0px 0px 80px;
+	}
+	
+	div#overview th,
+	div#overview td {
+		font-size      : 10px;
+		font-weight    : normal;
+		text-align     : left;
+		vertical-align : top;
+		line-height    : 1.2;
+		padding        : 3px 10px 3px 0px;
+	}
+	
+	div#overview th {
+		color          : #a8458e;
+	}
+	
+	div#overview div.download {
+		text-indent    : 80px;
+		background     : url("img/spec_download.gif") no-repeat;
+		width          : 330px;
+		height         : 30px;
+		margin         : 1px 0px 0px 0px;
+	}
+	
+	div#overview div.download a {
+		font-size      : 14px;
+		font-weight    : bold;
+		line-height    : 30px;
+	}
+}
+
+
+
+/** Index */
+/**************************************/
+@media all {
+	div#index table {
+		border-collapse: collapse;
+		width          : 100%;
+	}
+	
+	div#index td {
+		vertical-align : top;
+		border         : 2px solid #ffffff;
+		border-right   : 1px dotted #671e54;
+		border-left    : 1px dotted #671e54;
+		width          : 25%;
+		padding        : 20px 10px 20px 10px;
+	}
+	
+	div#index h2 {
+		margin         : 0px 0px 5px 0px;
+	}
+	
+	div#index h2 a {
+		font-size      : 20px;
+		font-weight    : bold;
+	}
+	
+	div#index h3 {
+		font-size      : 10px;
+		font-weight    : bold;
+		color          : #a8458e;
+		padding        : 10px 0px 5px 0px;
+		clear          : both;
+	}
+	
+	div#index p {
+		font-size      : 10px;
+		line-height    : 1.4;
+		color          : #996699;
+	}
+	
+	div#index li {
+		border-top     : 1px solid #671e54;
+		width          : 100%;
+		overflow       : hidden;
+		float          : left;
+		clear          : both;
+	}
+	
+	div#index li a {
+		font-size      : 9px;
+		text-decoration: none;
+		padding        : 7px 10px 7px 10px;
+		display        : block;
+	}
+	
+	div#index li a:hover {
+		background     : #460b36;
+	}
+}
+
+
+
+/** Nav */
+/**************************************/
+@media all {
+	div#nav {
+		width          : 25%;
+		float          : left;
+	}
+	
+	div#nav div.close,
+	div#nav div.open {
+		margin         : 0px 20px 1px 0px;
+	}
+	
+	div#nav h2 {
+		background     : #460b36;
+		padding        : 7px 10px 7px 10px;
+	}
+	
+	div#nav h2 span.name {
+		width          : 90%;
+		float          : left;
+		display        : block;
+	}
+	
+	div#nav h2 span.name a {
+		font-size      : 11px;
+		font-weight    : bold;
+		text-decoration: none;
+	}
+	
+	div#nav h2 span.name a:hover {
+		text-decoration: underline;
+	}
+	
+	div#nav h2 span.ico {
+		width          : 10%;
+		float          : right;
+		display        : block;
+	}
+	
+	div#nav h2 span.ico a {
+		width          : 10px;
+		height         : 10px;
+		margin         : 0px 0px 0px auto;
+		overflow       : hidden;
+		display        : block;
+	}
+	
+	div#nav h3 {
+		font-size      : 9px;
+		font-weight    : bold;
+		color          : #a8458e;
+		padding        : 5px 0px 5px 5px;
+	}
+	
+	div#nav ul {
+		margin         : 0px 0px 5px 0px;
+	}
+	
+	div#nav li {
+		font-size      : 9px;
+		border-top     : 1px solid #671e54;
+		width          : 100%;
+		overflow       : hidden;
+		float          : left;
+		clear          : both;
+	}
+	
+	div#nav li a {
+		text-decoration: none;
+		padding        : 4px 5px 4px 10px;
+		display        : block;
+	}
+	
+	div#nav li a:hover {
+		background     : #460b36;
+	}
+	
+	div#nav div.focus       h2            { background: #111111; }
+	div#nav div.focus       h2          a { color     : #ffffff; }
+	div#nav div.close       h2 span.ico a { background: url("img/nav_open.gif")        no-repeat; }
+	div#nav div.close.focus h2 span.ico a { background: url("img/nav_open_focus.gif")  no-repeat; }
+	div#nav div.open        h2 span.ico a { background: url("img/nav_close.gif")       no-repeat; }
+	div#nav div.open.focus  h2 span.ico a { background: url("img/nav_close_focus.gif") no-repeat; }
+	div#nav div.close div.list { display: none; }
+	div#nav div.open div.list  { display: block; }
+}
+
+
+
+/** Docs */
+/**************************************/
+@media all {
+	div#docs {
+		width          : 74%;
+		float          : right;
+	}
+	
+	div#docs div.section {
+		background     : #460b36;
+		padding        : 14px 20px 20px 20px;
+		margin         : 0px 0px 10px 0px;
+	}
+	
+	div#docs a.pagetop {
+		background     : url("img/ico_pagetop.gif") no-repeat;
+		width          : 7px;
+		height         : 6px;
+		margin         : 0px 0px 0px auto;
+		overflow       : hidden;
+		display        : block;
+	}
+	
+	div#docs h1 {
+		font-size      : 36px;
+		font-weight    : bold;
+		letter-spacing : -1px;
+		color          : #ffffff;
+	}
+	
+	div#docs h2 {
+		font-size      : 18px;
+		font-weight    : bold;
+		color          : #a8458e;
+		background     : #111111;
+		padding        : 15px 15px 15px 15px;
+		margin         : 40px 0px 10px 0px;
+	}
+	
+	div#docs h3 {
+		font-size      : 18px;
+		font-weight    : bold;
+		line-height    : 24px;
+		color          : #33cccc;
+		background     : transparent left center no-repeat;
+		height         : 24px;
+		padding        : 0px 0px 0px 24px;
+	}
+	
+	div#docs div.constructor h3 { background-image: url("img/ico_constructor.gif"); }
+	div#docs div.object      h3 { background-image: url("img/ico_object.gif"); }
+	div#docs div.function    h3 { background-image: url("img/ico_function.gif"); }
+	
+	div#docs h3 a {
+		font-style     : italic;
+	}
+	
+	div#docs h3 span.type {
+		font-size      : 12px;
+	}
+	
+	div#docs h3 span.signature {
+		font-size      : 14px;
+		font-weight    : normal;
+		color          : #33ff66;
+	}
+	
+	div#docs h4 {
+		font-size      : 12px;
+		font-weight    : bold;
+		color          : #a8458e;
+		margin         : 15px 0px 7px 0px;
+	}
+	
+	div#docs p {
+		font-size      : 11px;
+		line-height    : 1.4;
+		color          : #ffffff;
+		padding        : 5px 0px 0px 0px;
+	}
+	
+	div#docs pre {
+		font-family    : "Courier New", monospace;
+		font-size      : 11px;
+		line-height    : 1.6;
+		color          : #ffffff;
+		background     : #38092b;
+		padding        : 10px 10px 10px 10px;
+		margin         : 0px 0px 10px 0px;
+	}
+	
+	* html div#docs pre {
+		width          : 97%;
+		padding        : 10px 10px 25px 10px !important;
+		overflow       : auto;
+		overflow-y     : hidden;
+	}
+	
+	div#docs pre * {
+		font-family    : "Courier New", monospace;
+		font-size      : 11px;
+		line-height    : 1.6;
+	}
+	
+	div#docs table {
+		border-collapse: collapse;
+	}
+	
+	div#docs div.overview table {
+		margin         : 10px 0px 0px 0px;
+	}
+	
+	div#docs th,
+	div#docs td {
+		font-size      : 11px;
+		text-align     : left;
+		vertical-align : top;
+		line-height    : 1.4;
+		border         : 1px solid #671e54;
+		padding        : 5px 10px 5px 10px;
+	}
+	
+	div#docs th {
+		font-weight    : bold;
+		color          : #a8458e;
+		background     : #111111;
+	}
+	
+	div#docs td {
+		color          : #ffffff;
+		background     : #38092b;
+	}
+	
+	div#docs td.name.param {
+		color          : #33ff66;
+	}
+	
+	div#docs td table {
+		margin         : 0px 0px 10px 0px;
+	}
+	
+	div#docs ul {
+		margin         : 0px 0px 0px 20px;
+	}
+	
+	div#docs li {
+		font-size      : 13px;
+		list-style     : disc;
+		color          : #ffffff;
+		padding        : 4px 0px 4px 0px;
+	}
+	
+	div#docs li span.signature {
+		font-size      : 10px;
+		color          : #ffffff;
+	}
+	
+	div#docs span.option {
+		color          : #996699;
+		margin         : 0px 0px 0px 5px;
+	}
+	
+	div#docs *.type {
+		font-style     : italic;
+		font-weight    : normal;
+		color          : #ffff99 !important;
+	}
+}
+
+
+
+/** Code */
+/**************************************/
+@media all {
+	pre#code span.KEYW {
+		color          : #ff33ff;
+	}
+
+	pre#code span.COMM {
+		color          : #663366;
+	}
+
+	pre#code span.NUMB {
+		color          : #3399ff;
+	}
+
+	pre#code span.STRN {
+		color          : #33ff33;
+	}
+
+	pre#code span.REGX {
+		color          : #33cc33;
+	}
+
+	pre#code span.linenumber {
+		color          : #663366;
+		border-right   : 1px solid #663366;
+		padding        : 0px 5px 0px 0px;
+	}
+}
+
+
+
+/** Footer */
+/**************************************/
+@media all {
+	div#footer {
+		font-size      : 9px;
+		text-align     : center;
+		background     : #3d0a30 url("img/footer_l.gif") left bottom no-repeat;
+	}
+	
+	div#footer ul {
+		background     : url("img/footer_r.gif") right bottom no-repeat;
+		padding        : 15px 0px 15px 0px;
+	}
+	
+	div#footer li,
+	div#footer a {
+		line-height    : 1.6;
+		color          : #8b2d72;
+	}
+	
+	div#footer a:hover {
+		color          : #ffffff;
+	}
+}
+
+
+
+/** Clearfix */
+/**************************************/
+@media all {
+	div#header ul:after,
+	div#layout:after,
+	div#overview:after,
+	div#nav h2:after,
+	div#nav ul:after {
+		content        : ".";
+		height         : 0px;
+		clear          : both;
+		visibility     : hidden;
+		display        : block;
+	}
+	
+	div#header ul,
+	div#layout,
+	div#overview,
+	div#nav h2,
+	div#nav ul {
+		display        : inline-block;
+	}
+	
+	/*\*/
+	* html div#header ul,
+	* html div#layout,
+	* html div#overview,
+	* html div#nav h2,
+	* html div#nav ul {
+		height         : 1%;
+	}
+	
+	div#header ul,
+	div#layout,
+	div#overview,
+	div#nav h2,
+	div#nav ul {
+		display        : block;
+	}
+}
