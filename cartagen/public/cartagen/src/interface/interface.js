@@ -58,12 +58,7 @@ var Interface = {
 	 */
 	download_bbox: function() {
 		Glop.paused = true
-
 		alert('Please select a bounding box to download')
-
 		Tool.change('Select')
-
-		Interface.bbox_select_active = true
-		Interface.bbox_select_dragging = false
 	}
 }
