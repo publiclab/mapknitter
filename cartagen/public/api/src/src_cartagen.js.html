@@ -1,0 +1,375 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/* cartagen.js
+<span class='linenumber'>  2</span>  *
+<span class='linenumber'>  3</span>  * Copyright (C) 2009 Jeffrey Warren, Design Ecology, MIT Media Lab
+<span class='linenumber'>  4</span>  *
+<span class='linenumber'>  5</span>  * This file is part of the Cartagen mapping framework. Read more at
+<span class='linenumber'>  6</span>  * &lt;http://cartagen.org>
+<span class='linenumber'>  7</span>  *
+<span class='linenumber'>  8</span>  * Cartagen is free software: you can redistribute it and/or modify
+<span class='linenumber'>  9</span>  * it under the terms of the MIT License. You should have received a copy
+<span class='linenumber'> 10</span>  * of the MIT License along with Cartagen.  If not, see
+<span class='linenumber'> 11</span>  * &lt;http://www.opensource.org/licenses/mit-license.php>.
+<span class='linenumber'> 12</span>  */</span><span class="WHIT">
+<span class='linenumber'> 13</span>  
+<span class='linenumber'> 14</span> </span><span class="COMM">/* The following sections (until "BEGIN CARTAGEN") are not part of Cartagen. They are, however, 
+<span class='linenumber'> 15</span>  * also available under an MIT license.
+<span class='linenumber'> 16</span>  */</span><span class="WHIT">
+<span class='linenumber'> 17</span> 
+<span class='linenumber'> 18</span> </span><span class="COMM">/* **** BEGIN PROTOTYPE **** */</span><span class="WHIT">
+<span class='linenumber'> 19</span> 
+<span class='linenumber'> 20</span> </span><span class="COMM">//= require &lt;../lib/prototype></span><span class="WHIT">
+<span class='linenumber'> 21</span> 
+<span class='linenumber'> 22</span> </span><span class="COMM">/* **** END PROTOTYPE **** */</span><span class="WHIT">
+<span class='linenumber'> 23</span> 
+<span class='linenumber'> 24</span> 
+<span class='linenumber'> 25</span> </span><span class="COMM">/* **** BEGIN GEOHASH **** */</span><span class="WHIT">
+<span class='linenumber'> 26</span> 
+<span class='linenumber'> 27</span> </span><span class="COMM">//= require &lt;../lib/geohash></span><span class="WHIT">
+<span class='linenumber'> 28</span> 
+<span class='linenumber'> 29</span> </span><span class="COMM">/* **** END GEOHASH **** */</span><span class="WHIT">
+<span class='linenumber'> 30</span> 
+<span class='linenumber'> 31</span> 
+<span class='linenumber'> 32</span> </span><span class="COMM">/* **** BEGIN LIVEPIPE **** */</span><span class="WHIT">
+<span class='linenumber'> 33</span> 
+<span class='linenumber'> 34</span> </span><span class="COMM">//= require &lt;../lib/context-menus/livepipe></span><span class="WHIT">
+<span class='linenumber'> 35</span> </span><span class="COMM">//= require &lt;../lib/context-menus/contextmenu></span><span class="WHIT">
+<span class='linenumber'> 36</span> 
+<span class='linenumber'> 37</span> </span><span class="COMM">/* **** END LIVEPIPE **** */</span><span class="WHIT">
+<span class='linenumber'> 38</span> 
+<span class='linenumber'> 39</span> 
+<span class='linenumber'> 40</span> </span><span class="COMM">/* **** BEGIN CARTAGEN **** */</span><span class="WHIT">
+<span class='linenumber'> 41</span> 
+<span class='linenumber'> 42</span> </span><span class="COMM">//= require &lt;config/config></span><span class="WHIT">
+<span class='linenumber'> 43</span>  
+<span class='linenumber'> 44</span> </span><span class="COMM">/**
+<span class='linenumber'> 45</span>  * Array of all objects that should be drawn.
+<span class='linenumber'> 46</span>  * @type Feature[]
+<span class='linenumber'> 47</span>  * @deprecated
+<span class='linenumber'> 48</span>  */</span><span class="WHIT">
+<span class='linenumber'> 49</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">objects</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 50</span> 
+<span class='linenumber'> 51</span> </span><span class="COMM">// temp object unitl PhoneGap is initialized.</span><span class="WHIT">
+<span class='linenumber'> 52</span> </span><span class="NAME">PhoneGap</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">window.DeviceInfo</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">DeviceInfo.uuid</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="WHIT">
+<span class='linenumber'> 53</span> 
+<span class='linenumber'> 54</span> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'undefined'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 55</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 56</span> 	 * Path to the cartagen directory. Defaults to "cartagen", which works only
+<span class='linenumber'> 57</span> 	 * if the cartagen directory is named "cartagen" and is located in the
+<span class='linenumber'> 58</span> 	 * same directoy as the current page. This should be set before Cartagen
+<span class='linenumber'> 59</span> 	 * is loaded if it needs to be changed.
+<span class='linenumber'> 60</span> 	 * 
+<span class='linenumber'> 61</span> 	 * @type String
+<span class='linenumber'> 62</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 63</span>     </span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'cartagen'</span><span class="WHIT">
+<span class='linenumber'> 64</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 65</span> 
+<span class='linenumber'> 66</span> </span><span class="COMM">// if (Prototype.Browser.MobileSafari) $('brief').hide()</span><span class="WHIT">
+<span class='linenumber'> 67</span> 
+<span class='linenumber'> 68</span> </span><span class="COMM">/**
+<span class='linenumber'> 69</span>  * @namespace
+<span class='linenumber'> 70</span>  * Namespace for methods and variables that manage Cartagen as a whole, i.e. loading
+<span class='linenumber'> 71</span>  * data and creating Nodes and Ways.
+<span class='linenumber'> 72</span>  */</span><span class="WHIT">
+<span class='linenumber'> 73</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Cartagen</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 74</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 75</span> 	 * Queue of labels to draw
+<span class='linenumber'> 76</span> 	 * @type Label[]
+<span class='linenumber'> 77</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 78</span> 	</span><span class="NAME">label_queue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 79</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 80</span> 	 * Queue of features to be drawn at the end of draw()
+<span class='linenumber'> 81</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 82</span> 	</span><span class="NAME">feature_queue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 83</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 84</span> 	 * An array of scripts that will be loaded when Cartagen is initialized.
+<span class='linenumber'> 85</span> 	 * 
+<span class='linenumber'> 86</span> 	 * @type String[]
+<span class='linenumber'> 87</span> 	 * @see Cartagen.initialize
+<span class='linenumber'> 88</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 89</span> 	</span><span class="NAME">scripts</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 90</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 91</span> 	 * Registers initialize to run with the given configs when window is loaded
+<span class='linenumber'> 92</span> 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
+<span class='linenumber'> 93</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 94</span> 	</span><span class="NAME">setup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 95</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="NAME">document</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">observe</span><span class="PUNC">(</span><span class="STRN">'dom:loaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 96</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'canvas'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">insert</span><span class="PUNC">(</span><span class="STRN">'&lt;canvas id="main">&lt;/canvas>'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 97</span> 			</span><span class="NAME">Cartagen.initialize</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 98</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">	
+<span class='linenumber'> 99</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>100</span> 	</span><span class="COMM">/**
+<span class='linenumber'>101</span> 	 * Performs initialization tasks, mainly fetching map data. This should never be called directly,
+<span class='linenumber'>102</span> 	 * rather it is intended to be called by setup
+<span class='linenumber'>103</span> 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
+<span class='linenumber'>104</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>105</span> 	</span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>106</span> 		</span><span class="NAME">Config.init</span><span class="PUNC">(</span><span class="NAME">configs</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>107</span> 		</span><span class="COMM">// add a new layer for dynamic drawing (hovers, clicks)</span><span class="WHIT">
+<span class='linenumber'>108</span> 		</span><span class="COMM">// $C.add('background')</span><span class="WHIT">
+<span class='linenumber'>109</span> 		
+<span class='linenumber'>110</span> 		</span><span class="COMM">// load phonegap js if needed</span><span class="WHIT">
+<span class='linenumber'>111</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">window.PhoneGap</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>112</span> 			</span><span class="NAME">Cartagen.scripts.unshift</span><span class="PUNC">(</span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/lib/phonegap/phonegap.base.js'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>113</span> 						             </span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/lib/phonegap/geolocation.js'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>114</span> 						             </span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/lib/phonegap/iphone/phonegap.js'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>115</span> 						             </span><span class="NAME">cartagen_base_uri</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/lib/phonegap/iphone/geolocation.js'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>116</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>117</span> 
+<span class='linenumber'>118</span> 		</span><span class="COMM">// load extra scripts:</span><span class="WHIT">
+<span class='linenumber'>119</span> 		</span><span class="NAME">Cartagen.load_next_script</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>120</span> 		
+<span class='linenumber'>121</span> 		</span><span class="COMM">// browser stuff:</span><span class="WHIT">
+<span class='linenumber'>122</span> 		</span><span class="NAME">this.browser_check</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>123</span> 		
+<span class='linenumber'>124</span> 		</span><span class="COMM">//if (Prototype.Browser.MobileSafari) window.scrollTo(0, 1) //get rid of url bar</span><span class="WHIT">
+<span class='linenumber'>125</span> 
+<span class='linenumber'>126</span> 		</span><span class="COMM">/**
+<span class='linenumber'>127</span> 		 * @name Cartagen#cartagen:init
+<span class='linenumber'>128</span> 		 * @event
+<span class='linenumber'>129</span> 		 * Fired after Cartagen loads its configuration and the contents of 
+<span class='linenumber'>130</span> 		 * Cartagen.scripts, but before any features are loaded or drawn.
+<span class='linenumber'>131</span> 		 * Note that Cartagen.scripts are loaded asynchronously, so it is not
+<span class='linenumber'>132</span> 		 * guarenteed that they will be finished loading.
+<span class='linenumber'>133</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>134</span> 		</span><span class="NAME">document.fire</span><span class="PUNC">(</span><span class="STRN">'cartagen:init'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>135</span> 		
+<span class='linenumber'>136</span> 		</span><span class="COMM">// bind event listeners</span><span class="WHIT">
+<span class='linenumber'>137</span> 		</span><span class="NAME">Glop.observe</span><span class="PUNC">(</span><span class="STRN">'glop:draw'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Cartagen.draw.bindAsEventListener</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>138</span> 		</span><span class="NAME">Glop.observe</span><span class="PUNC">(</span><span class="STRN">'glop:postdraw'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Cartagen.post_draw.bindAsEventListener</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>139</span> 
+<span class='linenumber'>140</span> 		</span><span class="COMM">// Startup:</span><span class="WHIT">
+<span class='linenumber'>141</span> 		</span><span class="NAME">Style.load_styles</span><span class="PUNC">(</span><span class="NAME">Config.stylesheet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="COMM">// stylesheet</span><span class="WHIT">
+<span class='linenumber'>142</span> 		
+<span class='linenumber'>143</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">Config.static_map</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>144</span> 			</span><span class="NAME">Importer.get_current_plot</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>145</span> 			</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">PeriodicalExecuter</span><span class="PUNC">(</span><span class="NAME">Glop.trigger_draw</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>146</span> 			</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">PeriodicalExecuter</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">Importer.get_current_plot</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>147</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>148</span> 			</span><span class="NAME">Config.static_map_layers.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>149</span> 				</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="STRN">'fetching '</span><span class="PUNC">+</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>150</span> 				</span><span class="NAME">Importer.get_static_plot</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>151</span> 			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>152</span> 			</span><span class="COMM">// to add user-added map data... messy!</span><span class="WHIT">
+<span class='linenumber'>153</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Config.dynamic_layers.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>154</span> 				</span><span class="NAME">Config.dynamic_layers.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>155</span> 					</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="STRN">'fetching '</span><span class="PUNC">+</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>156</span> 					</span><span class="NAME">load_script</span><span class="PUNC">(</span><span class="NAME">layer_url</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>157</span> 				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>158</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>159</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>160</span> 		
+<span class='linenumber'>161</span> 		</span><span class="NAME">Glop.trigger_draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>162</span> 		
+<span class='linenumber'>163</span> 		</span><span class="COMM">/**
+<span class='linenumber'>164</span> 		 * @name cartagen:postinit
+<span class='linenumber'>165</span> 		 * @event
+<span class='linenumber'>166</span> 		 * Fired after Caragen loads map data.
+<span class='linenumber'>167</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>168</span> 		</span><span class="NAME">document.fire</span><span class="PUNC">(</span><span class="STRN">'cartagen:postinit'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>169</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>170</span> 	</span><span class="COMM">/**
+<span class='linenumber'>171</span> 	 * Runs every frame in the draw() method. An attempt to isolate cartagen code from general GLOP code.
+<span class='linenumber'>172</span> 	 * Uses Geohash to draw each feature on the map.
+<span class='linenumber'>173</span> 	 * @param {Event} e The Glop draw event.
+<span class='linenumber'>174</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>175</span> 	</span><span class="NAME">draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>176</span> 		</span><span class="NAME">e.no_draw</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>177</span> 
+<span class='linenumber'>178</span> 		</span><span class="COMM">// if (Prototype.Browser.MobileSafari || window.PhoneGap) Config.simplify = 2</span><span class="WHIT">
+<span class='linenumber'>179</span> 		</span><span class="NAME">Style.style_body</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>180</span>         
+<span class='linenumber'>181</span> 		</span><span class="COMM">// display fps if Config.fps = true</span><span class="WHIT">
+<span class='linenumber'>182</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Config.fps</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>183</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'cartagen_fps'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>184</span> 				</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'cartagen_fps'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Glop.fps</span><span class="WHIT">
+<span class='linenumber'>185</span> 			</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>186</span> 				</span><span class="NAME">$$</span><span class="PUNC">(</span><span class="STRN">'body'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">insert</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="NAME">top</span><span class="PUNC">:</span><span class="STRN">'&lt;div style="position:absolute;margin:10px;font-weight:bold;background:white" id="cartagen_fps">&lt;/div>'</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>187</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>188</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>189</span> 
+<span class='linenumber'>190</span> 		</span><span class="COMM">// $C.canvases.keys().each(function(canvas) {</span><span class="WHIT">
+<span class='linenumber'>191</span> 		</span><span class="COMM">// 	$C.open(canvas)</span><span class="WHIT">
+<span class='linenumber'>192</span> 			</span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="NAME">Glop.width</span><span class="WHIT"> </span><span class="REGX">/ 2, Glop.height /</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>193</span> 			        </span><span class="NAME">$C.rotate</span><span class="PUNC">(</span><span class="NAME">Map.rotate</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>194</span> 			        </span><span class="NAME">$C.scale</span><span class="PUNC">(</span><span class="NAME">Map.zoom</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Map.zoom</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>195</span> 			        </span><span class="NAME">$C.translate</span><span class="PUNC">(</span><span class="PUNC">-</span><span class="NAME">Map.x</span><span class="PUNC">,</span><span class="PUNC">-</span><span class="NAME">Map.y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>196</span> 		</span><span class="COMM">// })</span><span class="WHIT">
+<span class='linenumber'>197</span> 		</span><span class="COMM">// </span><span class="WHIT">
+<span class='linenumber'>198</span> 		</span><span class="COMM">// $C.close()</span><span class="WHIT">
+<span class='linenumber'>199</span>         
+<span class='linenumber'>200</span> 		</span><span class="NAME">Viewport.draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="COMM">//adjust viewport</span><span class="WHIT">
+<span class='linenumber'>201</span> 		
+<span class='linenumber'>202</span> 		</span><span class="COMM">/**
+<span class='linenumber'>203</span> 		 *@name Cartagen#cartagen:predraw
+<span class='linenumber'>204</span> 		 *Fires just before features are drawn
+<span class='linenumber'>205</span> 		 *@event
+<span class='linenumber'>206</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>207</span> 		</span><span class="NAME">Glop.fire</span><span class="PUNC">(</span><span class="STRN">'cartagen:predraw'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>208</span> 		
+<span class='linenumber'>209</span> 		</span><span class="COMM">//Geohash lookup:</span><span class="WHIT">
+<span class='linenumber'>210</span> 		</span><span class="NAME">Geohash.objects.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">object</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>211</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">object.user_submitted</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>212</span> 				</span><span class="NAME">Cartagen.feature_queue.push</span><span class="PUNC">(</span><span class="NAME">object</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>213</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>214</span> 			</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>215</span> 				</span><span class="COMM">// try {</span><span class="WHIT">
+<span class='linenumber'>216</span> 				</span><span class="NAME">object.draw</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>217</span> 				</span><span class="COMM">// } catch(e) {$l(e)}</span><span class="WHIT">
+<span class='linenumber'>218</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>219</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>220</span> 
+<span class='linenumber'>221</span> 		</span><span class="NAME">this.feature_queue.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>222</span> 			</span><span class="PUNC">(</span><span class="NAME">item.draw.bind</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>223</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>224</span> 		</span><span class="NAME">this.feature_queue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'>225</span> 		
+<span class='linenumber'>226</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Prototype.Browser.MobileSafari</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">window.PhoneGap</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">User.mark</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>227</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>228</span>     </span><span class="COMM">/**
+<span class='linenumber'>229</span>      * Runs every frame, after everything else has been done.
+<span class='linenumber'>230</span>      */</span><span class="WHIT">
+<span class='linenumber'>231</span>     </span><span class="NAME">post_draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>232</span>         </span><span class="NAME">this.label_queue.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>233</span>             </span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">draw</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>234</span>         </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>235</span> 
+<span class='linenumber'>236</span> 		</span><span class="NAME">this.label_queue</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'>237</span> 
+<span class='linenumber'>238</span> 		</span><span class="COMM">/**
+<span class='linenumber'>239</span> 		 *@name Cartagen#cartagen:predraw
+<span class='linenumber'>240</span> 		 *Fires just after labels are drawn
+<span class='linenumber'>241</span> 		 *@event
+<span class='linenumber'>242</span> 		 */</span><span class="WHIT">
+<span class='linenumber'>243</span> 		</span><span class="NAME">Glop.fire</span><span class="PUNC">(</span><span class="STRN">'cartagen:postdraw'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>244</span> 		
+<span class='linenumber'>245</span> 		</span><span class="COMM">// display percentage of features we've imported so far:</span><span class="WHIT">
+<span class='linenumber'>246</span> 		</span><span class="COMM">// $C.close()</span><span class="WHIT">
+<span class='linenumber'>247</span> 		</span><span class="NAME">Interface.display_loading</span><span class="PUNC">(</span><span class="NAME">Importer.parse_manager.completed</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>248</span> 		
+<span class='linenumber'>249</span>     </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>250</span>     </span><span class="COMM">/**
+<span class='linenumber'>251</span>      * Adds the label to the list of labels to be drawn during post_draw
+<span class='linenumber'>252</span>      * @param {Label}  label The label to draw
+<span class='linenumber'>253</span>      * @param {Number} x     x-coord
+<span class='linenumber'>254</span>      * @param {Number} y     y-coord
+<span class='linenumber'>255</span>      */</span><span class="WHIT">
+<span class='linenumber'>256</span>     </span><span class="NAME">queue_label</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">label</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>257</span>         </span><span class="NAME">this.label_queue.push</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NAME">label</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>258</span>     </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>259</span> 	</span><span class="COMM">/**
+<span class='linenumber'>260</span> 	 * Show alert if it's IE.
+<span class='linenumber'>261</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>262</span> 	</span><span class="NAME">browser_check</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>263</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>264</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">absolutize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>265</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.top</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"100px"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>266</span> 			</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.margin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"0 auto"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>267</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Prototype.Browser.IE</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'browsers'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>268</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>269</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>270</span> 	</span><span class="COMM">/**
+<span class='linenumber'>271</span> 	 * Repositions Cartagen to center on lat,lon with given zoom level
+<span class='linenumber'>272</span>      * @param {Number} lat     latitude to center the map on
+<span class='linenumber'>273</span>      * @param {Number} lon     longitude to center the map on
+<span class='linenumber'>274</span>      * @param {Number} zoom_level     zoom_level to set the map to
+<span class='linenumber'>275</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>276</span> 	</span><span class="NAME">go_to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">lat</span><span class="PUNC">,</span><span class="NAME">lon</span><span class="PUNC">,</span><span class="NAME">zoom_level</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>277</span> 		</span><span class="NAME">Map.zoom</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">zoom_level</span><span class="WHIT">
+<span class='linenumber'>278</span> 		</span><span class="NAME">Map.lat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">lat</span><span class="WHIT">
+<span class='linenumber'>279</span> 		</span><span class="NAME">Map.lon</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">lon</span><span class="WHIT">
+<span class='linenumber'>280</span> 		</span><span class="NAME">Map.x</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.lon_to_x</span><span class="PUNC">(</span><span class="NAME">Map.lon</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>281</span> 		</span><span class="NAME">Map.y</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Projection.lat_to_y</span><span class="PUNC">(</span><span class="NAME">Map.lat</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>282</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>283</span> 	</span><span class="COMM">/**
+<span class='linenumber'>284</span> 	 * Searches all objects by tags, and sets highlight=true for all matches.
+<span class='linenumber'>285</span> 	 * 
+<span class='linenumber'>286</span> 	 * @param {Object} query The tag to search for
+<span class='linenumber'>287</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>288</span> 	</span><span class="NAME">highlight</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">query</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>289</span> 		</span><span class="NAME">Geohash.objects.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">object</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>290</span> 			</span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
+<span class='linenumber'>291</span> 			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.tags</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Way</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>292</span> 				</span><span class="NAME">object.tags.each</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">tag</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>293</span> 					</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">tag.key.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">tag.value.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>294</span> 						</span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>295</span> 					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>296</span> 				</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>297</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">object.user</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.user.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>298</span> 				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">object.description</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">object.description.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">query.toLowerCase</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">object.highlight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>299</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>300</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>301</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>302</span> 	</span><span class="COMM">/**
+<span class='linenumber'>303</span> 	 * Shows the live GSS editor. Generally only for cartgen.org.
+<span class='linenumber'>304</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>305</span> 	</span><span class="NAME">show_gss_editor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>306</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'description'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">hide</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>307</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'brief'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'28%'</span><span class="WHIT">
+<span class='linenumber'>308</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'brief_first'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">style.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'92%'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>309</span> 		</span><span class="NAME">$</span><span class="PUNC">(</span><span class="STRN">'gss'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">toggle</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>310</span> 		</span><span class="NAME">Config.live_gss</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">Config.live_gss</span><span class="WHIT">
+<span class='linenumber'>311</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>312</span> 	</span><span class="COMM">/**
+<span class='linenumber'>313</span> 	 * Sends user to an image of the current canvas
+<span class='linenumber'>314</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>315</span> 	</span><span class="NAME">redirect_to_image</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>316</span> 		</span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>317</span> 				</span><span class="NAME">window.open</span><span class="PUNC">(</span><span class="NAME">$C.to_data_url</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>318</span> 			</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>319</span> 				</span><span class="NAME">alert</span><span class="PUNC">(</span><span class="STRN">"Sorry, this stylesheet uses remote images; JavaScript does not allow these to be used to generate an image."</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>320</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>321</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>322</span> 	</span><span class="COMM">/**
+<span class='linenumber'>323</span> 	 * Loads each script in scripts array, sequentially.
+<span class='linenumber'>324</span> 	 * Requires a load_next_script() call at the end of each
+<span class='linenumber'>325</span> 	 * dependent script to trigger the next one.
+<span class='linenumber'>326</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>327</span> 	</span><span class="NAME">load_next_script</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>328</span> 		</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="STRN">"loading: "</span><span class="PUNC">+</span><span class="NAME">Cartagen.scripts</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>329</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Cartagen.scripts.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>330</span> 			</span><span class="NAME">Cartagen.load_script</span><span class="PUNC">(</span><span class="NAME">Cartagen.scripts.splice</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>331</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>332</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>333</span> 	</span><span class="COMM">/**
+<span class='linenumber'>334</span> 	 * Loads a script into &lt;script src="" /> tags, no cross-domain limits.
+<span class='linenumber'>335</span> 	 * @param {String} script Path to the script
+<span class='linenumber'>336</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>337</span> 	</span><span class="NAME">load_script</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">script</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>338</span> 		</span><span class="NAME">$$</span><span class="PUNC">(</span><span class="STRN">'head'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">insert</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Element</span><span class="PUNC">(</span><span class="STRN">'script'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='linenumber'>339</span> 			</span><span class="STRN">'src'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">script</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='linenumber'>340</span> 			</span><span class="STRN">'type'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'text/javascript'</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='linenumber'>341</span> 			</span><span class="STRN">'charset'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'utf-8'</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='linenumber'>342</span> 			</span><span class="NAME">evalJSON</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'force'</span><span class="WHIT"> 
+<span class='linenumber'>343</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='linenumber'>344</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>345</span> 	</span><span class="COMM">/**
+<span class='linenumber'>346</span> 	 * Loads data from a local KML file and dumps it into the Geohash object.
+<span class='linenumber'>347</span> 	 * @param {String} url Path to the data file
+<span class='linenumber'>348</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>349</span> 	</span><span class="NAME">import_kml</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>350</span> 		</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Ajax.Request</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">,</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>351</span> 			</span><span class="NAME">method</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'get'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>352</span> 			</span><span class="NAME">onComplete</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">result</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>353</span> 				</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="STRN">'completed load of KML'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>354</span> 				</span><span class="NAME">response</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">result</span><span class="WHIT">
+<span class='linenumber'>355</span> 				</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="NAME">xml2json.xml_to_object</span><span class="PUNC">(</span><span class="NAME">result.responseText</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>356</span> 				</span><span class="NAME">$l</span><span class="PUNC">(</span><span class="STRN">'completed import of KML'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>357</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>358</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>359</span> 		
+<span class='linenumber'>360</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>361</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'>362</span> 
+<span class='linenumber'>363</span> </span><span class="COMM">//= require &lt;util/util></span><span class="WHIT">
+<span class='linenumber'>364</span> </span><span class="COMM">//= require &lt;config/style></span><span class="WHIT">
+<span class='linenumber'>365</span> </span><span class="COMM">//= require &lt;data/feature></span><span class="WHIT">
+<span class='linenumber'>366</span> </span><span class="COMM">//= require &lt;glop/glop></span><span class="WHIT">
+<span class='linenumber'>367</span> </span><span class="COMM">//= require &lt;interface/interface></span><span class="WHIT">
+<span class='linenumber'>368</span> </span><span class="COMM">//= require &lt;mapping/map></span></pre></body></html>

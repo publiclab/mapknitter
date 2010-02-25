@@ -1,0 +1,99 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * @namespace Stores information about the current viewport
+<span class='linenumber'>  3</span>  */</span><span class="WHIT">
+<span class='linenumber'>  4</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Viewport</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  5</span> 	</span><span class="COMM">/**
+<span class='linenumber'>  6</span> 	 * Frame to show bbox culling
+<span class='linenumber'>  7</span> 	 * @type Number
+<span class='linenumber'>  8</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>  9</span> 	</span><span class="NAME">padding</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 10</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 11</span> 	 * Bbox in [y1, x1, y2, x2] format
+<span class='linenumber'> 12</span> 	 * @type Number[]
+<span class='linenumber'> 13</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 14</span> 	</span><span class="NAME">bbox</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 15</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 16</span> 	 * Bbox in [[x,y],[x,y],[x,y],[x,y]] format, clockwise from top left
+<span class='linenumber'> 17</span> 	 * @type Array[]
+<span class='linenumber'> 18</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 19</span> 	</span><span class="NAME">full_bbox</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 20</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">[</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="PUNC">[</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">3</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="PUNC">[</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">3</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="PUNC">[</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="NAME">this.bbox</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 21</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 22</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 23</span> 	 * X-width of the viewport
+<span class='linenumber'> 24</span> 	 * @type Number
+<span class='linenumber'> 25</span> 	 */</span><span class="WHIT"> 
+<span class='linenumber'> 26</span> 	</span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 27</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 28</span> 	 * Y-height of the viewport
+<span class='linenumber'> 29</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 30</span> 	</span><span class="NAME">height</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 31</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 32</span> 	 * Yields the x,y of the nearest Viewport corner in an array as [x,y,corner] where corner is 0,1,2,3 clockwise from top left
+<span class='linenumber'> 33</span> 	 * 
+<span class='linenumber'> 34</span> 	 * @param {Number} x  x-coordinate of query
+<span class='linenumber'> 35</span> 	 * @param {Number} y  y-coordinate of query
+<span class='linenumber'> 36</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 37</span> 	</span><span class="NAME">nearest_corner</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 38</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">corner</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 39</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Math.abs</span><span class="PUNC">(</span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">Math.abs</span><span class="PUNC">(</span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">3</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 40</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 41</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'> 42</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 43</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">3</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 44</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT">
+<span class='linenumber'> 45</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 46</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Math.abs</span><span class="PUNC">(</span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">Math.abs</span><span class="PUNC">(</span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 47</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 48</span> 		</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 49</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Viewport.bbox</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 50</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT">
+<span class='linenumber'> 51</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="COMM">// swap 1 and 0</span><span class="WHIT">
+<span class='linenumber'> 52</span> 			</span><span class="NAME">corner</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="WHIT">
+<span class='linenumber'> 53</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 54</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">corner</span><span class="WHIT">
+<span class='linenumber'> 55</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 56</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 57</span> 	 * Yields the integer index of the nearest Viewport side, as 0,1,2, or 3
+<span class='linenumber'> 58</span> 	 * where top=0,right=1,bottom=2,left=3
+<span class='linenumber'> 59</span> 	 * 
+<span class='linenumber'> 60</span> 	 * @param {Number} x  x-coordinate of query
+<span class='linenumber'> 61</span> 	 * @param {Number} y  y-coordinate of query
+<span class='linenumber'> 62</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 63</span> 	</span><span class="COMM">// nearest_side: function(x,y) {</span><span class="WHIT">
+<span class='linenumber'> 64</span> 	</span><span class="COMM">// 	if ()</span><span class="WHIT">
+<span class='linenumber'> 65</span> 	</span><span class="COMM">// 	return side</span><span class="WHIT">
+<span class='linenumber'> 66</span> 	</span><span class="COMM">// },</span><span class="WHIT">
+<span class='linenumber'> 67</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 68</span> 	 * Varies around 1.0 as function of hardware resolution. This assumes that resolution is
+<span class='linenumber'> 69</span> 	 * somewhat proportianal to power, which is generally true. This should eventually be replaced
+<span class='linenumber'> 70</span> 	 * with something that measures initial load speed in fps to get a better estimate.
+<span class='linenumber'> 71</span> 	 * @type Number
+<span class='linenumber'> 72</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 73</span> 	</span><span class="NAME">power</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 74</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">window.screen.width</span><span class="PUNC">/</span><span class="NUMB">1024</span><span class="WHIT">
+<span class='linenumber'> 75</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 76</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 77</span> 	 * Performs per-frame setup functions such as resizing the viewport to match the containing 
+<span class='linenumber'> 78</span> 	 * window or element. Also generates Viewport.bbox
+<span class='linenumber'> 79</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 80</span> 	</span><span class="NAME">draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 81</span> 		</span><span class="NAME">Viewport.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Glop.width</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="REGX">/ Map.zoom) - (2 * Viewport.padding * (1 /</span><span class="WHIT"> </span><span class="NAME">Map.zoom</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 82</span>         </span><span class="NAME">Viewport.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Glop.height</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="REGX">/ Map.zoom) - (2 * Viewport.padding * (1 /</span><span class="WHIT"> </span><span class="NAME">Map.zoom</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 83</span>         </span><span class="COMM">// culling won't work anymore after we fixed rotation... everything's got to be square.</span><span class="WHIT">
+<span class='linenumber'> 84</span>         </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Map.rotate</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 85</span> 			</span><span class="NAME">Viewport.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.sqrt</span><span class="PUNC">(</span><span class="NAME">Math.pow</span><span class="PUNC">(</span><span class="NAME">Math.max</span><span class="PUNC">(</span><span class="NAME">Viewport.width</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Viewport.height</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="PUNC">*</span><span class="NUMB">2</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 86</span> 	   		</span><span class="NAME">Viewport.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Viewport.width</span><span class="WHIT">
+<span class='linenumber'> 87</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 88</span> 		</span><span class="NAME">Viewport.bbox</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">Map.y</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">Viewport.height</span><span class="WHIT"> </span><span class="REGX">/ 2, Map.x - Viewport.width /</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Map.y</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">Viewport.height</span><span class="WHIT"> </span><span class="REGX">/ 2, Map.x + Viewport.width /</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 89</span>         </span><span class="COMM">// $C.stroke_rect(Map.x-Viewport.width/2,Map.y-Viewport.height/2,Viewport.width,Viewport.height)</span><span class="WHIT">
+<span class='linenumber'> 90</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 91</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 92</span> </span></pre></body></html>
