@@ -26,7 +26,13 @@ end
 desc "builds the API docs"
 task :docs do
 	Dir.chdir 'lib/jsdoc'
-	puts `java -jar jsrun.jar app/main.js -v -t=templates/ext/ -d=../../../jsdox/ -a -r=2 ../../src/`
+	puts `java -jar jsrun.jar app/main.js -v -t=templates/mad/ -d=../../../api/ -a -r=2 ../../src/`
+end
+
+desc "builds the API docs, debug run"
+task :docs_debug do
+	Dir.chdir 'lib/jsdoc'
+	puts `java -jar jsdebug.jar app/main.js -v -t=templates/mad/ -d=../../../api/ -a -r=2 ../../src/`
 end
 
 desc "Finds while file a source line is in"
