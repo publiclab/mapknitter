@@ -1,0 +1,68 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * @namespace Stores information about the state of the mouse
+<span class='linenumber'>  3</span>  */</span><span class="WHIT">
+<span class='linenumber'>  4</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Mouse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  5</span> 	</span><span class="COMM">/**
+<span class='linenumber'>  6</span> 	 * X-coordiante of the mouse
+<span class='linenumber'>  7</span> 	 * @type Number
+<span class='linenumber'>  8</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>  9</span> 	</span><span class="NAME">x</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 10</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 11</span> 	 * Y-coordinate of the mouse
+<span class='linenumber'> 12</span> 	 * @type Number
+<span class='linenumber'> 13</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 14</span> 	</span><span class="NAME">y</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 15</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 16</span> 	 * Whether the mouse is down
+<span class='linenumber'> 17</span> 	 * @type Boolean
+<span class='linenumber'> 18</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 19</span> 	</span><span class="NAME">down</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 20</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 21</span> 	 * Whether the mouse is up
+<span class='linenumber'> 22</span> 	 * @type Boolean
+<span class='linenumber'> 23</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 24</span> 	</span><span class="NAME">up</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 25</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 26</span> 	 * X-coordinate of the last click
+<span class='linenumber'> 27</span> 	 * @type Number
+<span class='linenumber'> 28</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 29</span> 	</span><span class="NAME">click_x</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 30</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 31</span> 	 * Y-coordinate of the last click
+<span class='linenumber'> 32</span> 	 * @type Number
+<span class='linenumber'> 33</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 34</span> 	</span><span class="NAME">click_y</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 35</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 36</span> 	 * The frame of the last time the mouse was clicked
+<span class='linenumber'> 37</span> 	 * @type Number
+<span class='linenumber'> 38</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 39</span> 	</span><span class="NAME">click_frame</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 40</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 41</span> 	 * The frame of the last time the mouse was released
+<span class='linenumber'> 42</span> 	 * @type Number
+<span class='linenumber'> 43</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 44</span> 	</span><span class="NAME">release_frame</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 45</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 46</span> 	 * Whether the map is being dragged
+<span class='linenumber'> 47</span> 	 * @type Boolean
+<span class='linenumber'> 48</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 49</span> 	</span><span class="NAME">dragging</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 50</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 51</span> 	 * Length of the drag in the X-direction
+<span class='linenumber'> 52</span> 	 * @type Number
+<span class='linenumber'> 53</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 54</span> 	</span><span class="NAME">drag_x</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 55</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 56</span> 	 * Length of the drag in the Y-direction
+<span class='linenumber'> 57</span> 	 * @type Number
+<span class='linenumber'> 58</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 59</span> 	</span><span class="NAME">drag_y</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 60</span> 	</span><span class="NAME">hovered_features</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 61</span> </span><span class="PUNC">}</span></pre></body></html>

@@ -1,0 +1,84 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * @namespace Manages CPU usage by running main loop process,
+<span class='linenumber'>  3</span>  * monitoring loop completion, and adjusting interval to compensate.
+<span class='linenumber'>  4</span>  */</span><span class="WHIT">
+<span class='linenumber'>  5</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TimerManager</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  6</span> 	</span><span class="COMM">/**
+<span class='linenumber'>  7</span> 	 * Date of last execution of TimerManager.f(), in milliseconds
+<span class='linenumber'>  8</span> 	 */</span><span class="WHIT">
+<span class='linenumber'>  9</span> 	</span><span class="NAME">last_date</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Date</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 10</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 11</span> 	 * The recorded intervals of the last 100 executions. We sample from this to
+<span class='linenumber'> 12</span> 	 * make a good guess at what the next interval should be.
+<span class='linenumber'> 13</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 14</span> 	</span><span class="NAME">times</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 15</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 16</span> 	 * Factor by which to space out executions. 2 means double the measured interval.
+<span class='linenumber'> 17</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 18</span> 	</span><span class="NAME">spacing</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0.8</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 19</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 20</span> 	 * Interval after which to execute the function TimerManager.f() next time it's run;
+<span class='linenumber'> 21</span> 	 * changed every frame based on measured lag.
+<span class='linenumber'> 22</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 23</span> 	</span><span class="NAME">interval</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">10</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 24</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 25</span> 	 * Sets up TimerManager to run function f in context c every interval i;
+<span class='linenumber'> 26</span> 	 * defaults to c of TimerManager and i of 10. You probably want to pass the scope
+<span class='linenumber'> 27</span> 	 * of the function's parent class as c, as: TimerManager.setup(Foo.function_name,this)
+<span class='linenumber'> 28</span> 	 * @param {Function} f The function to execute
+<span class='linenumber'> 29</span> 	 * @param {Object} c The scope in which to run the function
+<span class='linenumber'> 30</span> 	 * @param {Number} s The amount to space out function executions beyond measured interval. 
+<span class='linenumber'> 31</span> 	 * 						2 means double the measured interval.
+<span class='linenumber'> 32</span> 	 * @param {Number} i The interval at which to run the function
+<span class='linenumber'> 33</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 34</span> 	</span><span class="NAME">setup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">f</span><span class="PUNC">,</span><span class="NAME">c</span><span class="PUNC">,</span><span class="NAME">s</span><span class="PUNC">,</span><span class="NAME">i</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 35</span> 		</span><span class="NAME">this.f</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">f</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 36</span> 		</span><span class="NAME">this.context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="WHIT">
+<span class='linenumber'> 37</span> 		</span><span class="NAME">this.interval</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.interval</span><span class="WHIT">
+<span class='linenumber'> 38</span> 		</span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="NAME">this.bound_run</span><span class="PUNC">,</span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.interval</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 39</span> 		</span><span class="COMM">// this.spacing = Math.max(1,2.5-Viewport.power())</span><span class="WHIT">
+<span class='linenumber'> 40</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 41</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 42</span> 	 * Binds the scope of TimerManager.run() to TimerManager
+<span class='linenumber'> 43</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 44</span> 	</span><span class="NAME">bound_run</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 45</span> 		</span><span class="NAME">TimerManager.run.apply</span><span class="PUNC">(</span><span class="NAME">TimerManager</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 46</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 47</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 48</span> 	 * Records Dates for next interval measurement, runs TimerManager.f() with proper
+<span class='linenumber'> 49</span> 	 * scope (TimerManager.context), creates a setTimeout to run itself again in 
+<span class='linenumber'> 50</span> 	 * TimerManager.interval milliseconds.
+<span class='linenumber'> 51</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 52</span> 	</span><span class="NAME">run</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 53</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">start_date</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Date</span><span class="WHIT">
+<span class='linenumber'> 54</span> 		</span><span class="NAME">this.f.apply</span><span class="PUNC">(</span><span class="NAME">this.context</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 55</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">execution_time</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Date</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">start_date</span><span class="WHIT">
+<span class='linenumber'> 56</span> 		</span><span class="NAME">this.times.unshift</span><span class="PUNC">(</span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">execution_time</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 57</span> 		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.times.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">100</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">this.times.pop</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 58</span> 		</span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="NAME">this.bound_run</span><span class="PUNC">,</span><span class="NAME">Math.max</span><span class="PUNC">(</span><span class="NUMB">50</span><span class="PUNC">,</span><span class="NAME">parseInt</span><span class="PUNC">(</span><span class="NAME">this.spacing</span><span class="PUNC">*</span><span class="NAME">this.sample</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 59</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 60</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 61</span> 	 * Sampling pattern to make a best-guess at 
+<span class='linenumber'> 62</span> 	 * what the next interval should be.
+<span class='linenumber'> 63</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 64</span> 	</span><span class="NAME">sequence</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="NUMB">2</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">,</span><span class="NUMB">5</span><span class="PUNC">,</span><span class="NUMB">8</span><span class="PUNC">,</span><span class="NUMB">13</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="COMM">//,21,34,55],</span><span class="WHIT">
+<span class='linenumber'> 65</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 66</span> 	 * Samples from recorded intervals to make a best-guess at 
+<span class='linenumber'> 67</span> 	 * what the next interval should be.
+<span class='linenumber'> 68</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 69</span> 	</span><span class="NAME">sample</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 70</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">sample</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'> 71</span> 		</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">this.sequence.length</span><span class="PUNC">;</span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 72</span> 			</span><span class="NAME">sample</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.times</span><span class="PUNC">[</span><span class="NAME">this.sequence</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT">
+<span class='linenumber'> 73</span> 		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 74</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">sample</span><span class="PUNC">/</span><span class="NUMB">9</span><span class="WHIT">
+<span class='linenumber'> 75</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 76</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 77</span> </span></pre></body></html>

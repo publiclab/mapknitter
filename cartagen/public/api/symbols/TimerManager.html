@@ -1,0 +1,367 @@
+
+<div class="body-wrap">
+    <div class="top-tools">
+        <a class="inner-link" href="#TimerManager-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
+        <a class="inner-link" href="#TimerManager-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
+        <a class="inner-link" href="#TimerManager-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
+        <a class="bookmark" href="./index.html?class=TimerManager"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
+    </div>
+    
+<div class="inheritance res-block">
+<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>TimerManager</pre>
+</div>
+    
+	
+
+    <h1>Class TimerManager (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManager">Wiki Page</a>)</h1>     
+    <table cellspacing="0">
+        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/glop/timer.js">timer.js</a></td></tr>
+        <tr><td class="label">Class:</td><td class="hd-info">TimerManager</td></tr>
+        <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
+        <tr><td class="label">Extends:</td><td class="hd-info"></td></tr>        
+    </table>
+    
+    <div class="description">
+         
+    </div>
+     
+    <div class="hr"></div>
+    <a id="TimerManager-configs"></a>
+    
+    <a id="TimerManager-props"></a>      
+    
+    <h2>Public Properties</h2> 
+            
+    <table cellspacing="0" class="member-table">            
+        <tr>
+            <th class="sig-header" colspan="2">Property</th>
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TimerManager-props-interval"></a>
+                <b>interval</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerPropInterval">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Interval after which to execute the function TimerManager.f() next time it's run;
+changed every frame based on measured ...</div>
+                    <div class="long">
+                        Interval after which to execute the function TimerManager.f() next time it's run;
+changed every frame based on measured lag.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.interval" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TimerManager-props-last_date"></a>
+                <b>last_date</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerPropLastDate">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Date of last execution of TimerManager.f(), in milliseconds...</div>
+                    <div class="long">
+                        Date of last execution of TimerManager.f(), in milliseconds
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.last_date" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TimerManager-props-sequence"></a>
+                <b>sequence</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerPropSequence">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Sampling pattern to make a best-guess at 
+what the next interval should be....</div>
+                    <div class="long">
+                        Sampling pattern to make a best-guess at 
+what the next interval should be.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.sequence" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TimerManager-props-spacing"></a>
+                <b>spacing</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerPropSpacing">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Factor by which to space out executions. 2 means double the measured interval....</div>
+                    <div class="long">
+                        Factor by which to space out executions. 2 means double the measured interval.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.spacing" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TimerManager-props-times"></a>
+                <b>times</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerPropTimes">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">The recorded intervals of the last 100 executions. We sample from this to
+make a good guess at what the next interval sh...</div>
+                    <div class="long">
+                        The recorded intervals of the last 100 executions. We sample from this to
+make a good guess at what the next interval should be.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.times" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+        
+        
+        
+        <!-- TODO: implement this alt row.  also notice non-linked "Defined by" when property is a part of this class.     
+        <tr class="property-row alt">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Ext.Component-hidden"></a>
+                <b>hidden</b> : Boolean            
+                <div class="mdesc">                            
+                    True if this component is hidden. Read-only.                       
+                </div>
+            </td>
+            <td class="msource">Component</td>
+        </tr>
+        -->
+    </table>
+                   
+    <a id="TimerManager-methods"></a>
+    <h2>Public Methods</h2>    
+    
+    <table cellspacing="0" class="member-table">
+        <tr>
+            <th class="sig-header" colspan="2">Method</th>            
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TimerManager-methods-bound_run"></a>                
+                <b>bound_run</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerMethodBoundRun">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Binds the scope of TimerManager.run() to TimerManager...</div>
+                    <div class="long">
+                        Binds the scope of TimerManager.run() to TimerManager
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.bound_run" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TimerManager-methods-run"></a>                
+                <b>run</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerMethodRun">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Records Dates for next interval measurement, runs TimerManager.f() with proper
+scope (TimerManager.context), creates a s...</div>
+                    <div class="long">
+                        Records Dates for next interval measurement, runs TimerManager.f() with proper
+scope (TimerManager.context), creates a setTimeout to run itself again in 
+TimerManager.interval milliseconds.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.run" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TimerManager-methods-sample"></a>                
+                <b>sample</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerMethodSample">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Samples from recorded intervals to make a best-guess at 
+what the next interval should be....</div>
+                    <div class="long">
+                        Samples from recorded intervals to make a best-guess at 
+what the next interval should be.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.sample" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TimerManager-methods-setup"></a>                
+                <b>setup</b>(&nbsp;<code>Function f, Object c, Number s, Number i</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTimerManagerMethodSetup">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Sets up TimerManager to run function f in context c every interval i;
+defaults to c of TimerManager and i of 10. You pro...</div>
+                    <div class="long">
+                        Sets up TimerManager to run function f in context c every interval i;
+defaults to c of TimerManager and i of 10. You probably want to pass the scope
+of the function's parent class as c, as: TimerManager.setup(Foo.function_name,this)
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>f</code> : Function
+                                    <div class="sub-desc">&nbsp;The function to execute</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>c</code> : Object
+                                    <div class="sub-desc">&nbsp;The scope in which to run the function</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>s</code> : Number
+                                    <div class="sub-desc">&nbsp;The amount to space out function executions beyond measured interval. 
+						2 means double the measured interval.</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>i</code> : Number
+                                    <div class="sub-desc">&nbsp;The interval at which to run the function</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TimerManager
+                <a class="x-hidden" ext:cls="TimerManager" ext:member="TimerManager.setup" href="symbols/TimerManager.html">TimerManager</a>
+            </td>
+        </tr>
+                                                          
+    </table>
+    
+    <a id="TimerManager-events"></a>
+    <h2>Public Events</h2>
+    <p>This class has no events</p>
+    <table cellspacing="0" class="x-hidden">        
+        <tr>
+            <th class="sig-header" colspan="2">Event</th>   
+            <th class="msource-header">Defined By</th>
+        </tr>
+                    
+    </table>            
+</div>

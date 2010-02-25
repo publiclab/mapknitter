@@ -1,0 +1,45 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ContextMenu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  2</span> 	</span><span class="NAME">cond_items</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  3</span> 	</span><span class="NAME">init</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  4</span> 		</span><span class="NAME">this.menu</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Control.ContextMenu</span><span class="PUNC">(</span><span class="STRN">'main'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>  5</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'>  6</span> 	</span><span class="NAME">add_cond_item</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  7</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.round</span><span class="PUNC">(</span><span class="NAME">Math.random</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="NUMB">999999999</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'>  8</span> 
+<span class='linenumber'>  9</span> 		</span><span class="COMM">//while(!cond_items[id]) {</span><span class="WHIT">
+<span class='linenumber'> 10</span> 		</span><span class="COMM">//	id = Math.round(Math.random() * 999999999)</span><span class="WHIT">
+<span class='linenumber'> 11</span> 		</span><span class="COMM">//}</span><span class="WHIT">
+<span class='linenumber'> 12</span> 		
+<span class='linenumber'> 13</span> 		</span><span class="NAME">callback.avail</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
+<span class='linenumber'> 14</span> 		</span><span class="NAME">callback.context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">window</span><span class="WHIT">
+<span class='linenumber'> 15</span> 		</span><span class="NAME">ContextMenu.cond_items</span><span class="PUNC">[</span><span class="NAME">id</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="WHIT">
+<span class='linenumber'> 16</span> 
+<span class='linenumber'> 17</span> 		</span><span class="NAME">this.menu.addItem</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 18</span> 				</span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 19</span> 				</span><span class="NAME">callback</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 20</span> 					</span><span class="PUNC">(</span><span class="NAME">ContextMenu.cond_items</span><span class="PUNC">[</span><span class="NAME">id</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">bind</span><span class="PUNC">(</span><span class="NAME">ContextMenu.cond_items</span><span class="PUNC">[</span><span class="NAME">id</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">context</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 21</span> 				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 22</span> 				</span><span class="NAME">condition</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 23</span> 					</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ContextMenu.cond_items</span><span class="PUNC">[</span><span class="NAME">id</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">avail</span><span class="WHIT">
+<span class='linenumber'> 24</span> 				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 25</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 26</span> 		
+<span class='linenumber'> 27</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT">
+<span class='linenumber'> 28</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 29</span> 	</span><span class="NAME">add_static_item</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 30</span> 		</span><span class="NAME">this.menu.addItem</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 31</span> 			</span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">name</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 32</span> 			</span><span class="NAME">callback</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">_callback</span><span class="WHIT">
+<span class='linenumber'> 33</span> 		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 34</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 35</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 36</span> 
+<span class='linenumber'> 37</span> </span><span class="NAME">document.observe</span><span class="PUNC">(</span><span class="STRN">'cartagen:init'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">ContextMenu.init.bindAsEventListener</span><span class="PUNC">(</span><span class="NAME">ContextMenu</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 38</span> </span></pre></body></html>

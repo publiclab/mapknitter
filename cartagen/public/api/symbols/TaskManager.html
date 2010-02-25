@@ -1,0 +1,345 @@
+
+<div class="body-wrap">
+    <div class="top-tools">
+        <a class="inner-link" href="#TaskManager-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
+        <a class="inner-link" href="#TaskManager-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
+        <a class="inner-link" href="#TaskManager-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
+        <a class="bookmark" href="./index.html?class=TaskManager"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
+    </div>
+    
+<div class="inheritance res-block">
+<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>TaskManager</pre>
+</div>
+    
+	
+
+    <h1>Class TaskManager (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManager">Wiki Page</a>)</h1>     
+    <table cellspacing="0">
+        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/glop/tasks.js">tasks.js</a></td></tr>
+        <tr><td class="label">Class:</td><td class="hd-info">TaskManager</td></tr>
+        <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
+        <tr><td class="label">Extends:</td><td class="hd-info"></td></tr>        
+    </table>
+    
+    <div class="description">
+        Manages long-running tasks; breaks them up to avoid stalling the UI;
+uses Web Workers where available. 
+    </div>
+     
+    <div class="hr"></div>
+    <a id="TaskManager-configs"></a>
+    
+    <a id="TaskManager-props"></a>      
+    
+    <h2>Public Properties</h2> 
+            
+    <table cellspacing="0" class="member-table">            
+        <tr>
+            <th class="sig-header" colspan="2">Property</th>
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TaskManager-props-quota"></a>
+                <b>quota</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerPropQuota">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Amount of time, in miliseconds, allocated to the TaskManager each frame....</div>
+                    <div class="long">
+                        Amount of time, in miliseconds, allocated to the TaskManager each frame.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#quota" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="TaskManager-props-tasks"></a>
+                <b>tasks</b> :  (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerPropTasks">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Tasks to be performed; each is a Task object with members...</div>
+                    <div class="long">
+                        Tasks to be performed; each is a Task object with members
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#tasks" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+        
+        
+        
+        <!-- TODO: implement this alt row.  also notice non-linked "Defined by" when property is a part of this class.     
+        <tr class="property-row alt">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Ext.Component-hidden"></a>
+                <b>hidden</b> : Boolean            
+                <div class="mdesc">                            
+                    True if this component is hidden. Read-only.                       
+                </div>
+            </td>
+            <td class="msource">Component</td>
+        </tr>
+        -->
+    </table>
+                   
+    <a id="TaskManager-methods"></a>
+    <h2>Public Methods</h2>    
+    
+    <table cellspacing="0" class="member-table">
+        <tr>
+            <th class="sig-header" colspan="2">Method</th>            
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-add"></a>                
+                <b>add</b>(&nbsp;<code> task</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodAdd">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short"></div>
+                    <div class="long">
+                        
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>task</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#add" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-get_completed"></a>                
+                <b>get_completed</b>(&nbsp;<code> tasks</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodGetCompleted">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short"></div>
+                    <div class="long">
+                        
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>tasks</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#get_completed" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-initialize"></a>                
+                <b>initialize</b>(&nbsp;<code> quota,  tasks</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodInitialize">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short"></div>
+                    <div class="long">
+                        
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>quota</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>tasks</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#initialize" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-run"></a>                
+                <b>run</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodRun">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Tasks to be performed; each is a Task object with members...</div>
+                    <div class="long">
+                        Tasks to be performed; each is a Task object with members
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#run" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-start"></a>                
+                <b>start</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodStart">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short"></div>
+                    <div class="long">
+                        
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#start" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="TaskManager-methods-stop"></a>                
+                <b>stop</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTaskManagerMethodStop">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short"></div>
+                    <div class="long">
+                        
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                TaskManager
+                <a class="x-hidden" ext:cls="TaskManager" ext:member="TaskManager#stop" href="symbols/TaskManager.html">TaskManager</a>
+            </td>
+        </tr>
+                                                          
+    </table>
+    
+    <a id="TaskManager-events"></a>
+    <h2>Public Events</h2>
+    <p>This class has no events</p>
+    <table cellspacing="0" class="x-hidden">        
+        <tr>
+            <th class="sig-header" colspan="2">Event</th>   
+            <th class="msource-header">Defined By</th>
+        </tr>
+                    
+    </table>            
+</div>

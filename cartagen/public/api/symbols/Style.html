@@ -1,0 +1,480 @@
+
+<div class="body-wrap">
+    <div class="top-tools">
+        <a class="inner-link" href="#Style-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
+        <a class="inner-link" href="#Style-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
+        <a class="inner-link" href="#Style-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
+        <a class="bookmark" href="./index.html?class=Style"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
+    </div>
+    
+<div class="inheritance res-block">
+<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>Style</pre>
+</div>
+    
+	
+
+    <h1>Class Style (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyle">Wiki Page</a>)</h1>     
+    <table cellspacing="0">
+        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/config/style.js">style.js</a></td></tr>
+        <tr><td class="label">Class:</td><td class="hd-info">Style</td></tr>
+        <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
+        <tr><td class="label">Extends:</td><td class="hd-info"></td></tr>        
+    </table>
+    
+    <div class="description">
+         
+    </div>
+     
+    <div class="hr"></div>
+    <a id="Style-configs"></a>
+    
+    <a id="Style-props"></a>      
+    
+    <h2>Public Properties</h2> 
+            
+    <table cellspacing="0" class="member-table">            
+        <tr>
+            <th class="sig-header" colspan="2">Property</th>
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Style-props-styles"></a>
+                <b>styles</b> : Object (GSS) (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStylePropStyles">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Storage for loaded styles...</div>
+                    <div class="long">
+                        Storage for loaded styles
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.styles" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Style-props-styles_changed"></a>
+                <b>styles_changed</b> : Boolean (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStylePropStylesChanged">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Whether any dynamic styles have been recalculated. Triggers draw....</div>
+                    <div class="long">
+                        Whether any dynamic styles have been recalculated. Triggers draw.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.styles_changed" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+        
+        
+        
+        <!-- TODO: implement this alt row.  also notice non-linked "Defined by" when property is a part of this class.     
+        <tr class="property-row alt">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Ext.Component-hidden"></a>
+                <b>hidden</b> : Boolean            
+                <div class="mdesc">                            
+                    True if this component is hidden. Read-only.                       
+                </div>
+            </td>
+            <td class="msource">Component</td>
+        </tr>
+        -->
+    </table>
+                   
+    <a id="Style-methods"></a>
+    <h2>Public Methods</h2>    
+    
+    <table cellspacing="0" class="member-table">
+        <tr>
+            <th class="sig-header" colspan="2">Method</th>            
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-apply_gss"></a>                
+                <b>apply_gss</b>(&nbsp;<code>String gss_string, Boolean force_update</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodApplyGss">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Copies each style from a gss string into the Styles.styles object, 
+which is the master 'merged' style storage for the m...</div>
+                    <div class="long">
+                        Copies each style from a gss string into the Styles.styles object, 
+which is the master 'merged' style storage for the map
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>gss_string</code> : String
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>force_update</code> : Boolean
+                                    <div class="sub-desc">&nbsp;Whether to force all objects in the 
+			map to refresh with the new styles</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.apply_gss" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-cascade"></a>                
+                <b>cascade</b>(&nbsp;<code>Object old_styles, Object new_styles</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodCascade">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Cascades a set of styles over another set. More or less merges the two....</div>
+                    <div class="long">
+                        Cascades a set of styles over another set. More or less merges the two.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>old_styles</code> : Object
+                                    <div class="sub-desc">&nbsp;Existing styles over which to cascade</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>new_styles</code> : Object
+                                    <div class="sub-desc">&nbsp;Additional styles to cascade over old ones</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.cascade" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-create_refresher"></a>                
+                <b>create_refresher</b>(&nbsp;<code>Feature feature, String property, Function generator, Number interval</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodCreateRefresher">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Creates a periodical executer that updates a property...</div>
+                    <div class="long">
+                        Creates a periodical executer that updates a property
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>feature</code> : Feature
+                                    <div class="sub-desc">&nbsp;Feature to update</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>property</code> : String
+                                    <div class="sub-desc">&nbsp;Property to update</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>generator</code> : Function
+                                    <div class="sub-desc">&nbsp;Fuction that generated the value for the property</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>interval</code> : Number
+                                    <div class="sub-desc">&nbsp;Number of seconds between updates</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.create_refresher" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-extend_value"></a>                
+                <b>extend_value</b>(&nbsp;<code> old_val,  new_val</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodExtendValue">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">If old_val and new_val are arrays, returns the two arrays, merged. Else, returns
+new_val....</div>
+                    <div class="long">
+                        If old_val and new_val are arrays, returns the two arrays, merged. Else, returns
+new_val.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>old_val</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>new_val</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.extend_value" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-load_styles"></a>                
+                <b>load_styles</b>(&nbsp;<code>String stylesheet_url</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodLoadStyles">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Loads a remove stylesheet....</div>
+                    <div class="long">
+                        Loads a remove stylesheet.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>stylesheet_url</code> : String
+                                    <div class="sub-desc">&nbsp;URL of stylesheet</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.load_styles" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-parse_styles"></a>                
+                <b>parse_styles</b>(&nbsp;<code>Object feature, Object selector</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodParseStyles">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Take styles from GSS and set appropriate properties of a feature...</div>
+                    <div class="long">
+                        Take styles from GSS and set appropriate properties of a feature
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>feature</code> : Object
+                                    <div class="sub-desc">&nbsp;Feature to set properties of</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>selector</code> : Object
+                                    <div class="sub-desc">&nbsp;A set of default properties to set first, before parsing styles
+                         that apply to tags of the feature.</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.parse_styles" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-refresh_style"></a>                
+                <b>refresh_style</b>(&nbsp;<code>Feature feature, String property</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodRefreshStyle">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Refreshes a property from its generator...</div>
+                    <div class="long">
+                        Refreshes a property from its generator
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                                <li>
+                                    <code>feature</code> : Feature
+                                    <div class="sub-desc">&nbsp;Feature to update</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>property</code> : String
+                                    <div class="sub-desc">&nbsp;Property to update</div>                                   
+                                    
+                                </li>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.refresh_style" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Style-methods-style_body"></a>                
+                <b>style_body</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassStyleMethodStyleBody">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Applies the global "body" styles...</div>
+                    <div class="long">
+                        Applies the global "body" styles
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Style
+                <a class="x-hidden" ext:cls="Style" ext:member="Style.style_body" href="symbols/Style.html">Style</a>
+            </td>
+        </tr>
+                                                          
+    </table>
+    
+    <a id="Style-events"></a>
+    <h2>Public Events</h2>
+    <p>This class has no events</p>
+    <table cellspacing="0" class="x-hidden">        
+        <tr>
+            <th class="sig-header" colspan="2">Event</th>   
+            <th class="msource-header">Defined By</th>
+        </tr>
+                    
+    </table>            
+</div>
