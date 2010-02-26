@@ -7881,6 +7881,27 @@ Tool.Pan = {
 		$l('Pan dblclick')
 	}.bindAsEventListener(Tool.Pan)
 }
+Tool.Warp = {
+	drag: function() {
+
+	},
+	mousedown: function() {
+		$l('Warp mousedown')
+
+	}.bindAsEventListener(Tool.Warp),
+	mouseup: function() {
+		$l('Warp mouseup')
+
+	}.bindAsEventListener(Tool.Warp),
+	mousemove: function() {
+		$l('Warp mousemove')
+
+	}.bindAsEventListener(Tool.Warp),
+	dblclick: function() {
+		$l('Warp dblclick')
+
+	}.bindAsEventListener(Tool.Warp)
+}
 
 var Interface = {
 	display_loading: function(percent) {
