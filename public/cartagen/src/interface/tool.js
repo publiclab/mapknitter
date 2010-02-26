@@ -34,7 +34,7 @@ var Tool = {
 		
 		Tool.active = new_tool
 	},
-	/*
+	/**
 	 * Pass drag call to the active tool:
 	 */
 	drag: function() {

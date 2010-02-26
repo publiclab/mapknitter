@@ -10,6 +10,15 @@ Cartagen is a vector-based, client-side framework for rendering maps in native H
 http://cartagen.org is a demonstration of the latest release of Cartagen. Test it out, visit places, and create your own maps!
 
 =================================================
+Quick links
+
+Installation Packages: http://github.com/jywarren/cartagen/downloads
+Source Code: http://github.com/jywarren/cartagen
+Cartagen Wiki: http://wiki.cartagen.org/
+API Documentation: http://cartagen.org/api/
+GSS Usage: http://wiki.cartagen.org/wiki/show/GssUsage
+
+=================================================
 What to install
 
 Cartagen is available in two 'editions' - each of which fulfills a different set of requirements.
@@ -23,8 +32,6 @@ Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenClien
 *** Server Edition ***
 
 The server edition is not yet officially released. If you are interested in it, you can get it from the development repository via subversion. It is not recommended for end-users, as installation and setup procedures are not fully in place. Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenServer
-
-
 
 =================================================
 Requirements
