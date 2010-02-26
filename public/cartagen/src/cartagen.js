@@ -88,7 +88,7 @@ var Cartagen = {
 	 */
 	scripts: [],
 	/**
-	 * Registers initialize to run with the given configs when window is loaded
+	 * Called from HTML page to boot up Cartagen. Registers initialize to run with the given configs when window is loaded.
 	 * @param {Object} configs A set of key/value pairs that will be copied to the Cartagen object
 	 */
 	setup: function(configs) {
