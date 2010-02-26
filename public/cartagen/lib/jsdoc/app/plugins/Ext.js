@@ -128,20 +128,22 @@ JSDOC.plugins.Ext = Ext.extend(JSDOC.plugins.Base, {
      */
     onCommentTags : function(param) {
         var firstTag = param.tags[0];
-        if(firstTag.title == 'cfg' || firstTag.title.indexOf('property') == 0) {
-            //print(firstTag.title);
-        } else {
-            return;
-        }
-        var map = ["type", "desc"];
-        for(var i=0; i < map.length; i++) {
-            if(!param.tags[map[i]]) {
-                var docTag = new JSDOC.DocTag();
-                docTag.title = map[i];
-                docTag.desc = firstTag[docTag.title];
-                param.tags.push(docTag);
-            }
-        }
+		if (firstTag) {
+			if(firstTag.title == 'cfg' || firstTag.title.indexOf('property') == 0) {
+	            //print(firstTag.title);
+	        } else {
+	            return;
+	        }
+	        var map = ["type", "desc"];
+	        for(var i=0; i < map.length; i++) {
+	            if(!param.tags[map[i]]) {
+	                var docTag = new JSDOC.DocTag();
+	                docTag.title = map[i];
+	                docTag.desc = firstTag[docTag.title];
+	                param.tags.push(docTag);
+	            }
+	        }
+		}
     },
     
     /***
