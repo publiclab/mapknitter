@@ -1,34 +1,34 @@
 
 <div class="body-wrap">
     <div class="top-tools">
-        <a class="inner-link" href="#Tool.Pan-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
-        <a class="inner-link" href="#Tool.Pan-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
-        <a class="inner-link" href="#Tool.Pan-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
-        <a class="bookmark" href="./index.html?class=Tool.Pan"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
+        <a class="inner-link" href="#Warper.ControlPoint-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
+        <a class="inner-link" href="#Warper.ControlPoint-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
+        <a class="inner-link" href="#Warper.ControlPoint-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
+        <a class="bookmark" href="./index.html?class=Warper.ControlPoint"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
     </div>
     
 <div class="inheritance res-block">
-<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>Pan</pre>
+<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>ControlPoint</pre>
 </div>
     
 	
 
-    <h1>Class Tool.Pan (<a href="http://wiki.cartagen.org/wiki/show/ApiClassTool.Pan">Wiki Page</a>)</h1>     
+    <h1>Class Warper.ControlPoint (<a href="http://wiki.cartagen.org/wiki/show/ApiClassWarper.ControlPoint">Wiki Page</a>)</h1>     
     <table cellspacing="0">
-        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/interface/pan.js">pan.js</a></td></tr>
-        <tr><td class="label">Class:</td><td class="hd-info">Pan</td></tr>
+        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/warper/control_point.js">control_point.js</a></td></tr>
+        <tr><td class="label">Class:</td><td class="hd-info">ControlPoint</td></tr>
         <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
         <tr><td class="label">Extends:</td><td class="hd-info"></td></tr>        
     </table>
     
     <div class="description">
-         
+        A class defining draggable points which describe a polygon; used in map warping/orthorectification workflows. 
     </div>
      
     <div class="hr"></div>
-    <a id="Tool.Pan-configs"></a>
+    <a id="Warper.ControlPoint-configs"></a>
     
-    <a id="Tool.Pan-props"></a>      
+    <a id="Warper.ControlPoint-props"></a>      
     
     <h2>Public Properties</h2> 
     <p>This class has no public properties.</p>        
@@ -55,7 +55,7 @@
         -->
     </table>
                    
-    <a id="Tool.Pan-methods"></a>
+    <a id="Warper.ControlPoint-methods"></a>
     <h2>Public Methods</h2>    
     
     <table cellspacing="0" class="member-table">
@@ -68,8 +68,8 @@
         <tr class="method-row expandable">
             <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
             <td class="sig">
-                <a id="Pan-methods-dblclick"></a>                
-                <b>dblclick</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassPanMethodDblclick">Wiki Page</a>)
+                <a id="ControlPoint-methods-click"></a>                
+                <b>click</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassControlPointMethodClick">Wiki Page</a>)
                 <div class="mdesc">
                     <div class="short"></div>
                     <div class="long">
@@ -92,16 +92,16 @@
                 </div>
             </td>
             <td class="msource">
-                Pan
-                <a class="x-hidden" ext:cls="Tool.Pan" ext:member="Tool.Pan.dblclick" href="symbols/Tool.Pan.html">Pan</a>
+                ControlPoint
+                <a class="x-hidden" ext:cls="Warper.ControlPoint" ext:member="Warper.ControlPoint#click" href="symbols/Warper.ControlPoint.html">ControlPoint</a>
             </td>
         </tr>
                 
         <tr class="method-row expandable">
             <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
             <td class="sig">
-                <a id="Pan-methods-drag"></a>                
-                <b>drag</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassPanMethodDrag">Wiki Page</a>)
+                <a id="ControlPoint-methods-drag"></a>                
+                <b>drag</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassControlPointMethodDrag">Wiki Page</a>)
                 <div class="mdesc">
                     <div class="short"></div>
                     <div class="long">
@@ -124,16 +124,48 @@
                 </div>
             </td>
             <td class="msource">
-                Pan
-                <a class="x-hidden" ext:cls="Tool.Pan" ext:member="Tool.Pan.drag" href="symbols/Tool.Pan.html">Pan</a>
+                ControlPoint
+                <a class="x-hidden" ext:cls="Warper.ControlPoint" ext:member="Warper.ControlPoint#drag" href="symbols/Warper.ControlPoint.html">ControlPoint</a>
             </td>
         </tr>
                 
         <tr class="method-row expandable">
             <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
             <td class="sig">
-                <a id="Pan-methods-mousedown"></a>                
-                <b>mousedown</b>(&nbsp;<code> event</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassPanMethodMousedown">Wiki Page</a>)
+                <a id="ControlPoint-methods-draw"></a>                
+                <b>draw</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassControlPointMethodDraw">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Called every frame from Cartagen.draw...</div>
+                    <div class="long">
+                        Called every frame from Cartagen.draw
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                ControlPoint
+                <a class="x-hidden" ext:cls="Warper.ControlPoint" ext:member="Warper.ControlPoint#draw" href="symbols/Warper.ControlPoint.html">ControlPoint</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="ControlPoint-methods-initialize"></a>                
+                <b>initialize</b>(&nbsp;<code> x,  y</code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassControlPointMethodInitialize">Wiki Page</a>)
                 <div class="mdesc">
                     <div class="short"></div>
                     <div class="long">
@@ -146,7 +178,13 @@
                             <ul>
                             
                                 <li>
-                                    <code>event</code> : 
+                                    <code>x</code> : 
+                                    <div class="sub-desc">&nbsp;</div>                                   
+                                    
+                                </li>
+                            
+                                <li>
+                                    <code>y</code> : 
                                     <div class="sub-desc">&nbsp;</div>                                   
                                     
                                 </li>
@@ -162,78 +200,14 @@
                 </div>
             </td>
             <td class="msource">
-                Pan
-                <a class="x-hidden" ext:cls="Tool.Pan" ext:member="Tool.Pan.mousedown" href="symbols/Tool.Pan.html">Pan</a>
-            </td>
-        </tr>
-                
-        <tr class="method-row expandable">
-            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
-            <td class="sig">
-                <a id="Pan-methods-mousemove"></a>                
-                <b>mousemove</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassPanMethodMousemove">Wiki Page</a>)
-                <div class="mdesc">
-                    <div class="short"></div>
-                    <div class="long">
-                        
-
-                        
-
-                        <div class="mdetail-params">                            
-                            <strong>Parameters:</strong>                            
-                            <ul>
-                            
-                            </ul>
-                                                        
-                            <strong>Returns:</strong>
-                            <ul>
-                                <li>void<div class="sub-desc"></div></li>
-                            </ul>                    
-                        </div>
-                    </div>                    
-                </div>
-            </td>
-            <td class="msource">
-                Pan
-                <a class="x-hidden" ext:cls="Tool.Pan" ext:member="Tool.Pan.mousemove" href="symbols/Tool.Pan.html">Pan</a>
-            </td>
-        </tr>
-                
-        <tr class="method-row expandable">
-            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
-            <td class="sig">
-                <a id="Pan-methods-mouseup"></a>                
-                <b>mouseup</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassPanMethodMouseup">Wiki Page</a>)
-                <div class="mdesc">
-                    <div class="short"></div>
-                    <div class="long">
-                        
-
-                        
-
-                        <div class="mdetail-params">                            
-                            <strong>Parameters:</strong>                            
-                            <ul>
-                            
-                            </ul>
-                                                        
-                            <strong>Returns:</strong>
-                            <ul>
-                                <li>void<div class="sub-desc"></div></li>
-                            </ul>                    
-                        </div>
-                    </div>                    
-                </div>
-            </td>
-            <td class="msource">
-                Pan
-                <a class="x-hidden" ext:cls="Tool.Pan" ext:member="Tool.Pan.mouseup" href="symbols/Tool.Pan.html">Pan</a>
+                ControlPoint
+                <a class="x-hidden" ext:cls="Warper.ControlPoint" ext:member="Warper.ControlPoint#initialize" href="symbols/Warper.ControlPoint.html">ControlPoint</a>
             </td>
         </tr>
                                                           
     </table>
     
-    <a id="Tool.Pan-events"></a>
+    <a id="Warper.ControlPoint-events"></a>
     <h2>Public Events</h2>
     <p>This class has no events</p>
     <table cellspacing="0" class="x-hidden">        

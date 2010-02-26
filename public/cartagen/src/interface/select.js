@@ -68,5 +68,8 @@ Tool.Select = {
 	}.bindAsEventListener(Tool.Select),
 	drag: function() {
 
-	}
+	},
+	dblclick: function() {
+		$l('Select dblclick')
+	}.bindAsEventListener(Tool.Select)
 }

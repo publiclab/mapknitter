@@ -12,7 +12,7 @@ var Events = {
 		Glop.observe('mousemove', Events.mousemove)
 		Glop.observe('mousedown', Events.mousedown)
 		Glop.observe('mouseup', Events.mouseup)
-		Glop.observe('dblclick', Events.doubleclick)
+		Glop.observe('dblclick', Events.dblclick)
 		Glop.observe('mouseover', Events.mouseover)
 		Glop.observe('mouseout', Events.mouseout)
 
@@ -232,7 +232,7 @@ var Events = {
 	 * Triggered when the canvas is double clicked. Currently unused
 	 * @param {Event} event
 	 */
-	doubleclick: function(event) {
+	dblclick: function(event) {
 	},
 	/**
 	 * Triggered each frame. Moves the map based on drags.

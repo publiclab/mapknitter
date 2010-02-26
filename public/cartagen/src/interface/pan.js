@@ -35,5 +35,8 @@ Tool.Pan = {
 			Map.x = Map.x_old+(d_x/Map.zoom)
 			Map.y = Map.y_old+(d_y/Map.zoom)
 		}
-	}
+	},
+	dblclick: function() {
+		$l('Pan dblclick')
+	}.bindAsEventListener(Tool.Pan)
 }

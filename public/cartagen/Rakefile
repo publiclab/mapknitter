@@ -15,8 +15,11 @@ task :autobuild do
 	    if ([FileSystemWatcher::CREATED,
 	    	FileSystemWatcher::MODIFIED,
 	    	FileSystemWatcher::DELETED].include? status)
-	        
-	        build
+	        begin
+	          build
+          rescue
+            puts "Build failed"
+          end
 	    end
 	end
 	

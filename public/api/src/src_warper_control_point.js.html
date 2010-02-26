@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * A class defining draggable points which describe a polygon; used in map warping/orthorectification workflows.
+<span class='linenumber'>  3</span>  * @class
+<span class='linenumber'>  4</span>  */</span><span class="WHIT">
+<span class='linenumber'>  5</span> </span><span class="NAME">Warper.ControlPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Class.create</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  6</span> 	</span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'>  7</span> 		</span><span class="COMM">//</span><span class="WHIT">
+<span class='linenumber'>  8</span> 		</span><span class="NAME">this.selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='linenumber'>  9</span> 		</span><span class="NAME">this.x</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">x</span><span class="WHIT">
+<span class='linenumber'> 10</span> 		</span><span class="NAME">this.y</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">y</span><span class="WHIT">
+<span class='linenumber'> 11</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 12</span> 	</span><span class="NAME">drag</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 13</span> 		</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'CP dragging'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 14</span> 	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 15</span> 	</span><span class="NAME">click</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 16</span> 		</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'CP clicked'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='linenumber'> 17</span> 	</span><span class="PUNC">}</span><span class="PUNC">.</span><span class="NAME">bindAsEventListener</span><span class="PUNC">(</span><span class="NAME">Glop</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 18</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 19</span> 	 * Called every frame from Cartagen.draw 
+<span class='linenumber'> 20</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 21</span> 	</span><span class="NAME">draw</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='linenumber'> 22</span> 		
+<span class='linenumber'> 23</span> 		
+<span class='linenumber'> 24</span> 		
+<span class='linenumber'> 25</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 26</span> </span><span class="PUNC">}</span><span class="PUNC">)</span></pre></body></html>
