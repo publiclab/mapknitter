@@ -23,8 +23,8 @@
 
 /* **** BEGIN PROTOTYPE-GRAPHIC **** */
 
-//= require <../lib/prototype-graphic/prototype-graphic>
-//= require <../lib/prototype-graphic/svg>
+// //= require <../lib/prototype-graphic/prototype-graphic>
+// //= require <../lib/prototype-graphic/svg>
 
 /* **** END PROTOTYPE-GRAPHIC **** */
 
