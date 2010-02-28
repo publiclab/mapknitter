@@ -7,9 +7,10 @@ var Tool = {
 		Glop.observe('mousemove', Tool.Pan.mousemove)
 		Glop.observe('mousedown', Tool.Pan.mousedown)
 		Glop.observe('mouseup', Tool.Pan.mouseup)
+		Glop.observe('dblclick', Tool.Pan.dblclick)
 	},
 	/**
-	 * The tool currently in use. Options include 'pan', 'pen', 'select'
+	 * The tool currently in use. Options include 'Pan', 'Pen', 'Select', 'Warp'
 	 */
 	active: 'Pan',
 	/**

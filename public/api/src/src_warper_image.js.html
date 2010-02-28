@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.linenumber {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='linenumber'>  1</span> <span class="COMM">/**
+<span class='linenumber'>  2</span>  * A class for warpable raster images.
+<span class='linenumber'>  3</span>  * @class
+<span class='linenumber'>  4</span>  */</span><span class="WHIT">
+<span class='linenumber'>  5</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Warper.Image</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Class.create</span><span class="PUNC">(</span><span class="WHIT">
+<span class='linenumber'>  6</span> </span><span class="PUNC">{</span><span class="WHIT">	
+<span class='linenumber'>  7</span> 	</span><span class="COMM">/**
+<span class='linenumber'>  8</span> 	 * The URI of the image resource to be warped
+<span class='linenumber'>  9</span> 	 * @type String
+<span class='linenumber'> 10</span> 	 * @default ""
+<span class='linenumber'> 11</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 12</span> 	</span><span class="NAME">src</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 13</span> 	</span><span class="COMM">/**
+<span class='linenumber'> 14</span> 	 * An array of ControlPoints of the corners of the image, starting from the top left and proceeding clockwise.
+<span class='linenumber'> 15</span> 	 * @type Array
+<span class='linenumber'> 16</span> 	 * @default "[[-100,100],[100,100],[100,-100],[-100,-100]]"
+<span class='linenumber'> 17</span> 	 */</span><span class="WHIT">
+<span class='linenumber'> 18</span> 	</span><span class="NAME">corners</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='linenumber'> 19</span> 		</span><span class="PUNC">[</span><span class="PUNC">-</span><span class="NUMB">100</span><span class="PUNC">,</span><span class="NUMB">100</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 20</span> 		</span><span class="PUNC">[</span><span class="NUMB">100</span><span class="PUNC">,</span><span class="NUMB">100</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 21</span> 		</span><span class="PUNC">[</span><span class="NUMB">100</span><span class="PUNC">,</span><span class="PUNC">-</span><span class="NUMB">100</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 22</span> 		</span><span class="PUNC">[</span><span class="PUNC">-</span><span class="NUMB">100</span><span class="PUNC">,</span><span class="PUNC">-</span><span class="NUMB">100</span><span class="PUNC">]</span><span class="WHIT">
+<span class='linenumber'> 23</span> 		</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='linenumber'> 24</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='linenumber'> 25</span> </span><span class="PUNC">)</span></pre></body></html>

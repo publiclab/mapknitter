@@ -1,5 +1,5 @@
 /**
- * @namespace The base of the interface between javascript and the canvas element.
+ * @namespace The base of the interface between javascript and the canvas element. GLOP is a general javascript/canvas drawing system.
  */
 var Glop = {
 	/**

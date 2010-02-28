@@ -6778,7 +6778,7 @@ var Events = {
 		Glop.observe('mousemove', Events.mousemove)
 		Glop.observe('mousedown', Events.mousedown)
 		Glop.observe('mouseup', Events.mouseup)
-		Glop.observe('dblclick', Events.doubleclick)
+		Glop.observe('dblclick', Events.dblclick)
 		Glop.observe('mouseover', Events.mouseover)
 		Glop.observe('mouseout', Events.mouseout)
 
@@ -6941,7 +6941,7 @@ var Events = {
 		Map.rotate_old = null
 		User.update()
 	},
-	doubleclick: function(event) {
+	dblclick: function(event) {
 	},
 	drag: function() {
 		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
@@ -7709,6 +7709,7 @@ var Tool = {
 		Glop.observe('mousemove', Tool.Pan.mousemove)
 		Glop.observe('mousedown', Tool.Pan.mousedown)
 		Glop.observe('mouseup', Tool.Pan.mouseup)
+		Glop.observe('dblclick', Tool.Pan.dblclick)
 	},
 	active: 'Pan',
 	change: function(new_tool) {
@@ -7730,9 +7731,6 @@ var Tool = {
 
 		Tool.active = new_tool
 	},
-	/*
-	 * Pass drag call to the active tool:
-	 */
 	drag: function() {
 		Tool[Tool.active].drag()
 	}
@@ -7804,23 +7802,44 @@ Tool.Select = {
 	}.bindAsEventListener(Tool.Select),
 	drag: function() {
 
-	}
+	},
+	dblclick: function() {
+		$l('Select dblclick')
+	}.bindAsEventListener(Tool.Select)
 }
 Tool.Pen = {
+	mode: 'inactive',
+	current_poly: null,
 	activate: function() {
-		console.log('Pen activated')
+		$l('Pen activated')
 	},
 	deactivate: function() {
-		console.log('Pen deactivated')
+		$l('Pen deactivated')
 	},
 	mousedown: function() {
-		console.log('Pen mousedown')
+
+		if (Tool.Pen.mode == 'inactive') {
+			$l('pen activated')
+
+		} else if (Tool.Pen.mode == 'drawing') {
+			$l('pen drawing')
+
+		}
+
 	}.bindAsEventListener(Tool.Pen),
 	mouseup: function() {
-		console.log('Pen mouseup')
+		$l('Pen mouseup')
 	}.bindAsEventListener(Tool.Pen),
 	mousemove: function() {
-		console.log('Pen mousemove')
+		$l('Pen mousemove')
+	}.bindAsEventListener(Tool.Pen),
+	dblclick: function() {
+		$l('Pen dblclick')
+		Tool.Pen.mode = 'inactive'
+		if (true) {
+
+		}
+
 	}.bindAsEventListener(Tool.Pen)
 }
 Tool.Pan = {
@@ -7857,7 +7876,31 @@ Tool.Pan = {
 			Map.x = Map.x_old+(d_x/Map.zoom)
 			Map.y = Map.y_old+(d_y/Map.zoom)
 		}
-	}
+	},
+	dblclick: function() {
+		$l('Pan dblclick')
+	}.bindAsEventListener(Tool.Pan)
+}
+Tool.Warp = {
+	drag: function() {
+
+	},
+	mousedown: function() {
+		$l('Warp mousedown')
+
+	}.bindAsEventListener(Tool.Warp),
+	mouseup: function() {
+		$l('Warp mouseup')
+
+	}.bindAsEventListener(Tool.Warp),
+	mousemove: function() {
+		$l('Warp mousemove')
+
+	}.bindAsEventListener(Tool.Warp),
+	dblclick: function() {
+		$l('Warp dblclick')
+
+	}.bindAsEventListener(Tool.Warp)
 }
 
 var Interface = {
@@ -8306,3 +8349,49 @@ var Map = {
 
 document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
+var Warper = {
+	images: [],
+	flatten: function() {
+		new Ajax.Request('/warper/warp', {
+		  method: 'get',
+		  parameters: {
+			images: Warper.images,
+		  },
+		  onSuccess: function(response) {
+		  }
+		});
+	},
+	new_image: function() {
+
+	}
+}
+
+Warper.ControlPoint = Class.create({
+	initialize: function(x,y) {
+		this.selected = true
+		this.x = x
+		this.y = y
+	},
+	drag: function() {
+		console.log('CP dragging')
+	},
+	click: function() {
+		console.log('CP clicked')
+	}.bindAsEventListener(Glop),
+	draw: function() {
+
+
+
+	}
+})
+Warper.Image = Class.create(
+{
+	src: '',
+	corners: [
+		[-100,100],
+		[100,100],
+		[100,-100],
+		[-100,-100]
+		],
+}
+)
