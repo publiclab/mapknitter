@@ -15,202 +15,6 @@
  * also available under an MIT license.
  */
 
-/* **** BEGIN PROTOTYPE-GRAPHIC **** */
-
-var PrototypeGraphic = {
-  Version: '0.1',
-  require: function(libraryName) {
-    document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
-  },
-  REQUIRED_PROTOTYPE: '1.5.1',
-  load: function() {
-    function convertVersionString(versionString){
-      var r = versionString.split('.');
-      return parseInt(r[0])*100000 + parseInt(r[1])*1000 + parseInt(r[2]);
-    }
-
-    if((typeof Prototype=='undefined') ||
-       (typeof Element == 'undefined') ||
-       (typeof Element.Methods=='undefined') ||
-       (convertVersionString(Prototype.Version) <
-        convertVersionString(PrototypeGraphic.REQUIRED_PROTOTYPE)))
-       throw("Prototype Graphic requires the Prototype JavaScript framework >= " +
-        PrototypeGraphic.REQUIRED_PROTOTYPE);
-
-    $A(document.getElementsByTagName("script")).findAll( function(s) {
-      return (s.src && s.src.match(/prototype\-graphic\.js(\?.*)?$/))
-    }).each( function(s) {
-      var path = s.src.replace(/prototype\-graphic\.js(\?.*)?$/,'');
-      ('utils,base/graphic,base/matrix,renderer/abstract,shape/shape,shape/rect,shape/ellipse,shape/circle,shape/polyline,shape/polygon,shape/line,shape/group,shape/text,shape/image').split(',').each(
-       function(include) { PrototypeGraphic.require(path+include+'.js') });
-       var includes = s.src.match(/\?.*include=([a-z,]*)/);
-       if (includes && includes[1] == "tools")
-        ('base/event_notifier,tools/tool,tools/tool_manager,tools/select,tools/drawing,tools/highlight').split(',').each(
-          function(include) { PrototypeGraphic.require(path+include+'.js') });
-    });
-  }
-}
-
-PrototypeGraphic.load();
-/*
-Class: Graphic.SVGRenderer
-	SVG Renderer Class
-
-	This class implements all Graphic.AbstractRender functions.
-
-  See Also:
-   <AbstractRender>
-
-   Author:
-   	Sébastien Gruhier, <http://www.xilinus.com>
-*/
-
-Graphic.SVGRenderer = Class.create();
-
-Object.extend(Graphic.SVGRenderer, {
-  xmlns: {
-    svg:   "http://www.w3.org/2000/svg",
-    xlink: "http://www.w3.org/1999/xlink"
-  },
-
-  createNode:  function(nodeName) {
-    return document.createElementNS(Graphic.SVGRenderer.xmlns.svg, nodeName);;
-  }
-})
-
-Object.extend(Graphic.SVGRenderer.prototype, Graphic.AbstractRender.prototype);
-Graphic.SVGRenderer.prototype._parentInitialize = Graphic.AbstractRender.prototype.initialize;
-Graphic.SVGRenderer.prototype._parentSetSize = Graphic.AbstractRender.prototype.setSize;
-
-Object.extend(Graphic.SVGRenderer.prototype, {
-  initialize: function(element) {
-    this._parentInitialize(element);
-    this.element = Graphic.SVGRenderer.createNode("svg");
-
-    this.element.setAttribute("width", this.bounds.w);
-    this.element.setAttribute("height", this.bounds.h);
-    this.element.setAttribute("preserveAspectRatio", "none");
-
-    this._setViewing();
-
-    this.element.shape = this;
-    $(element).appendChild(this.element);
-  },
-
-  destroy: function() {
-    $A(this.element.childNodes).each(function(node) {
-      if (node.shape) {
-        node.shape.destroy();
-      } else {
-        node.parentNode.removeChild(node);
-      }
-    })
-    this.element.parentNode.removeChild(this.element);
-  },
-
-  setSize: function(width, height) {
-    this._parentSetSize(width, height);
-    this.element.setAttribute("width", this.bounds.w);
-    this.element.setAttribute("height", this.bounds.h);
-    this.zoom(this.viewing.sx, this.viewing.sy)
-  },
-
-  createShape: function(shape){
-    return Graphic.SVGRenderer.createNode(shape.nodeName);
-  },
-
-  add: function(shape) {
-    if (shape.parent)
-      shape.parent.getRendererObject().appendChild(shape.getRendererObject());
-    else
-      this.element.appendChild(shape.getRendererObject());
-  },
-
-  remove:function(shape) {
-    if (shape.parent)
-      shape.parent.getRendererObject().removeChild(shape.getRendererObject());
-    else
-      this.element.removeChild(shape.getRendererObject());
-  },
-
-  get: function(id) {
-    var element = $(id)
-    return element && element.shape ? element.shape : null;
-  },
-
-  shapes: function() {
-    return $A(this.element.childNodes).collect(function(element) {return element.shape});
-  },
-
-  clear: function() {
-    $A(this.element.childNodes).each(function(element)  {
-      element.shape.destroy();
-    })
-  },
-
-  updateAttributes:function(shape, attributes) {
-    $H(attributes).keys().each(function(key) {
-      if (key == "href")
-        shape.element.setAttributeNS(Graphic.SVGRenderer.xmlns.xlink, "href", attributes[key]);
-      else
-        shape.element.setAttribute(key, attributes[key])
-    });
-  },
-
-  updateTransform:function(shape) {
-    if (shape.nodeName != "g")
-      shape.element.setAttribute("transform", "matrix(" + shape.getMatrix().values().join(",") +  ")");
-  },
-
-  nbShapes: function() {
-    return this.element.childNodes.length;
-  },
-
-  moveToFront: function(node) {
-    if (this.nbShapes() > 0) {
-      this.element.appendChild(node.element);
-    }
-  },
-
-  show:function(shape) {
-    shape.element.style.display = "block";
-  },
-
-  hide:function(shape) {
-    shape.element.style.display = "none";
-  },
-
-  draw: function() {
-  },
-
-  pick: function(event) {
-    var element = Event.element(event);
-    return element == this.element ? null : element.shape;
-  },
-
-  position: function() {
-    if (this.offset == null)
-      this.offset = Position.cumulativeOffset(this.element.parentNode);
-    return this.offset;
-  },
-
-  addComment: function(shape, text) {
-  	shape.element.appendChild(document.createComment(text));
-  },
-
-  addText: function(shape, text) {
-  	shape.element.appendChild(document.createTextNode(text));
-  },
-
-  _setViewing: function() {
-    var bounds = this.viewingMatrix.multiplyBounds(this.bounds);
-    this.element.setAttribute("viewBox", bounds.x + " " + bounds.y + " "  +  bounds.w + " " + bounds.h);
-  }
-});
-
-
-/* **** END PROTOTYPE-GRAPHIC **** */
-
 /* **** BEGIN PROTOTYPE **** */
 
 /*  Prototype JavaScript framework, version 1.6.0.3
@@ -4443,6 +4247,202 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 Element.addMethods();
 
 /* **** END PROTOTYPE **** */
+
+/* **** BEGIN PROTOTYPE-GRAPHIC **** */
+
+var PrototypeGraphic = {
+  Version: '0.1',
+  require: function(libraryName) {
+    document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
+  },
+  REQUIRED_PROTOTYPE: '1.5.1',
+  load: function() {
+    function convertVersionString(versionString){
+      var r = versionString.split('.');
+      return parseInt(r[0])*100000 + parseInt(r[1])*1000 + parseInt(r[2]);
+    }
+
+    if((typeof Prototype=='undefined') ||
+       (typeof Element == 'undefined') ||
+       (typeof Element.Methods=='undefined') ||
+       (convertVersionString(Prototype.Version) <
+        convertVersionString(PrototypeGraphic.REQUIRED_PROTOTYPE)))
+       throw("Prototype Graphic requires the Prototype JavaScript framework >= " +
+        PrototypeGraphic.REQUIRED_PROTOTYPE);
+
+    $A(document.getElementsByTagName("script")).findAll( function(s) {
+      return (s.src && s.src.match(/prototype\-graphic\.js(\?.*)?$/))
+    }).each( function(s) {
+      var path = s.src.replace(/prototype\-graphic\.js(\?.*)?$/,'');
+      ('utils,base/graphic,base/matrix,renderer/abstract,shape/shape,shape/rect,shape/ellipse,shape/circle,shape/polyline,shape/polygon,shape/line,shape/group,shape/text,shape/image').split(',').each(
+       function(include) { PrototypeGraphic.require(path+include+'.js') });
+       var includes = s.src.match(/\?.*include=([a-z,]*)/);
+       if (includes && includes[1] == "tools")
+        ('base/event_notifier,tools/tool,tools/tool_manager,tools/select,tools/drawing,tools/highlight').split(',').each(
+          function(include) { PrototypeGraphic.require(path+include+'.js') });
+    });
+  }
+}
+
+PrototypeGraphic.load();
+/*
+Class: Graphic.SVGRenderer
+	SVG Renderer Class
+
+	This class implements all Graphic.AbstractRender functions.
+
+  See Also:
+   <AbstractRender>
+
+   Author:
+   	Sébastien Gruhier, <http://www.xilinus.com>
+*/
+
+Graphic.SVGRenderer = Class.create();
+
+Object.extend(Graphic.SVGRenderer, {
+  xmlns: {
+    svg:   "http://www.w3.org/2000/svg",
+    xlink: "http://www.w3.org/1999/xlink"
+  },
+
+  createNode:  function(nodeName) {
+    return document.createElementNS(Graphic.SVGRenderer.xmlns.svg, nodeName);;
+  }
+})
+
+Object.extend(Graphic.SVGRenderer.prototype, Graphic.AbstractRender.prototype);
+Graphic.SVGRenderer.prototype._parentInitialize = Graphic.AbstractRender.prototype.initialize;
+Graphic.SVGRenderer.prototype._parentSetSize = Graphic.AbstractRender.prototype.setSize;
+
+Object.extend(Graphic.SVGRenderer.prototype, {
+  initialize: function(element) {
+    this._parentInitialize(element);
+    this.element = Graphic.SVGRenderer.createNode("svg");
+
+    this.element.setAttribute("width", this.bounds.w);
+    this.element.setAttribute("height", this.bounds.h);
+    this.element.setAttribute("preserveAspectRatio", "none");
+
+    this._setViewing();
+
+    this.element.shape = this;
+    $(element).appendChild(this.element);
+  },
+
+  destroy: function() {
+    $A(this.element.childNodes).each(function(node) {
+      if (node.shape) {
+        node.shape.destroy();
+      } else {
+        node.parentNode.removeChild(node);
+      }
+    })
+    this.element.parentNode.removeChild(this.element);
+  },
+
+  setSize: function(width, height) {
+    this._parentSetSize(width, height);
+    this.element.setAttribute("width", this.bounds.w);
+    this.element.setAttribute("height", this.bounds.h);
+    this.zoom(this.viewing.sx, this.viewing.sy)
+  },
+
+  createShape: function(shape){
+    return Graphic.SVGRenderer.createNode(shape.nodeName);
+  },
+
+  add: function(shape) {
+    if (shape.parent)
+      shape.parent.getRendererObject().appendChild(shape.getRendererObject());
+    else
+      this.element.appendChild(shape.getRendererObject());
+  },
+
+  remove:function(shape) {
+    if (shape.parent)
+      shape.parent.getRendererObject().removeChild(shape.getRendererObject());
+    else
+      this.element.removeChild(shape.getRendererObject());
+  },
+
+  get: function(id) {
+    var element = $(id)
+    return element && element.shape ? element.shape : null;
+  },
+
+  shapes: function() {
+    return $A(this.element.childNodes).collect(function(element) {return element.shape});
+  },
+
+  clear: function() {
+    $A(this.element.childNodes).each(function(element)  {
+      element.shape.destroy();
+    })
+  },
+
+  updateAttributes:function(shape, attributes) {
+    $H(attributes).keys().each(function(key) {
+      if (key == "href")
+        shape.element.setAttributeNS(Graphic.SVGRenderer.xmlns.xlink, "href", attributes[key]);
+      else
+        shape.element.setAttribute(key, attributes[key])
+    });
+  },
+
+  updateTransform:function(shape) {
+    if (shape.nodeName != "g")
+      shape.element.setAttribute("transform", "matrix(" + shape.getMatrix().values().join(",") +  ")");
+  },
+
+  nbShapes: function() {
+    return this.element.childNodes.length;
+  },
+
+  moveToFront: function(node) {
+    if (this.nbShapes() > 0) {
+      this.element.appendChild(node.element);
+    }
+  },
+
+  show:function(shape) {
+    shape.element.style.display = "block";
+  },
+
+  hide:function(shape) {
+    shape.element.style.display = "none";
+  },
+
+  draw: function() {
+  },
+
+  pick: function(event) {
+    var element = Event.element(event);
+    return element == this.element ? null : element.shape;
+  },
+
+  position: function() {
+    if (this.offset == null)
+      this.offset = Position.cumulativeOffset(this.element.parentNode);
+    return this.offset;
+  },
+
+  addComment: function(shape, text) {
+  	shape.element.appendChild(document.createComment(text));
+  },
+
+  addText: function(shape, text) {
+  	shape.element.appendChild(document.createTextNode(text));
+  },
+
+  _setViewing: function() {
+    var bounds = this.viewingMatrix.multiplyBounds(this.bounds);
+    this.element.setAttribute("viewBox", bounds.x + " " + bounds.y + " "  +  bounds.w + " " + bounds.h);
+  }
+});
+
+
+/* **** END PROTOTYPE-GRAPHIC **** */
 
 /* **** BEGIN GEOHASH **** */
 
