@@ -1,0 +1,20 @@
+Welcome to the Cartagen framework! If you're a developer looking to edit Cartagen source files, you're in the right place!
+
+=================================================
+Getting started
+
+The first resource you should look at is the Cartagen Wiki Developer Center:
+
+http://wiki.cartagen.org/wiki/show/DeveloperCenter
+
+API Documentation for Cartagen are available at both http://cartagen.org/api/ and also in the Cartagen source at /public/api/index.html
+
+=================================================
+Cartagen source layout
+
+http://wiki.cartagen.org/wiki/show/NavigatingTheSource
+
+=================================================
+Patches
+
+To generate a code patch, look at this good outline for git patch submission: https://rails.lighthouseapp.com/projects/8994/sending-patches

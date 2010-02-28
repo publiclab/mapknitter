@@ -18,7 +18,7 @@ task :autobuild do
 	        begin
 	          build
           rescue
-            puts "Build failed"
+            puts "//// !!! Build failed !!! ////"
           end
 	    end
 	end

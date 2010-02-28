@@ -15,12 +15,18 @@
  * also available under an MIT license.
  */
 
+/* **** BEGIN PROTOTYPE-GRAPHIC **** */
+
+//= require <../lib/prototype-graphic/prototype-graphic>
+//= require <../lib/prototype-graphic/svg>
+
+/* **** END PROTOTYPE-GRAPHIC **** */
+
 /* **** BEGIN PROTOTYPE **** */
 
 //= require <../lib/prototype>
 
 /* **** END PROTOTYPE **** */
-
 
 /* **** BEGIN GEOHASH **** */
 

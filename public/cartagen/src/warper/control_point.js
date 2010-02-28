@@ -14,7 +14,7 @@ Warper.ControlPoint = Class.create({
 	},
 	click: function() {
 		console.log('CP clicked')
-	}.bindAsEventListener(Glop),
+	},//.bindAsEventListener(Warper), // this wont work because its a class definition, not an instance
 	/**
 	 * Called every frame from Cartagen.draw 
 	 */

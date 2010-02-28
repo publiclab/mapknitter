@@ -71,3 +71,11 @@ Coming soon...
 Documentation
 
 Cartagen usage and documentation is available at http://wiki.cartagen.org, and a periodically downloaded version is available at http://github.com/jywarren/cartagen/downloads
+
+=================================================
+Development
+
+If you're interested in developing or modifying the Cartagen client-side source code (cartagen.js), review the README file at /public/cartagen/README, and see the following Wiki pages:
+
+http://wiki.cartagen.org/wiki/show/DeveloperCenter
+http://wiki.cartagen.org/wiki/show/NavigatingTheSource
