@@ -1,0 +1,6 @@
+<a href="/warper/list">List</a><br />
+
+Filename: <%= @image.filename %><br />
+Size: <%= @image.size %><br />
+
+<a href="<%= @image.public_filename() %>"><img src="<%= @image.public_filename(:medium) %>" /></a><br />
