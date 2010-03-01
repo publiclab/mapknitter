@@ -22,14 +22,16 @@
 		})
 		
 		var Draggable = Class.create({
-			initialize: function(x,y) {
+			initialize: function(x,y,img) {
 				this.x = x
 				this.y = y
 				this.lat = 0
 				this.lon = 0
+				this.image = new Image
+				this.image.src = img
 				this.color = "#200"
-				this.width = 100
-				this.height = 100
+				this.width = 300
+				this.height = 380
 				this.rotate=120
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			},
@@ -46,6 +48,8 @@
 						$C.fill_style(this.color)
 						$C.opacity(1)
 						$C.line_width(100)
+						console.log(this.image)
+						if (!Object.isUndefined(this.image.width)) $C.fill_pattern(this.image, 'repeat')
 						$C.rect(0,0,this.width,this.height)
 				$C.restore()
 				
@@ -84,7 +88,7 @@
 		})
 
 		function setup() {
-			draggy = new Draggable(Map.x,Map.y)
+			draggy = new Draggable(Map.x,Map.y,'http://s3.amazonaws.com/grassrootsmapping/warpables/1/00034_medium.jpg')
 		}
 		document.observe('cartagen:init', setup)
 	</script>
