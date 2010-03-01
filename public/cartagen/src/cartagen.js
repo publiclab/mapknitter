@@ -23,8 +23,31 @@
 
 /* **** BEGIN PROTOTYPE-GRAPHIC **** */
 
-// //= require <../lib/prototype-graphic/prototype-graphic>
-// //= require <../lib/prototype-graphic/svg>
+//= require <../lib/prototype-graphic/prototype-graphic>
+//= require <../lib/prototype-graphic/src/utils>
+//= require <../lib/prototype-graphic/src/base/event_notifier>
+//= require <../lib/prototype-graphic/src/base/graphic>
+//= require <../lib/prototype-graphic/src/base/matrix>
+//= require <../lib/prototype-graphic/src/renderer/abstract>
+//= require <../lib/prototype-graphic/src/renderer/canvas>
+//= require <../lib/prototype-graphic/src/renderer/svg>
+//= require <../lib/prototype-graphic/src/renderer/vml>
+//= require <../lib/prototype-graphic/src/shape/shape>
+//= require <../lib/prototype-graphic/src/shape/rect>
+//= require <../lib/prototype-graphic/src/shape/circle>
+//= require <../lib/prototype-graphic/src/shape/ellipse>
+//= require <../lib/prototype-graphic/src/shape/group>
+//= require <../lib/prototype-graphic/src/shape/image>
+//= require <../lib/prototype-graphic/src/shape/line>
+//= require <../lib/prototype-graphic/src/shape/polyline>
+//= require <../lib/prototype-graphic/src/shape/polygon>
+//= require <../lib/prototype-graphic/src/shape/text>
+//= require <../lib/prototype-graphic/src/tools/tool>
+//= require <../lib/prototype-graphic/src/tools/drawing>
+//= require <../lib/prototype-graphic/src/tools/highlight>
+//= require <../lib/prototype-graphic/src/tools/select>
+//= require <../lib/prototype-graphic/src/tools/tool_manager>
+//= require <../lib/prototype-graphic/svg>
 
 /* **** END PROTOTYPE-GRAPHIC **** */
 

@@ -1,0 +1,12 @@
+<%= error_messages_for :warpable %>
+
+<% form_for(:warpable, :url => mugshots_path, 
+                      :html => { :warpable => true }) do |f| -%>
+  <p>
+    <label for="warpable">Upload An Image:</label>
+    <%= f.file_field :uploaded_data %>
+  </p>
+  <p>
+    <%= submit_tag 'Upload' %>
+  </p>
+<% end -%>
