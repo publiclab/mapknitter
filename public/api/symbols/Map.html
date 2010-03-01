@@ -1,0 +1,571 @@
+
+<div class="body-wrap">
+    <div class="top-tools">
+        <a class="inner-link" href="#Map-props"><img src="resources/s.gif" class="item-icon icon-prop">Properties</a>
+        <a class="inner-link" href="#Map-methods"><img src="resources/s.gif" class="item-icon icon-method">Methods</a>
+        <a class="inner-link" href="#Map-events"><img src="resources/s.gif" class="item-icon icon-event">Events</a>
+        <a class="bookmark" href="./index.html?class=Map"><img src="resources/s.gif" class="item-icon icon-fav">Direct Link</a>
+    </div>
+    
+<div class="inheritance res-block">
+<pre class="res-block-inner"><img src="resources/elbow-end.gif"/>Map</pre>
+</div>
+    
+	
+
+    <h1>Class Map (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMap">Wiki Page</a>)</h1>     
+    <table cellspacing="0">
+        <tr><td class="label">Defined In:</td><td class="hd-info"><a href="http://code.google.com/p/cartagen/source/browse/trunk/cartagen/public/cartagen/src/mapping/map.js">map.js</a></td></tr>
+        <tr><td class="label">Class:</td><td class="hd-info">Map</td></tr>
+        <!-- tr><td class="label">Subclasses:</td><td class="hd-info">this could be figured out</td></tr -->
+        <tr><td class="label">Extends:</td><td class="hd-info"></td></tr>        
+    </table>
+    
+    <div class="description">
+        Stores data about the map and methods to manipulate it 
+    </div>
+     
+    <div class="hr"></div>
+    <a id="Map-configs"></a>
+    
+    <a id="Map-props"></a>      
+    
+    <h2>Public Properties</h2> 
+            
+    <table cellspacing="0" class="member-table">            
+        <tr>
+            <th class="sig-header" colspan="2">Property</th>
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-bbox"></a>
+                <b>bbox</b> : Number[] (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropBbox">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Bounding box of map, in [lon1, lat2, lon2, lat1] format...</div>
+                    <div class="long">
+                        Bounding box of map, in [lon1, lat2, lon2, lat1] format
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.bbox" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-last_pos"></a>
+                <b>last_pos</b> : Number[] (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropLastPos">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Last map position, as an [x, y] tuple...</div>
+                    <div class="long">
+                        Last map position, as an [x, y] tuple
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.last_pos" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-lat"></a>
+                <b>lat</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropLat">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Latitude of map's center...</div>
+                    <div class="long">
+                        Latitude of map's center
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.lat" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-lat_height"></a>
+                <b>lat_height</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropLatHeight">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Height of the map, in degrees of latitude...</div>
+                    <div class="long">
+                        Height of the map, in degrees of latitude
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.lat_height" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-lon"></a>
+                <b>lon</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropLon">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Longitude of map's center...</div>
+                    <div class="long">
+                        Longitude of map's center
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.lon" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-lon_width"></a>
+                <b>lon_width</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropLonWidth">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Width of the map, in degrees of longitude...</div>
+                    <div class="long">
+                        Width of the map, in degrees of longitude
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.lon_width" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-resolution"></a>
+                <b>resolution</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropResolution">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Resolution of map - controls the ratio of number of nodes a way has and the number of nodes
+used to that way in the draw...</div>
+                    <div class="long">
+                        Resolution of map - controls the ratio of number of nodes a way has and the number of nodes
+used to that way in the drawing process. Not that much savings yet. Automatically
+generated based on zoom level.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.resolution" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-rotate"></a>
+                <b>rotate</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropRotate">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Tilt degree, in radians...</div>
+                    <div class="long">
+                        Tilt degree, in radians
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.rotate" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-rotate_old"></a>
+                <b>rotate_old</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropRotateOld">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Tilt degree from beginning of drag motion...</div>
+                    <div class="long">
+                        Tilt degree from beginning of drag motion
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.rotate_old" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-x"></a>
+                <b>x</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropX">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">X-coordinate of map's center. Set this to move the map....</div>
+                    <div class="long">
+                        X-coordinate of map's center. Set this to move the map.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.x" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-x_old"></a>
+                <b>x_old</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropXOld">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">X-coordinate from beginning of drag motion...</div>
+                    <div class="long">
+                        X-coordinate from beginning of drag motion
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.x_old" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-y"></a>
+                <b>y</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropY">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">X-coordinate of map's center. Set this to move the map....</div>
+                    <div class="long">
+                        X-coordinate of map's center. Set this to move the map.
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.y" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-y_old"></a>
+                <b>y_old</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropYOld">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Y-coordinate from beginning of drag motion...</div>
+                    <div class="long">
+                        Y-coordinate from beginning of drag motion
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.y_old" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-zoom"></a>
+                <b>zoom</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropZoom">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Current zoom level...</div>
+                    <div class="long">
+                        Current zoom level
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.zoom" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+                    
+        <tr class="property-row expandable">
+            <td class="micon">
+                <a class="exi" href="#expand">&nbsp;</a>
+            </td>
+            <td class="sig">
+                <a id="Map-props-zoom_old"></a>
+                <b>zoom_old</b> : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapPropZoomOld">Wiki Page</a>)            
+                <div class="mdesc">   
+                    <div class="short">Zoom factor from beginning of drag or gesture motion...</div>
+                    <div class="long">
+                        Zoom factor from beginning of drag or gesture motion
+                        
+                         
+                    </div>
+                </div>
+            </td>
+            <td class="msource">                
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.zoom_old" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+        
+        
+        
+        <!-- TODO: implement this alt row.  also notice non-linked "Defined by" when property is a part of this class.     
+        <tr class="property-row alt">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Ext.Component-hidden"></a>
+                <b>hidden</b> : Boolean            
+                <div class="mdesc">                            
+                    True if this component is hidden. Read-only.                       
+                </div>
+            </td>
+            <td class="msource">Component</td>
+        </tr>
+        -->
+    </table>
+                   
+    <a id="Map-methods"></a>
+    <h2>Public Methods</h2>    
+    
+    <table cellspacing="0" class="member-table">
+        <tr>
+            <th class="sig-header" colspan="2">Method</th>            
+            <th class="msource-header">Defined By</th>
+        </tr>
+        
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Map-methods-draw"></a>                
+                <b>draw</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapMethodDraw">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Updates the map properties. Runs every frame....</div>
+                    <div class="long">
+                        Updates the map properties. Runs every frame.
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.draw" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Map-methods-init"></a>                
+                <b>init</b>(&nbsp;<code></code>&nbsp;) : void (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapMethodInit">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Initializes the map properties...</div>
+                    <div class="long">
+                        Initializes the map properties
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>void<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.init" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Map-methods-pointer_x"></a>                
+                <b>pointer_x</b>(&nbsp;<code></code>&nbsp;) : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapMethodPointerX">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Mouse's x-coordinate, in the map's coordinate system...</div>
+                    <div class="long">
+                        Mouse's x-coordinate, in the map's coordinate system
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>Number<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.pointer_x" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+                
+        <tr class="method-row expandable">
+            <td class="micon"><a class="exi" href="#expand">&nbsp;</a></td>
+            <td class="sig">
+                <a id="Map-methods-pointer_y"></a>                
+                <b>pointer_y</b>(&nbsp;<code></code>&nbsp;) : Number (<a href="http://wiki.cartagen.org/wiki/show/ApiClassMapMethodPointerY">Wiki Page</a>)
+                <div class="mdesc">
+                    <div class="short">Mouse's y-coordinate, in the map's coordinate system...</div>
+                    <div class="long">
+                        Mouse's y-coordinate, in the map's coordinate system
+
+                        
+
+                        <div class="mdetail-params">                            
+                            <strong>Parameters:</strong>                            
+                            <ul>
+                            
+                            </ul>
+                                                        
+                            <strong>Returns:</strong>
+                            <ul>
+                                <li>Number<div class="sub-desc"></div></li>
+                            </ul>                    
+                        </div>
+                    </div>                    
+                </div>
+            </td>
+            <td class="msource">
+                Map
+                <a class="x-hidden" ext:cls="Map" ext:member="Map.pointer_y" href="symbols/Map.html">Map</a>
+            </td>
+        </tr>
+                                                          
+    </table>
+    
+    <a id="Map-events"></a>
+    <h2>Public Events</h2>
+    <p>This class has no events</p>
+    <table cellspacing="0" class="x-hidden">        
+        <tr>
+            <th class="sig-header" colspan="2">Event</th>   
+            <th class="msource-header">Defined By</th>
+        </tr>
+                    
+    </table>            
+</div>

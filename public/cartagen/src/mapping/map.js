@@ -4,6 +4,7 @@
 
 /**
  * Stores data about the map and methods to manipulate it
+ * @namespace 
  */
 var Map = {
 	/**
