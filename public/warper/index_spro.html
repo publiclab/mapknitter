@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Cartagen</title>
+	<link rel="stylesheet" href="../cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="../cartagen/excanvas.js"></script><![endif]-->
+	<script src="../cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script type="text/javascript" charset="utf-8">
+		Cartagen.setup({
+			stylesheet: "../static/rome/style.gss",
+			static_map: true,
+			static_map_layers: ["map.json"],
+			lat: 42.360140177156026, 
+			lng: -71.08812053061226,
+			zoom_level: 1.0749999999999986
+		})
+		
+		// Tool.active == 'Warp'
+		
+		var PointShape = Class.create({
+			initialize: function(nodes) {
+				this.nodes = nodes
+				this.points = $A()
+				this.diddit = false
+				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				this.nodes.each(function(node) {
+					this.points.push(new DraggablePoint(node[0], node[1], 20))
+				}, this)
+			},
+			
+			draw: function() {
+				if (!this.diddit) {
+					this.diddit=true
+					var ps = ''
+					this.points.each(function(point) {
+						ps += '(' + point.x + ',' + point.y + ')'
+					})
+					//alert(ps)
+				}
+				$C.save()
+				$C.stroke_style('#f0f')
+				$C.fill_style('#f0f')
+				$C.line_width(2)
+				$C.begin_path()
+				
+				$C.move_to(this.points[0].x, this.points[0].y)
+				this.points.each(function(point) {
+					$C.line_to(point.x, point.y)
+				})
+				$C.line_to(this.points[0].x, this.points[0].y)
+
+				$C.stroke()
+				//$C.rect(this.points[0].x, this.points[0].y, this.points[2].x, this.points[2].y)
+				$C.restore()
+			}
+			
+		})
+		
+		var DraggablePoint = Class.create({
+			initialize: function(x,y,r) {
+				this.x = x
+				this.y = y
+				this.r = r
+				this.color = '#200'
+				this.dragging = false
+				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+			},
+			
+			// this gets called every frame:
+			draw: function() {
+				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
+				// first, save the transformation matrix:
+				$C.save()
+				
+					// go to the object's location:
+					$C.translate(this.x,this.y)
+						// draw the object:
+						$C.fill_style(this.color)
+						$C.opacity(1)
+						$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+				$C.restore()
+				
+				/*var nodestring = ''
+				nodes.each(function(node) {
+					nodestring += '(' + node[0] + ', ' + node[1] + ')\n'
+				})*/
+				
+				if (this.dragging && Mouse.down) {
+					this.drag()
+				} else if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+					if (Mouse.down) {
+						this.drag()
+					} else {
+						this.hover()
+					}
+				} else {
+					this.base()
+				}
+				
+				// put debug info in
+			/*	debug($H({
+					'mapx': Map.x,
+					'mapy': Map.y,
+					'mousex': Map.pointer_x(),
+					'mousey': Map.pointer_y(),
+					'draggyx': this.x,
+					'draggyy': this.y,
+					'nodes': nodestring,
+					'ipip': ipip(nodes, Map.pointer_x(), Map.pointer_y())
+				}))*/
+
+				// this.nodes should be a list of coordinate pairs
+				// this math is wrong but it gives you an idea.
+				// in reality the 'map' xy-coords are at 'map scale' and the interface is at 1:1 scale. 
+				// you must always be sure you're in the right scale.
+				// if (Geometry.is_point_in_poly(this.nodes, Mouse.x, Mouse.y)) {
+				// 	if (Mouse.dragging) {
+				// 		this.drag()
+				// 		// we can also save the 'dragging' as a state:
+				// 		this.dragging = true
+				// 	} else if (Mouse.down) {
+				// 		this.click()
+				// 	} else if (this.dragging) {
+				// 		this.dragging = false
+				// 	} else {
+				// 		this.hover()
+				// 	}
+				// }
+			},
+			base: function() {
+				// do stuff
+				this.color = '#200'
+				this.dragging = false
+			},
+			click: function() {
+				// do stuff
+
+			},
+			hover: function() {
+				// do stuff
+				this.color = '#f00'
+				this.dragging = false
+			},
+			drag: function() {
+				// do stuff
+				if (!this.dragging) {
+					this.dragging = true
+					this.drag_offset_x = Map.pointer_x() - this.x
+					this.drag_offset_y = Map.pointer_y() - this.y
+				}
+				this.color = '#f00'
+				this.x = Map.pointer_x() - this.drag_offset_x
+				this.y = Map.pointer_y() - this.drag_offset_y
+			},
+			r: function() {
+				// do stuff
+				this.color = '#00f'
+			}
+		})
+		
+		function debug(data) {
+			data.each(function(pair) {
+				$(pair.key).update(pair.value)
+			})
+		}
+
+		function setup() {
+			//draggy = new Draggable(Map.x,Map.y)
+			shapey = new PointShape($A([
+				[Map.x, Map.y],
+				[Map.x+100, Map.y],
+				[Map.x+100, Map.y+100],
+				[Map.x, Map.y+100]
+			]))
+			//draggy.debug = $('debug')
+			//$D.enable();
+			Tool.change('Warp')
+		}
+		document.observe('cartagen:init', setup)
+		
+	</script>
+	
+	<style>
+	#debug {
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		top: 0; right: 0;
+		padding: 10px;
+	}
+	.hidden { display: none; }
+	span {
+		width: 250px;
+		text-align: right;
+		text-decoration: underline;
+		display: block;
+	}
+	</style>
+</head>
+<body>
+
+<div id="canvas"></div>
+<div id="debug">
+	<li>Map.x: <span id="mapx"></span></li>
+	<li>Map.y: <span id="mapy"></span></li>
+	<li>Mouse.x: <span id="mousex"></span></li>
+	<li>Mouse.y: <span id="mousey"></span></li>
+	<li>Drag.x: <span id="draggyx"></span></li>
+	<li>Drag.y: <span id="draggyy"></span></li>
+	<li>Nodes: <span id="nodes"></span></li>
+	<li>IPIP: <span id="ipip"></span></li>
+</div>
+
+</body>
+</html>
