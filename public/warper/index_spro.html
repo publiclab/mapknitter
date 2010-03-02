@@ -30,11 +30,12 @@
 				this.points = $A()
 				this.diddit = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				Glop.observe('mousedown', this.click.bindAsEventListener(this))
 				this.nodes.each(function(node) {
 					this.points.push(new DraggablePoint(node[0], node[1], 20, this))
 				}, this)
+				// remember that nodes is no longer updated!!!
 			},
-			
 			draw: function() {
 				if (!this.diddit) {
 					this.diddit=true
@@ -45,9 +46,10 @@
 					//alert(ps)
 				}
 				$C.save()
-				$C.stroke_style('#f0f')
-				$C.fill_style('#f0f')
-				$C.line_width(2)
+				$C.stroke_style('#000')
+				$C.fill_style('#222')
+				if (this.active) $C.line_width(2)
+				else $C.line_width(0)
 				$C.begin_path()
 				
 				$C.move_to(this.points[0].x, this.points[0].y)
@@ -56,17 +58,18 @@
 				})
 				$C.line_to(this.points[0].x, this.points[0].y)
 
+				$C.opacity(0.4)
 				$C.stroke()
 				$C.opacity(0.2)
 				$C.fill()
 				$C.restore()
-				if (Mouse.down) {
-					Geometry.is_point_in_poly(nodes, Map.pointer_x, Map.pointer_.y)
-					this.click()
-				}
 			},
 			click: function() {
-				console.log('click')
+				if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
+					this.active = true
+				} else {
+					this.active = false
+				}
 			}
 		})
 		
@@ -79,20 +82,23 @@
 				this.color = '#200'
 				this.dragging = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				Glop.observe('mousedown', this.click.bindAsEventListener(this))
 			},
 			// this gets called every frame:
 			draw: function() {
 				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
 				// first, save the transformation matrix:
-				$C.save()
+				if (this.parent_shape.active) {
+					$C.save()
 				
-					// go to the object's location:
-					$C.translate(this.x,this.y)
-						// draw the object:
-						$C.fill_style(this.color)
-						$C.opacity(1)
-						$C.rect(-this.r/2,-this.r/2,this.r,this.r)
-				$C.restore()
+						// go to the object's location:
+						$C.translate(this.x,this.y)
+							// draw the object:
+							$C.fill_style(this.color)
+							$C.opacity(0.6)
+							$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+					$C.restore()
+				}
 				
 				/*var nodestring = ''
 				nodes.each(function(node) {
@@ -147,13 +153,16 @@
 				this.dragging = false
 			},
 			click: function() {
-				// do stuff
-				console.log('clicked control point')
-				this.parent_shape.active = true
+				if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+					this.color = '#f00'
+					// do stuff
+					console.log('clicked control point')
+					this.parent_shape.active = true
+				}
 			},
 			hover: function() {
 				// do stuff
-				this.color = '#f00'
+				this.color = '#900'
 				this.dragging = false
 			},
 			drag: function() {
