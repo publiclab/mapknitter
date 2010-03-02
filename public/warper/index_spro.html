@@ -25,12 +25,13 @@
 		
 		var PointShape = Class.create({
 			initialize: function(nodes) {
+				this.active = false
 				this.nodes = nodes
 				this.points = $A()
 				this.diddit = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 				this.nodes.each(function(node) {
-					this.points.push(new DraggablePoint(node[0], node[1], 20))
+					this.points.push(new DraggablePoint(node[0], node[1], 20, this))
 				}, this)
 			},
 			
@@ -56,22 +57,29 @@
 				$C.line_to(this.points[0].x, this.points[0].y)
 
 				$C.stroke()
-				//$C.rect(this.points[0].x, this.points[0].y, this.points[2].x, this.points[2].y)
+				$C.opacity(0.2)
+				$C.fill()
 				$C.restore()
+				if (Mouse.down) {
+					Geometry.is_point_in_poly(nodes, Map.pointer_x, Map.pointer_.y)
+					this.click()
+				}
+			},
+			click: function() {
+				console.log('click')
 			}
-			
 		})
 		
 		var DraggablePoint = Class.create({
-			initialize: function(x,y,r) {
+			initialize: function(x,y,r,parent) {
 				this.x = x
 				this.y = y
 				this.r = r
+				this.parent_shape = parent
 				this.color = '#200'
 				this.dragging = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			},
-			
 			// this gets called every frame:
 			draw: function() {
 				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
@@ -140,7 +148,8 @@
 			},
 			click: function() {
 				// do stuff
-
+				console.log('clicked control point')
+				this.parent_shape.active = true
 			},
 			hover: function() {
 				// do stuff
@@ -148,15 +157,17 @@
 				this.dragging = false
 			},
 			drag: function() {
-				// do stuff
-				if (!this.dragging) {
-					this.dragging = true
-					this.drag_offset_x = Map.pointer_x() - this.x
-					this.drag_offset_y = Map.pointer_y() - this.y
+				if (this.parent_shape.active) {
+					// do stuff
+					if (!this.dragging) {
+						this.dragging = true
+						this.drag_offset_x = Map.pointer_x() - this.x
+						this.drag_offset_y = Map.pointer_y() - this.y
+					}
+					this.color = '#f00'
+					this.x = Map.pointer_x() - this.drag_offset_x
+					this.y = Map.pointer_y() - this.drag_offset_y
 				}
-				this.color = '#f00'
-				this.x = Map.pointer_x() - this.drag_offset_x
-				this.y = Map.pointer_y() - this.drag_offset_y
 			},
 			r: function() {
 				// do stuff

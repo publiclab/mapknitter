@@ -1,5 +1,5 @@
 /**
- * @namespace Cavas functions, wrapped into shorter, simpler names and abstracted for cross-browser
+ * @namespace Canvas functions, wrapped into shorter, simpler names and abstracted for cross-browser
  *            compatability
  * @see <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes>
  *      MDC Docs</a>
