@@ -35,6 +35,7 @@
 				this.rotate=this.rotatestart
 				this.countclick=0
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				Glop.observe('mousedown', this.click.bindAsEventListener(this))
 			},
 			// this gets called every frame:
 			draw: function() {
@@ -53,17 +54,16 @@
 						$C.rect(0,0,this.width,this.height)
 
 				$C.restore()
-
 				
-				if (Mouse.down){
-					this.click()
-				}
+				
 				if (Mouse.hover){
 					this.hover()
 				}
-				/*if (Mouse.dragging){
+				if (Mouse.dragging){
+					Tool.change('Warp')
+					
 					this.drag()
-				}*/
+				}
 
 				// this.nodes should be a list of coordinate pairs
 				// this math is wrong but it gives you an idea.
@@ -88,19 +88,22 @@
 			click: function() {
 				this.countclick=this.countclick+1
 				this.rotate=this.rotate+this.rotateadd
-				dragx=Mouse.click_x
-				dragy=Mouse.click_y
-				$C.save()
-					// go to the object's location:
-					$C.translate(this.x,this.y)
-					$C.translate(dragx,dragy)
-					$C.rotate(this.rotate)
-						// draw the object:
-						$C.fill_style("#500")
-						$C.opacity(1)
-						$C.line_width(100)
-						$C.rect(0,0,this.width,this.height)
-				$C.restore()
+				this.x = Map.pointer_x()
+				this.y = Map.pointer_y()
+				console.log(Map.pointer_x())
+				console.log(Map.pointer_y())
+				
+				// $C.save()
+				// 	// go to the object's location:
+				// 	$C.translate(this.x,this.y)
+				// 	$C.translate(dragx,dragy)
+				// 	$C.rotate(this.rotate)
+				// 		// draw the object:
+				// 		$C.fill_style("#500")
+				// 		$C.opacity(1)
+				// 		$C.line_width(100)
+				// 		$C.rect(0,0,this.width,this.height)
+				// $C.restore()
 			},
 			hover: function() {
 				// do stuff

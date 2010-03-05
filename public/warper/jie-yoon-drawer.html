@@ -23,18 +23,28 @@
 		
 		// Tool.active == 'Warp'
 		
+		var shapes = []
+		
+		function new_shape() {
+			Tool.change("Pen")
+			Tool.Pen.mode='drawing'
+			shapes.push(new PointShape([]))
+		}
+		
 		var PointShape = Class.create({
 			initialize: function(nodes) {
 				this.active = false
-				this.nodes = nodes
 				this.points = $A()
 				this.diddit = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 				Glop.observe('mousedown', this.click.bindAsEventListener(this))
-				this.nodes.each(function(node) {
+				nodes.each(function(node) {
 					this.points.push(new DraggablePoint(node[0], node[1], 20, this))
 				}, this)
 				// remember that nodes is no longer updated!!!
+			},
+			new_point: function(x,y) {
+				this.points.push(new DraggablePoint(x, y, 20, this))
 			},
 			draw: function() {
 				if (!this.diddit) {
@@ -51,12 +61,15 @@
 				if (this.active) $C.line_width(2)
 				else $C.line_width(0)
 				$C.begin_path()
-				
-				$C.move_to(this.points[0].x, this.points[0].y)
-				this.points.each(function(point) {
-					$C.line_to(point.x, point.y)
-				})
-				$C.line_to(this.points[0].x, this.points[0].y)
+				if (this.points.length>0){
+					$C.move_to(this.points[0].x, this.points[0].y)		
+					this.points.each(function(point) {
+						$C.line_to(point.x, point.y)
+					})			
+					$C.line_to(this.points[0].x, this.points[0].y)
+					
+				}
+			
 
 				$C.opacity(0.4)
 				$C.stroke()
@@ -65,9 +78,9 @@
 				$C.restore()
 			},
 			click: function() {
-				if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
+				if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())&&Tool.active!='Pen') {
 					this.active = true
-				} else {
+				} else if (Tool.active!='Pen') {
 					this.active = false
 				}
 			}
@@ -116,36 +129,6 @@
 				} else {
 					this.base()
 				}
-				
-				// put debug info in
-			/*	debug($H({
-					'mapx': Map.x,
-					'mapy': Map.y,
-					'mousex': Map.pointer_x(),
-					'mousey': Map.pointer_y(),
-					'draggyx': this.x,
-					'draggyy': this.y,
-					'nodes': nodestring,
-					'ipip': ipip(nodes, Map.pointer_x(), Map.pointer_y())
-				}))*/
-
-				// this.nodes should be a list of coordinate pairs
-				// this math is wrong but it gives you an idea.
-				// in reality the 'map' xy-coords are at 'map scale' and the interface is at 1:1 scale. 
-				// you must always be sure you're in the right scale.
-				// if (Geometry.is_point_in_poly(this.nodes, Mouse.x, Mouse.y)) {
-				// 	if (Mouse.dragging) {
-				// 		this.drag()
-				// 		// we can also save the 'dragging' as a state:
-				// 		this.dragging = true
-				// 	} else if (Mouse.down) {
-				// 		this.click()
-				// 	} else if (this.dragging) {
-				// 		this.dragging = false
-				// 	} else {
-				// 		this.hover()
-				// 	}
-				// }
 			},
 			base: function() {
 				// do stuff
@@ -153,7 +136,7 @@
 				this.dragging = false
 			},
 			click: function() {
-				if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+				if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r  && Tool.active!='Pen') {
 					this.color = '#f00'
 					// do stuff
 					console.log('clicked control point')
@@ -193,10 +176,11 @@
 		function setup() {
 			//draggy = new Draggable(Map.x,Map.y)
 			shapey = new PointShape($A([
-				[Map.x, Map.y],
+				[Map.x, Map.y-300],
 				[Map.x+100, Map.y],
 				[Map.x+100, Map.y+100],
-				[Map.x, Map.y+100]
+				[Map.x, Map.y+100]//,
+				// [Map.x+200, Map.y+300]
 			]))
 			//draggy.debug = $('debug')
 			//$D.enable();
@@ -226,6 +210,7 @@
 
 <div id="canvas"></div>
 <div id="debug">
+	<a onClick="new_shape()">add a shape</a>
 	<li>Map.x: <span id="mapx"></span></li>
 	<li>Map.y: <span id="mapy"></span></li>
 	<li>Mouse.x: <span id="mousex"></span></li>
