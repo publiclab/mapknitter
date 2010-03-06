@@ -11555,7 +11555,7 @@ var Tool = {
 	change: function(new_tool) {
 		old_tool = Tool.active
 
-		tool_events = ['mousemove','mouseup','mousedown']
+		tool_events = ['mousemove','mouseup','mousedown','dblclick']
 
 		tool_events.each(function(tool_event) {
 			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
@@ -11648,8 +11648,11 @@ Tool.Select = {
 	}.bindAsEventListener(Tool.Select)
 }
 Tool.Pen = {
-	mode: 'inactive',
+	mode: 'inactive', //'draw','inactive','drag'
 	current_poly: null,
+	drag: function() {
+		$l('Pen dragging')
+	},
 	activate: function() {
 		$l('Pen activated')
 	},
@@ -11659,10 +11662,11 @@ Tool.Pen = {
 	mousedown: function() {
 
 		if (Tool.Pen.mode == 'inactive') {
-			$l('pen activated')
 
-		} else if (Tool.Pen.mode == 'drawing') {
-			$l('pen drawing')
+		} else if (Tool.Pen.mode == 'draw') {
+			console.log('pen drawing')
+			shapes.last().new_point(Map.pointer_x(), Map.pointer_y())
+			shapes.last().active = true
 
 		}
 
@@ -11675,9 +11679,9 @@ Tool.Pen = {
 	}.bindAsEventListener(Tool.Pen),
 	dblclick: function() {
 		$l('Pen dblclick')
-		Tool.Pen.mode = 'inactive'
 		if (true) {
-
+			Tool.Pen.mode = 'inactive'
+			Tool.change('Warp')
 		}
 
 	}.bindAsEventListener(Tool.Pen)
