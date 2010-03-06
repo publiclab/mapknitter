@@ -1,0 +1,159 @@
+CHANGELOG:
+
+ver 1.6.1 (04/13/2008)
+ Changed: 	_update method refactored.
+ Changed: 	Updated to Prototype 1.6.0.1 and Script.aculo.us 1.8.1
+ Changed: 	Removed Effect.ScaleBy. Using Effect.Morph. Code changed respectively.
+ Changed: 	_insertContent and _putContent methods refactored. Duplicate code removed.
+ Changed: 	_update method refactored. The Modalbox doesn't resize to a lower value during the content loading. Also completely removed _loadAfterResize method.
+ Changed: 	resizeToContent method refactored.
+
+ Fixed: 	Fixed double tabbing in forms for Opera and other browsers [#199]
+ Fixed: 	Any characters are now accepted to type in form in Safari/WebKit [#201]
+ Fixed: 	_insertContent method refactored for plain HTML case. Content flickering in Firefox is redone without setTimeout function (IE compatibility).
+ Fixed: 	removed some setTimeout methods which were a fixes for IE.
+
+ver 1.6.0 (12/17/2007)
+ Added: 	Added 2 methods for resizing Modalbox height for content (resizeToContent and resizeToInclude)
+ Added: 	Preliminary support for ASP.NET controls. Added boolean parameter 'aspnet'.
+ Added: 	Added onException callback support for Ajax request
+ Added: 	Experimental CSS3 drop shadow and rounded corners added
+ Added: 	Added 'autoFocusing' option [#133]
+ Added: 	Added a way to customize close link text [#153]
+ Added: 	Added 'beforeHide' callback which is being fired right before slide up effect [#154]
+
+ Changed: 	Updated to prototype 1.6.0 and script.aculo.us 1.8.0
+ Changed: 	Code base refactored to be prototype 1.6.0 compliant
+ Changed: 	Browser dependant checks rewritten with Prototype.Browser object
+ Changed: 	_prepareIE method now includes toggleSelects functionality
+ Changed: 	_toggleSelects and _setOverlay methods removed completely
+ Changed: 	_prepareIE method heavily refactored
+ Changed: 	DOM insertions refactored with prototype 1.6.0 methods
+ Changed: 	Element creation refactored with prototype 1.6.0 methods. builder.js removed.
+ Changed: 	Ajax.request callback change: onComplete -> onSuccess
+ Changed: 	No title case improved. Fixed extra header space addition, changed CSS
+ Changed: 	_insertContent method re-factored to be independed
+ Changed: 	loadContent method changed to strip scripts while inserting to DOM (plain HTML case)
+
+ Fixed: 	IE7 won't hide selects and scroll on top of page anymore
+ Fixed: 	Patched IE keyboard handling for Tab-key
+ Fixed: 	_kbdHandler "space" key case fixed 
+ Fixed: 	overlayClose parameter for window sequences (wizards) fixed [#139]
+ Fixed: 	Selecting a form element with mouse tab order fixed [#134]
+ Fixed: 	Fixed header hiding option in MSIE
+ Fixed: 	Fixed IDs renaming in MSIE (JS object content type case)
+ Fixed: 	Odd MSIE bug fixed with displaying forms on second modalbox calls
+ Fixed: 	Added makePositioned to fix MSIE display issues with variable height
+ Fixed: 	Added a workaround for content flickering in Firefox 
+ Fixed: 	_putContent method modified to support callbacks properly. [#100]
+ Fixed: 	_removeElements method fixed - IDs reverted properly for original content
+ 
+ver 1.5.5.1 (09/21/2007)
+ Added: 	If title options is set to 'false' the Modalbox header will not shown
+ Fixed: 	Toggle SELECTs visibility in IE for cloned node approach [#125]
+ Fixed: 	Critical odd bug with Safari 2 in the _setFocus method fixed
+
+ver 1.5.5 (09/06/2007)
+ Added: 	Modalbox can override standard alert messages. Use overrideAlert to toggle this feature on/off.
+ Added: 	Added an option to toggle animated transitions on/off [#98]
+ Added: 	Proper node clone IDs cleanup on hide [#120]. Unit-tests changes accordingly
+ Changed: 	Default transition intervals changed
+ Changed: 	_update method re-factored
+ Changed: 	_findFocusableElements method re-factored to exclude hidden inputs
+ Changed: 	Moving focus in direct and reverse order (by Shift+TAB combo)
+ Fixed: 	On resize modalbox contents were stretched to 90px if height wasn't defined
+ Fixed: 	Overlay initial flicker effect removed [#104]
+ Fixed: 	Evaluating javascripts after loading the content fixed [#100]
+ Fixed: 	Re-factored SELECTs toggle method for IEs [#111]
+ Fixed: 	Focusing by TAB key issue in Safari [#3]
+ Fixed: 	Potential issues with DOM node content type then using IDs from parent node [#120]
+ Fixed: 	Content isn't being shown in IE6 then transitions are switched off
+ Fixed: 	Added expression in resize effect [#114]
+
+ver 1.5.4 (07/16/2007)
+ Added: 	Overlay opacity parameter added
+ Added: 	ModalBox now accepts HTML (plain & object) as a content parameter [#21]
+ Added: 	Defining height now switches ModalBox to 'scrollable' viewport state [#26]
+ Added: 	ModalBox resizes automatically to fit content height [#26]
+ Added: 	Check for initialized MB on hide attempt
+ Added: 	Activate and Deactivate methods added for easily activation/deactivation of MB interactions
+ Fixed: 	PageUp/Down/Home/End buttons doesn't work on input elements [#58]
+ Fixed: 	Resize method don't resize anymore for a less then a content height. If the content height defined, this value is being used to calculate minimal resize height
+ Fixed: 	Resizing works correctly in IE6 [#77]
+ Fixed: 	Removed non-standard opacity rules from CSS [#57]
+ Changed: 	Options saves between sequences of windows. [was buggy. now fixed]
+ Changed: 	Title made not mandatory parameter and moved to options. !!! IMPORTANT: Changed APIs !!! [#83]
+ Changed: 	Changelog separated from the source code
+ Changed: 	Basic MB visual style changed
+ Changed: 	'isInitialized' property renamed to 'initialized'
+
+ver 1.5.3 (04/21/2007)
+ Added: 	Unit and functional tests added
+ Added: 	"Close window" text can be customized through the optional parameter 'closeString' [#41]
+ Added: 	Custom effects duration in parameters [#21]
+ Added: 	Ajax request method can be changed trough options (method) [#54]
+ Fixed: 	Executing JS from MB content window fixed
+ Fixed: 	MSIE horizontal scrolling after closing MB
+ Fixed: 	Resize method now resize correctly [#42]
+ Fixed: 	Loading string container doesn't appear on update (appears only loadingString text)
+ Fixed: 	Bug with unfired afterLoad callback and not executed helpers methods due to bind(window) for evalScript section in loadContent method
+ Fixed: 	Bug with beforeLoad callback return value (content loaded even with return value == false)
+
+ver 1.5.2 (02/26/2007)
+ Fixed: 	Scrolling by "space" key disabled then MB is visible
+ Fixed: 	Scrolling by navigational keys (Up / Down / PageUp / PageDown / Home / End) keys disabled then MB is visible
+ Changed: 	Keyboard handlers implementation re-factored [#9, #11]
+ Changed: 	Markup generated by modalbox optimized
+ Changed: 	Scrolling on top removed for all modern browsers except IE6 and lower [#1, #9, #11]
+
+ver 1.5.1 (02/15/2007)
+ Added: 	Callback 'beforeLoad' fired right before loading MB content. If the callback function returns false, loading will skipped.
+ Changed: 	Implementation of callbacks calls changed. Callbacks now removes after execution. 
+			Callbacks now have a return value (true | false). Default is true. Fixes: Issue 2 (http://code.google.com/p/modalbox/issues/detail?id=2&can=1&q=)
+
+ver 1.5: (02/02/2007)
+ Added: 	URL parameters are now passing to AJAX.Request. Use postOptions to pass parameters
+ Added: 	Loading message can be customized through options. Use loadingString option
+ Added:		Script.aculo.us 1.64 and prototype 1.5rc1 support
+ Added:		Callbacks added on first showing, updating, loading content, closing modalbox
+ Added:		Callback can be passed through hide method
+ Added: 	resize method resize modalbox without loading any content into it
+ Changed:	Evaluating contained scripts (striping HTML comments)
+ Changed: 	Appearing of overlay is now animated
+ Changed: 	Attaching events on window and overlay
+ Changed: 	Method hide now get the callbacks as a parameter
+ Changed: 	Inititalization redone with Builder class
+ Changed: 	Minor fixes and refactoring done
+ Changed: 	Focus loop engine redone
+ Changed: 	self variables replaced to bind(this) functions
+ Fixed: 	Scrolling to initial scroll position after closing MB
+ Fixed: 	Fixed bug in IE with body's overflow auto
+ 
+ver 1.4: (06/20/2006)
+ Added: 	Core definitions rewriten. Modalbox can now be accessed thorugh Modalbox object with public methods show and hide
+ Added: 	License added
+ Changed:	kbdHandler method is now public, so it can be stopped from other functions
+ Fixed: 	Stopping of event observing in hide method
+ Fixed: 	Hiding selects for IE issue (was applied on element ID)
+ Removed:	Redundant 'globalMB' global variable removed
+ Removed:	Scroll window events observerving
+ Removed:	Redundant effect ScalyTo
+ Issue: 	IE display bug then hidding scrollbars. Document body should have zero margins
+ 
+ ver 1.3: (06/18/2006)
+ Added: 	ModalBox will now get focus after opening
+ Added: 	Keystrokes handler added (Tab key is looped on ModalBox and closing ModalBox by pressing Esc)
+ Added: 	Window scrolling disabled (known issue: content jupms on top then opening ModalBox)
+ Fixed: 	All dependent event handlers now unloads then closing ModalBox
+ Fixed: 	SELECT element hiding function executes now only in MSIE
+ Fixed: 	'Close' button has now href attribute to receive focus
+ Fixed: 	Click on 'Close' button doesn't adds an href value to URL string
+ 
+ ver 1.2: 
+ Added: Global variable 'globalMB' added to the file. Use this variable to acces one instance of ModalBox and call methods on it
+ 
+ ver 1.1: 
+ Added: Added SELECT elements hiding for IE (should be rewriten later)
+ 
+ ver 1.0: 
+ Added: Core class description

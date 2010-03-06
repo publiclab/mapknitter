@@ -1,0 +1,29 @@
+<form action="#" method="get" name="form" id="form" accept-charset="utf-8" onsubmit="Modalbox.show('_ajax_form.html', {title: 'Step 2', width: 500}); return false;">
+	<fieldset>
+		<input type="hidden" name="hidden" value="111" id="hidden" /> <br />
+		
+		<input type="text" name="text" value="Text field" id="text" /> <br />
+		
+		<p id="errmsg" style="display: none">Email is not valid! Please check it or type another email.</p>
+		
+		<input type="password" name="pass" value="Pass field" id="pass" /> <br />
+		
+		<input type="button" name="button" value="Toggle error message" id="button" onclick="if($('errmsg').visible()) { $('errmsg').hide(); Modalbox.resizeToContent(); } else {new Effect.Appear('errmsg', {beforeStart: function() { Modalbox.resizeToInclude('errmsg'); } });}" /> <br />
+		
+		<select name="select" id="select" size="1">
+			<optgroup label="Label Text">
+				<option value="Value" selected="selected" label="Label Text"> 111 </option>
+				<option value="Value" label="Label Text"> 222 </option>
+				<option value="Value" label="Label Text"> 333 </option>
+			</optgroup>
+		</select>
+		
+		<br />
+		
+		<textarea name="text" rows="8" cols="40"></textarea>
+				
+	</fieldset>
+
+	<p><input type="submit" value="Continue &rarr;" /> or <a href="#" onclick="Modalbox.hide(); return false;">Cancel</a></p>
+	
+</form>

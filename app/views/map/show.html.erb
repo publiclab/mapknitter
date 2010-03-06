@@ -14,6 +14,9 @@
 		cartagen_base_uri = '/cartagen'
 	</script>
 	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script type="text/javascript" src="/modalbox/lib/scriptaculous.js?load=builder,effects"></script>
+		<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" charset="utf-8">
 		Cartagen.setup({
@@ -60,6 +63,9 @@
 		}
 	</script>
 	<span><a href="javascript:void(0);" onClick="$('styles').toggle()">Show styles</a></span> 
+	<span><a href="/warper/new" title="Simple form" onclick="
+	Modalbox.show(this.href, {title: this.title, width: 600}); return false;
+	">Upload aerial image</a></span>
 	<span><a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a></span> 
 	<span id='geolocate'><a href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}">Move to current location</a></span> 
 	<script type="text/javascript" charset="utf-8">
