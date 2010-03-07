@@ -11664,10 +11664,14 @@ Tool.Pen = {
 		if (Tool.Pen.mode == 'inactive') {
 
 		} else if (Tool.Pen.mode == 'draw') {
-			console.log('pen drawing')
-			shapes.last().new_point(Map.pointer_x(), Map.pointer_y())
-			shapes.last().active = true
-
+			var over_point = false
+			shapes.last().points.each(function(point){
+				if (point.mouse_inside()) over_point = true
+			})
+			if (!over_point) { // if you didn't click on an existing node
+				shapes.last().new_point(Map.pointer_x(), Map.pointer_y())
+				shapes.last().active = true
+			}
 		}
 
 	}.bindAsEventListener(Tool.Pen),
@@ -11681,7 +11685,7 @@ Tool.Pen = {
 		$l('Pen dblclick')
 		if (true) {
 			Tool.Pen.mode = 'inactive'
-			Tool.change('Warp')
+			Tool.change('Pan')
 		}
 
 	}.bindAsEventListener(Tool.Pen)

@@ -27,7 +27,7 @@
 		
 		function new_shape() {
 			Tool.change("Pen")
-			Tool.Pen.mode='drawing'
+			Tool.Pen.mode='draw'
 			shapes.push(new PointShape([]))
 		}
 		
@@ -80,6 +80,7 @@
 			click: function() {
 				if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())&&Tool.active!='Pen') {
 					this.active = true
+					Tool.change('Warp')
 				} else if (Tool.active!='Pen') {
 					this.active = false
 				}
@@ -120,7 +121,7 @@
 				
 				if (this.dragging && Mouse.down) {
 					this.drag()
-				} else if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+				} else if (this.mouse_inside()) {
 					if (Mouse.down) {
 						this.drag()
 					} else {
@@ -129,6 +130,9 @@
 				} else {
 					this.base()
 				}
+			},
+			mouse_inside: function() {
+				return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
 			},
 			base: function() {
 				// do stuff
@@ -141,6 +145,7 @@
 					// do stuff
 					console.log('clicked control point')
 					this.parent_shape.active = true
+					Tool.change('Warp')
 				}
 			},
 			hover: function() {
@@ -174,17 +179,7 @@
 		}
 
 		function setup() {
-			//draggy = new Draggable(Map.x,Map.y)
-			shapey = new PointShape($A([
-				[Map.x, Map.y-300],
-				[Map.x+100, Map.y],
-				[Map.x+100, Map.y+100],
-				[Map.x, Map.y+100]//,
-				// [Map.x+200, Map.y+300]
-			]))
-			//draggy.debug = $('debug')
-			//$D.enable();
-			Tool.change('Warp')
+
 		}
 		document.observe('cartagen:init', setup)
 		
@@ -210,15 +205,7 @@
 
 <div id="canvas"></div>
 <div id="debug">
-	<a onClick="new_shape()">add a shape</a>
-	<li>Map.x: <span id="mapx"></span></li>
-	<li>Map.y: <span id="mapy"></span></li>
-	<li>Mouse.x: <span id="mousex"></span></li>
-	<li>Mouse.y: <span id="mousey"></span></li>
-	<li>Drag.x: <span id="draggyx"></span></li>
-	<li>Drag.y: <span id="draggyy"></span></li>
-	<li>Nodes: <span id="nodes"></span></li>
-	<li>IPIP: <span id="ipip"></span></li>
+	<a href="javascript:void()" onClick="new_shape()">add a shape</a><br />
 </div>
 
 </body>
