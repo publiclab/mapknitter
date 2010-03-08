@@ -27,9 +27,13 @@ var Warper = {
 	 * A function which prompts the user for an image file, uploads it, and creates a 
 	 * Warper.Image object to contain its resulting URI and default coordinates.
 	 */
-	new_image: function() {
+	new_image: function(url) {
 		// consider prompting upload with a form
 		// and calling this function on success of form submission
+		
+		// Place the incoming image at Map.x, Map.y
+		
+		
 		
 	}
 }
