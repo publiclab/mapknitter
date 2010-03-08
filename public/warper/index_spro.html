@@ -14,50 +14,49 @@
 	<script src="matrix.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 	
-	function p(point) {
-		if (point.x == undefined) {
-			x = point[0]
-			y = point[1]
-		} else {
-			x = point.x
-			y = point.y
+		function p(point) {
+			if (point.x == undefined) {
+				x = point[0]
+				y = point[1]
+			} else {
+				x = point.x
+				y = point.y
+			}
+			return '(' + x + ', ' + y + ')'
 		}
-		return '(' + x + ', ' + y + ')'
-	}
 	
-	function getProjectiveTransform(points) {
-	  var eqMatrix = new Matrix(9, 8, [
-	    [ 1, 1, 1,   0, 0, 0, -points[3].x,-points[3].x,-points[3].x ], 
-	    [ 0, 1, 1,   0, 0, 0,  0,-points[2].x,-points[2].x ],
-	    [ 1, 0, 1,   0, 0, 0, -points[1].x, 0,-points[1].x ],
-	    [ 0, 0, 1,   0, 0, 0,  0, 0,-points[0].x ],
+		function getProjectiveTransform(points) {
+		  var eqMatrix = new Matrix(9, 8, [
+		    [ 1, 1, 1,   0, 0, 0, -points[3].x,-points[3].x,-points[3].x ], 
+		    [ 0, 1, 1,   0, 0, 0,  0,-points[2].x,-points[2].x ],
+		    [ 1, 0, 1,   0, 0, 0, -points[1].x, 0,-points[1].x ],
+		    [ 0, 0, 1,   0, 0, 0,  0, 0,-points[0].x ],
 
-	    [ 0, 0, 0,  -1,-1,-1,  points[3].y, points[3].y, points[3].y ],
-	    [ 0, 0, 0,   0,-1,-1,  0, points[2].y, points[2].y ],
-	    [ 0, 0, 0,  -1, 0,-1,  points[1].y, 0, points[1].y ],
-	    [ 0, 0, 0,   0, 0,-1,  0, 0, points[0].y ]
+		    [ 0, 0, 0,  -1,-1,-1,  points[3].y, points[3].y, points[3].y ],
+		    [ 0, 0, 0,   0,-1,-1,  0, points[2].y, points[2].y ],
+		    [ 0, 0, 0,  -1, 0,-1,  points[1].y, 0, points[1].y ],
+		    [ 0, 0, 0,   0, 0,-1,  0, 0, points[0].y ]
 
-	  ]);
+		  ]);
 
-	  var kernel = eqMatrix.rowEchelon().values;
-	  var transform = new Matrix(3, 3, [
-	    [-kernel[0][8], -kernel[1][8], -kernel[2][8]],
-	    [-kernel[3][8], -kernel[4][8], -kernel[5][8]],
-	    [-kernel[6][8], -kernel[7][8],             1]
-	  ]);
-	  return transform;
-	}
-	
+		  var kernel = eqMatrix.rowEchelon().values;
+		  var transform = new Matrix(3, 3, [
+		    [-kernel[0][8], -kernel[1][8], -kernel[2][8]],
+		    [-kernel[3][8], -kernel[4][8], -kernel[5][8]],
+		    [-kernel[6][8], -kernel[7][8],             1]
+		  ]);
+		  return transform;
+		}
 	
 		Cartagen.setup({
 			stylesheet: "../static/rome/style.gss",
 			static_map: true,
 			static_map_layers: ["map.json"],
-			//lat: 42.360140177156026, 
-			//lng: -71.08812053061226,
-			lat: 0,
-			lng: 0,
-			zoom_level: 1.0749999999999986
+			lat: 42.359140177156026, 
+			lng: -71.09002053061226,
+			//lat: 42,
+			//lng: -71,
+			zoom_level: 1.3049999999999986
 		})
 		
 		// Tool.active == 'Warp'
@@ -70,29 +69,31 @@
 				this.diddit = false
 				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 				Glop.observe('mousedown', this.click.bindAsEventListener(this))
+				Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 				this.nodes.each(function(node) {
 					this.points.push(new DraggablePoint(node[0], node[1], 20, this))
 				}, this)
 				// remember that nodes is no longer updated!!!
 				this.image = new Image()
-				this.image.src = 'image1.jpg'
+				this.image.src = 'campus.jpg'
+				this.opacity_low = 0.2
+				this.opacity_high = 0.8
+				this.opacity = this.opacity_high
 				this.subdivisionLimit = 5
 				this.patchSize = 100
 			},
 			draw: function() {
-				if (!this.diddit) {
-					this.diddit=true
-					var ps = ''
-					this.points.each(function(point) {
-						ps += '(' + point.x + ',' + point.y + ')'
-					})
-					//alert(ps)
-				}
+				
 				$C.save()
+				// show image
+				$C.opacity(this.opacity)
+				this.update()
 				$C.stroke_style('#000')
 				$C.fill_style('#222')
+				
 				if (this.active) $C.line_width(2)
 				else $C.line_width(0)
+				
 				$C.begin_path()
 				
 				$C.move_to(this.points[0].x, this.points[0].y)
@@ -102,8 +103,7 @@
 				})
 				$C.line_to(this.points[0].x, this.points[0].y)
 
-				$C.opacity(1)
-				this.update()
+				
 				
 				$C.opacity(0.4)
 				$C.stroke()
@@ -136,8 +136,7 @@
 
 				// Set up basic drawing context.
 				//$C.translate(-minX, -minY);
-				//$C.canvas.clearRect(minX, minY, width, height);
-				//$C.stroke_style("#9F0");
+				$C.stroke_style("#9F0");
 
 				transform = getProjectiveTransform(this.points);
 
@@ -147,17 +146,19 @@
 				var pbl = transform.transformProjectiveVector([0, 1, 1]);
 				var pbr = transform.transformProjectiveVector([1, 1, 1]);
 
-
+				$C.canvas.save();
+				//$C.translate(-minX, -minY)
 				$C.canvas.beginPath();
 				$C.canvas.moveTo(ptl[0], ptl[1]);
 				$C.canvas.lineTo(ptr[0], ptr[1]);
 				$C.canvas.lineTo(pbr[0], pbr[1]);
 				$C.canvas.lineTo(pbl[0], pbl[1]);
-				//$C.canvas.stroke();
+				$C.canvas.stroke();
 				$C.canvas.closePath();
 				$C.canvas.clip();
 				
 				this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivisionLimit);
+				$C.canvas.restore()
 				
 			},
 			/**
@@ -165,7 +166,6 @@
 			*/
 			divide: function(u1, v1, u4, v4, p1, p2, p3, p4, limit) {
 				// See if we can still divide.
-				debug($H({'limit': limit}))
 				if (limit) {
 					// Measure patch non-affinity.
 					var d1 = [p2[0] + p3[0] - 2 * p1[0], p2[1] + p3[1] - 2 * p1[1]];
@@ -220,10 +220,6 @@
 				var d43 = [p3[0] - p4[0], p3[1] - p4[1]];
 				var d31 = [p1[0] - p3[0], p1[1] - p3[1]];
 				
-				debug($H({
-					'd12': d12
-				}))
-
 				// Find the corner that encloses the most area
 				var a1 = Math.abs(d12[0] * d31[1] - d12[1] * d31[0]);
 				var a2 = Math.abs(d24[0] * d12[1] - d24[1] * d12[0]);
@@ -303,6 +299,11 @@
 				} else {
 					this.active = false
 				}
+			},
+			
+			dblclick: function() {
+				if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+				else this.opacity = this.opacity_low
 			}
 		})
 		
@@ -432,10 +433,10 @@
 		function setup() {
 			//draggy = new Draggable(Map.x,Map.y)
 			shapey = new PointShape($A([
-				[Map.x, Map.y],
-				[Map.x+100, Map.y],
-				[Map.x, Map.y+100],
-				[Map.x+100, Map.y+100]
+				[Map.x-100, Map.y],
+				[Map.x+200 +100*Math.random(), Map.y],
+				[Map.x-100, Map.y+100 +100*Math.random()],
+				[Map.x+200 +100*Math.random(), Map.y+100 +100*Math.random()]
 			]))/*
 			shapey = new PointShape($A([
 				[Map.x, Map.y],
