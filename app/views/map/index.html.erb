@@ -1,0 +1,48 @@
+<div id="header">
+	<a href="/map/"><img src="/images/knitter-logo.png" /></a>
+	<h2>Cartagen Knitter</h2>
+</div>
+
+<div id="main">
+	<div id='list'>
+		<h1>Maps</h1>
+		<% odd = false %>
+		<% for map in @maps %>
+			<div class="<% puts 'odd' if odd %>">
+				<h3><a href ="/map/show/<%= map.name %>"><%= map.name.capitalize %></a></h3>
+				<p><small>
+					<%= truncate(map.description,200) %>
+					<% if !map.description %><i>no description</i><% end %>
+				</small></p>
+				<p class="meta"><small>
+					Updated on <%= map.updated_at.to_s(:short) %> | 
+					<a href="/maps/<%= map.name %>">View map &raquo;</a>
+				</small></p>
+			</div>
+			<% odd = !odd %>
+		<% end %>
+	</div>
+</div>
+
+<div id="sidebar">
+	
+	<div id="new_map">
+		<h3>Make a new map</h3>
+		<form action="/map/create" method="get" accept-charset="utf-8">
+			
+			<label for="name">Name</label> <input class="text" type="text" name="name" value="" id="name"><br />
+			<label for="location">Place</label> <input class="text" type="text" name="location" value="Paris, France" id="place"><br />
+			<label for="author">Author</label> <input class="text" type="text" name="author" value="your name" id="author"><br />
+
+			<label for="description">Description</label><textarea name="description" rows="8" cols="24"></textarea>
+			
+			<label for="password">Password (optional)</label> <input class="text" type="password" name="password" value="" id="password"><br />
+			
+
+			<p><input type="submit" value="Save"></p>
+		</form>
+	</div>
+	
+</div>
+
+<br style="clear:both;" />

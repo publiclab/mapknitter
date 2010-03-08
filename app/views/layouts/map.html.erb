@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Cartagen: Maps</title>
+		<style type="text/css" media="screen">
+			
+			html { background: #333; }
+			body {
+				margin: 10px auto;
+				padding:30px;
+				width: 700px; 
+				background: white; 
+				font-family: georgia, times, serif;
+				box-shadow: 0 10px 15px #000;
+				-webkit-box-shadow: 0 0 25px rgba(0,0,0,0.4);
+			}
+
+			img { border:0; }
+			a { color:#B3221C; }
+			h1, h2, h3 { font-weight:normal; }
+			h1 { font-size:3em; }
+
+			h3 a { text-decoration:none; }
+
+			#header {
+				border-bottom:3px solid #222;
+			}
+			#header h2 {
+				margin-top:0;
+				padding-top:22px;
+				margin-bottom:8px;
+			}
+			#header img {
+				float:left;
+			}
+			
+			#main {
+				float:left;
+			}
+			
+			#list {
+				width: 400px;
+			}
+			#list h3 {
+				border-top:1px solid #ddd;
+				font-weight:normal;
+				margin-bottom:3px;
+				padding-top:10px;
+			}
+			#list p {
+				margin-top:6px;
+				margin-bottom:6px;
+			}
+			#list .meta {
+				text-align:right;
+				font-size:12px;
+				font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
+			}
+			
+			#sidebar {
+				width:250px;
+				margin-top:10px;
+				margin-left:10px;
+				float:right;
+			}
+			#sidebar h3 {
+				font-style:italic;
+			}
+			
+			#new_map {
+				border:3px solid #161;
+				padding:14px;
+				background:#98BE66;
+			}
+			#new_map form {
+			}
+			#new_map form input.text {
+				font-size:1em;
+				width:210px;
+			}
+			#new_map form label {
+				font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
+				font-size:11px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<%= yield %>
+	</body>
+</html>

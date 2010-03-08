@@ -1,19 +1,32 @@
 class MapController < ApplicationController
   caches_page :find
 
+  def index
+    
+    @maps = Map.find :all, :order => 'id DESC'
+    
+  end
+
   def new
-    @map = {:lat => 41.891,
-            :lon => 12.4902,
-            :name => params[:id]}
-    render :template => 'map/show'
+
+  end
+
+  def create
+    location = GeoKit::GeoLoc.geocode(params[:location])
+    map = Map.new({:lat => location.lat,
+            :lon => location.lng,
+            :name => params[:location]})
+    map.save
+    redirect_to :action => 'show', :id => map.name
   end
   
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    render :layout => false
   end
   
   def stylesheet
-    render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles
+    render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles, :layout => false
   end
   
   # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
@@ -50,16 +63,9 @@ class MapController < ApplicationController
       # use geo.precision to define a width and height for the viewport
       # set zoom_x and zoom_y accordingly in javascript... and the scale factor.
       @map = {:range => range, :zoom_level => zoom_level,:lat => geo.lat, :lng => geo.lng}
+      render :layout => false
     end
   end
-
-  def demo
-    find
-  end
-  
-  # def tags
-  #   @map = {:zoom_level => Openstreetmap.precision(geo),:lat1 => geo.lat-range, :lng1 => geo.lng-range, :lat2 => geo.lat+range, :lng2 => geo.lng+range }
-  # end
   
   # accepts lat1,lng1,lat2,lng2 and returns osm features for the bounding box in various formats
   def plot
@@ -72,18 +78,12 @@ class MapController < ApplicationController
       Rails.cache.write(cache,@features)
     end
     respond_to do |format|
-      format.html { render :html => @features }
-      format.xml  { render :xml => @features }
-      format.kml  { render :template => "map/plot.kml.erb" }
-      format.js  { render :json => @features }
+      format.html { render :html => @features, :layout => false }
+      format.xml  { render :xml => @features, :layout => false }
+      format.kml  { render :template => "map/plot.kml.erb", :layout => false }
+      format.js  { render :json => @features, :layout => false }
     end
   end
-  
-  # # yields a plot where coastlines are collected in relations
-  # # see: http://wiki.openstreetmap.org/wiki/Relations/Proposed/Collected_Ways
-  # def plot_relation_adder
-  #   
-  # end
 
   # accepts lat1,lng1,lat2,lng2 and returns osm features for the bounding box in various formats
   def tag
@@ -96,10 +96,10 @@ class MapController < ApplicationController
       # Rails.cache.write(cache,@features)
     # end
     respond_to do |format|
-      format.html { render :html => @features }
-      format.xml  { render :xml => @features }
-      format.kml  { render :template => "map/plot.kml.erb" }
-      format.js  { render :json => @features }
+      format.html { render :html => @features, :layout => false }
+      format.xml  { render :xml => @features, :layout => false }
+      format.kml  { render :template => "map/plot.kml.erb", :layout => false }
+      format.js  { render :json => @features, :layout => false }
     end
   end
 

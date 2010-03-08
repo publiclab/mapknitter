@@ -43,6 +43,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => "map", :action => "find", :id => "20 ames st cambridge"
 
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
+  map.connect 'maps', :controller => "map", :action => "index"
   map.connect 'maps/:id', :controller => "map", :action => "show"
   map.connect 'generate/:tag.:format', :controller => 'extract', :action => "osm_to_json_by_tag"
   map.connect 'static/:city/:tag.:format', :controller => "extract", :action => "osm_to_json_by_tag"
