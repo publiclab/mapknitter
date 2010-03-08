@@ -1,0 +1,5 @@
+<h1>Loaded string</h1>
+<a href="_ajax_form.html" title="Modalbox 1" id="modalLink" onclick="Modalbox.show(this.href, {beforeLoad: function() {return false} }); return false;">Show ModalBox</a>
+<script type="text/javascript" charset="utf-8">
+	alert('Internal JS eval test: ' + $('modalLink').inspect());
+</script>

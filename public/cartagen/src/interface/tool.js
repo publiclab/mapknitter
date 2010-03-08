@@ -19,7 +19,7 @@ var Tool = {
 	change: function(new_tool) {
 		old_tool = Tool.active
 			
-		tool_events = ['mousemove','mouseup','mousedown']
+		tool_events = ['mousemove','mouseup','mousedown','dblclick']
 
 		tool_events.each(function(tool_event) {
 			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])

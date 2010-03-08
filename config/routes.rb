@@ -42,8 +42,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => "map", :action => "find", :id => "20 ames st cambridge"
 
-  map.resources :tweets
-
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
   map.connect 'maps/:id', :controller => "map", :action => "show"
   map.connect 'generate/:tag.:format', :controller => 'extract', :action => "osm_to_json_by_tag"
@@ -55,6 +53,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'demo/:id/:range', :controller => "map", :action => "find", :demo => true
   map.connect 'find/:id', :controller => "map", :action => "find"
   map.connect 'find/:id/:range', :controller => "map", :action => "find"
+
+  map.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>ModalBox Unit Test</title>
+	
+	<script type="text/javascript" src="../../lib/prototype.js"></script>
+	<script type="text/javascript" src="../../lib/scriptaculous.js?load=effects"></script>
+	<script type="text/javascript" src="../../lib/unittest.js"></script>
+	
+	<script type="text/javascript" src="../../modalbox.js"></script>
+	<link rel="stylesheet" href="../../modalbox.css" type="text/css" />
+	
+	<link rel="stylesheet" href="../test.css" type="text/css" />
+	
+	<style type="text/css" media="screen">
+		#MB_loading {
+			font-size: 18px;
+		}
+	</style>
+	
+</head>
+
+<body>
+	<div id="testNodesHtmlID" style="display: none"><p id="child_el">Test existing HTML insertion</p></div>
+	<h1 id="1">ModalBox Unit Test</h1>
+	
+	<!-- Log output -->
+	<div id="testlog"> </div>
+	
+	<br />
+	
+	<select name="select" id="selectID" size="1">
+		<optgroup label="Label Text">
+			<option value="Value" selected="selected" label="Label Text">  </option>
+		</optgroup>
+	</select>
+		
+	<!-- Tests follow -->
+	<script type="text/javascript" language="javascript" charset="utf-8">
+	// <![CDATA[
+		var callbacks = new Array;
+		var scopeStr = "";
+		function windowScopeTest(str){
+			scopeStr = str; // Will be used to pass some string from MB to window-scope function
+		};
+
+		new Test.Unit.Runner({
+		setup: function(){ with(this) {
+			Modalbox.show("_ajax_content.html", {
+				title: "Title",
+				width: 150, 
+				//height: 150, 
+				loadingString: "Тестируем Unicode", 
+				closeString: "Закрыть окно", 
+				closeValue: "Close",
+				overlayClose: false, 
+				overlayDuration: .1, 
+				slideDownDuration: .1, 
+				slideUpDuration: .1, 
+				resizeDuration: .1, 
+				method: "get", 
+				params: {section: 'blog', id: '45'},
+				onShow: function(){ callbacks[0] = "onShow" },
+				afterLoad: function(){ callbacks[1] = "afterLoad" },
+				
+				afterHide: function(){ return "test2" }, 
+				afterResize: function(){ return "test3" }, 
+				beforeLoad: function(){ return true }, 
+	
+				onUpdate: function(){ return "test6" }
+			});
+		}},
+		teardown: function(){with(this) {
+			if(Modalbox.initialized)
+				Modalbox._removeElements();
+		}},
+		testMBBasics: function() { with(this) {
+			assertInstanceOf(Object, Modalbox);
+			assertEqual("MB_overlay", document.body.childNodes[0].id);
+			assertEqual("MB_window", document.body.childNodes[1].id);
+			assertEqual("MB_frame", document.body.childNodes[1].childNodes[0].id);
+			assertEqual("MB_header", document.body.childNodes[1].childNodes[0].childNodes[0].id);
+			assertEqual("MB_caption", document.body.childNodes[1].childNodes[0].childNodes[0].childNodes[0].id);
+			assertEqual("MB_close", document.body.childNodes[1].childNodes[0].childNodes[0].childNodes[1].id);
+			assertEqual("MB_content", document.body.childNodes[1].childNodes[0].childNodes[1].id);
+			assertEqual("MB_loading", document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].id);
+			
+			// Testing passed strings parameters after MB update
+			assertEqual("MB_loading", document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].id);
+			assertEqual("Тестируем Unicode", document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].innerHTML);
+			
+			// Testing SELECTS are hiiden in IEs
+			//wait(10, function() { with(this) {
+			if (navigator.appVersion.match(/\bMSIE\b/))
+				assertNotVisible($('selectID'));
+			//}});
+		}},
+		testMBParameters: function() { with(this) {
+			
+			// Testing passed parameters for strings
+			assertEqual("Title", $("MB_caption").innerHTML);
+			assertEqual("Тестируем Unicode", $("MB_loading").innerHTML);
+			assertEqual("18px", $("MB_loading").getStyle('fontSize'));
+			assertEqual("Закрыть окно", $("MB_close").title);
+			assertEqual("Close", $("MB_close").down().innerHTML);
+			
+			wait(300, function() { with(this) {
+				assertEqual(false, Modalbox.options.overlayClose);
+				assert({section: 'blog', id: '45'}, Modalbox.options.params);
+			}});
+		}},
+		testMBCallbacks: function(){ with(this) {
+			wait(300, function() { with(this) {
+				assertEqual("onShow", callbacks[0]);
+				
+				wait(300, function() { with(this) {
+					// Testing beforeLoad callback
+					Modalbox.show("_ajax_content.html", {
+						title: "Callbacks test",
+						width: 150, 
+						height: 150, 
+						overlayDuration: .1, 
+						slideDownDuration: .1, 
+						slideUpDuration: .1, 
+						resizeDuration: .1, 
+						method: "get", 
+						beforeLoad: function(){ return false; }, 
+						onUpdate: function(){ callbacks[2] = "onUpdate" },
+						afterResize: function(){ callbacks[3] = "afterResize"; },
+						afterHide: function(){ callbacks[4] = "afterHide" },
+						beforeHide: function(){ callbacks[5] = "beforeHide" }
+					});
+					wait(300, function() { with(this) {
+						assertEqual("onUpdate", callbacks[2]); // onUpdate callback fired
+						assertNull(Modalbox.options.onUpdate); // Callbacks should be removed after executuion
+						
+						// Content shouldn't be loaded
+						assertNotEqual("Loaded string",  document.body.childNodes[1].childNodes[0].childNodes[1].innerHTML, "Content shouldn't be loaded");
+						assertNull(Modalbox.options.beforeLoad); // Callbacks should be removed after executuion
+						
+						Modalbox.resize(100, 100);
+						wait(500, function() { with(this) {
+							assertEqual("afterResize", callbacks[3]); // afterResize callback fired
+							assertNull(Modalbox.options.afterResize); // Callbacks should be removed after executuion
+							
+							Modalbox.hide();
+							assertEqual("beforeHide", callbacks[5]); // afterHide callback fired
+							assertNull(Modalbox.options.beforeHide); // Callbacks should be removed after executuion
+							wait(700, function() { with(this) {
+								// Check afterHide callback
+								assertEqual("afterHide", callbacks[4]); // afterHide callback fired
+								assertNull(Modalbox.options.afterHide); // Callbacks should be removed after executuion
+							
+								// Check modalbox isn't on the screen
+								assertNotEqual("MB_overlay", document.body.down().id, "Overlay isn't on the screen");
+								assertNotEqual("MB_window", document.body.down().next().id, "Modalbox isn't on the screen");
+							}});
+						}});
+						
+					}});
+				}});
+			}});
+		}},
+		testMBPosition: function() { with(this) {
+			Modalbox.show("_ajax_content.html", {
+				title: "Title",
+				width: 150, 
+				height: 150
+			});
+			wait(1000, function() { with(this) {
+				assertEqual("absolute", $("MB_close").getStyle("position"));
+				assertEqual(150, $("MB_window").getWidth(), "Width should be 150px");
+				assertEqual(150, $("MB_window").getHeight(), "Height should be 150px");
+				assertNotEqual(0, $("MB_window").getStyle("left"));
+
+				Modalbox.resize(100, 100);
+				wait(1000, function() { with(this) {
+					assertEqual(250, $("MB_window").getWidth(), "Width should be now 250px");
+					assertEqual(250, $("MB_window").getHeight(), "Height should be now 250px");
+		
+					Modalbox.resize(0, -50);
+					wait(1000, function() { with(this) {
+						assertEqual(250, $("MB_window").getWidth(), "Width should remain 250px");
+						assertEqual(200, $("MB_window").getHeight(), "Height should be now 200px");
+					}});
+				}});
+			}});
+		}},
+		testAjax: function(){ with(this) {
+			wait(1000, function() { with(this) {
+				assertEqual("Loaded string",  document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].innerHTML);
+				assertEqual("afterLoad", callbacks[1]); // Testing afterLoad callback
+				assertNull(Modalbox.options.afterLoad); // Callback should be removed after executuion
+				
+				Modalbox.show("_ajax_content_js.html", {title: "JS test", width: 150, height: 150});
+				wait(1500, function() { with(this) {
+					assertEqual("Window scope test passed", scopeStr); // Testing calling window-scoped function from inside MB document
+				}});
+			}});
+		}},
+		testPlainHTML: function(){ with(this) {
+			wait(1000, function() { with(this) {
+				Modalbox.show("<h1>Test HTML string</h1>", {title: "Test HTML string", width: 150, height: 150});
+				wait(1000, function() { with(this) {
+					assertEqual("<h1>test html string</h1>", document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].innerHTML.toLowerCase());
+				}});
+			}});
+		}},
+		testNodesHTML: function(){ with(this) {
+			wait(1000, function() { with(this) {
+				Modalbox.show($("testNodesHtmlID"), {width: 150, height: 150});
+				wait(1000, function() { with(this) {
+					assertEqual('Test existing HTML insertion', document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].childNodes[0].innerHTML);
+					assert($("MB_testNodesHtmlID"), "Original HTML element remains on DOM");
+					assertEqual("MB_testNodesHtmlID", document.body.down(10).id, "Original container element got modified ID with MB_ prefix");
+					assertEqual("MB_child_el", document.body.down(11).id, "Original child element got modified ID with MB_ prefix");
+					assertEqual("testNodesHtmlID", document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0].id, "Cloned HTML element got master's  ID");
+					assertVisible(document.body.childNodes[1].childNodes[0].childNodes[1].childNodes[0]);
+					assertNotVisible($("MB_testNodesHtmlID"));
+					
+					Modalbox.hide();
+					wait(1000, function() { with(this) {
+						assertNotVisible($("testNodesHtmlID"));
+						assertEqual("testNodesHtmlID", document.body.down().id, "Original container element ID cleaned up from MB_ prefix");
+						assertEqual("child_el", document.body.down(1).id, "Original child element ID cleaned up from MB_ prefix");
+					}});
+				}});
+			}});
+		}},
+		testDisposeCorrectly: function(){ with(this) {
+			wait(500, function() { with(this) {
+				Modalbox.hide();
+				wait(700, function() { with(this) {
+					// Check modalbox isn't on the screen
+					assertNotEqual("MB_overlay", document.body.down().id, "Overlay isn't on the screen");
+					assertNotEqual("MB_window", document.body.down().next().id, "Modalbox isn't on the screen");
+					// Style parameters returned to their initial value
+					assertEqual("", document.body.style.overflow);
+					assertEqual("", document.body.style.height);
+					
+					assertEqual(false, Modalbox.initialized);
+					assertVisible("selectID");
+				}});
+			}});
+		}},
+		testResizeMethods: function(){ with(this) {
+			wait(1000, function() { with(this) {
+				Modalbox.show('<div id="heightEl" style="height: 150px; border: 1px solid #DDD">Resizable height</div>', {title: "150px", width: 200});
+				wait(500, function() { with(this) {
+					assertEqual(193, $("MB_window").getHeight(), "1st step. Height should be 193px");
+					
+					$('heightEl').setStyle({height: '250px'});
+					Modalbox.resizeToContent();
+					wait(500, function() { with(this) {
+						assertEqual(294, $("MB_window").getHeight(), "2nd step. Height should be 294px");
+						
+						$('heightEl').setStyle({height: '150px'});
+						Modalbox.resizeToContent();
+						wait(500, function() { with(this) {
+							assertEqual(194, $("MB_window").getHeight(), "3rd step. Height should be 194px");
+							
+							$('MB_content').insert('<div id="newEl" style="display: none; margin: 20px 0; height: 50px; border: 5px solid #DDD;">Updated height</div>');
+							Modalbox.resizeToInclude('newEl', {afterResize: function(){ $('newEl').show(); } });
+							wait(500, function() { with(this) {
+								assertEqual(294, $("MB_window").getHeight(), "4th step. Height should be 294px (50 + 2x(20+5))");
+							}});
+						}});
+					}});
+				}});
+			}});
+		}},
+		testMouseEvents: function(){ with(this) {
+			wait(330, function() { with(this) {
+				Event.simulateMouse('MB_close','click');
+				wait(500, function() { with(this) {
+					assert(!Modalbox.initialized, "Modalbox should be hidden");
+				}});
+			}});
+		}},/*
+		testOverlayCloseEvents: function(){ with(this) {
+			wait(330, function() { with(this) {
+				assertEqual(Modalbox.options.overlayClose, false, "overlayClose is set to false");
+				//Event.simulateMouse('MB_window','click');
+				assert(Modalbox.initialized, "Modalbox should remain on the screen.");
+				Modalbox.show($("testNodesHtmlID"), {overlayClose: true});
+				wait(500, function() { with(this) {
+					Event.simulateMouse('MB_overlay','click');
+					wait(500, function() { with(this) {
+						assert(!Modalbox.initialized, "Modalbox should be now hidden.");
+					}});
+				}});
+			}});
+		}},*/
+		testKeyboardEvents: function(){ with(this) {
+			wait(330, function() { with(this) {
+				Event.simulateKey('MB_window', 'keypress', {keyCode: Event.KEY_ESC});
+				wait(500, function() { with(this) {
+					assert(!Modalbox.initialized, "Modalbox should be hidden");
+				}});
+			}});
+		}}
+
+		}, "testlog");
+	// ]]>
+	</script>
+</body>
+</html>
