@@ -29,9 +29,6 @@
 		})
 		Cartagen.Builder = {
 			name: '<%= @map[:name] %>',
-			gss: {
-				<%= @map[:styles] %>
-			},
 			add_menus: function() {
 				$l('adding knitter')
 				Style.load_styles('/knitter.gss')
@@ -69,7 +66,7 @@
 	</div>
 	<div class="toolbar">
 		<a class='first' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
-		<a href="javascript:void(0);" onClick="Tool.change('Pen');"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
+		<a href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
 		<a class='last' href="javascript:void(0);" onClick="Tool.change('Warp');"><img src="/images/tools/stock-tool-perspective-22.png" /></a>
 	</div>
 

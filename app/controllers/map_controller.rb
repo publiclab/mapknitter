@@ -15,7 +15,7 @@ class MapController < ApplicationController
     location = GeoKit::GeoLoc.geocode(params[:location])
     map = Map.new({:lat => location.lat,
             :lon => location.lng,
-            :name => params[:location]})
+            :name => params[:name]})
     map.save
     redirect_to :action => 'show', :id => map.name
   end

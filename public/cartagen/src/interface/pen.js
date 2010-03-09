@@ -53,5 +53,16 @@ Tool.Pen = {
 		}
 		// complete and store polygon
 		
-	}.bindAsEventListener(Tool.Pen)
+	}.bindAsEventListener(Tool.Pen),
+	//Tool.Pen.Shape
+	Shape: Class.create({
+		
+	}),
+	//Tool.Pen.Point
+	Point: Class.create({
+		
+	}),
+	new_shape: function() {
+		
+	}
 }

@@ -1,12 +1,12 @@
 <%= error_messages_for :warpable %>
 
-<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true }) do |f| -%>
+<% form_remote_for(:warpable, :url => {:action => 'create_asynchronous'}, :html => { :multipart => true }) do |f| -%>
   <p>
     <label for="warpable">Upload An Image:</label>
     <%= f.file_field :uploaded_data %>
   </p>
   <p>
-    <%= submit_tag 'Upload' %>
+	<input name="update_btn" onclick="new Ajax.Request('/warper/create_asynchronous', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this.form),onSuccess:function(response){ Warper.new_image(response.responseText);console.log(response.responseText);Modalbox.hide();return false; }});" value="Update" type="button">
   </p>
 <% end -%>
 

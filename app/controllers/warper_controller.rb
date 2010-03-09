@@ -16,6 +16,18 @@ class WarperController < ApplicationController
     end
   end
   
+  def create_asynchronous
+    @warpable = Warpable.new(params[:warpable])
+    puts params[:warpable]
+    if @warpable.save
+      flash[:notice] = 'Warpable was successfully created.'
+      render :text => @warpable.public_filename(:medium)
+    else
+      flash[:notice] = 'There was an error'
+      render :action => :new
+    end
+  end
+  
   def show
     @image = Warpable.find params[:id]
   end

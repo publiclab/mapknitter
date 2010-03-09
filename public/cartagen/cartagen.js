@@ -8024,7 +8024,16 @@ Tool.Pen = {
 			Tool.change('Pan')
 		}
 
-	}.bindAsEventListener(Tool.Pen)
+	}.bindAsEventListener(Tool.Pen),
+	Shape: Class.create({
+
+	}),
+	Point: Class.create({
+
+	}),
+	new_shape: function() {
+
+	}
 }
 Tool.Pan = {
 	mousedown: function(event) {

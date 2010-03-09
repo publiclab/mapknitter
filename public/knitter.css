@@ -1,6 +1,10 @@
 body {
 	font-family:lucida grande, lucida sans console;
 }
+img {
+	border:0;
+}
+
 #header a {
 	color:#4C6ACB;
 	font-weight:bold;
