@@ -10,12 +10,4 @@
   </p>
 <% end -%>
 
-<script type="text/javascript" charset="utf-8">
-	function fake_upload() {
-		
-		Warper.new_image()
-		
-	}
-</script>
-
-<a href="javascript:void(0);" onClick="fake_upload()">Fake upload</a>
+<a href="javascript:void(0);" onClick="Warper.new_image('/warper/campus.jpg');Modalbox.hide();return false;">Fake upload</a>

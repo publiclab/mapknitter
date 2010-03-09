@@ -16,9 +16,12 @@ var Interface = {
 	/**
 	 * Draws the display for how much of the map data has downloaded.
 	 */
-	display_loading: function(percent) {
+	display_loading: function() {
+		var percent = Importer.parse_manager.completed
+		if (percent > 75) {
+			$('loading_message').hide()
+		}
 		if (percent < 100) {
-			// $l('bar')
 			$C.save()
 	        $C.translate(Map.x,Map.y)
 			$C.rotate(-Map.rotate)
@@ -53,6 +56,12 @@ var Interface = {
 	        $C.translate(-Map.x,-Map.y)
 			$C.restore()
 		}
+	},
+	/**
+	 * Displays 'Loading map data...' until more than 75 percent of the map data is loaded.
+	 */
+	display_loading_message: function(percent) {
+		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:999;top:45%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(230,230,230,0.9);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
 	},
 	/**
 	 * Prompts the user to select a bbox, then downloads that bbox

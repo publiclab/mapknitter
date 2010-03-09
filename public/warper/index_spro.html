@@ -279,16 +279,15 @@
 				}))
 				
 				
-				
-				$C.canvas.drawImage(
-					this.image,
-					u1 * iw,
-					v1 * ih,
-					Math.min(u4 - u1 + padu, 1) * iw,
-					Math.min(v4 - v1 + padv, 1) * ih,
-					dx, dy,
-					1 + padx, 1 + pady
-				);
+					$C.canvas.drawImage(
+						this.image,
+						u1 * iw,
+						v1 * ih,
+						Math.min(u4 - u1 + padu, 1) * iw,
+						Math.min(v4 - v1 + padv, 1) * ih,
+						dx, dy,
+						1 + padx, 1 + pady
+					);
 				
 				$C.canvas.restore();
 			},
