@@ -78,6 +78,7 @@ body {
 	border-bottom:1px solid #555;
 	border-right:1px solid #555;
 	background:#444;
+/*	http://www.westciv.com/tools/gradients/ */
 /*	-webkit-gradient(linear, 0% 0%, 0% 100%, from(#666666), to(#3B3B3B))*/
 }
 .toolbar a:hover {
