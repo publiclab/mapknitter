@@ -9,7 +9,7 @@ class WarperController < ApplicationController
     puts params[:warpable]
     if @warpable.save
       flash[:notice] = 'Warpable was successfully created.'
-      redirect_to :action => :show, :id => @warpable.id
+      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
     else
       flash[:notice] = 'There was an error'
       render :action => :new
@@ -21,11 +21,15 @@ class WarperController < ApplicationController
     puts params[:warpable]
     if @warpable.save
       flash[:notice] = 'Warpable was successfully created.'
-      render :text => @warpable.public_filename(:medium)
+      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
     else
       flash[:notice] = 'There was an error'
       render :action => :new
     end
+  end
+
+  def uploaded_confirmation
+    @warpable = Warpable.find params[:id]
   end
   
   def show

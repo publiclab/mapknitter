@@ -1,13 +1,29 @@
-<%= error_messages_for :warpable %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
 
-<% form_remote_for(:warpable, :url => {:action => 'create_asynchronous'}, :html => { :multipart => true }) do |f| -%>
-  <p>
-    <label for="warpable">Upload An Image:</label>
-    <%= f.file_field :uploaded_data %>
-  </p>
-  <p>
-	<input name="update_btn" onclick="new Ajax.Request('/warper/create_asynchronous', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this.form),onSuccess:function(response){ Warper.new_image(response.responseText);console.log(response.responseText);Modalbox.hide();return false; }});" value="Update" type="button">
-  </p>
-<% end -%>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Cartagen: Maps</title>
+		<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	</head>
+	<body>
+		<%= error_messages_for :warpable %>
 
-<a href="javascript:void(0);" onClick="Warper.new_image('/warper/campus.jpg');Modalbox.hide();return false;">Fake upload</a>
+		<% form_for(:warpable, :url => {:action => 'create_asynchronous'}, :html => { :multipart => true,:id => "warpable_upload_form" }) do |f| -%>
+		  <p>
+		    <label for="warpable">Select an image to upload:</label>
+		    <input id="warpable_uploaded_data" name="warpable[uploaded_data]" size="30" type="file" />
+		  </p>
+		  <p>
+			  <%= submit_tag 'Upload' %>
+		  </p>
+		<% end -%>
+
+		<p>
+			Where can you get images to upload? Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
+		</p>
+		<a href="javascript:void(0);" onClick="Warper.new_image('/warper/campus.jpg');Modalbox.hide();return false;">Fake upload</a>
+	</body>
+</html>
