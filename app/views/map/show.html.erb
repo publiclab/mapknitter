@@ -62,11 +62,17 @@
 			document.location = "/find/"+q
 		}
 	</script>
-	<span><a href="javascript:void(0);" onClick="$('styles').toggle()">Show styles</a></span> 
-	<span><a href="/warper/new" title="Simple form" onclick="
-	Modalbox.show(this.href, {title: this.title, width: 600}); return false;
-	">Upload aerial image</a></span>
-	<span><a href="javascript:void(0);" onClick="Cartagen.redirect_to_image()">Download image &raquo;</a></span> 
+	<div class="toolbar">
+		<a class='first silk' href="javascript:void(0);" onClick="Modalbox.show(this.href, {title: this.title, width: 600}); return false;"><img src="/images/silk-grey/photo_add.png" /></a>
+		<a class='silk' href="javascript:void(0);" onClick="Cartagen.redirect_to_image()"><img src="/images/silk-grey/disk.png" /></a>
+		<a class='last silk' href="javascript:void(0);" onClick="$('styles').toggle()"><img src="/images/silk-grey/page_edit.png" /></a>
+	</div>
+	<div class="toolbar">
+		<a class='first' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
+		<a href="javascript:void(0);" onClick="Tool.change('Pen');"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
+		<a class='last' href="javascript:void(0);" onClick="Tool.change('Warp');"><img src="/images/tools/stock-tool-perspective-22.png" /></a>
+	</div>
+
 	<span id='geolocate'><a href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}">Move to current location</a></span> 
 	<script type="text/javascript" charset="utf-8">
 		if (!User.geolocate()) $('geolocate').hide()
@@ -76,12 +82,6 @@
 		<input type="submit" name="some_name" tabindex="4" value="Go"> 
 	</form></span>
 	<span class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
-</div>
-
-<div id="palette">
-	<a href="">Pan</a>
-	<a href="">Select</a>
-	<a href="">Pen</a>
 </div>
 
 <div class='modal' id="styles" style="display:none;">

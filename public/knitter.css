@@ -60,3 +60,47 @@ body {
 #styles textarea {
 	margin-bottom:6px;
 }
+
+.toolbar {
+	float:left;
+	margin-right:4px;
+	margin-left:8px;
+	padding-top:2px;
+}
+.toolbar a {
+	display:block;
+	float:left;
+	padding:2px;
+	height:24px;
+	width:28px;
+	text-align:center;
+	border-top:1px solid #555;
+	border-bottom:1px solid #555;
+	border-right:1px solid #555;
+	background:#444;
+/*	http://www.westciv.com/tools/gradients/ */
+/*	-webkit-gradient(linear, 0% 0%, 0% 100%, from(#666666), to(#3B3B3B))*/
+}
+.toolbar a:hover {
+	background:#666;
+}
+.toolbar a:active {
+	background:#888;
+}
+.toolbar a.first {
+	border-left:1px solid #555;
+	-moz-border-radius-topleft:5px;
+	-webkit-border-top-left-radius:5px;
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+}
+.toolbar a.last {
+	border-right:1px solid #555;
+	-moz-border-radius-topright:5px;
+	-webkit-border-top-right-radius:5px;
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+}
+.toolbar a.silk img {
+	padding-top:4px;
+}

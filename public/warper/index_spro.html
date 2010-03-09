@@ -27,13 +27,13 @@
 	
 		function getProjectiveTransform(points) {
 		  var eqMatrix = new Matrix(9, 8, [
-		    [ 1, 1, 1,   0, 0, 0, -points[3].x,-points[3].x,-points[3].x ], 
-		    [ 0, 1, 1,   0, 0, 0,  0,-points[2].x,-points[2].x ],
+		    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ], 
+		    [ 0, 1, 1,   0, 0, 0,  0,-points[3].x,-points[3].x ],
 		    [ 1, 0, 1,   0, 0, 0, -points[1].x, 0,-points[1].x ],
 		    [ 0, 0, 1,   0, 0, 0,  0, 0,-points[0].x ],
 
-		    [ 0, 0, 0,  -1,-1,-1,  points[3].y, points[3].y, points[3].y ],
-		    [ 0, 0, 0,   0,-1,-1,  0, points[2].y, points[2].y ],
+		    [ 0, 0, 0,  -1,-1,-1,  points[2].y, points[2].y, points[2].y ],
+		    [ 0, 0, 0,   0,-1,-1,  0, points[3].y, points[3].y ],
 		    [ 0, 0, 0,  -1, 0,-1,  points[1].y, 0, points[1].y ],
 		    [ 0, 0, 0,   0, 0,-1,  0, 0, points[0].y ]
 
@@ -432,11 +432,11 @@
 
 		function setup() {
 			//draggy = new Draggable(Map.x,Map.y)
-			shapey = new PointShape($A([
+			shapey = new PointShape($A([ // should build points clockwise from top left
 				[Map.x-100, Map.y],
 				[Map.x+200 +100*Math.random(), Map.y],
-				[Map.x-100, Map.y+100 +100*Math.random()],
-				[Map.x+200 +100*Math.random(), Map.y+100 +100*Math.random()]
+				[Map.x+200 +100*Math.random(), Map.y+100 +100*Math.random()],
+				[Map.x-100, Map.y+100 +100*Math.random()]
 			]))/*
 			shapey = new PointShape($A([
 				[Map.x, Map.y],
