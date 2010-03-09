@@ -8134,7 +8134,7 @@ var Interface = {
 		}
 	},
 	display_loading_message: function(percent) {
-		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:999;top:45%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(230,230,230,0.9);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
+		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
 	},
 	download_bbox: function() {
 		Glop.paused = true
@@ -8523,8 +8523,8 @@ var Map = {
 		this.lon = Projection.x_to_lon(-this.x)
 		this.resolution = Math.round(Math.abs(Math.log(Map.zoom)))
 	},
-	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Map.zoom) },
-	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y)/Map.zoom) },
+	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x+Config.padding_left)/Map.zoom) },
+	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y+Config.padding_top)/Map.zoom) },
 	bbox: [],
 	x: 0,
 	y: 0,
@@ -8733,7 +8733,6 @@ Warper.Image = Class.create(
 		ih = this.image.height;
 
 
-		$C.stroke_style("#9F0");
 
 		transform = Warper.getProjectiveTransform(this.points);
 
@@ -8748,7 +8747,6 @@ Warper.Image = Class.create(
 		$C.canvas.lineTo(ptr[0], ptr[1]);
 		$C.canvas.lineTo(pbr[0], pbr[1]);
 		$C.canvas.lineTo(pbl[0], pbl[1]);
-		$C.canvas.stroke();
 		$C.canvas.closePath();
 		$C.canvas.clip();
 

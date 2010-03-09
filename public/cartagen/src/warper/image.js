@@ -83,7 +83,6 @@ Warper.Image = Class.create(
 
 		// Set up basic drawing context.
 		//$C.translate(-minX, -minY);
-		$C.stroke_style("#9F0");
 
 		transform = Warper.getProjectiveTransform(this.points);
 
@@ -100,7 +99,7 @@ Warper.Image = Class.create(
 		$C.canvas.lineTo(ptr[0], ptr[1]);
 		$C.canvas.lineTo(pbr[0], pbr[1]);
 		$C.canvas.lineTo(pbl[0], pbl[1]);
-		$C.canvas.stroke();
+		// $C.canvas.stroke();
 		$C.canvas.closePath();
 		$C.canvas.clip();
 		

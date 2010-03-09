@@ -35,12 +35,12 @@ var Map = {
 	 * Mouse's x-coordinate, in the map's coordinate system
 	 * @type Number
 	 */
-	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x)/Map.zoom) },
+	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x+Config.padding_left)/Map.zoom) },
 	/**
 	 * Mouse's y-coordinate, in the map's coordinate system
 	 * @type Number
 	 */
-	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y)/Map.zoom) },
+	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y+Config.padding_top)/Map.zoom) },
 	/**
 	 * Bounding box of map, in [lon1, lat2, lon2, lat1] format
 	 * @type Number[]
