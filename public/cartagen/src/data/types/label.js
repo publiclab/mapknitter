@@ -73,11 +73,12 @@ var Label = Class.create(
             $C.stroke_style(this.fontColor)
 
 			//rotate the labels on unclosed ways:
-			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
-				$C.translate(x, y)
-				$C.rotate(this.owner.middle_segment_angle())
-				$C.translate(-x, -y)
-			}
+			//this does not work yet!! It crashes Cartagen.
+			// if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
+			// 	$C.translate(x, y)
+			// 	$C.rotate(this.owner.middle_segment_angle())
+			// 	$C.translate(-x, -y)
+			// }
 			
 			if (this.fontRotation) {
 				$C.translate(x, y)
@@ -102,7 +103,6 @@ var Label = Class.create(
 			                            height,
 			                            Object.value(this.text, this.owner))
 
-			// $l('width: ' + width)
 			if (this.fontBackground) {
 				$C.fill_style(this.fontBackground)
 				$C.rect(x - (width + padding)/2, 

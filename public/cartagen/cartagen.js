@@ -6196,11 +6196,6 @@ var Label = Class.create(
 
             $C.stroke_style(this.fontColor)
 
-			if (!Object.isUndefined(this.owner.closed_poly) && !this.owner.closed_poly) {
-				$C.translate(x, y)
-				$C.rotate(this.owner.middle_segment_angle())
-				$C.translate(-x, -y)
-			}
 
 			if (this.fontRotation) {
 				$C.translate(x, y)
@@ -8099,7 +8094,7 @@ Tool.Warp = {
 var Interface = {
 	display_loading: function() {
 		var percent = Importer.parse_manager.completed
-		if (percent > 75) {
+		if (percent > 75 || (percent < 100)) {
 			$('loading_message').hide()
 		}
 		if (percent < 100) {

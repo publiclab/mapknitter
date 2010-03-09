@@ -18,7 +18,7 @@ var Interface = {
 	 */
 	display_loading: function() {
 		var percent = Importer.parse_manager.completed
-		if (percent > 75) {
+		if (percent > 75 || (percent < 100)) {
 			$('loading_message').hide()
 		}
 		if (percent < 100) {

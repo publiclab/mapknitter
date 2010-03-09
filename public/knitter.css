@@ -10,6 +10,8 @@ img {
 	font-weight:bold;
 }
 #header {
+	-webkit-user-select:none;
+	-moz-user-select:none;
 	color:white;
 	width:100%;
 	background:#333;
@@ -68,7 +70,7 @@ img {
 .toolbar {
 	float:left;
 	margin-right:4px;
-	margin-left:8px;
+	margin-left:12px;
 	padding-top:2px;
 }
 .toolbar a {
@@ -83,13 +85,15 @@ img {
 	border-right:1px solid #555;
 	background:#444;
 /*	http://www.westciv.com/tools/gradients/ */
-/*	-webkit-gradient(linear, 0% 0%, 0% 100%, from(#666666), to(#3B3B3B))*/
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#444), to(#222))
 }
 .toolbar a:hover {
-	background:#666;
+	background:#555;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555), to(#333))
 }
 .toolbar a:active {
 	background:#888;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#555))
 }
 .toolbar a.first {
 	border-left:1px solid #555;

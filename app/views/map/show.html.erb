@@ -23,12 +23,13 @@
 			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
 			static_map: false,
 			padding_top: -46,
-			lat: <%= @map[:lat] %>,
-			lng: <%= @map[:lon] %>
+			lat: <%= @map.lat %>,
+			lng: <%= @map.lon %>
 			// debug: true
 		})
 		Cartagen.Builder = {
-			name: '<%= @map[:name] %>',
+			name: '<%= @map.name %>',
+			gss: {},
 			add_menus: function() {
 				$l('adding knitter')
 				Style.load_styles('/knitter.gss')
