@@ -5,62 +5,86 @@
 Warper.Image = Class.create(
 {	
 	initialize: function(nodes,image) {
-		this.active = false
-		this.points = $A()
-		this.diddit = false
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('mousedown', this.click.bindAsEventListener(this))
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
-		nodes.each(function(node) {
-			this.points.push(new Warper.ControlPoint(node[0], node[1], 20, this))
-		}, this)
-		// remember that nodes is no longer updated!!!
-		this.image = new Image()
-		this.image.src = image
 		this.opacity_low = 0.2
 		this.opacity_high = 0.8
 		this.opacity = this.opacity_high
 		this.subdivisionLimit = 5
 		this.patchSize = 100
+		
+		this.offset_x = 0
+		this.offset_y = 0
+		
+		this.active = false
+		this.active_point = false
+		this.dragging = false
+		this.points = $A()
+				
+		nodes.each(function(node) {
+			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
+		}, this)
+		
+		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
+		Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
+		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
+		
+		this.image = new Image()
+		this.image.src = image
 	},
+		
 	/**
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
-		
-		$C.save()
-		// show image
-		$C.opacity(this.opacity)
 		this.update()
-		$C.stroke_style('#000')
-		$C.fill_style('#222')
+		$C.save()
 		
-		if (this.active) $C.line_width(2)
-		else $C.line_width(0)
+		// Draw image
+		$C.opacity(this.opacity)
 		
-		$C.begin_path()
+		// Draw outline & points
+		if (this.active) {
+			$C.stroke_style('#000')
+			$C.fill_style('#222')
+			
+			// Draw outline
+			$C.line_width(2)
 		
-		$C.move_to(this.points[0].x, this.points[0].y)
-		//$C.canvas.drawImage(this.image, this.points[0].x, this.points[0].y)
-		this.points.each(function(point) {
-			$C.line_to(point.x, point.y)
-		})
-		$C.line_to(this.points[0].x, this.points[0].y)
+			$C.begin_path()
 
+			$C.move_to(this.points[0].x, this.points[0].y)
+			this.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})
+			$C.line_to(this.points[0].x, this.points[0].y)
 		
+			$C.opacity(0.4)
+			$C.stroke()
 		
-		$C.opacity(0.4)
-		$C.stroke()
+			$C.opacity(0.2)
+			$C.fill()
 		
-		$C.opacity(0.2)
-		$C.fill()
-		
+			// Draw points
+			this.points.each(function(point) {
+				point.draw()
+			})			
+			
+		}
 		$C.restore()
+		
 	},
+	
 	/**
 	 * Update transform based on position of 4 corners.
 	 */
 	update: function() {
+		// Update points
+		this.points.each(function(point) {
+			point.update()
+		})
+		
+		if (this.active) {this.drag()}
+		
 		// Get extents.
 		var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 		this.points.each(function(point) {
@@ -68,7 +92,7 @@ Warper.Image = Class.create(
 			maxX = Math.max(maxX, Math.ceil(point.x));
 			minY = Math.min(minY, Math.floor(point.y));
 			maxY = Math.max(maxY, Math.ceil(point.y));
-		});
+		})
 		
 		//$l($H({'minX': minX, 'minY': minY}))
 
@@ -239,15 +263,48 @@ Warper.Image = Class.create(
 		$C.canvas.restore();
 	},
 	
-	click: function() {
-		if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
-			this.active = true
+	mousedown: function() {
+		if (!this.active) {
+			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
+				this.active = true
+			}
 		} else {
-			this.active = false
+			this.points.each(function(point) {
+				point.click()
+			})
+			if ((!this.active_point) && (!Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))) {
+				this.active = false
+				this.active_point = false
+			}
 		}
 	},
 	
+	mouseup: function() {
+		//this.active = false
+		//this.active_point = false
+	},
+	
+	drag: function() {
+		// do stuff
+		if (!Mouse.down) {
+			this.cancel_drag()
+			return
+		}
+		if (!this.dragging) {
+			this.dragging = true
+			this.drag_offset_x = Map.pointer_x()
+			this.drag_offset_y = Map.pointer_y()
+		}
+		this.offset_x = Map.pointer_x() - this.drag_offset_x
+		this.offset_y = Map.pointer_y() - this.drag_offset_y
+	},
+	cancel_drag: function() {
+		//this.base()
+		//this.parent_shape.active_point = false
+	},
+	
 	dblclick: function() {
+		console.log('double clicked image')
 		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
 		else this.opacity = this.opacity_low
 	}

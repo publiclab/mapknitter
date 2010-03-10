@@ -177,6 +177,13 @@ $C = {
 		$C.canvas.fillRect(x, y, w, h)
 	},
 	
+	circ: function(x, y, r){
+		// if ($C.frozen) return
+		$C.canvas.beginPath()
+		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
+		$C.canvas.fill()
+	},
+	
 	/**
 	 * Alias of canvas.strokeRect (unfilled rectangle)
 	 * @param {Number} x X-coord of the top-left corner
