@@ -1,4 +1,3 @@
 <script type="text/javascript" charset="utf-8">
-	// parent.document.
-	console.log(Map.x+' '+'<%= @warpable.public_filename(:medium) %>')
+	parent.Warper.new_image('<%= @warpable.public_filename(:medium) %>');parent.Modalbox.hide();
 </script>

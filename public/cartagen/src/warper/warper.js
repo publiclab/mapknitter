@@ -33,10 +33,10 @@ var Warper = {
 		
 		// Place the incoming image at Map.x, Map.y
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-100, Map.y],
-			[Map.x+200 +100*Math.random(), Map.y],
-			[Map.x+200 +100*Math.random(), Map.y+100 +100*Math.random()],
-			[Map.x-100, Map.y+100 +100*Math.random()]
+			[Map.x-200, Map.y],
+			[Map.x+400 +200*Math.random(), Map.y],
+			[Map.x+400 +200*Math.random(), Map.y+200 +200*Math.random()],
+			[Map.x-200, Map.y+200 +200*Math.random()]
 		]),url))
 		
 	},
