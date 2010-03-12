@@ -8076,6 +8076,9 @@ Tool.Warp = {
 		console.log('activate')
 		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a></div>")
 	},
+        deactivate: function() {
+		$('tool_specific').remove()
+	},
 	delete_image: function() {
 		Warper.images.each(function(image,index) {
 			if (image.active) {
@@ -8576,6 +8579,7 @@ var Warper = {
 				image.active = true
 				inside_image = true
 			} else {
+				console.log('clicked outside')
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
 				}

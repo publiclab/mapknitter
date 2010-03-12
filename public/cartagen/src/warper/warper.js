@@ -26,6 +26,7 @@ var Warper = {
 				image.active = true
 				inside_image = true
 			} else {
+				console.log('clicked outside')
 				// if you're clicking outside while it's active, and the corners have been moved:
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
