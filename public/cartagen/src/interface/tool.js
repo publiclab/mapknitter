@@ -1,7 +1,7 @@
 /**
  * @namespace A class to contain tool definitions and associated tool methods for user interaction.
  */
-var Tool = {			
+var Tool = {		
 	initialize: function() {
 		// default tool on startup is the Pan tool:
 		Glop.observe('mousemove', Tool.Pan.mousemove)
@@ -9,6 +9,12 @@ var Tool = {
 		Glop.observe('mouseup', Tool.Pan.mouseup)
 		Glop.observe('dblclick', Tool.Pan.dblclick)
 	},
+	/**
+	 * Whether the mouse is hovering over a tool button. Flag used to determine 
+	 * whether user is clicking on a toolbar button and not trying to deselect
+	 * an object. See example in Warper.mousedown()
+	 */
+	hover: true,
 	/**
 	 * The tool currently in use. Options include 'Pan', 'Pen', 'Select', 'Warp'
 	 */

@@ -10,7 +10,8 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.color = '#200'
 		this.dragging = false
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
 		Glop.observe('mousedown', this.click.bindAsEventListener(this))
 	},
 	// this gets called every frame:
@@ -46,8 +47,14 @@ Warper.ControlPoint = Class.create({
 		this.color = '#200'
 		this.dragging = false
 	},
+	/**
+	 * Returns true if the mouse is inside this control point
+	 */
+	is_inside: function() {
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+	},
 	click: function() {
-		if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+		if (this.is_inside()) {
 			this.color = '#f00'
 			// do stuff
 			console.log('clicked control point')
@@ -70,6 +77,9 @@ Warper.ControlPoint = Class.create({
 			this.color = '#f00'
 			this.x = Map.pointer_x() - this.drag_offset_x
 			this.y = Map.pointer_y() - this.drag_offset_y
+			// update old_coordinates: if we manage drag events better and get a 'mouseup' we can do this only then
+			// right now it's inefficient.
+			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
 		}
 	},
 	r: function() {

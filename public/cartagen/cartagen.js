@@ -7882,6 +7882,7 @@ var Tool = {
 		Glop.observe('mouseup', Tool.Pan.mouseup)
 		Glop.observe('dblclick', Tool.Pan.dblclick)
 	},
+	hover: true,
 	active: 'Pan',
 	change: function(new_tool) {
 		old_tool = Tool.active
@@ -8070,12 +8071,27 @@ Tool.Pan = {
 	}.bindAsEventListener(Tool.Pan)
 }
 Tool.Warp = {
+	mode: 'default', //'rotate','drag','scale'
+	activate: function() {
+		console.log('activate')
+		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a></div>")
+	},
+	delete_image: function() {
+		Warper.images.each(function(image,index) {
+			if (image.active) {
+				console.log(index+' deleting')
+				Warper.images.splice(index,1)
+				image.cleanup()
+				new Ajax.Request('/warper/delete/'+image.id,{
+					method:'post',
+				})
+			}
+		})
+	},
 	drag: function() {
 
 	},
 	mousedown: function() {
-		$l('Warp mousedown')
-
 	}.bindAsEventListener(Tool.Warp),
 	mouseup: function() {
 		$l('Warp mouseup')
@@ -8545,7 +8561,32 @@ var Map = {
 document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
+	initialize: function() {
+		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
+	},
 	images: [],
+	mousedown: function() {
+		var inside_image = false
+		Warper.images.each(function(image) {
+			var inside_points = false
+			image.points.each(function(point) {
+				if (point.is_inside()) inside_points = true
+			})
+			if (inside_points || Geometry.is_point_in_poly(image.points, Map.pointer_x(), Map.pointer_y())) {
+				image.active = true
+				inside_image = true
+			} else {
+				if (image.active && (image.coordinates() != image.old_coordinates)) {
+					image.save()
+				}
+				if (image.active && !Tool.hover) {
+					image.active = false
+				}
+			}
+		})
+		if (inside_image) Tool.change('Warp')
+		else Tool.change('Pan')
+	},
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
 		  method: 'get',
@@ -8556,15 +8597,29 @@ var Warper = {
 		  }
 		});
 	},
-	new_image: function(url) {
-
+	new_image: function(url,id) {
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
 			[Map.x-200, Map.y],
 			[Map.x+400 +200*Math.random(), Map.y],
 			[Map.x+400 +200*Math.random(), Map.y+200 +200*Math.random()],
 			[Map.x-200, Map.y+200 +200*Math.random()]
-		]),url))
-
+		]),url,id))
+	},
+	load_image: function(url,points,id) {
+		points[0][0] = Projection.lon_to_x(points[0][0])
+		points[0][1] = Projection.lat_to_y(points[0][1])
+		points[1][0] = Projection.lon_to_x(points[1][0])
+		points[1][1] = Projection.lat_to_y(points[1][1])
+		points[2][0] = Projection.lon_to_x(points[2][0])
+		points[2][1] = Projection.lat_to_y(points[2][1])
+		points[3][0] = Projection.lon_to_x(points[3][0])
+		points[3][1] = Projection.lat_to_y(points[3][1])
+		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+			[points[0][0],points[0][1]],
+			[points[1][0],points[1][1]],
+			[points[2][0],points[2][1]],
+			[points[3][0],points[3][1]]
+		]),url,id))
 	},
 	p: function(point) {
 		if (point.x == undefined) {
@@ -8600,7 +8655,7 @@ var Warper = {
 	}
 
 }
-
+Warper.initialize()
 Warper.ControlPoint = Class.create({
 	initialize: function(x,y,r,parent) {
 		this.x = x
@@ -8609,7 +8664,8 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.color = '#200'
 		this.dragging = false
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
 		Glop.observe('mousedown', this.click.bindAsEventListener(this))
 	},
 	draw: function() {
@@ -8639,8 +8695,11 @@ Warper.ControlPoint = Class.create({
 		this.color = '#200'
 		this.dragging = false
 	},
+	is_inside: function() {
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+	},
 	click: function() {
-		if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+		if (this.is_inside()) {
 			this.color = '#f00'
 			console.log('clicked control point')
 			this.parent_shape.active = true
@@ -8660,6 +8719,7 @@ Warper.ControlPoint = Class.create({
 			this.color = '#f00'
 			this.x = Map.pointer_x() - this.drag_offset_x
 			this.y = Map.pointer_y() - this.drag_offset_y
+			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
 		}
 	},
 	r: function() {
@@ -8668,12 +8728,14 @@ Warper.ControlPoint = Class.create({
 })
 Warper.Image = Class.create(
 {
-	initialize: function(nodes,image) {
+	initialize: function(nodes,image,id) {
+		this.id = id
 		this.active = false
 		this.points = $A()
+		this.old_coordinates = []
 		this.diddit = false
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('mousedown', this.click.bindAsEventListener(this))
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 		nodes.each(function(node) {
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 20, this))
@@ -8687,7 +8749,6 @@ Warper.Image = Class.create(
 		this.patchSize = 100
 	},
 	draw: function() {
-
 		$C.save()
 		$C.opacity(this.opacity)
 		this.update()
@@ -8705,8 +8766,6 @@ Warper.Image = Class.create(
 		})
 		$C.line_to(this.points[0].x, this.points[0].y)
 
-
-
 		$C.opacity(0.4)
 		$C.stroke()
 
@@ -8714,6 +8773,50 @@ Warper.Image = Class.create(
 		$C.fill()
 
 		$C.restore()
+	},
+	is_inside: function() {
+		var inside_points = false
+		this.points.each(function(point) {
+			if (point.is_inside()) inside_points = true
+		})
+		return (inside_points || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+	},
+	dblclick: function() {
+		if (this.is_inside()) {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+		}
+	},
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
+	},
+	save: function() {
+		var coordinate_string = '',first = true
+		this.coordinates().each(function(coord){
+			if (first) first = false
+			else coordinate_string += ':'
+			coordinate_string += coord[0]+','+coord[1]
+		})
+		new Ajax.Request('/warper/update', {
+		  	method: 'post',
+			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			onSuccess: function(response) {
+				$l('updated warper points')
+			}
+		})
+	},
+	cleanup: function() {
+		this.points.each(function(point){
+			Glop.stopObserving('glop:postdraw',point.draw_handler)
+		})
+		Glop.stopObserving('glop:postdraw', this.draw_handler)
+                Glop.stopObserving('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	update: function() {
 		var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -8857,19 +8960,6 @@ Warper.Image = Class.create(
 		}
 
 		$C.canvas.restore();
-	},
-
-	click: function() {
-		if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
-			this.active = true
-		} else {
-			this.active = false
-		}
-	},
-
-	dblclick: function() {
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
 	}
 }
 )
