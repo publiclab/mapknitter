@@ -4,12 +4,14 @@
  */
 Warper.Image = Class.create(
 {	
-	initialize: function(nodes,image) {
+	initialize: function(nodes,image,id) {
+		this.id = id
 		this.active = false
 		this.points = $A()
+		this.old_coordinates = []
 		this.diddit = false
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('mousedown', this.click.bindAsEventListener(this))
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 		nodes.each(function(node) {
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 20, this))
@@ -27,7 +29,6 @@ Warper.Image = Class.create(
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
-		
 		$C.save()
 		// show image
 		$C.opacity(this.opacity)
@@ -46,8 +47,6 @@ Warper.Image = Class.create(
 			$C.line_to(point.x, point.y)
 		})
 		$C.line_to(this.points[0].x, this.points[0].y)
-
-		
 		
 		$C.opacity(0.4)
 		$C.stroke()
@@ -56,6 +55,59 @@ Warper.Image = Class.create(
 		$C.fill()
 		
 		$C.restore()
+	},
+	is_inside: function() {
+		var inside_points = false
+		this.points.each(function(point) {
+			if (point.is_inside()) inside_points = true
+		})
+		return (inside_points || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+	},
+	dblclick: function() {
+		if (this.is_inside()) {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+		}
+	},
+	/**
+	 * A function to generate an array of coordinate pairs as in [lat,lon] for the image corners
+	 */
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
+	},
+	/**
+	 * Asyncronously upload distorted point coordinates to server
+	 */
+	save: function() {
+		var coordinate_string = '',first = true
+		this.coordinates().each(function(coord){
+			if (first) first = false
+			else coordinate_string += ':'
+			coordinate_string += coord[0]+','+coord[1]
+		})
+		new Ajax.Request('/warper/update', {
+		  	method: 'post',
+			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			onSuccess: function(response) {
+				$l('updated warper points')
+			}
+		})
+	},
+	/**
+	 * 
+	 */
+	cleanup: function() {
+		this.points.each(function(point){
+			Glop.stopObserving('glop:postdraw',point.draw_handler)
+		})	
+		Glop.stopObserving('glop:postdraw', this.draw_handler)
+                Glop.stopObserving('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	/**
 	 * Update transform based on position of 4 corners.
@@ -237,19 +289,6 @@ Warper.Image = Class.create(
 		}
 		
 		$C.canvas.restore();
-	},
-	
-	click: function() {
-		if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
-			this.active = true
-		} else {
-			this.active = false
-		}
-	},
-	
-	dblclick: function() {
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
 	}
 }
 )

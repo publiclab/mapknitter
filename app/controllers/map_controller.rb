@@ -22,6 +22,23 @@ class MapController < ApplicationController
   
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    @warpables = Warpable.find :all, :conditions => {:map_id => @map.id} 
+    @nodes = {}
+    @warpables.each do |warpable|
+      if warpable.nodes != ''
+        puts 'yes nodes'
+        nodes = []
+        warpable.nodes.split(',').each do |node|
+          node_obj = Node.find(node)
+          nodes << [node_obj.lon,node_obj.lat]
+        end
+        @nodes[warpable.id.to_s] = nodes
+      else
+        puts 'no nodes'
+      end
+      puts @nodes[warpable.id.to_s]
+      @nodes[warpable.id.to_s] ||= '[]'
+    end
     render :layout => false
   end
   
