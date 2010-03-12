@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100310191643) do
+ActiveRecord::Schema.define(:version => 20100308193343) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(:version => 20100310191643) do
     t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "nodes",        :default => ""
     t.integer  "map_id",       :default => 0
   end
 

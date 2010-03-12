@@ -1,7 +1,7 @@
 development:
   bucket_name: grassrootsmapping
-  access_key_id: your_access_key_id
-  secret_access_key: your_secret_access_key 
+  access_key_id: 19B4ECGC0GDTVRJQ2DG2
+  secret_access_key: oki3smq4woTt8iMvW9lTt4GTTThZXexaz8XWAR/5 
 
 test:
   bucket_name: 
