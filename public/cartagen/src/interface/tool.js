@@ -12,12 +12,10 @@ var Tool = {
 		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
 	},
 	mouse_in_main: function() {
-		Tool.hover = true
-		console.log('into main')
+		Tool.hover = false
 	},
 	mouse_out_main: function() {
-		Tool.hover = false
-		console.log('out of main')
+		Tool.hover = true
 	},
 	/**
 	 * Whether the mouse is hovering over a tool button. Flag used to determine 

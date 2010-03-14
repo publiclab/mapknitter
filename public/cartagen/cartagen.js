@@ -7891,12 +7891,10 @@ var Tool = {
 		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
 	},
 	mouse_in_main: function() {
-		Tool.hover = true
-		console.log('into main')
+		Tool.hover = false
 	},
 	mouse_out_main: function() {
-		Tool.hover = false
-		console.log('out of main')
+		Tool.hover = true
 	},
 	hover: true,
 	active: 'Pan',
@@ -8091,7 +8089,7 @@ Tool.Warp = {
 	activate: function() {
 		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
 		$('tool_specific').insert('<a class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
-			$('tool_warp_delete').observe('mouseup',function(){ Tool.Warp.delete_image() })
+			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
 		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
 		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_scale\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-scale-22.png\' /></a>')
@@ -8112,6 +8110,7 @@ Tool.Warp = {
 				})
 			}
 		})
+		Tool.change('Pan')
 	},
 	drag: function() {
 
@@ -8588,17 +8587,6 @@ document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
-		document.observe('cartagen:setup',this.create_observers)
-	},
-	create_observers: function() {
-		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
-		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
-	},
-	mouse_in_main: function() {
-		Tool.hover = true
-	},
-	mouse_out_main: function() {
-		Tool.hover = false
 	},
 	images: [],
 	mousedown: function() {
@@ -8615,13 +8603,13 @@ var Warper = {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
 				}
-				if (image.active && Tool.hover) {
+				if (image.active && !Tool.hover) {
 					image.active = false
 				}
 			}
 		})
 		if (inside_image) Tool.change('Warp')
-		else Tool.change('Pan')
+		else if (!Tool.hover) Tool.change('Pan')
 	},
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {

@@ -13,7 +13,7 @@ Tool.Warp = {
 	activate: function() {
 		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
 		$('tool_specific').insert('<a class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
-			$('tool_warp_delete').observe('mouseup',function(){ Tool.Warp.delete_image() })
+			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
 		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
 		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_scale\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-scale-22.png\' /></a>')
@@ -37,6 +37,7 @@ Tool.Warp = {
 				})
 			}
 		})
+		Tool.change('Pan')
 	},
 	/**
 	 * 

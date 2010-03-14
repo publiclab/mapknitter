@@ -5,20 +5,6 @@
 var Warper = {
 	initialize: function() {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
-		document.observe('cartagen:setup',this.create_observers)
-	},
-	/**
-	 * Sets up observers to signal when we're hovering over the toolbar or not 
-	 */
-	create_observers: function() {
-		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
-		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
-	},
-	mouse_in_main: function() {
-		Tool.hover = true
-	},
-	mouse_out_main: function() {
-		Tool.hover = false
 	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image
@@ -44,13 +30,13 @@ var Warper = {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
 				}
-				if (image.active && Tool.hover) {
+				if (image.active && !Tool.hover) {
 					image.active = false
 				}
 			}	
 		})
 		if (inside_image) Tool.change('Warp')
-		else Tool.change('Pan')
+		else if (!Tool.hover) Tool.change('Pan')
 	},
 	/**
 	 * A function which submits all the Images in the Warper.images array

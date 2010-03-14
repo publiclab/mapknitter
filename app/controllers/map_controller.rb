@@ -34,7 +34,7 @@ class MapController < ApplicationController
         @nodes[warpable.id.to_s] = nodes
       else
       end
-      @nodes[warpable.id.to_s] ||= '[]'
+      @nodes[warpable.id.to_s] ||= 'none'
     end
     render :layout => false
   end
