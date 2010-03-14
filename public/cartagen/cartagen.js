@@ -8592,11 +8592,7 @@ var Warper = {
 	mousedown: function() {
 		var inside_image = false
 		Warper.images.each(function(image) {
-			var inside_points = false
-			image.points.each(function(point) {
-				if (point.is_inside()) inside_points = true
-			})
-			if (inside_points || Geometry.is_point_in_poly(image.points, Map.pointer_x(), Map.pointer_y())) {
+			if (image.is_inside()) {
 				image.active = true
 				inside_image = true
 			} else {
@@ -8623,10 +8619,10 @@ var Warper = {
 	},
 	new_image: function(url,id) {
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-200, Map.y],
-			[Map.x+400 +200*Math.random(), Map.y],
-			[Map.x+400 +200*Math.random(), Map.y+200 +200*Math.random()],
-			[Map.x-200, Map.y+200 +200*Math.random()]
+			[Map.x-100/Map.zoom, Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
 		]),url,id))
 	},
 	load_image: function(url,points,id) {
@@ -8720,6 +8716,7 @@ Warper.ControlPoint = Class.create({
 		if (this.is_inside()) {
 			this.color = '#f00'
 			this.parent_shape.active_point = this
+			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
 		}
 	},
 	drag: function() {
@@ -8746,11 +8743,10 @@ Warper.Image = Class.create(
 	initialize: function(nodes,image,id) {
 		this.id = id
 		this.opacity_low = 0.2
-		this.opacity_high = 0.8
+		this.opacity_high = 0.6
 		this.opacity = this.opacity_high
-		this.subdivisionLimit = 5
-		this.patchSize = 100
 
+		this.subdivision_limit = 5
 		this.offset_x = 0
 		this.offset_y = 0
 
@@ -8765,19 +8761,19 @@ Warper.Image = Class.create(
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
 		}, this)
 
+		this.centroid = Geometry.poly_centroid(this.points)
+
 		this.draw_handler = this.draw.bindAsEventListener(this)
 		Glop.observe('glop:postdraw', this.draw_handler)
-		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
-		Glop.observe('mousedown', this.mousedown_handler)
-		this.mouseup_handler = this.mouseup.bindAsEventListener(this)
-		Glop.observe('mouseup', this.mouseup_handler)
 		this.dblclick_handler = this.dblclick.bindAsEventListener(this)
 		Glop.observe('dblclick', this.dblclick_handler)
 
 		this.image = new Image()
 		this.image.src = image
 	},
-
+	patch_size: function() {
+		return 100/Map.zoom
+	},
 	draw: function() {
 		this.update()
 		$C.save()
@@ -8829,23 +8825,6 @@ Warper.Image = Class.create(
 	},
 	cancel_drag: function() {
 	},
-	mousedown: function() {
-		if (!this.active) {
-			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
-				this.active = true
-			}
-		} else {
-			this.points.each(function(point) {
-				point.mousedown()
-			})
-			if ((!this.active_point) && (!Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) && !Tool.hover) {
-				this.active = false
-				this.active_point = false
-			}
-		}
-	},
-	mouseup: function() {
-	},
 	dblclick: function() {
 		if (this.is_inside()) {
 			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
@@ -8878,12 +8857,10 @@ Warper.Image = Class.create(
 	},
 	cleanup: function() {
 		this.points.each(function(point){
-			Glop.stopObserving('glop:postdraw',point.draw_handler)
+			Glop.stopObserving('mousedown',point.mousedown_handler)
 		})
 		Glop.stopObserving('glop:postdraw', this.draw_handler)
-        Glop.stopObserving('dblclick', this.dblclick_handler)
-		Glop.stopObserving('mousedown', this.mousedown_handler)
-		Glop.stopObserving('mouseup', this.mouseup_handler)
+        	Glop.stopObserving('dblclick', this.dblclick_handler)
 	},
 	update: function() {
 		this.points.each(function(point) {
@@ -8909,7 +8886,6 @@ Warper.Image = Class.create(
 		ih = this.image.height;
 
 
-
 		transform = Warper.getProjectiveTransform(this.points);
 
 		var ptl = transform.transformProjectiveVector([0, 0, 1]);
@@ -8926,7 +8902,7 @@ Warper.Image = Class.create(
 		$C.canvas.closePath();
 		$C.canvas.clip();
 
-		this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivisionLimit);
+		this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivision_limit);
 		$C.canvas.restore()
 
 	},
@@ -8941,7 +8917,7 @@ Warper.Image = Class.create(
 			d2 = [p3[0] - p1[0] + p4[0] - p2[0], p3[1] - p1[1] + p4[1] - p2[1]];
 			var area = Math.abs(d1[0] * d2[1] - d1[1] * d2[0]);
 
-			if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.patchSize * this.patchSize))) {
+			if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.patch_size() * this.patch_size()))) {
 				var umid = (u1 + u4) / 2;
 				var vmid = (v1 + v4) / 2;
 				var pmid = transform.transformProjectiveVector([umid, vmid, 1]);

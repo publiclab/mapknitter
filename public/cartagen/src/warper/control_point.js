@@ -53,6 +53,7 @@ Warper.ControlPoint = Class.create({
 			this.color = '#f00'
 			// do stuff
 			this.parent_shape.active_point = this
+			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
 		}
 	},
 	drag: function() {
