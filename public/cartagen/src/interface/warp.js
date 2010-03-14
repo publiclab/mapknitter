@@ -8,12 +8,17 @@ Tool.Warp = {
 	 */
 	mode: 'default', //'rotate','drag','scale'
 	/**
-	 * Runs when this tool is selected; adds a menu
+	 * Runs when this tool is selected; adds custom toolbar
 	 */
 	activate: function() {
-		// Tool.clear_toolbar()
 		console.log('activate')
-		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a></div>")
+		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a><a class='' href='javascript:void(0);' onClick='Tool.Warp.mode = \'scale\''><img src='/images/tools/stock-tool-rotate-22.png' /></a><a class='last' href='javascript:void(0);' onClick='Tool.Warp.mode = \'rotate\''><img src='/images/tools/stock-tool-scale-22.png' /></a></div>")
+	},
+	/**
+	 * Runs when this tool is deselected; removes custom toolbar
+	 */
+	deactivate: function() {
+		$('tool_specific').remove()
 	},
 	delete_image: function() {
 		Warper.images.each(function(image,index) {

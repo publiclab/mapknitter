@@ -30,7 +30,7 @@ var Warper = {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
 				}
-				if (image.active && !Tool.hover) {
+				if (image.active && Tool.hover) {
 					image.active = false
 				}
 			}	

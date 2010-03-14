@@ -7197,6 +7197,12 @@ $C = {
 		$C.canvas.fillRect(x, y, w, h)
 	},
 
+	circ: function(x, y, r){
+		$C.canvas.beginPath()
+		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
+		$C.canvas.fill()
+	},
+
 	stroke_rect: function(x, y, w, h){
 		$C.canvas.strokeRect(x, y, w, h)
 	},
@@ -8074,7 +8080,10 @@ Tool.Warp = {
 	mode: 'default', //'rotate','drag','scale'
 	activate: function() {
 		console.log('activate')
-		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a></div>")
+		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a><a class='' href='javascript:void(0);' onClick='Tool.Warp.mode = \'scale\''><img src='/images/tools/stock-tool-rotate-22.png' /></a><a class='last' href='javascript:void(0);' onClick='Tool.Warp.mode = \'rotate\''><img src='/images/tools/stock-tool-scale-22.png' /></a></div>")
+	},
+	deactivate: function() {
+		$('tool_specific').remove()
 	},
 	delete_image: function() {
 		Warper.images.each(function(image,index) {
@@ -8579,7 +8588,7 @@ var Warper = {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
 				}
-				if (image.active && !Tool.hover) {
+				if (image.active && Tool.hover) {
 					image.active = false
 				}
 			}
@@ -8661,34 +8670,38 @@ Warper.ControlPoint = Class.create({
 		this.x = x
 		this.y = y
 		this.r = r
+		this.rel_r = this.r / Map.zoom
 		this.parent_shape = parent
 		this.color = '#200'
 		this.dragging = false
-		this.draw_handler = this.draw.bindAsEventListener(this)
-		Glop.observe('glop:postdraw', this.draw_handler)
-		Glop.observe('mousedown', this.click.bindAsEventListener(this))
+		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
+		Glop.observe('mousedown', this.mousedown_handler)
+		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
+		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
+	},
+	mouse_out_main: function() {
+		console.log('exiting main')
+		Tool.hover = false
+	},
+	mouse_in_main: function() {
+		console.log('in main')
+		Tool.hover = true
 	},
 	draw: function() {
 		if (this.parent_shape.active) {
 			$C.save()
-
 				$C.translate(this.x,this.y)
-					$C.fill_style(this.color)
-					$C.opacity(0.6)
-					$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+				$C.fill_style(this.color)
+				$C.opacity(0.6)
+				$C.circ(0, 0, this.rel_r)
 			$C.restore()
 		}
+	},
+	update: function() {
+		this.rel_r = this.r / Map.zoom
 
-		if (this.dragging && Mouse.down) {
+		if (this.parent_shape.active_point == this) {
 			this.drag()
-		} else if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
-			if (Mouse.down) {
-				this.drag()
-			} else {
-				this.hover()
-			}
-		} else {
-			this.base()
 		}
 	},
 	base: function() {
@@ -8698,67 +8711,79 @@ Warper.ControlPoint = Class.create({
 	is_inside: function() {
 		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
 	},
-	click: function() {
+	mousedown: function() {
 		if (this.is_inside()) {
 			this.color = '#f00'
-			console.log('clicked control point')
-			this.parent_shape.active = true
+			this.parent_shape.active_point = this
 		}
-	},
-	hover: function() {
-		this.color = '#900'
-		this.dragging = false
 	},
 	drag: function() {
-		if (this.parent_shape.active) {
-			if (!this.dragging) {
-				this.dragging = true
-				this.drag_offset_x = Map.pointer_x() - this.x
-				this.drag_offset_y = Map.pointer_y() - this.y
-			}
-			this.color = '#f00'
-			this.x = Map.pointer_x() - this.drag_offset_x
-			this.y = Map.pointer_y() - this.drag_offset_y
-			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
+		if (!Mouse.down) {
+			this.cancel_drag()
+			return
 		}
+		if (!this.dragging) {
+			this.dragging = true
+			this.drag_offset_x = Map.pointer_x() - this.x
+			this.drag_offset_y = Map.pointer_y() - this.y
+		}
+		this.color = '#f00'
+		this.x = Map.pointer_x() - this.drag_offset_x
+		this.y = Map.pointer_y() - this.drag_offset_y
 	},
-	r: function() {
-		this.color = '#00f'
+	cancel_drag: function() {
+		this.base()
+		this.parent_shape.active_point = false
 	}
 })
 Warper.Image = Class.create(
 {
 	initialize: function(nodes,image,id) {
 		this.id = id
-		this.active = false
-		this.points = $A()
-		this.old_coordinates = []
-		this.diddit = false
-		this.draw_handler = this.draw.bindAsEventListener(this)
-		Glop.observe('glop:postdraw', this.draw_handler)
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
-		nodes.each(function(node) {
-			this.points.push(new Warper.ControlPoint(node[0], node[1], 20, this))
-		}, this)
-		this.image = new Image()
-		this.image.src = image
 		this.opacity_low = 0.2
 		this.opacity_high = 0.8
 		this.opacity = this.opacity_high
 		this.subdivisionLimit = 5
 		this.patchSize = 100
+
+		this.offset_x = 0
+		this.offset_y = 0
+
+		this.active = false
+		this.active_point = false
+		this.dragging = false
+		this.points = $A()
+		this.old_coordinates = []
+		this.diddit = false
+
+		nodes.each(function(node) {
+			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
+		}, this)
+
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
+		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
+		Glop.observe('mousedown', this.mousedown_handler)
+		this.mouseup_handler = this.mouseup.bindAsEventListener(this)
+		Glop.observe('mouseup', this.mouseup_handler)
+		this.dblclick_handler = this.dblclick.bindAsEventListener(this)
+		Glop.observe('dblclick', this.dblclick_handler)
+
+		this.image = new Image()
+		this.image.src = image
 	},
+
 	draw: function() {
-		$C.save()
-		$C.opacity(this.opacity)
 		this.update()
-		$C.stroke_style('#000')
-		$C.fill_style('#222')
+		$C.save()
 
-		if (this.active) $C.line_width(2)
-		else $C.line_width(0)
+		$C.opacity(this.opacity)
 
-		$C.begin_path()
+		if (this.active) {
+			$C.stroke_style('#000')
+			$C.fill_style('#222')
+
+			$C.line_width(2)
 
 		$C.move_to(this.points[0].x, this.points[0].y)
 		this.points.each(function(point) {
@@ -8766,13 +8791,16 @@ Warper.Image = Class.create(
 		})
 		$C.line_to(this.points[0].x, this.points[0].y)
 
-		$C.opacity(0.4)
-		$C.stroke()
+			$C.opacity(0.2)
+			$C.fill()
 
-		$C.opacity(0.2)
-		$C.fill()
+			this.points.each(function(point) {
+				point.draw()
+			})
 
+		}
 		$C.restore()
+
 	},
 	is_inside: function() {
 		var inside_points = false
@@ -8780,6 +8808,38 @@ Warper.Image = Class.create(
 			if (point.is_inside()) inside_points = true
 		})
 		return (inside_points || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+	},
+	drag: function() {
+		if (!Mouse.down) {
+			this.cancel_drag()
+			return
+		}
+		if (!this.dragging) {
+			this.dragging = true
+			this.drag_offset_x = Map.pointer_x()
+			this.drag_offset_y = Map.pointer_y()
+		}
+		this.offset_x = Map.pointer_x() - this.drag_offset_x
+		this.offset_y = Map.pointer_y() - this.drag_offset_y
+	},
+	cancel_drag: function() {
+	},
+	mousedown: function() {
+		if (!this.active) {
+			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
+				this.active = true
+			}
+		} else {
+			this.points.each(function(point) {
+				point.mousedown()
+			})
+			if ((!this.active_point) && (!Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) && !Tool.hover) {
+				this.active = false
+				this.active_point = false
+			}
+		}
+	},
+	mouseup: function() {
 	},
 	dblclick: function() {
 		if (this.is_inside()) {
@@ -8816,16 +8876,24 @@ Warper.Image = Class.create(
 			Glop.stopObserving('glop:postdraw',point.draw_handler)
 		})
 		Glop.stopObserving('glop:postdraw', this.draw_handler)
-                Glop.stopObserving('dblclick', this.dblclick.bindAsEventListener(this))
+        Glop.stopObserving('dblclick', this.dblclick_handler)
+		Glop.stopObserving('mousedown', this.mousedown_handler)
+		Glop.stopObserving('mouseup', this.mouseup_handler)
 	},
 	update: function() {
+		this.points.each(function(point) {
+			point.update()
+		})
+
+		if (this.active) {this.drag()}
+
 		var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 		this.points.each(function(point) {
 			minX = Math.min(minX, Math.floor(point.x));
 			maxX = Math.max(maxX, Math.ceil(point.x));
 			minY = Math.min(minY, Math.floor(point.y));
 			maxY = Math.max(maxY, Math.ceil(point.y));
-		});
+		})
 
 
 		minX--; minY--; maxX++; maxY++;
