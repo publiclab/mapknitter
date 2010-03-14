@@ -15,17 +15,6 @@ Warper.ControlPoint = Class.create({
 		// Glop.observe('glop:postdraw', this.draw_handler)
 		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
 		Glop.observe('mousedown', this.mousedown_handler)
-		// debug code:
-		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
-		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
-	},
-	mouse_out_main: function() {
-		console.log('exiting main')
-		Tool.hover = false
-	},
-	mouse_in_main: function() {
-		console.log('in main')
-		Tool.hover = true
 	},
 	// this gets called every frame:
 	draw: function() {
