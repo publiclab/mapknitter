@@ -16,8 +16,8 @@ Tool.Warp = {
 			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
 		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_scale\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-scale-22.png\' /></a>')
-			$('tool_warp_scale').observe('mouseup',function(){Tool.Warp.mode = 'scale'})
+		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
+			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},
 	/**
 	 * Runs when this tool is deselected; removes custom toolbar
