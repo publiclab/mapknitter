@@ -1,8 +1,8 @@
 /**
  * Generic matrix class. Built for readability, not for speed.
- *
- * (c) Steven Wittens 2008
- * http://www.acko.net/
+ * 
+ * Copyright (c) 2008 Steven Wittens (www.acko.net)
+ * Licensed under the MIT license, see LICENSE_PROJECTIVE.
  */
 var Matrix = function (w, h, values) {
   this.w = w;
