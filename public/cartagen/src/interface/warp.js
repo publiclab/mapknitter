@@ -24,6 +24,7 @@ Tool.Warp = {
 	 */
 	deactivate: function() {
 		$('tool_specific').remove()
+		Tool.Warp.mode = 'default'
 	},
 	delete_image: function() {
 		console.log('deleting image')

@@ -54,6 +54,13 @@ Warper.ControlPoint = Class.create({
 			// do stuff
 			this.parent_shape.active_point = this
 			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
+			if (Tool.Warp.mode == 'rotate') {
+				this.self_angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+				this.point_angles = []
+				this.parent_shape.each(function(point) {
+					this.point_angles.push(Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x()))
+				},this)
+			}
 		}
 	},
 	drag: function() {
@@ -62,14 +69,27 @@ Warper.ControlPoint = Class.create({
 			this.cancel_drag()
 			return
 		}
-		if (!this.dragging) {
-			this.dragging = true
-			this.drag_offset_x = Map.pointer_x() - this.x
-			this.drag_offset_y = Map.pointer_y() - this.y
+		if (Tool.Warp.mode == 'default') {
+			if (!this.dragging) {
+				this.dragging = true
+				this.drag_offset_x = Map.pointer_x() - this.x
+				this.drag_offset_y = Map.pointer_y() - this.y
+			}
+			this.color = '#f00'
+			this.x = Map.pointer_x() - this.drag_offset_x
+			this.y = Map.pointer_y() - this.drag_offset_y
+		} else if (Tool.Warp.mode == 'rotate') {
+			// use this.centroid to rotate around a point
+			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+			console.log(((angle*360)/6.28)+180)
+			//angle = ((angle*360)/Math.PI)+180
+			// use angle to recalculate each of the points in this.parent_shape.points
+			this.parent_shape.points.each(function(point) {
+				
+			},this)
+		} else if (Tool.Warp.mode == 'scale') {
+			console.log('scale')	
 		}
-		this.color = '#f00'
-		this.x = Map.pointer_x() - this.drag_offset_x
-		this.y = Map.pointer_y() - this.drag_offset_y
 	},
 	cancel_drag: function() {
 		this.base()

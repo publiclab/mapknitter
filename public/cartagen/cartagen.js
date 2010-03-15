@@ -7899,23 +7899,24 @@ var Tool = {
 	hover: true,
 	active: 'Pan',
 	change: function(new_tool) {
-		old_tool = Tool.active
+		if (new_tool != Tool.active) {
+			old_tool = Tool.active
 
-		tool_events = ['mousemove','mouseup','mousedown','dblclick']
+			tool_events = ['mousemove','mouseup','mousedown','dblclick']
 
-		tool_events.each(function(tool_event) {
-			Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
-			Glop.observe(tool_event,Tool[new_tool][tool_event])
-		})
+			tool_events.each(function(tool_event) {
+				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
+				Glop.observe(tool_event,Tool[new_tool][tool_event])
+			})
 
-		if (!Object.isUndefined(Tool[old_tool].deactivate)) {
-			Tool[old_tool].deactivate()
+			if (!Object.isUndefined(Tool[old_tool].deactivate)) {
+				Tool[old_tool].deactivate()
+			}
+			if (!Object.isUndefined(Tool[new_tool].activate)) {
+				Tool[new_tool].activate()
+			}
+			Tool.active = new_tool
 		}
-		if (!Object.isUndefined(Tool[new_tool].activate)) {
-			Tool[new_tool].activate()
-		}
-
-		Tool.active = new_tool
 	},
 	drag: function() {
 		Tool[Tool.active].drag()
@@ -8097,6 +8098,7 @@ Tool.Warp = {
 	},
 	deactivate: function() {
 		$('tool_specific').remove()
+		Tool.Warp.mode = 'default'
 	},
 	delete_image: function() {
 		console.log('deleting image')
@@ -8717,6 +8719,13 @@ Warper.ControlPoint = Class.create({
 			this.color = '#f00'
 			this.parent_shape.active_point = this
 			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
+			if (Tool.Warp.mode == 'rotate') {
+				this.self_angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+				this.point_angles = []
+				this.parent_shape.each(function(point) {
+					this.point_angles.push(Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x()))
+				},this)
+			}
 		}
 	},
 	drag: function() {
@@ -8724,14 +8733,24 @@ Warper.ControlPoint = Class.create({
 			this.cancel_drag()
 			return
 		}
-		if (!this.dragging) {
-			this.dragging = true
-			this.drag_offset_x = Map.pointer_x() - this.x
-			this.drag_offset_y = Map.pointer_y() - this.y
+		if (Tool.Warp.mode == 'default') {
+			if (!this.dragging) {
+				this.dragging = true
+				this.drag_offset_x = Map.pointer_x() - this.x
+				this.drag_offset_y = Map.pointer_y() - this.y
+			}
+			this.color = '#f00'
+			this.x = Map.pointer_x() - this.drag_offset_x
+			this.y = Map.pointer_y() - this.drag_offset_y
+		} else if (Tool.Warp.mode == 'rotate') {
+			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+			console.log(((angle*360)/6.28)+180)
+			this.parent_shape.points.each(function(point) {
+
+			},this)
+		} else if (Tool.Warp.mode == 'scale') {
+			console.log('scale')
 		}
-		this.color = '#f00'
-		this.x = Map.pointer_x() - this.drag_offset_x
-		this.y = Map.pointer_y() - this.drag_offset_y
 	},
 	cancel_drag: function() {
 		this.base()
@@ -8762,6 +8781,8 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.centroid = Geometry.poly_centroid(this.points)
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2
 
 		this.draw_handler = this.draw.bindAsEventListener(this)
 		Glop.observe('glop:postdraw', this.draw_handler)
@@ -8778,27 +8799,29 @@ Warper.Image = Class.create(
 		this.update()
 		$C.save()
 
-		$C.opacity(this.opacity)
-
 		if (this.active) {
+			$C.opacity(this.opacity)
 			$C.stroke_style('#000')
 			$C.fill_style('#222')
 
 			$C.line_width(2)
 
-		$C.move_to(this.points[0].x, this.points[0].y)
-		this.points.each(function(point) {
-			$C.line_to(point.x, point.y)
-		})
-		$C.line_to(this.points[0].x, this.points[0].y)
+			$C.move_to(this.points[0].x, this.points[0].y)
+			this.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})
+			$C.line_to(this.points[0].x, this.points[0].y)
 
 			$C.opacity(0.2)
 			$C.fill()
 
+			$C.save()
+			$C.circ(this.centroid[0],this.centroid[1], 8/Map.zoom)
+			$C.restore()
+
 			this.points.each(function(point) {
 				point.draw()
 			})
-
 		}
 		$C.restore()
 
@@ -8854,6 +8877,9 @@ Warper.Image = Class.create(
 				$l('updated warper points')
 			}
 		})
+		this.centroid = Geometry.poly_centroid(this.points)
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2
 	},
 	cleanup: function() {
 		this.points.each(function(point){

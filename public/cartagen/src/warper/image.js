@@ -26,7 +26,9 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.centroid = Geometry.poly_centroid(this.points)
-		
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2	
+	
 		this.draw_handler = this.draw.bindAsEventListener(this)
 		Glop.observe('glop:postdraw', this.draw_handler)
 		this.dblclick_handler = this.dblclick.bindAsEventListener(this)
@@ -48,31 +50,32 @@ Warper.Image = Class.create(
 		this.update()
 		$C.save()
 		
-		// Draw image
-		$C.opacity(this.opacity)
-		
 		// Draw outline & points
 		if (this.active) {
+			$C.opacity(this.opacity)
 			$C.stroke_style('#000')
 			$C.fill_style('#222')
 			
 			// Draw outline
 			$C.line_width(2)
 		
-		$C.move_to(this.points[0].x, this.points[0].y)
-		this.points.each(function(point) {
-			$C.line_to(point.x, point.y)
-		})
-		$C.line_to(this.points[0].x, this.points[0].y)
-		
+			$C.move_to(this.points[0].x, this.points[0].y)
+			this.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})
+			$C.line_to(this.points[0].x, this.points[0].y)
+			
 			$C.opacity(0.2)
 			$C.fill()
 		
+			$C.save()	
+			$C.circ(this.centroid[0],this.centroid[1], 8/Map.zoom)		
+			$C.restore()
+
 			// Draw points
 			this.points.each(function(point) {
 				point.draw()
 			})			
-			
 		}
 		$C.restore()
 		
@@ -137,6 +140,9 @@ Warper.Image = Class.create(
 				$l('updated warper points')
 			}
 		})
+		this.centroid = Geometry.poly_centroid(this.points)  
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2	
 	},
 	/**
 	 * 
