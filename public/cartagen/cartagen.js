@@ -8721,9 +8721,9 @@ Warper.ControlPoint = Class.create({
 			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
 			if (Tool.Warp.mode == 'rotate') {
 				this.self_angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
-				this.point_angles = []
-				this.parent_shape.each(function(point) {
-					this.point_angles.push(Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x()))
+				this.parent_shape.points.each(function(point) {
+					point.angle = Math.atan2(point.y-this.parent_shape.centroid[1],point.x-this.parent_shape.centroid[0])
+					point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
 				},this)
 			}
 		}
@@ -8744,9 +8744,10 @@ Warper.ControlPoint = Class.create({
 			this.y = Map.pointer_y() - this.drag_offset_y
 		} else if (Tool.Warp.mode == 'rotate') {
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
-			console.log(((angle*360)/6.28)+180)
+			var theta = angle-this.self_angle
 			this.parent_shape.points.each(function(point) {
-
+				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+theta)*point.distance
+				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+theta)*point.distance
 			},this)
 		} else if (Tool.Warp.mode == 'scale') {
 			console.log('scale')
