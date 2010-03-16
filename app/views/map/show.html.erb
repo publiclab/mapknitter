@@ -24,9 +24,25 @@
 			static_map: false,
 			padding_top: -46,
 			lat: <%= @map.lat %>,
-			lng: <%= @map.lon %>
-			// debug: true
+			lng: <%= @map.lon %>,
+			zoom: <%= @map.zoom %>
 		})
+		var Knitter = {
+			save_new_location: function(lat,lon,zoom) {
+				new Ajax.Request('/map/update/'+<%= @map.id %>,{
+					method: 'get',
+					parameters: {
+						lat: lat,
+						lon: lon,
+						zoom: zoom
+					}
+				})
+			},
+			save_current_location: function(callback) {
+				Knitter.save_new_location(Map.lat,Map.lon,Map.zoom)
+				if (!Object.isUndefined(callback)) callback()
+			}
+		}
 		Cartagen.Builder = {
 			name: '<%= @map.name %>',
 			gss: {},
@@ -85,6 +101,12 @@
 		<div class="toolbar">
 			<a class='first' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
 			<a class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
+		</div>
+		<div class="toolbar">
+			<a class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
+			<a class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}"><img src="/images/silk-grey/house.png" /></a> 
+			<script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
+			<a class='last silk' href="javascript:void(0);" onClick=""><img src="/images/silk-grey/magnifier.png" /></a>
 		</div>
 	</div>
 

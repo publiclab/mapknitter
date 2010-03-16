@@ -22,6 +22,7 @@ class MapController < ApplicationController
   
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    @map.zoom = 1.6 if @map.zoom == 0
     @warpables = Warpable.find :all, :conditions => {:map_id => @map.id} 
     @nodes = {}
     @warpables.each do |warpable|
@@ -38,7 +39,19 @@ class MapController < ApplicationController
     end
     render :layout => false
   end
-  
+ 
+  def update
+    @map = Map.find(params[:id])
+    @map.lat = params[:lat]
+    @map.lon = params[:lon]
+    @map.zoom = params[:zoom]
+    if @map.save
+      render :text => 'success'
+    else
+      render :text => 'failure'
+    end
+  end
+ 
   def stylesheet
     render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles, :layout => false
   end
