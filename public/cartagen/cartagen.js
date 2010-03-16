@@ -7889,12 +7889,30 @@ var Tool = {
 		Glop.observe('dblclick', Tool.Pan.dblclick)
 		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
 		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
+
+		document.observe('mousemove', Tool.update_tooltip)
 	},
 	mouse_in_main: function() {
 		Tool.hover = false
 	},
 	mouse_out_main: function() {
 		Tool.hover = true
+	},
+	show_tooltip: function(tool_name) {
+		Tool.hide_tooltip()
+		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
+		$('tooltip').innerHTML = tool_name
+		$('tooltip').absolutize()
+		$('tooltip').style.zIndex = 999
+	},
+	hide_tooltip: function() {
+		if ($('tooltip')) $('tooltip').remove()
+	},
+	update_tooltip: function() {
+		if ($('tooltip')) {
+			$('tooltip').style.top = (-Mouse.y)+'px'
+			$('tooltip').style.left = (-Mouse.x)+'px'
+		}
 	},
 	hover: true,
 	active: 'Pan',
