@@ -1,16 +1,18 @@
 /**
- * A class for warpable raster images.
+ * A class for warpable raster images. Note that mousedown events are
+ * handled in the Warper namespace. Corner manipulation is handled in 
+ * the Warper.ControlPoint class.
  * @class
  */
 Warper.Image = Class.create(
 {	
-	initialize: function(nodes,image) {
+	initialize: function(nodes,image,id) {
+		this.id = id
 		this.opacity_low = 0.2
-		this.opacity_high = 0.8
+		this.opacity_high = 0.6
 		this.opacity = this.opacity_high
-		this.subdivisionLimit = 5
-		this.patchSize = 100
-		
+	
+		this.subdivision_limit = 5	
 		this.offset_x = 0
 		this.offset_y = 0
 		
@@ -18,62 +20,143 @@ Warper.Image = Class.create(
 		this.active_point = false
 		this.dragging = false
 		this.points = $A()
+		this.old_coordinates = []
+		this.diddit = false
 				
 		nodes.each(function(node) {
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
 		}, this)
-		
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
-		Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
+
+		this.centroid = Geometry.poly_centroid(this.points)
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2	
+	
+		this.draw_handler = this.draw.bindAsEventListener(this)
+		Glop.observe('glop:postdraw', this.draw_handler)
+		this.dblclick_handler = this.dblclick.bindAsEventListener(this)
+		Glop.observe('dblclick', this.dblclick_handler)
 		
 		this.image = new Image()
 		this.image.src = image
 	},
-		
+	/**
+	 * Calculates the 
+	 */	
+	patch_size: function() {
+		return 100/Map.zoom
+	},
 	/**
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
+		$C.opacity(1)
 		this.update()
 		$C.save()
 		
-		// Draw image
-		$C.opacity(this.opacity)
-		
 		// Draw outline & points
 		if (this.active) {
+			$C.opacity(this.opacity)
 			$C.stroke_style('#000')
 			$C.fill_style('#222')
 			
 			// Draw outline
 			$C.line_width(2)
 		
-			$C.begin_path()
-
 			$C.move_to(this.points[0].x, this.points[0].y)
 			this.points.each(function(point) {
 				$C.line_to(point.x, point.y)
 			})
 			$C.line_to(this.points[0].x, this.points[0].y)
-		
-			$C.opacity(0.4)
-			$C.stroke()
-		
+			
 			$C.opacity(0.2)
 			$C.fill()
 		
+			$C.save()	
+			$C.circ(this.centroid[0],this.centroid[1], 8/Map.zoom)		
+			$C.restore()
+
 			// Draw points
 			this.points.each(function(point) {
 				point.draw()
 			})			
-			
 		}
 		$C.restore()
 		
 	},
-	
+	is_inside: function() {
+		var inside_points = false
+		this.points.each(function(point) {
+			if (point.is_inside()) inside_points = true
+		})
+		return (inside_points || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+	},
+	drag: function() {
+		// do stuff
+		if (!Mouse.down) {
+			this.cancel_drag()
+			return
+		}
+		if (!this.dragging) {
+			this.dragging = true
+			this.drag_offset_x = Map.pointer_x()
+			this.drag_offset_y = Map.pointer_y()
+		}
+		this.offset_x = Map.pointer_x() - this.drag_offset_x
+		this.offset_y = Map.pointer_y() - this.drag_offset_y
+	},
+	cancel_drag: function() {
+		//this.base()
+		//this.parent_shape.active_point = false
+	},
+	dblclick: function() {
+		if (this.is_inside()) {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+		}
+	},
+	/**
+	 * A function to generate an array of coordinate pairs as in [lat,lon] for the image corners
+	 */
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
+	},
+	/**
+	 * Asyncronously upload distorted point coordinates to server
+	 */
+	save: function() {
+		var coordinate_string = '',first = true
+		this.coordinates().each(function(coord){
+			if (first) first = false
+			else coordinate_string += ':'
+			coordinate_string += coord[0]+','+coord[1]
+		})
+		new Ajax.Request('/warper/update', {
+		  	method: 'post',
+			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			onSuccess: function(response) {
+				$l('updated warper points')
+			}
+		})
+		this.centroid = Geometry.poly_centroid(this.points)  
+		this.centroid[0] *= 2
+		this.centroid[1] *= 2	
+	},
+	/**
+	 * 
+	 */
+	cleanup: function() {
+		this.points.each(function(point){
+			Glop.stopObserving('mousedown',point.mousedown_handler)
+		})	
+		Glop.stopObserving('glop:postdraw', this.draw_handler)
+        	Glop.stopObserving('dblclick', this.dblclick_handler)
+	},
 	/**
 	 * Update transform based on position of 4 corners.
 	 */
@@ -104,7 +187,6 @@ Warper.Image = Class.create(
 		iw = this.image.width;
 		ih = this.image.height;
 		
-
 		// Set up basic drawing context.
 		//$C.translate(-minX, -minY);
 
@@ -127,7 +209,7 @@ Warper.Image = Class.create(
 		$C.canvas.closePath();
 		$C.canvas.clip();
 		
-		this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivisionLimit);
+		this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivision_limit);
 		$C.canvas.restore()
 		
 	},
@@ -148,9 +230,9 @@ Warper.Image = Class.create(
 			d2 = [p3[0] - p1[0] + p4[0] - p2[0], p3[1] - p1[1] + p4[1] - p2[1]];
 			var area = Math.abs(d1[0] * d2[1] - d1[1] * d2[0]);
 
-			// Check area > patchSize pixels (note factor 4 due to not averaging d1 and d2)
+			// Check area > patch_size pixels (note factor 4 due to not averaging d1 and d2)
 			// The non-affinity measure is used as a correction factor.
-			if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.patchSize * this.patchSize))) {
+			if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.patch_size() * this.patch_size()))) {
 				// Calculate subdivision points (middle, top, bottom, left, right).
 				var umid = (u1 + u4) / 2;
 				var vmid = (v1 + v4) / 2;
@@ -261,52 +343,6 @@ Warper.Image = Class.create(
 		}
 		
 		$C.canvas.restore();
-	},
-	
-	mousedown: function() {
-		if (!this.active) {
-			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
-				this.active = true
-			}
-		} else {
-			this.points.each(function(point) {
-				point.click()
-			})
-			if ((!this.active_point) && (!Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))) {
-				this.active = false
-				this.active_point = false
-			}
-		}
-	},
-	
-	mouseup: function() {
-		//this.active = false
-		//this.active_point = false
-	},
-	
-	drag: function() {
-		// do stuff
-		if (!Mouse.down) {
-			this.cancel_drag()
-			return
-		}
-		if (!this.dragging) {
-			this.dragging = true
-			this.drag_offset_x = Map.pointer_x()
-			this.drag_offset_y = Map.pointer_y()
-		}
-		this.offset_x = Map.pointer_x() - this.drag_offset_x
-		this.offset_y = Map.pointer_y() - this.drag_offset_y
-	},
-	cancel_drag: function() {
-		//this.base()
-		//this.parent_shape.active_point = false
-	},
-	
-	dblclick: function() {
-		console.log('double clicked image')
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
 	}
 }
 )

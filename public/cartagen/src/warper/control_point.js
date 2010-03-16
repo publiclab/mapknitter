@@ -11,20 +11,24 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.color = '#200'
 		this.dragging = false
+		// this.draw_handler = this.draw.bindAsEventListener(this)
+		// Glop.observe('glop:postdraw', this.draw_handler)
+		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
+		Glop.observe('mousedown', this.mousedown_handler)
 	},
-	
 	// this gets called every frame:
-	draw: function() {	
-		$C.save()
-			// go to the object's location:
-			$C.translate(this.x,this.y)
+	draw: function() {
+		if (this.parent_shape.active) {
+			$C.save()
+				// go to the object's location:
+				$C.translate(this.x,this.y)
 				// draw the object:
 				$C.fill_style(this.color)
 				$C.opacity(0.6)
 				$C.circ(0, 0, this.rel_r)
-		$C.restore()
+			$C.restore()
+		}
 	},
-	
 	update: function() {
 		this.rel_r = this.r / Map.zoom
 		
@@ -32,35 +36,66 @@ Warper.ControlPoint = Class.create({
 			this.drag()
 		}
 	},
-	
 	// states of interaction
 	base: function() {
 		// do stuff
 		this.color = '#200'
 		this.dragging = false
 	},
-	click: function() {
-		if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.rel_r) {
+	/**
+	 * Returns true if the mouse is inside this control point
+	 */
+	is_inside: function() {
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+	},
+	mousedown: function() {
+		if (this.is_inside()) {
 			this.color = '#f00'
 			// do stuff
-			console.log('clicked control point')
 			this.parent_shape.active_point = this
+			this.parent_shape.old_coordinates = this.parent_shape.coordinates()
+			if (Tool.Warp.mode == 'rotate') {
+				with (Math) {
+					this.self_distance = sqrt(pow(this.parent_shape.centroid[1]-Map.pointer_y(),2)+pow(this.parent_shape.centroid[0]-Map.pointer_x(),2))
+				}
+				this.self_angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+				this.parent_shape.points.each(function(point) {
+					point.angle = Math.atan2(point.y-this.parent_shape.centroid[1],point.x-this.parent_shape.centroid[0])
+					point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
+				},this)
+			}
 		}
 	},
+	/**
+	 * Handles drags of control points. Behavior varies according to Tool.Warp.mode.
+	 */
 	drag: function() {
 		// do stuff
 		if (!Mouse.down) {
 			this.cancel_drag()
 			return
 		}
-		if (!this.dragging) {
-			this.dragging = true
-			this.drag_offset_x = Map.pointer_x() - this.x
-			this.drag_offset_y = Map.pointer_y() - this.y
+		if (Tool.Warp.mode == 'default') {
+			if (!this.dragging) {
+				this.dragging = true
+				this.drag_offset_x = Map.pointer_x() - this.x
+				this.drag_offset_y = Map.pointer_y() - this.y
+			}
+			this.color = '#f00'
+			this.x = Map.pointer_x() - this.drag_offset_x
+			this.y = Map.pointer_y() - this.drag_offset_y
+		} else if (Tool.Warp.mode == 'rotate') {
+			// use this.centroid to rotate around a point
+			var distance = Math.sqrt(Math.pow(this.parent_shape.centroid[1]-Map.pointer_y(),2)+Math.pow(this.parent_shape.centroid[0]-Map.pointer_x(),2))
+			var distance_change = distance - this.self_distance
+			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
+			var angle_change = angle-this.self_angle
+			// use angle to recalculate each of the points in this.parent_shape.points
+			this.parent_shape.points.each(function(point) {
+				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
+				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
+			},this)
 		}
-		this.color = '#f00'
-		this.x = Map.pointer_x() - this.drag_offset_x
-		this.y = Map.pointer_y() - this.drag_offset_y
 	},
 	cancel_drag: function() {
 		this.base()

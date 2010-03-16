@@ -11,7 +11,7 @@
 			<div class="<% puts 'odd' if odd %>">
 				<h3><a href ="/map/show/<%= map.name %>"><%= map.name.capitalize %></a></h3>
 				<p><small>
-					<%= truncate(map.description,200) %>
+					<%= truncate(map.description,:length =>200) %>
 					<% if !map.description %><i>no description</i><% end %>
 				</small></p>
 				<p class="meta"><small>

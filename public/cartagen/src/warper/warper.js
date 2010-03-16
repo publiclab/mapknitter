@@ -3,13 +3,40 @@
  * 	      geographic grid; to orthorectify them. 
  */
 var Warper = {
+	initialize: function() {
+		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
+	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image
 	 * @type Array
 	 */
 	images: [],
 	/**
-	 * A function which submits all the Images in the Warper.images array to the Ruby backend for full-resolution warping.
+	 * Click event handler - defined here because if it's in Tool.Warp, 
+	 * it isn't activated unless the Warp tool is active.
+	 */
+	mousedown: function() {
+		var inside_image = false
+		Warper.images.each(function(image) {
+			if (image.is_inside()) {
+				image.active = true
+				inside_image = true
+			} else {
+				// if you're clicking outside while it's active, and the corners have been moved:
+				if (image.active && (image.coordinates() != image.old_coordinates)) {
+					image.save()
+				}
+				if (image.active && !Tool.hover) {
+					image.active = false
+				}
+			}	
+		})
+		if (inside_image) Tool.change('Warp')
+		else if (!Tool.hover) Tool.change('Pan')
+	},
+	/**
+	 * A function which submits all the Images in the Warper.images array
+	 * to the Ruby backend for full-resolution warping.
 	 */
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
@@ -24,21 +51,37 @@ var Warper = {
 		});
 	},
 	/**
-	 * A function which prompts the user for an image file, uploads it, and creates a 
-	 * Warper.Image object to contain its resulting URI and default coordinates.
+	 * Creates a Warper.Image object to contain its resulting URI and 'random' coordinates.
+         * Places the incoming image at Map.x, Map.y, but randomize the corners to show the
+         * user that you can warp it. 
 	 */
-	new_image: function(url) {
-		// consider prompting upload with a form
-		// and calling this function on success of form submission
-		
-		// Place the incoming image at Map.x, Map.y
+	new_image: function(url,id) {
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-200, Map.y],
-			[Map.x+400 +200*Math.random(), Map.y],
-			[Map.x+400 +200*Math.random(), Map.y+200 +200*Math.random()],
-			[Map.x-200, Map.y+200 +200*Math.random()]
-		]),url))
-		
+			[Map.x-100/Map.zoom, Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
+		]),url,id))
+	},
+	/**
+	 * Instantiates an existing image as a Warper.Image object, given an image and known points
+	 * in an array of [lon,lat] pairs.
+	 */
+	load_image: function(url,points,id) {
+		points[0][0] = Projection.lon_to_x(points[0][0])
+		points[0][1] = Projection.lat_to_y(points[0][1])
+		points[1][0] = Projection.lon_to_x(points[1][0])
+		points[1][1] = Projection.lat_to_y(points[1][1])
+		points[2][0] = Projection.lon_to_x(points[2][0])
+		points[2][1] = Projection.lat_to_y(points[2][1])
+		points[3][0] = Projection.lon_to_x(points[3][0])
+		points[3][1] = Projection.lat_to_y(points[3][1])
+		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+			[points[0][0],points[0][1]],
+			[points[1][0],points[1][1]],
+			[points[2][0],points[2][1]],
+			[points[3][0],points[3][1]]
+		]),url,id))
 	},
 	/**
 	 * Convenience method to present points as objects with .x and .y values instead of [x,y]
@@ -77,6 +120,6 @@ var Warper = {
 	}
 	
 }
-
+Warper.initialize()
 //= require "control_point"
 //= require "image"
