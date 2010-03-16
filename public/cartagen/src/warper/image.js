@@ -1,5 +1,7 @@
 /**
- * A class for warpable raster images.
+ * A class for warpable raster images. Note that mousedown events are
+ * handled in the Warper namespace. Corner manipulation is handled in 
+ * the Warper.ControlPoint class.
  * @class
  */
 Warper.Image = Class.create(
@@ -47,6 +49,7 @@ Warper.Image = Class.create(
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
+		$C.opacity(1)
 		this.update()
 		$C.save()
 		

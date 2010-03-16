@@ -8800,6 +8800,7 @@ Warper.Image = Class.create(
 		return 100/Map.zoom
 	},
 	draw: function() {
+		$C.opacity(1)
 		this.update()
 		$C.save()
 

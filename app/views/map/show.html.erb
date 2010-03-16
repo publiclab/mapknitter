@@ -110,10 +110,6 @@
 		</div>
 	</div>
 
-	<span id='geolocate'><a href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}">Move to current location</a></span> 
-	<script type="text/javascript" charset="utf-8">
-		if (!User.geolocate()) $('geolocate').hide()
-	</script>
 	<span class='form right'><form style="display:inline;" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
 		<input style="font-size:0.9em" id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
 		<input type="submit" name="some_name" tabindex="4" value="Go"> 
