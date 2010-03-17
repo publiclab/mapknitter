@@ -8,17 +8,26 @@ Tool.Warp = {
 	 */
 	mode: 'default', //'rotate','drag','scale'
 	/**
-	 * Runs when this tool is selected; adds a menu
+	 * Runs when this tool is selected; adds custom toolbar
 	 */
 	activate: function() {
-		// Tool.clear_toolbar()
-		console.log('activate')
-		$('toolbars').insert("<div class='toolbar' id='tool_specific'><a class='first silk' href='javascript:void(0);' onClick='Tool.Warp.delete_image();'><img src='/images/silk-grey/delete.png' /></a></div>")
+		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
+		$('tool_specific').insert('<a class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
+			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
+		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
+			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
+		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
+			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},
-        deactivate: function() {
+	/**
+	 * Runs when this tool is deselected; removes custom toolbar
+	 */
+	deactivate: function() {
 		$('tool_specific').remove()
+		Tool.Warp.mode = 'default'
 	},
 	delete_image: function() {
+		console.log('deleting image')
 		Warper.images.each(function(image,index) {
 			if (image.active) {
 				console.log(index+' deleting')
@@ -29,6 +38,7 @@ Tool.Warp = {
 				})
 			}
 		})
+		Tool.change('Pan')
 	},
 	/**
 	 * 

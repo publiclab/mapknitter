@@ -18,15 +18,10 @@ var Warper = {
 	mousedown: function() {
 		var inside_image = false
 		Warper.images.each(function(image) {
-			var inside_points = false
-			image.points.each(function(point) {
-				if (point.is_inside()) inside_points = true
-			})
-			if (inside_points || Geometry.is_point_in_poly(image.points, Map.pointer_x(), Map.pointer_y())) {
+			if (image.is_inside()) {
 				image.active = true
 				inside_image = true
 			} else {
-				console.log('clicked outside')
 				// if you're clicking outside while it's active, and the corners have been moved:
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
@@ -37,7 +32,7 @@ var Warper = {
 			}	
 		})
 		if (inside_image) Tool.change('Warp')
-		else Tool.change('Pan')
+		else if (!Tool.hover) Tool.change('Pan')
 	},
 	/**
 	 * A function which submits all the Images in the Warper.images array
@@ -62,10 +57,10 @@ var Warper = {
 	 */
 	new_image: function(url,id) {
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-200, Map.y],
-			[Map.x+400 +200*Math.random(), Map.y],
-			[Map.x+400 +200*Math.random(), Map.y+200 +200*Math.random()],
-			[Map.x-200, Map.y+200 +200*Math.random()]
+			[Map.x-100/Map.zoom, Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
 		]),url,id))
 	},
 	/**

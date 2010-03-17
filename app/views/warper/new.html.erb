@@ -13,7 +13,7 @@
 
 		<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true,:id => "warpable_upload_form" }) do |f| -%>
 		  <p>
-		    <label for="warpable">Select an image to upload:</label>
+		    <label for="warpable">Choose a file from your computer:</label>
 		    <input id="warpable_uploaded_data" name="warpable[uploaded_data]" size="30" type="file" />
 		    <input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 		  </p>
@@ -23,8 +23,7 @@
 		<% end -%>
 
 		<p>
-			Where can you get images to upload? Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
+			Where can you get images to upload?<br />Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
 		</p>
-		<a href="javascript:void(0);" onClick="Warper.new_image('/warper/campus.jpg');Modalbox.hide();return false;">Fake upload</a>
 	</body>
 </html>
