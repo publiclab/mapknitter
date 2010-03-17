@@ -13,6 +13,13 @@
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
+	get_iframe: function(lat,lon,zoom,stylesheet,height,width) {
+		width = typeof(width) != 'undefined' ? width : 500
+		height = typeof(height) != 'undefined' ? height : 300
+		zoom = typeof(zoom) != 'undefined' ? zoom : 2
+		url = typeof(url) != 'undefined' ? url : 'http://cartagen.org'
+		return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
+	},
 	/**
 	 * Draws the display for how much of the map data has downloaded.
 	 */
