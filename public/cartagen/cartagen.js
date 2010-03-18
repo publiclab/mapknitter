@@ -7197,22 +7197,16 @@ $C = {
 	rect: function(x, y, w, h){
 		$C.canvas.fillRect(x, y, w, h)
 	},
-
-<<<<<<< HEAD
 	circ: function(x, y, r){
 		$C.canvas.beginPath()
 		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
 		$C.canvas.fill()
 	},
-
 	stroke_circ: function(x, y, r){
 		$C.begin_path()
 		$C.arc(x, y, r, 0, 2*Math.PI, true)
 		$C.stroke()
 	},
-
-=======
->>>>>>> 7e8ad8c35c28410a9a3ffd6b2a784e2ea0449010
 	stroke_rect: function(x, y, w, h){
 		$C.canvas.strokeRect(x, y, w, h)
 	},

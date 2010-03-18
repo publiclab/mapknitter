@@ -177,31 +177,36 @@ $C = {
 		// if ($C.frozen) return
 		$C.canvas.fillRect(x, y, w, h)
 	},
-	
-<<<<<<< HEAD
+	/**
+	 * Draws an unfilled circle at x,y with radius r
+	 * @param {Number} x X-coord of the center of the circle
+	 * @param {Number} y Y-coord of the center of the circle
+	 * @param {Number} r Radius of the circle
+	 */
 	circ: function(x, y, r){
 		// if ($C.frozen) return
 		$C.canvas.beginPath()
 		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
 		$C.canvas.fill()
 	},
-
+	/**
+	 * Draws a filled circle at x,y with radius r
+	 * @param {Number} x X-coord of the center of the circle
+	 * @param {Number} y Y-coord of the center of the circle
+	 * @param {Number} r Radius of the circle
+	 */
 	stroke_circ: function(x, y, r){
 		// if ($C.frozen) return
 		$C.begin_path()
 		$C.arc(x, y, r, 0, 2*Math.PI, true)
 		$C.stroke()
 	},
-		
-=======
->>>>>>> 7e8ad8c35c28410a9a3ffd6b2a784e2ea0449010
 	/**
 	 * Alias of canvas.strokeRect (unfilled rectangle)
 	 * @param {Number} x X-coord of the top-left corner
 	 * @param {Number} y Y-coord of the top-left corner
 	 * @param {Number} w Width of the rectangle
 	 * @param {Number} h Height of the rectangle
-
 	 */
 	stroke_rect: function(x, y, w, h){
 		// if ($C.frozen) return
