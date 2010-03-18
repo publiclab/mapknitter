@@ -14,6 +14,40 @@
 	<script src="matrix.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 	
+		function p(point) {
+			if (point.x == undefined) {
+				x = point[0]
+				y = point[1]
+			} else {
+				x = point.x
+				y = point.y
+			}
+			return '(' + x + ', ' + y + ')'
+		}
+	
+		function getProjectiveTransform(points) {
+		  var eqMatrix = new Matrix(9, 8, [
+		    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ], 
+		    [ 0, 1, 1,   0, 0, 0,  0,-points[3].x,-points[3].x ],
+		    [ 1, 0, 1,   0, 0, 0, -points[1].x, 0,-points[1].x ],
+		    [ 0, 0, 1,   0, 0, 0,  0, 0,-points[0].x ],
+
+		    [ 0, 0, 0,  -1,-1,-1,  points[2].y, points[2].y, points[2].y ],
+		    [ 0, 0, 0,   0,-1,-1,  0, points[3].y, points[3].y ],
+		    [ 0, 0, 0,  -1, 0,-1,  points[1].y, 0, points[1].y ],
+		    [ 0, 0, 0,   0, 0,-1,  0, 0, points[0].y ]
+
+		  ]);
+
+		  var kernel = eqMatrix.rowEchelon().values;
+		  var transform = new Matrix(3, 3, [
+		    [-kernel[0][8], -kernel[1][8], -kernel[2][8]],
+		    [-kernel[3][8], -kernel[4][8], -kernel[5][8]],
+		    [-kernel[6][8], -kernel[7][8],             1]
+		  ]);
+		  return transform;
+		}
+	
 		Cartagen.setup({
 			stylesheet: "../static/rome/style.gss",
 			static_map: true,
@@ -25,8 +59,392 @@
 			zoom_level: 1.3049999999999986
 		})
 		
+		// Tool.active == 'Warp'
+		
+		var PointShape = Class.create({
+			initialize: function(nodes) {
+				this.active = false
+				this.nodes = nodes
+				this.points = $A()
+				this.diddit = false
+				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				Glop.observe('mousedown', this.click.bindAsEventListener(this))
+				Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
+				this.nodes.each(function(node) {
+					this.points.push(new DraggablePoint(node[0], node[1], 20, this))
+				}, this)
+				// remember that nodes is no longer updated!!!
+				this.image = new Image()
+				this.image.src = 'campus.jpg'
+				this.opacity_low = 0.2
+				this.opacity_high = 0.8
+				this.opacity = this.opacity_high
+				this.subdivisionLimit = 5
+				this.patchSize = 100
+			},
+			draw: function() {
+				
+				$C.save()
+				// show image
+				$C.opacity(this.opacity)
+				this.update()
+				$C.stroke_style('#000')
+				$C.fill_style('#222')
+				
+				if (this.active) $C.line_width(2)
+				else $C.line_width(0)
+				
+				$C.begin_path()
+				
+				$C.move_to(this.points[0].x, this.points[0].y)
+				//$C.canvas.drawImage(this.image, this.points[0].x, this.points[0].y)
+				this.points.each(function(point) {
+					$C.line_to(point.x, point.y)
+				})
+				$C.line_to(this.points[0].x, this.points[0].y)
+
+				
+				
+				$C.opacity(0.4)
+				$C.stroke()
+				
+				$C.opacity(0.2)
+				$C.fill()
+				
+				$C.restore()
+			},
+			update: function() {
+				// Get extents.
+				var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+				this.points.each(function(point) {
+					minX = Math.min(minX, Math.floor(point.x));
+					maxX = Math.max(maxX, Math.ceil(point.x));
+					minY = Math.min(minY, Math.floor(point.y));
+					maxY = Math.max(maxY, Math.ceil(point.y));
+				});
+				
+				//debug($H({'minX': minX, 'minY': minY}))
+
+				minX--; minY--; maxX++; maxY++;
+				var width = maxX - minX;
+				var height = maxY - minY;
+
+				// Measure texture.
+				iw = this.image.width;
+				ih = this.image.height;
+				
+
+				// Set up basic drawing context.
+				//$C.translate(-minX, -minY);
+				$C.stroke_style("#9F0");
+
+				transform = getProjectiveTransform(this.points);
+
+				// Begin subdivision process.
+				var ptl = transform.transformProjectiveVector([0, 0, 1]);
+				var ptr = transform.transformProjectiveVector([1, 0, 1]);
+				var pbl = transform.transformProjectiveVector([0, 1, 1]);
+				var pbr = transform.transformProjectiveVector([1, 1, 1]);
+
+				$C.canvas.save();
+				//$C.translate(-minX, -minY)
+				$C.canvas.beginPath();
+				$C.canvas.moveTo(ptl[0], ptl[1]);
+				$C.canvas.lineTo(ptr[0], ptr[1]);
+				$C.canvas.lineTo(pbr[0], pbr[1]);
+				$C.canvas.lineTo(pbl[0], pbl[1]);
+				$C.canvas.stroke();
+				$C.canvas.closePath();
+				$C.canvas.clip();
+				
+				this.divide(0, 0, 1, 1, ptl, ptr, pbl, pbr, this.subdivisionLimit);
+				$C.canvas.restore()
+				
+			},
+			/**
+			* Render a projective patch.
+			*/
+			divide: function(u1, v1, u4, v4, p1, p2, p3, p4, limit) {
+				// See if we can still divide.
+				if (limit) {
+					// Measure patch non-affinity.
+					var d1 = [p2[0] + p3[0] - 2 * p1[0], p2[1] + p3[1] - 2 * p1[1]];
+					var d2 = [p2[0] + p3[0] - 2 * p4[0], p2[1] + p3[1] - 2 * p4[1]];
+					var d3 = [d1[0] + d2[0], d1[1] + d2[1]];
+					var r = Math.abs((d3[0] * d3[0] + d3[1] * d3[1]) / (d1[0] * d2[0] + d1[1] * d2[1]));
+
+					// Measure patch area.
+					d1 = [p2[0] - p1[0] + p4[0] - p3[0], p2[1] - p1[1] + p4[1] - p3[1]];
+					d2 = [p3[0] - p1[0] + p4[0] - p2[0], p3[1] - p1[1] + p4[1] - p2[1]];
+					var area = Math.abs(d1[0] * d2[1] - d1[1] * d2[0]);
+
+					// Check area > patchSize pixels (note factor 4 due to not averaging d1 and d2)
+					// The non-affinity measure is used as a correction factor.
+					if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.patchSize * this.patchSize))) {
+						// Calculate subdivision points (middle, top, bottom, left, right).
+						var umid = (u1 + u4) / 2;
+						var vmid = (v1 + v4) / 2;
+						var pmid = transform.transformProjectiveVector([umid, vmid, 1]);
+						var pt = transform.transformProjectiveVector([umid, v1, 1]);
+						var pb = transform.transformProjectiveVector([umid, v4, 1]);
+						var pl = transform.transformProjectiveVector([u1, vmid, 1]);
+						var pr = transform.transformProjectiveVector([u4, vmid, 1]);
+
+						// Subdivide.
+						limit--;
+						this.divide(u1, v1, umid, vmid, p1, pt, pl, pmid, limit);
+						this.divide(umid, v1, u4, vmid, pt, p2, pmid, pr, limit);
+						this.divide(u1, vmid, umid, v4, pl, pmid, p3, pb, limit);
+						this.divide(umid, vmid, u4, v4, pmid, pr, pb, p4, limit);
+
+
+						return;
+					}
+				}
+
+				// Render this patch.
+				$C.canvas.save();
+
+				// Set clipping path.
+				$C.canvas.beginPath();
+				$C.canvas.moveTo(p1[0], p1[1]);
+				$C.canvas.lineTo(p2[0], p2[1]);
+				$C.canvas.lineTo(p4[0], p4[1]);
+				$C.canvas.lineTo(p3[0], p3[1]);
+				$C.canvas.closePath();
+				//$C.canvas.clip();
+
+				// Get patch edge vectors.
+				var d12 = [p2[0] - p1[0], p2[1] - p1[1]];
+				var d24 = [p4[0] - p2[0], p4[1] - p2[1]];
+				var d43 = [p3[0] - p4[0], p3[1] - p4[1]];
+				var d31 = [p1[0] - p3[0], p1[1] - p3[1]];
+				
+				// Find the corner that encloses the most area
+				var a1 = Math.abs(d12[0] * d31[1] - d12[1] * d31[0]);
+				var a2 = Math.abs(d24[0] * d12[1] - d24[1] * d12[0]);
+				var a4 = Math.abs(d43[0] * d24[1] - d43[1] * d24[0]);
+				var a3 = Math.abs(d31[0] * d43[1] - d31[1] * d43[0]);
+				var amax = Math.max(Math.max(a1, a2), Math.max(a3, a4));
+				var dx = 0, dy = 0, padx = 0, pady = 0;
+
+				// Align the transform along this corner.
+				switch (amax) {
+					case a1:
+						//debug($H({'case': 'a1'}))
+						$C.canvas.transform(d12[0], d12[1], -d31[0], -d31[1], p1[0], p1[1]);
+						// Calculate 1.05 pixel padding on vector basis.
+						if (u4 != 1) padx = 1.05 / Math.sqrt(d12[0] * d12[0] + d12[1] * d12[1]);
+						if (v4 != 1) pady = 1.05 / Math.sqrt(d31[0] * d31[0] + d31[1] * d31[1]);
+						break;
+					case a2:
+						//debug($H({'case': 'a2'}))
+						$C.canvas.transform(d12[0], d12[1],  d24[0],  d24[1], p2[0], p2[1]);
+						// Calculate 1.05 pixel padding on vector basis.
+						if (u4 != 1) padx = 1.05 / Math.sqrt(d12[0] * d12[0] + d12[1] * d12[1]);
+						if (v4 != 1) pady = 1.05 / Math.sqrt(d24[0] * d24[0] + d24[1] * d24[1]);
+						dx = -1;
+						break;
+					case a4:
+						//debug($H({'case': 'a4'}))
+						$C.canvas.transform(-d43[0], -d43[1], d24[0], d24[1], p4[0], p4[1]);
+						// Calculate 1.05 pixel padding on vector basis.
+						if (u4 != 1) padx = 1.05 / Math.sqrt(d43[0] * d43[0] + d43[1] * d43[1]);
+						if (v4 != 1) pady = 1.05 / Math.sqrt(d24[0] * d24[0] + d24[1] * d24[1]);
+						dx = -1;
+						dy = -1;
+						break;
+					case a3:
+						//debug($H({'case': 'a3'}))
+						// Calculate 1.05 pixel padding on vector basis.
+						$C.canvas.transform(-d43[0], -d43[1], -d31[0], -d31[1], p3[0], p3[1]);
+						if (u4 != 1) padx = 1.05 / Math.sqrt(d43[0] * d43[0] + d43[1] * d43[1]);
+						if (v4 != 1) pady = 1.05 / Math.sqrt(d31[0] * d31[0] + d31[1] * d31[1]);
+						dy = -1;
+						break;
+				}
+
+				// Calculate image padding to match.
+				var du = (u4 - u1);
+				var dv = (v4 - v1);
+				var padu = padx * du;
+				var padv = pady * dv;
+				
+				//dx += this.points[0].x
+				//dy += this.points[0].y
+				
+				debug($H({
+					'dx, dy': p([dx, dy]),
+					'px, py': p([padx, pady])
+				}))
+				
+				
+					$C.canvas.drawImage(
+						this.image,
+						u1 * iw,
+						v1 * ih,
+						Math.min(u4 - u1 + padu, 1) * iw,
+						Math.min(v4 - v1 + padv, 1) * ih,
+						dx, dy,
+						1 + padx, 1 + pady
+					);
+				
+				$C.canvas.restore();
+			},
+			
+			click: function() {
+				if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())) {
+					this.active = true
+				} else {
+					this.active = false
+				}
+			},
+			
+			dblclick: function() {
+				if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+				else this.opacity = this.opacity_low
+			}
+		})
+		
+		var DraggablePoint = Class.create({
+			initialize: function(x,y,r,parent) {
+				this.x = x
+				this.y = y
+				this.r = r
+				this.parent_shape = parent
+				this.color = '#200'
+				this.dragging = false
+				Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+				Glop.observe('mousedown', this.click.bindAsEventListener(this))
+			},
+			// this gets called every frame:
+			draw: function() {
+				// transform to 1:1 scale pixelwise (the map is not at this scale by default)
+				// first, save the transformation matrix:
+				if (this.parent_shape.active) {
+					$C.save()
+				
+						// go to the object's location:
+						$C.translate(this.x,this.y)
+							// draw the object:
+							$C.fill_style(this.color)
+							$C.opacity(0.6)
+							$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+					$C.restore()
+				}
+				
+				/*var nodestring = ''
+				nodes.each(function(node) {
+					nodestring += '(' + node[0] + ', ' + node[1] + ')\n'
+				})*/
+				
+				if (this.dragging && Mouse.down) {
+					this.drag()
+				} else if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+					if (Mouse.down) {
+						this.drag()
+					} else {
+						this.hover()
+					}
+				} else {
+					this.base()
+				}
+				
+				// put debug info in
+			/*	debug($H({
+					'mapx': Map.x,
+					'mapy': Map.y,
+					'mousex': Map.pointer_x(),
+					'mousey': Map.pointer_y(),
+					'draggyx': this.x,
+					'draggyy': this.y,
+					'nodes': nodestring,
+					'ipip': ipip(nodes, Map.pointer_x(), Map.pointer_y())
+				}))*/
+
+				// this.nodes should be a list of coordinate pairs
+				// this math is wrong but it gives you an idea.
+				// in reality the 'map' xy-coords are at 'map scale' and the interface is at 1:1 scale. 
+				// you must always be sure you're in the right scale.
+				// if (Geometry.is_point_in_poly(this.nodes, Mouse.x, Mouse.y)) {
+				// 	if (Mouse.dragging) {
+				// 		this.drag()
+				// 		// we can also save the 'dragging' as a state:
+				// 		this.dragging = true
+				// 	} else if (Mouse.down) {
+				// 		this.click()
+				// 	} else if (this.dragging) {
+				// 		this.dragging = false
+				// 	} else {
+				// 		this.hover()
+				// 	}
+				// }
+			},
+			base: function() {
+				// do stuff
+				this.color = '#200'
+				this.dragging = false
+			},
+			click: function() {
+				if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r) {
+					this.color = '#f00'
+					// do stuff
+					console.log('clicked control point')
+					this.parent_shape.active = true
+				}
+			},
+			hover: function() {
+				// do stuff
+				this.color = '#900'
+				this.dragging = false
+			},
+			drag: function() {
+				if (this.parent_shape.active) {
+					// do stuff
+					if (!this.dragging) {
+						this.dragging = true
+						this.drag_offset_x = Map.pointer_x() - this.x
+						this.drag_offset_y = Map.pointer_y() - this.y
+					}
+					this.color = '#f00'
+					this.x = Map.pointer_x() - this.drag_offset_x
+					this.y = Map.pointer_y() - this.drag_offset_y
+				}
+			},
+			r: function() {
+				// do stuff
+				this.color = '#00f'
+			}
+		})
+		
+		function debug(data) {
+			data.each(function(pair) {
+				if ($(pair.key) == undefined) {
+					newDebug = new Element('li', {'id': pair.key})
+					newDebug.update(pair.key + ': ' + pair.value)
+					$('debug').insert(newDebug)
+				} else {
+					$(pair.key).update(pair.key + ': ' + pair.value)
+				}
+			})
+		}
+
 		function setup() {
-			Warper.new_image('campus.jpg')
+			//draggy = new Draggable(Map.x,Map.y)
+			shapey = new PointShape($A([ // should build points clockwise from top left
+				[Map.x-100, Map.y],
+				[Map.x+200 +100*Math.random(), Map.y],
+				[Map.x+200 +100*Math.random(), Map.y+100 +100*Math.random()],
+				[Map.x-100, Map.y+100 +100*Math.random()]
+			]))/*
+			shapey = new PointShape($A([
+				[Map.x, Map.y],
+				[Map.x+100, Map.y],
+				[Map.x+100, Map.y+100],
+				[Map.x, Map.y+100]
+			]))*/
+			//draggy.debug = $('debug')
+			//$D.enable();
 			Tool.change('Warp')
 		}
 		document.observe('cartagen:init', setup)

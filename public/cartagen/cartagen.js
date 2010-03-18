@@ -7198,6 +7198,7 @@ $C = {
 		$C.canvas.fillRect(x, y, w, h)
 	},
 
+<<<<<<< HEAD
 	circ: function(x, y, r){
 		$C.canvas.beginPath()
 		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
@@ -7210,6 +7211,8 @@ $C = {
 		$C.stroke()
 	},
 
+=======
+>>>>>>> 7e8ad8c35c28410a9a3ffd6b2a784e2ea0449010
 	stroke_rect: function(x, y, w, h){
 		$C.canvas.strokeRect(x, y, w, h)
 	},
@@ -8335,6 +8338,13 @@ Tool.Warp = {
 }
 
 var Interface = {
+	get_iframe: function(lat,lon,zoom,stylesheet,height,width) {
+		width = typeof(width) != 'undefined' ? width : 500
+		height = typeof(height) != 'undefined' ? height : 300
+		zoom = typeof(zoom) != 'undefined' ? zoom : 2
+		url = typeof(url) != 'undefined' ? url : 'http://cartagen.org'
+		return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
+	},
 	display_loading: function() {
 		var percent = Importer.parse_manager.completed
 		if (percent > 75 || (percent < 100)) {

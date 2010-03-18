@@ -178,6 +178,7 @@ $C = {
 		$C.canvas.fillRect(x, y, w, h)
 	},
 	
+<<<<<<< HEAD
 	circ: function(x, y, r){
 		// if ($C.frozen) return
 		$C.canvas.beginPath()
@@ -192,6 +193,8 @@ $C = {
 		$C.stroke()
 	},
 		
+=======
+>>>>>>> 7e8ad8c35c28410a9a3ffd6b2a784e2ea0449010
 	/**
 	 * Alias of canvas.strokeRect (unfilled rectangle)
 	 * @param {Number} x X-coord of the top-left corner
