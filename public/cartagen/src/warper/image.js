@@ -1,13 +1,16 @@
 /**
- * A class for warpable raster images.
+ * A class for warpable raster images. Note that mousedown events are
+ * handled in the Warper namespace. Corner manipulation is handled in 
+ * the Warper.ControlPoint class.
  * @class
  */
 Warper.Image = Class.create(
 {	
+	type: 'Warper.Image',
 	initialize: function(nodes,image,id) {
 		this.id = id
-		this.opacity_low = 0.2
-		this.opacity_high = 0.6
+		this.opacity_low = 0.5
+		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
 	
 		this.subdivision_limit = 5	
@@ -25,14 +28,12 @@ Warper.Image = Class.create(
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
 		}, this)
 
-		this.centroid = Geometry.poly_centroid(this.points)
-		this.centroid[0] *= 2
-		this.centroid[1] *= 2	
+		this.reset_centroid()
 	
-		this.draw_handler = this.draw.bindAsEventListener(this)
-		Glop.observe('glop:postdraw', this.draw_handler)
-		this.dblclick_handler = this.dblclick.bindAsEventListener(this)
-		Glop.observe('dblclick', this.dblclick_handler)
+		// this.dblclick_handler = this.dblclick.bindAsEventListener(this)
+		// Glop.observe('dblclick', this.dblclick_handler)
+		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 		
 		this.image = new Image()
 		this.image.src = image
@@ -47,63 +48,78 @@ Warper.Image = Class.create(
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
+		$C.opacity(this.opacity)
+		// draw warped image: 
 		this.update()
+		$C.opacity(1)
 		$C.save()
 		
 		// Draw outline & points
 		if (this.active) {
-			$C.opacity(this.opacity)
 			$C.stroke_style('#000')
 			$C.fill_style('#222')
 			
 			// Draw outline
-			$C.line_width(2)
-		
+			$C.begin_path()
 			$C.move_to(this.points[0].x, this.points[0].y)
 			this.points.each(function(point) {
 				$C.line_to(point.x, point.y)
 			})
 			$C.line_to(this.points[0].x, this.points[0].y)
 			
+			// Draw outline's shading
 			$C.opacity(0.2)
 			$C.fill()
 		
-			$C.save()	
-			$C.circ(this.centroid[0],this.centroid[1], 8/Map.zoom)		
-			$C.restore()
-
 			// Draw points
+			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()
-			})			
+			})
 		}
+		
 		$C.restore()
 		
 	},
+	select: function() {
+		this.active = true
+	},
+	deselect: function() {
+		this.active = false
+		this.active_point = false
+	},
+	select_point: function(point) {
+		if (this.active_point) { this.active_point.deselect() }
+		point.select()
+	},
 	is_inside: function() {
-		var inside_points = false
+		return (this.is_in_point() || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+	},
+	is_in_point: function() {
+		var inside_point = false
 		this.points.each(function(point) {
-			if (point.is_inside()) inside_points = true
+			if (point.is_inside()) inside_point = true
 		})
-		return (inside_points || Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y()))
+		return inside_point
 	},
 	drag: function() {
-		// do stuff
-		if (!Mouse.down) {
-			this.cancel_drag()
-			return
-		}
 		if (!this.dragging) {
 			this.dragging = true
-			this.drag_offset_x = Map.pointer_x()
-			this.drag_offset_y = Map.pointer_y()
 		}
-		this.offset_x = Map.pointer_x() - this.drag_offset_x
-		this.offset_y = Map.pointer_y() - this.drag_offset_y
+		if (!this.active_point) {
+			this.points.each(function(point) {
+				// 'true' = all points drag together
+				point.drag(true)
+			})
+			$C.cursor('move')
+		}
 	},
 	cancel_drag: function() {
-		//this.base()
-		//this.parent_shape.active_point = false
+		$C.cursor('auto')
+		this.dragging = false
+		this.points.each(function(point) {
+			point.dragging = false
+		})
 	},
 	dblclick: function() {
 		if (this.is_inside()) {
@@ -139,10 +155,13 @@ Warper.Image = Class.create(
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}
-		})
+		})	
+		this.reset_centroid()
+	},
+	reset_centroid: function() {
 		this.centroid = Geometry.poly_centroid(this.points)  
 		this.centroid[0] *= 2
-		this.centroid[1] *= 2	
+		this.centroid[1] *= 2
 	},
 	/**
 	 * 
@@ -152,7 +171,7 @@ Warper.Image = Class.create(
 			Glop.stopObserving('mousedown',point.mousedown_handler)
 		})	
 		Glop.stopObserving('glop:postdraw', this.draw_handler)
-        	Glop.stopObserving('dblclick', this.dblclick_handler)
+       	Glop.stopObserving('dblclick', this.dblclick_handler)
 	},
 	/**
 	 * Update transform based on position of 4 corners.
@@ -162,9 +181,7 @@ Warper.Image = Class.create(
 		this.points.each(function(point) {
 			point.update()
 		})
-		
-		if (this.active) {this.drag()}
-		
+
 		// Get extents.
 		var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 		this.points.each(function(point) {

@@ -1,3 +1,5 @@
+require 'date'
+
 desc "builds cartagen.js"
 task :build do
 	build

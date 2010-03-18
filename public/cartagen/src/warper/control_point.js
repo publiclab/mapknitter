@@ -3,13 +3,14 @@
  * @class
  */
 Warper.ControlPoint = Class.create({
+	type: 'Warper.ControlPoint',
 	initialize: function(x,y,r,parent) {
 		this.x = x
 		this.y = y
 		this.r = r
 		this.rel_r = this.r / Map.zoom
 		this.parent_shape = parent
-		this.color = '#200'
+		this.active = false
 		this.dragging = false
 		// this.draw_handler = this.draw.bindAsEventListener(this)
 		// Glop.observe('glop:postdraw', this.draw_handler)
@@ -18,15 +19,30 @@ Warper.ControlPoint = Class.create({
 	},
 	// this gets called every frame:
 	draw: function() {
-		if (this.parent_shape.active) {
-			$C.save()
-				// go to the object's location:
-				$C.translate(this.x,this.y)
-				// draw the object:
-				$C.fill_style(this.color)
-				$C.opacity(0.6)
-				$C.circ(0, 0, this.rel_r)
-			$C.restore()
+		this.style()
+		$C.save()
+			// go to the object's location:
+			$C.translate(this.x,this.y)
+			// draw the object:
+			$C.fill_style(this.color)
+			$C.opacity(0.6)
+			if (this.is_inside()) $C.circ(0, 0, this.rel_r)
+			$C.stroke_circ(0, 0, this.rel_r)
+		$C.restore()
+	},
+	select: function() {
+		this.active = true
+		this.parent_shape.active_point = this
+	},
+	deselect: function() {
+		this.active = false
+		this.parent_shape.active_point = false
+	},
+	style: function() {
+		if (this.dragging) {
+			this.color = '#f00'
+		} else {
+			this.color = '#200'
 		}
 	},
 	update: function() {
@@ -50,6 +66,7 @@ Warper.ControlPoint = Class.create({
 	},
 	mousedown: function() {
 		if (this.is_inside()) {
+			this.cancel_drag()
 			this.color = '#f00'
 			// do stuff
 			this.parent_shape.active_point = this
@@ -69,22 +86,24 @@ Warper.ControlPoint = Class.create({
 	/**
 	 * Handles drags of control points. Behavior varies according to Tool.Warp.mode.
 	 */
-	drag: function() {
-		// do stuff
-		if (!Mouse.down) {
-			this.cancel_drag()
-			return
-		}
-		if (Tool.Warp.mode == 'default') {
+	drag: function(translating_whole_image) {
+		// translation is possible in any tool:
+		if (translating_whole_image || Tool.Warp.mode == 'default') {
 			if (!this.dragging) {
 				this.dragging = true
 				this.drag_offset_x = Map.pointer_x() - this.x
 				this.drag_offset_y = Map.pointer_y() - this.y
+				if (Object.isUndefined(translating_whole_image)) $C.cursor('crosshair')
 			}
-			this.color = '#f00'
-			this.x = Map.pointer_x() - this.drag_offset_x
-			this.y = Map.pointer_y() - this.drag_offset_y
-		} else if (Tool.Warp.mode == 'rotate') {
+			if (this.drag_offset_x) {
+				this.x = Map.pointer_x() - this.drag_offset_x
+				this.y = Map.pointer_y() - this.drag_offset_y
+			}
+		}
+
+		if (Tool.Warp.mode == 'rotate' && Object.isUndefined(translating_whole_image)) {
+			// don't translate if it's dragging a control point:
+			this.dragging = false
 			// use this.centroid to rotate around a point
 			var distance = Math.sqrt(Math.pow(this.parent_shape.centroid[1]-Map.pointer_y(),2)+Math.pow(this.parent_shape.centroid[0]-Map.pointer_x(),2))
 			var distance_change = distance - this.self_distance
@@ -98,7 +117,10 @@ Warper.ControlPoint = Class.create({
 		}
 	},
 	cancel_drag: function() {
-		this.base()
+		this.dragging = false
+		this.drag_offset_x = false
+		this.drag_offset_y = false
 		this.parent_shape.active_point = false
+		this.parent_shape.reset_centroid()
 	}
 })

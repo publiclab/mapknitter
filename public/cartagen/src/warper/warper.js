@@ -5,12 +5,14 @@
 var Warper = {
 	initialize: function() {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		
 	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image
 	 * @type Array
 	 */
 	images: [],
+	active_image: false,
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active.
@@ -19,7 +21,8 @@ var Warper = {
 		var inside_image = false
 		Warper.images.each(function(image) {
 			if (image.is_inside()) {
-				image.active = true
+				Warper.active_image = image
+				image.select()
 				inside_image = true
 			} else {
 				// if you're clicking outside while it's active, and the corners have been moved:
@@ -27,10 +30,22 @@ var Warper = {
 					image.save()
 				}
 				if (image.active && !Tool.hover) {
-					image.active = false
+					image.deselect()
 				}
 			}	
 		})
+		if (Warper.active_image) {
+			var point_clicked = false
+			Warper.active_image.points.each(function(point) {
+				if (point.is_inside()) {
+					Warper.active_image.select_point(point)
+					point_clicked = true
+				}
+			})
+			if (!point_clicked && Warper.active_image.active_point) {
+				Warper.active_image.active_point.deselect()
+			}
+		}
 		if (inside_image) Tool.change('Warp')
 		else if (!Tool.hover) Tool.change('Pan')
 	},

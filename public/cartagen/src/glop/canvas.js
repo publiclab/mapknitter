@@ -17,6 +17,7 @@ $C = {
 		$('main').style.position = 'absolute'
 		$('main').style.top = 0
 		$('main').style.left = 0
+		$('canvas').onselectstart = function() {return false}
 		this.canvas =  $('main').getContext('2d')
 		this.element = $('main')
 		this.canvases.set('main',this.canvas)
@@ -183,7 +184,14 @@ $C = {
 		$C.canvas.arc(x, y, r, 0, 2*Math.PI, true)
 		$C.canvas.fill()
 	},
-	
+
+	stroke_circ: function(x, y, r){
+		// if ($C.frozen) return
+		$C.begin_path()
+		$C.arc(x, y, r, 0, 2*Math.PI, true)
+		$C.stroke()
+	},
+		
 	/**
 	 * Alias of canvas.strokeRect (unfilled rectangle)
 	 * @param {Number} x X-coord of the top-left corner
@@ -419,6 +427,9 @@ $C = {
 		Glop.width = _width
 		Glop.height = _height
 		return url
+	},
+	cursor: function(cursor) {
+		this.element.style.cursor = cursor
 	}
 }
 

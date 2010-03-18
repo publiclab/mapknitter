@@ -25,12 +25,11 @@ Tool.Warp = {
 	deactivate: function() {
 		$('tool_specific').remove()
 		Tool.Warp.mode = 'default'
+		Warper.active_object = false
 	},
 	delete_image: function() {
-		console.log('deleting image')
 		Warper.images.each(function(image,index) {
 			if (image.active) {
-				console.log(index+' deleting')
 				Warper.images.splice(index,1)
 				image.cleanup()
 				new Ajax.Request('/warper/delete/'+image.id,{
@@ -44,17 +43,34 @@ Tool.Warp = {
 	 * 
 	 */
 	drag: function() {
-		
 	},
+	/**
+	 * Used to select objects in Warper
+	 */
 	mousedown: function() {
 	}.bindAsEventListener(Tool.Warp),
 	mouseup: function() {
 		$l('Warp mouseup')
-		
+		if (Warper.active_image) {
+			if (Warper.active_image.active_point) {
+				Warper.active_image.active_point.cancel_drag()
+			} else {
+				Warper.active_image.cancel_drag()
+			}
+		}
+		$C.cursor('auto')
 	}.bindAsEventListener(Tool.Warp),
 	mousemove: function() {
 		$l('Warp mousemove')
-		
+		if (Mouse.down){
+			if (Warper.active_image) {
+				if (Warper.active_image.active_point) {
+					Warper.active_image.active_point.drag()
+				} else {
+					Warper.active_image.drag()
+				}
+			}
+		}
 	}.bindAsEventListener(Tool.Warp),
 	dblclick: function() {
 		$l('Warp dblclick')
