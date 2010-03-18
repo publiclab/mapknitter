@@ -1,10 +1,9 @@
 /**
  * Projective texturing using Canvas.
- *
- * (c) Steven Wittens 2008
- * http://www.acko.net/
+ * 
+ * Copyright (c) 2008 Steven Wittens (www.acko.net)
+ * Licensed under the MIT license, see LICENSE_PROJECTIVE.
  */
-
 var points = [
   [100, 100],
   [200 + Math.random() * 200, 100],

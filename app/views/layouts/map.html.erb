@@ -21,7 +21,7 @@
 			img { border:0; }
 			a { color:#B3221C; }
 			h1, h2, h3 { font-weight:normal; }
-			h1 { font-size:3em; }
+			h1 { font-size:2em; }
 
 			h3 a { text-decoration:none; }
 
@@ -36,7 +36,12 @@
 			#header img {
 				float:left;
 			}
-			
+		
+			#header .right {
+				float:right;
+				margin-top:26px;
+			}
+	
 			#main {
 				float:left;
 			}
@@ -86,10 +91,22 @@
 				font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
 				font-size:11px;
 			}
-			
+			#main .left {
+				width:400px;
+				font-size:13px;
+				font-style:italic;	
+			}
 		</style>
 	</head>
 	<body>
 		<%= yield %>
-	</body>
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-180781-29");
+	pageTracker._trackPageview();
+	} catch(err) {}</script></body>
 </html>
