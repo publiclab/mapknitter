@@ -13,6 +13,9 @@
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
+	display_iframe: function() {
+		$$('body')[0].insert("<div id='iframe_code'><textarea>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea></div>")
+	},
 	get_iframe: function(lat,lon,zoom,stylesheet,height,width) {
 		width = typeof(width) != 'undefined' ? width : 500
 		height = typeof(height) != 'undefined' ? height : 300

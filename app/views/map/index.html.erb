@@ -1,12 +1,3 @@
-<div id="header">
-	<div style="display:none;">Use Cartagen Knitter to upload your own aerial imagery and 'knit' a map. Knitter is part of the Grassroots Mapping project supporting communities in geographic conflict.</div>
-	<div class="right">
-		<a href="http://wiki.grassrootsmapping.org">GrassrootsMapping Wiki &raquo;</a>
-	</div>
-	<a href="/map/"><img src="/images/knitter-logo.png" /></a>
-	<h2>Cartagen Knitter</h2>
-</div>
-
 <div id="main">
 	<div class='left'>
 		<p>Use Cartagen Knitter to upload your own aerial imagery and 'knit' a map. Everything you create with this tool is owned by you; read more at <a href="http://grassrootsmapping.org">GrassrootsMapping.org</a>.</p>
@@ -14,48 +5,9 @@
 		<p><object width="400" height="300"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=10213658&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=10213658&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="300"></embed></object></p>
 		<p><a href="http://vimeo.com/10213658">Cartagen warping tool demo</a> from <a href="http://vimeo.com/user263756">Jeffrey Warren</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
 	</div>
-	<div id='list'>
-		<h1>Maps</h1>
-		<% odd = false %>
-		<% for map in @maps %>
-			<div class="<% puts 'odd' if odd %>">
-				<h3><a href ="/map/show/<%= map.name %>"><%= map.name.capitalize %></a></h3>
-				<p><small>
-					<%= truncate(map.description,:length =>200) %>
-					<% if !map.description %><i>no description</i><% end %>
-				</small></p>
-				<p class="meta"><small>
-					Updated on <%= map.updated_at.to_s(:short) %> | 
-					<a href="/maps/<%= map.name %>">View map &raquo;</a>
-				</small></p>
-			</div>
-			<% odd = !odd %>
-		<% end %>
-	</div>
+	<h1>Maps</h1>
+	<%= render :partial => 'map/list' %>
 </div>
-
 <div id="sidebar">
-	
-	<div id="new_map">
-		<h3>Make a new map</h3>
-		<form action="/map/create" method="get" accept-charset="utf-8">
-			
-			<label for="name">Name</label> <input class="text" type="text" name="name" value="" id="name"><br />
-			<label for="location">Place</label> <input class="text" type="text" name="location" value="Paris, France" id="place"><br />
-			<label for="author">Author</label> <input class="text" type="text" name="author" value="your name" id="author"><br />
-
-			<label for="description">Description</label><textarea name="description" rows="8" cols="24"></textarea>
-			
-			<!--<label for="password">Password (optional)</label> <input class="text" type="password" name="password" value="" id="password"><br />-->
-			
-
-			<p><input type="submit" value="Save"></p>
-		</form>
-	</div>
-	<div>
-		<p>Cartagen Knitter is part of the <a href="http://cartagen.org">Cartagen framework</a> for dynamic mapping in HTML5. The Cartagen <a href="">source code</a> is available on Github. Cartagen was created by <a href="http://unterbahn.com">Jeffrey Warren</a> at the MIT Media Lab and the <a href="http://civic.mit.edu">Center for Future Civic Media</a></p>
-	</div>
-	
+<%= render :partial => "map/new" %>
 </div>
-
-<br style="clear:both;" />

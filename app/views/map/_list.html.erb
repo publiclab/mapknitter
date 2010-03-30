@@ -1,0 +1,17 @@
+<div id="list">
+	<% odd = false %>
+	<% for map in @maps %>
+		<div class="<% puts 'odd' if odd %>">
+			<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
+			<p><small>
+				<%= truncate(map.description,:length =>200) %>
+				<% if !map.description %><i>no description</i><% end %>
+			</small></p>
+			<p class="meta"><small>
+				Updated on <%= map.updated_at.to_s(:short) %> | 
+				<a href="/maps/<%= map.name %>">View map &raquo;</a>
+			</small></p>
+		</div>
+	<% end %>
+</div>
+

@@ -55,6 +55,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'find/:id', :controller => "map", :action => "find"
   map.connect 'find/:id/:range', :controller => "map", :action => "find"
 
+  map.connect 'author/:id', :controller => 'author', :action => 'show'
   map.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 
   map.connect ':controller/:action/:id'

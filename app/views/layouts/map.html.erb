@@ -5,6 +5,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Cartagen: Maps</title>
+		<script src="/javascripts/jquery.min.js" type="text/javascript"></script> 
+		<script type="text/javascript" src="/javascripts/jquery-autocomplete/jquery.autocomplete.js"></script> 
+		<script type="text/javascript" src="/javascripts/jquery-autocomplete/lib/jquery.ajaxQueue.js"></script> 
+		<link href="/javascripts/jquery-autocomplete/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" /> 
+
 		<style type="text/css" media="screen">
 			
 			html { background: #333; }
@@ -20,6 +25,7 @@
 
 			img { border:0; }
 			a { color:#B3221C; }
+			a:hover { color:#a00; }
 			h1, h2, h3 { font-weight:normal; }
 			h1 { font-size:2em; }
 
@@ -32,6 +38,13 @@
 				margin-top:0;
 				padding-top:22px;
 				margin-bottom:8px;
+			}
+			#header h2 a {
+				text-decoration:none;
+				color:black;
+			}
+			#header h2 a:hover {
+				color:#900;
 			}
 			#header img {
 				float:left;
@@ -55,6 +68,9 @@
 				margin-bottom:3px;
 				padding-top:10px;
 			}
+			#list h3 small {
+				font-size: 0.6em;
+			}
 			#list p {
 				margin-top:6px;
 				margin-bottom:6px;
@@ -76,18 +92,18 @@
 				font-style:italic;
 			}
 			
-			#new_map {
+			#sidebar .box {
 				border:3px solid #161;
 				padding:14px;
 				background:#98BE66;
 			}
-			#new_map form {
+			#sidebar form {
 			}
-			#new_map form input.text {
+			#sidebar form input.text {
 				font-size:1em;
 				width:210px;
 			}
-			#new_map form label {
+			#sidebar form label {
 				font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
 				font-size:11px;
 			}
@@ -99,7 +115,18 @@
 		</style>
 	</head>
 	<body>
+	<div id="header">
+		<div class="right">
+			<a href="http://wiki.grassrootsmapping.org">GrassrootsMapping Wiki &raquo;</a>
+		</div>
+		<a href="/maps/"><img src="/images/knitter-logo.png" /></a>
+		<h2><a href="/maps/">Cartagen Knitter</a></h2>
+	</div>
+
 		<%= yield %>
+
+	<br style="clear:both;" />
+
 	<script type="text/javascript">
 	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

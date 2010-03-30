@@ -51,6 +51,15 @@ class MapController < ApplicationController
       render :text => 'failure'
     end
   end
+
+  def geolocate
+    begin
+	@location = GeoKit::GeoLoc.geocode(params[:q])
+	render :layout => false
+    rescue
+	render :text => "No results"
+    end
+  end
  
   def stylesheet
     render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles, :layout => false
