@@ -92,25 +92,33 @@
 				font-style:italic;
 			}
 			
-			#sidebar .box {
+			.box {
 				border:3px solid #161;
 				padding:14px;
 				background:#98BE66;
 			}
-			#sidebar form {
+			form.map {
 			}
-			#sidebar form input.text {
+			form.map input.text {
 				font-size:1em;
 				width:210px;
 			}
-			#sidebar form label {
+			form.map label {
 				font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
 				font-size:11px;
+			}
+			form.map input.loading {
+				background:'/images/spinner-small.gif';right:2px;
 			}
 			#main .left {
 				width:400px;
 				font-size:13px;
 				font-style:italic;	
+			}
+			#flash {
+				padding:5px;
+				color:#090;
+				background:#9f9;
 			}
 		</style>
 	</head>
@@ -122,6 +130,12 @@
 		<a href="/maps/"><img src="/images/knitter-logo.png" /></a>
 		<h2><a href="/maps/">Cartagen Knitter</a></h2>
 	</div>
+
+	<% if flash[:notice] %>
+	<div id="flash">
+		<%= flash[:notice] %>	
+	</div>
+	<% end %>
 
 		<%= yield %>
 

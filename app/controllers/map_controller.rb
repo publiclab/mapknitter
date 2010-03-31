@@ -7,15 +7,27 @@ class MapController < ApplicationController
     
   end
 
+  def edit
+    @map = Map.find_by_name params[:id]
+  end
+
   def new
 
+  end
+
+  def update_map
+    @map = Map.find(params[:map][:id])
+    @map.update_attributes(params[:map])
+    flash[:notice] = "Saved map."
+    redirect_to '/map/edit/'+@map.name
   end
 
   def create
     location = GeoKit::GeoLoc.geocode(params[:location])
     map = Map.new({:lat => location.lat,
             :lon => location.lng,
-            :name => params[:name]})
+            :name => params[:name],
+            :location => params[:location]})
     map.save
     redirect_to :action => 'show', :id => map.name
   end

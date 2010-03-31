@@ -1,20 +1,26 @@
-<div class="box">
-	<h3>Make a new map</h3>
-	<form class='map' id="new_map" action="/map/create" method="get" accept-charset="utf-8">
+<div id="main">
+	<h2>Editing "<%= @map.name %>"</h2>	
+	<p><i>by <a href="/author/<%= @map.author %>"><%= @map.author %></a></i></p>
+
+	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
+
+	<div class='box'>
+	<form class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
+	
+		<input type='hidden' name='map[id]' value="<%= @map.id %>"/>
 		
 		<label for="name">Name</label><br />
-		<input class="text" type="text" name="name" value="" id="name"><br />
+		<input class="text" type="text" name="map[name]" value="<%= @map.name %>" id="name"><br />
 		<label for="location">Place</label><br />
-		<input class="text" type="text" name="location" value="Paris, France" id="new_map_place"><br />
+		<input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
 		<div id="geocode_results">
 			
 		</div>
 		<script>
 	    /* JQuery search as you type
 	    * Overrides the action and method of the form
-	    *
 	    */
-	      $().ready(function() {
+	      $(window).ready(function() {
 	        $("#new_map_place").autocomplete("/map/geolocate",
 	          { cacheLength:1, multiple:false, minchars:1, mustMatch:false,
 	            highlight:false,
@@ -29,7 +35,9 @@
 	                //a header, return null character
 	                return "\0";
 	              }
-	            }
+	            },
+		    search: function(event,ui) {
+		    }
 	          });
 	          $("#new_map_place").result(function(event, data, formatted) {
 		    if (data == 'No results'){  
@@ -37,21 +45,23 @@
 		    } else {
 	              $("#new_map_place").attr('value',data);
 		    }
-		    });
-          });
+		  })
+          	});
+	    
 
 		</script>
 		<label for="author">Author</label><br />
-		<input class="text" type="text" name="author" value="your name" id="author"><br />
+		<input class="text" type="text" name="map[author]" value="<%= @map.author %>" id="author"><br />
 		<label for="description">Description</label><br />
-		<textarea name="description" rows="8" cols="24"></textarea>
+		<textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
 		
 		<!--<label for="password">Password (optional)</label><br />
 		<input class="text" type="password" name="password" value="" id="password"><br />-->
 			
-
 		<p><input type="submit" value="Save"></p>
 	</form>
+	</div>
+
+	
 </div>
-<p>Cartagen Knitter is part of the <a href="http://cartagen.org">Cartagen framework</a> for dynamic mapping in HTML5. The Cartagen <a href="">source code</a> is available on Github. Cartagen was created by <a href="http://unterbahn.com">Jeffrey Warren</a> at the MIT Media Lab and the <a href="http://civic.mit.edu">Center for Future Civic Media</a></p>
 

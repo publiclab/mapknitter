@@ -8,6 +8,7 @@
 				<% if !map.description %><i>no description</i><% end %>
 			</small></p>
 			<p class="meta"><small>
+				<a href="/map/edit/<%= map.name %>">Edit</a> | 
 				Updated on <%= map.updated_at.to_s(:short) %> | 
 				<a href="/maps/<%= map.name %>">View map &raquo;</a>
 			</small></p>
