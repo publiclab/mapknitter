@@ -18,6 +18,10 @@ class MapController < ApplicationController
   def update_map
     @map = Map.find(params[:map][:id])
     @map.update_attributes(params[:map])
+    location = GeoKit::GeoLoc.geocode(params[:map][:location])
+    @map.lat = location.lat
+    @map.lon = location.lng
+    @map.save
     flash[:notice] = "Saved map."
     redirect_to '/map/edit/'+@map.name
   end
