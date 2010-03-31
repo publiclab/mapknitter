@@ -1,10 +1,18 @@
 <div id="main">
 	<h2>Editing "<%= @map.name %>"</h2>	
-	<p><i>by <a href="/author/<%= @map.author %>"><%= @map.author %></a></i></p>
+	<p><small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a></small></p>
 
 	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
 
+	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+	<div id='images'>
+		<% @images.each do |image| %>
+		<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+		<% end %>
+	</div>
+
 	<div class='box'>
+	<h3>Edit map details:</h3>
 	<form class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
 	
 		<input type='hidden' name='map[id]' value="<%= @map.id %>"/>

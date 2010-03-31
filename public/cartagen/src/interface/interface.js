@@ -13,6 +13,37 @@
  * @namespace Misc. UI methods that do not related to user-submitted data
  */
 var Interface = {
+	mousemove: function(event) {
+		Mouse.window_x = Event.pointerX(event)
+		Mouse.window_y = Event.pointerY(event)
+	},
+	/**
+ 	 * Creates listeners for mouseover and mouseout events for buttons
+ 	 * on the toolbar; must run every time you change the toolbar.
+ 	 */
+	setup_tooltips: function() {
+		$$('.toolbar a').each(function(toolbar){
+			toolbar.onmouseover = function() {
+				Interface.show_tooltip(toolbar.name)
+			}
+			toolbar.onmouseout = function() {
+				$$('.tooltip').each(function(tooltip) {
+					tooltip.remove()
+				})
+			}
+		})
+	},
+	/**
+ 	 * Show a tooltip
+ 	 */
+	show_tooltip: function(name) {
+		$$('.tooltip').each(function(tooltip){
+			//delete it
+			tooltip.remove()
+		})
+		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
+		$('tooltip').style.left = (Mouse.window_x)+'px'
+	},
 	display_iframe: function() {
 		$$('body')[0].insert("<div id='iframe_code'><textarea>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea></div>")
 	},
@@ -82,3 +113,5 @@ var Interface = {
 		Tool.change('Select')
 	}
 }
+document.observe('mousemove',Interface.mousemove)
+

@@ -5,7 +5,6 @@
 var Warper = {
 	initialize: function() {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
-		
 	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image

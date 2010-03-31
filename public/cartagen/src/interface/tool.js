@@ -55,5 +55,5 @@ var Tool = {
 	 */
 	drag: function() {
 		Tool[Tool.active].drag()
-	}
+	},
 }

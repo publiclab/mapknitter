@@ -195,6 +195,7 @@ var Cartagen = {
 		
 		Glop.trigger_draw()
 		Interface.display_loading_message()
+		Interface.setup_tooltips()
 		
 		/**
 		 * @name cartagen:postinit

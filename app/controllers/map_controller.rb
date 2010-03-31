@@ -9,6 +9,7 @@ class MapController < ApplicationController
 
   def edit
     @map = Map.find_by_name params[:id]
+    @images = Warpable.find_all_by_map_id(params[:id],:conditions => ['parent_id IS NULL'])
   end
 
   def new
@@ -50,6 +51,11 @@ class MapController < ApplicationController
       @nodes[warpable.id.to_s] ||= 'none'
     end
     render :layout => false
+  end
+
+  def search
+    params[:id] ||= params[:q]
+    @maps = Map.find(:all, :conditions => ['name LIKE ? OR location LIKE ? OR description LIKE ?',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
   end
  
   def update

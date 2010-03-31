@@ -5208,6 +5208,7 @@ var Cartagen = {
 
 		Glop.trigger_draw()
 		Interface.display_loading_message()
+		Interface.setup_tooltips()
 
 		document.fire('cartagen:postinit')
 	},
@@ -7508,6 +7509,8 @@ var Keyboard = {
 var Mouse = {
 	x: 0,
 	y: 0,
+	window_x: 0,
+	window_y: 0,
 	down: false,
 	up: false,
 	click_x: 0,
@@ -7927,7 +7930,7 @@ var Tool = {
 	},
 	drag: function() {
 		Tool[Tool.active].drag()
-	}
+	},
 }
 Tool.Select = {
 	activate: function() {
@@ -8274,11 +8277,11 @@ Tool.Warp = {
 	mode: 'default', //'rotate','drag','scale'
 	activate: function() {
 		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
-		$('tool_specific').insert('<a class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
 			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
-		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
 			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},
 	deactivate: function() {
@@ -8332,6 +8335,29 @@ Tool.Warp = {
 }
 
 var Interface = {
+	mousemove: function(event) {
+		Mouse.window_x = Event.pointerX(event)
+		Mouse.window_y = Event.pointerY(event)
+	},
+	setup_tooltips: function() {
+		$$('.toolbar a').each(function(toolbar){
+			toolbar.onmouseover = function() {
+				Interface.show_tooltip(toolbar.name)
+			}
+			toolbar.onmouseout = function() {
+				$$('.tooltip').each(function(tooltip) {
+					tooltip.remove()
+				})
+			}
+		})
+	},
+	show_tooltip: function(name) {
+		$$('.tooltip').each(function(tooltip){
+			tooltip.remove()
+		})
+		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
+		$('tooltip').style.left = (Mouse.window_x)+'px'
+	},
 	display_iframe: function() {
 		$$('body')[0].insert("<div id='iframe_code'><textarea>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea></div>")
 	},
@@ -8392,6 +8418,8 @@ var Interface = {
 		Tool.change('Select')
 	}
 }
+document.observe('mousemove',Interface.mousemove)
+
 var Geohash = {}
 
 Object.extend(Geohash, Enumerable)
@@ -8797,7 +8825,6 @@ document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
-
 	},
 	images: [],
 	active_image: false,
