@@ -11,12 +11,14 @@ var Warper = {
 	 * @type Array
 	 */
 	images: [],
+	locked: false,
 	active_image: false,
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active.
 	 */
 	mousedown: function() {
+		if (!Warper.locked) {
 		var inside_image = false
 		Warper.images.each(function(image) {
 			if (image.is_inside()) {
@@ -47,6 +49,7 @@ var Warper = {
 		}
 		if (inside_image) Tool.change('Warp')
 		else if (!Tool.hover) Tool.change('Pan')
+		}
 	},
 	/**
 	 * A function which submits all the Images in the Warper.images array

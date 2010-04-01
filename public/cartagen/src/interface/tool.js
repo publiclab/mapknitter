@@ -49,6 +49,7 @@ var Tool = {
 			}
 			Tool.active = new_tool
 		}
+		Interface.setup_tooltips()
 	},
 	/**
 	 * Pass drag call to the active tool:

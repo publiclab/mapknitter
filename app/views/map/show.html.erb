@@ -76,6 +76,9 @@
 				$('header').hide()
 				Config.padding_top = 0
 			}
+			if (Config.locked == 'true') {
+				Warper.locked = true
+			}
 		}
 		document.observe('cartagen:init', setup)
 	</script>
@@ -116,11 +119,7 @@
 		</div>
 	</div>
 
-	<span class='form right'><form style="display:inline;" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
-		<input style="font-size:0.9em" id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
-		<input type="submit" name="some_name" tabindex="4" value="Go"> 
-	</form></span>
-	<span class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
+	<span style='margin-right:6px;' class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
 </div>
 
 <div class='modal' id="styles" style="display:none;">

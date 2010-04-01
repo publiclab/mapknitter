@@ -21,6 +21,7 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
+			$C.line_width(3/Map.zoom)
 			// go to the object's location:
 			$C.translate(this.x,this.y)
 			// draw the object:
@@ -62,7 +63,7 @@ Warper.ControlPoint = Class.create({
 	 * Returns true if the mouse is inside this control point
 	 */
 	is_inside: function() {
-		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
 		if (this.is_inside()) {

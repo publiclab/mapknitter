@@ -54,16 +54,22 @@ var Interface = {
 	display_knitter_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
-		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name,true)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
 		$('iframe_code').absolutize()
 		}
 	},
-	get_iframe: function(lat,lon,zoom,stylesheet,url,height,width) {
-		width = typeof(width) != 'undefined' ? width : 500
-		height = typeof(height) != 'undefined' ? height : 300
-		zoom = typeof(zoom) != 'undefined' ? zoom : 2
-		url = typeof(url) != 'undefined' ? url : 'http://cartagen.org'
-		return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
+	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
+		width = width || 500
+		height = height || 300
+		zoom = zoom || 2
+		url = url || 'http://cartagen.org'
+
+		code = "<iframe height='"+height+"'width='"+width+"' src='"+url+'?fullscreen=true'
+		if (!Object.isUndefined(locked)) code += '&#038;locked=true'
+		if (!Object.isUndefined(stylesheet)) code += '&#038;gss='+stylesheet
+		code = code + "' style='border:0;'></iframe>"
+ 		return code
+		//return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
 	},
 	/**
 	 * Draws the display for how much of the map data has downloaded.

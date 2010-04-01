@@ -7927,6 +7927,7 @@ var Tool = {
 			}
 			Tool.active = new_tool
 		}
+		Interface.setup_tooltips()
 	},
 	drag: function() {
 		Tool[Tool.active].drag()
@@ -8368,16 +8369,21 @@ var Interface = {
 	display_knitter_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
-		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name,true)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
 		$('iframe_code').absolutize()
 		}
 	},
-	get_iframe: function(lat,lon,zoom,stylesheet,url,height,width) {
-		width = typeof(width) != 'undefined' ? width : 500
-		height = typeof(height) != 'undefined' ? height : 300
-		zoom = typeof(zoom) != 'undefined' ? zoom : 2
-		url = typeof(url) != 'undefined' ? url : 'http://cartagen.org'
-		return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
+	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
+		width = width || 500
+		height = height || 300
+		zoom = zoom || 2
+		url = url || 'http://cartagen.org'
+
+		code = "<iframe height='"+height+"'width='"+width+"' src='"+url+'?fullscreen=true'
+		if (!Object.isUndefined(locked)) code += '&#038;locked=true'
+		if (!Object.isUndefined(stylesheet)) code += '&#038;gss='+stylesheet
+		code = code + "' style='border:0;'></iframe>"
+ 		return code
 	},
 	display_loading: function() {
 		var percent = Importer.parse_manager.completed
@@ -8838,8 +8844,10 @@ var Warper = {
 		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
 	},
 	images: [],
+	locked: false,
 	active_image: false,
 	mousedown: function() {
+		if (!Warper.locked) {
 		var inside_image = false
 		Warper.images.each(function(image) {
 			if (image.is_inside()) {
@@ -8869,6 +8877,7 @@ var Warper = {
 		}
 		if (inside_image) Tool.change('Warp')
 		else if (!Tool.hover) Tool.change('Pan')
+		}
 	},
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
@@ -8955,6 +8964,7 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
+			$C.line_width(3/Map.zoom)
 			$C.translate(this.x,this.y)
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
@@ -8989,7 +8999,7 @@ Warper.ControlPoint = Class.create({
 		this.dragging = false
 	},
 	is_inside: function() {
-		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
 		if (this.is_inside()) {
