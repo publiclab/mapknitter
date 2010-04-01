@@ -115,10 +115,14 @@
 				font-size:13px;
 				font-style:italic;	
 			}
-			#flash {
+			div.flash {
 				padding:5px;
 				color:#090;
 				background:#9f9;
+			}
+			div.flash.error {
+				color:#900;
+				background:#f99;
 			}
 			#search {
 				border:3px solid #161;
@@ -132,6 +136,22 @@
 			#search input.text {
 				font-size:1em;
 			}
+			.ac_results {
+				padding: 3px;
+				border: none;
+				background-color: #ffa;
+			}
+			.ac_results ul {
+			}
+			.ac_results li {
+				color:#444;
+			}
+			.ac_odd {
+				background-color:#dd8;
+			}
+			.ac_over {
+				background-color:#cb6;
+			}	
 		</style>
 	</head>
 	<body>
@@ -144,8 +164,13 @@
 	</div>
 
 	<% if flash[:notice] %>
-	<div id="flash">
+	<div class="flash notice">
 		<%= flash[:notice] %>	
+	</div>
+	<% end %>
+	<% if flash[:error] %>
+	<div class="flash error">
+		<%= flash[:error] %>	
 	</div>
 	<% end %>
 

@@ -1,5 +1,5 @@
 class Map < ActiveRecord::Base
-  validates_presence_of :name
+  validates_presence_of :name,:author,:location
 
   def validate
     self.name != 'untitled'

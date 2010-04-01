@@ -25,7 +25,8 @@
 			padding_top: -46,
 			lat: <%= @map.lat %>,
 			lng: <%= @map.lon %>,
-			zoom: <%= @map.zoom %>
+			zoom: <%= @map.zoom %>,
+			map_name: '<%= @map.name %>'
 		})
 		var Knitter = {
 			save_new_location: function(lat,lon,zoom) {
@@ -71,6 +72,10 @@
 					Warper.new_image(warpable.img,warpable.id);
 				}
 			})
+			if (Config.fullscreen) {
+				$('header').hide()
+				Config.padding_top = 0
+			}
 		}
 		document.observe('cartagen:init', setup)
 	</script>
@@ -95,6 +100,7 @@
 	<div id="toolbars">
 		<div class="toolbar">
 			<a name='Download image' class='first silk' href="javascript:void(0);" onClick="Cartagen.redirect_to_image()"><img src="/images/silk-grey/disk.png" /></a>
+			<a name='Embed this map on your site' class='silk' href="javascript:void(0);" onClick="Interface.display_knitter_iframe()"><img src="/images/silk-grey/page_white_code.png" /></a>
 			<!--<a name='Edit GSS' class='silk' href="javascript:void(0);" onClick="$('styles').toggle()"><img src="/images/silk-grey/page_edit.png" /></a>-->
 			<a name='Upload an image' class='last silk' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/warper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/photo_add.png" /></a>
 		</div>
@@ -104,7 +110,7 @@
 		</div>
 		<div class="toolbar">
 			<a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
-			<a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Map.lat = User.lat;Map.lon = User.lon}"><img src="/images/silk-grey/house.png" /></a> 
+			<a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a> 
 			<script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
 			<a name='Search for a new location' class='last silk' href="javascript:void(0);" onClick=""><img src="/images/silk-grey/magnifier.png" /></a>
 		</div>

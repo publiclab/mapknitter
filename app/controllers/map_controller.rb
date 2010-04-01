@@ -2,9 +2,7 @@ class MapController < ApplicationController
   caches_page :find
 
   def index
-    
     @maps = Map.find :all, :order => 'id DESC'
-    
   end
 
   def edit
@@ -28,13 +26,18 @@ class MapController < ApplicationController
   end
 
   def create
-    location = GeoKit::GeoLoc.geocode(params[:location])
-    map = Map.new({:lat => location.lat,
+    if params[:location] == ''
+      flash[:error] = 'You must define a location'
+      redirect_to '/maps'
+    else
+      location = GeoKit::GeoLoc.geocode(params[:location])
+      map = Map.new({:lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
             :location => params[:location]})
-    map.save
-    redirect_to :action => 'show', :id => map.name
+      map.save
+      redirect_to :action => 'show', :id => map.name
+    end
   end
   
   def show
