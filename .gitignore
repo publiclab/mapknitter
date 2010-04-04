@@ -1,0 +1,8 @@
+.DS_Store
+log/
+tmp/*
+tmp/**/*
+coverage*
+public/warpables/*
+config/database.yml
+config/amazon_s3.yml
