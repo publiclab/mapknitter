@@ -29,10 +29,10 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
 	
 		// this.dblclick_handler = this.dblclick.bindAsEventListener(this)
 		// Glop.observe('dblclick', this.dblclick_handler)
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 		
 		this.image = new Image()
@@ -157,6 +157,8 @@ Warper.Image = Class.create(
 			}
 		})	
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
+		Warper.sort_images()
 	},
 	reset_centroid: function() {
 		this.centroid = Geometry.poly_centroid(this.points)  

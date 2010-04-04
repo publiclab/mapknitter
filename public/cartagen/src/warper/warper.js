@@ -4,7 +4,9 @@
  */
 var Warper = {
 	initialize: function() {
-		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		// heinous, but we really do need 
+		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image
@@ -13,6 +15,12 @@ var Warper = {
 	images: [],
 	locked: false,
 	active_image: false,
+	sort_images: function() {
+		Warper.images.sort(Geometry.sort_by_area)
+	},
+	draw: function() {
+		Warper.images.each(function(image){ image.draw() })
+	},
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active.
@@ -137,6 +145,6 @@ var Warper = {
 	}
 	
 }
-Warper.initialize()
+document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 //= require "control_point"
 //= require "image"

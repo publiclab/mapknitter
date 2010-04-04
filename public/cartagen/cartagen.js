@@ -8841,11 +8841,18 @@ document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
-		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 	},
 	images: [],
 	locked: false,
 	active_image: false,
+	sort_images: function() {
+		Warper.images.sort(Geometry.sort_by_area)
+	},
+	draw: function() {
+		Warper.images.each(function(image){ image.draw() })
+	},
 	mousedown: function() {
 		if (!Warper.locked) {
 		var inside_image = false
@@ -8947,7 +8954,7 @@ var Warper = {
 	}
 
 }
-Warper.initialize()
+document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 Warper.ControlPoint = Class.create({
 	type: 'Warper.ControlPoint',
 	initialize: function(x,y,r,parent) {
@@ -9078,8 +9085,8 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
 
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 
 		this.image = new Image()
@@ -9186,6 +9193,8 @@ Warper.Image = Class.create(
 			}
 		})
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
+		Warper.sort_images()
 	},
 	reset_centroid: function() {
 		this.centroid = Geometry.poly_centroid(this.points)
