@@ -66,7 +66,7 @@ Warper.ControlPoint = Class.create({
 		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
-		if (this.is_inside()) {
+		if (!this.parent_shape.locked && this.is_inside()) {
 			this.cancel_drag()
 			this.color = '#f00'
 			// do stuff
@@ -88,6 +88,7 @@ Warper.ControlPoint = Class.create({
 	 * Handles drags of control points. Behavior varies according to Tool.Warp.mode.
 	 */
 	drag: function(translating_whole_image) {
+		if (!this.parent_shape.locked) {
 		// translation is possible in any tool:
 		if (translating_whole_image || Tool.Warp.mode == 'default') {
 			if (!this.dragging) {
@@ -115,6 +116,7 @@ Warper.ControlPoint = Class.create({
 				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
 				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
 			},this)
+		}
 		}
 	},
 	cancel_drag: function() {

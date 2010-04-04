@@ -61,13 +61,13 @@
 		function setup() {
 			warpables = [
 				<% @warpables.each do |warpable| %>
-				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>},
+				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
 				<% end %>
 			]
 			warpables.each(function(warpable) {
 				if (warpable.nodes != 'none') {
 					// nodes as [[lon,lat],[lon,lat]]
-					Warper.load_image(warpable.img,warpable.nodes,warpable.id);
+					Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
 				} else {
 					Warper.new_image(warpable.img,warpable.id);
 				}

@@ -123,3 +123,7 @@ img {
 .toolbar a.silk img {
 	padding-top:4px;
 }
+.toolbar a.down {
+	background:#222;
+}
+

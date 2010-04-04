@@ -7908,8 +7908,8 @@ var Tool = {
 	},
 	hover: true,
 	active: 'Pan',
-	change: function(new_tool) {
-		if (new_tool != Tool.active) {
+	change: function(new_tool,force) {
+		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 
 			tool_events = ['mousemove','mouseup','mousedown','dblclick']
@@ -8280,6 +8280,9 @@ Tool.Warp = {
 		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
 		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
 			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
+		$('tool_specific').insert('<a name=\'Lock this image\' class=\'silk\' id=\'tool_warp_lock\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/lock.png\' /></a>')
+			$('tool_warp_lock').observe('mouseup',Tool.Warp.lock_image)
+			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
 		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
 		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
@@ -8301,6 +8304,12 @@ Tool.Warp = {
 			}
 		})
 		Tool.change('Pan')
+	},
+	lock_image: function() {
+		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		else $('tool_warp_lock').removeClassName('down')
+		Warper.active_image.locked = !Warper.active_image.locked
+		Warper.active_image.save()
 	},
 	drag: function() {
 	},
@@ -8862,18 +8871,19 @@ var Warper = {
 		if (!Warper.locked) {
 		var inside_image = false
 		Warper.images.each(function(image) {
-			if (image.is_inside()) {
-				Warper.active_image = image
-				image.select()
-				inside_image = true
-			} else {
-				if (image.active && (image.coordinates() != image.old_coordinates)) {
-					image.save()
+				if (image.is_inside()) {
+					Warper.active_image = image
+					image.select()
+					inside_image = true
+					return
+				} else {
+					if (image.active && (image.coordinates() != image.old_coordinates)) {
+						image.save()
+					}
+					if (image.active && !Tool.hover) {
+						image.deselect()
+					}
 				}
-				if (image.active && !Tool.hover) {
-					image.deselect()
-				}
-			}
 		})
 		if (Warper.active_image) {
 			var point_clicked = false
@@ -8887,7 +8897,9 @@ var Warper = {
 				Warper.active_image.active_point.deselect()
 			}
 		}
-		if (inside_image) Tool.change('Warp')
+		if (inside_image) {
+			Tool.change('Warp',true)
+		}
 		else if (!Tool.hover) Tool.change('Pan')
 		}
 	},
@@ -8909,7 +8921,7 @@ var Warper = {
 			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
 		]),url,id))
 	},
-	load_image: function(url,points,id) {
+	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
 		points[0][1] = Projection.lat_to_y(points[0][1])
 		points[1][0] = Projection.lon_to_x(points[1][0])
@@ -8924,6 +8936,7 @@ var Warper = {
 			[points[2][0],points[2][1]],
 			[points[3][0],points[3][1]]
 		]),url,id))
+		Warper.images.last().locked = locked
 	},
 	p: function(point) {
 		if (point.x == undefined) {
@@ -9014,7 +9027,7 @@ Warper.ControlPoint = Class.create({
 		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
-		if (this.is_inside()) {
+		if (!this.parent_shape.locked && this.is_inside()) {
 			this.cancel_drag()
 			this.color = '#f00'
 			this.parent_shape.active_point = this
@@ -9032,6 +9045,7 @@ Warper.ControlPoint = Class.create({
 		}
 	},
 	drag: function(translating_whole_image) {
+		if (!this.parent_shape.locked) {
 		if (translating_whole_image || Tool.Warp.mode == 'default') {
 			if (!this.dragging) {
 				this.dragging = true
@@ -9056,6 +9070,7 @@ Warper.ControlPoint = Class.create({
 				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
 			},this)
 		}
+		}
 	},
 	cancel_drag: function() {
 		this.dragging = false
@@ -9073,6 +9088,7 @@ Warper.Image = Class.create(
 		this.opacity_low = 0.5
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
+		this.locked = false
 
 		this.subdivision_limit = 5
 		this.offset_x = 0
@@ -9151,6 +9167,7 @@ Warper.Image = Class.create(
 		return inside_point
 	},
 	drag: function() {
+		if (!this.locked) {
 		if (!this.dragging) {
 			this.dragging = true
 		}
@@ -9159,6 +9176,7 @@ Warper.Image = Class.create(
 				point.drag(true)
 			})
 			$C.cursor('move')
+		}
 		}
 	},
 	cancel_drag: function() {
@@ -9192,7 +9210,7 @@ Warper.Image = Class.create(
 		})
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}

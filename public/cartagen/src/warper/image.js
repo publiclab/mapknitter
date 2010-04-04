@@ -12,6 +12,7 @@ Warper.Image = Class.create(
 		this.opacity_low = 0.5
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
+		this.locked = false
 	
 		this.subdivision_limit = 5	
 		this.offset_x = 0
@@ -103,6 +104,7 @@ Warper.Image = Class.create(
 		return inside_point
 	},
 	drag: function() {
+		if (!this.locked) {
 		if (!this.dragging) {
 			this.dragging = true
 		}
@@ -112,6 +114,7 @@ Warper.Image = Class.create(
 				point.drag(true)
 			})
 			$C.cursor('move')
+		}
 		}
 	},
 	cancel_drag: function() {
@@ -151,7 +154,7 @@ Warper.Image = Class.create(
 		})
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}

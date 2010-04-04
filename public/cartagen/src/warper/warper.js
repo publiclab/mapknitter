@@ -39,19 +39,20 @@ var Warper = {
 		if (!Warper.locked) {
 		var inside_image = false
 		Warper.images.each(function(image) {
-			if (image.is_inside()) {
-				Warper.active_image = image
-				image.select()
-				inside_image = true
-			} else {
-				// if you're clicking outside while it's active, and the corners have been moved:
-				if (image.active && (image.coordinates() != image.old_coordinates)) {
-					image.save()
+				if (image.is_inside()) {
+					Warper.active_image = image
+					image.select()
+					inside_image = true
+					return
+				} else {
+					// if you're clicking outside while it's active, and the corners have been moved:
+					if (image.active && (image.coordinates() != image.old_coordinates)) {
+						image.save()
+					}
+					if (image.active && !Tool.hover) {
+						image.deselect()
+					}
 				}
-				if (image.active && !Tool.hover) {
-					image.deselect()
-				}
-			}	
 		})
 		if (Warper.active_image) {
 			var point_clicked = false
@@ -65,7 +66,10 @@ var Warper = {
 				Warper.active_image.active_point.deselect()
 			}
 		}
-		if (inside_image) Tool.change('Warp')
+		if (inside_image) {
+			// 'true' forces a change, in case you have an image selected and are selecting a second one
+			Tool.change('Warp',true)
+		}
 		else if (!Tool.hover) Tool.change('Pan')
 		}
 	},
@@ -102,7 +106,7 @@ var Warper = {
 	 * Instantiates an existing image as a Warper.Image object, given an image and known points
 	 * in an array of [lon,lat] pairs.
 	 */
-	load_image: function(url,points,id) {
+	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
 		points[0][1] = Projection.lat_to_y(points[0][1])
 		points[1][0] = Projection.lon_to_x(points[1][0])
@@ -117,6 +121,7 @@ var Warper = {
 			[points[2][0],points[2][1]],
 			[points[3][0],points[3][1]]
 		]),url,id))
+		Warper.images.last().locked = locked
 	},
 	/**
 	 * Convenience method to present points as objects with .x and .y values instead of [x,y]
