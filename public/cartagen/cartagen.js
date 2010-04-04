@@ -8848,7 +8848,12 @@ var Warper = {
 	locked: false,
 	active_image: false,
 	sort_images: function() {
-		Warper.images.sort(Geometry.sort_by_area)
+		Warper.images.sort(Warper.sort_by_area)
+	},
+	sort_by_area: function(a,b) {
+		if ( a.area < b.area ) return 1;
+		if ( a.area > b.area ) return -1;
+		return 0; // a == b
 	},
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
