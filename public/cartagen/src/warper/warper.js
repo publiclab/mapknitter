@@ -37,12 +37,12 @@ var Warper = {
 	 */
 	mousedown: function() {
 		if (!Warper.locked) {
-		var inside_image = false
+		var inside_image = false, same_image = false
 		for (i=Warper.images.length-1;i>=0;i--){
 			var image = Warper.images[i]
 			if (image.is_inside()) {
 				if (!inside_image) {
-					Warper.images.each(function(image){image.deselect()})
+					same_image = (Warper.active_image == image)
 					Warper.active_image = image
 					image.select()
 					inside_image = true
@@ -71,7 +71,7 @@ var Warper = {
 		}
 		if (inside_image) {
 			// 'true' forces a change, in case you have an image selected and are selecting a second one
-			Tool.change('Warp',true)
+			Tool.change('Warp',!same_image)
 		}
 		else if (!Tool.hover) Tool.change('Pan')
 		}
