@@ -8870,21 +8870,24 @@ var Warper = {
 	mousedown: function() {
 		if (!Warper.locked) {
 		var inside_image = false
-		Warper.images.each(function(image) {
-				if (image.is_inside()) {
+		for (i=Warper.images.length-1;i>=0;i--){
+			var image = Warper.images[i]
+			if (image.is_inside()) {
+				if (!inside_image) {
+					Warper.images.each(function(image){image.deselect()})
 					Warper.active_image = image
 					image.select()
 					inside_image = true
-					return
-				} else {
-					if (image.active && (image.coordinates() != image.old_coordinates)) {
-						image.save()
-					}
-					if (image.active && !Tool.hover) {
-						image.deselect()
-					}
 				}
-		})
+			} else {
+				if (image.active && (image.coordinates() != image.old_coordinates)) {
+					image.save()
+				}
+				if (image.active && !Tool.hover) {
+					image.deselect()
+				}
+			}
+		}
 		if (Warper.active_image) {
 			var point_clicked = false
 			Warper.active_image.points.each(function(point) {
