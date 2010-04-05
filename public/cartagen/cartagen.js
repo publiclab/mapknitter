@@ -8295,7 +8295,7 @@ Tool.Warp = {
 	},
 	delete_image: function() {
 		Warper.images.each(function(image,index) {
-			if (image.active) {
+			if (image.active && Warper.active_image == image) {
 				Warper.images.splice(index,1)
 				image.cleanup()
 				new Ajax.Request('/warper/delete/'+image.id,{
