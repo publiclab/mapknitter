@@ -4,17 +4,27 @@
  */
 var Warper = {
 	initialize: function() {
-		// heinous, but we really do need 
 		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	/**
 	 * The images which are currently being warped. Array members are of type Warper.Image
 	 * @type Array
 	 */
 	images: [],
+	/**
+  	 * Whether the map is locked; a GET parameter of ?locked=true makes all warpables 
+  	 * 'permanent', i.e. they will not respond to clicks or other interaction
+  	 */
 	locked: false,
+	/**
+ 	 * The selected image. This would be deprecated if we implement multiple selection or grouping.
+ 	 */
 	active_image: false,
+	/*
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
 	},
@@ -28,12 +38,16 @@ var Warper = {
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
 	},
+	/*
+ 	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle. 
+ 	 * This places warpable images above most other features except labels.
+ 	 */
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
-	 * it isn't activated unless the Warp tool is active.
+	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
 	 */
 	mousedown: function() {
 		if (!Warper.locked) {
@@ -45,6 +59,7 @@ var Warper = {
 					same_image = (Warper.active_image == image)
 					Warper.active_image = image
 					image.select()
+					image.points.each(function(point){point.mousedown()})
 					inside_image = true
 				}
 			} else {
@@ -77,6 +92,21 @@ var Warper = {
 		}
 	},
 	/**
+	 * Double click event handler - defined here because if it's in Tool.Warp, 
+	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
+	 */
+	dblclick: function() {
+		if (!Warper.locked) {
+			for (i=Warper.images.length-1;i>=0;i--){
+				var image = Warper.images[i]
+				if (image.is_inside()) {
+					image.dblclick()
+					return
+				}
+			}	
+		}	
+	},
+	/**
 	 * A function which submits all the Images in the Warper.images array
 	 * to the Ruby backend for full-resolution warping.
 	 */
@@ -96,14 +126,26 @@ var Warper = {
 	 * Creates a Warper.Image object to contain its resulting URI and 'random' coordinates.
          * Places the incoming image at Map.x, Map.y, but randomize the corners to show the
          * user that you can warp it. 
+	 * @param {String} url Address of image file in form http://path/to/image.xxx where xxx is any browser-readable image format.
+	 * @param {Integer} id The unique id (primary key, from the database) of the image. Used for tracking/differentiating
+	 * @param {Boolean} randomize Whether to randomize the corner placement to 'suggest' to the user that the image is warpable.
 	 */
-	new_image: function(url,id) {
-		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-100/Map.zoom, Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
-			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
-		]),url,id))
+	new_image: function(url,id,natural_size) {
+		if (!natural_size) {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x-100/Map.zoom, Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+				[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
+			]),url,id,natural_size))
+		} else {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y]
+			]),url,id,natural_size))
+		}
 	},
 	/**
 	 * Instantiates an existing image as a Warper.Image object, given an image and known points

@@ -12,10 +12,6 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.active = false
 		this.dragging = false
-		// this.draw_handler = this.draw.bindAsEventListener(this)
-		// Glop.observe('glop:postdraw', this.draw_handler)
-		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
-		Glop.observe('mousedown', this.mousedown_handler)
 	},
 	// this gets called every frame:
 	draw: function() {
