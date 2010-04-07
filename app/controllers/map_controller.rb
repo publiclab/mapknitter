@@ -27,16 +27,34 @@ class MapController < ApplicationController
 
   def create
     if params[:location] == ''
-      flash[:error] = 'You must define a location'
-      redirect_to '/maps'
+      @map = Map.new
+      @map.errors.add :location, 'You must name a location. You may also enter a latitude and longitude instead.'
+      index
+      render :action=>"index", :controller=>"map"
     else
-      location = GeoKit::GeoLoc.geocode(params[:location])
-      map = Map.new({:lat => location.lat,
+      unless params[:latitude] && params[:longitude]
+        begin
+          location = GeoKit::GeoLoc.geocode(params[:location])
+        rescue
+          flash[:error] = 'Cartagen could not find that location. Try entering a latitude and longitude as well.'
+          redirect_to '/maps'
+        end
+        @map = Map.new({:lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
             :location => params[:location]})
-      map.save
-      redirect_to :action => 'show', :id => map.name
+      else
+        @map = Map.new({:lat => params[:latitude],
+            :lon => params[:longitude],
+            :name => params[:name],
+            :location => params[:location]})
+      end
+      if @map.save
+        redirect_to :action => 'show', :id => map.name
+      else
+	index
+        render :action=>"index", :controller=>"map"
+      end
     end
   end
   
