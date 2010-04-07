@@ -64,12 +64,15 @@
 				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
 				<% end %>
 			]
-			warpables.each(function(warpable) {
+			var first_new_image = true
+			warpables.each(function(warpable,index) {
 				if (warpable.nodes != 'none') {
 					// nodes as [[lon,lat],[lon,lat]]
 					Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
 				} else {
-					Warper.new_image(warpable.img,warpable.id);
+					if (first_new_image) Warper.new_image(warpable.img,warpable.id,false);
+					else Warper.new_image(warpable.img,warpable.id,true)
+					first_new_image = false
 				}
 			})
 			Warper.sort_images()

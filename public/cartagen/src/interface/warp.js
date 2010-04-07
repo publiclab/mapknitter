@@ -19,6 +19,8 @@ Tool.Warp = {
 			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
 		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
+		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
+			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
 		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
 			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},

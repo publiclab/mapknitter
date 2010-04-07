@@ -8285,6 +8285,8 @@ Tool.Warp = {
 			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
 		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
+		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
+			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
 		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
 			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},
@@ -8852,10 +8854,14 @@ var Warper = {
 	initialize: function() {
 		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	images: [],
 	locked: false,
 	active_image: false,
+	/*
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
 	},
@@ -8864,6 +8870,10 @@ var Warper = {
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
 	},
+	/*
+ 	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle.
+ 	 * This places warpable images above most other features except labels.
+ 	 */
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
@@ -8877,6 +8887,7 @@ var Warper = {
 					same_image = (Warper.active_image == image)
 					Warper.active_image = image
 					image.select()
+					image.points.each(function(point){point.mousedown()})
 					inside_image = true
 				}
 			} else {
@@ -8906,6 +8917,17 @@ var Warper = {
 		else if (!Tool.hover) Tool.change('Pan')
 		}
 	},
+	dblclick: function() {
+		if (!Warper.locked) {
+			for (i=Warper.images.length-1;i>=0;i--){
+				var image = Warper.images[i]
+				if (image.is_inside()) {
+					image.dblclick()
+					return
+				}
+			}
+		}
+	},
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
 		  method: 'get',
@@ -8916,13 +8938,22 @@ var Warper = {
 		  }
 		});
 	},
-	new_image: function(url,id) {
-		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-100/Map.zoom, Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
-			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
-		]),url,id))
+	new_image: function(url,id,natural_size) {
+		if (!natural_size) {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x-100/Map.zoom, Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+				[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
+			]),url,id,natural_size))
+		} else {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y]
+			]),url,id,natural_size))
+		}
 	},
 	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
@@ -8986,8 +9017,6 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.active = false
 		this.dragging = false
-		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
-		Glop.observe('mousedown', this.mousedown_handler)
 	},
 	draw: function() {
 		this.style()
@@ -9086,7 +9115,7 @@ Warper.ControlPoint = Class.create({
 Warper.Image = Class.create(
 {
 	type: 'Warper.Image',
-	initialize: function(nodes,image,id) {
+	initialize: function(nodes,image,id,natural_size) {
 		this.id = id
 		this.opacity_low = 0.5
 		this.opacity_high = 1.0
@@ -9111,34 +9140,38 @@ Warper.Image = Class.create(
 		this.reset_centroid()
 		this.area = Geometry.poly_area(this.points)
 
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
-
 		this.image = new Image()
 		this.image.src = image
+		this.natural_size = natural_size
+		this.waiting_for_natural_size = natural_size | false
 	},
 	patch_size: function() {
 		return 100/Map.zoom
 	},
 	draw: function() {
+		if (this.waiting_for_natural_size) {
+			this.set_to_natural_size()
+		}
 		$C.opacity(this.opacity)
 		this.update()
 		$C.opacity(1)
 		$C.save()
 
+		$C.stroke_style('#000')
+		$C.fill_style('#222')
+
+		$C.begin_path()
+		$C.move_to(this.points[0].x, this.points[0].y)
+		this.points.each(function(point) {
+			$C.line_to(point.x, point.y)
+		})
+		$C.line_to(this.points[0].x, this.points[0].y)
+
+		$C.opacity(0.1)
+		if (this.active) $C.opacity(0.2)
+		$C.fill()
+
 		if (this.active) {
-			$C.stroke_style('#000')
-			$C.fill_style('#222')
-
-			$C.begin_path()
-			$C.move_to(this.points[0].x, this.points[0].y)
-			this.points.each(function(point) {
-				$C.line_to(point.x, point.y)
-			})
-			$C.line_to(this.points[0].x, this.points[0].y)
-
-			$C.opacity(0.2)
-			$C.fill()
-
 			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()
@@ -9147,6 +9180,24 @@ Warper.Image = Class.create(
 
 		$C.restore()
 
+	},
+	set_to_natural_size: function() {
+		if (this.image.width) {
+			this.points[1].x = this.points[0].x
+			this.points[1].y = this.points[0].y
+			this.points[2].x = this.points[0].x
+			this.points[2].y = this.points[0].y
+			this.points[3].x = this.points[0].x
+			this.points[3].y = this.points[0].y
+
+			this.points[1].x += this.image.width/(Map.zoom*2)
+			this.points[2].x += this.image.width/(Map.zoom*2)
+			this.points[2].y += this.image.height/(Map.zoom*2)
+			this.points[3].y += this.image.height/(Map.zoom*2)
+			this.reset_centroid()
+			this.area = Geometry.poly_area(this.points)
+			this.waiting_for_natural_size = false
+		}
 	},
 	select: function() {
 		this.active = true
@@ -9190,10 +9241,8 @@ Warper.Image = Class.create(
 		})
 	},
 	dblclick: function() {
-		if (this.is_inside()) {
-			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-			else this.opacity = this.opacity_low
-		}
+		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+		else this.opacity = this.opacity_low
 	},
 	coordinates: function() {
 		coordinates = []
@@ -9228,11 +9277,7 @@ Warper.Image = Class.create(
 		this.centroid[1] *= 2
 	},
 	cleanup: function() {
-		this.points.each(function(point){
-			Glop.stopObserving('mousedown',point.mousedown_handler)
-		})
-		Glop.stopObserving('glop:postdraw', this.draw_handler)
-       	Glop.stopObserving('dblclick', this.dblclick_handler)
+       		Glop.stopObserving('dblclick', this.dblclick_handler)
 	},
 	update: function() {
 		this.points.each(function(point) {
