@@ -50,7 +50,7 @@ class MapController < ApplicationController
             :location => params[:location]})
       end
       if @map.save
-        redirect_to :action => 'show', :id => map.name
+        redirect_to :action => 'show', :id => @map.name
       else
 	index
         render :action=>"index", :controller=>"map"
