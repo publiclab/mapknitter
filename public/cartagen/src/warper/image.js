@@ -135,6 +135,8 @@ Warper.Image = Class.create(
 			})
 			$C.cursor('move')
 		}
+		} else {
+			Tool.Pan.drag()
 		}
 	},
 	cancel_drag: function() {

@@ -51,6 +51,9 @@ var Warper = {
 	 */
 	mousedown: function() {
 		if (!Warper.locked) {
+		Map.x_old = Map.x
+		Map.y_old = Map.y
+		console.log('resetting')
 		var inside_image = false, same_image = false
 		for (i=Warper.images.length-1;i>=0;i--){
 			var image = Warper.images[i]
