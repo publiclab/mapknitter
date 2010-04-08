@@ -9174,7 +9174,7 @@ Warper.Image = Class.create(
 		if (this.active) $C.opacity(0.2)
 		$C.fill()
 
-		if (this.active) {
+		if (this.active && !this.locked) {
 			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()
