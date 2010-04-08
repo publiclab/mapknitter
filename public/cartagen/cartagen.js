@@ -9028,8 +9028,17 @@ Warper.ControlPoint = Class.create({
 			$C.translate(this.x,this.y)
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
-			if (this.is_inside()) $C.circ(0, 0, this.rel_r)
-			$C.stroke_circ(0, 0, this.rel_r)
+			if (this.parent_shape.locked) {
+				$C.begin_path()
+				$C.move_to(-6/Map.zoom,-6/Map.zoom)
+				$C.line_to(6/Map.zoom,6/Map.zoom)
+				$C.move_to(-6/Map.zoom,6/Map.zoom)
+				$C.line_to(6/Map.zoom,-6/Map.zoom)
+				$C.stroke()
+			} else {
+				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
+				$C.stroke_circ(0, 0, this.rel_r)
+			}
 		$C.restore()
 	},
 	select: function() {
@@ -9174,7 +9183,7 @@ Warper.Image = Class.create(
 		if (this.active) $C.opacity(0.2)
 		$C.fill()
 
-		if (this.active && !this.locked) {
+		if (this.active) {
 			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()
