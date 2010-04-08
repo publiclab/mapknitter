@@ -25,7 +25,8 @@
 			padding_top: -46,
 			lat: <%= @map.lat %>,
 			lng: <%= @map.lon %>,
-			zoom: <%= @map.zoom %>
+			zoom: <%= @map.zoom %>,
+			map_name: '<%= @map.name %>'
 		})
 		var Knitter = {
 			save_new_location: function(lat,lon,zoom) {
@@ -60,17 +61,28 @@
 		function setup() {
 			warpables = [
 				<% @warpables.each do |warpable| %>
-				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>},
+				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
 				<% end %>
 			]
-			warpables.each(function(warpable) {
+			var first_new_image = true
+			warpables.each(function(warpable,index) {
 				if (warpable.nodes != 'none') {
 					// nodes as [[lon,lat],[lon,lat]]
-					Warper.load_image(warpable.img,warpable.nodes,warpable.id);
+					Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
 				} else {
-					Warper.new_image(warpable.img,warpable.id);
+					if (first_new_image) Warper.new_image(warpable.img,warpable.id,false);
+					else Warper.new_image(warpable.img,warpable.id,true)
+					first_new_image = false
 				}
 			})
+			Warper.sort_images()
+			if (Config.fullscreen) {
+				$('header').hide()
+				Config.padding_top = 0
+			}
+			if (Config.locked == 'true') {
+				Warper.locked = true
+			}
 		}
 		document.observe('cartagen:init', setup)
 	</script>
@@ -85,7 +97,7 @@
 </div>
 
 <div id="header">
-	<a style="float:left;" href="http://cartagen.org"><img src="/images/cartagen-dark.png"/></a>
+	<a style="float:left;" href="http://cartagen.org/maps"><img src="/images/cartagen-dark.png"/></a>
 	<script type="text/javascript" charset="utf-8">
 		function find(q) {
 			q = q.replace(' ','-')
@@ -110,11 +122,7 @@
 		</div>
 	</div>
 
-	<span class='form right'><form style="display:inline;" action="javascript:void(0);" method="get" accept-charset="utf-8" onSubmit="find($('find_field').value)">
-		<input style="font-size:0.9em" id="find_field" style="width:170px;" tabindex="3" type="text" name="id" value="">
-		<input type="submit" name="some_name" tabindex="4" value="Go"> 
-	</form></span>
-	<span class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
+	<span style='margin-right:6px;' class='right'><a target="_blank" href="http://wiki.cartagen.org/wiki/show/GssUsage">GSS Docs</a></span> 
 </div>
 
 <div class='modal' id="styles" style="display:none;">

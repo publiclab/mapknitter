@@ -53,7 +53,7 @@ class WarperController < ApplicationController
       node_ids << node.id
     end
     @warpable.nodes = node_ids.join(',')
-    
+    @warpable.locked = params[:locked]    
     @warpable.save
     render :text => 'success'
   end

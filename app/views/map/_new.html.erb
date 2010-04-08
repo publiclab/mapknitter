@@ -1,0 +1,63 @@
+<div class="box">
+	<h3>Make a new map</h3>
+	<% form_for :map, @map, :url => { :controller => "map", :action => "create" }, :html => {:id => "new_map", :class => "map"} do |f| %>
+		<%= error_messages_for 'map' %>	
+		<label for="name">Name</label><br />
+		<input class="text" type="text" name="name" value="" id="name"><br />
+		<label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label><br />
+		<input class="text" type="text" name="location" value="Paris, France" id="new_map_place"><br />
+		<div id="geocode_results">
+			
+		</div>
+		<script>
+	    /* JQuery search as you type
+	    * Overrides the action and method of the form
+	    *
+	    */
+	      $().ready(function() {
+	        $("#new_map_place").autocomplete("/map/geolocate",
+	          { cacheLength:1, multiple:false, minchars:1, mustMatch:false,
+	            highlight:false,
+	            formatItem: function(x) {
+	              return x[0];
+	            },
+	            formatResult: function(x) {
+	              if(x[1]) {
+	                //real object, with a url field
+	                return x[0];
+	              } else {
+	                //a header, return null character
+	                return "\0";
+	              }
+	            }
+	          });
+	          $("#new_map_place").result(function(event, data, formatted) {
+		    if (data == 'No results'){  
+	            
+		    } else {
+	              $("#new_map_place").attr('value',data);
+		    }
+		    });
+          });
+
+		</script>
+		<div id="lat_lon" style="display:none;">
+			<label for="latitude">Latitude</label><br />
+			<input type="text" name="latitude" /><br />
+			<label for="longitude">Longitude</label><br />
+			<input type="text" name="longitude" /><br />
+		</div>
+		<label for="author">Author</label><br />
+		<input class="text" type="text" name="author" value="your name" id="author"><br />
+		<label for="description">Description</label><br />
+		<textarea name="description" rows="8" cols="24"></textarea>
+		
+		<!--<label for="password">Password (optional)</label><br />
+		<input class="text" type="password" name="password" value="" id="password"><br />-->
+			
+
+		<p><input type="submit" value="Save"></p>
+	<% end %>
+</div>
+<p>Cartagen Knitter is part of the <a href="http://cartagen.org">Cartagen framework</a> for dynamic mapping in HTML5. The Cartagen <a href="">source code</a> is available on Github. Cartagen was created by <a href="http://unterbahn.com">Jeffrey Warren</a> at the MIT Media Lab and the <a href="http://civic.mit.edu">Center for Future Civic Media</a></p>
+

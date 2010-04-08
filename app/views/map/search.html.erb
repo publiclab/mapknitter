@@ -1,0 +1,12 @@
+<div id="main">
+	<h1>Search results for '<%= params[:id] %>'</h1>
+	<% if @maps.length == 0 %>
+	<p><i>No maps found </i></a>
+	<% end %>
+	<%= render :partial => 'map/list' %>
+</div>
+<div id="sidebar">
+<%= render :partial => "map/search"  %>
+<%= render :partial => "map/new" %>
+</div>
+

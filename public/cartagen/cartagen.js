@@ -5208,6 +5208,7 @@ var Cartagen = {
 
 		Glop.trigger_draw()
 		Interface.display_loading_message()
+		Interface.setup_tooltips()
 
 		document.fire('cartagen:postinit')
 	},
@@ -7508,6 +7509,8 @@ var Keyboard = {
 var Mouse = {
 	x: 0,
 	y: 0,
+	window_x: 0,
+	window_y: 0,
 	down: false,
 	up: false,
 	click_x: 0,
@@ -7923,8 +7926,8 @@ var Tool = {
 	},
 	hover: true,
 	active: 'Pan',
-	change: function(new_tool) {
-		if (new_tool != Tool.active) {
+	change: function(new_tool,force) {
+		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 
 			tool_events = ['mousemove','mouseup','mousedown','dblclick']
@@ -7942,10 +7945,11 @@ var Tool = {
 			}
 			Tool.active = new_tool
 		}
+		Interface.setup_tooltips()
 	},
 	drag: function() {
 		Tool[Tool.active].drag()
-	}
+	},
 }
 Tool.Select = {
 	activate: function() {
@@ -8292,11 +8296,16 @@ Tool.Warp = {
 	mode: 'default', //'rotate','drag','scale'
 	activate: function() {
 		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
-		$('tool_specific').insert('<a class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
 			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
-		$('tool_specific').insert('<a class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Lock this image\' class=\'silk\' id=\'tool_warp_lock\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/lock.png\' /></a>')
+			$('tool_warp_lock').observe('mouseup',Tool.Warp.lock_image)
+			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
+			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
+		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
 			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
 	},
 	deactivate: function() {
@@ -8306,7 +8315,7 @@ Tool.Warp = {
 	},
 	delete_image: function() {
 		Warper.images.each(function(image,index) {
-			if (image.active) {
+			if (image.active && Warper.active_image == image) {
 				Warper.images.splice(index,1)
 				image.cleanup()
 				new Ajax.Request('/warper/delete/'+image.id,{
@@ -8315,6 +8324,12 @@ Tool.Warp = {
 			}
 		})
 		Tool.change('Pan')
+	},
+	lock_image: function() {
+		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		else $('tool_warp_lock').removeClassName('down')
+		Warper.active_image.locked = !Warper.active_image.locked
+		Warper.active_image.save()
 	},
 	drag: function() {
 	},
@@ -8350,12 +8365,54 @@ Tool.Warp = {
 }
 
 var Interface = {
-	get_iframe: function(lat,lon,zoom,stylesheet,height,width) {
-		width = typeof(width) != 'undefined' ? width : 500
-		height = typeof(height) != 'undefined' ? height : 300
-		zoom = typeof(zoom) != 'undefined' ? zoom : 2
-		url = typeof(url) != 'undefined' ? url : 'http://cartagen.org'
-		return "<iframe height='"+height+"' width='"+width+"'  src='"+url+"?gss="+stylesheet+"&#038;fullscreen=true&#038;zoom_level="+zoom+"' style='border:0;'></iframe>"
+	mousemove: function(event) {
+		Mouse.window_x = Event.pointerX(event)
+		Mouse.window_y = Event.pointerY(event)
+	},
+	setup_tooltips: function() {
+		$$('.toolbar a').each(function(toolbar){
+			toolbar.onmouseover = function() {
+				Interface.show_tooltip(toolbar.name)
+			}
+			toolbar.onmouseout = function() {
+				$$('.tooltip').each(function(tooltip) {
+					tooltip.remove()
+				})
+			}
+		})
+	},
+	show_tooltip: function(name) {
+		$$('.tooltip').each(function(tooltip){
+			tooltip.remove()
+		})
+		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
+		$('tooltip').style.left = (Mouse.window_x)+'px'
+	},
+	display_iframe: function() {
+		if ($('iframe_code') != undefined) {
+			$('iframe_code').remove()
+		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+		$('iframe_code').absolutize()
+		}
+	},
+	display_knitter_iframe: function() {
+		if ($('iframe_code') != undefined) {
+			$('iframe_code').remove()
+		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name,true)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+		$('iframe_code').absolutize()
+		}
+	},
+	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
+		width = width || 500
+		height = height || 300
+		zoom = zoom || 2
+		url = url || 'http://cartagen.org'
+
+		code = "<iframe height='"+height+"'width='"+width+"' src='"+url+'?fullscreen=true'
+		if (!Object.isUndefined(locked)) code += '&#038;locked=true'
+		if (!Object.isUndefined(stylesheet)) code += '&#038;gss='+stylesheet
+		code = code + "' style='border:0;'></iframe>"
+ 		return code
 	},
 	display_loading: function() {
 		var percent = Importer.parse_manager.completed
@@ -8407,6 +8464,8 @@ var Interface = {
 		Tool.change('Select')
 	}
 }
+document.observe('mousemove',Interface.mousemove)
+
 var Geohash = {}
 
 Object.extend(Geohash, Enumerable)
@@ -8811,18 +8870,47 @@ document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
-		document.observe('mousedown',this.mousedown.bindAsEventListener(this))
-
+		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	images: [],
+	locked: false,
 	active_image: false,
+	/*
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 */
+	sort_images: function() {
+		Warper.images.sort(Warper.sort_by_area)
+	},
+	sort_by_area: function(a,b) {
+		if ( a.area < b.area ) return 1;
+		if ( a.area > b.area ) return -1;
+		return 0; // a == b
+	},
+	/*
+ 	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle.
+ 	 * This places warpable images above most other features except labels.
+ 	 */
+	draw: function() {
+		Warper.images.each(function(image){ image.draw() })
+	},
 	mousedown: function() {
-		var inside_image = false
-		Warper.images.each(function(image) {
+		if (!Warper.locked) {
+		Map.x_old = Map.x
+		Map.y_old = Map.y
+		console.log('resetting')
+		var inside_image = false, same_image = false
+		for (i=Warper.images.length-1;i>=0;i--){
+			var image = Warper.images[i]
 			if (image.is_inside()) {
-				Warper.active_image = image
-				image.select()
-				inside_image = true
+				if (!inside_image) {
+					same_image = (Warper.active_image == image)
+					Warper.active_image = image
+					image.select()
+					image.points.each(function(point){point.mousedown()})
+					inside_image = true
+				}
 			} else {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
 					image.save()
@@ -8831,7 +8919,7 @@ var Warper = {
 					image.deselect()
 				}
 			}
-		})
+		}
 		if (Warper.active_image) {
 			var point_clicked = false
 			Warper.active_image.points.each(function(point) {
@@ -8844,8 +8932,22 @@ var Warper = {
 				Warper.active_image.active_point.deselect()
 			}
 		}
-		if (inside_image) Tool.change('Warp')
+		if (inside_image) {
+			Tool.change('Warp',!same_image)
+		}
 		else if (!Tool.hover) Tool.change('Pan')
+		}
+	},
+	dblclick: function() {
+		if (!Warper.locked) {
+			for (i=Warper.images.length-1;i>=0;i--){
+				var image = Warper.images[i]
+				if (image.is_inside()) {
+					image.dblclick()
+					return
+				}
+			}
+		}
 	},
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
@@ -8857,15 +8959,24 @@ var Warper = {
 		  }
 		});
 	},
-	new_image: function(url,id) {
-		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-			[Map.x-100/Map.zoom, Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
-			[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
-			[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
-		]),url,id))
+	new_image: function(url,id,natural_size) {
+		if (!natural_size) {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x-100/Map.zoom, Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y],
+				[Map.x+100/Map.zoom +(100/Map.zoom)*Math.random(), Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()],
+				[Map.x-100/Map.zoom, Map.y+100/Map.zoom +(50/Map.zoom)*Math.random()]
+			]),url,id,natural_size))
+		} else {
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y],
+				[Map.x, Map.y]
+			]),url,id,natural_size))
+		}
 	},
-	load_image: function(url,points,id) {
+	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
 		points[0][1] = Projection.lat_to_y(points[0][1])
 		points[1][0] = Projection.lon_to_x(points[1][0])
@@ -8880,6 +8991,7 @@ var Warper = {
 			[points[2][0],points[2][1]],
 			[points[3][0],points[3][1]]
 		]),url,id))
+		Warper.images.last().locked = locked
 	},
 	p: function(point) {
 		if (point.x == undefined) {
@@ -8915,7 +9027,7 @@ var Warper = {
 	}
 
 }
-Warper.initialize()
+document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 Warper.ControlPoint = Class.create({
 	type: 'Warper.ControlPoint',
 	initialize: function(x,y,r,parent) {
@@ -8926,17 +9038,25 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.active = false
 		this.dragging = false
-		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
-		Glop.observe('mousedown', this.mousedown_handler)
 	},
 	draw: function() {
 		this.style()
 		$C.save()
+			$C.line_width(3/Map.zoom)
 			$C.translate(this.x,this.y)
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
-			if (this.is_inside()) $C.circ(0, 0, this.rel_r)
-			$C.stroke_circ(0, 0, this.rel_r)
+			if (this.parent_shape.locked) {
+				$C.begin_path()
+				$C.move_to(-6/Map.zoom,-6/Map.zoom)
+				$C.line_to(6/Map.zoom,6/Map.zoom)
+				$C.move_to(-6/Map.zoom,6/Map.zoom)
+				$C.line_to(6/Map.zoom,-6/Map.zoom)
+				$C.stroke()
+			} else {
+				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
+				$C.stroke_circ(0, 0, this.rel_r)
+			}
 		$C.restore()
 	},
 	select: function() {
@@ -8966,10 +9086,10 @@ Warper.ControlPoint = Class.create({
 		this.dragging = false
 	},
 	is_inside: function() {
-		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
-		if (this.is_inside()) {
+		if (!this.parent_shape.locked && this.is_inside()) {
 			this.cancel_drag()
 			this.color = '#f00'
 			this.parent_shape.active_point = this
@@ -8987,6 +9107,7 @@ Warper.ControlPoint = Class.create({
 		}
 	},
 	drag: function(translating_whole_image) {
+		if (!this.parent_shape.locked) {
 		if (translating_whole_image || Tool.Warp.mode == 'default') {
 			if (!this.dragging) {
 				this.dragging = true
@@ -9011,6 +9132,7 @@ Warper.ControlPoint = Class.create({
 				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
 			},this)
 		}
+		}
 	},
 	cancel_drag: function() {
 		this.dragging = false
@@ -9023,11 +9145,12 @@ Warper.ControlPoint = Class.create({
 Warper.Image = Class.create(
 {
 	type: 'Warper.Image',
-	initialize: function(nodes,image,id) {
+	initialize: function(nodes,image,id,natural_size) {
 		this.id = id
 		this.opacity_low = 0.5
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
+		this.locked = false
 
 		this.subdivision_limit = 5
 		this.offset_x = 0
@@ -9045,36 +9168,40 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.reset_centroid()
-
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
+		this.area = Geometry.poly_area(this.points)
 
 		this.image = new Image()
 		this.image.src = image
+		this.natural_size = natural_size
+		this.waiting_for_natural_size = natural_size | false
 	},
 	patch_size: function() {
 		return 100/Map.zoom
 	},
 	draw: function() {
+		if (this.waiting_for_natural_size) {
+			this.set_to_natural_size()
+		}
 		$C.opacity(this.opacity)
 		this.update()
 		$C.opacity(1)
 		$C.save()
 
+		$C.stroke_style('#000')
+		$C.fill_style('#222')
+
+		$C.begin_path()
+		$C.move_to(this.points[0].x, this.points[0].y)
+		this.points.each(function(point) {
+			$C.line_to(point.x, point.y)
+		})
+		$C.line_to(this.points[0].x, this.points[0].y)
+
+		$C.opacity(0.1)
+		if (this.active) $C.opacity(0.2)
+		$C.fill()
+
 		if (this.active) {
-			$C.stroke_style('#000')
-			$C.fill_style('#222')
-
-			$C.begin_path()
-			$C.move_to(this.points[0].x, this.points[0].y)
-			this.points.each(function(point) {
-				$C.line_to(point.x, point.y)
-			})
-			$C.line_to(this.points[0].x, this.points[0].y)
-
-			$C.opacity(0.2)
-			$C.fill()
-
 			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()
@@ -9083,6 +9210,24 @@ Warper.Image = Class.create(
 
 		$C.restore()
 
+	},
+	set_to_natural_size: function() {
+		if (this.image.width) {
+			this.points[1].x = this.points[0].x
+			this.points[1].y = this.points[0].y
+			this.points[2].x = this.points[0].x
+			this.points[2].y = this.points[0].y
+			this.points[3].x = this.points[0].x
+			this.points[3].y = this.points[0].y
+
+			this.points[1].x += this.image.width/(Map.zoom*2)
+			this.points[2].x += this.image.width/(Map.zoom*2)
+			this.points[2].y += this.image.height/(Map.zoom*2)
+			this.points[3].y += this.image.height/(Map.zoom*2)
+			this.reset_centroid()
+			this.area = Geometry.poly_area(this.points)
+			this.waiting_for_natural_size = false
+		}
 	},
 	select: function() {
 		this.active = true
@@ -9106,6 +9251,7 @@ Warper.Image = Class.create(
 		return inside_point
 	},
 	drag: function() {
+		if (!this.locked) {
 		if (!this.dragging) {
 			this.dragging = true
 		}
@@ -9114,6 +9260,9 @@ Warper.Image = Class.create(
 				point.drag(true)
 			})
 			$C.cursor('move')
+		}
+		} else {
+			Tool.Pan.drag()
 		}
 	},
 	cancel_drag: function() {
@@ -9124,10 +9273,8 @@ Warper.Image = Class.create(
 		})
 	},
 	dblclick: function() {
-		if (this.is_inside()) {
-			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-			else this.opacity = this.opacity_low
-		}
+		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+		else this.opacity = this.opacity_low
 	},
 	coordinates: function() {
 		coordinates = []
@@ -9147,12 +9294,14 @@ Warper.Image = Class.create(
 		})
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}
 		})
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
+		Warper.sort_images()
 	},
 	reset_centroid: function() {
 		this.centroid = Geometry.poly_centroid(this.points)
@@ -9160,11 +9309,7 @@ Warper.Image = Class.create(
 		this.centroid[1] *= 2
 	},
 	cleanup: function() {
-		this.points.each(function(point){
-			Glop.stopObserving('mousedown',point.mousedown_handler)
-		})
-		Glop.stopObserving('glop:postdraw', this.draw_handler)
-       	Glop.stopObserving('dblclick', this.dblclick_handler)
+       		Glop.stopObserving('dblclick', this.dblclick_handler)
 	},
 	update: function() {
 		this.points.each(function(point) {

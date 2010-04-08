@@ -2,22 +2,60 @@ class MapController < ApplicationController
   caches_page :find
 
   def index
-    
     @maps = Map.find :all, :order => 'id DESC'
-    
+  end
+
+  def edit
+    @map = Map.find_by_name params[:id]
+    @images = Warpable.find_all_by_map_id(params[:id],:conditions => ['parent_id IS NULL'])
   end
 
   def new
 
   end
 
+  def update_map
+    @map = Map.find(params[:map][:id])
+    @map.update_attributes(params[:map])
+    location = GeoKit::GeoLoc.geocode(params[:map][:location])
+    @map.lat = location.lat
+    @map.lon = location.lng
+    @map.save
+    flash[:notice] = "Saved map."
+    redirect_to '/map/edit/'+@map.name
+  end
+
   def create
-    location = GeoKit::GeoLoc.geocode(params[:location])
-    map = Map.new({:lat => location.lat,
+    if params[:location] == ''
+      @map = Map.new
+      @map.errors.add :location, 'You must name a location. You may also enter a latitude and longitude instead.'
+      index
+      render :action=>"index", :controller=>"map"
+    else
+      unless params[:latitude] && params[:longitude]
+        begin
+          location = GeoKit::GeoLoc.geocode(params[:location])
+        rescue
+          flash[:error] = 'Cartagen could not find that location. Try entering a latitude and longitude as well.'
+          redirect_to '/maps'
+        end
+        @map = Map.new({:lat => location.lat,
             :lon => location.lng,
-            :name => params[:name]})
-    map.save
-    redirect_to :action => 'show', :id => map.name
+            :name => params[:name],
+            :location => params[:location]})
+      else
+        @map = Map.new({:lat => params[:latitude],
+            :lon => params[:longitude],
+            :name => params[:name],
+            :location => params[:location]})
+      end
+      if @map.save
+        redirect_to :action => 'show', :id => @map.name
+      else
+	index
+        render :action=>"index", :controller=>"map"
+      end
+    end
   end
   
   def show
@@ -39,6 +77,11 @@ class MapController < ApplicationController
     end
     render :layout => false
   end
+
+  def search
+    params[:id] ||= params[:q]
+    @maps = Map.find(:all, :conditions => ['name LIKE ? OR location LIKE ? OR description LIKE ?',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
+  end
  
   def update
     @map = Map.find(params[:id])
@@ -49,6 +92,15 @@ class MapController < ApplicationController
       render :text => 'success'
     else
       render :text => 'failure'
+    end
+  end
+
+  def geolocate
+    begin
+	@location = GeoKit::GeoLoc.geocode(params[:q])
+	render :layout => false
+    rescue
+	render :text => "No results"
     end
   end
  

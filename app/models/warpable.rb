@@ -1,9 +1,11 @@
 class Warpable < ActiveRecord::Base
   
   has_attachment :content_type => :image, 
+		 #:storage => :file_system,:path_prefix => 'public/warpables', 
                  :storage => :s3, 
                  :max_size => 5.megabytes,
                  # :resize_to => '320x200>',
+		:processor => :MiniMagick,
                  :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
 
   # validates_as_attachment

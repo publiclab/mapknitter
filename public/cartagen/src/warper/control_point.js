@@ -12,22 +12,28 @@ Warper.ControlPoint = Class.create({
 		this.parent_shape = parent
 		this.active = false
 		this.dragging = false
-		// this.draw_handler = this.draw.bindAsEventListener(this)
-		// Glop.observe('glop:postdraw', this.draw_handler)
-		this.mousedown_handler = this.mousedown.bindAsEventListener(this)
-		Glop.observe('mousedown', this.mousedown_handler)
 	},
 	// this gets called every frame:
 	draw: function() {
 		this.style()
 		$C.save()
+			$C.line_width(3/Map.zoom)
 			// go to the object's location:
 			$C.translate(this.x,this.y)
 			// draw the object:
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
-			if (this.is_inside()) $C.circ(0, 0, this.rel_r)
-			$C.stroke_circ(0, 0, this.rel_r)
+			if (this.parent_shape.locked) {
+				$C.begin_path()
+				$C.move_to(-6/Map.zoom,-6/Map.zoom)
+				$C.line_to(6/Map.zoom,6/Map.zoom)
+				$C.move_to(-6/Map.zoom,6/Map.zoom)
+				$C.line_to(6/Map.zoom,-6/Map.zoom)
+				$C.stroke()
+			} else {
+				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
+				$C.stroke_circ(0, 0, this.rel_r)
+			}
 		$C.restore()
 	},
 	select: function() {
@@ -62,10 +68,10 @@ Warper.ControlPoint = Class.create({
 	 * Returns true if the mouse is inside this control point
 	 */
 	is_inside: function() {
-		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+		return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < (this.r/Map.zoom))
 	},
 	mousedown: function() {
-		if (this.is_inside()) {
+		if (!this.parent_shape.locked && this.is_inside()) {
 			this.cancel_drag()
 			this.color = '#f00'
 			// do stuff
@@ -87,6 +93,7 @@ Warper.ControlPoint = Class.create({
 	 * Handles drags of control points. Behavior varies according to Tool.Warp.mode.
 	 */
 	drag: function(translating_whole_image) {
+		if (!this.parent_shape.locked) {
 		// translation is possible in any tool:
 		if (translating_whole_image || Tool.Warp.mode == 'default') {
 			if (!this.dragging) {
@@ -114,6 +121,7 @@ Warper.ControlPoint = Class.create({
 				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
 				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
 			},this)
+		}
 		}
 	},
 	cancel_drag: function() {

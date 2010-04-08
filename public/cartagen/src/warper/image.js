@@ -7,11 +7,12 @@
 Warper.Image = Class.create(
 {	
 	type: 'Warper.Image',
-	initialize: function(nodes,image,id) {
+	initialize: function(nodes,image,id,natural_size) {
 		this.id = id
 		this.opacity_low = 0.5
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
+		this.locked = false
 	
 		this.subdivision_limit = 5	
 		this.offset_x = 0
@@ -29,14 +30,12 @@ Warper.Image = Class.create(
 		}, this)
 
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
 	
-		// this.dblclick_handler = this.dblclick.bindAsEventListener(this)
-		// Glop.observe('dblclick', this.dblclick_handler)
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
-		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
-		
 		this.image = new Image()
 		this.image.src = image
+		this.natural_size = natural_size
+		this.waiting_for_natural_size = natural_size | false
 	},
 	/**
 	 * Calculates the 
@@ -48,29 +47,32 @@ Warper.Image = Class.create(
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
+		if (this.waiting_for_natural_size) {
+			this.set_to_natural_size()
+		}
 		$C.opacity(this.opacity)
 		// draw warped image: 
 		this.update()
 		$C.opacity(1)
 		$C.save()
 		
-		// Draw outline & points
-		if (this.active) {
-			$C.stroke_style('#000')
-			$C.fill_style('#222')
+		$C.stroke_style('#000')
+		$C.fill_style('#222')
 			
-			// Draw outline
-			$C.begin_path()
-			$C.move_to(this.points[0].x, this.points[0].y)
-			this.points.each(function(point) {
-				$C.line_to(point.x, point.y)
-			})
-			$C.line_to(this.points[0].x, this.points[0].y)
-			
-			// Draw outline's shading
-			$C.opacity(0.2)
-			$C.fill()
+		// Draw outline
+		$C.begin_path()
+		$C.move_to(this.points[0].x, this.points[0].y)
+		this.points.each(function(point) {
+			$C.line_to(point.x, point.y)
+		})
+		$C.line_to(this.points[0].x, this.points[0].y)
 		
+		// Draw outline's shading
+		$C.opacity(0.1)
+		if (this.active) $C.opacity(0.2)
+		$C.fill()
+		
+		if (this.active) {
 			// Draw points
 			$C.line_width(2)
 			this.points.each(function(point) {
@@ -80,6 +82,25 @@ Warper.Image = Class.create(
 		
 		$C.restore()
 		
+	},
+	set_to_natural_size: function() {
+		if (this.image.width) {
+			// the image loaded completely, and we can use its dimensions
+			this.points[1].x = this.points[0].x
+			this.points[1].y = this.points[0].y
+			this.points[2].x = this.points[0].x
+			this.points[2].y = this.points[0].y
+			this.points[3].x = this.points[0].x
+			this.points[3].y = this.points[0].y
+
+			this.points[1].x += this.image.width/(Map.zoom*2)
+			this.points[2].x += this.image.width/(Map.zoom*2)
+			this.points[2].y += this.image.height/(Map.zoom*2)
+			this.points[3].y += this.image.height/(Map.zoom*2)
+			this.reset_centroid()
+			this.area = Geometry.poly_area(this.points)
+			this.waiting_for_natural_size = false
+		}
 	},
 	select: function() {
 		this.active = true
@@ -103,6 +124,7 @@ Warper.Image = Class.create(
 		return inside_point
 	},
 	drag: function() {
+		if (!this.locked) {
 		if (!this.dragging) {
 			this.dragging = true
 		}
@@ -113,6 +135,9 @@ Warper.Image = Class.create(
 			})
 			$C.cursor('move')
 		}
+		} else {
+			Tool.Pan.drag()
+		}
 	},
 	cancel_drag: function() {
 		$C.cursor('auto')
@@ -121,11 +146,13 @@ Warper.Image = Class.create(
 			point.dragging = false
 		})
 	},
+	/**
+ 	 * Double click handler. Called from Warper.dblclick(), which finds the top
+ 	 * image and calls its dblclick()
+ 	 */
 	dblclick: function() {
-		if (this.is_inside()) {
-			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-			else this.opacity = this.opacity_low
-		}
+		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+		else this.opacity = this.opacity_low
 	},
 	/**
 	 * A function to generate an array of coordinate pairs as in [lat,lon] for the image corners
@@ -151,12 +178,14 @@ Warper.Image = Class.create(
 		})
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}
 		})	
 		this.reset_centroid()
+		this.area = Geometry.poly_area(this.points)
+		Warper.sort_images()
 	},
 	reset_centroid: function() {
 		this.centroid = Geometry.poly_centroid(this.points)  
@@ -167,11 +196,7 @@ Warper.Image = Class.create(
 	 * 
 	 */
 	cleanup: function() {
-		this.points.each(function(point){
-			Glop.stopObserving('mousedown',point.mousedown_handler)
-		})	
-		Glop.stopObserving('glop:postdraw', this.draw_handler)
-       	Glop.stopObserving('dblclick', this.dblclick_handler)
+       		Glop.stopObserving('dblclick', this.dblclick_handler)
 	},
 	/**
 	 * Update transform based on position of 4 corners.

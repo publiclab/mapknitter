@@ -1,5 +1,9 @@
 class Map < ActiveRecord::Base
-  validates_presence_of :name
+  validates_presence_of :name,:author,:location
+  validates_format_of       :name,
+                            :with => /^(\w)+$/,#/([a-zA-Z0-9_-])$/,  
+                            :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
+                            :on => :create                  
 
   def validate
     self.name != 'untitled'

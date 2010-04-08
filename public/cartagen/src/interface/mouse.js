@@ -13,6 +13,14 @@ var Mouse = {
 	 */
 	y: 0,
 	/**
+  	 * The mouse x position with regard to the browser window, regardless of toolbars, etc.
+  	 */
+	window_x: 0,
+	/**
+  	 * The mouse y position with regard to the browser window, regardless of toolbars, etc.
+  	 */
+	window_y: 0,
+	/**
 	 * Whether the mouse is down
 	 * @type Boolean
 	 */

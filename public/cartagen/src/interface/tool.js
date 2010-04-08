@@ -48,8 +48,8 @@ var Tool = {
 	/**
 	 * Function to change the active tool 
 	 */
-	change: function(new_tool) {
-		if (new_tool != Tool.active) {
+	change: function(new_tool,force) {
+		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 			
 			tool_events = ['mousemove','mouseup','mousedown','dblclick']
@@ -67,11 +67,12 @@ var Tool = {
 			}
 			Tool.active = new_tool
 		}
+		Interface.setup_tooltips()
 	},
 	/**
 	 * Pass drag call to the active tool:
 	 */
 	drag: function() {
 		Tool[Tool.active].drag()
-	}
+	},
 }

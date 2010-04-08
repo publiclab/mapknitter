@@ -44,6 +44,8 @@ a.button.green:active {
 	background:#4F5F37 top repeat-x;
 }
 
+img { border:0; }
+
 input {
 	font-size:1.6em;
 }

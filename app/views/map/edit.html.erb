@@ -1,0 +1,75 @@
+<div id="main">
+	<h2>Editing "<%= @map.name %>"</h2>	
+	<p><small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a></small></p>
+
+	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
+
+	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+	<div id='images'>
+		<% @images.each do |image| %>
+		<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+		<% end %>
+	</div>
+
+	<div class='box'>
+	<h3>Edit map details:</h3>
+	<form class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
+	
+		<input type='hidden' name='map[id]' value="<%= @map.id %>"/>
+		
+		<label for="name">Name</label><br />
+		<input class="text" type="text" name="map[name]" value="<%= @map.name %>" id="name"><br />
+		<label for="location">Place</label><br />
+		<input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
+		<div id="geocode_results">
+			
+		</div>
+		<script>
+	    /* JQuery search as you type
+	    * Overrides the action and method of the form
+	    */
+	      $(window).ready(function() {
+	        $("#new_map_place").autocomplete("/map/geolocate",
+	          { cacheLength:1, multiple:false, minchars:1, mustMatch:false,
+	            highlight:false,
+	            formatItem: function(x) {
+	              return x[0];
+	            },
+	            formatResult: function(x) {
+	              if(x[1]) {
+	                //real object, with a url field
+	                return x[0];
+	              } else {
+	                //a header, return null character
+	                return "\0";
+	              }
+	            },
+		    search: function(event,ui) {
+		    }
+	          });
+	          $("#new_map_place").result(function(event, data, formatted) {
+		    if (data == 'No results'){  
+	            
+		    } else {
+	              $("#new_map_place").attr('value',data);
+		    }
+		  })
+          	});
+	    
+
+		</script>
+		<label for="author">Author</label><br />
+		<input class="text" type="text" name="map[author]" value="<%= @map.author %>" id="author"><br />
+		<label for="description">Description</label><br />
+		<textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
+		
+		<!--<label for="password">Password (optional)</label><br />
+		<input class="text" type="password" name="password" value="" id="password"><br />-->
+			
+		<p><input type="submit" value="Save"></p>
+	</form>
+	</div>
+
+	
+</div>
+
