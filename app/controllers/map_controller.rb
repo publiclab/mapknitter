@@ -32,18 +32,21 @@ class MapController < ApplicationController
       index
       render :action=>"index", :controller=>"map"
     else
-      unless params[:latitude] && params[:longitude]
+      if params[:latitude] == '' && params[:longitude] == ''
+	location = ''
+	puts 'geocoding'
         begin
           location = GeoKit::GeoLoc.geocode(params[:location])
-        rescue
-          flash[:error] = 'Cartagen could not find that location. Try entering a latitude and longitude as well.'
-          redirect_to '/maps'
-        end
-        @map = Map.new({:lat => location.lat,
+	  @map = Map.new({:lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
             :location => params[:location]})
+        rescue
+	  @map = Map.new({
+            :name => params[:name]})
+	end
       else
+	puts 'nogeocoding'
         @map = Map.new({:lat => params[:latitude],
             :lon => params[:longitude],
             :name => params[:name],

@@ -102,7 +102,7 @@ $C = {
 	 */
 	fill_style: function(color) {
 		// if ($C.frozen) return
-		$C.canvas.fillStyle = color
+		if (color[0] != '#') $C.canvas.fillStyle = color
 	},
 	/**
 	 * Sets the fill style of the canvas to a pattern.

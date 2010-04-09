@@ -7173,7 +7173,7 @@ $C = {
 		$C.canvases.get(name).clearRect(0, 0, Glop.width, Glop.height)
 	},
 	fill_style: function(color) {
-		$C.canvas.fillStyle = color
+		if (color[0] != '#') $C.canvas.fillStyle = color
 	},
 	fill_pattern: function(image, repeat) {
 		if (image.width) {
