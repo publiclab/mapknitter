@@ -42,6 +42,7 @@ var Interface = {
 			tooltip.remove()
 		})
 		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
+		// console.log('hey there '+Mouse.window_x+' '+$('tooltip').style.left)
 		$('tooltip').style.left = (Mouse.window_x)+'px'
 	},
 	display_iframe: function() {

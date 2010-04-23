@@ -7899,6 +7899,8 @@ var Tool = {
 		Glop.observe('dblclick', Tool.Pan.dblclick)
 		Glop.observe('mouseover',this.mouse_in_main.bindAsEventListener(this))
 		Glop.observe('mouseout',this.mouse_out_main.bindAsEventListener(this))
+
+		document.observe('mousemove', Tool.update_tooltip)
 	},
 	mouse_in_main: function() {
 		Tool.hover = false
@@ -7906,9 +7908,27 @@ var Tool = {
 	mouse_out_main: function() {
 		Tool.hover = true
 	},
+	show_tooltip: function(tool_name) {
+		console.log(tool_name)
+		Tool.hide_tooltip()
+		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
+		$('tooltip').innerHTML = tool_name
+		$('tooltip').absolutize()
+		$('tooltip').style.zIndex = 999
+	},
+	hide_tooltip: function() {
+		if ($('tooltip')) $('tooltip').remove()
+	},
+	update_tooltip: function() {
+		if ($('tooltip')) {
+			$('tooltip').style.top = (-Mouse.y)+'px'
+			$('tooltip').style.left = (-Mouse.x)+'px'
+		}
+	},
 	hover: true,
 	active: 'Pan',
 	change: function(new_tool,force) {
+		console.log('changing '+Tool.active+' to '+new_tool)
 		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 
@@ -7917,6 +7937,7 @@ var Tool = {
 			tool_events.each(function(tool_event) {
 				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 				Glop.observe(tool_event,Tool[new_tool][tool_event])
+				console.log(new_tool+', '+tool_event)
 			})
 
 			if (!Object.isUndefined(Tool[old_tool].deactivate)) {
@@ -8019,13 +8040,14 @@ Tool.Pen = {
 		$l('Pen deactivated')
 	},
 	mousedown: function() {
-
+		console.log('mousedown in pen')
 		if (Tool.Pen.mode == 'inactive') {
 		}
 		else if (Tool.Pen.mode == 'draw') {
 			var over_point = false
 			Tool.Pen.shapes.last().points.each(function(point){
 				if (point.mouse_inside()) over_point = true
+				console.log(point.mouse_inside())
 			})
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Pen.shapes.last().new_point(Map.pointer_x(), Map.pointer_y())
@@ -8067,7 +8089,7 @@ Tool.Pen = {
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Pen.ControlPoint(x, y, 20, this))
+			this.points.push(new Tool.Pen.ControlPoint(x, y, 5, this))
 		},
 		mouse_inside: function(){
 			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
@@ -8172,11 +8194,23 @@ Tool.Pen = {
 		draw: function() {
 			if (this.parent_shape.active) {
 				$C.save()
+					$C.line_width(3/Map.zoom)
 					$C.translate(this.x,this.y)
-						$C.fill_style(this.color)
-						$C.opacity(0.6)
-						$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+					$C.fill_style("#333")
+					$C.opacity(0.6)
+					if (this.parent_shape.locked) {
+						$C.begin_path()
+						$C.move_to(-6/Map.zoom,-6/Map.zoom)
+						$C.line_to(6/Map.zoom,6/Map.zoom)
+						$C.move_to(-6/Map.zoom,6/Map.zoom)
+						$C.line_to(6/Map.zoom,-6/Map.zoom)
+						$C.stroke()
+					} else {
+						if (this.mouse_inside()) $C.circ(0, 0, this.r)
+						$C.stroke_circ(0, 0, this.r)
+					}
 				$C.restore()
+
 			}
 
 			/*var nodestring = ''
@@ -8881,7 +8915,6 @@ var Warper = {
 		if (!Warper.locked) {
 		Map.x_old = Map.x
 		Map.y_old = Map.y
-		console.log('resetting')
 		var inside_image = false, same_image = false
 		for (i=Warper.images.length-1;i>=0;i--){
 			var image = Warper.images[i]
@@ -8916,8 +8949,7 @@ var Warper = {
 		}
 		if (inside_image) {
 			Tool.change('Warp',!same_image)
-		}
-		else if (!Tool.hover) Tool.change('Pan')
+		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
 	dblclick: function() {
