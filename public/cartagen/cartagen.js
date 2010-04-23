@@ -8069,7 +8069,7 @@ Tool.Pen = {
 		$l('Pen dblclick')
 		if (true) {
 			Tool.Pen.mode = 'inactive'
-			Tool.change('Pan')
+			Tool.change('Pan') //Hi!!
 		}
 
 	}.bindAsEventListener(Tool.Pen),
