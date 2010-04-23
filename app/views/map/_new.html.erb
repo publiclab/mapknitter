@@ -3,9 +3,9 @@
 	<% form_for :map, @map, :url => { :controller => "map", :action => "create" }, :html => {:id => "new_map", :class => "map"} do |f| %>
 		<%= error_messages_for 'map' %>	
 		<label for="name">Name</label><br />
-		<input class="text" type="text" name="name" value="" id="name"><br />
+		<input class="text" type="text" name="name" value="<%= params[:name] %>" id="name"><br />
 		<label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label><br />
-		<input class="text" type="text" name="location" value="Paris, France" id="new_map_place"><br />
+		<input class="text" type="text" name="location" value="<%= params[:location] || 'Paris, France' %>" id="new_map_place"><br />
 		<div id="geocode_results">
 			
 		</div>
@@ -48,7 +48,7 @@
 			<input type="text" name="longitude" /><br />
 		</div>
 		<label for="author">Author</label><br />
-		<input class="text" type="text" name="author" value="your name" id="author"><br />
+		<input class="text" type="text" name="author" value="<%= params[:author] || 'anonymous' %>" id="author"><br />
 		<label for="description">Description</label><br />
 		<textarea name="description" rows="8" cols="24"></textarea>
 		

@@ -5,7 +5,7 @@ class Warpable < ActiveRecord::Base
                  :storage => :s3, 
                  :max_size => 5.megabytes,
                  # :resize_to => '320x200>',
-		:processor => :MiniMagick,
+		:processor => :image_science,
                  :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
 
   # validates_as_attachment
