@@ -8886,7 +8886,7 @@ document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
@@ -9213,9 +9213,9 @@ Warper.Image = Class.create(
 
 		$C.opacity(0.1)
 		if (this.active) $C.opacity(0.2)
-		$C.fill()
 
 		if (this.active) {
+			$C.fill()
 			$C.line_width(2)
 			this.points.each(function(point) {
 				point.draw()

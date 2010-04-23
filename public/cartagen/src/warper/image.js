@@ -70,9 +70,9 @@ Warper.Image = Class.create(
 		// Draw outline's shading
 		$C.opacity(0.1)
 		if (this.active) $C.opacity(0.2)
-		$C.fill()
 		
 		if (this.active) {
+			$C.fill()
 			// Draw points
 			$C.line_width(2)
 			this.points.each(function(point) {
