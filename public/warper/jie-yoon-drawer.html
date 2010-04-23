@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01index.html" title="index//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
-
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -21,22 +20,18 @@
 			zoom_level: 1.0749999999999986
 		})
 		
-		Tool.active == 'Warp'
-
-		var shapes = []
+		//Tool.active == 'Warp'
 		function new_shape() {
-			Tool.change("Pen")
+			Tool.active='Pen'
+			//Tool.change("Pen")
 			Tool.Pen.mode='draw'
 			shapes.push(new PointShape([]))
 		}
+		var shapes = []
+		Tool.active='Pen'
+		Tool.Pen.mode='draw'
+		shapes.push(new PointShape([]))
 		
-		
-		//variable PointShape
-		//initializes- active, array of points
-		//methods- new-point(x,y)- adds another point to its array of points
-		//click- if click in the shape and the tool isn't Pen, then it becomes active.
-		//otherwise, if the active tool isn't Pen and it isn't in the shape, then it doesn't become active.
-		//draws 
 		var PointShape = Class.create({
 			initialize: function(nodes) {
 				this.active = false
@@ -238,9 +233,10 @@
 				$(pair.key).update(pair.value)
 			})
 		}
-		function setup() {
+		function setup() {	
 		}
 		document.observe('cartagen:init', setup)
+		
 	</script>
 
 	<style>
@@ -263,7 +259,7 @@
 
 <div id="canvas"></div>
 <div id="debug">
-	<a href="javascript:void()" onClick="new_shape()">add a shape</a><br />
+	<a href="javascript:void()" onClick=new_shape()>add a shape</a><br />
 </div>
 
 </body>

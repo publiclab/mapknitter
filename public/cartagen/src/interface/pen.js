@@ -53,7 +53,7 @@ Tool.Pen = {
 		if (true) {
 			// close the poly
 			Tool.Pen.mode = 'inactive'
-			Tool.change('Pan')
+			Tool.change('Pan') //Hi!!
 		}
 		// complete and store polygon
 		
