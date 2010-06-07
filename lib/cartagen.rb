@@ -5,6 +5,22 @@ class Cartagen
     string.slice!(word+' ')
     word
   end
+
+  def self.spherical_mercator_lon_to_x(lon,center_lon,scale_factor=10000)
+    (lon - center_lon) * -1 * scale_factor
+  end
+
+  def self.spherical_mercator_x_to_lon(x,center_lon,scale_factor=10000) 
+    (x/(-1*scale_factor)) + center_lon
+  end
+
+  def self.spherical_mercator_lat_to_y(lat,scale_factor=10000)
+    180/Math::PI * Math.log(Math.tan(Math::PI/4+lat*(Math::PI/180)/2)) * scale_factor
+  end
+
+  def self.spherical_mercator_y_to_lat(y,scale_factor=10000)
+    180/Math::PI * (2 * Math.atan(Math.exp(y/scale_factor*Math::PI/180)) - Math::PI/2)
+  end
   
   # collects coastline ways into collected_way relations;
   # see  http://wiki.openstreetmap.org/wiki/Relations/Proposed/Collected_Ways
