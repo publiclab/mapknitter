@@ -4,7 +4,7 @@
  */
 var Warper = {
 	initialize: function() {
-		Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
@@ -53,7 +53,6 @@ var Warper = {
 		if (!Warper.locked) {
 		Map.x_old = Map.x
 		Map.y_old = Map.y
-		console.log('resetting')
 		var inside_image = false, same_image = false
 		for (i=Warper.images.length-1;i>=0;i--){
 			var image = Warper.images[i]
@@ -90,8 +89,7 @@ var Warper = {
 		if (inside_image) {
 			// 'true' forces a change, in case you have an image selected and are selecting a second one
 			Tool.change('Warp',!same_image)
-		}
-		else if (!Tool.hover) Tool.change('Pan')
+		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
 	/**

@@ -22,13 +22,14 @@ Tool.Pen = {
 		$l('Pen deactivated')
 	},
 	mousedown: function() {
-		
+		console.log('mousedown in pen')
 		if (Tool.Pen.mode == 'inactive') {
 		} 
 		else if (Tool.Pen.mode == 'draw') {
 			var over_point = false
 			Tool.Pen.shapes.last().points.each(function(point){
 				if (point.mouse_inside()) over_point = true
+				console.log(point.mouse_inside())
 			})
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Pen.shapes.last().new_point(Map.pointer_x(), Map.pointer_y())
@@ -53,7 +54,7 @@ Tool.Pen = {
 		if (true) {
 			// close the poly
 			Tool.Pen.mode = 'inactive'
-			Tool.change('Pan')
+			Tool.change('Pan') //Hi!!
 		}
 		// complete and store polygon
 		
@@ -74,7 +75,7 @@ Tool.Pen = {
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Pen.ControlPoint(x, y, 20, this))
+			this.points.push(new Tool.Pen.ControlPoint(x, y, 5, this))
 		},
 		mouse_inside: function(){
 			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
@@ -182,13 +183,25 @@ Tool.Pen = {
 			// first, save the transformation matrix:
 			if (this.parent_shape.active) {
 				$C.save()
+					$C.line_width(3/Map.zoom)
 					// go to the object's location:
 					$C.translate(this.x,this.y)
-						// draw the object:
-						$C.fill_style(this.color)
-						$C.opacity(0.6)
-						$C.rect(-this.r/2,-this.r/2,this.r,this.r)
+					// draw the object:
+					$C.fill_style("#333")
+					$C.opacity(0.6)
+					if (this.parent_shape.locked) {
+						$C.begin_path()
+						$C.move_to(-6/Map.zoom,-6/Map.zoom)
+						$C.line_to(6/Map.zoom,6/Map.zoom)
+						$C.move_to(-6/Map.zoom,6/Map.zoom)
+						$C.line_to(6/Map.zoom,-6/Map.zoom)
+						$C.stroke()
+					} else {
+						if (this.mouse_inside()) $C.circ(0, 0, this.r)
+						$C.stroke_circ(0, 0, this.r)
+					}
 				$C.restore()
+
 			}
 			
 			/*var nodestring = ''
