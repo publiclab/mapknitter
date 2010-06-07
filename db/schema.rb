@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100316142953) do
+ActiveRecord::Schema.define(:version => 20100505153420) do
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20100316142953) do
     t.text     "description"
     t.string   "author",                                      :default => "anonymous"
     t.decimal  "zoom",        :precision => 15, :scale => 10, :default => 2.0
+    t.string   "location",                                    :default => ""
   end
 
   create_table "messages", :force => true do |t|
@@ -72,6 +73,8 @@ ActiveRecord::Schema.define(:version => 20100316142953) do
     t.datetime "updated_at"
     t.string   "nodes",        :default => ""
     t.integer  "map_id",       :default => 0
+    t.boolean  "locked",       :default => false, :null => false
+    t.boolean  "deleted",      :default => false, :null => false
   end
 
   create_table "ways", :force => true do |t|
