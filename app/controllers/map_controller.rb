@@ -2,12 +2,12 @@ class MapController < ApplicationController
   caches_page :find
 
   def index
-    @maps = Map.find :all, :order => 'id DESC'
+    @maps = Map.find :all, :order => 'updated_at DESC', :limit => 25
   end
 
   def edit
     @map = Map.find_by_name params[:id]
-    @images = Warpable.find_all_by_map_id(params[:id],:conditions => ['parent_id IS NULL'])
+    @images = Warpable.find_all_by_map_id(params[:id],:conditions => ['parent_id IS NULL AND deleted = false'])
   end
 
   def new
@@ -64,7 +64,7 @@ class MapController < ApplicationController
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
     @map.zoom = 1.6 if @map.zoom == 0
-    @warpables = Warpable.find :all, :conditions => {:map_id => @map.id} 
+    @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
     @nodes = {}
     @warpables.each do |warpable|
       if warpable.nodes != ''

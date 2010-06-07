@@ -30,11 +30,13 @@ node: {
 	fillStyle: "#ddd",
 	strokeStyle: "#090",
 	lineWidth: 0,
-	radius: 1
+	radius: 1,
+	opacity: 0.8
 },
 way: {
 	strokeStyle: "#ccc",
 	lineWidth: 3,
+	opacity: 0.8,
 	menu: {
 		"Toggle Transparency": function() {
 			if (this._transparency_active) {

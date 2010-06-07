@@ -9,6 +9,8 @@ class WarperController < ApplicationController
   def create
     @warpable = Warpable.new(params[:warpable])
     @warpable.map_id = params[:map_id]
+    map = Map.find(params[:map_id])
+    map.updated_at = Time.now
     if @warpable.save
       flash[:notice] = 'Warpable was successfully created.'
       redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
@@ -27,7 +29,7 @@ class WarperController < ApplicationController
   end
   
   def list
-    @warpables = Warpable.find :all, :conditions => ['parent_id is NULL']
+    @warpables = Warpable.find :all, :conditions => ['parent_id is NULL AND deleted = false']
   end
   
   def update
@@ -60,7 +62,8 @@ class WarperController < ApplicationController
   
   def delete
     image = Warpable.find params[:id]
-    image.delete
+    image.deleted = true
+    image.save
     render :text => 'successfully deleted '+params[:id]
   end
   
