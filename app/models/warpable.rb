@@ -49,7 +49,7 @@ class Warpable < ActiveRecord::Base
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
 
     local_location = working_directory+self.id.to_s+'-'+self.filename
-    completed_local_location = directory+self.id.to_s+'.png'
+    completed_local_location = directory+self.id.to_s+'.tif'
 
     northmost = self.nodes_array.first.lat
     southmost = self.nodes_array.first.lat
@@ -99,7 +99,7 @@ class Warpable < ActiveRecord::Base
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
     puts points
-    imageMagick = "convert "+local_location+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" "+completed_local_location
+    imageMagick = "convert "+local_location+" -background transparent -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' "+completed_local_location
     puts imageMagick
     system(imageMagick)
     #warped Warped.new({:url => ''})
