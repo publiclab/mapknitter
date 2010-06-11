@@ -6,6 +6,7 @@ class Map < ActiveRecord::Base
                             :with => /[a-zA-Z0-9_-]/,  
                             :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
                             :on => :create                  
+  has_many :warpables
 
   def update_name
     self.name = self.name.gsub(/\W/, '-').downcase

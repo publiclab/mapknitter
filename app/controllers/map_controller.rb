@@ -185,4 +185,56 @@ class MapController < ApplicationController
     end
   end
 
+  def export
+    respond_to do |format|
+      format.html { 
+	map = Map.find_by_name params[:id]
+	scale = 1
+	# determine optimal zoom level
+	widths = []
+	map.warpables.each do |warpable|
+		nodes = warpable.nodes_array
+		scale = 20037508.34
+    		y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
+    		x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
+    		y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
+    		x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
+		dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
+		widths << (warpable.width*scale)/dist
+		puts 'scale: '+scale.to_s+' & dist: '+dist.to_s
+	end
+
+	average = (widths.inject {|sum, n| sum + n })/widths.length
+	puts average.to_s+' = average'
+
+	# distort all warpables
+	map.warpables.each do |warpable|
+		warpable.generate_affine_distort(average,map.name)
+	end
+
+	# generate photoshop script
+
+	# zip it up
+	gem 'rubyzip'
+	require 'zip/zip'
+	require 'zip/zipfilesystem'
+
+	path = RAILS_ROOT+"/public/warps/"+map.name+"/"
+	path.sub!(%r[/$],'')
+	archive = File.join(RAILS_ROOT+'/public/warps/',File.basename(path))+'.zip'
+	FileUtils.rm archive, :force=>true
+
+	Zip::ZipFile.open(archive, 'w') do |zipfile|
+		Dir["#{path}/**/**"].reject{|f|f==archive}.each do |file|
+			zipfile.add(file.sub(path+'/',''),file)
+		end
+	end
+
+	# warn that it might take a while
+
+	render :text => '<a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
+      }
+    end
+  end
+
 end

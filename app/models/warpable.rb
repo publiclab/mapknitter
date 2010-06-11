@@ -39,12 +39,17 @@ class Warpable < ActiveRecord::Base
     Node.find self.nodes.split(',')
   end
  
-  def generate_affine_distort(scale)
+  def generate_affine_distort(scale,path)
     # convert IMG_0777.JPG -virtual-pixel Transparent -distort Affine '0,0, 100,100  3072,2304 300,300  3072,0 300,150  0,2304 150,1800' test.png
     require 'net/http'
-    local_location = RAILS_ROOT+"/public/warps/"+self.id.to_s+'-'+self.filename
-    completed_local_location = RAILS_ROOT+"/public/warps/"+self.id.to_s+'-completed-'+self.filename
-    completed_local_location = completed_local_location[0..(completed_local_location.length-4)]+'png'
+    
+    working_directory = RAILS_ROOT+"/public/warps/"+path+"-working/"
+    directory = RAILS_ROOT+"/public/warps/"+path+"/"
+    Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
+    Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
+
+    local_location = working_directory+self.id.to_s+'-'+self.filename
+    completed_local_location = directory+self.id.to_s+'.png'
 
     northmost = self.nodes_array.first.lat
     southmost = self.nodes_array.first.lat
@@ -94,7 +99,7 @@ class Warpable < ActiveRecord::Base
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
     puts points
-    imageMagick = "convert "+local_location+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' -crop "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+"+0+0 "+completed_local_location
+    imageMagick = "convert "+local_location+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" "+completed_local_location
     puts imageMagick
     system(imageMagick)
     #warped Warped.new({:url => ''})
