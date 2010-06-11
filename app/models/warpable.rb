@@ -39,7 +39,7 @@ class Warpable < ActiveRecord::Base
     Node.find self.nodes.split(',')
   end
  
-  def generate_affine_distort
+  def generate_affine_distort(scale)
     # convert IMG_0777.JPG -virtual-pixel Transparent -distort Affine '0,0, 100,100  3072,2304 300,300  3072,0 300,150  0,2304 150,1800' test.png
     require 'net/http'
     local_location = RAILS_ROOT+"/public/warps/"+self.id.to_s+'-'+self.filename
@@ -60,16 +60,10 @@ class Warpable < ActiveRecord::Base
 
     puts northmost.to_s+','+southmost.to_s+','+westmost.to_s+','+eastmost.to_s
     
-    center_lon = (eastmost+westmost)/2
-    center_lat = (northmost+southmost)/2
-
-    puts center_lon.to_s+","+center_lat.to_s
-
-    scale = 10000 # this will later be determined from the median pixel resolution
     y1 = Cartagen.spherical_mercator_lat_to_y(northmost,scale)
-    x1 = Cartagen.spherical_mercator_lon_to_x(westmost,center_lon,scale)
+    x1 = Cartagen.spherical_mercator_lon_to_x(westmost,scale)
     y2 = Cartagen.spherical_mercator_lat_to_y(southmost,scale)
-    x2 = Cartagen.spherical_mercator_lon_to_x(eastmost,center_lon,scale)
+    x2 = Cartagen.spherical_mercator_lon_to_x(eastmost,scale)
     puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
     points = ""
@@ -79,7 +73,8 @@ class Warpable < ActiveRecord::Base
       corner = source_corners.shift
       nx1 = corner[0]
       ny1 = corner[1]
-      nx2 = (x1-Cartagen.spherical_mercator_lon_to_x(node.lon,center_lon,scale))*10
+      # why the HELL should the following x10 be necessary??
+      nx2 = (-x1+Cartagen.spherical_mercator_lon_to_x(node.lon,scale))*10
       ny2 = y1-Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
 
       points = points + '  ' unless first
@@ -99,11 +94,11 @@ class Warpable < ActiveRecord::Base
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
     puts points
-    imageMagick = "convert "+local_location+" -virtual-pixel Transparent -distort Affine '"+points+"' "+completed_local_location
+    imageMagick = "convert "+local_location+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' -crop "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+"+0+0 "+completed_local_location
     puts imageMagick
     system(imageMagick)
     #warped Warped.new({:url => ''})
-    
+    # eventually store in s3    
   end
 
 end

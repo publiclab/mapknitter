@@ -6,12 +6,12 @@ class Cartagen
     word
   end
 
-  def self.spherical_mercator_lon_to_x(lon,center_lon,scale_factor=10000)
-    (lon - center_lon) * -1 * scale_factor
+  def self.spherical_mercator_lon_to_x(lon,scale_factor=10000)
+    (lon) * scale_factor
   end
 
-  def self.spherical_mercator_x_to_lon(x,center_lon,scale_factor=10000) 
-    (x/(-1*scale_factor)) + center_lon
+  def self.spherical_mercator_x_to_lon(x,scale_factor=10000) 
+    (x/(scale_factor))
   end
 
   def self.spherical_mercator_lat_to_y(lat,scale_factor=10000)
