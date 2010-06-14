@@ -213,13 +213,21 @@ class MapController < ApplicationController
 	end
 
 	# generate photoshop script
+	path = RAILS_ROOT+"/public/warps/"+map.name+"/"	
+	File.copy(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx',path)
+	text = File.read(path+'/'+map.name+'.jsx')
+	#text.gsub('<document-title>',map.)
+	#var docName = "<document-title>"
+	#var stitchWidth = <document-width>
+	#var stitchHeight = <document-height>
+	#var cmPerPixel = <cm-per-pixel>
+	# <warps> # [['filename',x,y],['filename',x,y]]
 
 	# zip it up
 	gem 'rubyzip'
 	require 'zip/zip'
 	require 'zip/zipfilesystem'
 
-	path = RAILS_ROOT+"/public/warps/"+map.name+"/"
 	path.sub!(%r[/$],'')
 	archive = File.join(RAILS_ROOT+'/public/warps/',File.basename(path))+'.zip'
 	FileUtils.rm archive, :force=>true

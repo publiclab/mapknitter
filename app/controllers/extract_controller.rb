@@ -9,6 +9,7 @@ class ExtractController < ApplicationController
         format.xml  { render :xml => @features }
         format.kml  { render :template => "map/plot.kml.erb" }
         format.js  { render :json => @features }
+	format.json { render :json => @features }
       end
     end
 

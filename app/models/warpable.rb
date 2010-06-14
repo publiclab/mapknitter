@@ -1,8 +1,8 @@
 class Warpable < ActiveRecord::Base
   
   has_attachment :content_type => :image, 
-		 :storage => :file_system,:path_prefix => 'public/warpables', 
-                 #:storage => :s3, 
+		 #:storage => :file_system,:path_prefix => 'public/warpables', 
+                 :storage => :s3, 
                  :max_size => 5.megabytes,
                  # :resize_to => '320x200>',
 		:processor => :image_science,
@@ -102,6 +102,7 @@ class Warpable < ActiveRecord::Base
     imageMagick = "convert "+local_location+" -background transparent -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' "+completed_local_location
     puts imageMagick
     system(imageMagick)
+    # http://www.imagemagick.org/Usage/layers/#merge
     #warped Warped.new({:url => ''})
     # eventually store in s3    
   end
