@@ -1,8 +1,7 @@
 class Warp < ActiveRecord::Base
-
   has_attachment :content_type => :image, 
-		 #:storage => :file_system,:path_prefix => 'public/warpables', 
-                 :storage => :s3, 
+		 :storage => :file_system,:path_prefix => 'public/warps', 
+                 #:storage => :s3, 
                  :max_size => 5.megabytes,
                  # :resize_to => '320x200>',
 		:processor => :image_science,
@@ -34,30 +33,21 @@ class Warp < ActiveRecord::Base
     end
   end
 
-  def url=(value) 
-    self.uploaded_data = UrlUpload.new(value)
+  def path=(value) 
+    self.uploaded_data = LocalUpload.new(value)
   end
 
 end
 
-
-require 'open-uri'
-
-# Make it always write to tempfiles, never StringIO
-OpenURI::Buffer.module_eval {
-  remove_const :StringMax
-  const_set :StringMax, 0
-}
-
-class UrlUpload
+class LocalUpload
     EXTENSIONS = {
       "image/jpeg" => ["jpg", "jpeg", "jpe"],
       "image/gif" => ["gif"],
       "image/png" => ["png"]
     }
     attr_reader :original_filename, :attachment_data
-    def initialize(url)
-      @attachment_data = open(url)
+    def initialize(path)
+      @attachment_data = File.open(path)
       @original_filename = determine_filename
     end
 

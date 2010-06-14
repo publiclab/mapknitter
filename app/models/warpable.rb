@@ -1,8 +1,8 @@
 class Warpable < ActiveRecord::Base
   
   has_attachment :content_type => :image, 
-		 #:storage => :file_system,:path_prefix => 'public/warpables', 
-                 :storage => :s3, 
+		 :storage => :file_system,:path_prefix => 'public/warpables', 
+                 #:storage => :s3, 
                  :max_size => 5.megabytes,
                  # :resize_to => '320x200>',
 		:processor => :image_science,
@@ -63,13 +63,13 @@ class Warpable < ActiveRecord::Base
       eastmost = node.lon if node.lon > eastmost
     end
 
-    puts northmost.to_s+','+southmost.to_s+','+westmost.to_s+','+eastmost.to_s
+    # puts northmost.to_s+','+southmost.to_s+','+westmost.to_s+','+eastmost.to_s
     
     y1 = Cartagen.spherical_mercator_lat_to_y(northmost,scale)
     x1 = Cartagen.spherical_mercator_lon_to_x(westmost,scale)
     y2 = Cartagen.spherical_mercator_lat_to_y(southmost,scale)
     x2 = Cartagen.spherical_mercator_lon_to_x(eastmost,scale)
-    puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
+    # puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
     points = ""
     first = true
@@ -98,13 +98,14 @@ class Warpable < ActiveRecord::Base
     else
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
-    puts points
+    # puts points
     imageMagick = "convert "+local_location+" -background transparent -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' "+completed_local_location
-    puts imageMagick
+    # puts imageMagick
     system(imageMagick)
     # http://www.imagemagick.org/Usage/layers/#merge
-    #warped Warped.new({:url => ''})
-    # eventually store in s3    
+    
+    # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})
+    [x1,y1]
   end
 
 end

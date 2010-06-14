@@ -210,20 +210,32 @@ class MapController < ApplicationController
 	puts average.to_s+' = average'
 
 	# distort all warpables
+	warps = Warp.find_by_map_id(map.id)
+	warp_string = "["
+	first = true
 	map.warpables.each do |warpable|
-		warpable.generate_affine_distort(average,map.name)
+		warpable_coords = warpable.generate_affine_distort(average,map.name)
+		warp_string += "," if first
+		first = false if first
+		warp_string += "['"+warpable.id.to_s+".tif',"+warpable_coords[0].to_s+","+warpable_coords[1].to_s+"]"
 	end
 
 	# generate photoshop script
 	path = RAILS_ROOT+"/public/warps/"+map.name+"/"	
 	File.copy(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx',path)
 	text = File.read(path+'/'+map.name+'.jsx')
-	text.gsub('<document-title>')
-	#var docName = "<document-title>"
-	#var stitchWidth = <document-width>
-	#var stitchHeight = <document-height>
-	#var cmPerPixel = <cm-per-pixel>
-	# <warps> # [['filename',x,y],['filename',x,y]]
+	text.gsub('<document-title>',map.name)
+	text.gsub('<document-width>',5000)
+	text.gsub('<document-height>',5000)
+	text.gsub('<cm-per-pixel>',average)
+
+	text.gsub('<warps>',warp_string) # [['filename',x,y],['filename',x,y]]
+
+	# write photoshop script file
+        open('cartagen-photoshop-export.jsx', "wb") { |file|
+          file.write(text)
+        }
+	
 
 	# zip it up
 	gem 'rubyzip'
