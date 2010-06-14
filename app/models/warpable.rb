@@ -1,3 +1,5 @@
+require "ftools"
+
 class Warpable < ActiveRecord::Base
   
   has_attachment :content_type => :image, 
@@ -89,7 +91,7 @@ class Warpable < ActiveRecord::Base
     end
 
     if (self.public_filename[0..3] == 'http')
-      Net::HTTP.start() { |http|
+      Net::HTTP.start('localhost') { |http|
         resp = http.get(self.public_filename)
         open(local_location, "wb") { |file|
           file.write(resp.body)
