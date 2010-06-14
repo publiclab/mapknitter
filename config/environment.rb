@@ -28,13 +28,20 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  config.gem "json"
+  config.gem "json_pure"
   config.gem "httparty"
   config.gem "geokit"
   config.gem "RubyInline"
   config.gem "image_science"
+  # if you're going to use Amazon s3 for image storage:
+  # config.gem "aws-s3"
   # you also need to install 'freeimage':
   ##### sudo port install freeimage
+  # we also need davetroy-geohash, but it's not in the default gem sources, so try adding github to your gem sources:
+  # gem sources -a http://gems.github.com
+  # then run:
+  # sudo gem install davetroy-geohash
+  # Hmm, this might also be useful:
   # config.gem "davetroy-geohash", :source => "http://gems.github.com"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
