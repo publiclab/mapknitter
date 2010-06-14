@@ -104,7 +104,7 @@ class Warpable < ActiveRecord::Base
     # puts points
     imageMagick = "convert "+local_location+" -background transparent -extent "+(10*(-x1+x2)).to_s+"x"+(y1-y2).to_s+" -matte -virtual-pixel transparent -distort Perspective '"+points+"' "+completed_local_location
     # puts imageMagick
-    system(imageMagick)
+    puts system(imageMagick)
     # http://www.imagemagick.org/Usage/layers/#merge
     
     # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})

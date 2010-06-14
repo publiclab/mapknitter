@@ -21,7 +21,7 @@ var stitchWidth = <document-width>
 var stitchHeight = <document-height>
 var cmPerPixel = <cm-per-pixel>
 var stitchDoc = app.documents.add(stitchWidth/300,stitchHeight/300, 300, docName, NewDocumentMode.RGB)
-localPath = '.'
+localPath = '~/Downloads/'+docName+'/'
 
 // ############## Main code begins here: ############## //
 

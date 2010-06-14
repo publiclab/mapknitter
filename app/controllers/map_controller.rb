@@ -211,31 +211,39 @@ class MapController < ApplicationController
 
 	# distort all warpables
 	warps = Warp.find_by_map_id(map.id)
+	lowest_x=0
+	lowest_y=0
+	warpable_coords = []
+	map.warpables.each do |warpable|
+		my_warpable_coords = warpable.generate_affine_distort(average,map.name)
+		warpable_coords << my_warpable_coords
+		lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
+		lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
+	end
 	warp_string = "["
 	first = true
-	map.warpables.each do |warpable|
-		warpable_coords = warpable.generate_affine_distort(average,map.name)
-		warp_string += "," if first
+	for i in 0..map.warpables.length-1 do
+		warp_string += "," unless first
 		first = false if first
-		warp_string += "['"+warpable.id.to_s+".tif',"+warpable_coords[0].to_s+","+warpable_coords[1].to_s+"]"
+		x = (warpable_coords[i][0]-lowest_x).to_i.to_s
+		y = (warpable_coords[i][1]-lowest_y).to_i.to_s
+		
+		warp_string += "['"+map.warpables[i].id.to_s+".tif',"+x+","+y+"]"
 	end
+	warp_string += "]"
 
 	# generate photoshop script
 	path = RAILS_ROOT+"/public/warps/"+map.name+"/"	
-	File.copy(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx',path)
-	text = File.read(path+'/'+map.name+'.jsx')
-	text.gsub('<document-title>',map.name)
-	text.gsub('<document-width>',5000)
-	text.gsub('<document-height>',5000)
-	text.gsub('<cm-per-pixel>',average)
+	text = File.read(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx')
+	text.gsub!('<document-title>',map.name)
+	text.gsub!('<document-width>',5000.to_s)
+	text.gsub!('<document-height>',5000.to_s)
+	text.gsub!('<cm-per-pixel>',average.to_s)
 
-	text.gsub('<warps>',warp_string) # [['filename',x,y],['filename',x,y]]
+	text.gsub!('<warps>',warp_string) # [['filename',x,y],['filename',x,y]]
 
 	# write photoshop script file
-        open('cartagen-photoshop-export.jsx', "wb") { |file|
-          file.write(text)
-        }
-	
+	File.open(path+'cartagen-photoshop-export.jsx', 'w') {|f| f.write(text) }
 
 	# zip it up
 	gem 'rubyzip'
@@ -252,6 +260,7 @@ class MapController < ApplicationController
 		end
 	end
 
+	system('chmod a+r '+archive)
 	# warn that it might take a while
 
 	render :text => '<a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
