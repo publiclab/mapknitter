@@ -193,15 +193,17 @@ class MapController < ApplicationController
 	# determine optimal zoom level
 	widths = []
 	map.warpables.each do |warpable|
-		nodes = warpable.nodes_array
-		scale = 20037508.34
-    		y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
-    		x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
-    		y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
-    		x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
-		dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
-		widths << (warpable.width*scale)/dist
-		puts 'scale: '+scale.to_s+' & dist: '+dist.to_s
+		unless warpable.width.nil?
+			nodes = warpable.nodes_array
+			scale = 20037508.34
+    			y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
+    			x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
+    			y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
+    			x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
+			dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
+			widths << (warpable.width*scale)/dist
+			puts 'scale: '+scale.to_s+' & dist: '+dist.to_s
+		end
 	end
 
 	average = (widths.inject {|sum, n| sum + n })/widths.length
@@ -216,7 +218,7 @@ class MapController < ApplicationController
 	path = RAILS_ROOT+"/public/warps/"+map.name+"/"	
 	File.copy(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx',path)
 	text = File.read(path+'/'+map.name+'.jsx')
-	#text.gsub('<document-title>',map.)
+	text.gsub('<document-title>')
 	#var docName = "<document-title>"
 	#var stitchWidth = <document-width>
 	#var stitchHeight = <document-height>
