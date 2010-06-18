@@ -8886,7 +8886,7 @@ document.observe('cartagen:init', Map.init.bindAsEventListener(Map))
 document.observe('glop:predraw', Map.draw.bindAsEventListener(Map))
 var Warper = {
 	initialize: function() {
-		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},

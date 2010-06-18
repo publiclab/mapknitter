@@ -4,7 +4,7 @@
  */
 var Warper = {
 	initialize: function() {
-		Glop.observe('cartagen:predraw', this.draw.bindAsEventListener(this))
+		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
