@@ -81,7 +81,7 @@ class Warpable < ActiveRecord::Base
       nx1 = corner[0]
       ny1 = corner[1]
       # why the HELL should the following x10 be necessary??
-      nx2 = (-x1+Cartagen.spherical_mercator_lon_to_x(node.lon,scale))*10
+      nx2 = (-x1+Cartagen.spherical_mercator_lon_to_x(node.lon,scale))
       ny2 = y1-Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
 
       points = points + '  ' unless first

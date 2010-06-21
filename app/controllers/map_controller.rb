@@ -192,6 +192,7 @@ class MapController < ApplicationController
 	scale = 1
 	# determine optimal zoom level
 	widths = []
+	reasonable_warpables = []
 	map.warpables.each do |warpable|
 		unless warpable.width.nil?
 			nodes = warpable.nodes_array
@@ -210,7 +211,6 @@ class MapController < ApplicationController
 	puts average.to_s+' = average'
 
 	# distort all warpables
-	warps = Warp.find_by_map_id(map.id)
 	lowest_x=0
 	lowest_y=0
 	warpable_coords = []
@@ -220,6 +220,7 @@ class MapController < ApplicationController
 		lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
 		lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
 	end
+	tif_string = 'convert '
 	warp_string = "["
 	first = true
 	for i in 0..map.warpables.length-1 do
@@ -227,9 +228,10 @@ class MapController < ApplicationController
 		first = false if first
 		x = (warpable_coords[i][0]-lowest_x).to_i.to_s
 		y = (warpable_coords[i][1]-lowest_y).to_i.to_s
-		
+		tif_string += " -page +"+x+"+"+y+" "+RAILS_ROOT+"/public/warps/"+map.name+"/"+map.warpables[i].id.to_s+".tif"
 		warp_string += "['"+map.warpables[i].id.to_s+".tif',"+x+","+y+"]"
 	end
+	tif_string += " "+RAILS_ROOT+"/public/warps/"+map.name+".tif"
 	warp_string += "]"
 
 	# generate photoshop script
@@ -263,7 +265,9 @@ class MapController < ApplicationController
 	system('chmod a+r '+archive)
 	# warn that it might take a while
 
-	render :text => '<a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
+	system(tif_string)
+
+	render :text => '<a href="/warps/'+map.name+'.tif">'+map.name+'.tif</a><br /><a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
       }
     end
   end
