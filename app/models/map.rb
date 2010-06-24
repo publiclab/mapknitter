@@ -15,6 +15,31 @@ class Map < ActiveRecord::Base
   def validate
     self.name != 'untitled'
   end
+
+  # generates a geotiff from an existing tiff, referencing the map warpable coordinates
+  def generate_geotiff
+    gdalwarp = 'gdalwarp '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
+    gdal_translate = 'gdalwarp '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
+    coordinates = ' '
+    self.warpables.each do |warpable|
+      warpable.nodes_array.each do |node|
+        x = 0
+        y = 0
+        # this ordering may be wrong:
+        coordinates += x+','+y+' '+node.lat + ',' + node.lon + ' '
+      end
+    end
+    system(gdalwarp)
+    system(gdal_translate)
+  end
+
+  # generates a tileset at RAILS_ROOT/public/tiles/<map_name>/
+  def generate_tiles
+    # get google api key from /config/google_api.yml
+    google_api_key = ''
+    gdal2tiles = 'gdal2tiles.py -k -t '+self.name+' -g '+google_api_key+' '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
+    system(gdal2tiles)
+  end
   
   def before_save
     self.styles = 'body: {
