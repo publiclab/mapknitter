@@ -26,6 +26,9 @@ var Events = {
 		// keyboard:
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
+		if (Config.key_input) {
+			Keyboard.key_input = true
+		}
 		
 		// touchscreen (mobile phone) events:
 		element = $('main')
@@ -114,14 +117,14 @@ var Events = {
 		var character = String.fromCharCode(code);
 		if (Keyboard.key_input) {
 			switch(character) {
-				case "s": zoom_in(); break
-				case "w": zoom_out(); break
+				case "s": Map.zoom *= 1.1; break
+				case "w": Map.zoom *= 0.9; break
 				case "d": Map.rotate += 0.1; break
 				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x += 20/Map.zoom; break
-				case "h": Map.x -= 20/Map.zoom; break
-				case "t": Map.y += 20/Map.zoom; break
-				case "g": Map.y -= 20/Map.zoom; break
+				case "f": Map.x -= 20/Map.zoom; break
+				case "h": Map.x += 20/Map.zoom; break
+				case "t": Map.y -= 20/Map.zoom; break
+				case "g": Map.y += 20/Map.zoom; break
 				case "x": localStorage.clear()
 			}
 		} else {

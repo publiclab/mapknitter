@@ -14,6 +14,17 @@ class MapController < ApplicationController
 
   end
 
+  def cache
+    keys = params[:id].split(',')
+    keys.each do |key|
+      system('cd '+RAILS_ROOT+'/public/api/0.6/geohash && wget '+key+'.json')
+    end
+  end
+
+  def clear_cache
+      system('rm '+RAILS_ROOT+'/public/api/0.6/geohash/*.json')
+  end
+
   def update_map
     @map = Map.find(params[:map][:id])
     @map.update_attributes(params[:map])

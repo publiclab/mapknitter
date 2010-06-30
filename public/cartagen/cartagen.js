@@ -5080,6 +5080,7 @@ Object.Event.extend(Control.ContextMenu);
 
 var Config = {
 	stylesheet: "/style.gss",
+	vectors: true,
 	live: false,
 	powersave: true,
 	zoom_out_limit: 0.02,
@@ -5129,7 +5130,12 @@ var Config = {
 		this.run_handlers()
 	},
 	get_url_params: function() {
-		return window.location.href.toQueryParams()
+		params = window.location.href.toQueryParams()
+		$H(params).each(function(param){
+			if (param.value == 'true') params[param.key] = true
+			if (param.value == 'false') params[param.key] = false
+		})
+		return params
 	},
 	apply_aliases: function() {
 		this.aliases.each(function(pair) {
@@ -6688,7 +6694,7 @@ var Glop = {
 		Events.drag()
 		Glop.fire('glop:predraw')
 		draw_event = $('main').fire('glop:draw')
-		if (!draw_event.no_draw) {
+		if (Config.vectors && !draw_event.no_draw) {
 			objects.each(function(object) {
 				object.draw()
 			})
@@ -6961,6 +6967,9 @@ var Events = {
 
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
+		if (Config.key_input) {
+			Keyboard.key_input = true
+		}
 
 		element = $('main')
 		element.ontouchstart = Events.ontouchstart
@@ -7028,14 +7037,14 @@ var Events = {
 		var character = String.fromCharCode(code);
 		if (Keyboard.key_input) {
 			switch(character) {
-				case "s": zoom_in(); break
-				case "w": zoom_out(); break
+				case "s": Map.zoom *= 1.1; break
+				case "w": Map.zoom *= 0.9; break
 				case "d": Map.rotate += 0.1; break
 				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x += 20/Map.zoom; break
-				case "h": Map.x -= 20/Map.zoom; break
-				case "t": Map.y += 20/Map.zoom; break
-				case "g": Map.y -= 20/Map.zoom; break
+				case "f": Map.x -= 20/Map.zoom; break
+				case "h": Map.x += 20/Map.zoom; break
+				case "t": Map.y -= 20/Map.zoom; break
+				case "g": Map.y += 20/Map.zoom; break
 				case "x": localStorage.clear()
 			}
 		} else {
@@ -8431,48 +8440,52 @@ var Interface = {
  		return code
 	},
 	display_loading: function() {
-		var percent = Importer.parse_manager.completed
-		if (percent > 75 || (percent < 100)) {
-			$('loading_message').hide()
-		}
-		if (percent < 100) {
-			$C.save()
-	        $C.translate(Map.x,Map.y)
-			$C.rotate(-Map.rotate)
-	        $C.translate(-Map.x,-Map.y)
-			$C.fill_style('white')
-			$C.line_width(0)
-			$C.opacity(0.7)
-			var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
-			$C.begin_path()
-				$C.line_to(x,y)
-				$C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
-				$C.line_to(x,y)
-			$C.fill()
-			$C.opacity(0.9)
-			$C.line_width(6/Map.zoom)
-			$C.stroke_style('white')
-			$C.line_cap('square')
-			$C.begin_path()
-				$C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
-			$C.stroke()
-			var width = $C.measure_text("Lucida Grande, sans-serif",
-			             12,
-			             parseInt(percent)+"%")
-			$C.draw_text("Lucida Grande, sans-serif",
-			             12/Map.zoom,
-						 "#333",
-			             x-(width/(2*Map.zoom)),
-						 y+(6/Map.zoom),
-						 parseInt(percent)+"%")
-			$C.translate(Map.x,Map.y)
-			$C.rotate(Map.rotate)
-	        $C.translate(-Map.x,-Map.y)
-			$C.restore()
+		if (Config.vectors) {
+			var percent = Importer.parse_manager.completed
+			if (percent > 75 || (percent < 100)) {
+				$('loading_message').hide()
+			}
+			if (percent < 100) {
+				$C.save()
+		        $C.translate(Map.x,Map.y)
+				$C.rotate(-Map.rotate)
+		        $C.translate(-Map.x,-Map.y)
+				$C.fill_style('white')
+				$C.line_width(0)
+				$C.opacity(0.7)
+				var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
+				$C.begin_path()
+					$C.line_to(x,y)
+					$C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
+					$C.line_to(x,y)
+				$C.fill()
+				$C.opacity(0.9)
+				$C.line_width(6/Map.zoom)
+				$C.stroke_style('white')
+				$C.line_cap('square')
+				$C.begin_path()
+					$C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
+				$C.stroke()
+				var width = $C.measure_text("Lucida Grande, sans-serif",
+				             12,
+				             parseInt(percent)+"%")
+				$C.draw_text("Lucida Grande, sans-serif",
+				             12/Map.zoom,
+							 "#333",
+				             x-(width/(2*Map.zoom)),
+							 y+(6/Map.zoom),
+							 parseInt(percent)+"%")
+				$C.translate(Map.x,Map.y)
+				$C.rotate(Map.rotate)
+		        $C.translate(-Map.x,-Map.y)
+				$C.restore()
+			}
 		}
 	},
 	display_loading_message: function(percent) {
-		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
+		if (Config.vectors) {
+	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
+		}
 	},
 	download_bbox: function() {
 		Glop.paused = true

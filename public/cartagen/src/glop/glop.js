@@ -131,7 +131,7 @@ var Glop = {
 		 * is set to true, GLOP will not raw the objects array.
 		 */
 		draw_event = $('main').fire('glop:draw')
-		if (!draw_event.no_draw) {
+		if (Config.vectors && !draw_event.no_draw) {
 			objects.each(function(object) { 
 				object.draw()
 			})

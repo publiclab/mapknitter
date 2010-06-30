@@ -17,12 +17,24 @@
 		<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<script type="text/javascript" src="/modalbox/lib/scriptaculous.js?load=builder,effects"></script>
 		<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ9jusMjXczq_T0r2GbPBfuk8gSSxTNggosnUj2szZbHP69QuzNbgCLGw' type='text/javascript'></script>
 	<script type="text/javascript" charset="utf-8">
+
+		var map;
+	        var mapBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+		//var mapBounds = new OpenLayers.Bounds( -88.8701993896, 29.798690641, -88.8620380748, 29.8071316946);
+		var mapMinZoom = 14;
+		var mapMaxZoom = 20;
+		var spher_merc = new OpenLayers.Projection("EPSG:4326")
+		var latlon = new OpenLayers.Projection("EPSG:900913")
+
 		Cartagen.setup({
 			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
 			static_map: false,
 			padding_top: -46,
+			key_input: true,
 			lat: <%= @map.lat %>,
 			lng: <%= @map.lon %>,
 			zoom: <%= @map.zoom %>,
@@ -58,6 +70,7 @@
 			}
 		}
 		document.observe('styles:loaded:/stylesheet/<%= @map[:name] %>.gss',Cartagen.Builder.add_menus)
+
 		function setup() {
 			warpables = [
 				<% @warpables.each do |warpable| %>
@@ -85,9 +98,87 @@
 			}
 		}
 		document.observe('cartagen:init', setup)
+
+		function start_openlayers() {
+		       	map = new OpenLayers.Map('map', { controls: [], 
+//				  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
+					                units: "m",
+							projection: new OpenLayers.Projection("EPSG:900913"),
+		                  			displayProjection: new OpenLayers.Projection("EPSG:4326"),
+	                				maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
+							maxResolution: 156543.0339 });
+
+			// http://isse.cr.usgs.gov/ArcGIS/services/Combined/TNM_Large_Scale_Imagery/MapServer/WMSServer?request=GetCapabilities&service=WMS
+			// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
+			// http://viewer.nationalmap.gov/example/services.html
+
+			tile_url = prompt('Enter a TMS service URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
+			if (tile_url == 'google') {
+				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
+				map.addLayer(gsat)
+			} else {
+		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url, 
+				{ projection: latlon,
+		                  displayProjection: spher_merc,
+				  getURL: overlay_getTileURL,
+				  maxResolution:156543.0339,
+	                	  units: "m",
+	                          maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
+				  tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
+				  serviceVersion: '.', 
+				  layername: '.', 
+				  type: 'png', 
+				  alpha: true, 
+				  isBaseLayer: false});
+		       		map.addLayer(tms);
+			}
+
+			map.zoomToExtent( mapBounds.transform(map.displayProjection, map.projection ) )
+			if (Config.tile_switcher) {
+		         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
+				map.addControl(switcherControl);
+		                switcherControl.maximizeControl();
+			}
+			Glop.observe('glop:postdraw', openLayersDraw)
+		}
+
+	        function overlay_getTileURL(bounds) {
+console.log(bounds)
+	            var res = this.map.getResolution();
+	            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+	            var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
+	            var z = this.map.getZoom();
+			console.log('getting tile '+z+','+x+','+y)
+	            if (this.map.baseLayer.name == 'Virtual Earth Roads' || this.map.baseLayer.name == 'Virtual Earth Aerial' || this.map.baseLayer.name == 'Virtual Earth Hybrid') {
+	               z = z + 1;
+	            }
+		    if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom ) {
+	              //console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
+	              return this.url + z + "/" + x + "/" + y + "." + this.type;
+                    } else {
+                      return "http://www.maptiler.org/img/none.png";
+                    }
+		}
+
+		function openLayersDraw() {
+			var lon_left = Projection.x_to_lon(Map.x-(Glop.width/2))
+			var lon_right = Projection.x_to_lon(Map.x+(Glop.width/2))
+			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(map.projection,map.displayProjection),parseInt((Map.zoom*(lon_right-lon_left))/-0.001));
+
+			lat1 = Projection.y_to_lat(Viewport.bbox[0])
+			lon1 = Projection.x_to_lon(Viewport.bbox[1])
+			lat2 = Projection.y_to_lat(Viewport.bbox[2])
+			lon2 = Projection.x_to_lon(Viewport.bbox[3])
+			map.zoomToExtent(new OpenLayers.Bounds(lat1,lon1,lat2,lon2).transform(latlon,spher_merc))
+//			console.log('recentering openlayers')
+			console.log(new OpenLayers.Bounds(lat1,lon1,lat2,lon2).transform(latlon,spher_merc))
+		}
+
 	</script>
 </head>
 <body>
+<script>
+</script>
 
 <div id="google" style="display:none;"></div>
 
@@ -119,7 +210,9 @@
             <a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
-            <a name='Search for a new location' class='last silk' href="javascript:void(0);" onClick=""><img src="/images/silk-grey/magnifier.png" /></a>
+            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.values.join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
+            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors.toggle()"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a name='Enter a tile layer to warp over' class='last silk' href="javascript:void(0);" onClick="start_openlayers()"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>
 
@@ -157,7 +250,9 @@
 	</div>
 </div>
 
-<div id="canvas"></div>
+<div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" id="map"></div>
+
+<div id="canvas" style="width:100%; height:100%; position:absolute; top:0;  z-index 10;"></div>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

@@ -43,9 +43,7 @@ class Map < ActiveRecord::Base
   
   def before_save
     self.styles = 'body: {
-	fillStyle: "white",
 	lineWidth: 0,
-	pattern: "/images/brown-paper.jpg",
 	menu: {
 		"Edit GSS": Cartagen.show_gss_editor,
 		"Download Image": Cartagen.redirect_to_image,

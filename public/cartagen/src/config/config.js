@@ -1,6 +1,7 @@
 var Config = {
 	// See http://wiki.cartagen.org/wiki/show/CustomizingCartagen for info on the config options
 	stylesheet: "/style.gss",
+	vectors: true,
 	live: false,
 	powersave: true,
 	zoom_out_limit: 0.02,
@@ -48,14 +49,19 @@ var Config = {
 	init: function(config) {
 		// stores passed configs and query string configs in the Config object
 		Object.extend(this, config)
-		Object.extend(this, this.get_url_params())
-		
+		Object.extend(this, this.get_url_params())	
+	
 		this.apply_aliases()
 		
 		this.run_handlers()
 	},
 	get_url_params: function() {
-		return window.location.href.toQueryParams()
+		params = window.location.href.toQueryParams()
+		$H(params).each(function(param){
+			if (param.value == 'true') params[param.key] = true
+			if (param.value == 'false') params[param.key] = false
+		})
+		return params
 	},
 	apply_aliases: function() {
 		this.aliases.each(function(pair) {
