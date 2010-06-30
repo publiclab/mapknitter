@@ -134,13 +134,25 @@
 		       		map.addLayer(tms);
 			}
 
-			map.zoomToExtent( mapBounds.transform(map.displayProjection, map.projection ) )
+			Glop.observe('glop:draw',function(){$('map').setStyle({height:Glop.height+'px'})})
+
+			var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
+			var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
+			var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
+			var lon2 = Projection.x_to_lon(Map.x+Glop.width/2)
+
+			var bounds = new OpenLayers.Bounds();
+			bounds.extend(new OpenLayers.LonLat(lon1,lat1).transform(spher_merc,latlon))
+			bounds.extend(new OpenLayers.LonLat(lon2,lat2).transform(spher_merc,latlon))
+
+			map.zoomToExtent( bounds )
 			if (Config.tile_switcher) {
 		         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
 				map.addControl(switcherControl);
 		                switcherControl.maximizeControl();
 			}
-			Glop.observe('glop:postdraw', openLayersDraw)
+			openLayersDraw()
+			Glop.observe('cartagen:change', openLayersDraw)
 		}
 
 	        function overlay_getTileURL(bounds) {
@@ -160,22 +172,23 @@
                     }
 		}
 
-
 		function openLayersDraw() {
 			var lon_left = Projection.x_to_lon(Map.x-(Glop.width/2))
 			var lon_right = Projection.x_to_lon(Map.x+(Glop.width/2))
-			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(map.projection,map.displayProjection))
+			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
 
-			lat1 = Projection.y_to_lat(Viewport.bbox[0])
-			lon1 = Projection.x_to_lon(Viewport.bbox[1])
-			lat2 = Projection.y_to_lat(Viewport.bbox[2])
-			lon2 = Projection.x_to_lon(Viewport.bbox[3])
+			var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
+			var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
+			var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
+			var lon2 = Projection.x_to_lon(Map.x+Glop.width/2)
 
-			bounds = new OpenLayers.Bounds();
-			bounds.extend(new OpenLayers.LonLat(lon1,lat1).transform(spher_merc,latlon))
-			bounds.extend(new OpenLayers.LonLat(lon2,lat2).transform(spher_merc,latlon))
+			var left = new OpenLayers.LonLat(map.getExtent().left,map.getExtent().top);
+			var right = new OpenLayers.LonLat(map.getExtent().right,map.getExtent().bottom);
 
-//			map.zoomToExtent(bounds)
+			left = left.transform(spher_merc,latlon);
+			right = right.transform(spher_merc,latlon);
+			
+			Cartagen.go_to(Map.lat,Map.lon,115000000/(right.lon-left.lon))
 		}
 
 	</script>
@@ -214,7 +227,7 @@
             <a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
-            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.values.join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
+            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
             <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors.toggle()"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Enter a tile layer to warp over' class='last silk' href="javascript:void(0);" onClick="start_openlayers()"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>

@@ -20,31 +20,6 @@ var Interface = {
 	},
 
 	/**
- 	 * Inserts tiles behind the Cartagen system using OpenLayers, for tracing etc.
- 	 */
-	add_tiles: function() {
-		Config.tiles = true;
-		Interface.quantize_zoom()
-		Glop.observe('glop:predraw',Interface.quantize_zoom)
-	},
-
-	/**
- 	 * Filters the zoom level, snapping it to those conventional for OpenLayers & for tile sets.
- 	 */
-	quantize_zoom: function() {
-		zoom = Map.zoom
-		resolutions = [156543.0339, 78271.51695, 39135.758475, 19567.8792375, 9783.93961875, 4891.969809375, 2445.9849046875, 1222.99245234375, 611.496226171875, 305.7481130859375, 152.87405654296876, 76.43702827148438, 38.21851413574219, 19.109257067871095, 9.554628533935547, 4.777314266967774, 2.388657133483887, 1.1943285667419434, 0.5971642833709717, 0.29858214168548586]
-		var nearest = -1
-		var dist = -1
-		resolutions.each(function(res){
-			if (Math.abs(res-zoom) < dist || dist == -1) nearest = res
-		})
-		new_zoom = nearest*(Viewport.bbox[2]-Viewport.bbox[0])/0.006
-		console.log(new_zoom)
-		Map.zoom = new_zoom
-	},
-
-	/**
  	 * Creates listeners for mouseover and mouseout events for buttons
  	 * on the toolbar; must run every time you change the toolbar.
  	 */

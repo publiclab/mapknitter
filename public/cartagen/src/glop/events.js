@@ -93,9 +93,9 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				Map.zoom = (Map.zoom * 1) + (1/80)
 			} else {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				Map.zoom = (Map.zoom * 1) + (1/80)
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
@@ -117,8 +117,14 @@ var Events = {
 		var character = String.fromCharCode(code);
 		if (Keyboard.key_input) {
 			switch(character) {
-				case "s": Map.zoom *= 1.1; break
-				case "w": Map.zoom *= 0.9; break
+				case "s": 
+					if (Config.tiles) map.zoomIn()
+					else Map.zoom *= 1.1
+					break
+				case "w": 
+					if (Config.tiles) map.zoomOut()
+					else Map.zoom *= 0.9
+					break
 				case "d": Map.rotate += 0.1; break
 				case "a": Map.rotate -= 0.1; break
 				case "f": Map.x -= 20/Map.zoom; break
@@ -128,7 +134,8 @@ var Events = {
 				case "x": localStorage.clear()
 			}
 		} else {
-			// just modifiers:
+			// just 
+			// 				}modifiers:
 			switch(character){
 				case "r": Keyboard.keys.set("r",true); break
 				case "z": Keyboard.keys.set("z",true); break
