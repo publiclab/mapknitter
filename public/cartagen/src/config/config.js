@@ -1,6 +1,7 @@
 var Config = {
 	// See http://wiki.cartagen.org/wiki/show/CustomizingCartagen for info on the config options
 	stylesheet: "/style.gss",
+	tiles: false,
 	vectors: true,
 	live: false,
 	powersave: true,

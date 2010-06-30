@@ -5080,6 +5080,7 @@ Object.Event.extend(Control.ContextMenu);
 
 var Config = {
 	stylesheet: "/style.gss",
+	tiles: false,
 	vectors: true,
 	live: false,
 	powersave: true,
@@ -5169,7 +5170,7 @@ var Cartagen = {
 	scripts: [],
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
-			$('canvas').insert('<canvas id="main"></canvas>')
+			$('canvas').insert('<canvas style="z-index:20;" id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})
 	},
@@ -5631,10 +5632,10 @@ var Style = {
 		}
 	},
 	 style_body: function() {
-		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+		if (!Config.tiles && Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
 		if (Style.styles.body.opacity) $C.opacity(Style.styles.body.opacity)
 
-		if (Style.styles.body.pattern) {
+		if (!Config.tiles && Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern
 				Style.styles.body.pattern = new Image()
@@ -8390,10 +8391,31 @@ Tool.Warp = {
 }
 
 var Interface = {
+
 	mousemove: function(event) {
 		Mouse.window_x = Event.pointerX(event)
 		Mouse.window_y = Event.pointerY(event)
 	},
+
+	add_tiles: function() {
+		Config.tiles = true;
+		Interface.quantize_zoom()
+		Glop.observe('glop:predraw',Interface.quantize_zoom)
+	},
+
+	quantize_zoom: function() {
+		zoom = Map.zoom
+		resolutions = [156543.0339, 78271.51695, 39135.758475, 19567.8792375, 9783.93961875, 4891.969809375, 2445.9849046875, 1222.99245234375, 611.496226171875, 305.7481130859375, 152.87405654296876, 76.43702827148438, 38.21851413574219, 19.109257067871095, 9.554628533935547, 4.777314266967774, 2.388657133483887, 1.1943285667419434, 0.5971642833709717, 0.29858214168548586]
+		var nearest = -1
+		var dist = -1
+		resolutions.each(function(res){
+			if (Math.abs(res-zoom) < dist || dist == -1) nearest = res
+		})
+		new_zoom = nearest*(Viewport.bbox[2]-Viewport.bbox[0])/0.006
+		console.log(new_zoom)
+		Map.zoom = new_zoom
+	},
+
 	setup_tooltips: function() {
 		$$('.toolbar a').each(function(toolbar){
 			toolbar.onmouseover = function() {
@@ -8406,6 +8428,7 @@ var Interface = {
 			}
 		})
 	},
+
 	show_tooltip: function(name) {
 		$$('.tooltip').each(function(tooltip){
 			tooltip.remove()
@@ -8413,6 +8436,7 @@ var Interface = {
 		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
 		$('tooltip').style.left = (Mouse.window_x)+'px'
 	},
+
 	display_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
@@ -8420,6 +8444,7 @@ var Interface = {
 		$('iframe_code').absolutize()
 		}
 	},
+
 	display_knitter_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
@@ -8427,6 +8452,7 @@ var Interface = {
 		$('iframe_code').absolutize()
 		}
 	},
+
 	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
 		width = width || 500
 		height = height || 300
@@ -8439,6 +8465,7 @@ var Interface = {
 		code = code + "' style='border:0;'></iframe>"
  		return code
 	},
+
 	display_loading: function() {
 		if (Config.vectors) {
 			var percent = Importer.parse_manager.completed
@@ -8482,11 +8509,13 @@ var Interface = {
 			}
 		}
 	},
+
 	display_loading_message: function(percent) {
 		if (Config.vectors) {
 	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
 		}
 	},
+
 	download_bbox: function() {
 		Glop.paused = true
 		alert('Please select a bounding box to download')

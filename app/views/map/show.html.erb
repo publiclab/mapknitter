@@ -113,6 +113,7 @@
 			// http://viewer.nationalmap.gov/example/services.html
 
 			tile_url = prompt('Enter a TMS service URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
+			Config.tiles = true
 			if (tile_url == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)
@@ -143,7 +144,6 @@
 		}
 
 	        function overlay_getTileURL(bounds) {
-console.log(bounds)
 	            var res = this.map.getResolution();
 	            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
 	            var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
@@ -160,18 +160,22 @@ console.log(bounds)
                     }
 		}
 
+
 		function openLayersDraw() {
 			var lon_left = Projection.x_to_lon(Map.x-(Glop.width/2))
 			var lon_right = Projection.x_to_lon(Map.x+(Glop.width/2))
-			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(map.projection,map.displayProjection),parseInt((Map.zoom*(lon_right-lon_left))/-0.001));
+			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(map.projection,map.displayProjection))
 
 			lat1 = Projection.y_to_lat(Viewport.bbox[0])
 			lon1 = Projection.x_to_lon(Viewport.bbox[1])
 			lat2 = Projection.y_to_lat(Viewport.bbox[2])
 			lon2 = Projection.x_to_lon(Viewport.bbox[3])
-			map.zoomToExtent(new OpenLayers.Bounds(lat1,lon1,lat2,lon2).transform(latlon,spher_merc))
-//			console.log('recentering openlayers')
-			console.log(new OpenLayers.Bounds(lat1,lon1,lat2,lon2).transform(latlon,spher_merc))
+
+			bounds = new OpenLayers.Bounds();
+			bounds.extend(new OpenLayers.LonLat(lon1,lat1).transform(spher_merc,latlon))
+			bounds.extend(new OpenLayers.LonLat(lon2,lat2).transform(spher_merc,latlon))
+
+//			map.zoomToExtent(bounds)
 		}
 
 	</script>

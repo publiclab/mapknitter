@@ -128,7 +128,7 @@ var Cartagen = {
 	 */
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
-			$('canvas').insert('<canvas id="main"></canvas>')
+			$('canvas').insert('<canvas style="z-index:20;" id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})	
 	},
