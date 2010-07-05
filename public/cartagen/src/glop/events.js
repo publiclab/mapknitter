@@ -120,10 +120,12 @@ var Events = {
 				case "s": 
 					if (Config.tiles) map.zoomIn()
 					else Map.zoom *= 1.1
+					Glop.fire('cartagen:change')
 					break
 				case "w": 
 					if (Config.tiles) map.zoomOut()
 					else Map.zoom *= 0.9
+					Glop.fire('cartagen:change')
 					break
 				case "d": Map.rotate += 0.1; break
 				case "a": Map.rotate -= 0.1; break
