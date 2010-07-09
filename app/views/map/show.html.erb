@@ -118,7 +118,7 @@
 			if (tile_url == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)
-			else if (tile_url == 'yahoo') {
+			} else if (tile_url == 'yahoo') {
 				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {'type': YAHOO_MAP_SAT, 'sphericalMercator': true});
 				map.addLayer(yahoosat)
 			} else {
