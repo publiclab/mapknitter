@@ -19,6 +19,7 @@
 		<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&amp;appid=15QBs_zV34EJnwUBaFAtGKSQhvOEtK8saR5kIMdmJUJ52ct.2GKGEHHDHHhAskXQ"></script>
 	<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA' type='text/javascript'></script>
 	<script type="text/javascript" charset="utf-8">
 
@@ -117,6 +118,9 @@
 			if (tile_url == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)
+			else if (tile_url == 'yahoo') {
+				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {'type': YAHOO_MAP_SAT, 'sphericalMercator': true});
+				map.addLayer(yahoosat)
 			} else {
 		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url, 
 				{ projection: latlon,
