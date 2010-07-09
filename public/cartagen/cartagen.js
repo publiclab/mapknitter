@@ -5791,6 +5791,7 @@ var Feature = Class.create(
 		this.label = new Label(this)
 	},
 	draw: function() {
+		if (Config.vectors) {
 
 
 		$C.fill_style(this.fillStyle)
@@ -5812,6 +5813,7 @@ var Feature = Class.create(
 		$C.restore()
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
+		}
 		}
 	},
 	style: Prototype.emptyFunction,

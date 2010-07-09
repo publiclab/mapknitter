@@ -26,6 +26,7 @@ var Feature = Class.create(
 	 * this feature's label in the label drawing queue.
 	 */
 	draw: function() {
+		if (Config.vectors) {
 		// Formerly drew separately to different canvases. 
 		// That functionality has been put off for now.
 		//
@@ -62,6 +63,7 @@ var Feature = Class.create(
 		// draw label if we're zoomed in enough
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
+		}
 		}
 	},
 	/**
