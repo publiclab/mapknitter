@@ -228,7 +228,7 @@
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
             <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
-            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors.toggle()"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors = !Config.vectors"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Enter a tile layer to warp over' class='last silk' href="javascript:void(0);" onClick="start_openlayers()"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>
