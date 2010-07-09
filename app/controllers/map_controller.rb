@@ -14,6 +14,14 @@ class MapController < ApplicationController
 
   end
 
+  def add_static_data
+    @map = Map.find params[:id]
+    static_data = @map.static_data.split(',')
+    static_data << params[:url]
+    @map.static_data = static_data.join(',')
+    @map.save
+  end
+
   def cache
     keys = params[:id].split(',')
     keys.each do |key|
