@@ -6594,7 +6594,7 @@ var Importer = {
 		}
 	},
 	parse_way: function(way){
-		if (Config.live || (way && !Feature.ways.get(way.id))) {
+		if (Config.live || !Feature.ways.get(way.id)) {
 			var data = {
 				id: way.id,
 				user: way.user,
@@ -7036,30 +7036,23 @@ var Events = {
 	keypress: function(e) {
 		if (Events.enabled === false) return
 
-		var code;
 		if (!e) var e = window.event;
 
-		if (e.keyCode) code = e.keyCode;
-		else if (e.which) code = e.which;
-		var character = String.fromCharCode(code);
+		var character = e.which || e.keyCode;
+		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
+
 			switch(character) {
-				case "s":
+				case '=':
 					if (Config.tiles) map.zoomIn()
 					else Map.zoom *= 1.1
-					Glop.fire('cartagen:change')
+					Glop.fire('glop:draw')
 					break
-				case "w":
+				case '-':
 					if (Config.tiles) map.zoomOut()
 					else Map.zoom *= 0.9
-					Glop.fire('cartagen:change')
+					Glop.fire('glop:draw')
 					break
-				case "d": Map.rotate += 0.1; break
-				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x -= 20/Map.zoom; break
-				case "h": Map.x += 20/Map.zoom; break
-				case "t": Map.y -= 20/Map.zoom; break
-				case "g": Map.y += 20/Map.zoom; break
 				case "x": localStorage.clear()
 			}
 		} else {
@@ -7072,8 +7065,17 @@ var Events = {
 		}
 		Glop.trigger_draw(5)
 	},
+
 	keyup: function(e) {
 		if (Events.enabled === false) return
+
+		var character = e.keyIdentifier
+		switch(character) {
+			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+			case 'Up': Map.y -= 20/Map.zoom; break
+			case 'Down': Map.y += 20/Map.zoom; break
+		}
 
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
@@ -8351,16 +8353,18 @@ Tool.Warp = {
 		Warper.active_object = false
 	},
 	delete_image: function() {
-		Warper.images.each(function(image,index) {
-			if (image.active && Warper.active_image == image) {
-				Warper.images.splice(index,1)
-				image.cleanup()
-				new Ajax.Request('/warper/delete/'+image.id,{
-					method:'post',
-				})
-			}
-		})
-		Tool.change('Pan')
+		if (confirm('Are you sure you want to delete this image? You cannot undo this action.')) {
+			Warper.images.each(function(image,index) {
+				if (image.active && Warper.active_image == image) {
+					Warper.images.splice(index,1)
+					image.cleanup()
+					new Ajax.Request('/warper/delete/'+image.id,{
+						method:'post',
+					})
+				}
+			})
+			Tool.change('Pan')
+		}
 	},
 	lock_image: function() {
 		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
@@ -8501,7 +8505,7 @@ var Interface = {
 
 	display_loading_message: function(percent) {
 		if (Config.vectors) {
-	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
+	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...<p><small>(Use arrow keys and +/- to pan and zoom)</small></p></div></div>')
 		}
 	},
 

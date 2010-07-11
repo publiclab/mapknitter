@@ -112,30 +112,24 @@ var Events = {
 	keypress: function(e) {
 		if (Events.enabled === false) return
 
-		var code;
 		if (!e) var e = window.event;
-
-		if (e.keyCode) code = e.keyCode;
-		else if (e.which) code = e.which;
-		var character = String.fromCharCode(code);
+		//else if (e.which) code = e.which;
+	
+		var character = e.which || e.keyCode;
+		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
+
 			switch(character) {
-				case "s": 
+				case '=': 
 					if (Config.tiles) map.zoomIn()
 					else Map.zoom *= 1.1
-					Glop.fire('cartagen:change')
+					Glop.fire('glop:draw')
 					break
-				case "w": 
+				case '-': 
 					if (Config.tiles) map.zoomOut()
 					else Map.zoom *= 0.9
-					Glop.fire('cartagen:change')
+					Glop.fire('glop:draw')
 					break
-				case "d": Map.rotate += 0.1; break
-				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x -= 20/Map.zoom; break
-				case "h": Map.x += 20/Map.zoom; break
-				case "t": Map.y -= 20/Map.zoom; break
-				case "g": Map.y += 20/Map.zoom; break
 				case "x": localStorage.clear()
 			}
 		} else {
@@ -151,12 +145,21 @@ var Events = {
 		Glop.trigger_draw(5)
 		// e.preventDefault()
 	},
+
 	/**
 	 * Triggered when a key is released
 	 */
 	keyup: function(e) {
 		if (Events.enabled === false) return
-		
+
+		var character = e.keyIdentifier
+		switch(character) {	
+			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+			case 'Up': Map.y -= 20/Map.zoom; break
+			case 'Down': Map.y += 20/Map.zoom; break
+		}
+
 		Keyboard.keys.set("r",false)
 		Keyboard.keys.set("z",false)
 		e.preventDefault()

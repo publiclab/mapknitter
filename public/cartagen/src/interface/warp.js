@@ -33,16 +33,18 @@ Tool.Warp = {
 		Warper.active_object = false
 	},
 	delete_image: function() {
-		Warper.images.each(function(image,index) {
-			if (image.active && Warper.active_image == image) {
-				Warper.images.splice(index,1)
-				image.cleanup()
-				new Ajax.Request('/warper/delete/'+image.id,{
-					method:'post',
-				})
-			}
-		})
-		Tool.change('Pan')
+		if (confirm('Are you sure you want to delete this image? You cannot undo this action.')) {
+			Warper.images.each(function(image,index) {
+				if (image.active && Warper.active_image == image) {
+					Warper.images.splice(index,1)
+					image.cleanup()
+					new Ajax.Request('/warper/delete/'+image.id,{
+						method:'post',
+					})
+				}
+			})
+			Tool.change('Pan')
+		}
 	},
 	lock_image: function() {
 		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
