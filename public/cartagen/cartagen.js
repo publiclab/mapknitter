@@ -6594,7 +6594,7 @@ var Importer = {
 		}
 	},
 	parse_way: function(way){
-		if (Config.live || !Feature.ways.get(way.id)) {
+		if (Config.live || (way && !Feature.ways.get(way.id))) {
 			var data = {
 				id: way.id,
 				user: way.user,
@@ -7021,15 +7021,18 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Map.zoom = (Map.zoom * 1) + (1/80)
+				if (Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				else map.zoomOut()
 			} else {
-				Map.zoom = (Map.zoom * 1) + (1/80)
+				if (Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				else map.zoomIn()
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 		event.preventDefault()
 	},
+
 	keypress: function(e) {
 		if (Events.enabled === false) return
 
@@ -7930,7 +7933,6 @@ var Tool = {
 		Tool.hover = true
 	},
 	show_tooltip: function(tool_name) {
-		console.log(tool_name)
 		Tool.hide_tooltip()
 		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
 		$('tooltip').innerHTML = tool_name
@@ -7949,7 +7951,6 @@ var Tool = {
 	hover: true,
 	active: 'Pan',
 	change: function(new_tool,force) {
-		console.log('changing '+Tool.active+' to '+new_tool)
 		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 
@@ -7958,7 +7959,6 @@ var Tool = {
 			tool_events.each(function(tool_event) {
 				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 				Glop.observe(tool_event,Tool[new_tool][tool_event])
-				console.log(new_tool+', '+tool_event)
 			})
 
 			if (!Object.isUndefined(Tool[old_tool].deactivate)) {
@@ -8373,7 +8373,6 @@ Tool.Warp = {
 	mousedown: function() {
 	}.bindAsEventListener(Tool.Warp),
 	mouseup: function() {
-		$l('Warp mouseup')
 		if (Warper.active_image) {
 			if (Warper.active_image.active_point) {
 				Warper.active_image.active_point.cancel_drag()
@@ -8384,7 +8383,6 @@ Tool.Warp = {
 		$C.cursor('auto')
 	}.bindAsEventListener(Tool.Warp),
 	mousemove: function() {
-		$l('Warp mousemove')
 		if (Mouse.down){
 			if (Warper.active_image) {
 				if (Warper.active_image.active_point) {
@@ -8396,7 +8394,6 @@ Tool.Warp = {
 		}
 	}.bindAsEventListener(Tool.Warp),
 	dblclick: function() {
-		$l('Warp dblclick')
 
 	}.bindAsEventListener(Tool.Warp)
 }

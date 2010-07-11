@@ -93,15 +93,18 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Map.zoom = (Map.zoom * 1) + (1/80)
+				if (Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				else map.zoomOut()
 			} else {
-				Map.zoom = (Map.zoom * 1) + (1/80)
+				if (Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				else map.zoomIn()
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 		event.preventDefault()
 	},
+
 	/**
 	 * Triggered when a key is pressed
 	 * @param {Event} e

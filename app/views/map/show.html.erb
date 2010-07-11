@@ -156,7 +156,7 @@
 		                switcherControl.maximizeControl();
 			}
 			openLayersDraw()
-			Glop.observe('cartagen:change', openLayersDraw)
+			Glop.observe('glop:draw', openLayersDraw)
 		}
 
 	        function overlay_getTileURL(bounds) {
@@ -177,14 +177,7 @@
 		}
 
 		function openLayersDraw() {
-			var lon_left = Projection.x_to_lon(Map.x-(Glop.width/2))
-			var lon_right = Projection.x_to_lon(Map.x+(Glop.width/2))
-			map.setCenter(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
-
-			var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
-			var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
-			var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
-			var lon2 = Projection.x_to_lon(Map.x+Glop.width/2)
+			map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
 
 			var left = new OpenLayers.LonLat(map.getExtent().left,map.getExtent().top);
 			var right = new OpenLayers.LonLat(map.getExtent().right,map.getExtent().bottom);
@@ -192,7 +185,7 @@
 			left = left.transform(spher_merc,latlon);
 			right = right.transform(spher_merc,latlon);
 			
-			Cartagen.go_to(Map.lat,Map.lon,115000000/(right.lon-left.lon))
+			Map.zoom = 115000000/(right.lon-left.lon)
 		}
 
 	</script>
@@ -232,7 +225,7 @@
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
             <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
-            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors = !Config.vectors"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors = !Config.vectors;$('loading_message').hide()"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Enter a tile layer to warp over' class='last silk' href="javascript:void(0);" onClick="start_openlayers()"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>

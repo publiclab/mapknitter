@@ -20,7 +20,6 @@ var Tool = {
 		Tool.hover = true
 	},
 	show_tooltip: function(tool_name) {
-		console.log(tool_name)
 		Tool.hide_tooltip()
 		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
 		$('tooltip').innerHTML = tool_name
@@ -50,7 +49,6 @@ var Tool = {
 	 * Function to change the active tool 
 	 */
 	change: function(new_tool,force) {
-		console.log('changing '+Tool.active+' to '+new_tool)
 		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 			
@@ -59,7 +57,6 @@ var Tool = {
 			tool_events.each(function(tool_event) {
 				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 				Glop.observe(tool_event,Tool[new_tool][tool_event])
-				console.log(new_tool+', '+tool_event)
 			})
 
 			if (!Object.isUndefined(Tool[old_tool].deactivate)) {

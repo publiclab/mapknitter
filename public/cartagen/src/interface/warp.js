@@ -61,7 +61,6 @@ Tool.Warp = {
 	mousedown: function() {
 	}.bindAsEventListener(Tool.Warp),
 	mouseup: function() {
-		$l('Warp mouseup')
 		if (Warper.active_image) {
 			if (Warper.active_image.active_point) {
 				Warper.active_image.active_point.cancel_drag()
@@ -72,7 +71,6 @@ Tool.Warp = {
 		$C.cursor('auto')
 	}.bindAsEventListener(Tool.Warp),
 	mousemove: function() {
-		$l('Warp mousemove')
 		if (Mouse.down){
 			if (Warper.active_image) {
 				if (Warper.active_image.active_point) {
@@ -84,7 +82,6 @@ Tool.Warp = {
 		}
 	}.bindAsEventListener(Tool.Warp),
 	dblclick: function() {
-		$l('Warp dblclick')
 				
 	}.bindAsEventListener(Tool.Warp)	
 }
