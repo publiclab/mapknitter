@@ -119,7 +119,7 @@
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)
 			} else if (tile_url == 'yahoo') {
-				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {'type': YAHOO_MAP_SAT, 'sphericalMercator': true, numZoomLevels: 20});
+				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 20});
 				map.addLayer(yahoosat)
 			} else {
 		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url, 
