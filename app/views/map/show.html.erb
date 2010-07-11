@@ -184,8 +184,9 @@
 
 			left = left.transform(spher_merc,latlon);
 			right = right.transform(spher_merc,latlon);
-			
-			Map.zoom = 115000000/(right.lon-left.lon)
+
+			var convert = 127000000		
+			Map.zoom = convert/(right.lon-left.lon)
 		}
 
 	</script>
