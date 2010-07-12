@@ -6259,6 +6259,7 @@ var Coastline = {
 	coastline_nodes: [],
 	assembled_coastline: [],
 	draw: function() {
+		if (Config.vectors) {
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
 			$l(object.id+' relation')
@@ -6343,6 +6344,7 @@ var Coastline = {
 				$C.fill_pattern(coastline_style.pattern, 'repeat')
 			} else $C.fill_style(coastline_style.fillStyle)
 			$C.fill()
+		}
 		}
 	},
 	refresh_coastlines: function() {

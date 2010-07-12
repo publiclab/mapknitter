@@ -34,6 +34,7 @@ var Coastline = {
 	 * 
 	 */
 	draw: function() {
+		if (Config.vectors) {
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
 			// invent a better way to trigger collect_nodes, based on Viewport change:
@@ -166,6 +167,7 @@ var Coastline = {
 				$C.fill_pattern(coastline_style.pattern, 'repeat')	
 			} else $C.fill_style(coastline_style.fillStyle)
 			$C.fill()
+		}
 		}
 	},
 	refresh_coastlines: function() {
