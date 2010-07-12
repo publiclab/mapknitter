@@ -26,7 +26,7 @@ class Map < ActiveRecord::Base
         x = 0
         y = 0
         # this ordering may be wrong:
-        coordinates += x+','+y+' '+node.lat + ',' + node.lon + ' '
+        coordinates = coordinates+x.to_s+','+y.to_s+' '+node.lat.to_s + ',' + node.lon.to_s + ' '
       end
     end
     system(gdalwarp)

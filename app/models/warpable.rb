@@ -91,8 +91,8 @@ class Warpable < ActiveRecord::Base
     end
 
     if (self.public_filename[0..3] == 'http')
-      #Net::HTTP.start('s3.amazonaws.com') { |http|
-      Net::HTTP.start('localhost') { |http|
+      Net::HTTP.start('s3.amazonaws.com') { |http|
+      #Net::HTTP.start('localhost') { |http|
         resp = http.get(self.public_filename)
         open(local_location, "wb") { |file|
           file.write(resp.body)
