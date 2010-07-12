@@ -23,13 +23,13 @@ var Warper = {
  	 */
 	active_image: false,
 	/*
- 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
 	},
 	/**
-	 * Compared two ways based on area
+	 * Compared two ways based on area, except for the active image which is sorted to top.
 	 * @param {Warper.Image} a
 	 * @param {Warper.Image} b
 	 */
@@ -37,6 +37,15 @@ var Warper = {
 		if ( a.area < b.area ) return 1;
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
+	},
+	/**
+	 * Sorts warpable images to bring the active one to the top.
+	 * @param {Warper.Image} a
+	 * @param {Warper.Image} b
+	 */
+	sort_by_active: function(a,b) {
+		if (a == Warper.active_image) return 1;
+		if (b == Warper.active_image) return -1;
 	},
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle. 
@@ -91,6 +100,7 @@ var Warper = {
 			Tool.change('Warp',!same_image)
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
+		Warper.images.sort(Warper.sort_by_active)
 	},
 	/**
 	 * Double click event handler - defined here because if it's in Tool.Warp, 

@@ -8931,7 +8931,7 @@ var Warper = {
 	locked: false,
 	active_image: false,
 	/*
- 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
@@ -8940,6 +8940,10 @@ var Warper = {
 		if ( a.area < b.area ) return 1;
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
+	},
+	sort_by_active: function(a,b) {
+		if (a == Warper.active_image) return 1;
+		if (b == Warper.active_image) return -1;
 	},
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle.
@@ -8988,6 +8992,7 @@ var Warper = {
 			Tool.change('Warp',!same_image)
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
+		Warper.images.sort(Warper.sort_by_active)
 	},
 	dblclick: function() {
 		if (!Warper.locked) {
