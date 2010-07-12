@@ -8990,9 +8990,9 @@ var Warper = {
 		}
 		if (inside_image) {
 			Tool.change('Warp',!same_image)
+			Warper.images.sort(Warper.sort_by_active)
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
-		Warper.images.sort(Warper.sort_by_active)
 	},
 	dblclick: function() {
 		if (!Warper.locked) {

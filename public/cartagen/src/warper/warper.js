@@ -98,9 +98,9 @@ var Warper = {
 		if (inside_image) {
 			// 'true' forces a change, in case you have an image selected and are selecting a second one
 			Tool.change('Warp',!same_image)
+			Warper.images.sort(Warper.sort_by_active)
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
-		Warper.images.sort(Warper.sort_by_active)
 	},
 	/**
 	 * Double click event handler - defined here because if it's in Tool.Warp, 
