@@ -29,7 +29,9 @@ class Map < ActiveRecord::Base
         coordinates = coordinates+x.to_s+','+y.to_s+' '+node.lat.to_s + ',' + node.lon.to_s + ' '
       end
     end
+    puts gdalwarp
     system(gdalwarp)
+    puts gdal_translate
     system(gdal_translate)
   end
 
@@ -38,6 +40,7 @@ class Map < ActiveRecord::Base
     # get google api key from /config/google_api.yml
     google_api_key = ''
     gdal2tiles = 'gdal2tiles.py -k -t '+self.name+' -g '+google_api_key+' '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
+    puts gdal2tiles
     system(gdal2tiles)
   end
   

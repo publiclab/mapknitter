@@ -284,6 +284,7 @@ class MapController < ApplicationController
 	system('chmod a+r '+archive)
 	# warn that it might take a while
 
+	puts 'generating tiff: '+tif_string
 	system(tif_string)
 
 	puts 'generating geotiff'
