@@ -185,7 +185,7 @@
 			left = left.transform(spher_merc,latlon);
 			right = right.transform(spher_merc,latlon);
 
-			var convert = 127000000		
+			var convert = 124023.4375*Glop.width
 			Map.zoom = convert/(right.lon-left.lon)
 		}
 
