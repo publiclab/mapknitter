@@ -130,7 +130,17 @@ var Events = {
 					else Map.zoom *= 0.9
 					Glop.fire('glop:draw')
 					break
-				case "x": localStorage.clear()
+				case "x": 
+					localStorage.clear()
+					break
+				case "r":
+					Tool.Warp.mode = 'rotate'
+					break
+				case "w":
+					Tool.Warp.mode = 'default' 
+					break
+				case "m":
+					Tool.change('Pan')
 			}
 		} else {
 			// just 
