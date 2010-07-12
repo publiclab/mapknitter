@@ -2,7 +2,7 @@ class Warp < ActiveRecord::Base
   has_attachment :content_type => :image, 
 		 :storage => :file_system,:path_prefix => 'public/warps', 
                  #:storage => :s3, 
-                 :max_size => 5.megabytes,
+                 :max_size => 10.megabytes,
                  # :resize_to => '320x200>',
 		:processor => :image_science,
                  :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }

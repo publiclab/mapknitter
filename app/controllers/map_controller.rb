@@ -286,6 +286,11 @@ class MapController < ApplicationController
 
 	system(tif_string)
 
+	puts 'generating geotiff'
+	self.generate_geotiff
+	puts 'generating tiles'
+	self.generate_tiles
+
 	render :text => '<a href="/warps/'+map.name+'.tif">'+map.name+'.tif</a><br /><a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
       }
     end
