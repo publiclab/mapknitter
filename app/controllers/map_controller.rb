@@ -212,7 +212,8 @@ class MapController < ApplicationController
 	# determine optimal zoom level
 	widths = []
 	reasonable_warpables = []
-	map.warpables.each do |warpable|
+	warpables = Warpable.find_all_by_map_id(map.id,:conditions => {:deleted => false})
+	warpables.each do |warpable|
 		unless warpable.width.nil?
 			nodes = warpable.nodes_array
 			scale = 20037508.34
@@ -233,7 +234,7 @@ class MapController < ApplicationController
 	lowest_x=0
 	lowest_y=0
 	warpable_coords = []
-	map.warpables.each do |warpable|
+	warpables.each do |warpable|
 		my_warpable_coords = warpable.generate_affine_distort(average,map.name)
 		warpable_coords << my_warpable_coords
 		lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
@@ -242,7 +243,7 @@ class MapController < ApplicationController
 	tif_string = 'convert '
 	warp_string = "["
 	first = true
-	for i in 0..map.warpables.length-1 do
+	for i in 0..warpables.length-1 do
 		warp_string += "," unless first
 		first = false if first
 		x = (warpable_coords[i][0]-lowest_x).to_i.to_s
