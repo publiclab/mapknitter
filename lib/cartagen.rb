@@ -6,20 +6,24 @@ class Cartagen
     word
   end
 
-  def self.spherical_mercator_lon_to_x(lon,scale_factor=10000)
-    (lon) * scale_factor
+  def self.spherical_mercator_lon_to_x(lon,scale=10000)
+    (lon*scale)/180
   end
 
-  def self.spherical_mercator_x_to_lon(x,scale_factor=10000) 
-    (x/(scale_factor))
+  def self.spherical_mercator_x_to_lon(x,scale=10000) 
+    (x/scale)*180
   end
 
-  def self.spherical_mercator_lat_to_y(lat,scale_factor=10000)
-    180/Math::PI * Math.log(Math.tan(Math::PI/4+lat*(Math::PI/180)/2)) * scale_factor
+  def self.spherical_mercator_lat_to_y(lat,scale=10000)
+    #180/Math::PI * Math.log(Math.tan(Math::PI/4+lat*(Math::PI/180)/2)) * scale_factor
+    y = Math.log(Math.tan((90 + lat) * Math::PI / 360)) / (Math::PI / 180)
+    y * scale / 180
   end
 
-  def self.spherical_mercator_y_to_lat(y,scale_factor=10000)
-    180/Math::PI * (2 * Math.atan(Math.exp(y/scale_factor*Math::PI/180)) - Math::PI/2)
+ def self.spherical_mercator_y_to_lat(y,scale=10000)
+    #180/Math::PI * (2 * Math.atan(Math.exp(y/scale_factor*Math::PI/180)) - Math::PI/2)
+    lat = (y / scale) * 180
+    180/Math::PI * (2 * Math.atan(Math.exp(lat * Math::PI / 180)) - Math::PI / 2)
   end
   
   # collects coastline ways into collected_way relations;

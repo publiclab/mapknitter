@@ -121,7 +121,7 @@ canvas {
 	padding:8px;
 	margin:12px;
 	position:absolute; bottom:0; left:0;
-	z-index:9;
+	z-index:40;
 	background:white;
 	-moz-opacity: 0.80;
 	opacity:.80;
