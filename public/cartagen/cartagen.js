@@ -6611,14 +6611,16 @@ var Importer = {
 					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
 			})
-			if (way.tag instanceof Array) {
-				way.tag.each(function(tag) {
-					data.tags.set(tag.k,tag.v)
+            		if (way.tag){
+				if (way.tag instanceof Array) {
+					way.tag.each(function(tag) {
+						data.tags.set(tag.k,tag.v)
+						if (tag.v == 'coastline') data.coastline = true
+					})
+				} else {
+					data.tags.set(way.tag.k,way.tag.v)
 					if (tag.v == 'coastline') data.coastline = true
-				})
-			} else {
-				data.tags.set(way.tag.k,way.tag.v)
-				if (tag.v == 'coastline') data.coastline = true
+				}
 			}
 			new Way(data)
 		}
