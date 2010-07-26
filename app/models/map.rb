@@ -48,7 +48,7 @@ class Map < ActiveRecord::Base
 
   # distort all warpables, returns upper left corner coords in x,y
   def distort_warpables(scale)
-	puts '> generating perspectival distorts of each warpable in ImageMagick'
+	puts '> generating geotiffs of each warpable in GDAL'
 	lowest_x=0
 	lowest_y=0
 	warpable_coords = []
@@ -63,66 +63,21 @@ class Map < ActiveRecord::Base
   end
 
   def generate_composite_tiff(coords,origin)
-	tif_string = 'convert -monitor '
-	for i in 0..self.warpables.length-1 do
-		x = (coords[i][0]-origin[0]).to_i.to_s
-		y = (coords[i][1]-origin[1]).to_i.to_s
-		tif_string += " -page +"+x+"+"+y+" "+RAILS_ROOT+"/public/warps/"+self.name+"/"+self.warpables[i].id.to_s+".tif"
-	end
-	tif_string += " "+RAILS_ROOT+"/public/warps/"+self.name+".tif"
-
-	# warn that it might take a while
-
-	puts '- '+tif_string
-	system(tif_string)
-	puts 'complete!'
+        directory = RAILS_ROOT+"/public/warps/"+self.name+"/"
+        geotiff_location = directory+self.name+'-geo.tif'
+	geotiffs = ''
+	self.warpables.each do |warpable|
+        	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
+        end
+	gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
+	system(gdal_merge)
   end
-
-  def zip
-	path = RAILS_ROOT+"/public/warps/"+self.name+"/"
-	gem 'rubyzip'
-	require 'zip/zip'
-	require 'zip/zipfilesystem'
-
-	path.sub!(%r[/$],'')
-	archive = File.join(RAILS_ROOT+'/public/warps/',File.basename(path))+'.zip'
-	FileUtils.rm archive, :force=>true
-
-	Zip::ZipFile.open(archive, 'w') do |zipfile|
-		Dir["#{path}/**/**"].reject{|f|f==archive}.each do |file|
-			zipfile.add(file.sub(path+'/',''),file)
-		end
-	end
-
-	system('chmod a+r '+archive)
-  end
-
-  # generates a geotiff from an existing tiff, referencing the map warpable coordinates
-  def generate_geotiff
-    coordinates = ' '
-    self.warpables.each do |warpable|
-      warpable.nodes_array.each do |node|
-        x = 0
-        y = 0
-        # this ordering may be wrong:
-        coordinates = coordinates+' -gcp '+x.to_s+' '+y.to_s+' '+node.lat.to_s + ' ' + node.lon.to_s
-      end
-    end
-    
-    gdal_translate = 'gdal_translate -of GTiff -a_srs EPSG:4326 '+coordinates+'  -co "TILED=NO" '+RAILS_ROOT+'/public/warps/'+self.name+'.tif '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
-    gdalwarp = 'gdalwarp -of GTiff -t_srs EPSG:4326 '+RAILS_ROOT+'/public/warps/'+self.name+'.tif '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
-
-    puts gdal_translate
-    system(gdal_translate)
-    puts gdalwarp
-    system(gdalwarp)
-  end
-
-  # generates a tileset at RAILS_ROOT/public/tiles/<map_name>/
+  
+# generates a tileset at RAILS_ROOT/public/tiles/<map_name>/
   def generate_tiles
     # get google api key from /config/google_api.yml
-    google_api_key = ''
-    gdal2tiles = 'gdal2tiles.py -k -t '+self.name+' -g '+google_api_key+' '+RAILS_ROOT+'/public/warps/'+self.name+'.tif'
+    google_api_key = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif'
     puts gdal2tiles
     system(gdal2tiles)
   end

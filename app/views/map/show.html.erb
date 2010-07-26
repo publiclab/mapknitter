@@ -73,6 +73,7 @@
 		document.observe('styles:loaded:/stylesheet/<%= @map[:name] %>.gss',Cartagen.Builder.add_menus)
 
 		function setup() {
+			Glop.observe('glop:predraw', function() { $C.clear();})
 			warpables = [
 				<% @warpables.each do |warpable| %>
 				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},

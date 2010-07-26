@@ -219,16 +219,10 @@ class MapController < ApplicationController
 	puts '> generating composite tiff'
 	map.generate_composite_tiff(warpable_coords,origin)
 
-	puts '> generating zip'
-	map.zip
-
-	puts '> generating geotiff'
-	map.generate_geotiff
-
 	puts '> generating tiles'
 	map.generate_tiles
 
-	render :text => '<a href="/warps/'+map.name+'.tif">'+map.name+'.tif</a><br /><a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
+	render :text => '<a href="/warps/'+map.name+'/'+map.name+'-geo.tif">'+map.name+'-geo.tif</a>'
       }
     end
   end

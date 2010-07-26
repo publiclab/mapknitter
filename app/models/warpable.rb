@@ -53,6 +53,7 @@ class Warpable < ActiveRecord::Base
 
     local_location = working_directory+self.id.to_s+'-'+self.filename
     completed_local_location = directory+self.id.to_s+'.tif'
+    geotiff_location = directory+self.id.to_s+'-geo.tif'
 
     northmost = self.nodes_array.first.lat
     southmost = self.nodes_array.first.lat
@@ -76,19 +77,21 @@ class Warpable < ActiveRecord::Base
     # puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
     points = ""
+    coordinates = ""
     first = true
-    source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
+    source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
     self.nodes_array.each do |node|
       corner = source_corners.shift
       nx1 = corner[0]
       ny1 = corner[1]
       nx2 = -x1+(pxperm*Cartagen.spherical_mercator_lon_to_x(node.lon,scale))
       ny2 = y1-(pxperm*Cartagen.spherical_mercator_lat_to_y(node.lat,scale))
-
+   
       points = points + '  ' unless first
       points = points + nx1.to_s + ',' + ny1.to_s + ' ' + nx2.to_i.to_s + ',' + ny2.to_i.to_s
       first = false
       # we need to find an origin; find northwestern-most point
+      coordinates = coordinates+' -gcp '+nx1.to_s+', '+ny1.to_s+', '+node.lon.to_s + ', ' + node.lat.to_s
     end
 
     if (self.public_filename[0..3] == 'http')
@@ -102,12 +105,12 @@ class Warpable < ActiveRecord::Base
     else
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
-    puts points
-    imageMagick = "convert -monitor "+local_location+" -background transparent -extent "+(y1-y2).to_i.to_s+"x"+(-x1+x2).to_i.to_s+" -repage -matte -virtual-pixel transparent -distort Perspective '"+points+"' "+completed_local_location
-    puts imageMagick
-    puts system(imageMagick)
-    puts 'complete!'
-    # http://www.imagemagick.org/Usage/layers/#merge
+    gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+local_location+' '+completed_local_location
+    gdalwarp = 'gdalwarp -tps -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+completed_local_location+' '+geotiff_location
+    puts gdal_translate
+    system(gdal_translate)
+    puts gdalwarp
+    system(gdalwarp)
     
     # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})
     [x1,y1]
