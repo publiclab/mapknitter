@@ -33,6 +33,8 @@ Rails::Initializer.run do |config|
   config.gem "geokit"
   config.gem "RubyInline"
   config.gem "image_science"
+  config.gem "exifr"
+
   # config.gem "rubyzip"
   # if you're going to use Amazon s3 for image storage:
   # config.gem "aws-s3"

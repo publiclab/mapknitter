@@ -8,5 +8,6 @@ coverage*
 public/warpables/*
 public/warps/*
 public/api/0.6/*
+db/schema.rb
 config/database.yml
 config/amazon_s3.yml

@@ -79,7 +79,23 @@ class Warpable < ActiveRecord::Base
     points = ""
     coordinates = ""
     first = true
-    source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
+  
+#Value	0th Row	0th Column
+#1	top	left side
+#2	top	right side
+#3	bottom	right side
+#4	bottom	left side
+#5	left side	top
+#6	right side	top
+#7	right side	bottom
+#8	left side	bottom
+
+    rotation = system('identify -format %[exif:Orientation] '+local_location)
+    if rotation == 6
+      source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
+    else
+      source_corners = [[0,0],[self.height,0],[self.height,self.width],[0,self.width]]
+    end
     self.nodes_array.each do |node|
       corner = source_corners.shift
       nx1 = corner[0]
@@ -105,12 +121,22 @@ class Warpable < ActiveRecord::Base
     else
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
-    gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+local_location+' '+completed_local_location
-    gdalwarp = 'gdalwarp -tps -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+completed_local_location+' '+geotiff_location
-    puts gdal_translate
-    system(gdal_translate)
-    puts gdalwarp
-    system(gdalwarp)
+
+    imageMagick = "convert -monitor -background transparent "
+    imageMagick += "-matte -virtual-pixel transparent "
+    imageMagick += "-distort Perspective '"+points+"' "
+    imageMagick += "-crop "+(y1-y2).to_i.to_s+"x"+(-x1+x2).to_i.to_s+" "
+    imageMagick += local_location+" "+completed_local_location
+    puts imageMagick
+    puts system(imageMagick)
+    puts 'complete!'
+
+    #gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+local_location+' '+completed_local_location
+    #gdalwarp = 'gdalwarp -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+completed_local_location+' '+geotiff_location
+    #puts gdal_translate
+    #system(gdal_translate)
+    #puts gdalwarp
+    #system(gdalwarp)
     
     # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})
     [x1,y1]
