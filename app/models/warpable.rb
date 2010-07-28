@@ -92,9 +92,11 @@ class Warpable < ActiveRecord::Base
 
     rotation = system('identify -format %[exif:Orientation] '+local_location)
     if rotation == 6
-      source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
+      source_corners = [[0,self.height],[0,0],[self.width,0],[self.width,self.height]]
+    elsif rotation == 4
+      source_corners = [[self.width,self.height],[0,self.height],[0,0],[self.width,0]]
     else
-      source_corners = [[0,0],[self.height,0],[self.height,self.width],[0,self.width]]
+      source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
     end
     self.nodes_array.each do |node|
       corner = source_corners.shift
@@ -107,7 +109,7 @@ class Warpable < ActiveRecord::Base
       points = points + nx1.to_s + ',' + ny1.to_s + ' ' + nx2.to_i.to_s + ',' + ny2.to_i.to_s
       first = false
       # we need to find an origin; find northwestern-most point
-      coordinates = coordinates+' -gcp '+nx1.to_s+', '+ny1.to_s+', '+node.lon.to_s + ', ' + node.lat.to_s
+      coordinates = coordinates+' -gcp '+nx2.to_s+', '+ny2.to_s+', '+node.lon.to_s + ', ' + node.lat.to_s
     end
 
     if (self.public_filename[0..3] == 'http')
@@ -122,19 +124,31 @@ class Warpable < ActiveRecord::Base
       File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
 
+    height = (y1-y2).to_i.to_s
+    width = (-x1+x2).to_i.to_s
+
     imageMagick = "convert -monitor -background transparent "
+    imageMagick += local_location+" "
+    if rotation == 6 || rotation == 4
+    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
+    else
+    	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
+    end
+    imageMagick += "-background transparent -flatten "
     imageMagick += "-matte -virtual-pixel transparent "
     imageMagick += "-distort Perspective '"+points+"' "
-    imageMagick += "-crop "+(y1-y2).to_i.to_s+"x"+(-x1+x2).to_i.to_s+" "
-    imageMagick += local_location+" "+completed_local_location
+    imageMagick += "+repage "
+    imageMagick += completed_local_location
     puts imageMagick
     puts system(imageMagick)
     puts 'complete!'
+	# generate a static html page at /warp/map.name/progress that says "Warping 1 of 6" or "Saving 4 of 6"
 
-    #gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+local_location+' '+completed_local_location
+    gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
+    puts gdal_translate
+    system(gdal_translate)
+    
     #gdalwarp = 'gdalwarp -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+completed_local_location+' '+geotiff_location
-    #puts gdal_translate
-    #system(gdal_translate)
     #puts gdalwarp
     #system(gdalwarp)
     
