@@ -78,9 +78,9 @@ class Map < ActiveRecord::Base
   def generate_tiles
     # get google api key from /config/google_api.yml
     google_api_key = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif'
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+"/public/tms/"+self.name+"/"
     puts gdal2tiles
-#    system(gdal2tiles)
+    system(gdal2tiles)
   end
   
   def before_save

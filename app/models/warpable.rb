@@ -53,7 +53,8 @@ class Warpable < ActiveRecord::Base
 
     local_location = working_directory+self.id.to_s+'-'+self.filename
     completed_local_location = directory+self.id.to_s+'.tif'
-    geotiff_location = directory+self.id.to_s+'-geo.tif'
+    geotiff_location = directory+self.id.to_s+'-geo-unwarped.tif'
+    warped_geotiff_location = directory+self.id.to_s+'-geo.tif'
 
     northmost = self.nodes_array.first.lat
     southmost = self.nodes_array.first.lat
@@ -76,6 +77,18 @@ class Warpable < ActiveRecord::Base
     x2 = pxperm*Cartagen.spherical_mercator_lon_to_x(eastmost,scale)
     # puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
+    if (self.public_filename[0..3] == 'http')
+      Net::HTTP.start('s3.amazonaws.com') { |http|
+      #Net::HTTP.start('localhost') { |http|
+        resp = http.get(self.public_filename)
+        open(local_location, "wb") { |file|
+          file.write(resp.body)
+        }
+      }
+    else
+      File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
+    end
+
     points = ""
     coordinates = ""
     first = true
@@ -90,11 +103,14 @@ class Warpable < ActiveRecord::Base
 #7	right side	bottom
 #8	left side	bottom
 
-    rotation = system('identify -format %[exif:Orientation] '+local_location)
-    if rotation == 6
-      source_corners = [[0,self.height],[0,0],[self.width,0],[self.width,self.height]]
-    elsif rotation == 4
-      source_corners = [[self.width,self.height],[0,self.height],[0,0],[self.width,0]]
+    rotation = `identify -format %[exif:Orientation] #{local_location}`
+    puts '>>>>>>>>>>>>>>>>>>>>>>'+rotation.to_s
+    if rotation.to_i == 6
+      puts 'rotated CW'
+      source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
+    elsif rotation.to_i == 4
+      puts 'rotated CCW'
+      source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]
     else
       source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
     end
@@ -110,18 +126,6 @@ class Warpable < ActiveRecord::Base
       first = false
       # we need to find an origin; find northwestern-most point
       coordinates = coordinates+' -gcp '+nx2.to_s+', '+ny2.to_s+', '+node.lon.to_s + ', ' + node.lat.to_s
-    end
-
-    if (self.public_filename[0..3] == 'http')
-      Net::HTTP.start('s3.amazonaws.com') { |http|
-      #Net::HTTP.start('localhost') { |http|
-        resp = http.get(self.public_filename)
-        open(local_location, "wb") { |file|
-          file.write(resp.body)
-        }
-      }
-    else
-      File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
     end
 
     height = (y1-y2).to_i.to_s
@@ -144,13 +148,13 @@ class Warpable < ActiveRecord::Base
     puts 'complete!'
 	# generate a static html page at /warp/map.name/progress that says "Warping 1 of 6" or "Saving 4 of 6"
 
-    gdal_translate = "gdal_translate -of GTiff -a_srs '+init=epsg:4326' "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
+    gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
     puts gdal_translate
     system(gdal_translate)
     
-    #gdalwarp = 'gdalwarp -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+completed_local_location+' '+geotiff_location
-    #puts gdalwarp
-    #system(gdalwarp)
+    gdalwarp = 'gdalwarp -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
+    puts gdalwarp
+    system(gdalwarp)
     
     # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})
     [x1,y1]
