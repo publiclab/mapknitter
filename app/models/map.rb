@@ -36,7 +36,7 @@ class Map < ActiveRecord::Base
 			dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
 			puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
 			puts (x2-x1).to_s+','+(y2-y1).to_s
-			pxperms << (warpable.width)/dist
+			pxperms << (warpable.width)/dist unless warpable.width.nil? || dist.nil?
 			puts 'scale: '+pxperms.last.to_s+' & dist: '+dist.to_s
 		end
 	end
