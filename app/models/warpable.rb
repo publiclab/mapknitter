@@ -104,12 +104,14 @@ class Warpable < ActiveRecord::Base
 #8	left side	bottom
 
     rotation = `identify -format %[exif:Orientation] #{local_location}`
-    puts '>>>>>>>>>>>>>>>>>>>>>>'+rotation.to_s
     if rotation.to_i == 6
       puts 'rotated CW'
       source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
     elsif rotation.to_i == 4
       puts 'rotated CCW'
+      source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]
+    elsif rotation.to_i == 3
+      puts 'rotated 180 deg'
       source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]
     else
       source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
@@ -133,7 +135,7 @@ class Warpable < ActiveRecord::Base
 
     imageMagick = "convert -monitor -background transparent "
     imageMagick += local_location+" "
-    if rotation == 6 || rotation == 4
+    if rotation.to_i == 6 || rotation.to_i == 4
     	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
     else
     	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
