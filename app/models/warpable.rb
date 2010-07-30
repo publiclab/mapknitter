@@ -152,7 +152,7 @@ class Warpable < ActiveRecord::Base
     puts gdal_translate
     system(gdal_translate)
     
-    gdalwarp = 'gdalwarp -dstalpha -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
+    gdalwarp = 'gdalwarp -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
     system(gdalwarp)
     
