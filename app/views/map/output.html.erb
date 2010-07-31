@@ -1,0 +1,16 @@
+<h1>Map export</h1>
+
+<p>From this panel you can export this map in a variety of formats. These may already be available, but if you've changed the map at all, or want to see the most recent version, you can <b>re-generate the export</b>.</p>
+
+<p>This may take some time - a large map could take as long as <b>an hour or more</b>. Leave this panel open to monitor progress, or come back later to see how it's going. Closing this panel will not stop the export.</p>
+
+<div <% if !@running %>style="display:none;"<% end %> id="run_export">Click this link to begin the export: <a href="/map/export/<%= @map.name %>">Export</a>. The export links below may be unavailable while the export is running.</div>
+
+<div <% if @running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
+
+<script>
+Ajax.PeriodicalUpdater('export_progress','/map/progress/<% @map.id %>', {method: 'get', frequency: 5})
+</script>
+<div id='export_progress'>
+
+</div>

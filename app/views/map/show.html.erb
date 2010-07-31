@@ -232,7 +232,7 @@
     	</div>
 	</div>
 
-	<span style='margin-right:6px;' class='right'><a target="_blank" href="/map/export/<%= @map.name %>">Export</a></span>
+	<span style='margin-right:6px;' class='right'><a target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export'})" href="javascript:void(0);">Export</a></span>
 </div>
 
 <div class='modal' id="styles" style="display:none;">

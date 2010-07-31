@@ -46,8 +46,8 @@ class Warpable < ActiveRecord::Base
     # convert IMG_0777.JPG -virtual-pixel Transparent -distort Affine '0,0, 100,100  3072,2304 300,300  3072,0 300,150  0,2304 150,1800' test.png
     require 'net/http'
     
-    working_directory = RAILS_ROOT+"/public/warps/"+path+"-working/"
-    directory = RAILS_ROOT+"/public/warps/"+path+"/"
+    working_directory = "public/warps/"+path+"-working/"
+    directory = "public/warps/"+path+"/"
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
 
@@ -116,6 +116,7 @@ class Warpable < ActiveRecord::Base
     else
       source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
     end
+
     self.nodes_array.each do |node|
       corner = source_corners.shift
       nx1 = corner[0]
@@ -136,9 +137,9 @@ class Warpable < ActiveRecord::Base
     imageMagick = "convert -monitor -background transparent "
     imageMagick += local_location+" "
     if rotation.to_i == 6 || rotation.to_i == 8
-    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
-    else
     	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
+    else
+    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
     end
     imageMagick += "-background transparent -flatten "
     imageMagick += "-matte -virtual-pixel transparent "
@@ -158,7 +159,6 @@ class Warpable < ActiveRecord::Base
     puts gdalwarp
     system(gdalwarp)
     
-    # warp = Warp.new({:map_id => self.map_id,:warpable_id => self.id,:path => completed_local_location})
     [x1,y1]
   end
 
