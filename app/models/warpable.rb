@@ -29,7 +29,7 @@ class Warpable < ActiveRecord::Base
       [:size].each do |attr_name|
         enum = attachment_options[attr_name]
         unless enum.nil? || enum.include?(send(attr_name))
-          errors.add_to_base("Images should be smaller than 5 MB in size")
+          errors.add_to_base("Images should be smaller than 10 MB in size")
         end
       end
         
@@ -105,11 +105,11 @@ class Warpable < ActiveRecord::Base
 
     rotation = `identify -format %[exif:Orientation] #{local_location}`
     if rotation.to_i == 6
-      puts 'rotated CW'
+      puts 'rotated CCW'
       source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
     elsif rotation.to_i == 8
-      puts 'rotated CCW'
-      source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]
+      puts 'rotated CW'
+      source_corners = [[self.height,0],[self.height,self.width],[0,self.width],[0,0]]
     elsif rotation.to_i == 3
       puts 'rotated 180 deg'
       source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]

@@ -209,6 +209,9 @@ class MapController < ApplicationController
       format.html { 
 	map = Map.find_by_name params[:id]
 
+        directory = RAILS_ROOT+"/public/warps/"+map.name+"/"
+    	`rm -r #{directory}`
+
 	puts '> averaging scales'
 	pxperm = map.average_scale # pixels per meter
 
