@@ -40,7 +40,7 @@ class Map < ActiveRecord::Base
 			puts 'scale: '+pxperms.last.to_s+' & dist: '+dist.to_s
 		end
 	end
-
+	puts pxperms
 	average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
 	puts 'average scale = '+average.to_s
         average
