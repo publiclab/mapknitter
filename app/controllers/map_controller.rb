@@ -294,7 +294,7 @@ class MapController < ApplicationController
 
 		puts '> generating jpg'
 		export = Export.find_by_map_id(map.id)
-		export.tms = true if map.generate_jpg
+		export.jpg = true if map.generate_jpg
 		export.status = 'complete'
 		export.save
 	
