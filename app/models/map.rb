@@ -79,9 +79,9 @@ class Map < ActiveRecord::Base
 	gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
-	stdin, stdout, stderr = Open3.popen3('dc')
-	stdin.puts(gdal_merge)
-	puts stdout.gets
+	stdin, stdout, stderr = Open3.popen3(gdal_merge)
+	puts sterr.readlines
+	puts stdout.readlines
 	geotiff_location
   end
   

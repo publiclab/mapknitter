@@ -258,6 +258,9 @@ class MapController < ApplicationController
 			export = Export.new({:map_id => map.id,:status => 'starting'})
 		end
 		export.status = 'starting'
+		export.tms = false
+		export.geotiff = false
+		export.jpg = false
 		export.save       
 
 		directory = RAILS_ROOT+"/public/warps/"+map.name+"/"
