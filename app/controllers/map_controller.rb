@@ -253,7 +253,6 @@ class MapController < ApplicationController
   def export
 	map = Map.find_by_name params[:id]
 	begin
-
 		unless export = Export.find_by_map_id(map.id)
 			export = Export.new({:map_id => map.id,:status => 'starting'})
 		end
@@ -285,9 +284,10 @@ class MapController < ApplicationController
 		puts '> generating composite tiff'
 		geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
 	
-		stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
-		puts stderr.readlines
-		info = stdout.readlines.split(',') 
+		info = `identify -quiet -format '%b,%w,%h' #{geotiff_location}"`
+		#stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
+		#puts stderr.readlines
+		#info = stdout.readlines.split(',') 
 	
 		export = Export.find_by_map_id(map.id)
 		if info[0] != ''

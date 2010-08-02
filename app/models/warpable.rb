@@ -93,7 +93,8 @@ class Warpable < ActiveRecord::Base
     points = ""
     coordinates = ""
     first = true
-  
+ 
+#EXIF orientation values: 
 #Value	0th Row	0th Column
 #1	top	left side
 #2	top	right side
@@ -103,10 +104,11 @@ class Warpable < ActiveRecord::Base
 #6	right side	top
 #7	right side	bottom
 #8	left side	bottom
-		
-	stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
-	rotation = stdout.readlines.first.to_s.to_i
-	puts stderr.readlines
+	
+	rotation = (`identify -format %[exif:Orientation] #{local_location}`).to_i	
+	#stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
+	#rotation = stdout.readlines.first.to_s.to_i
+	#puts stderr.readlines
 
     if rotation == 6
       puts 'rotated CCW'
