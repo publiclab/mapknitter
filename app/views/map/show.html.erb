@@ -101,7 +101,7 @@
 		}
 		document.observe('cartagen:init', setup)
 
-		function start_openlayers() {
+		function start_openlayers(tile_url) {
 		       	map = new OpenLayers.Map('map', { controls: [], 
 //				  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
 					                units: "m",
@@ -114,7 +114,7 @@
 			// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
 			// http://viewer.nationalmap.gov/example/services.html
 
-			tile_url = prompt('Enter a TMS service URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
+			//tile_url = prompt('Enter a TMS service URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
 			Config.tiles = true
 			if (tile_url == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
@@ -228,7 +228,7 @@
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
             <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
             <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors = !Config.vectors;$('loading_message').hide()"><img src="/images/silk-grey/chart_line.png" /></a>
-            <a name='Enter a tile layer to warp over' class='last silk' href="javascript:void(0);" onClick="start_openlayers()"><img src="/images/silk-grey/map_add.png" /></a>
+            <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>
 

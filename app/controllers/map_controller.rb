@@ -215,6 +215,12 @@ class MapController < ApplicationController
 	render :layout => false
   end
 
+  def layers
+
+	render :layout => false
+
+  end
+
   def progress
 	if export = Export.find_by_map_id(params[:id])
 		if  export.status == 'complete'
@@ -261,9 +267,8 @@ class MapController < ApplicationController
 
 	info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
 
-	size = number_to_human_size(info[0])
-
 	export = Export.find_by_map_id(map.id)
+	export.size = number_to_human_size(info[0])
 	export.width = info[1]
 	export.height = info[2]
 	export.cm_per_pixel = 100.0000/pxperm
