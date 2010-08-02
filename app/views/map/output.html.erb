@@ -49,7 +49,7 @@ Loading...
 <% end %>
 <% if @export.geotiff %>
 <p>
-<a href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= @export.size %>, <%= @export.width %> x <%= @export.height %> px)
+<a href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= @size %>, <%= @export.width %> x <%= @export.height %> px)
 </p>
 <% end %>
 <% if @export.jpg %><% end %>

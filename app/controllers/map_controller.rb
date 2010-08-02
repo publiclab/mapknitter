@@ -212,6 +212,7 @@ class MapController < ApplicationController
 	else
 		@running = false
 	end
+	@size = number_to_human_size(@export.size) if @export
 	render :layout => false
   end
 
@@ -268,7 +269,7 @@ class MapController < ApplicationController
 	info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
 
 	export = Export.find_by_map_id(map.id)
-	export.size = number_to_human_size(info[0])
+	export.size = info[0]
 	export.width = info[1]
 	export.height = info[2]
 	export.cm_per_pixel = 100.0000/pxperm
