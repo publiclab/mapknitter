@@ -96,7 +96,7 @@ class Map < ActiveRecord::Base
   end
  
   def generate_jpg
-	imageMagick = 'convert public/warps/'+self.name+'/'+self.name+'-geo.tif public/warps/'+self.name+'/'+self.name+'.jpg'
+	imageMagick = 'convert -background white -flatten public/warps/'+self.name+'/'+self.name+'-geo.tif public/warps/'+self.name+'/'+self.name+'.jpg'
 	system(imageMagick)
   end
  
