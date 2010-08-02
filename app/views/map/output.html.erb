@@ -40,6 +40,7 @@ Loading...
 </span></p>
 
 <div>
+<% unless @export.nil? %>
 <% if @export.tms %>
 <p>
 <a href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a><br />
@@ -52,6 +53,7 @@ Loading...
 </p>
 <% end %>
 <% if @export.jpg %><% end %>
+<% end %>
 </div>
 
 <p>Export links may be unavailable while the export is running.</p>
