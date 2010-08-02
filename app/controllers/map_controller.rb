@@ -284,7 +284,8 @@ class MapController < ApplicationController
 		puts '> generating composite tiff'
 		geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
 	
-		info = `identify -quiet -format '%b,%w,%h' #{geotiff_location}`
+		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
+		puts info
 		#stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
 		#puts stderr.readlines
 		#info = stdout.readlines.split(',') 
