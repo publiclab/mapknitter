@@ -1,3 +1,4 @@
+require 'open3'
 class MapController < ApplicationController
   caches_page :find
 
@@ -254,13 +255,16 @@ class MapController < ApplicationController
 		unless export = Export.find_by_map_id(map.id)
 			export = Export.new({:map_id => map.id,:status => 'starting'})
 		end
-		export.geotiff = true
 		export.status = 'starting'
 		export.save       
-	 
+
 		directory = "public/warps/"+map.name+"/"
-	    	`rm -r #{directory}`
-		`rm -r public/tms/#{map.name}/`
+		stdin, stdout, stderr = Open3.popen3('rm -r #{directory}')
+		puts stdout.readlines
+		puts stderr.readlines
+		stdin, stdout, stderr = Open3.popen3('rm -r public/tms/#{map.name}/')
+		puts stdout.readlines
+		puts stderr.readlines
 	
 		puts '> averaging scales'
 		pxperm = map.average_scale # pixels per meter
@@ -268,7 +272,7 @@ class MapController < ApplicationController
 		puts '> distorting warpables'
 		origin = map.distort_warpables(pxperm)
 		warpable_coords = origin.pop	
-		
+
 		export = Export.find_by_map_id(map.id)
 		export.status = 'compositing'
 		export.save
@@ -276,7 +280,9 @@ class MapController < ApplicationController
 		puts '> generating composite tiff'
 		geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
 	
-		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
+		stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
+		puts stderr.readlines
+		info = stdout.readlines.split(',') 
 	
 		export = Export.find_by_map_id(map.id)
 		export.size = info[0]
@@ -298,13 +304,12 @@ class MapController < ApplicationController
 		export.status = 'complete'
 		export.save
 	
-		render :text => '<a href="/warps/'+map.name+'/'+map.name+'-geo.tif">'+map.name+'-geo.tif</a>'
-	rescue
+	rescue SystemCallError
+  	#	$stderr.print "failed: " + $!
 		export = Export.find_by_map_id(map.id)
 		export.status = 'failed'
 		export.save
 	end
-    return :text => "new Ajax.Updater('formats','/map/formats/<%= @map.id %>')"
+        render :text => "new Ajax.Updater('formats','/map/formats/#{map.id}')"
   end
-
 end

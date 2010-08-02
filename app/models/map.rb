@@ -1,3 +1,4 @@
+require 'open3'
 class Map < ActiveRecord::Base
   before_validation :update_name
   validates_presence_of :name,:author
@@ -78,7 +79,9 @@ class Map < ActiveRecord::Base
 	gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
-	system(gdal_merge)
+	stdin, stdout, stderr = Open3.popen3('dc')
+	stdin.puts(gdal_merge)
+	puts stdout.gets
 	geotiff_location
   end
   
