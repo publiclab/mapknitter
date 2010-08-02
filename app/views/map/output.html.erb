@@ -1,9 +1,12 @@
 <h1>Map export</h1>
 
 <style>
-.export_status {
-	width:24px;
-	float:right;
+img.export_status {
+	float:left;
+	margin-right:4px;
+}
+p.export_status {
+	width:70px;
 }
 a.export_button {
 
@@ -26,7 +29,7 @@ a.export_button {
 <p>This may take some time - a large map could take as long as <b>an hour or more</b>. Leave this panel open to monitor progress, or come back later to see how it's going. Closing this panel will not stop the export.</p>
 
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Click this link to begin the export: <br />
-<a class="export_button" href="/map/export/<%= @map.name %>">Export</a>
+<a class="export_button" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>')">Export</a>
 </div>
 
 <div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
@@ -34,7 +37,7 @@ a.export_button {
 <script>
 new Ajax.PeriodicalUpdater('export_progress','/map/progress/<%= @map.id %>', {method: 'get', frequency: 5})
 </script>
-<p>
+<p class='export_status'>
 <b>Status:</b> <span id='export_progress'>
 Loading...
 </span></p>
@@ -49,7 +52,7 @@ Loading...
 <% end %>
 <% if @export.geotiff %>
 <p>
-<a href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= @size %>, <%= @export.width %> x <%= @export.height %> px)
+<a href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
 </p>
 <% end %>
 <% if @export.jpg %><% end %>
