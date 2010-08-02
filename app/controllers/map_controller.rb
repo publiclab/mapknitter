@@ -250,6 +250,7 @@ class MapController < ApplicationController
 	 
 		directory = "public/warps/"+map.name+"/"
 	    	`rm -r #{directory}`
+		`rm -r public/tms/#{map.name}/`
 	
 		puts '> averaging scales'
 		pxperm = map.average_scale # pixels per meter
