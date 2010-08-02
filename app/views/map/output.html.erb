@@ -36,7 +36,7 @@ function refresh_formats(response) {
 </script>
 
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Click this link to begin the export: <br />
-<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',{onSuccess: 'refresh_formats'});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
+<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',{onSuccess: function(response){ eval(response.responseText) }});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
 <span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
 </div>
 
