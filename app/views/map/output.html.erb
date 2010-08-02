@@ -33,7 +33,7 @@ a.export_button {
 
 <script>
 new Ajax.PeriodicalUpdater('export_progress','/map/progress/<%= @map.id %>', {method: 'get', frequency: 5})
-new Ajax.Updater('formats','/map/formats/<%= @map.id %>')
+new Ajax.Updater('formats','/map/formats/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>')
 </script>
 <p class='export_status'>
 <b>Status:</b> <span id='export_progress'>
