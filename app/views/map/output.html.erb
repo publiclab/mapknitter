@@ -38,7 +38,7 @@ new Ajax.Updater('formats','/map/formats/<%= @map.id %>')
 <p class='export_status'>
 <b>Status:</b> <span id='export_progress'>
 Loading...
-</span></p>
+</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/map/cancel_export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>')">cancel</a>)</p>
 
 <div id="formats">
 </div>

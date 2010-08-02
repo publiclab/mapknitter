@@ -223,6 +223,12 @@ class MapController < ApplicationController
 	render :layout => false
   end
 
+  def cancel_export
+	export = Export.find_by_map_id(params[:id])
+	export.status = 'none'
+	export.save
+  end
+
   def progress
 	if export = Export.find_by_map_id(params[:id])
 		if  export.status == 'complete'
