@@ -279,12 +279,15 @@ class MapController < ApplicationController
 		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
 	
 		export = Export.find_by_map_id(map.id)
-		export.size = info[0]
-		export.width = info[1]
-		export.height = info[2]
-		export.cm_per_pixel = 100.0000/pxperm
-		export.status = 'tiling'
-		export.save
+		if info[0] != ''
+			export.geotiff = true
+			export.size = info[0]
+			export.width = info[1]
+			export.height = info[2]
+			export.cm_per_pixel = 100.0000/pxperm
+			export.status = 'tiling'
+			export.save
+		end
 	
 		puts '> generating tiles'
 		export = Export.find_by_map_id(map.id)
