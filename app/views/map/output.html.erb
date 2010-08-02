@@ -5,9 +5,6 @@ img.export_status {
 	float:left;
 	margin-right:4px;
 }
-p.export_status {
-	width:70px;
-}
 a.export_button {
 
 	padding:6px;
@@ -36,27 +33,14 @@ a.export_button {
 
 <script>
 new Ajax.PeriodicalUpdater('export_progress','/map/progress/<%= @map.id %>', {method: 'get', frequency: 5})
+new Ajax.Updater('formats','/map/formats/<%= @map.id %>')
 </script>
 <p class='export_status'>
 <b>Status:</b> <span id='export_progress'>
 Loading...
 </span></p>
 
-<div>
-<% unless @export.nil? %>
-<% if @export.tms %>
-<p>
-<a href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a><br />
-<a href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a>
-</p>
-<% end %>
-<% if @export.geotiff %>
-<p>
-<a href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
-</p>
-<% end %>
-<% if @export.jpg %><% end %>
-<% end %>
+<div id="formats">
 </div>
 
 <p>Export links may be unavailable while the export is running.</p>

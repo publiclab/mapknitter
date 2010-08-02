@@ -204,6 +204,11 @@ class MapController < ApplicationController
     end
   end
 
+  def formats
+	@map = Map.find params[:id] 
+	@export = Export.find_by_map_id(params[:id])
+  end
+
   def output
 	@map = Map.find params[:id] 
 	if @export = Export.find_by_map_id(params[:id])
@@ -215,9 +220,7 @@ class MapController < ApplicationController
   end
 
   def layers
-
 	render :layout => false
-
   end
 
   def progress
@@ -279,6 +282,12 @@ class MapController < ApplicationController
 		puts '> generating tiles'
 		export = Export.find_by_map_id(map.id)
 		export.tms = true if map.generate_tiles
+		export.status = 'creating jpg'
+		export.save
+
+		puts '> generating jpg'
+		export = Export.find_by_map_id(map.id)
+		export.tms = true if map.generate_jpg
 		export.status = 'complete'
 		export.save
 	
@@ -288,7 +297,7 @@ class MapController < ApplicationController
 		export.status = 'failed'
 		export.save
 	end
-   return :text => 'started export'
+    return :text => "new Ajax.Updater('formats','/map/formats/<%= @map.id %>')"
   end
 
 end
