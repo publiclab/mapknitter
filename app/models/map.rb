@@ -89,7 +89,12 @@ class Map < ActiveRecord::Base
     puts gdal2tiles
     system(gdal2tiles)
   end
-  
+ 
+  def generate_jpg
+	imageMagick = 'convert public/warps/'+self.name+'-geo.tif public/warps/'+self.name+'.jpg'
+	system(imageMagick)
+  end
+ 
   def before_save
     self.styles = 'body: {
 	lineWidth: 0,
