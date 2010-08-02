@@ -105,16 +105,16 @@ class Warpable < ActiveRecord::Base
 #8	left side	bottom
 		
 	stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
-	rotation = stdout.readlines.first
+	rotation = stdout.readlines.first.to_s.to_i
 	puts stderr.readlines
 
-    if rotation.to_i == 6
+    if rotation == 6
       puts 'rotated CCW'
       source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
-    elsif rotation.to_i == 8
+    elsif rotation == 8
       puts 'rotated CW'
       source_corners = [[self.height,0],[self.height,self.width],[0,self.width],[0,0]]
-    elsif rotation.to_i == 3
+    elsif rotation == 3
       puts 'rotated 180 deg'
       source_corners = [[self.height,self.width],[0,self.width],[0,0],[self.height,0]]
     else
@@ -140,7 +140,7 @@ class Warpable < ActiveRecord::Base
 
     imageMagick = "convert -monitor -background transparent "
     imageMagick += local_location+" "
-    if rotation.to_i == 6 || rotation.to_i == 8
+    if rotation == 6 || rotation == 8
     	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
     else
     	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
