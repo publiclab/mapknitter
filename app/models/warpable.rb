@@ -1,3 +1,4 @@
+require "open3"
 require "ftools"
 
 class Warpable < ActiveRecord::Base
@@ -102,8 +103,11 @@ class Warpable < ActiveRecord::Base
 #6	right side	top
 #7	right side	bottom
 #8	left side	bottom
+		
+	stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
+	rotation = stdout.readlines.first
+	puts stderr.readlines
 
-    rotation = `identify -format %[exif:Orientation] #{local_location}`
     if rotation.to_i == 6
       puts 'rotated CCW'
       source_corners = [[0,self.width],[0,0],[self.height,0],[self.height,self.width]]
@@ -147,17 +151,21 @@ class Warpable < ActiveRecord::Base
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
-    puts system(imageMagick)
-    puts 'complete!'
-	# generate a static html page at /warp/map.name/progress that says "Warping 1 of 6" or "Saving 4 of 6"
+	stdin, stdout, stderr = Open3.popen3(imageMagick)
+	puts stdout.readlines
+	puts stderr.readlines
 
     gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
     puts gdal_translate
-    system(gdal_translate)
-    
+	stdin, stdout, stderr = Open3.popen3(gdal_translate)
+	puts stdout.readlines
+	puts stderr.readlines   
+ 
     gdalwarp = 'gdalwarp -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
-    system(gdalwarp)
+	stdin, stdout, stderr = Open3.popen3(gdalwarp)
+	puts stdout.readlines
+	puts stderr.readlines   
     
     [x1,y1]
   end

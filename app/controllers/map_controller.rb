@@ -1,6 +1,7 @@
 require 'open3'
 class MapController < ApplicationController
   caches_page :find
+  protect_from_forgery :except => :formats
 
   def index
     @maps = Map.find :all, :order => 'updated_at DESC', :limit => 25
@@ -229,6 +230,7 @@ class MapController < ApplicationController
 	export = Export.find_by_map_id(params[:id])
 	export.status = 'none'
 	export.save
+	render :text => 'cancelled'
   end
 
   def progress
