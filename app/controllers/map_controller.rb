@@ -260,11 +260,11 @@ class MapController < ApplicationController
 		export.status = 'starting'
 		export.save       
 
-		directory = "public/warps/"+map.name+"/"
+		directory = RAILS_ROOT+"/public/warps/"+map.name+"/"
 		stdin, stdout, stderr = Open3.popen3('rm -r '+directory)
 		puts stdout.readlines
 		puts stderr.readlines
-		stdin, stdout, stderr = Open3.popen3('rm -r public/tms/'+map.name)
+		stdin, stdout, stderr = Open3.popen3('rm -r '+RAILS_ROOT+'/public/tms/'+map.name)
 		puts stdout.readlines
 		puts stderr.readlines
 	

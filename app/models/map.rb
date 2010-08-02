@@ -70,7 +70,7 @@ class Map < ActiveRecord::Base
   end
 
   def generate_composite_tiff(coords,origin)
-        directory = "public/warps/"+self.name+"/"
+        directory = RAILS_ROOT+"/public/warps/"+self.name+"/"
         geotiff_location = directory+self.name+'-geo.tif'
 	geotiffs = ''
 	self.warpables.each do |warpable|
@@ -89,14 +89,14 @@ class Map < ActiveRecord::Base
   def generate_tiles
     # get google api key from /config/google_api.yml
     google_api_key = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" public/warps/'+self.name+'/'+self.name+'-geo.tif public/tms/'+self.name+"/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
     puts gdal2tiles
     puts system('which gdal2tiles.py')
     system(gdal2tiles)
   end
  
   def generate_jpg
-	imageMagick = 'convert -background white -flatten public/warps/'+self.name+'/'+self.name+'-geo.tif public/warps/'+self.name+'/'+self.name+'.jpg'
+	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg'
 	system(imageMagick)
   end
  

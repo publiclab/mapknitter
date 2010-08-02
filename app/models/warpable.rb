@@ -47,8 +47,8 @@ class Warpable < ActiveRecord::Base
     # convert IMG_0777.JPG -virtual-pixel Transparent -distort Affine '0,0, 100,100  3072,2304 300,300  3072,0 300,150  0,2304 150,1800' test.png
     require 'net/http'
     
-    working_directory = "public/warps/"+path+"-working/"
-    directory = "public/warps/"+path+"/"
+    working_directory = RAILS_ROOT+"/public/warps/"+path+"-working/"
+    directory = RAILS_ROOT+"/public/warps/"+path+"/"
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
 
@@ -151,21 +151,24 @@ class Warpable < ActiveRecord::Base
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
-	stdin, stdout, stderr = Open3.popen3(imageMagick)
-	puts stdout.readlines
-	puts stderr.readlines
+	system(imageMagick)
+	#stdin, stdout, stderr = Open3.popen3(imageMagick)
+	#puts stdout.readlines
+	#puts stderr.readlines
 
     gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
     puts gdal_translate
-	stdin, stdout, stderr = Open3.popen3(gdal_translate)
-	puts stdout.readlines
-	puts stderr.readlines   
+	system(gdal_translate)
+	#stdin, stdout, stderr = Open3.popen3(gdal_translate)
+	#puts stdout.readlines
+	#puts stderr.readlines   
  
     gdalwarp = 'gdalwarp -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
-	stdin, stdout, stderr = Open3.popen3(gdalwarp)
-	puts stdout.readlines
-	puts stderr.readlines   
+	system(gdalwarp)
+	#stdin, stdout, stderr = Open3.popen3(gdalwarp)
+	#puts stdout.readlines
+	#puts stderr.readlines   
     
     [x1,y1]
   end
