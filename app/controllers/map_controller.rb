@@ -229,7 +229,7 @@ class MapController < ApplicationController
 		elsif export.status == 'failed'
 			output = 'export failed'
 		else
-			output = export.status+' <img class="export_status" src="/images/spinner-small.gif">'
+			output = ' <img class="export_status" src="/images/spinner-small.gif">'+ export.status
 		end
 	else
 		output = 'export has not been run'
