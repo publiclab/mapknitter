@@ -42,6 +42,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => "map", :action => "find", :id => "20 ames st cambridge"
 
+  map.connect 'tms/:id/alt/:z/:x/:y.png', :controller => "utility", :action => "tms_alt"
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
   map.connect 'maps', :controller => "map", :action => "index"
   map.connect 'maps/:id', :controller => "map", :action => "show"
