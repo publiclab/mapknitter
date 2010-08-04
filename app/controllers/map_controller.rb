@@ -5,6 +5,11 @@ class MapController < ApplicationController
 
   def index
     @maps = Map.find :all, :order => 'updated_at DESC', :limit => 25
+    respond_to do |format|
+      format.html {  }
+      format.xml  { render :xml => @maps }
+      format.json  { render :json => @maps }
+    end
   end
 
   def edit

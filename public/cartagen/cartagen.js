@@ -7025,10 +7025,10 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) - (1/20)
 				else map.zoomOut()
 			} else {
-				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/20)
 				else map.zoomIn()
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit

@@ -44,7 +44,6 @@ class Warpable < ActiveRecord::Base
 
   # pixels per meter = pxperm 
   def generate_perspectival_distort(pxperm,path)
-    # convert IMG_0777.JPG -virtual-pixel Transparent -distort Affine '0,0, 100,100  3072,2304 300,300  3072,0 300,150  0,2304 150,1800' test.png
     require 'net/http'
     
     working_directory = RAILS_ROOT+"/public/warps/"+path+"-working/"
@@ -140,7 +139,14 @@ class Warpable < ActiveRecord::Base
     height = (y1-y2).to_i.to_s
     width = (-x1+x2).to_i.to_s
 
+	# http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&t=11319
+	# http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=8764
+	# read about equalization 
+	# -equalize
+	# -contrast-stretch 0
+
     imageMagick = "convert -monitor -background transparent "
+    imageMagick += "-contrast-stretch 0 "
     imageMagick += local_location+" "
     if rotation == 6 || rotation == 8
     	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
