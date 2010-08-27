@@ -101,45 +101,71 @@
 		}
 		document.observe('cartagen:init', setup)
 
-		function start_openlayers(tile_url) {
-		       	map = new OpenLayers.Map('map', { controls: [], 
-//				  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
+		function init_openlayers(format) {
+			if (format == 'WMS') {
+			       	map = new OpenLayers.Map('map', { controls: [], 
+							projection: new OpenLayers.Projection("EPSG:4326"),
+		                  			displayProjection: new OpenLayers.Projection("EPSG:4326"),
+	                				maxExtent: new OpenLayers.Bounds(-180,-90,180,90),	
+						});
+			} else {
+			       	map = new OpenLayers.Map('map', { controls: [], 
+				  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
 					                units: "m",
 							projection: new OpenLayers.Projection("EPSG:900913"),
 		                  			displayProjection: new OpenLayers.Projection("EPSG:4326"),
 	                				maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-							maxResolution: 156543.0339 });
+							maxResolution: 156543.0339
+						});
+			}
+			openlayers_on = true;
+		}
+
+		function start_openlayers(layer) {
+			if (!openlayers_on) init_openlayers(layer)
 
 			// http://isse.cr.usgs.gov/ArcGIS/services/Combined/TNM_Large_Scale_Imagery/MapServer/WMSServer?request=GetCapabilities&service=WMS
 			// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
 			// http://viewer.nationalmap.gov/example/services.html
 
-			//tile_url = prompt('Enter a TMS service URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
 			Config.tiles = true
-			if (tile_url == 'google') {
+			Config.tile_type = layer
+			if (layer == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)
-			} else if (tile_url == 'yahoo') {
+			} else if (layer == 'yahoo') {
 				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 20});
 				map.addLayer(yahoosat)
-			} else {
-		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url, 
-				{ projection: latlon,
-		                  displayProjection: spher_merc,
-				  getURL: overlay_getTileURL,
-				  maxResolution:156543.0339,
-	                	  units: "m",
-	                          maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-				  tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
+			} else if (layer == 'TMS') {
+				tile_url = prompt('Enter a TMS URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
+		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url,
+				{ //projection: latlon,
+		                  //displayProjection: spher_merc,
+				  //getURL: overlay_getTileURL,
+				  //maxResolution:156543.0339,
+	                	  //units: "m",
+	                          //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
+				  //tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
 				  serviceVersion: '.', 
 				  layername: '.', 
 				  type: 'png', 
 				  alpha: true, 
 				  isBaseLayer: true});
 		       		map.addLayer(tms);
+			} else if (layer == 'WMS') {
+				projection: latlon,
+				//wms_url = prompt('Enter a WMS URI','http://msrmaps.com/ogcmap.ashx')
+				wms_url = prompt('Enter a WMS URI','http://isse.cr.usgs.gov/arcgis/services/Combined/SDDS_Imagery/MapServer/WMSServer?SERVICE=WMS&VERSION=1.1.1&STYLES=&SRS=EPSG:4326&FORMAT=image/png&layers=0&request=map&')
+				wms_layer = prompt('Enter a WMS layer','0')
+				map.addLayer(new OpenLayers.Layer.WMS('WMS',wms_url,{
+					layers: wms_layer
+					//layers:'DOQ'
+					//layers:'osm'
+				}))
 			}
 
 			Glop.observe('glop:draw',function(){$('map').setStyle({height:Glop.height+'px'})})
+			if (Config.tile_type == 'WMS') Glop.observe('mouseup',function() {map.layers.first().refresh()})
 
 			var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
 			var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
@@ -147,8 +173,8 @@
 			var lon2 = Projection.x_to_lon(Map.x+Glop.width/2)
 
 			var bounds = new OpenLayers.Bounds();
-			bounds.extend(new OpenLayers.LonLat(lon1,lat1).transform(spher_merc,latlon))
-			bounds.extend(new OpenLayers.LonLat(lon2,lat2).transform(spher_merc,latlon))
+			bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
+			bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
 
 			map.zoomToExtent( bounds )
 			if (Config.tile_switcher) {
@@ -178,17 +204,25 @@
 		}
 
 		function openLayersDraw() {
-			map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
+			if (Config.tile_type == 'WMS') map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat))
+			else map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
 
 			var left = new OpenLayers.LonLat(map.getExtent().left,map.getExtent().top);
 			var right = new OpenLayers.LonLat(map.getExtent().right,map.getExtent().bottom);
 
-			left = left.transform(spher_merc,latlon);
-			right = right.transform(spher_merc,latlon);
+			if (Config.tile_type == 'WMS') var convert = Glop.width/124023.4375
+			else {
+				left = left.transform(spher_merc,latlon);
+				right = right.transform(spher_merc,latlon);
 
-			var convert = 124023.4375*Glop.width
+				var convert = 124023.4375*Glop.width
+			}
 			Map.zoom = convert/(right.lon-left.lon)
+
 		}
+
+		// start storing a layer_type and layer_url in Map model, use it to switch this:
+		var openlayers_on = false;
 
 	</script>
 </head>
