@@ -15,6 +15,7 @@ class Map < ActiveRecord::Base
 
   def validate
     self.name != 'untitled'
+    self.name = self.name.gsub(' ','-')
   end
 
   def warpables
