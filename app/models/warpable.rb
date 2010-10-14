@@ -145,7 +145,8 @@ class Warpable < ActiveRecord::Base
 	# -equalize
 	# -contrast-stretch 0
 
-    imageMagick = "convert -monitor -background transparent "
+    #imageMagick = "convert -monitor -background transparent "
+    imageMagick = "convert -background transparent "
     imageMagick += "-contrast-stretch 0 "
     imageMagick += local_location+" "
     if rotation == 6 || rotation == 8
