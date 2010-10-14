@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100731141421) do
+ActiveRecord::Schema.define(:version => 20101014151404) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -47,6 +47,8 @@ ActiveRecord::Schema.define(:version => 20100731141421) do
     t.decimal  "zoom",        :precision => 15, :scale => 10, :default => 2.0
     t.string   "location",                                    :default => ""
     t.string   "static_data",                                 :default => ""
+    t.boolean  "vectors",                                     :default => true,        :null => false
+    t.string   "tiles",                                       :default => "",          :null => false
   end
 
   create_table "messages", :force => true do |t|
@@ -86,9 +88,9 @@ ActiveRecord::Schema.define(:version => 20100731141421) do
     t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "nodes",        :default => ""
     t.integer  "map_id",       :default => 0
-    t.boolean  "locked",       :default => false
+    t.string   "nodes",        :default => ""
+    t.boolean  "locked",       :default => false, :null => false
     t.boolean  "deleted",      :default => false, :null => false
   end
 
