@@ -39,7 +39,8 @@
 			lat: <%= @map.lat %>,
 			lng: <%= @map.lon %>,
 			zoom: <%= @map.zoom %>,
-			map_name: '<%= @map.name %>'
+			map_name: '<%= @map.name %>',
+			vectors: <%= @map.vectors %>
 		})
 		var Knitter = {
 			save_new_location: function(lat,lon,zoom) {
@@ -55,6 +56,19 @@
 			save_current_location: function(callback) {
 				Knitter.save_new_location(Map.lat,Map.lon,Map.zoom)
 				if (!Object.isUndefined(callback)) callback()
+			},
+			toggle_vectors: function() {
+				Config.vectors = !Config.vectors;
+				$('loading_message').hide()
+				new Ajax.Request('/map/update/'+<%= @map.id %>,{
+					method: 'get',
+					parameters: {
+						lat: Map.lat,
+						lon: Map.lon,
+						zoom: Map.zoom,
+						vectors: Config.vectors
+					}
+				})
 			}
 		}
 		Cartagen.Builder = {
@@ -73,6 +87,9 @@
 		document.observe('styles:loaded:/stylesheet/<%= @map[:name] %>.gss',Cartagen.Builder.add_menus)
 
 		function setup() {
+			Glop.observe('pan:mouseup', function () {
+				Knitter.save_current_location()
+			})
 			Glop.observe('glop:predraw', function() { $C.clear();})
 			warpables = [
 				<% @warpables.each do |warpable| %>
@@ -98,6 +115,7 @@
 			if (Config.locked == 'true') {
 				Warper.locked = true
 			}
+			start_openlayers('<%= @map.tiles %>')
 		}
 		document.observe('cartagen:init', setup)
 
@@ -184,6 +202,17 @@
 			}
 			openLayersDraw()
 			Glop.observe('glop:draw', openLayersDraw)
+			//
+			
+			new Ajax.Request('/map/update/'+<%= @map.id %>,{
+				method: 'get',
+				parameters: {
+					lat: Map.lat,
+					lon: Map.lon,
+					zoom: Map.zoom,
+					tiles: layer // here we might add a WMS url too
+				}
+			})
 		}
 
 	        function overlay_getTileURL(bounds) {
@@ -260,8 +289,8 @@
             <a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
-            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
-            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Config.vectors = !Config.vectors;$('loading_message').hide()"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="new Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
+            <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>

@@ -43,7 +43,9 @@ class MapController < ApplicationController
   def update_map
     @map = Map.find(params[:map][:id])
     @map.update_attributes(params[:map])
-    location = GeoKit::GeoLoc.geocode(params[:map][:location])
+    @map.author = params[:map][:author]
+    @map.description = params[:map][:description]
+	location = GeoKit::GeoLoc.geocode(params[:map][:location])
     @map.lat = location.lat
     @map.lon = location.lng
     @map.save
@@ -116,6 +118,11 @@ class MapController < ApplicationController
     @map = Map.find(params[:id])
     @map.lat = params[:lat]
     @map.lon = params[:lon]
+    @map.vectors = true if params[:vectors] == 'true'
+    @map.vectors = false if params[:vectors] == 'false'
+    @map.tiles = params[:tiles] if params[:tiles]
+puts @map.vectors
+puts '..................'
     @map.zoom = params[:zoom]
     if @map.save
       render :text => 'success'

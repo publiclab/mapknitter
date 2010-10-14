@@ -8314,7 +8314,7 @@ Tool.Pan = {
 	        Map.rotate_old = Map.rotate
 	}.bindAsEventListener(Tool.Pan),
 	mouseup: function() {
-
+			Glop.fire('pan:mouseup')
 	}.bindAsEventListener(Tool.Pan),
 	mousemove: function() {
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
@@ -8339,6 +8339,7 @@ Tool.Pan = {
 			var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 			Map.x = Map.x_old+(d_x/Map.zoom)
 			Map.y = Map.y_old+(d_y/Map.zoom)
+			Glop.fire('pan:dragging')
 		}
 	},
 	dblclick: function() {
