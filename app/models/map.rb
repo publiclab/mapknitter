@@ -81,7 +81,7 @@ class Map < ActiveRecord::Base
 	#gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
-	Gdal.raw(gdal_merge)
+	system(Gdal.ulimit+gdal_merge)
 	geotiff_location
   end
   
