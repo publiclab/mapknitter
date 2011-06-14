@@ -92,12 +92,12 @@ class Map < ActiveRecord::Base
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
-    Gdal.raw(gdal2tiles)
+    system(Gdal.ulimit+gdal2tiles)
   end
  
   def generate_jpg
 	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg'
-	Gdal.raw(imageMagick)
+	system(Gdal.ulimit+imageMagick)
   end
  
   def before_save
