@@ -3,8 +3,8 @@ require 'open3'
 class Gdal
 
   def self.ulimit
-    # use ulimit to restrict to 7200 CPU seconds and 5gb virtual memory:
-    "ulimit -t 7200 && ulimit -v 5000000 && "
+    # use ulimit to restrict to 7200 CPU seconds and 5gb virtual memory, and 2gB file storage:
+    "ulimit -t 7200 && ulimit -v 5000000 && ulimit -f 2000000 && "
   end
  
   def self.raw(cmd,verbose)
