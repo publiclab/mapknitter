@@ -28,10 +28,10 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  config.gem "json_pure"
+  #config.gem "json_pure"
   config.gem "httparty"
   config.gem "geokit"
-  config.gem "RubyInline"
+  #config.gem "RubyInline"
   config.gem "image_science"
   #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
 
