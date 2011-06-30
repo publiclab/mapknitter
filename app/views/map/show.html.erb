@@ -69,6 +69,21 @@
 						vectors: Config.vectors
 					}
 				})
+			},
+			center_on_warpables: function() {
+				if (warpables.length > 0) {
+					var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
+					warpables.each(function(warpable){
+	               				 warpable.nodes.each(function(node) {
+	                			        lonsum += Projection.x_to_lon(-node[0])
+	                			        latsum += Projection.y_to_lat(node[1])
+							loncount += 1
+							latcount += 1
+	                			})
+					},this)
+					console.log(lonsum/loncount + "," + latsum/latcount)
+					Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
+				}
 			}
 		}
 		Cartagen.Builder = {
@@ -108,6 +123,7 @@
 				}
 			})
 			Warper.sort_images()
+			Knitter.center_on_warpables()
 			if (Config.fullscreen) {
 				$('header').hide()
 				Config.padding_top = 0
@@ -288,7 +304,7 @@
     	<div class="toolbar">
             <a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
-            <script type="text/javascript" charset="utf-8">if (!User.geolocate()) $('geolocate').hide()</script>
+            <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
             <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="new Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
             <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
