@@ -94,3 +94,6 @@ Rails::Initializer.run do |config|
 
   require 'json/add/rails'
 end
+
+ENV['PATH'] = "#{ENV['PATH']}:/Library/Frameworks/GDAL.framework/Programs"
+

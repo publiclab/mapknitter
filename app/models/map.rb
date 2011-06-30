@@ -86,9 +86,7 @@ class Map < ActiveRecord::Base
 	#gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
-	stdin, stdout, stderr = Open3.popen3(gdal_merge)
-	puts stderr.readlines
-	puts stdout.readlines
+	system(Gdal.ulimit+gdal_merge)
 	geotiff_location
   end
   
@@ -97,14 +95,14 @@ class Map < ActiveRecord::Base
     # get google api key from /config/google_api.yml
     google_api_key = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
-    puts gdal2tiles
-    puts system('which gdal2tiles.py')
-    system(gdal2tiles)
+#    puts gdal2tiles
+#    puts system('which gdal2tiles.py')
+    system(Gdal.ulimit+gdal2tiles)
   end
  
   def generate_jpg
 	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg'
-	system(imageMagick)
+	system(Gdal.ulimit+imageMagick)
   end
  
   def before_save

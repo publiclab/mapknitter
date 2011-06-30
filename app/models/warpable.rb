@@ -160,21 +160,21 @@ class Warpable < ActiveRecord::Base
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
-	system(imageMagick)
+	system(Gdal.ulimit+imageMagick)
 	#stdin, stdout, stderr = Open3.popen3(imageMagick)
 	#puts stdout.readlines
 	#puts stderr.readlines
 
     gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
     puts gdal_translate
-	system(gdal_translate)
+	system(Gdal.ulimit+gdal_translate)
 	#stdin, stdout, stderr = Open3.popen3(gdal_translate)
 	#puts stdout.readlines
 	#puts stderr.readlines   
  
     gdalwarp = 'gdalwarp -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
-	system(gdalwarp)
+	system(Gdal.ulimit+gdalwarp)
 	#stdin, stdout, stderr = Open3.popen3(gdalwarp)
 	#puts stdout.readlines
 	#puts stderr.readlines   
