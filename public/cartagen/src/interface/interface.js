@@ -8,6 +8,7 @@
 //= require "pen"
 //= require "pan"
 //= require "warp"
+//= require "mask"
 
 /**
  * @namespace Misc. UI methods that do not related to user-submitted data

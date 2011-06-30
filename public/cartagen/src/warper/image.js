@@ -19,6 +19,7 @@ Warper.Image = Class.create(
 		this.offset_y = 0
 		
 		this.active = false
+		this.mask = false
 		this.active_point = false
 		this.dragging = false
 		this.points = $A()
@@ -50,6 +51,23 @@ Warper.Image = Class.create(
 		if (this.waiting_for_natural_size) {
 			this.set_to_natural_size()
 		}
+
+		// spliced in
+		if (this.mask) {
+			$C.save()
+			$C.begin_path()
+			if (this.mask.points.length>0){
+				$C.move_to(this.mask.points[0].x, this.mask.points[0].y)		
+				this.mask.points.each(function(point) {
+					$C.line_to(point.x, point.y)
+				})			
+				$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
+			}
+			$C.canvas.clip()
+			//$C.restore()
+		}
+		// spliced in
+		
 		$C.opacity(this.opacity)
 		// draw warped image: 
 		this.update()

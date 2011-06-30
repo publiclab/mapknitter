@@ -3,40 +3,9 @@
  */
 var Zoom = {
 	initialize: function() {
-		Glop.observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
+		//Glop.observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
+		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;bottom:8px;left:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*1.3'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3)'>-</a></div>")
 	},
-	zoom_to: function() {
-		
-	},
-	width: 20,
-	height:0.4,
-	draw: function() {
-		
-		// Glop.height*0.3
-		// $l('hey')
-		$C.save()
-		$C.fill_style('white')
-		$C.line_width(Zoom.width/Cartagen.zoom_level)
-		$C.opacity(0.7)
-		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+(40/Cartagen.zoom_level), y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+(40/Cartagen.zoom_level)
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.line_to(x,y+(Glop.height*Zoom.height)/Cartagen.zoom_level)
-		$C.stroke()
-
-		$C.opacity(0.9)
-		$C.line_width(Zoom.width/Cartagen.zoom_level)
-		$C.stroke_style('white')
-		$C.line_cap('square')
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.line_to(x,y+(Cartagen.zoom_level*Glop.height*Zoom.height)/Cartagen.zoom_level)
-		$C.stroke()
-
-		$C.restore()
-		
-	}
-	
 }
 
 document.observe('cartagen:init', Zoom.initialize.bindAsEventListener(Zoom))
