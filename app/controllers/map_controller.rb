@@ -48,6 +48,7 @@ class MapController < ApplicationController
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
     @map.lat = location.lat
     @map.lon = location.lng
+    @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
     @map.save
     flash[:notice] = "Saved map."
     redirect_to '/map/edit/'+@map.name
@@ -88,9 +89,18 @@ class MapController < ApplicationController
       end
     end
   end
-  
+ 
+  def login
+  end
+
+  # http://www.zacharyfox.com/blog/ruby-on-rails/password-hashing 
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      puts params[:password]
+      flash[:error] = "That password is incorrect."
+      redirect_to "/map/login/"+params[:id]
+    else
     @map.zoom = 1.6 if @map.zoom == 0
     @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
     @nodes = {}
@@ -107,6 +117,7 @@ class MapController < ApplicationController
       @nodes[warpable.id.to_s] ||= 'none'
     end
     render :layout => false
+    end
   end
 
   def search

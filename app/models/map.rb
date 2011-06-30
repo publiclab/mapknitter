@@ -9,6 +9,11 @@ class Map < ActiveRecord::Base
                             :on => :create                  
 #  has_many :warpables
 
+  # Hash the password before saving the record
+  def before_create
+    self.password = Password::update(self.password) if self.password != ""
+  end
+
   def update_name
     self.name = self.name.gsub(/\W/, '-').downcase
   end
