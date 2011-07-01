@@ -164,6 +164,7 @@
 
 			Config.tiles = true
 			Config.tile_type = layer
+			Zoom.interval = 6 
 			if (layer == 'google') {
 				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
 				map.addLayer(gsat)

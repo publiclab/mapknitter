@@ -7896,7 +7896,8 @@ var ContextMenu = {
 document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 var Zoom = {
 	initialize: function() {
-		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;bottom:8px;left:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*1.3'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3)'>-</a></div>")
+		Zoom.interval = 1.3
+		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3)'>-</a></div>")
 	},
 }
 
