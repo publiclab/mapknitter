@@ -310,7 +310,7 @@ var Cartagen = {
      * @param {Number} zoom_level     zoom_level to set the map to
 	 */
 	go_to: function(lat,lon,zoom_level) {
-		Map.zoom = zoom_level
+		Map.zoom = zoom_level || Map.zoom_level
 		Map.lat = lat
 		Map.lon = lon
 		Map.x = Projection.lon_to_x(Map.lon)

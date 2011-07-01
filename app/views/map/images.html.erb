@@ -1,0 +1,8 @@
+	<h2>Images from "<%= @map.name %>"</h2>	
+
+	<p><%= @images.length %> images in this map</p>
+		<% @images.each_with_index do |image,index| %>
+		<a href="javascript:void(0);" onClick="Cartagen.go_to(<%= @image_locations[index][1] %>,<%= @image_locations[index][0] %>);"><img src="<%= image.public_filename(:thumb) %>" /></a>
+		<% end %>
+	<br style="clear:both;" />
+

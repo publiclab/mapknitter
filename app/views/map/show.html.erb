@@ -31,6 +31,8 @@
 		var spher_merc = new OpenLayers.Projection("EPSG:4326")
 		var latlon = new OpenLayers.Projection("EPSG:900913")
 
+		setTimeout(function(){$('loading_message').hide()},4000)
+
 		Cartagen.setup({
 			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
 			static_map: false,
@@ -86,20 +88,6 @@
 				}
 			}
 		}
-		Cartagen.Builder = {
-			name: '<%= @map.name %>',
-			gss: {},
-			add_menus: function() {
-				$l('adding knitter')
-				Style.load_styles('/knitter.gss')
-			},
-			add_style: function(feature) {
-				Cartagen.Builder.editing = feature
-				if (feature.__type__) $('editing').innerHTML = feature.__type__+'s'
-				$('wysiwyg').show()
-			}
-		}
-		document.observe('styles:loaded:/stylesheet/<%= @map[:name] %>.gss',Cartagen.Builder.add_menus)
 
 		function setup() {
 			Glop.observe('pan:mouseup', function () {
@@ -295,24 +283,26 @@
 		<div class="toolbar">
             <a name='Download image' class='first silk' href="javascript:void(0);" onClick="Cartagen.redirect_to_image()"><img src="/images/silk-grey/disk.png" /></a>
             <a name='Embed this map on your site' class='silk' href="javascript:void(0);" onClick="Interface.display_knitter_iframe()"><img src="/images/silk-grey/page_white_code.png" /></a>
+            <a name='View all images' class='last silk' href="/map/images/<%= @map.name %>" onClick="Modalbox.show('/map/images/<%= @map.name %>', {title: 'Click an image to see it on the map', width: 600});return false;"><img src="/images/silk-grey/photos.png" /></a>
             <!--<a name='Edit GSS' class='silk' href="javascript:void(0);" onClick="$('styles').toggle()"><img src="/images/silk-grey/page_edit.png" /></a>-->
-            <a name='Upload an image' class='last silk' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/warper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/photo_add.png" /></a>
     	</div>
     	<div class="toolbar">
-            <a name='Move an image (m)' class='first' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
+            <a name='Upload an image' class='first silk' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/warper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/photo_add.png" /></a>
+            <a name='Move an image (m)' class='' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
             <a name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
     	</div>
     	<div class="toolbar">
-            <a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>
-            <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
+            <!--<a name='Save current location' class='first silk' href="javascript:void(0);" onClick="Knitter.save_current_location()"><img src="/images/silk-grey/map.png" /></a>-->
+            <a name='Geolocate your current position' class='first silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
-            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="new Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>
+<!--            <a name='Cache for local serving' class='silk' href="javascript:void(0);" onClick="new Ajax.Request('/map/cache/'+Geohash.keys.keys().join(','))"><img src="/images/silk-grey/disconnect.png" /></a>-->
             <a name='Toggle vector data' class='silk' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
             <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>
 
 	<span style='margin-right:6px;' class='right'><a target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:475})" href="javascript:void(0);">Export</a></span>
+	<span style='margin-right:6px;' class='right'><a target="_blank" href="/map/edit/<%= @map.name %>">Edit details</a></span>
 </div>
 
 <div class='modal' id="styles" style="display:none;">

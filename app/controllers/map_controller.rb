@@ -14,7 +14,28 @@ class MapController < ApplicationController
 
   def edit
     @map = Map.find_by_name params[:id]
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+    else
+      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    end
+  end
+
+  # pt fm ac wpw
+  def images
+    @map = Map.find_by_name params[:id]
     @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    @image_locations = []
+    @images.each do |image|
+      if image.nodes != ''
+        node = image.nodes.split(',').first
+        node_obj = Node.find(node)
+        @image_locations << [node_obj.lon,node_obj.lat]
+      else
+      end
+    end
+    render :layout => false
   end
 
   def new
@@ -42,16 +63,21 @@ class MapController < ApplicationController
 
   def update_map
     @map = Map.find(params[:map][:id])
-    @map.update_attributes(params[:map])
-    @map.author = params[:map][:author]
-    @map.description = params[:map][:description]
-	location = GeoKit::GeoLoc.geocode(params[:map][:location])
-    @map.lat = location.lat
-    @map.lon = location.lng
-    @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
-    @map.save
-    flash[:notice] = "Saved map."
-    redirect_to '/map/edit/'+@map.name
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+    else
+      @map.update_attributes(params[:map])
+      @map.author = params[:map][:author]
+      @map.description = params[:map][:description]
+  	location = GeoKit::GeoLoc.geocode(params[:map][:location])
+      @map.lat = location.lat
+      @map.lon = location.lng
+      @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
+      @map.save
+      flash[:notice] = "Saved map."
+      redirect_to '/map/edit/'+@map.name
+    end
   end
 
   def create
@@ -97,9 +123,8 @@ class MapController < ApplicationController
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
     if @map.password != "" && !Password::check(params[:password],@map.password) 
-      puts params[:password]
-      flash[:error] = "That password is incorrect."
-      redirect_to "/map/login/"+params[:id]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
     @map.zoom = 1.6 if @map.zoom == 0
     @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
