@@ -9326,7 +9326,9 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
-			$C.line_width(3/Map.zoom)
+			var linewidth = 3/Map.zoom
+			if (linewidth < 1) linewidth = 1
+			$C.line_width(linewidth)
 			$C.translate(this.x,this.y)
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
@@ -9360,7 +9362,6 @@ Warper.ControlPoint = Class.create({
 	},
 	update: function() {
 		this.rel_r = this.r / Map.zoom
-
 		if (this.parent_shape.active_point == this) {
 			this.drag()
 		}
