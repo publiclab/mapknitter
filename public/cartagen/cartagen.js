@@ -7545,6 +7545,7 @@ CanvasTextFunctions.enable = function( ctx)
 var Keyboard = {
 	keys: new Hash(),
 	key_input: false,
+	shift: false
 }
 var Mouse = {
 	x: 0,

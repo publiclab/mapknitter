@@ -12,4 +12,9 @@ var Keyboard = {
 	 * @type Boolean
 	 */
 	key_input: false,
+	/**
+	 * Whether the shift key is down
+	 * @type Boolean
+	 */
+	shift: false
 }
