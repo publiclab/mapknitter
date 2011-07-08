@@ -213,8 +213,21 @@ var Warper = {
 	    [-kernel[6][8], -kernel[7][8],             1]
 	  ]);
 	  return transform;
-	}
+	},
 	
+	/**
+	 * Custom keyup listener, triggered when a key is released
+	 */
+	keyup: function(e) {
+		var character = e.keyIdentifier, bump = 10 // amount in pixels to move with arrow keys
+		switch(character) {	
+			case 'Left': if (!e.shiftKey) Warper.active_image.move_x(-bump/Map.zoom); else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Warper.active_image.move_x(bump/Map.zoom); else Map.rotate -= 0.1; break
+			case 'Up': Warper.active_image.move_y(-bump/Map.zoom); break
+			case 'Down': Warper.active_image.move_y(bump/Map.zoom); break
+		}
+		e.preventDefault()
+	},
 }
 document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 //= require "control_point"

@@ -24,6 +24,7 @@ var Events = {
 		window.onmousewheel = document.onmousewheel = Events.wheel
 		
 		// keyboard:
+		Event.observe(document, 'keydown', Events.keydown)
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
 		if (Config.key_input) {
@@ -105,6 +106,12 @@ var Events = {
 		event.preventDefault()
 	},
 
+	keydown: function(e) {
+		var key = e.which || e.keyCode
+		if (key == 16 || e.shiftKey) {
+			Keyboard.shift = true
+		}
+	},
 	/**
 	 * Triggered when a key is pressed
 	 * @param {Event} e
@@ -114,20 +121,6 @@ var Events = {
 
 		if (!e) var e = window.event;
 		//else if (e.which) code = e.which;
-
-
-		if (window.Event) {
-			mykey = e.which;
-			alt = (e.modifiers & Event.ALT_MASK) ? true : false;
-			ctrl = (e.modifiers & Event.CONTROL_MASK) ? true : false;
-			shift = (e.modifiers & Event.SHIFT_MASK) ? true : false;
-		} else {
-			mykey = event.keyCode;
-			alt = event.altKey;
-			ctrl = event.ctrlKey;
-			shift = event.shiftKey;
-		}
-		Keyboard.shift = shift
 	
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
@@ -164,6 +157,15 @@ var Events = {
 				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
 				case "b": if (Config.debug) Interface.download_bbox()
+				case Event.KEY_UP:
+					Cartagen.fire('keypress:up')
+					console.log('key up arrow')
+				case Event.KEY_DOWN:
+					Cartagen.fire('keypress:down')
+				case Event.KEY_LEFT:
+					Cartagen.fire('keypress:left')
+				case Event.KEY_RIGHT:
+					Cartagen.fire('keypress:right')
 			}
 		}
 		Glop.trigger_draw(5)
@@ -174,20 +176,20 @@ var Events = {
 	 * Triggered when a key is released
 	 */
 	keyup: function(e) {
-		if (Events.enabled === false) return
-
-		Keyboard.shift = false
-		var character = e.keyIdentifier
-		switch(character) {	
-			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
-			case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
-			case 'Up': Map.y -= 20/Map.zoom; break
-			case 'Down': Map.y += 20/Map.zoom; break
+		if (Events.enabled === true) {
+			Keyboard.shift = false
+			var character = e.keyIdentifier
+			switch(character) {	
+				case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+				case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+				case 'Up': Map.y -= 20/Map.zoom; break
+				case 'Down': Map.y += 20/Map.zoom; break
+			}
+	
+			Keyboard.keys.set("r",false)
+			Keyboard.keys.set("z",false)
+			e.preventDefault()
 		}
-
-		Keyboard.keys.set("r",false)
-		Keyboard.keys.set("z",false)
-		e.preventDefault()
 	},
 	/**
 	 * Triggered when a touch is started. Mainly for touchscreen mobile platforms

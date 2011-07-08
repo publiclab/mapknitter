@@ -101,6 +101,16 @@ Warper.Image = Class.create(
 		$C.restore()
 		
 	},
+	move_x: function(px) {
+		this.points.each(function(point){
+			point.x += px
+		},this)
+	},
+	move_y: function(px) {
+		this.points.each(function(point){
+			point.y += px
+		},this)
+	},
 	set_to_natural_size: function() {
 		if (this.image.width) {
 			// the image loaded completely, and we can use its dimensions
@@ -122,10 +132,14 @@ Warper.Image = Class.create(
 	},
 	select: function() {
 		this.active = true
+		Events.enabled = false
+		Event.observe(document, 'keyup', Warper.keyup)
 	},
 	deselect: function() {
 		this.active = false
 		this.active_point = false
+		Events.enabled = true
+		Event.stopObserving(document, 'keyup', Warper.keyup)
 	},
 	select_point: function(point) {
 		if (this.active_point) { this.active_point.deselect() }

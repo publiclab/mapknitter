@@ -6973,6 +6973,7 @@ var Events = {
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
 		window.onmousewheel = document.onmousewheel = Events.wheel
 
+		Event.observe(document, 'keydown', Events.keydown)
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
 		if (Config.key_input) {
@@ -7037,24 +7038,16 @@ var Events = {
 		event.preventDefault()
 	},
 
+	keydown: function(e) {
+		var key = e.which || e.keyCode
+		if (key == 16 || e.shiftKey) {
+			Keyboard.shift = true
+		}
+	},
 	keypress: function(e) {
 		if (Events.enabled === false) return
 
 		if (!e) var e = window.event;
-
-
-		if (window.Event) {
-			mykey = e.which;
-			alt = (e.modifiers & Event.ALT_MASK) ? true : false;
-			ctrl = (e.modifiers & Event.CONTROL_MASK) ? true : false;
-			shift = (e.modifiers & Event.SHIFT_MASK) ? true : false;
-		} else {
-			mykey = event.keyCode;
-			alt = event.altKey;
-			ctrl = event.ctrlKey;
-			shift = event.shiftKey;
-		}
-		Keyboard.shift = shift
 
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
@@ -7089,26 +7082,35 @@ var Events = {
 				case "z": Keyboard.keys.set("z",true); break
 				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
 				case "b": if (Config.debug) Interface.download_bbox()
+				case Event.KEY_UP:
+					Cartagen.fire('keypress:up')
+					console.log('key up arrow')
+				case Event.KEY_DOWN:
+					Cartagen.fire('keypress:down')
+				case Event.KEY_LEFT:
+					Cartagen.fire('keypress:left')
+				case Event.KEY_RIGHT:
+					Cartagen.fire('keypress:right')
 			}
 		}
 		Glop.trigger_draw(5)
 	},
 
 	keyup: function(e) {
-		if (Events.enabled === false) return
+		if (Events.enabled === true) {
+			Keyboard.shift = false
+			var character = e.keyIdentifier
+			switch(character) {
+				case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+				case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+				case 'Up': Map.y -= 20/Map.zoom; break
+				case 'Down': Map.y += 20/Map.zoom; break
+			}
 
-		Keyboard.shift = false
-		var character = e.keyIdentifier
-		switch(character) {
-			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
-			case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
-			case 'Up': Map.y -= 20/Map.zoom; break
-			case 'Down': Map.y += 20/Map.zoom; break
+			Keyboard.keys.set("r",false)
+			Keyboard.keys.set("z",false)
+			e.preventDefault()
 		}
-
-		Keyboard.keys.set("r",false)
-		Keyboard.keys.set("z",false)
-		e.preventDefault()
 	},
 	ontouchstart: function(e){
 		e.preventDefault();
@@ -7913,7 +7915,7 @@ document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMe
 var Zoom = {
 	initialize: function() {
 		Zoom.interval = 1.3
-		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3)'>-</a></div>")
+		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval;map.zoomIn()'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3);map.zoomOut()'>-</a></div>")
 	},
 }
 
@@ -9324,8 +9326,18 @@ var Warper = {
 	    [-kernel[6][8], -kernel[7][8],             1]
 	  ]);
 	  return transform;
-	}
+	},
 
+	keyup: function(e) {
+		var character = e.keyIdentifier, bump = 10 // amount in pixels to move with arrow keys
+		switch(character) {
+			case 'Left': if (!e.shiftKey) Warper.active_image.move_x(-bump/Map.zoom); else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Warper.active_image.move_x(bump/Map.zoom); else Map.rotate -= 0.1; break
+			case 'Up': Warper.active_image.move_y(-bump/Map.zoom); break
+			case 'Down': Warper.active_image.move_y(bump/Map.zoom); break
+		}
+		e.preventDefault()
+	},
 }
 document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 Warper.ControlPoint = Class.create({
@@ -9429,12 +9441,11 @@ Warper.ControlPoint = Class.create({
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
 			var angle_change = angle-this.self_angle
 
-			if (!Keyboard.shift) {
-				this.parent_shape.points.each(function(point) {
-					point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
-					point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
-				},this)
-			}
+			if (Keyboard.shift) angle_change = 0
+			this.parent_shape.points.each(function(point) {
+				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
+				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
+			},this)
 		}
 		}
 	},
@@ -9530,6 +9541,16 @@ Warper.Image = Class.create(
 		$C.restore()
 
 	},
+	move_x: function(px) {
+		this.points.each(function(point){
+			point.x += px
+		},this)
+	},
+	move_y: function(px) {
+		this.points.each(function(point){
+			point.y += px
+		},this)
+	},
 	set_to_natural_size: function() {
 		if (this.image.width) {
 			this.points[1].x = this.points[0].x
@@ -9550,10 +9571,14 @@ Warper.Image = Class.create(
 	},
 	select: function() {
 		this.active = true
+		Events.enabled = false
+		Event.observe(document, 'keyup', Warper.keyup)
 	},
 	deselect: function() {
 		this.active = false
 		this.active_point = false
+		Events.enabled = true
+		Event.stopObserving(document, 'keyup', Warper.keyup)
 	},
 	select_point: function(point) {
 		if (this.active_point) { this.active_point.deselect() }
