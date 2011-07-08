@@ -114,6 +114,20 @@ var Events = {
 
 		if (!e) var e = window.event;
 		//else if (e.which) code = e.which;
+
+
+		if (window.Event) {
+			mykey = e.which;
+			alt = (e.modifiers & Event.ALT_MASK) ? true : false;
+			ctrl = (e.modifiers & Event.CONTROL_MASK) ? true : false;
+			shift = (e.modifiers & Event.SHIFT_MASK) ? true : false;
+		} else {
+			mykey = event.keyCode;
+			alt = event.altKey;
+			ctrl = event.ctrlKey;
+			shift = event.shiftKey;
+		}
+		Keyboard.shift = shift
 	
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
@@ -162,6 +176,7 @@ var Events = {
 	keyup: function(e) {
 		if (Events.enabled === false) return
 
+		Keyboard.shift = false
 		var character = e.keyIdentifier
 		switch(character) {	
 			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break

@@ -117,11 +117,14 @@ Warper.ControlPoint = Class.create({
 			var distance_change = distance - this.self_distance
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
 			var angle_change = angle-this.self_angle
-			// use angle to recalculate each of the points in this.parent_shape.points
-			this.parent_shape.points.each(function(point) {
-				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
-				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
-			},this)
+
+			if (!Keyboard.shift) { 
+				// use angle to recalculate each of the points in this.parent_shape.points
+				this.parent_shape.points.each(function(point) {
+					point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
+					point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
+				},this)
+			}
 		}
 		}
 	},
