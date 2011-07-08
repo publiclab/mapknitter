@@ -12,4 +12,6 @@ var Keyboard = {
 	 * @type Boolean
 	 */
 	key_input: false,
+	shift: false,
+
 }

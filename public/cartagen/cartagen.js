@@ -7042,6 +7042,20 @@ var Events = {
 
 		if (!e) var e = window.event;
 
+
+		if (window.Event) {
+			mykey = e.which;
+			alt = (e.modifiers & Event.ALT_MASK) ? true : false;
+			ctrl = (e.modifiers & Event.CONTROL_MASK) ? true : false;
+			shift = (e.modifiers & Event.SHIFT_MASK) ? true : false;
+		} else {
+			mykey = event.keyCode;
+			alt = event.altKey;
+			ctrl = event.ctrlKey;
+			shift = event.shiftKey;
+		}
+		Keyboard.shift = shift
+
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
@@ -7083,6 +7097,7 @@ var Events = {
 	keyup: function(e) {
 		if (Events.enabled === false) return
 
+		Keyboard.shift = false
 		var character = e.keyIdentifier
 		switch(character) {
 			case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
@@ -7545,6 +7560,8 @@ CanvasTextFunctions.enable = function( ctx)
 var Keyboard = {
 	keys: new Hash(),
 	key_input: false,
+	shift: false,
+
 }
 var Mouse = {
 	x: 0,
@@ -9412,10 +9429,13 @@ Warper.ControlPoint = Class.create({
 			var distance_change = distance - this.self_distance
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
 			var angle_change = angle-this.self_angle
-			this.parent_shape.points.each(function(point) {
-				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
-				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
-			},this)
+
+			if (!Keyboard.shift) {
+				this.parent_shape.points.each(function(point) {
+					point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
+					point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
+				},this)
+			}
 		}
 		}
 	},
