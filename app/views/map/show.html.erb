@@ -14,10 +14,11 @@
 		cartagen_base_uri = '/cartagen'
 	</script>
 	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
-		<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-		<script type="text/javascript" src="/modalbox/lib/scriptaculous.js?load=builder,effects"></script>
-		<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/knitter.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript" src="/modalbox/lib/scriptaculous.js?load=builder,effects"></script>
+	<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&amp;appid=15QBs_zV34EJnwUBaFAtGKSQhvOEtK8saR5kIMdmJUJ52ct.2GKGEHHDHHhAskXQ"></script>
 	<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA' type='text/javascript'></script>
@@ -25,13 +26,9 @@
 
 		var map;
 	        var mapBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
-		//var mapBounds = new OpenLayers.Bounds( -88.8701993896, 29.798690641, -88.8620380748, 29.8071316946);
-		var mapMinZoom = 14;
-		var mapMaxZoom = 20;
+		var mapMinZoom = 14, mapMaxZoom = 20;
 		var spher_merc = new OpenLayers.Projection("EPSG:4326")
 		var latlon = new OpenLayers.Projection("EPSG:900913")
-
-		setTimeout(function(){$('loading_message').hide()},4000)
 
 		Cartagen.setup({
 			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
@@ -44,241 +41,32 @@
 			map_name: '<%= @map.name %>',
 			vectors: <%= @map.vectors %>
 		})
-		var Knitter = {
-			save_new_location: function(lat,lon,zoom) {
-				new Ajax.Request('/map/update/'+<%= @map.id %>,{
-					method: 'get',
-					parameters: {
-						lat: lat,
-						lon: lon,
-						zoom: zoom
-					}
-				})
-			},
-			save_current_location: function(callback) {
-				Knitter.save_new_location(Map.lat,Map.lon,Map.zoom)
-				if (!Object.isUndefined(callback)) callback()
-			},
-			toggle_vectors: function() {
-				Config.vectors = !Config.vectors;
-				$('loading_message').hide()
-				new Ajax.Request('/map/update/'+<%= @map.id %>,{
-					method: 'get',
-					parameters: {
-						lat: Map.lat,
-						lon: Map.lon,
-						zoom: Map.zoom,
-						vectors: Config.vectors
-					}
-				})
-			},
-			center_on_warpables: function() {
-				if (warpables.length > 0) {
-					var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
-					warpables.each(function(warpable){
-	               				 warpable.nodes.each(function(node) {
-	                			        lonsum += Projection.x_to_lon(-node[0])
-	                			        latsum += Projection.y_to_lat(node[1])
-							loncount += 1
-							latcount += 1
-	                			})
-					},this)
-					console.log(lonsum/loncount + "," + latsum/latcount)
-					Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
-				}
-			}
-		}
 
-		function setup() {
-			Glop.observe('pan:mouseup', function () {
-				Knitter.save_current_location()
-			})
-			Glop.observe('glop:predraw', function() { $C.clear();})
-			warpables = [
-				<% @warpables.each do |warpable| %>
-				{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
-				<% end %>
-			]
-			var first_new_image = true
-			warpables.each(function(warpable,index) {
-				if (warpable.nodes != 'none') {
-					// nodes as [[lon,lat],[lon,lat]]
-					Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
-				} else {
-					if (first_new_image) Warper.new_image(warpable.img,warpable.id,false);
-					else Warper.new_image(warpable.img,warpable.id,true)
-					first_new_image = false
-				}
-			})
-			Warper.sort_images()
-			Knitter.center_on_warpables()
-			if (Config.fullscreen) {
-				$('header').hide()
-				Config.padding_top = 0
-			}
-			if (Config.locked == 'true') {
-				Warper.locked = true
-			}
-			start_openlayers('<%= @map.tiles %>')
-		}
-		document.observe('cartagen:init', setup)
+		var warpables = [
+			<% @warpables.each do |warpable| %>
+			{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
+			<% end %>
+		]
 
-		function init_openlayers(format) {
-			if (format == 'WMS') {
-			       	map = new OpenLayers.Map('map', { controls: [], 
-							projection: new OpenLayers.Projection("EPSG:4326"),
-		                  			displayProjection: new OpenLayers.Projection("EPSG:4326"),
-	                				maxExtent: new OpenLayers.Bounds(-180,-90,180,90),	
-						});
-			} else {
-			       	map = new OpenLayers.Map('map', { controls: [], 
-				  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
-					                units: "m",
-							projection: new OpenLayers.Projection("EPSG:900913"),
-		                  			displayProjection: new OpenLayers.Projection("EPSG:4326"),
-	                				maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-							maxResolution: 156543.0339
-						});
-			}
-			openlayers_on = true;
-		}
-
-		function start_openlayers(layer) {
-			if (!openlayers_on) init_openlayers(layer)
-
-			// http://isse.cr.usgs.gov/ArcGIS/services/Combined/TNM_Large_Scale_Imagery/MapServer/WMSServer?request=GetCapabilities&service=WMS
-			// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
-			// http://viewer.nationalmap.gov/example/services.html
-
-			Config.tiles = true
-			Config.tile_type = layer
-			Zoom.interval = 6 
-			if (layer == 'google') {
-				var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
-				map.addLayer(gsat)
-			} else if (layer == 'yahoo') {
-				var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 20});
-				map.addLayer(yahoosat)
-			} else if (layer == 'TMS') {
-				tile_url = prompt('Enter a TMS URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
-		       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url,
-				{ //projection: latlon,
-		                  //displayProjection: spher_merc,
-				  //getURL: overlay_getTileURL,
-				  //maxResolution:156543.0339,
-	                	  //units: "m",
-	                          //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-				  //tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
-				  serviceVersion: '.', 
-				  layername: '.', 
-				  type: 'png', 
-				  alpha: true, 
-				  isBaseLayer: true});
-		       		map.addLayer(tms);
-			} else if (layer == 'WMS') {
-				projection: latlon,
-				//wms_url = prompt('Enter a WMS URI','http://msrmaps.com/ogcmap.ashx')
-				wms_url = prompt('Enter a WMS URI','http://isse.cr.usgs.gov/arcgis/services/Combined/SDDS_Imagery/MapServer/WMSServer?SERVICE=WMS&VERSION=1.1.1&STYLES=&SRS=EPSG:4326&FORMAT=image/png&layers=0&request=map&')
-				wms_layer = prompt('Enter a WMS layer','0')
-				map.addLayer(new OpenLayers.Layer.WMS('WMS',wms_url,{
-					layers: wms_layer
-					//layers:'DOQ'
-					//layers:'osm'
-				}))
-			}
-
-			Glop.observe('glop:draw',function(){$('map').setStyle({height:Glop.height+'px'})})
-			if (Config.tile_type == 'WMS') Glop.observe('mouseup',function() {map.layers.first().refresh()})
-
-			var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
-			var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
-			var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
-			var lon2 = Projection.x_to_lon(Map.x+Glop.width/2)
-
-			var bounds = new OpenLayers.Bounds();
-			bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
-			bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
-
-			map.zoomToExtent( bounds )
-			if (Config.tile_switcher) {
-		         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
-				map.addControl(switcherControl);
-		                switcherControl.maximizeControl();
-			}
-			openLayersDraw()
-			Glop.observe('glop:draw', openLayersDraw)
-			//
-			
-			new Ajax.Request('/map/update/'+<%= @map.id %>,{
-				method: 'get',
-				parameters: {
-					lat: Map.lat,
-					lon: Map.lon,
-					zoom: Map.zoom,
-					tiles: layer // here we might add a WMS url too
-				}
-			})
-		}
-
-	        function overlay_getTileURL(bounds) {
-	            var res = this.map.getResolution();
-	            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-	            var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
-	            var z = this.map.getZoom();
-			console.log('getting tile '+z+','+x+','+y)
-	            if (this.map.baseLayer.name == 'Virtual Earth Roads' || this.map.baseLayer.name == 'Virtual Earth Aerial' || this.map.baseLayer.name == 'Virtual Earth Hybrid') {
-	               z = z + 1;
-	            }
-		    if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom ) {
-	              //console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
-	              return this.url + z + "/" + x + "/" + y + "." + this.type;
-                    } else {
-                      return "http://www.maptiler.org/img/none.png";
-                    }
-		}
-
-		function openLayersDraw() {
-			if (Config.tile_type == 'WMS') map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat))
-			else map.moveTo(new OpenLayers.LonLat(Map.lon,Map.lat).transform(spher_merc,latlon))
-
-			var left = new OpenLayers.LonLat(map.getExtent().left,map.getExtent().top);
-			var right = new OpenLayers.LonLat(map.getExtent().right,map.getExtent().bottom);
-
-			if (Config.tile_type == 'WMS') var convert = Glop.width/124023.4375
-			else {
-				left = left.transform(spher_merc,latlon);
-				right = right.transform(spher_merc,latlon);
-
-				var convert = 124023.4375*Glop.width
-			}
-			Map.zoom = convert/(right.lon-left.lon)
-
-		}
-
-		// start storing a layer_type and layer_url in Map model, use it to switch this:
-		var openlayers_on = false;
+		document.observe('cartagen:init', function() {
+			Knitter.map_id = <%= @map.id %>
+			Knitter.setup()
+			Knitter.start_openlayers('<%= @map.tiles %>')
+		})
 
 	</script>
 </head>
 <body>
-<script>
-</script>
 
 <div id="google" style="display:none;"></div>
 
 <div id="browsers" style="display:none;">
 	<h3>WHOOPS</h3>
-	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, but IE8, Chrome, Safari, Mobile Safari, and Android are coming ASAP!</p>
+	<p>Cartagen is built on standards-compliant HTML 5 and Canvas, but is in beta stage right now. It works best in Firefox, Chrome, or Safari, but IE8/9, Mobile Safari, and Android work to varying degrees, and are coming someday.</p>
 </div>
 
 <div id="header">
 	<a style="float:left;" href="/maps"><img src="/images/cartagen-dark.png"/></a>
-	<script type="text/javascript" charset="utf-8">
-		function find(q) {
-			q = q.replace(' ','-')
-			document.location = "/find/"+q
-		}
-	</script>
 	<div id="toolbars">
 		<div class="toolbar">
             <a name='Download image' class='first silk' href="javascript:void(0);" onClick="Cartagen.redirect_to_image()"><img src="/images/silk-grey/disk.png" /></a>
@@ -289,6 +77,7 @@
     	<div class="toolbar">
             <a name='Upload an image' class='first silk' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/warper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/photo_add.png" /></a>
             <a name='Move an image (m)' class='' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>
+            <a name='Toggle image transparency' class='silk' href="javascript:void(0);" onClick="Warper.active_image.dblclick()"><img src="/images/silk-grey/contrast_low.png" /></a>
             <a name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>
     	</div>
     	<div class="toolbar">
@@ -303,37 +92,6 @@
 
 	<span style='margin-right:6px;' class='right'><a target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:475})" href="javascript:void(0);">Export</a></span>
 	<span style='margin-right:6px;' class='right'><a target="_blank" href="/map/edit/<%= @map.name %>">Edit details</a></span>
-</div>
-
-<div class='modal' id="styles" style="display:none;">
-	<div>
-		<h3>Viewing all styles</h3>
-		<textarea rows="20" cols="70"><%= @map[:styles] %></textarea>
-		<a href="javascript:$('styles').hide()">save</a> | 
-		<a href="javascript:$('styles').hide()">cancel</a>
-	</div>
-</div>
-
-<div class='modal' id="wysiwyg" style="display:none;">
-	<div>
-		<h3>Edit styles for <span id='editing'></span></h3>
-		
-		<form action="show_submit" method="get" accept-charset="utf-8">
-			
-			<label for="fill_color">Fill color</label> <input type="text" name="fill_color" value="" id="fill_color"><br />
-			<label for="stroke_color">Stroke color</label> <input type="text" name="stroke_color" value="" id="stroke_color"><br />
-			<label for="line_width">Line width</label> <input type="text" name="line_width" value="" id="line_width"><br />
-			<label for="image">Image (url)</label> <input type="text" name="image" value="" id="image"><br />
-			<label for="pattern">Pattern (url)</label> <input type="text" name="pattern" value="" id="pattern"><br />
-			<label for="text">Label</label> <input type="text" name="text" value="" id="text"><br />
-
-		</form>
-		
-		<p class="footer">
-			<a href="javascript:$('wysiwyg').hide()">save</a> | 
-			<a href="javascript:$('wysiwyg').hide()">cancel</a>
-		</p>
-	</div>
 </div>
 
 <div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" id="map"></div>
