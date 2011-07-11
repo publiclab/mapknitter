@@ -3,6 +3,9 @@
 <p>
 <a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a><br />
 <a target="_blank" href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
+<br />
+<a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
+<a target="_blank" href="http://maps.google.com/maps?q=http://cartagen.org/tms/<%= @map.name %>/doc.kml">Google Maps viewer</a> (beta, low res)<br />
 </p>
 <% end %>
 <% if @export.geotiff %>
