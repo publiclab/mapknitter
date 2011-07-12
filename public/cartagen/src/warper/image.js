@@ -13,6 +13,7 @@ Warper.Image = Class.create(
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
 		this.locked = false
+		this.outline = false
 	
 		this.subdivision_limit = 5	
 		this.offset_x = 0
@@ -39,7 +40,13 @@ Warper.Image = Class.create(
 		this.waiting_for_natural_size = natural_size | false
 	},
 	/**
-	 * Calculates the 
+	 * Toggles drawn borders around the image 
+	 */	
+	toggle_outline: function() {
+		this.outline = !this.outline
+	},
+	/**
+	 * Calculates the (what the hell is this?) 
 	 */	
 	patch_size: function() {
 		return 100/Map.zoom
@@ -70,11 +77,10 @@ Warper.Image = Class.create(
 		
 		$C.opacity(this.opacity)
 		// draw warped image: 
-		this.update()
+		if (!this.outline) this.update()
 		$C.opacity(1)
 		$C.save()
 		
-		$C.stroke_style('#000')
 		$C.fill_style('#222')
 			
 		// Draw outline
@@ -89,6 +95,13 @@ Warper.Image = Class.create(
 		$C.opacity(0.1)
 		if (this.active) $C.opacity(0.2)
 		
+		$C.opacity(1)
+		$C.stroke_style('#d00')
+		$C.line_width(1)
+		if (this.outline) $C.stroke()
+		$C.opacity(0.1)
+
+		$C.stroke_style('#000')
 		if (this.active) {
 			$C.fill()
 			// Draw points
@@ -112,6 +125,8 @@ Warper.Image = Class.create(
 		},this)
 	},
 	set_to_natural_size: function() {
+		this.opacity = 1.0
+		this.outline = false
 		if (this.image.width) {
 			// the image loaded completely, and we can use its dimensions
 			this.points[1].x = this.points[0].x

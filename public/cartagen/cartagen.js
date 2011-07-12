@@ -9466,6 +9466,7 @@ Warper.Image = Class.create(
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
 		this.locked = false
+		this.outline = false
 
 		this.subdivision_limit = 5
 		this.offset_x = 0
@@ -9491,6 +9492,9 @@ Warper.Image = Class.create(
 		this.natural_size = natural_size
 		this.waiting_for_natural_size = natural_size | false
 	},
+	toggle_outline: function() {
+		this.outline = !this.outline
+	},
 	patch_size: function() {
 		return 100/Map.zoom
 	},
@@ -9513,11 +9517,10 @@ Warper.Image = Class.create(
 		}
 
 		$C.opacity(this.opacity)
-		this.update()
+		if (!this.outline) this.update()
 		$C.opacity(1)
 		$C.save()
 
-		$C.stroke_style('#000')
 		$C.fill_style('#222')
 
 		$C.begin_path()
@@ -9530,6 +9533,13 @@ Warper.Image = Class.create(
 		$C.opacity(0.1)
 		if (this.active) $C.opacity(0.2)
 
+		$C.opacity(1)
+		$C.stroke_style('#d00')
+		$C.line_width(1)
+		if (this.outline) $C.stroke()
+		$C.opacity(0.1)
+
+		$C.stroke_style('#000')
 		if (this.active) {
 			$C.fill()
 			$C.line_width(2)
@@ -9552,6 +9562,8 @@ Warper.Image = Class.create(
 		},this)
 	},
 	set_to_natural_size: function() {
+		this.opacity = 1.0
+		this.outline = false
 		if (this.image.width) {
 			this.points[1].x = this.points[0].x
 			this.points[1].y = this.points[0].y
