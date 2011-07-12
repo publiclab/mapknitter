@@ -6,6 +6,7 @@ var Warper = {
 	initialize: function() {
 		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('mouseup',this.mouseup.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	/**
@@ -54,6 +55,10 @@ var Warper = {
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
+	mouseup: function() {
+		if (Warper.should_save) Warper.active_image.save_state()
+		Warper.should_save = false
+	},
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
@@ -72,6 +77,7 @@ var Warper = {
 					image.select()
 					image.points.each(function(point){point.mousedown()})
 					inside_image = true
+					Warper.should_save = true
 				}
 			} else {
 				// if you're clicking outside while it's active, and the corners have been moved:
@@ -89,6 +95,7 @@ var Warper = {
 				if (point.is_inside()) {
 					Warper.active_image.select_point(point)
 					point_clicked = true
+					Warper.should_save = true
 				}
 			})
 			if (!point_clicked && Warper.active_image.active_point) {

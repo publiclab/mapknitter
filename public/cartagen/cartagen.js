@@ -8346,7 +8346,9 @@ Tool.Warp = {
 			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
 		$('tool_specific').insert('<a name=\'Rotate/scale this image (r)\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
 			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
+		$('tool_specific').insert('<a name=\'Undo last image edit\' class=\'silk\' id=\'tool_warp_undo\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
+			$('tool_warp_undo').observe('mouseup',function(){Warper.active_image.undo();})
+		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_refresh.png\' /></a>')
 			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
 		$('tool_specific').insert('<a name=\'Distort this image by dragging corners (w)\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
 			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
@@ -9171,6 +9173,7 @@ var Warper = {
 	initialize: function() {
 		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('mouseup',this.mouseup.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	images: [],
@@ -9198,6 +9201,10 @@ var Warper = {
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
+	mouseup: function() {
+		if (Warper.should_save) Warper.active_image.save_state()
+		Warper.should_save = false
+	},
 	mousedown: function() {
 		if (!Warper.locked) {
 		Map.x_old = Map.x
@@ -9212,6 +9219,7 @@ var Warper = {
 					image.select()
 					image.points.each(function(point){point.mousedown()})
 					inside_image = true
+					Warper.should_save = true
 				}
 			} else {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
@@ -9228,6 +9236,7 @@ var Warper = {
 				if (point.is_inside()) {
 					Warper.active_image.select_point(point)
 					point_clicked = true
+					Warper.should_save = true
 				}
 			})
 			if (!point_clicked && Warper.active_image.active_point) {
@@ -9480,6 +9489,8 @@ Warper.Image = Class.create(
 		this.old_coordinates = []
 		this.diddit = false
 
+		this.history = []
+
 		nodes.each(function(node) {
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
 		}, this)
@@ -9498,6 +9509,7 @@ Warper.Image = Class.create(
 	patch_size: function() {
 		return 100/Map.zoom
 	},
+
 	draw: function() {
 		if (this.waiting_for_natural_size) {
 			this.set_to_natural_size()
@@ -9561,6 +9573,7 @@ Warper.Image = Class.create(
 			point.y += px
 		},this)
 	},
+
 	set_to_natural_size: function() {
 		this.opacity = 1.0
 		this.outline = false
@@ -9592,6 +9605,7 @@ Warper.Image = Class.create(
 		Events.enabled = true
 		Event.stopObserving(document, 'keyup', Warper.keyup)
 	},
+
 	select_point: function(point) {
 		if (this.active_point) { this.active_point.deselect() }
 		point.select()
@@ -9606,6 +9620,7 @@ Warper.Image = Class.create(
 		})
 		return inside_point
 	},
+
 	drag: function() {
 		if (!this.locked) {
 		if (!this.dragging) {
@@ -9627,6 +9642,27 @@ Warper.Image = Class.create(
 		this.points.each(function(point) {
 			point.dragging = false
 		})
+	},
+	save_state: function() {
+		if (this.history.last() != this.serialize_points()) this.history.push(this.serialize_points())
+	},
+	undo: function() {
+		if (this.history.last() == this.serialize_points()) this.history.pop()
+		if (this.history.length > 0) this.import_points(this.history.pop())
+	},
+	import_points: function(saved) {
+		saved = saved.evalJSON()
+		this.points.each(function(point,index) {
+			point.x = saved[index][0]
+			point.y = saved[index][1]
+		})
+	},
+	serialize_points: function() {
+		var prejson = []
+		this.points.each(function(point){
+			prejson.push([point.x,point.y])
+		})
+		return prejson.toJSON()
 	},
 	dblclick: function() {
 		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
@@ -9709,6 +9745,7 @@ Warper.Image = Class.create(
 		$C.canvas.restore()
 
 	},
+
 	divide: function(u1, v1, u4, v4, p1, p2, p3, p4, limit) {
 		if (limit) {
 			var d1 = [p2[0] + p3[0] - 2 * p1[0], p2[1] + p3[1] - 2 * p1[1]];
