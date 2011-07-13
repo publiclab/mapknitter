@@ -149,10 +149,15 @@ class Warpable < ActiveRecord::Base
     imageMagick = "convert -background transparent "
     imageMagick += "-contrast-stretch 0 "
     imageMagick += local_location+" "
-    if rotation == 6 || rotation == 8
-    	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
+#    if rotation == 6 || rotation == 8
+#    	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
+#    else
+#    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
+#    end
+    if width > height
+	imageMagick += "-crop "+width+"x"+width+"+0+0\! "
     else
-    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
+	imageMagick += "-crop "+height+"x"+height+"+0+0\! "
     end
     imageMagick += "-background transparent -flatten "
     imageMagick += "-matte -virtual-pixel transparent "
