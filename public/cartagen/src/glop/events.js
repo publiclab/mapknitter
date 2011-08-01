@@ -118,6 +118,7 @@ var Events = {
 	 */
 	keypress: function(e) {
 		if (Events.enabled === false) return
+		if (Events.keys_enabled === false) return
 
 		if (!e) var e = window.event;
 		//else if (e.which) code = e.which;
@@ -125,50 +126,10 @@ var Events = {
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
-
-			switch(character) {
-				case '=': 
-					if (Config.tiles) map.zoomIn()
-					else Map.zoom *= 1.1
-					Glop.fire('glop:draw')
-					break
-				case '-': 
-					if (Config.tiles) map.zoomOut()
-					else Map.zoom *= 0.9
-					Glop.fire('glop:draw')
-					break
-				case "x": 
-					localStorage.clear()
-					break
-				case "r":
-					Tool.Warp.mode = 'rotate'
-					break
-				case "w":
-					Tool.Warp.mode = 'default' 
-					break
-				case "m":
-					Tool.change('Pan')
-			}
+			Keyboard.hotkey(character)
 		} else {
-			// just 
-			// 				}modifiers:
-			switch(character){
-				case "r": Keyboard.keys.set("r",true); break
-				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
-				case "b": if (Config.debug) Interface.download_bbox()
-				case Event.KEY_UP:
-					Cartagen.fire('keypress:up')
-					console.log('key up arrow')
-				case Event.KEY_DOWN:
-					Cartagen.fire('keypress:down')
-				case Event.KEY_LEFT:
-					Cartagen.fire('keypress:left')
-				case Event.KEY_RIGHT:
-					Cartagen.fire('keypress:right')
-			}
+			Keyboard.modifier(character)
 		}
-		Glop.trigger_draw(5)
 		// e.preventDefault()
 	},
 
@@ -177,18 +138,20 @@ var Events = {
 	 */
 	keyup: function(e) {
 		if (Events.enabled === true) {
-			Keyboard.shift = false
-			var character = e.keyIdentifier
-			switch(character) {	
-				case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
-				case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
-				case 'Up': Map.y -= 20/Map.zoom; break
-				case 'Down': Map.y += 20/Map.zoom; break
+			if (Events.arrow_keys_enabled === true) {
+				Keyboard.shift = false
+				var character = e.keyIdentifier
+				switch(character) {	
+					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+					case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+					case 'Up': Map.y -= 20/Map.zoom; break
+					case 'Down': Map.y += 20/Map.zoom; break
+				}
+		
+				Keyboard.keys.set("r",false)
+				Keyboard.keys.set("z",false)
+				e.preventDefault()
 			}
-	
-			Keyboard.keys.set("r",false)
-			Keyboard.keys.set("z",false)
-			e.preventDefault()
 		}
 	},
 	/**
