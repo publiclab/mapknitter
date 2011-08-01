@@ -46,6 +46,7 @@ Warper.Image = Class.create(
 	 */	
 	toggle_outline: function() {
 		this.outline = !this.outline
+		$('tool_warp_outline').toggleClassName('down')
 	},
 	/**
 	 * Calculates the (what the hell is this?) 
@@ -151,14 +152,15 @@ Warper.Image = Class.create(
 	},
 	select: function() {
 		this.active = true
-		Events.enabled = false
-		Event.observe(document, 'keyup', Warper.keyup)
+		Events.arrow_keys_enabled = false
+		Event.observe(document, 'keyup', Warper.keyup) // custom keyup handler
+		Glop.trigger_draw()
 	},
 	deselect: function() {
 		this.active = false
 		this.active_point = false
-		Events.enabled = true
-		Event.stopObserving(document, 'keyup', Warper.keyup)
+		Events.arrow_keys_enabled = true
+		Event.stopObserving(document, 'keyup', Warper.keyup) // custom keyup handler
 	},
 
 	select_point: function(point) {
@@ -240,6 +242,7 @@ Warper.Image = Class.create(
 	dblclick: function() {
 		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
 		else this.opacity = this.opacity_low
+		$('tool_warp_transparent').toggleClassName('down')
 	},
 	/**
 	 * A function to generate an array of coordinate pairs as in [lat,lon] for the image corners

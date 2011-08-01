@@ -11,26 +11,24 @@ Tool.Warp = {
 	 * Runs when this tool is selected; adds custom toolbar
 	 */
 	activate: function() {
-		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
-		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
-			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
-		$('tool_specific').insert('<a name=\'Lock this image\' class=\'silk\' id=\'tool_warp_lock\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/lock.png\' /></a>')
-			$('tool_warp_lock').observe('mouseup',Tool.Warp.lock_image)
-			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
-		$('tool_specific').insert('<a name=\'Rotate/scale this image (r)\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
-			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a name=\'Undo last image edit\' class=\'silk\' id=\'tool_warp_undo\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
-			$('tool_warp_undo').observe('mouseup',function(){Warper.active_image.undo();})
-		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_refresh.png\' /></a>')
-			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
-		$('tool_specific').insert('<a name=\'Distort this image by dragging corners (w)\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
-			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
+		Tool.add_toolbar("tool_specific")
+		//add_tool_specific_button(name,task,tooltip,icon,classes,init_tool)
+		Tool.add_tool_specific_button("warp_delete",Tool.Warp.delete_image,"Delete this image","/images/silk-grey/delete.png","first silk")
+		Tool.add_tool_specific_button("warp_revert",function(){Warper.active_image.set_to_natural_size();},"Revert to original proportions","/images/silk-grey/arrow_refresh.png","silk")
+		Tool.add_tool_specific_button("warp_lock",Tool.Warp.lock_image,"Lock this image","/images/silk-grey/lock.png","silk")
+		if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		Tool.add_tool_specific_button("warp_outline",function(){Warper.active_image.toggle_outline()},"Toggle image outline","/images/silk-grey/shape_move_backwards.png","silk")
+		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency","/images/silk-grey/contrast_low.png","silk")
+		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
+		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
+		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
+		$('tool_warp_distort').addClassName('down')
 	},
 	/**
 	 * Runs when this tool is deselected; removes custom toolbar
 	 */
 	deactivate: function() {
-		$('tool_specific').remove()
+		Tool.remove_toolbar("tool_specific")
 		Tool.Warp.mode = 'default'
 		Warper.active_object = false
 	},

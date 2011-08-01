@@ -33,6 +33,7 @@ Warper.ControlPoint = Class.create({
 				$C.line_to(6/Map.zoom,-6/Map.zoom)
 				$C.stroke()
 			} else {
+				if (Tool.Warp.mode == "rotate") $C.stroke_style("red")
 				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
 				$C.stroke_circ(0, 0, this.rel_r)
 			}

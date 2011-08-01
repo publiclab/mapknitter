@@ -7046,70 +7046,35 @@ var Events = {
 	},
 	keypress: function(e) {
 		if (Events.enabled === false) return
+		if (Events.keys_enabled === false) return
 
 		if (!e) var e = window.event;
 
 		var character = e.which || e.keyCode;
 		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
-
-			switch(character) {
-				case '=':
-					if (Config.tiles) map.zoomIn()
-					else Map.zoom *= 1.1
-					Glop.fire('glop:draw')
-					break
-				case '-':
-					if (Config.tiles) map.zoomOut()
-					else Map.zoom *= 0.9
-					Glop.fire('glop:draw')
-					break
-				case "x":
-					localStorage.clear()
-					break
-				case "r":
-					Tool.Warp.mode = 'rotate'
-					break
-				case "w":
-					Tool.Warp.mode = 'default'
-					break
-				case "m":
-					Tool.change('Pan')
-			}
+			Keyboard.hotkey(character)
 		} else {
-			switch(character){
-				case "r": Keyboard.keys.set("r",true); break
-				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
-				case "b": if (Config.debug) Interface.download_bbox()
-				case Event.KEY_UP:
-					Cartagen.fire('keypress:up')
-					console.log('key up arrow')
-				case Event.KEY_DOWN:
-					Cartagen.fire('keypress:down')
-				case Event.KEY_LEFT:
-					Cartagen.fire('keypress:left')
-				case Event.KEY_RIGHT:
-					Cartagen.fire('keypress:right')
-			}
+			Keyboard.modifier(character)
 		}
-		Glop.trigger_draw(5)
 	},
 
 	keyup: function(e) {
 		if (Events.enabled === true) {
-			Keyboard.shift = false
-			var character = e.keyIdentifier
-			switch(character) {
-				case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
-				case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
-				case 'Up': Map.y -= 20/Map.zoom; break
-				case 'Down': Map.y += 20/Map.zoom; break
-			}
+			if (Events.arrow_keys_enabled === true) {
+				Keyboard.shift = false
+				var character = e.keyIdentifier
+				switch(character) {
+					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+					case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+					case 'Up': Map.y -= 20/Map.zoom; break
+					case 'Down': Map.y += 20/Map.zoom; break
+				}
 
-			Keyboard.keys.set("r",false)
-			Keyboard.keys.set("z",false)
-			e.preventDefault()
+				Keyboard.keys.set("r",false)
+				Keyboard.keys.set("z",false)
+				e.preventDefault()
+			}
 		}
 	},
 	ontouchstart: function(e){
@@ -7562,7 +7527,55 @@ CanvasTextFunctions.enable = function( ctx)
 var Keyboard = {
 	keys: new Hash(),
 	key_input: false,
-	shift: false
+	shift: false,
+	hotkeys: {
+		"=": function() {
+			if (Config.tiles) map.zoomIn()
+			else Map.zoom *= 1.1
+		},
+		"-": function() {
+			if (Config.tiles) map.zoomOut()
+			else Map.zoom *= 0.9
+		},
+		"x": function() {
+			localStorage.clear()
+		},
+		"r": function() {
+			Tool.unpress(['warp_distort'])
+			$('tool_warp_rotate').addClassName('down')
+			Tool.Warp.mode = 'rotate'
+		},
+		"d": function() {
+			Tool.unpress(['warp_rotate'])
+			$('tool_warp_distort').addClassName('down')
+			Tool.Warp.mode = 'default'
+		},
+		"t": function() {
+			Warper.active_image.dblclick()
+		},
+		"o": function() {
+			Warper.active_image.toggle_outline()
+		},
+		"l": function() {
+			Tool.Warp.lock_image()
+		},
+	},
+	hotkey: function(key) {
+		if (Keyboard.hotkeys[key]) Keyboard.hotkeys[key]()
+		Glop.trigger_draw()
+	},
+	modifier: function(key) {
+		switch(character){
+			case "r": Keyboard.keys.set("r",true); break
+			case "z": Keyboard.keys.set("z",true); break
+			case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
+			case "b": if (Config.debug) Interface.download_bbox()
+			case Event.KEY_UP: Cartagen.fire('keypress:up')
+			case Event.KEY_DOWN: Cartagen.fire('keypress:down')
+			case Event.KEY_LEFT: Cartagen.fire('keypress:left')
+			case Event.KEY_RIGHT: Cartagen.fire('keypress:right')
+		}
+	}
 }
 var Mouse = {
 	x: 0,
@@ -7979,6 +7992,28 @@ var Tool = {
 	drag: function() {
 		Tool[Tool.active].drag()
 	},
+	unpress: function(list) {
+		list.each(function(button) {
+			$('tool_'+button).removeClassName('down')
+		})
+	},
+	add_toolbar: function(name) {
+		$('toolbars').insert('<div class=\'toolbar\' id=\''+name+'\'></div>')
+	},
+	remove_toolbar: function(name) {
+		$(name).remove()
+	},
+	add_tool_specific_button: function(name,task,tooltip,icon,classes,press,init_tool) {
+		$('tool_specific').insert('<a name=\''+tooltip+'\' class=\''+classes+'\' id=\'tool_'+name+'\'  href=\'javascript:void(0);\'><img src=\''+icon+'\' /></a>')
+		$('tool_'+name).observe('mouseup',function(e){Glop.trigger_draw();task(e)})
+		if (press) {
+			Tool.unpress(['move','warp_rotate','warp_distort'])
+			$('tool_'+name).addClassName('down')
+		}
+	},
+	remove_tool_specific_button: function(name) {
+
+	}
 }
 Tool.Select = {
 	activate: function() {
@@ -8338,23 +8373,20 @@ Tool.Pan = {
 Tool.Warp = {
 	mode: 'default', //'rotate','drag','scale'
 	activate: function() {
-		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
-		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
-			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
-		$('tool_specific').insert('<a name=\'Lock this image\' class=\'silk\' id=\'tool_warp_lock\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/lock.png\' /></a>')
-			$('tool_warp_lock').observe('mouseup',Tool.Warp.lock_image)
-			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
-		$('tool_specific').insert('<a name=\'Rotate/scale this image (r)\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
-			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a name=\'Undo last image edit\' class=\'silk\' id=\'tool_warp_undo\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
-			$('tool_warp_undo').observe('mouseup',function(){Warper.active_image.undo();})
-		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_refresh.png\' /></a>')
-			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
-		$('tool_specific').insert('<a name=\'Distort this image by dragging corners (w)\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
-			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
+		Tool.add_toolbar("tool_specific")
+		Tool.add_tool_specific_button("warp_delete",Tool.Warp.delete_image,"Delete this image","/images/silk-grey/delete.png","first silk")
+		Tool.add_tool_specific_button("warp_revert",function(){Warper.active_image.set_to_natural_size();},"Revert to original proportions","/images/silk-grey/arrow_refresh.png","silk")
+		Tool.add_tool_specific_button("warp_lock",Tool.Warp.lock_image,"Lock this image","/images/silk-grey/lock.png","silk")
+		if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		Tool.add_tool_specific_button("warp_outline",function(){Warper.active_image.toggle_outline()},"Toggle image outline","/images/silk-grey/shape_move_backwards.png","silk")
+		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency","/images/silk-grey/contrast_low.png","silk")
+		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
+		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
+		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
+		$('tool_warp_distort').addClassName('down')
 	},
 	deactivate: function() {
-		$('tool_specific').remove()
+		Tool.remove_toolbar("tool_specific")
 		Tool.Warp.mode = 'default'
 		Warper.active_object = false
 	},
@@ -9377,6 +9409,7 @@ Warper.ControlPoint = Class.create({
 				$C.line_to(6/Map.zoom,-6/Map.zoom)
 				$C.stroke()
 			} else {
+				if (Tool.Warp.mode == "rotate") $C.stroke_style("red")
 				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
 				$C.stroke_circ(0, 0, this.rel_r)
 			}
@@ -9505,6 +9538,7 @@ Warper.Image = Class.create(
 	},
 	toggle_outline: function() {
 		this.outline = !this.outline
+		$('tool_warp_outline').toggleClassName('down')
 	},
 	patch_size: function() {
 		return 100/Map.zoom
@@ -9596,14 +9630,15 @@ Warper.Image = Class.create(
 	},
 	select: function() {
 		this.active = true
-		Events.enabled = false
-		Event.observe(document, 'keyup', Warper.keyup)
+		Events.arrow_keys_enabled = false
+		Event.observe(document, 'keyup', Warper.keyup) // custom keyup handler
+		Glop.trigger_draw()
 	},
 	deselect: function() {
 		this.active = false
 		this.active_point = false
-		Events.enabled = true
-		Event.stopObserving(document, 'keyup', Warper.keyup)
+		Events.arrow_keys_enabled = true
+		Event.stopObserving(document, 'keyup', Warper.keyup) // custom keyup handler
 	},
 
 	select_point: function(point) {
@@ -9667,6 +9702,7 @@ Warper.Image = Class.create(
 	dblclick: function() {
 		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
 		else this.opacity = this.opacity_low
+		$('tool_warp_transparent').toggleClassName('down')
 	},
 	coordinates: function() {
 		coordinates = []
