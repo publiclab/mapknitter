@@ -13,7 +13,7 @@ var Knitter = {
 				Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
 			} else {
 				if (first_new_image) Warper.new_image(warpable.img,warpable.id,false);
-				else Warper.new_image(warpable.img,warpable.id,true)
+				else Warper.new_image(warpable.img,warpable.id,false)
 				first_new_image = false
 			}
 		})
