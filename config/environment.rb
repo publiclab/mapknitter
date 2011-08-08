@@ -33,6 +33,7 @@ Rails::Initializer.run do |config|
   config.gem "geokit"
   #config.gem "RubyInline"
   config.gem "image_science"
+  config.gem "recaptcha", :lib => "recaptcha/rails"
   #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
 
   # config.gem "rubyzip"
@@ -96,4 +97,3 @@ Rails::Initializer.run do |config|
 end
 
 ENV['PATH'] = "#{ENV['PATH']}:/Library/Frameworks/GDAL.framework/Programs"
-

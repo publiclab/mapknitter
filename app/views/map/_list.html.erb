@@ -11,6 +11,7 @@
 			<p class="meta"><small>
 				<a href="/map/edit/<%= map.name %>">Edit</a> | 
 				Updated on <%= map.updated_at.to_s(:short) %> | 
+				<%= map.warpables.length %> images | 
 				<a href="/maps/<%= map.name %>">View map &raquo;</a>
 			</small></p>
 		</div>

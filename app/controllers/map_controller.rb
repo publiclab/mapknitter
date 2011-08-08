@@ -75,7 +75,6 @@ class MapController < ApplicationController
       @map.lon = location.lng
       @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
       @map.save
-      flash[:notice] = "Saved map."
       redirect_to '/map/edit/'+@map.name
     end
   end
@@ -107,7 +106,8 @@ class MapController < ApplicationController
             :name => params[:name],
             :location => params[:location]})
       end
-      if @map.save
+      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
+      #if @map.save
         redirect_to :action => 'show', :id => @map.name
       else
 	index
@@ -157,8 +157,6 @@ class MapController < ApplicationController
     @map.vectors = true if params[:vectors] == 'true'
     @map.vectors = false if params[:vectors] == 'false'
     @map.tiles = params[:tiles] if params[:tiles]
-puts @map.vectors
-puts '..................'
     @map.zoom = params[:zoom]
     if @map.save
       render :text => 'success'

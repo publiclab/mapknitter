@@ -12,10 +12,8 @@ class WarperController < ApplicationController
     map = Map.find(params[:map_id])
     map.updated_at = Time.now
     if @warpable.save
-      flash[:notice] = 'Warpable was successfully created.'
       redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
     else
-      flash[:notice] = 'There was an error'
       render :action => :new
     end
   end
