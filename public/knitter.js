@@ -12,8 +12,8 @@ var Knitter = {
 				// nodes as [[lon,lat],[lon,lat]]
 				Warper.load_image(warpable.img,warpable.nodes,warpable.id,warpable.locked);
 			} else {
-				if (first_new_image) Warper.new_image(warpable.img,warpable.id,false);
-				else Warper.new_image(warpable.img,warpable.id,false)
+				if (first_new_image) Warper.new_image(warpable.img,warpable.id,true);
+				else Warper.new_image(warpable.img,warpable.id,true)
 				first_new_image = false
 			}
 		})
@@ -190,12 +190,14 @@ var Knitter = {
 		if (warpables.length > 0) {
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
 			warpables.each(function(warpable){
-				warpable.nodes.each(function(node) {
-               			        lonsum += Projection.x_to_lon(-node[0])
-               			        latsum += Projection.y_to_lat(node[1])
-					loncount += 1
-					latcount += 1
-	                	})
+				if (warpable.nodes != "none") {
+					warpable.nodes.each(function(node) {
+               			        	lonsum += Projection.x_to_lon(-node[0])
+               			        	latsum += Projection.y_to_lat(node[1])
+						loncount += 1
+						latcount += 1
+	                		})
+				}
 			},this)
 			Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
 		}
