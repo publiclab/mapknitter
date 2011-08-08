@@ -38,8 +38,8 @@ class MapController < ApplicationController
     render :layout => false
   end
 
+  # just a template pointer... maybe uneccessary
   def new
-
   end
 
   def add_static_data

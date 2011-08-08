@@ -9,7 +9,7 @@ class Warpable < ActiveRecord::Base
                  :max_size => 10.megabytes,
                  # :resize_to => '320x200>',
 		:processor => :image_science,
-                 :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
+                :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
 
   # validates_as_attachment
 
@@ -33,13 +33,23 @@ class Warpable < ActiveRecord::Base
           errors.add_to_base("Images should be smaller than 10 MB in size")
         end
       end
-        
     end
-
   end 
 
   def nodes_array
     Node.find self.nodes.split(',')
+  end
+
+  # allow uploads via URL
+  require 'open-uri'
+  attr_reader :url
+  def url=(uri)
+    return nil if uri.blank?
+    io = (open(URI.parse(uri)) rescue return nil)
+    (class << io; self; end;).class_eval do
+      define_method(:original_filename) { base_uri.path.split('/').last }
+    end
+    self.uploaded_data = io
   end
 
   # pixels per meter = pxperm 
@@ -159,9 +169,11 @@ class Warpable < ActiveRecord::Base
     else
 	imageMagick += "-crop "+height+"x"+height+"+0+0\! "
     end
+#    imageMagick += "-background transparent -flatten "
     imageMagick += "-background transparent -flatten "
-    imageMagick += "-matte -virtual-pixel transparent "
+    imageMagick += "-matte -virtual-pixel white +antialias "
     imageMagick += "-distort Perspective '"+points+"' "
+    imageMagick += "-background transparent -flatten "
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
@@ -177,7 +189,7 @@ class Warpable < ActiveRecord::Base
 	#puts stdout.readlines
 	#puts stderr.readlines   
  
-    gdalwarp = 'gdalwarp -srcnodata 255 -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
+    gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
 	system(Gdal.ulimit+gdalwarp)
 	#stdin, stdout, stderr = Open3.popen3(gdalwarp)
