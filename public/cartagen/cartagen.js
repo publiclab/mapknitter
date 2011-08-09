@@ -8464,9 +8464,8 @@ Tool.Mask = {
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
 			}
-		}
-		else if (Tool.Mask.mode == 'drag'){
-			Tool.Mask.warpable.mask.active=true
+		} else if (Tool.Mask.mode == 'drag'){
+			Tool.Mask.warpable.mask.enabled=true
 		}
 
 	}.bindAsEventListener(Tool.Mask),
@@ -8479,31 +8478,31 @@ Tool.Mask = {
 	}.bindAsEventListener(Tool.Mask),
 
 	dblclick: function() {
-		Tool.Mask.warpable.mask.active = true
+		Tool.Mask.warpable.mask.enabled = true
 		Tool.Mask.mode = 'inactive'
 		Tool.change('Pan')
-		console.log('completed mask')
 	}.bindAsEventListener(Tool.Mask),
 
 	mask_warpable: function() {
 		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
-		Tool.Mask.warpable.mask = new Tool.Mask.Shape([])
+		Tool.Mask.warpable.mask = new Tool.Mask.Shape([],Tool.Mask.warpable)
 	},
 
 	Shape: Class.create({
-		initialize: function(nodes) {
-			this.active = false
+		initialize: function(nodes,parent_image) {
+			this.enabled = false
 			this.points = []//$A(
 			this.dragging=false
 			this.color='#222'
+			this.parent_image = parent_image
 
 			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
 			Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Mask.ControlPoint(x, y, 5/Map.zoom, this))
+			this.points.push(new Tool.Mask.ControlPoint(x, y, 6/Map.zoom, this))
 		},
 		mouse_inside: function(){
 			return Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())
@@ -8530,7 +8529,7 @@ Tool.Mask = {
 					}
 				}
 			}
-			else if (Tool.active!='Mask') {
+			else if (Tool.active != 'Mask') {
 				this.active = false
 				this.color='#000'
 			}
@@ -8604,7 +8603,7 @@ Tool.Mask = {
 			Glop.observe('mousedown', this.click.bindAsEventListener(this))
 		},
 		draw: function() {
-			if (this.parent_shape.active) {
+			if (this.parent_shape.parent_image.active) {
 				$C.save()
 					$C.line_width(2/Map.zoom)
 					$C.translate(this.x,this.y)
@@ -8619,7 +8618,7 @@ Tool.Mask = {
 						$C.stroke()
 					} else {
 						if (this.mouse_inside()) $C.circ(0, 0, this.r)
-						$C.stroke_circ(0, 0, this.r)
+						$C.stroke_circ(0, 0, 6)//this.r)
 					}
 				$C.restore()
 
@@ -9554,6 +9553,7 @@ Warper.Image = Class.create(
 			this.set_to_natural_size()
 		}
 
+		$C.save()
 		if (this.mask && this.mask.points && this.mask.points.length > 2) {
 			$C.begin_path()
 			$C.move_to(this.mask.points[0].x, this.mask.points[0].y)
@@ -9561,13 +9561,15 @@ Warper.Image = Class.create(
 				$C.line_to(point.x, point.y)
 			})
 			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			if (this.mask.active) $C.canvas.clip()
+			$C.canvas.closePath();
+			if (this.mask.enabled) $C.canvas.clip()
 			else $C.stroke()
 		}
 
 		$C.opacity(this.opacity)
 		if (!this.outline) this.update()
 
+		$C.restore()
 		$C.opacity(1)
 		$C.save()
 		$C.fill_style('#222')

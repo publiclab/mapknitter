@@ -32,9 +32,8 @@ Tool.Mask = {
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
 			}
-		}
-		else if (Tool.Mask.mode == 'drag'){
-			Tool.Mask.warpable.mask.active=true
+		} else if (Tool.Mask.mode == 'drag'){
+			Tool.Mask.warpable.mask.enabled=true
 		}
 		
 	}.bindAsEventListener(Tool.Mask),
@@ -48,35 +47,35 @@ Tool.Mask = {
 
 	dblclick: function() {
 		// close the poly, fire up the mask
-		Tool.Mask.warpable.mask.active = true
+		Tool.Mask.warpable.mask.enabled = true
 		Tool.Mask.mode = 'inactive'
 		Tool.change('Pan')
-		console.log('completed mask')
 	}.bindAsEventListener(Tool.Mask),
 
 	// Mask the currently selected image
 	mask_warpable: function() {
 		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
-		Tool.Mask.warpable.mask = new Tool.Mask.Shape([])	
+		Tool.Mask.warpable.mask = new Tool.Mask.Shape([],Tool.Mask.warpable)	
 	},
 
 	Shape: Class.create({
-		initialize: function(nodes) {
-			this.active = false
+		initialize: function(nodes,parent_image) {
+			this.enabled = false
 			this.points = []//$A(
 			this.dragging=false
 			this.color='#222'
-			
+			this.parent_image = parent_image		
+	
 			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
 			Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Mask.ControlPoint(x, y, 5/Map.zoom, this))
+			this.points.push(new Tool.Mask.ControlPoint(x, y, 6/Map.zoom, this))
 		},
 		mouse_inside: function(){
-			//if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
+			//if (Geome6try.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
 			//	console.log('Mouse in point')
 			//}
 			return Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())
@@ -103,7 +102,7 @@ Tool.Mask = {
 					}
 				}
 			} 
-			else if (Tool.active!='Mask') {
+			else if (Tool.active != 'Mask') {
 				this.active = false
 				this.color='#000'
 			}
@@ -180,7 +179,7 @@ Tool.Mask = {
 		draw: function() {
 			// transform to 1:1 scale pixelwise (the map is not at this scale by default)
 			// first, save the transformation matrix:
-			if (this.parent_shape.active) {
+			if (this.parent_shape.parent_image.active) {
 				$C.save()
 					$C.line_width(2/Map.zoom)
 					// go to the object's location:
@@ -197,7 +196,7 @@ Tool.Mask = {
 						$C.stroke()
 					} else {
 						if (this.mouse_inside()) $C.circ(0, 0, this.r)
-						$C.stroke_circ(0, 0, this.r)
+						$C.stroke_circ(0, 0, 6)//this.r)
 					}
 				$C.restore()
 

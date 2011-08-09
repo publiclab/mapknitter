@@ -71,24 +71,25 @@ Warper.Image = Class.create(
 			this.set_to_natural_size()
 		}
 
+		$C.save()
 		if (this.mask && this.mask.points && this.mask.points.length > 2) {
-			//$C.save()
 			$C.begin_path()
 			$C.move_to(this.mask.points[0].x, this.mask.points[0].y)		
 			this.mask.points.each(function(point) {
 				$C.line_to(point.x, point.y)
 			})			
 			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			if (this.mask.active) $C.canvas.clip()
+			$C.canvas.closePath();
+			if (this.mask.enabled) $C.canvas.clip()
 			else $C.stroke()
 			// LEARN HOW TO USE CLIP, PILGRIM!!
-			//$C.restore()
 		}
 		
 		$C.opacity(this.opacity)
 		// draw warped image: 
 		if (!this.outline) this.update()
 
+		$C.restore()
 		// Draw outline
 		$C.opacity(1)
 		$C.save()
