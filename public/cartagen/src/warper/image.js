@@ -79,7 +79,8 @@ Warper.Image = Class.create(
 				$C.line_to(point.x, point.y)
 			})			
 			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			$C.canvas.clip()
+			if (this.mask.active) $C.canvas.clip()
+			else $C.stroke()
 			// LEARN HOW TO USE CLIP, PILGRIM!!
 			//$C.restore()
 		}

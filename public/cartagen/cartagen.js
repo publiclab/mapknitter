@@ -8460,7 +8460,6 @@ Tool.Mask = {
 			var over_point = false
 			Tool.Mask.warpable.mask.points.each(function(point){
 				if (point.mouse_inside()) over_point = true
-				console.log(point.mouse_inside())
 			})
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
@@ -8480,20 +8479,16 @@ Tool.Mask = {
 	}.bindAsEventListener(Tool.Mask),
 
 	dblclick: function() {
-		$l('Mask dblclick')
-		if (true) {
-			Tool.Mask.warpable.mask.active = true
-			Tool.Mask.mode = 'inactive'
-			Tool.change('Pan') //Hi!!
-		}
-
+		Tool.Mask.warpable.mask.active = true
+		Tool.Mask.mode = 'inactive'
+		Tool.change('Pan')
+		console.log('completed mask')
 	}.bindAsEventListener(Tool.Mask),
 
 	mask_warpable: function() {
 		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
 		Tool.Mask.warpable.mask = new Tool.Mask.Shape([])
-		console.log('added mask')
 	},
 
 	Shape: Class.create({
@@ -8598,11 +8593,11 @@ Tool.Mask = {
 		}
 	}),
 	ControlPoint: Class.create({
-		initialize: function(x,y,r,parent) {
+		initialize: function(x,y,r,parent_shape) {
 			this.x = x
 			this.y = y
 			this.r = r
-			this.parent_shape = parent
+			this.parent_shape = parent_shape
 			this.color = '#200'
 			this.dragging = false
 			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
@@ -8670,15 +8665,14 @@ Tool.Mask = {
 			this.dragging = false
 		},
 		drag: function() {
-			if (this.parent_shape.active  /*&& Geometry.distance(this.x, this.y, Map.pointer)*/) {
-				if (!this.dragging) {
-					this.dragging = true
-					this.drag_offset_x = Map.pointer_x() - this.x
-					this.drag_offset_y = Map.pointer_y() - this.y
-				}
-				this.color = '#f00'
-				this.x=Map.pointer_x()
-				this.y=Map.pointer_y()
+			if (!this.dragging) {
+				this.dragging = true
+				this.drag_offset_x = Map.pointer_x() - this.x
+				this.drag_offset_y = Map.pointer_y() - this.y
+			}
+			if (this.drag_offset_x) {
+				this.x = Map.pointer_x() - this.drag_offset_x
+				this.y = Map.pointer_y() - this.drag_offset_y
 			}
 		},
 		r: function() {
@@ -9567,7 +9561,8 @@ Warper.Image = Class.create(
 				$C.line_to(point.x, point.y)
 			})
 			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			$C.canvas.clip()
+			if (this.mask.active) $C.canvas.clip()
+			else $C.stroke()
 		}
 
 		$C.opacity(this.opacity)
