@@ -49,10 +49,18 @@ Warper.Image = Class.create(
 		$('tool_warp_outline').toggleClassName('down')
 	},
 	/**
-	 * Calculates the (what the hell is this?) 
+	 * Calculates the (what the hell is this?) --
+	 * probably its the size of the gridding for distortion 
 	 */	
 	patch_size: function() {
 		return 100/Map.zoom
+	},
+
+	/**
+	 * Duh.
+	 */
+	delete_mask: function() {
+		this.mask = false
 	},
 
 	/**
@@ -63,31 +71,27 @@ Warper.Image = Class.create(
 			this.set_to_natural_size()
 		}
 
-		// spliced in
-		if (this.mask) {
-			$C.save()
+		if (this.mask && this.mask.points && this.mask.points.length > 2) {
+			//$C.save()
 			$C.begin_path()
-			if (this.mask.points.length>0){
-				$C.move_to(this.mask.points[0].x, this.mask.points[0].y)		
-				this.mask.points.each(function(point) {
-					$C.line_to(point.x, point.y)
-				})			
-				$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			}
+			$C.move_to(this.mask.points[0].x, this.mask.points[0].y)		
+			this.mask.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})			
+			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
 			$C.canvas.clip()
+			// LEARN HOW TO USE CLIP, PILGRIM!!
 			//$C.restore()
 		}
-		// spliced in
 		
 		$C.opacity(this.opacity)
 		// draw warped image: 
 		if (!this.outline) this.update()
+
+		// Draw outline
 		$C.opacity(1)
 		$C.save()
-		
 		$C.fill_style('#222')
-			
-		// Draw outline
 		$C.begin_path()
 		$C.move_to(this.points[0].x, this.points[0].y)
 		this.points.each(function(point) {
@@ -188,6 +192,12 @@ Warper.Image = Class.create(
 				// 'true' = all points drag together
 				point.drag(true)
 			})
+			if (this.mask && this.mask.points) {
+				this.mask.points.each(function(point) {
+					// 'true' = all points drag together
+					point.drag(true)
+				})
+			}
 			$C.cursor('move')
 		}
 		} else {
@@ -240,9 +250,11 @@ Warper.Image = Class.create(
  	 * image and calls its dblclick()
  	 */
 	dblclick: function() {
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
-		$('tool_warp_transparent').toggleClassName('down')
+		if (Tool.active != "Mask") {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+			$('tool_warp_transparent').toggleClassName('down')
+		}
 	},
 	/**
 	 * A function to generate an array of coordinate pairs as in [lat,lon] for the image corners

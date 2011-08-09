@@ -6,7 +6,7 @@ Tool.Mask = {
 	 * The tool mode can be 'drawing' when the user is in the process of adding 
 	 * points to the polygon, or 'inactive' when a polygon has not yet begun.
 	 */
-	mode: 'inactive', //'draw','inactive','drag'
+	mode: 'draw', //'draw','inactive','drag'
 	/**
 	 * The polygon currently being drawn. 
 	 */
@@ -15,16 +15,16 @@ Tool.Mask = {
 		$l('Mask dragging')
 	},
 	activate: function() {
-		$l('Mask activated')
+		$('tooltip').hide()
 	},
 	deactivate: function() {
 		$l('Mask deactivated')
 	},
+
 	mousedown: function() {
-		console.log('mousedown in pen')
 		if (Tool.Mask.mode == 'inactive') {
-		} 
-		else if (Tool.Mask.mode == 'draw') {
+		} else if (Tool.Mask.mode == 'draw') {
+			if (Warper.active_image && Warper.active_image.mask == false) Tool.Mask.mask_warpable()
 			var over_point = false
 			Tool.Mask.warpable.mask.points.each(function(point){
 				if (point.mouse_inside()) over_point = true
@@ -32,7 +32,6 @@ Tool.Mask = {
 			})
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
-				Tool.Mask.warpable.mask.active = true
 			}
 		}
 		else if (Tool.Mask.mode == 'drag'){
@@ -40,18 +39,21 @@ Tool.Mask = {
 		}
 		
 	}.bindAsEventListener(Tool.Mask),
+
 	mouseup: function() {
 		$l('Mask mouseup')
 	}.bindAsEventListener(Tool.Mask),
 	mousemove: function() {
 		$l('Mask mousemove')
 	}.bindAsEventListener(Tool.Mask),
+
 	dblclick: function() {
 		$l('Mask dblclick')
 		// Tool.Mask.mode = 'inactive'
 		// Did we end inside the first control point of the polygon?
 		if (true) {
-			// close the poly
+			// close the poly, fire up the mask
+			Tool.Mask.warpable.mask.active = true
 			Tool.Mask.mode = 'inactive'
 			Tool.change('Pan') //Hi!!
 		}
@@ -59,14 +61,15 @@ Tool.Mask = {
 		// in selected image's .mask parameter
 		
 	}.bindAsEventListener(Tool.Mask),
+
 	// 
 	mask_warpable: function() {
-		Tool.Mask.warpable = Warper.active_object
-		Tool.change("Mask")
+		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
 		Tool.Mask.warpable.mask = new Tool.Mask.Shape([])	
 		console.log('added mask')
 	},
+
 	Shape: Class.create({
 		initialize: function(nodes) {
 			this.active = false
@@ -76,14 +79,15 @@ Tool.Mask = {
 			
 			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
+			Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Mask.ControlPoint(x, y, 5, this))
+			this.points.push(new Tool.Mask.ControlPoint(x, y, 5/Map.zoom, this))
 		},
 		mouse_inside: function(){
-			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
-				console.log('Mouse in point')
-			}
+			//if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
+			//	console.log('Mouse in point')
+			//}
 			return Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())
 		},
 		base: function(){
@@ -103,7 +107,7 @@ Tool.Mask = {
 				this.first_click_y=Map.pointer_y()
 				if (this.active){
 					if (!this.dragging){
-						this.dragging=true
+						this.dragging = true
 						Tool.change('Warp')
 					}
 				}
@@ -113,16 +117,17 @@ Tool.Mask = {
 				this.color='#000'
 			}
 		},
+		mouseup: function() {
+			this.dragging = false
+		},
 		hover: function(){
 			this.color='#900'
 			this.dragging=false
-			console.log('Hover')
 		},	
 		draw: function() {
 			if (this.mouse_inside()){
 				if (this.dragging){
 					this.drag_started=true
-					console.log('Trying to drag')
 					Tool.Mask.mode='drag'
 					for (var i=0; i<this.points.length; i++){
 						this.points[i].x=this.points[i].old_x + (Map.pointer_x()-this.first_click_x)
@@ -151,7 +156,7 @@ Tool.Mask = {
 				$C.save()
 				$C.stroke_style('#000')
 				$C.fill_style(this.color)
-				if (this.active) $C.line_width(2)
+				if (this.active) $C.line_width(2/Map.zoom)
 				else $C.line_width(0)
 				$C.begin_path()
 				if (this.points.length>0){
@@ -186,7 +191,7 @@ Tool.Mask = {
 			// first, save the transformation matrix:
 			if (this.parent_shape.active) {
 				$C.save()
-					$C.line_width(3/Map.zoom)
+					$C.line_width(2/Map.zoom)
 					// go to the object's location:
 					$C.translate(this.x,this.y)
 					// draw the object:

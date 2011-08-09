@@ -8371,17 +8371,18 @@ Tool.Pan = {
 	}.bindAsEventListener(Tool.Pan)
 }
 Tool.Warp = {
-	mode: 'default', //'rotate','drag','scale'
+	mode: 'default', //'rotate','mask'
 	activate: function() {
 		Tool.add_toolbar("tool_specific")
 		Tool.add_tool_specific_button("warp_delete",Tool.Warp.delete_image,"Delete this image","/images/silk-grey/delete.png","first silk")
 		Tool.add_tool_specific_button("warp_revert",function(){Warper.active_image.set_to_natural_size();},"Revert to original proportions","/images/silk-grey/arrow_refresh.png","silk")
 		Tool.add_tool_specific_button("warp_lock",Tool.Warp.lock_image,"Lock this image (l)","/images/silk-grey/lock.png","silk")
 		if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
-		Tool.add_tool_specific_button("warp_outline",function(){Warper.active_image.toggle_outline()},"Toggle image outline (o)","/images/silk-grey/shape_move_backwards.png","silk")
+		Tool.add_tool_specific_button("warp_outline",function(){Warper.active_image.toggle_outline()},"Toggle image outline (o)","/images/tools/stock-tool-rect-select-22.png",true)
 		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency (t)","/images/silk-grey/contrast_low.png","silk")
 		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
 		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
+		Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
 		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
 		$('tool_warp_distort').addClassName('down')
 	},
@@ -8440,22 +8441,22 @@ Tool.Warp = {
 	}.bindAsEventListener(Tool.Warp)
 }
 Tool.Mask = {
-	mode: 'inactive', //'draw','inactive','drag'
+	mode: 'draw', //'draw','inactive','drag'
 	current_poly: null,
 	drag: function() {
 		$l('Mask dragging')
 	},
 	activate: function() {
-		$l('Mask activated')
+		$('tooltip').hide()
 	},
 	deactivate: function() {
 		$l('Mask deactivated')
 	},
+
 	mousedown: function() {
-		console.log('mousedown in pen')
 		if (Tool.Mask.mode == 'inactive') {
-		}
-		else if (Tool.Mask.mode == 'draw') {
+		} else if (Tool.Mask.mode == 'draw') {
+			if (Warper.active_image && Warper.active_image.mask == false) Tool.Mask.mask_warpable()
 			var over_point = false
 			Tool.Mask.warpable.mask.points.each(function(point){
 				if (point.mouse_inside()) over_point = true
@@ -8463,7 +8464,6 @@ Tool.Mask = {
 			})
 			if (!over_point) { // if you didn't click on an existing node
 				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
-				Tool.Mask.warpable.mask.active = true
 			}
 		}
 		else if (Tool.Mask.mode == 'drag'){
@@ -8471,27 +8471,31 @@ Tool.Mask = {
 		}
 
 	}.bindAsEventListener(Tool.Mask),
+
 	mouseup: function() {
 		$l('Mask mouseup')
 	}.bindAsEventListener(Tool.Mask),
 	mousemove: function() {
 		$l('Mask mousemove')
 	}.bindAsEventListener(Tool.Mask),
+
 	dblclick: function() {
 		$l('Mask dblclick')
 		if (true) {
+			Tool.Mask.warpable.mask.active = true
 			Tool.Mask.mode = 'inactive'
 			Tool.change('Pan') //Hi!!
 		}
 
 	}.bindAsEventListener(Tool.Mask),
+
 	mask_warpable: function() {
-		Tool.Mask.warpable = Warper.active_object
-		Tool.change("Mask")
+		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
 		Tool.Mask.warpable.mask = new Tool.Mask.Shape([])
 		console.log('added mask')
 	},
+
 	Shape: Class.create({
 		initialize: function(nodes) {
 			this.active = false
@@ -8501,14 +8505,12 @@ Tool.Mask = {
 
 			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
 			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
+			Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
 		},
 		new_point: function(x,y) {
-			this.points.push(new Tool.Mask.ControlPoint(x, y, 5, this))
+			this.points.push(new Tool.Mask.ControlPoint(x, y, 5/Map.zoom, this))
 		},
 		mouse_inside: function(){
-			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())){
-				console.log('Mouse in point')
-			}
 			return Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())
 		},
 		base: function(){
@@ -8528,7 +8530,7 @@ Tool.Mask = {
 				this.first_click_y=Map.pointer_y()
 				if (this.active){
 					if (!this.dragging){
-						this.dragging=true
+						this.dragging = true
 						Tool.change('Warp')
 					}
 				}
@@ -8538,16 +8540,17 @@ Tool.Mask = {
 				this.color='#000'
 			}
 		},
+		mouseup: function() {
+			this.dragging = false
+		},
 		hover: function(){
 			this.color='#900'
 			this.dragging=false
-			console.log('Hover')
 		},
 		draw: function() {
 			if (this.mouse_inside()){
 				if (this.dragging){
 					this.drag_started=true
-					console.log('Trying to drag')
 					Tool.Mask.mode='drag'
 					for (var i=0; i<this.points.length; i++){
 						this.points[i].x=this.points[i].old_x + (Map.pointer_x()-this.first_click_x)
@@ -8576,7 +8579,7 @@ Tool.Mask = {
 				$C.save()
 				$C.stroke_style('#000')
 				$C.fill_style(this.color)
-				if (this.active) $C.line_width(2)
+				if (this.active) $C.line_width(2/Map.zoom)
 				else $C.line_width(0)
 				$C.begin_path()
 				if (this.points.length>0){
@@ -8608,7 +8611,7 @@ Tool.Mask = {
 		draw: function() {
 			if (this.parent_shape.active) {
 				$C.save()
-					$C.line_width(3/Map.zoom)
+					$C.line_width(2/Map.zoom)
 					$C.translate(this.x,this.y)
 					$C.fill_style("#333")
 					$C.opacity(0.6)
@@ -9276,8 +9279,12 @@ var Warper = {
 			}
 		}
 		if (inside_image) {
-			Tool.change('Warp',!same_image)
-			Warper.images.sort(Warper.sort_by_active)
+			if (Tool.active != "Mask") {
+				Tool.change('Warp',!same_image)
+				Warper.images.sort(Warper.sort_by_active)
+			} else {
+
+			}
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
@@ -9544,31 +9551,31 @@ Warper.Image = Class.create(
 		return 100/Map.zoom
 	},
 
+	delete_mask: function() {
+		this.mask = false
+	},
+
 	draw: function() {
 		if (this.waiting_for_natural_size) {
 			this.set_to_natural_size()
 		}
 
-		if (this.mask) {
-			$C.save()
+		if (this.mask && this.mask.points && this.mask.points.length > 2) {
 			$C.begin_path()
-			if (this.mask.points.length>0){
-				$C.move_to(this.mask.points[0].x, this.mask.points[0].y)
-				this.mask.points.each(function(point) {
-					$C.line_to(point.x, point.y)
-				})
-				$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
-			}
+			$C.move_to(this.mask.points[0].x, this.mask.points[0].y)
+			this.mask.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})
+			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
 			$C.canvas.clip()
 		}
 
 		$C.opacity(this.opacity)
 		if (!this.outline) this.update()
+
 		$C.opacity(1)
 		$C.save()
-
 		$C.fill_style('#222')
-
 		$C.begin_path()
 		$C.move_to(this.points[0].x, this.points[0].y)
 		this.points.each(function(point) {
@@ -9665,6 +9672,11 @@ Warper.Image = Class.create(
 			this.points.each(function(point) {
 				point.drag(true)
 			})
+			if (this.mask && this.mask.points) {
+				this.mask.points.each(function(point) {
+					point.drag(true)
+				})
+			}
 			$C.cursor('move')
 		}
 		} else {
@@ -9700,9 +9712,11 @@ Warper.Image = Class.create(
 		return prejson.toJSON()
 	},
 	dblclick: function() {
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
-		$('tool_warp_transparent').toggleClassName('down')
+		if (Tool.active != "Mask") {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+			$('tool_warp_transparent').toggleClassName('down')
+		}
 	},
 	coordinates: function() {
 		coordinates = []
