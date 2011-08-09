@@ -174,6 +174,7 @@ var Knitter = {
 
 	toggle_vectors: function() {
 		Config.vectors = !Config.vectors;
+		$('tagreport').toggle()
 		$('loading_message').hide()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',

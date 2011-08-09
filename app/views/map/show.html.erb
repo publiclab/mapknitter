@@ -81,6 +81,7 @@
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
             <a name='Toggle vector data' class='silk<%= " down" if @map.vectors %>' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a id="tagreport" name='Show all tags' class='silk' style="display:none;" href="javascript:void(0);" onClick="Cartagen.tags('alert');"><img src="/images/silk-grey/tag_blue.png" /></a>
             <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
     	</div>
 	</div>

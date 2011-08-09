@@ -138,8 +138,8 @@ var Events = {
 	 */
 	keyup: function(e) {
 		if (Events.enabled === true) {
+			Keyboard.shift = false
 			if (Events.arrow_keys_enabled === true) {
-				Keyboard.shift = false
 				var character = e.keyIdentifier
 				switch(character) {	
 					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break

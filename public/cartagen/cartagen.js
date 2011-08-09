@@ -5339,6 +5339,37 @@ var Cartagen = {
 			}
 		})
 
+	},
+
+	tags: function(type,filter) {
+		type = type || "text"
+		filter = filter || true
+		var blacklist = ["created_by","tiger:upload_uuid","tiger:source","tiger:name_base","tiger:reviewed","tiger:cfcc","tiger:county","tiger:separated","tiger:name_base","tiger:name_type","tiger:tlid","tiger:zip_left","tiger:zip_right"]
+		var tags = []
+		Geohash.objects.each(function(obj) {
+			if (obj.tags) obj.tags.each(function(tag){
+				var uniq = true
+				tags.each(function(oldtag) {
+					if (oldtag[0] == tag[0] && oldtag[1] == tag[1]) uniq = false
+				})
+				if (uniq) {
+					if (filter) {
+						var blocked = false
+						blacklist.each(function(bad) {
+							if (tag[0] == bad || tag[1] == bad) blocked = true
+						})
+						if (!blocked) {
+							tags.push(tag)
+						}
+					} else {
+						tags.push(tag)
+					}
+				}
+			})
+		})
+		if (type == "text") return tags.toJSON()
+		else if (type == "alert") alert(tags.toJSON())
+		else return tags
 	}
 }
 
@@ -7061,8 +7092,8 @@ var Events = {
 
 	keyup: function(e) {
 		if (Events.enabled === true) {
+			Keyboard.shift = false
 			if (Events.arrow_keys_enabled === true) {
-				Keyboard.shift = false
 				var character = e.keyIdentifier
 				switch(character) {
 					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
