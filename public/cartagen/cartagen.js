@@ -8488,6 +8488,15 @@ Tool.Mask = {
 		Tool.Mask.mode='draw'
 		Tool.Mask.warpable.mask = new Tool.Mask.Shape([],Tool.Mask.warpable)
 	},
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
+	},
 
 	Shape: Class.create({
 		initialize: function(nodes,parent_image) {
@@ -9725,15 +9734,21 @@ Warper.Image = Class.create(
 		return coordinates
 	},
 	save: function() {
-		var coordinate_string = '',first = true
+		var coordinate_string = '', first = true, mask_coordinate_string = ''
 		this.coordinates().each(function(coord){
 			if (first) first = false
 			else coordinate_string += ':'
 			coordinate_string += coord[0]+','+coord[1]
 		})
+		first = true
+		this.mask.coordinates().each(function(coord{
+			if (first) first = false
+			else mask_coordinate_string += ':'
+			mask_coordinate_string += coord[0]+','+coord[1]
+		})
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked, 'mask': mask_coordinate_string },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}
