@@ -1,6 +1,32 @@
 var Knitter = {
 	// start storing a layer_type and layer_url in Map model, use it to switch this:
 	openlayers_on: false,
+	save: {
+		state: true,
+		saved: function(response) {
+			Knitter.save.state = true
+			$('save_saved').show()
+			$('save_saving').hide()
+			$('save_failed').hide()
+			console.log('saved')
+			console.log(response)
+		},
+		submitted: function(response) {
+			Knitter.save.state = "saving"
+			$('save_saved').hide()
+			$('save_saving').show()
+			$('save_failed').hide()
+			console.log('saving')
+		},
+		failed: function(response) {
+			Knitter.save.state = false
+			$('save_saved').hide()
+			$('save_saving').hide()
+			$('save_failed').show()
+			console.log('failed')
+			console.log(response)
+		},
+	},
 	setup: function() {
 		Glop.observe('pan:mouseup', function () {
 			Knitter.save_current_location()
@@ -110,6 +136,7 @@ var Knitter = {
 		Knitter.openLayersDraw()
 		Glop.observe('glop:draw', Knitter.openLayersDraw)
 			
+		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
@@ -117,7 +144,10 @@ var Knitter = {
 				lon: Map.lon,
 				zoom: Map.zoom,
 				tiles: layer // here we might add a WMS url too
-			}
+			},
+			onSuccess: Knitter.save.saved,
+			on0: Knitter.save.failed,
+			onFailure: Knitter.save.failed,
 		})
 	},
 
@@ -157,13 +187,17 @@ var Knitter = {
 	},
 
 	save_new_location: function(lat,lon,zoom) {
+		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
 				lat: lat,
 				lon: lon,
 				zoom: zoom
-			}
+			},
+			onSuccess: Knitter.save.saved,
+			on0: Knitter.save.failed,
+			onFailure: Knitter.save.failed,
 		})
 	},
 
@@ -176,6 +210,7 @@ var Knitter = {
 		Config.vectors = !Config.vectors;
 		$('tagreport').toggle()
 		$('loading_message').hide()
+		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
@@ -183,7 +218,10 @@ var Knitter = {
 				lon: Map.lon,
 				zoom: Map.zoom,
 				vectors: Config.vectors
-			}
+			},
+			onSuccess: Knitter.save.saved,
+			on0: Knitter.save.failed,
+			onFailure: Knitter.save.failed,
 		})
 	},
 

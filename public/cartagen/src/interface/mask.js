@@ -15,7 +15,7 @@ Tool.Mask = {
 		$l('Mask dragging')
 	},
 	activate: function() {
-		$('tooltip').hide()
+		Tool.hide_tooltip()
 	},
 	deactivate: function() {
 		$l('Mask deactivated')
@@ -57,6 +57,18 @@ Tool.Mask = {
 		Tool.Mask.warpable = Warper.active_image
 		Tool.Mask.mode='draw'
 		Tool.Mask.warpable.mask = new Tool.Mask.Shape([],Tool.Mask.warpable)	
+	},
+	/**
+	 * A function to generate an array of coordinate pairs as in [lat,lon] for the mask points
+	 */
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
 	},
 
 	Shape: Class.create({

@@ -72,12 +72,33 @@ img {
 .modal form {
 	text-align:right;
 }
-#styles textarea {
-	margin-bottom:6px;
+
+#save_state {
+	margin:3px 6px;
+	padding:3px 7px;
+	font-size:11px;
 }
-#iframe_code {
-	
+#save_state span {
+	padding:3px 5px;
+	font-family:lucida grande, lucida sans console, sans-serif;
+	float:right;
 }
+#save_state #save_saved {
+	border:1px solid #080;
+	color: #040;
+	background:#5a3;
+}
+#save_state #save_saving {
+	border:1px solid #880;
+	color: #330;
+	background:#de0;
+}
+#save_state #save_failed {
+	border:1px solid #300;
+	color: #f22;
+	background:#800;
+}
+
 .toolbar {
 	float:left;
 	margin-right:4px;

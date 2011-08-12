@@ -23,6 +23,7 @@ var Warper = {
  	 * The selected image. This would be deprecated if we implement multiple selection or grouping.
  	 */
 	active_image: false,
+
 	/*
  	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
@@ -48,6 +49,7 @@ var Warper = {
 		if (a == Warper.active_image) return 1;
 		if (b == Warper.active_image) return -1;
 	},
+
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle. 
  	 * This places warpable images above most other features except labels.
@@ -59,6 +61,7 @@ var Warper = {
 		if (Warper.should_save) Warper.active_image.save_state()
 		Warper.should_save = false
 	},
+
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
@@ -113,6 +116,7 @@ var Warper = {
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
+
 	/**
 	 * Double click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
@@ -128,6 +132,7 @@ var Warper = {
 			}	
 		}	
 	},
+
 	/**
 	 * A function which submits all the Images in the Warper.images array
 	 * to the Ruby backend for full-resolution warping.
@@ -144,10 +149,10 @@ var Warper = {
 		  }
 		});
 	},
+
 	/**
 	 * Creates a Warper.Image object to contain its resulting URI and 'random' coordinates.
-         * Places the incoming image at Map.x, Map.y, but randomize the corners to show the
-         * user that you can warp it. 
+         * Places the incoming image at Map.x, Map.y
 	 * @param {String} url Address of image file in form http://path/to/image.xxx where xxx is any browser-readable image format.
 	 * @param {Integer} id The unique id (primary key, from the database) of the image. Used for tracking/differentiating
 	 * @param {Boolean} randomize Whether to randomize the corner placement to 'suggest' to the user that the image is warpable.
@@ -169,6 +174,7 @@ var Warper = {
 			]),url,id,natural_size))
 		}
 	},
+
 	/**
 	 * Instantiates an existing image as a Warper.Image object, given an image and known points
 	 * in an array of [lon,lat] pairs.
@@ -190,6 +196,7 @@ var Warper = {
 		]),url,id))
 		Warper.images.last().locked = locked
 	},
+
 	/**
 	 * Convenience method to present points as objects with .x and .y values instead of [x,y]
 	 */
@@ -203,6 +210,7 @@ var Warper = {
 		}
 		return '(' + x + ', ' + y + ')'
 	},
+
 	getProjectiveTransform: function(points) {
 	  var eqMatrix = new Matrix(9, 8, [
 	    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ], 

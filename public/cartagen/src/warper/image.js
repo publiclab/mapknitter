@@ -274,15 +274,25 @@ Warper.Image = Class.create(
 	 * Asyncronously upload distorted point coordinates to server
 	 */
 	save: function() {
-		var coordinate_string = '',first = true
+		// mask_coordinate_string may end up being useless depending on if 
+		// we mask in GDAL or ImageMagick
+		var coordinate_string = '', first = true, mask_coordinate_string = ''
 		this.coordinates().each(function(coord){
 			if (first) first = false
 			else coordinate_string += ':'
 			coordinate_string += coord[0]+','+coord[1]
 		})
+		first = true
+		if (this.mask) {
+			this.mask.coordinates().each(function(coord){
+				if (first) first = false
+				else mask_coordinate_string += ':'
+				mask_coordinate_string += coord[0]+','+coord[1]
+			})
+		}
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked, 'mask': mask_coordinate_string },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}

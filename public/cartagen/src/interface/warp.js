@@ -1,5 +1,7 @@
 /**
- * @namespace The 'Warp' tool and associated methods.
+ * @namespace The 'Warp' tool interface and associated methods. 
+ * Some is also stored at /warper/warper.js, since the Warp 
+ * tool is quite complex.
  */
 Tool.Warp = {
 	/**
@@ -21,7 +23,7 @@ Tool.Warp = {
 		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency (t)","/images/silk-grey/contrast_low.png","silk")
 		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
 		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
-		Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
+		if (Config.beta) Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
 		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
 		$('tool_warp_distort').addClassName('down')
 	},

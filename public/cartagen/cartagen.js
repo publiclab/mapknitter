@@ -8413,7 +8413,7 @@ Tool.Warp = {
 		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency (t)","/images/silk-grey/contrast_low.png","silk")
 		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
 		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
-		Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
+		if (Config.beta) Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
 		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
 		$('tool_warp_distort').addClassName('down')
 	},
@@ -8478,7 +8478,7 @@ Tool.Mask = {
 		$l('Mask dragging')
 	},
 	activate: function() {
-		$('tooltip').hide()
+		Tool.hide_tooltip()
 	},
 	deactivate: function() {
 		$l('Mask deactivated')
@@ -9247,6 +9247,7 @@ var Warper = {
 	images: [],
 	locked: false,
 	active_image: false,
+
 	/*
  	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
@@ -9262,6 +9263,7 @@ var Warper = {
 		if (a == Warper.active_image) return 1;
 		if (b == Warper.active_image) return -1;
 	},
+
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle.
  	 * This places warpable images above most other features except labels.
@@ -9273,6 +9275,7 @@ var Warper = {
 		if (Warper.should_save) Warper.active_image.save_state()
 		Warper.should_save = false
 	},
+
 	mousedown: function() {
 		if (!Warper.locked) {
 		Map.x_old = Map.x
@@ -9321,6 +9324,7 @@ var Warper = {
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
+
 	dblclick: function() {
 		if (!Warper.locked) {
 			for (i=Warper.images.length-1;i>=0;i--){
@@ -9332,6 +9336,7 @@ var Warper = {
 			}
 		}
 	},
+
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
 		  method: 'get',
@@ -9342,6 +9347,7 @@ var Warper = {
 		  }
 		});
 	},
+
 	new_image: function(url,id,natural_size) {
 		if (!natural_size) {
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
@@ -9359,6 +9365,7 @@ var Warper = {
 			]),url,id,natural_size))
 		}
 	},
+
 	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
 		points[0][1] = Projection.lat_to_y(points[0][1])
@@ -9376,6 +9383,7 @@ var Warper = {
 		]),url,id))
 		Warper.images.last().locked = locked
 	},
+
 	p: function(point) {
 		if (point.x == undefined) {
 			x = point[0]
@@ -9386,6 +9394,7 @@ var Warper = {
 		}
 		return '(' + x + ', ' + y + ')'
 	},
+
 	getProjectiveTransform: function(points) {
 	  var eqMatrix = new Matrix(9, 8, [
 	    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ],
@@ -9772,11 +9781,13 @@ Warper.Image = Class.create(
 			coordinate_string += coord[0]+','+coord[1]
 		})
 		first = true
-		this.mask.coordinates().each(function(coord{
-			if (first) first = false
-			else mask_coordinate_string += ':'
-			mask_coordinate_string += coord[0]+','+coord[1]
-		})
+		if (this.mask) {
+			this.mask.coordinates().each(function(coord){
+				if (first) first = false
+				else mask_coordinate_string += ':'
+				mask_coordinate_string += coord[0]+','+coord[1]
+			})
+		}
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
 			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked, 'mask': mask_coordinate_string },
