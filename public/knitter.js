@@ -8,23 +8,18 @@ var Knitter = {
 			$('save_saved').show()
 			$('save_saving').hide()
 			$('save_failed').hide()
-			console.log('saved')
-			console.log(response)
 		},
 		submitted: function(response) {
 			Knitter.save.state = "saving"
 			$('save_saved').hide()
 			$('save_saving').show()
 			$('save_failed').hide()
-			console.log('saving')
 		},
 		failed: function(response) {
 			Knitter.save.state = false
 			$('save_saved').hide()
 			$('save_saving').hide()
 			$('save_failed').show()
-			console.log('failed')
-			console.log(response)
 		},
 	},
 	setup: function() {
