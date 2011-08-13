@@ -8,6 +8,7 @@ var Knitter = {
 			$('save_saved').show()
 			$('save_saving').hide()
 			$('save_failed').hide()
+			console.log(response)
 		},
 		submitted: function(response) {
 			Knitter.save.state = "saving"
@@ -20,6 +21,7 @@ var Knitter = {
 			$('save_saved').hide()
 			$('save_saving').hide()
 			$('save_failed').show()
+			console.log(response)
 		},
 	},
 	setup: function() {
@@ -204,7 +206,7 @@ var Knitter = {
 	toggle_vectors: function() {
 		Config.vectors = !Config.vectors;
 		$('tagreport').toggle()
-		$('loading_message').hide()
+		if ($('loading_message')) $('loading_message').hide()
 		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
