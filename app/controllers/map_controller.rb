@@ -139,7 +139,7 @@ class MapController < ApplicationController
         @nodes[warpable.id.to_s] = nodes
       else
 	# delete warpables which have not been placed and are older than 1 hour:
-	warpable.delete if DateTime.now-3.minutes < warpable.created_at
+	warpable.delete if DateTime.now-1.hour < warpable.created_at
       end
       @nodes[warpable.id.to_s] ||= 'none'
     end
