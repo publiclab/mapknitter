@@ -48,6 +48,7 @@ Tool.Warp = {
 			})
 			Tool.change('Pan')
 		}
+		Tool.hide_tooltip()
 	},
 	lock_image: function() {
 		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
