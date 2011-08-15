@@ -27,15 +27,19 @@ class MapController < ApplicationController
     @map = Map.find_by_name params[:id]
     @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
     @image_locations = []
-    @images.each do |image|
-      if image.nodes != ''
-        node = image.nodes.split(',').first
-        node_obj = Node.find(node)
-        @image_locations << [node_obj.lon,node_obj.lat]
-      else
+    if @images
+      @images.each do |image|
+        if image.nodes != ''
+          node = image.nodes.split(',').first
+          node_obj = Node.find(node)
+          @image_locations << [node_obj.lon,node_obj.lat]
+        else
+        end
       end
+      render :layout => false
+    else
+      render :text => "<h2>There are no images in this map.</h2>"
     end
-    render :layout => false
   end
 
   # just a template pointer... maybe uneccessary
@@ -137,11 +141,16 @@ class MapController < ApplicationController
           nodes << [node_obj.lon,node_obj.lat]
         end
         @nodes[warpable.id.to_s] = nodes
-      elsif (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
+      elsif (warpable.nodes == "none" && warpable.created_at == warpable.updated_at)
 	# delete warpables which have not been placed and are older than 1 hour:
 	warpable.delete if DateTime.now-1.hour > warpable.created_at
       end
       @nodes[warpable.id.to_s] ||= 'none'
+    end
+    unless @warpables 
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
     end
     render :layout => false
     end
