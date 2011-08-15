@@ -147,7 +147,7 @@ class MapController < ApplicationController
       end
       @nodes[warpable.id.to_s] ||= 'none'
     end
-    unless @warpables 
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
       @map.lon = location.lng
