@@ -50,8 +50,8 @@
 
 		document.observe('cartagen:init', function() {
 			Knitter.map_id = <%= @map.id %>
-			Knitter.setup()
 			Knitter.start_openlayers('<%= @map.tiles %>')
+			Knitter.setup()
 		})
 
 	</script>

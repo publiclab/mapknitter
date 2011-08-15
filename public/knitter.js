@@ -225,17 +225,28 @@ var Knitter = {
 	center_on_warpables: function() {
 		if (warpables.length > 0) {
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
+			var maxlat,maxlon,minlat,minlon
 			warpables.each(function(warpable){
 				if (warpable.nodes != "none") {
 					warpable.nodes.each(function(node) {
-               			        	lonsum += Projection.x_to_lon(-node[0])
-               			        	latsum += Projection.y_to_lat(node[1])
+						var lon = Projection.x_to_lon(-node[0])
+						var lat = Projection.y_to_lat(node[1])
+						if (lon > maxlon) maxlon = lon 
+						if (lat > maxlat) maxlat = lat 
+						if (lon < minlon) minlon = lon 
+						if (lat < minlat) minlat = lat 
+               			        	lonsum += lon
+               			        	latsum += lat
 						loncount += 1
 						latcount += 1
 	                		})
 				}
 			},this)
-			Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
+			if (latcount > 0) Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
+			var bounds = new OpenLayers.Bounds();
+			bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(spher_merc,latlon))
+			bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(spher_merc,latlon))
+			map.zoomToExtent( bounds )
 		}
 	}
 }

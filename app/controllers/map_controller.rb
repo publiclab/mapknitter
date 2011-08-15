@@ -151,6 +151,9 @@ class MapController < ApplicationController
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
       @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
     end
     render :layout => false
     end
