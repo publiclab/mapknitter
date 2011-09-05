@@ -17,7 +17,9 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
-			$C.line_width(3/Map.zoom)
+			var linewidth = 3/Map.zoom
+			if (linewidth < 1) linewidth = 1
+			$C.line_width(linewidth)
 			// go to the object's location:
 			$C.translate(this.x,this.y)
 			// draw the object:
@@ -31,6 +33,7 @@ Warper.ControlPoint = Class.create({
 				$C.line_to(6/Map.zoom,-6/Map.zoom)
 				$C.stroke()
 			} else {
+				if (Tool.Warp.mode == "rotate") $C.stroke_style("red")
 				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
 				$C.stroke_circ(0, 0, this.rel_r)
 			}
@@ -53,7 +56,6 @@ Warper.ControlPoint = Class.create({
 	},
 	update: function() {
 		this.rel_r = this.r / Map.zoom
-		
 		if (this.parent_shape.active_point == this) {
 			this.drag()
 		}
@@ -116,6 +118,8 @@ Warper.ControlPoint = Class.create({
 			var distance_change = distance - this.self_distance
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
 			var angle_change = angle-this.self_angle
+
+			if (Keyboard.shift) angle_change = 0 
 			// use angle to recalculate each of the points in this.parent_shape.points
 			this.parent_shape.points.each(function(point) {
 				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)

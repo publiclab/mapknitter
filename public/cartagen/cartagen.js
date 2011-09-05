@@ -5080,6 +5080,8 @@ Object.Event.extend(Control.ContextMenu);
 
 var Config = {
 	stylesheet: "/style.gss",
+	tiles: false,
+	vectors: true,
 	live: false,
 	powersave: true,
 	zoom_out_limit: 0.02,
@@ -5129,7 +5131,12 @@ var Config = {
 		this.run_handlers()
 	},
 	get_url_params: function() {
-		return window.location.href.toQueryParams()
+		params = window.location.href.toQueryParams()
+		$H(params).each(function(param){
+			if (param.value == 'true') params[param.key] = true
+			if (param.value == 'false') params[param.key] = false
+		})
+		return params
 	},
 	apply_aliases: function() {
 		this.aliases.each(function(pair) {
@@ -5163,7 +5170,7 @@ var Cartagen = {
 	scripts: [],
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
-			$('canvas').insert('<canvas id="main"></canvas>')
+			$('canvas').insert('<canvas style="z-index:20;" id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})
 	},
@@ -5273,7 +5280,7 @@ var Cartagen = {
 		}
 	},
 	go_to: function(lat,lon,zoom_level) {
-		Map.zoom = zoom_level
+		Map.zoom = zoom_level || Map.zoom_level
 		Map.lat = lat
 		Map.lon = lon
 		Map.x = Projection.lon_to_x(Map.lon)
@@ -5332,6 +5339,37 @@ var Cartagen = {
 			}
 		})
 
+	},
+
+	tags: function(type,filter) {
+		type = type || "text"
+		filter = filter || true
+		var blacklist = ["created_by","tiger:upload_uuid","tiger:source","tiger:name_base","tiger:reviewed","tiger:cfcc","tiger:county","tiger:separated","tiger:name_base","tiger:name_type","tiger:tlid","tiger:zip_left","tiger:zip_right"]
+		var tags = []
+		Geohash.objects.each(function(obj) {
+			if (obj.tags) obj.tags.each(function(tag){
+				var uniq = true
+				tags.each(function(oldtag) {
+					if (oldtag[0] == tag[0] && oldtag[1] == tag[1]) uniq = false
+				})
+				if (uniq) {
+					if (filter) {
+						var blocked = false
+						blacklist.each(function(bad) {
+							if (tag[0] == bad || tag[1] == bad) blocked = true
+						})
+						if (!blocked) {
+							tags.push(tag)
+						}
+					} else {
+						tags.push(tag)
+					}
+				}
+			})
+		})
+		if (type == "text") return tags.toJSON()
+		else if (type == "alert") alert(tags.toJSON())
+		else return tags
 	}
 }
 
@@ -5625,10 +5663,10 @@ var Style = {
 		}
 	},
 	 style_body: function() {
-		if (Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
+		if (!Config.tiles && Style.styles.body.fillStyle) $C.fill_style(Style.styles.body.fillStyle)
 		if (Style.styles.body.opacity) $C.opacity(Style.styles.body.opacity)
 
-		if (Style.styles.body.pattern) {
+		if (!Config.tiles && Style.styles.body.pattern) {
 			if (!Style.styles.body.pattern.src) {
 				var value = Style.styles.body.pattern
 				Style.styles.body.pattern = new Image()
@@ -5784,6 +5822,7 @@ var Feature = Class.create(
 		this.label = new Label(this)
 	},
 	draw: function() {
+		if (Config.vectors) {
 
 
 		$C.fill_style(this.fillStyle)
@@ -5805,6 +5844,7 @@ var Feature = Class.create(
 		$C.restore()
 		if (Map.zoom > 0.3) {
 			Cartagen.queue_label(this.label, this.x, this.y)
+		}
 		}
 	},
 	style: Prototype.emptyFunction,
@@ -6250,6 +6290,7 @@ var Coastline = {
 	coastline_nodes: [],
 	assembled_coastline: [],
 	draw: function() {
+		if (Config.vectors) {
 		Coastline.assembled_coastline = []
 		Feature.relations.values().each(function(object) {
 			$l(object.id+' relation')
@@ -6334,6 +6375,7 @@ var Coastline = {
 				$C.fill_pattern(coastline_style.pattern, 'repeat')
 			} else $C.fill_style(coastline_style.fillStyle)
 			$C.fill()
+		}
 		}
 	},
 	refresh_coastlines: function() {
@@ -6600,14 +6642,16 @@ var Importer = {
 					if (!Object.isUndefined(node)) data.nodes.push(node)
 				}
 			})
-			if (way.tag instanceof Array) {
-				way.tag.each(function(tag) {
-					data.tags.set(tag.k,tag.v)
+            		if (way.tag){
+				if (way.tag instanceof Array) {
+					way.tag.each(function(tag) {
+						data.tags.set(tag.k,tag.v)
+						if (tag.v == 'coastline') data.coastline = true
+					})
+				} else {
+					data.tags.set(way.tag.k,way.tag.v)
 					if (tag.v == 'coastline') data.coastline = true
-				})
-			} else {
-				data.tags.set(way.tag.k,way.tag.v)
-				if (tag.v == 'coastline') data.coastline = true
+				}
 			}
 			new Way(data)
 		}
@@ -6677,6 +6721,7 @@ var Glop = {
 		var new_snapshot = Map.x +','+ Map.x_old +','+ Map.y +','+ Map.y_old +','+ Map.rotate +','+ Map.rotate_old +','+ Map.zoom +','+ Map.old_zoom
 
 		if (new_snapshot != Glop.snapshot || force_draw || Glop.changed_size) {
+			Glop.fire('cartagen:change')
 			$C.thaw('background')
 		} else {
 			$C.freeze('background')
@@ -6688,7 +6733,7 @@ var Glop = {
 		Events.drag()
 		Glop.fire('glop:predraw')
 		draw_event = $('main').fire('glop:draw')
-		if (!draw_event.no_draw) {
+		if (Config.vectors && !draw_event.no_draw) {
 			objects.each(function(object) {
 				object.draw()
 			})
@@ -6959,8 +7004,12 @@ var Events = {
 		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
 		window.onmousewheel = document.onmousewheel = Events.wheel
 
+		Event.observe(document, 'keydown', Events.keydown)
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
+		if (Config.key_input) {
+			Keyboard.key_input = true
+		}
 
 		element = $('main')
 		element.ontouchstart = Events.ontouchstart
@@ -7008,52 +7057,56 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) - (1/20)
+				else map.zoomOut()
 			} else {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/20)
+				else map.zoomIn()
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 		event.preventDefault()
 	},
+
+	keydown: function(e) {
+		var key = e.which || e.keyCode
+		if (key == 16 || e.shiftKey) {
+			Keyboard.shift = true
+		}
+	},
 	keypress: function(e) {
 		if (Events.enabled === false) return
+		if (Events.keys_enabled === false) return
 
-		var code;
 		if (!e) var e = window.event;
 
-		if (e.keyCode) code = e.keyCode;
-		else if (e.which) code = e.which;
-		var character = String.fromCharCode(code);
+		var character = e.which || e.keyCode;
+		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
-			switch(character) {
-				case "s": zoom_in(); break
-				case "w": zoom_out(); break
-				case "d": Map.rotate += 0.1; break
-				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x += 20/Map.zoom; break
-				case "h": Map.x -= 20/Map.zoom; break
-				case "t": Map.y += 20/Map.zoom; break
-				case "g": Map.y -= 20/Map.zoom; break
-				case "x": localStorage.clear()
-			}
+			Keyboard.hotkey(character)
 		} else {
-			switch(character){
-				case "r": Keyboard.keys.set("r",true); break
-				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
-				case "b": if (Config.debug) Interface.download_bbox()
+			Keyboard.modifier(character)
+		}
+	},
+
+	keyup: function(e) {
+		if (Events.enabled === true) {
+			Keyboard.shift = false
+			if (Events.arrow_keys_enabled === true) {
+				var character = e.keyIdentifier
+				switch(character) {
+					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+					case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+					case 'Up': Map.y -= 20/Map.zoom; break
+					case 'Down': Map.y += 20/Map.zoom; break
+				}
+
+				Keyboard.keys.set("r",false)
+				Keyboard.keys.set("z",false)
+				e.preventDefault()
 			}
 		}
-		Glop.trigger_draw(5)
-	},
-	keyup: function(e) {
-		if (Events.enabled === false) return
-
-		Keyboard.keys.set("r",false)
-		Keyboard.keys.set("z",false)
-		e.preventDefault()
 	},
 	ontouchstart: function(e){
 		e.preventDefault();
@@ -7505,6 +7558,55 @@ CanvasTextFunctions.enable = function( ctx)
 var Keyboard = {
 	keys: new Hash(),
 	key_input: false,
+	shift: false,
+	hotkeys: {
+		"=": function() {
+			if (Config.tiles) map.zoomIn()
+			else Map.zoom *= 1.1
+		},
+		"-": function() {
+			if (Config.tiles) map.zoomOut()
+			else Map.zoom *= 0.9
+		},
+		"x": function() {
+			localStorage.clear()
+		},
+		"r": function() {
+			Tool.unpress(['warp_distort'])
+			$('tool_warp_rotate').addClassName('down')
+			Tool.Warp.mode = 'rotate'
+		},
+		"d": function() {
+			Tool.unpress(['warp_rotate'])
+			$('tool_warp_distort').addClassName('down')
+			Tool.Warp.mode = 'default'
+		},
+		"t": function() {
+			Warper.active_image.dblclick()
+		},
+		"o": function() {
+			Warper.active_image.toggle_outline()
+		},
+		"l": function() {
+			Tool.Warp.lock_image()
+		},
+	},
+	hotkey: function(key) {
+		if (Keyboard.hotkeys[key]) Keyboard.hotkeys[key]()
+		Glop.trigger_draw()
+	},
+	modifier: function(key) {
+		switch(character){
+			case "r": Keyboard.keys.set("r",true); break
+			case "z": Keyboard.keys.set("z",true); break
+			case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
+			case "b": if (Config.debug) Interface.download_bbox()
+			case Event.KEY_UP: Cartagen.fire('keypress:up')
+			case Event.KEY_DOWN: Cartagen.fire('keypress:down')
+			case Event.KEY_LEFT: Cartagen.fire('keypress:left')
+			case Event.KEY_RIGHT: Cartagen.fire('keypress:right')
+		}
+	}
 }
 var Mouse = {
 	x: 0,
@@ -7856,38 +7958,9 @@ var ContextMenu = {
 document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 var Zoom = {
 	initialize: function() {
-		Glop.observe('cartagen:postdraw', Zoom.draw.bindAsEventListener(this))
+		Zoom.interval = 1.3
+		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval;map.zoomIn()'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3);map.zoomOut()'>-</a></div>")
 	},
-	zoom_to: function() {
-
-	},
-	width: 20,
-	height:0.4,
-	draw: function() {
-
-		$C.save()
-		$C.fill_style('white')
-		$C.line_width(Zoom.width/Cartagen.zoom_level)
-		$C.opacity(0.7)
-		var x = Map.x-(1/Cartagen.zoom_level*(Glop.width/2))+(40/Cartagen.zoom_level), y = Map.y-(1/Cartagen.zoom_level*(Glop.height/2))+(40/Cartagen.zoom_level)
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.line_to(x,y+(Glop.height*Zoom.height)/Cartagen.zoom_level)
-		$C.stroke()
-
-		$C.opacity(0.9)
-		$C.line_width(Zoom.width/Cartagen.zoom_level)
-		$C.stroke_style('white')
-		$C.line_cap('square')
-		$C.begin_path()
-			$C.line_to(x,y)
-			$C.line_to(x,y+(Cartagen.zoom_level*Glop.height*Zoom.height)/Cartagen.zoom_level)
-		$C.stroke()
-
-		$C.restore()
-
-	}
-
 }
 
 document.observe('cartagen:init', Zoom.initialize.bindAsEventListener(Zoom))
@@ -7909,7 +7982,6 @@ var Tool = {
 		Tool.hover = true
 	},
 	show_tooltip: function(tool_name) {
-		console.log(tool_name)
 		Tool.hide_tooltip()
 		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
 		$('tooltip').innerHTML = tool_name
@@ -7928,7 +8000,6 @@ var Tool = {
 	hover: true,
 	active: 'Pan',
 	change: function(new_tool,force) {
-		console.log('changing '+Tool.active+' to '+new_tool)
 		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 
@@ -7937,7 +8008,6 @@ var Tool = {
 			tool_events.each(function(tool_event) {
 				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 				Glop.observe(tool_event,Tool[new_tool][tool_event])
-				console.log(new_tool+', '+tool_event)
 			})
 
 			if (!Object.isUndefined(Tool[old_tool].deactivate)) {
@@ -7953,6 +8023,28 @@ var Tool = {
 	drag: function() {
 		Tool[Tool.active].drag()
 	},
+	unpress: function(list) {
+		list.each(function(button) {
+			$('tool_'+button).removeClassName('down')
+		})
+	},
+	add_toolbar: function(name) {
+		$('toolbars').insert('<div class=\'toolbar\' id=\''+name+'\'></div>')
+	},
+	remove_toolbar: function(name) {
+		$(name).remove()
+	},
+	add_tool_specific_button: function(name,task,tooltip,icon,classes,press,init_tool) {
+		$('tool_specific').insert('<a name=\''+tooltip+'\' class=\''+classes+'\' id=\'tool_'+name+'\'  href=\'javascript:void(0);\'><img src=\''+icon+'\' /></a>')
+		$('tool_'+name).observe('mouseup',function(e){Glop.trigger_draw();task(e)})
+		if (press) {
+			Tool.unpress(['move','warp_rotate','warp_distort'])
+			$('tool_'+name).addClassName('down')
+		}
+	},
+	remove_tool_specific_button: function(name) {
+
+	}
 }
 Tool.Select = {
 	activate: function() {
@@ -8277,7 +8369,7 @@ Tool.Pan = {
 	        Map.rotate_old = Map.rotate
 	}.bindAsEventListener(Tool.Pan),
 	mouseup: function() {
-
+			Glop.fire('pan:mouseup')
 	}.bindAsEventListener(Tool.Pan),
 	mousemove: function() {
 		var lon = Projection.x_to_lon(-1*Map.pointer_x())
@@ -8302,6 +8394,7 @@ Tool.Pan = {
 			var d_y = Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 			Map.x = Map.x_old+(d_x/Map.zoom)
 			Map.y = Map.y_old+(d_y/Map.zoom)
+			Glop.fire('pan:dragging')
 		}
 	},
 	dblclick: function() {
@@ -8309,37 +8402,40 @@ Tool.Pan = {
 	}.bindAsEventListener(Tool.Pan)
 }
 Tool.Warp = {
-	mode: 'default', //'rotate','drag','scale'
+	mode: 'default', //'rotate','mask'
 	activate: function() {
-		$('toolbars').insert('<div class=\'toolbar\' id=\'tool_specific\'></div>')
-		$('tool_specific').insert('<a name=\'Delete this image\' class=\'first silk\' id=\'tool_warp_delete\'  href=\'javascript:void(0);\'><img src=\'/images/silk-grey/delete.png\' /></a>')
-			$('tool_warp_delete').observe('mouseup',Tool.Warp.delete_image)
-		$('tool_specific').insert('<a name=\'Lock this image\' class=\'silk\' id=\'tool_warp_lock\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/lock.png\' /></a>')
-			$('tool_warp_lock').observe('mouseup',Tool.Warp.lock_image)
-			if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
-		$('tool_specific').insert('<a name=\'Rotate/scale this image\' class=\'\' id=\'tool_warp_rotate\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-rotate-22.png\' /></a>')
-			$('tool_warp_rotate').observe('mouseup',function(){Tool.Warp.mode = 'rotate'})
-		$('tool_specific').insert('<a name=\'Revert this image to natural size\' class=\'silk\' id=\'tool_warp_revert\' href=\'javascript:void(0);\'><img src=\'/images/silk-grey/arrow_undo.png\' /></a>')
-			$('tool_warp_revert').observe('mouseup',function(){Warper.active_image.set_to_natural_size();})
-		$('tool_specific').insert('<a name=\'Distort this image by dragging corners\' class=\'last\' id=\'tool_warp_default\' href=\'javascript:void(0);\'><img src=\'/images/tools/stock-tool-perspective-22.png\' /></a>')
-			$('tool_warp_default').observe('mouseup',function(){Tool.Warp.mode = 'default'})
+		Tool.add_toolbar("tool_specific")
+		Tool.add_tool_specific_button("warp_delete",Tool.Warp.delete_image,"Delete this image","/images/silk-grey/delete.png","first silk")
+		Tool.add_tool_specific_button("warp_revert",function(){Warper.active_image.set_to_natural_size();},"Revert to original proportions","/images/silk-grey/arrow_refresh.png","silk")
+		Tool.add_tool_specific_button("warp_lock",Tool.Warp.lock_image,"Lock this image (l)","/images/silk-grey/lock.png","silk")
+		if (Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
+		Tool.add_tool_specific_button("warp_outline",function(){Warper.active_image.toggle_outline()},"Toggle image outline (o)","/images/tools/stock-tool-rect-select-22.png",true)
+		Tool.add_tool_specific_button("warp_transparent",function(){Warper.active_image.dblclick()},"Toggle image transparency (t)","/images/silk-grey/contrast_low.png","silk")
+		Tool.add_tool_specific_button("warp_rotate",function(){Tool.Warp.mode = 'rotate'},"Rotate/scale this image (r)","/images/tools/stock-tool-rotate-22.png",true)
+		Tool.add_tool_specific_button("warp_distort",function(){Tool.Warp.mode = 'default'},"Distort this image by dragging corners (d)","/images/tools/stock-tool-perspective-22.png",true)
+		if (Config.beta) Tool.add_tool_specific_button("warp_mask",function(){Tool.change('Mask')},"Mask out parts of this image (m)","/images/silk-grey/shape_move_backwards.png","silk")
+		Tool.add_tool_specific_button("warp_undo",function(){Warper.active_image.undo();},"Undo last image edit","/images/silk-grey/arrow_undo.png","silk last")
+		$('tool_warp_distort').addClassName('down')
 	},
 	deactivate: function() {
-		$('tool_specific').remove()
+		Tool.remove_toolbar("tool_specific")
 		Tool.Warp.mode = 'default'
 		Warper.active_object = false
 	},
 	delete_image: function() {
-		Warper.images.each(function(image,index) {
-			if (image.active && Warper.active_image == image) {
-				Warper.images.splice(index,1)
-				image.cleanup()
-				new Ajax.Request('/warper/delete/'+image.id,{
-					method:'post',
-				})
-			}
-		})
-		Tool.change('Pan')
+		if (confirm('Are you sure you want to delete this image? You cannot undo this action.')) {
+			Warper.images.each(function(image,index) {
+				if (image.active && Warper.active_image == image) {
+					Warper.images.splice(index,1)
+					image.cleanup()
+					new Ajax.Request('/warper/delete/'+image.id,{
+						method:'post',
+					})
+				}
+			})
+			Tool.change('Pan')
+		}
+		Tool.hide_tooltip()
 	},
 	lock_image: function() {
 		if (!Warper.active_image.locked) $('tool_warp_lock').addClassName('down')
@@ -8352,7 +8448,6 @@ Tool.Warp = {
 	mousedown: function() {
 	}.bindAsEventListener(Tool.Warp),
 	mouseup: function() {
-		$l('Warp mouseup')
 		if (Warper.active_image) {
 			if (Warper.active_image.active_point) {
 				Warper.active_image.active_point.cancel_drag()
@@ -8363,7 +8458,6 @@ Tool.Warp = {
 		$C.cursor('auto')
 	}.bindAsEventListener(Tool.Warp),
 	mousemove: function() {
-		$l('Warp mousemove')
 		if (Mouse.down){
 			if (Warper.active_image) {
 				if (Warper.active_image.active_point) {
@@ -8375,16 +8469,265 @@ Tool.Warp = {
 		}
 	}.bindAsEventListener(Tool.Warp),
 	dblclick: function() {
-		$l('Warp dblclick')
 
 	}.bindAsEventListener(Tool.Warp)
 }
+Tool.Mask = {
+	mode: 'draw', //'draw','inactive','drag'
+	current_poly: null,
+	drag: function() {
+		$l('Mask dragging')
+	},
+	activate: function() {
+		Tool.hide_tooltip()
+	},
+	deactivate: function() {
+		$l('Mask deactivated')
+	},
+
+	mousedown: function() {
+		if (Tool.Mask.mode == 'inactive') {
+		} else if (Tool.Mask.mode == 'draw') {
+			if (Warper.active_image && Warper.active_image.mask == false) Tool.Mask.mask_warpable()
+			var over_point = false
+			Tool.Mask.warpable.mask.points.each(function(point){
+				if (point.mouse_inside()) over_point = true
+			})
+			if (!over_point) { // if you didn't click on an existing node
+				Tool.Mask.warpable.mask.new_point(Map.pointer_x(), Map.pointer_y())
+			}
+		} else if (Tool.Mask.mode == 'drag'){
+			Tool.Mask.warpable.mask.enabled=true
+		}
+
+	}.bindAsEventListener(Tool.Mask),
+
+	mouseup: function() {
+		$l('Mask mouseup')
+	}.bindAsEventListener(Tool.Mask),
+	mousemove: function() {
+		$l('Mask mousemove')
+	}.bindAsEventListener(Tool.Mask),
+
+	dblclick: function() {
+		Tool.Mask.warpable.mask.enabled = true
+		Tool.Mask.mode = 'inactive'
+		Tool.change('Pan')
+	}.bindAsEventListener(Tool.Mask),
+
+	mask_warpable: function() {
+		Tool.Mask.warpable = Warper.active_image
+		Tool.Mask.mode='draw'
+		Tool.Mask.warpable.mask = new Tool.Mask.Shape([],Tool.Mask.warpable)
+	},
+	coordinates: function() {
+		coordinates = []
+		this.points.each(function(point) {
+			var lon = Projection.x_to_lon(-point.x)
+			var lat = Projection.y_to_lat(point.y)
+			coordinates.push([lon,lat])
+		})
+		return coordinates
+	},
+
+	Shape: Class.create({
+		initialize: function(nodes,parent_image) {
+			this.enabled = false
+			this.points = []//$A(
+			this.dragging=false
+			this.color='#222'
+			this.parent_image = parent_image
+
+			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+			Glop.observe('mousedown', this.mousedown.bindAsEventListener(this))
+			Glop.observe('mouseup', this.mouseup.bindAsEventListener(this))
+		},
+		new_point: function(x,y) {
+			this.points.push(new Tool.Mask.ControlPoint(x, y, 6/Map.zoom, this))
+		},
+		mouse_inside: function(){
+			return Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())
+		},
+		base: function(){
+			this.color="#222"
+			this.dragging=false
+		},
+		mousedown: function() {
+			if (Geometry.is_point_in_poly(this.points, Map.pointer_x(), Map.pointer_y())&&Tool.active !='Mask') {
+				this.active = true
+				this.color='#f00'
+				console.log('Clicked shape')
+				this.points.each(function(point) {
+					point.old_x = point.x
+					point.old_y = point.y
+				})
+				this.first_click_x=Map.pointer_x()
+				this.first_click_y=Map.pointer_y()
+				if (this.active){
+					if (!this.dragging){
+						this.dragging = true
+						Tool.change('Warp')
+					}
+				}
+			}
+			else if (Tool.active != 'Mask') {
+				this.active = false
+				this.color='#000'
+			}
+		},
+		mouseup: function() {
+			this.dragging = false
+		},
+		hover: function(){
+			this.color='#900'
+			this.dragging=false
+		},
+		draw: function() {
+			if (this.mouse_inside()){
+				if (this.dragging){
+					this.drag_started=true
+					Tool.Mask.mode='drag'
+					for (var i=0; i<this.points.length; i++){
+						this.points[i].x=this.points[i].old_x + (Map.pointer_x()-this.first_click_x)
+						this.points[i].y=this.points[i].old_y + (Map.pointer_y()-this.first_click_y)
+					}
+					this.color = '#f00'
+				}
+				else if (!Mouse.down){
+					this.hover()
+				}
+			}
+			if (this.drag_started && Mouse.down){
+				for (var i=0; i<this.points.length; i++){
+					this.points[i].x=this.points[i].old_x + (Map.pointer_x()-this.first_click_x)
+					this.points[i].y=this.points[i].old_y + (Map.pointer_y()-this.first_click_y)
+				}
+				this.color = '#f00'
+			}
+			if (!Mouse.down){
+				this.drag_started=false
+			}
+			else{
+				this.base()
+			}
+
+				$C.save()
+				$C.stroke_style('#000')
+				$C.fill_style(this.color)
+				if (this.active) $C.line_width(2/Map.zoom)
+				else $C.line_width(0)
+				$C.begin_path()
+				if (this.points.length>0){
+					$C.move_to(this.points[0].x, this.points[0].y)
+					this.points.each(function(point) {
+						$C.line_to(point.x, point.y)
+					})
+					$C.line_to(this.points[0].x, this.points[0].y)
+
+				}
+				$C.opacity(0.4)
+				$C.stroke()
+				$C.opacity(0.2)
+				$C.fill()
+				$C.restore()
+		}
+	}),
+	ControlPoint: Class.create({
+		initialize: function(x,y,r,parent_shape) {
+			this.x = x
+			this.y = y
+			this.r = r
+			this.parent_shape = parent_shape
+			this.color = '#200'
+			this.dragging = false
+			Glop.observe('glop:postdraw', this.draw.bindAsEventListener(this))
+			Glop.observe('mousedown', this.click.bindAsEventListener(this))
+		},
+		draw: function() {
+			if (this.parent_shape.parent_image.active) {
+				$C.save()
+					$C.line_width(2/Map.zoom)
+					$C.translate(this.x,this.y)
+					$C.fill_style("#333")
+					$C.opacity(0.6)
+					if (this.parent_shape.locked) {
+						$C.begin_path()
+						$C.move_to(-6/Map.zoom,-6/Map.zoom)
+						$C.line_to(6/Map.zoom,6/Map.zoom)
+						$C.move_to(-6/Map.zoom,6/Map.zoom)
+						$C.line_to(6/Map.zoom,-6/Map.zoom)
+						$C.stroke()
+					} else {
+						if (this.mouse_inside()) $C.circ(0, 0, this.r)
+						$C.stroke_circ(0, 0, 6)//this.r)
+					}
+				$C.restore()
+
+			}
+
+			/*var nodestring = ''
+			nodes.each(function(node) {
+				nodestring += '(' + node[0] + ', ' + node[1] + ')\n'
+			})*/
+
+			if (this.dragging && Mouse.down) {
+				this.drag()
+			}
+			else if (this.mouse_inside()) {
+				if (Mouse.down) {
+					this.drag()
+				}
+				else {
+					this.hover()
+				}
+			}
+			else {
+				this.base()
+			}
+		},
+		mouse_inside: function() {
+			return (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r)
+		},
+		base: function() {
+			this.color = '#200'
+			this.dragging = false
+		},
+		click: function() {
+			if (Geometry.distance(this.x, this.y, Map.pointer_x(), Map.pointer_y()) < this.r  && Tool.active!='Mask') {
+				this.color = '#f00'
+				console.log('clicked control point')
+				this.parent_shape.active = true
+
+			}
+		},
+		hover: function() {
+			this.color = '#900'
+			this.dragging = false
+		},
+		drag: function() {
+			if (!this.dragging) {
+				this.dragging = true
+				this.drag_offset_x = Map.pointer_x() - this.x
+				this.drag_offset_y = Map.pointer_y() - this.y
+			}
+			if (this.drag_offset_x) {
+				this.x = Map.pointer_x() - this.drag_offset_x
+				this.y = Map.pointer_y() - this.drag_offset_y
+			}
+		},
+		r: function() {
+			this.color = '#00f'
+		}
+	}),
+}
 
 var Interface = {
+
 	mousemove: function(event) {
 		Mouse.window_x = Event.pointerX(event)
 		Mouse.window_y = Event.pointerY(event)
 	},
+
 	setup_tooltips: function() {
 		$$('.toolbar a').each(function(toolbar){
 			toolbar.onmouseover = function() {
@@ -8397,6 +8740,7 @@ var Interface = {
 			}
 		})
 	},
+
 	show_tooltip: function(name) {
 		$$('.tooltip').each(function(tooltip){
 			tooltip.remove()
@@ -8404,6 +8748,7 @@ var Interface = {
 		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
 		$('tooltip').style.left = (Mouse.window_x)+'px'
 	},
+
 	display_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
@@ -8411,6 +8756,7 @@ var Interface = {
 		$('iframe_code').absolutize()
 		}
 	},
+
 	display_knitter_iframe: function() {
 		if ($('iframe_code') != undefined) {
 			$('iframe_code').remove()
@@ -8418,6 +8764,7 @@ var Interface = {
 		$('iframe_code').absolutize()
 		}
 	},
+
 	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
 		width = width || 500
 		height = height || 300
@@ -8430,50 +8777,57 @@ var Interface = {
 		code = code + "' style='border:0;'></iframe>"
  		return code
 	},
+
 	display_loading: function() {
-		var percent = Importer.parse_manager.completed
-		if (percent > 75 || (percent < 100)) {
-			$('loading_message').hide()
-		}
-		if (percent < 100) {
-			$C.save()
-	        $C.translate(Map.x,Map.y)
-			$C.rotate(-Map.rotate)
-	        $C.translate(-Map.x,-Map.y)
-			$C.fill_style('white')
-			$C.line_width(0)
-			$C.opacity(0.7)
-			var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
-			$C.begin_path()
-				$C.line_to(x,y)
-				$C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
-				$C.line_to(x,y)
-			$C.fill()
-			$C.opacity(0.9)
-			$C.line_width(6/Map.zoom)
-			$C.stroke_style('white')
-			$C.line_cap('square')
-			$C.begin_path()
-				$C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
-			$C.stroke()
-			var width = $C.measure_text("Lucida Grande, sans-serif",
-			             12,
-			             parseInt(percent)+"%")
-			$C.draw_text("Lucida Grande, sans-serif",
-			             12/Map.zoom,
-						 "#333",
-			             x-(width/(2*Map.zoom)),
-						 y+(6/Map.zoom),
-						 parseInt(percent)+"%")
-			$C.translate(Map.x,Map.y)
-			$C.rotate(Map.rotate)
-	        $C.translate(-Map.x,-Map.y)
-			$C.restore()
+		if (Config.vectors) {
+			var percent = Importer.parse_manager.completed
+			if (percent > 75 || (percent < 100)) {
+				$('loading_message').hide()
+			}
+			if (percent < 100) {
+				$C.save()
+		        $C.translate(Map.x,Map.y)
+				$C.rotate(-Map.rotate)
+		        $C.translate(-Map.x,-Map.y)
+				$C.fill_style('white')
+				$C.line_width(0)
+				$C.opacity(0.7)
+				var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
+				$C.begin_path()
+					$C.line_to(x,y)
+					$C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
+					$C.line_to(x,y)
+				$C.fill()
+				$C.opacity(0.9)
+				$C.line_width(6/Map.zoom)
+				$C.stroke_style('white')
+				$C.line_cap('square')
+				$C.begin_path()
+					$C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
+				$C.stroke()
+				var width = $C.measure_text("Lucida Grande, sans-serif",
+				             12,
+				             parseInt(percent)+"%")
+				$C.draw_text("Lucida Grande, sans-serif",
+				             12/Map.zoom,
+							 "#333",
+				             x-(width/(2*Map.zoom)),
+							 y+(6/Map.zoom),
+							 parseInt(percent)+"%")
+				$C.translate(Map.x,Map.y)
+				$C.rotate(Map.rotate)
+		        $C.translate(-Map.x,-Map.y)
+				$C.restore()
+			}
 		}
 	},
+
 	display_loading_message: function(percent) {
-		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:8;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...</div></div>')
+		if (Config.vectors) {
+	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:20;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...<p><small>(Use arrow keys and +/- to pan and zoom)</small></p></div></div>')
+		}
 	},
+
 	download_bbox: function() {
 		Glop.paused = true
 		alert('Please select a bounding box to download')
@@ -8888,13 +9242,15 @@ var Warper = {
 	initialize: function() {
 		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('mouseup',this.mouseup.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	images: [],
 	locked: false,
 	active_image: false,
+
 	/*
- 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
@@ -8904,6 +9260,11 @@ var Warper = {
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
 	},
+	sort_by_active: function(a,b) {
+		if (a == Warper.active_image) return 1;
+		if (b == Warper.active_image) return -1;
+	},
+
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle.
  	 * This places warpable images above most other features except labels.
@@ -8911,6 +9272,11 @@ var Warper = {
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
+	mouseup: function() {
+		if (Warper.should_save) Warper.active_image.save_state()
+		Warper.should_save = false
+	},
+
 	mousedown: function() {
 		if (!Warper.locked) {
 		Map.x_old = Map.x
@@ -8925,6 +9291,7 @@ var Warper = {
 					image.select()
 					image.points.each(function(point){point.mousedown()})
 					inside_image = true
+					Warper.should_save = true
 				}
 			} else {
 				if (image.active && (image.coordinates() != image.old_coordinates)) {
@@ -8941,6 +9308,7 @@ var Warper = {
 				if (point.is_inside()) {
 					Warper.active_image.select_point(point)
 					point_clicked = true
+					Warper.should_save = true
 				}
 			})
 			if (!point_clicked && Warper.active_image.active_point) {
@@ -8948,10 +9316,16 @@ var Warper = {
 			}
 		}
 		if (inside_image) {
-			Tool.change('Warp',!same_image)
+			if (Tool.active != "Mask") {
+				Tool.change('Warp',!same_image)
+				Warper.images.sort(Warper.sort_by_active)
+			} else {
+
+			}
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
+
 	dblclick: function() {
 		if (!Warper.locked) {
 			for (i=Warper.images.length-1;i>=0;i--){
@@ -8963,6 +9337,7 @@ var Warper = {
 			}
 		}
 	},
+
 	flatten: function() {
 		new Ajax.Request('/warper/warp', {
 		  method: 'get',
@@ -8973,6 +9348,7 @@ var Warper = {
 		  }
 		});
 	},
+
 	new_image: function(url,id,natural_size) {
 		if (!natural_size) {
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
@@ -8990,6 +9366,7 @@ var Warper = {
 			]),url,id,natural_size))
 		}
 	},
+
 	load_image: function(url,points,id,locked) {
 		points[0][0] = Projection.lon_to_x(points[0][0])
 		points[0][1] = Projection.lat_to_y(points[0][1])
@@ -9007,6 +9384,7 @@ var Warper = {
 		]),url,id))
 		Warper.images.last().locked = locked
 	},
+
 	p: function(point) {
 		if (point.x == undefined) {
 			x = point[0]
@@ -9017,6 +9395,7 @@ var Warper = {
 		}
 		return '(' + x + ', ' + y + ')'
 	},
+
 	getProjectiveTransform: function(points) {
 	  var eqMatrix = new Matrix(9, 8, [
 	    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ],
@@ -9038,8 +9417,18 @@ var Warper = {
 	    [-kernel[6][8], -kernel[7][8],             1]
 	  ]);
 	  return transform;
-	}
+	},
 
+	keyup: function(e) {
+		var character = e.keyIdentifier, bump = 10 // amount in pixels to move with arrow keys
+		switch(character) {
+			case 'Left': if (!e.shiftKey) Warper.active_image.move_x(-bump/Map.zoom); else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Warper.active_image.move_x(bump/Map.zoom); else Map.rotate -= 0.1; break
+			case 'Up': Warper.active_image.move_y(-bump/Map.zoom); break
+			case 'Down': Warper.active_image.move_y(bump/Map.zoom); break
+		}
+		e.preventDefault()
+	},
 }
 document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 Warper.ControlPoint = Class.create({
@@ -9056,7 +9445,9 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
-			$C.line_width(3/Map.zoom)
+			var linewidth = 3/Map.zoom
+			if (linewidth < 1) linewidth = 1
+			$C.line_width(linewidth)
 			$C.translate(this.x,this.y)
 			$C.fill_style(this.color)
 			$C.opacity(0.6)
@@ -9068,6 +9459,7 @@ Warper.ControlPoint = Class.create({
 				$C.line_to(6/Map.zoom,-6/Map.zoom)
 				$C.stroke()
 			} else {
+				if (Tool.Warp.mode == "rotate") $C.stroke_style("red")
 				if (this.is_inside()) $C.circ(0, 0, this.rel_r)
 				$C.stroke_circ(0, 0, this.rel_r)
 			}
@@ -9090,7 +9482,6 @@ Warper.ControlPoint = Class.create({
 	},
 	update: function() {
 		this.rel_r = this.r / Map.zoom
-
 		if (this.parent_shape.active_point == this) {
 			this.drag()
 		}
@@ -9141,6 +9532,8 @@ Warper.ControlPoint = Class.create({
 			var distance_change = distance - this.self_distance
 			var angle = Math.atan2(this.parent_shape.centroid[1]-Map.pointer_y(),this.parent_shape.centroid[0]-Map.pointer_x())
 			var angle_change = angle-this.self_angle
+
+			if (Keyboard.shift) angle_change = 0
 			this.parent_shape.points.each(function(point) {
 				point.x = this.parent_shape.centroid[0]+Math.cos(point.angle+angle_change)*(point.distance+distance_change)
 				point.y = this.parent_shape.centroid[1]+Math.sin(point.angle+angle_change)*(point.distance+distance_change)
@@ -9165,17 +9558,21 @@ Warper.Image = Class.create(
 		this.opacity_high = 1.0
 		this.opacity = this.opacity_high
 		this.locked = false
+		this.outline = false
 
 		this.subdivision_limit = 5
 		this.offset_x = 0
 		this.offset_y = 0
 
 		this.active = false
+		this.mask = false
 		this.active_point = false
 		this.dragging = false
 		this.points = $A()
 		this.old_coordinates = []
 		this.diddit = false
+
+		this.history = []
 
 		nodes.each(function(node) {
 			this.points.push(new Warper.ControlPoint(node[0], node[1], 10, this))
@@ -9189,21 +9586,43 @@ Warper.Image = Class.create(
 		this.natural_size = natural_size
 		this.waiting_for_natural_size = natural_size | false
 	},
+	toggle_outline: function() {
+		this.outline = !this.outline
+		$('tool_warp_outline').toggleClassName('down')
+	},
 	patch_size: function() {
 		return 100/Map.zoom
 	},
+
+	delete_mask: function() {
+		this.mask = false
+	},
+
 	draw: function() {
 		if (this.waiting_for_natural_size) {
 			this.set_to_natural_size()
 		}
+
+		$C.save()
+		if (this.mask && this.mask.points && this.mask.points.length > 2) {
+			$C.begin_path()
+			$C.move_to(this.mask.points[0].x, this.mask.points[0].y)
+			this.mask.points.each(function(point) {
+				$C.line_to(point.x, point.y)
+			})
+			$C.line_to(this.mask.points[0].x, this.mask.points[0].y)
+			$C.canvas.closePath();
+			if (this.mask.enabled) $C.canvas.clip()
+			else $C.stroke()
+		}
+
 		$C.opacity(this.opacity)
-		this.update()
+		if (!this.outline) this.update()
+
+		$C.restore()
 		$C.opacity(1)
 		$C.save()
-
-		$C.stroke_style('#000')
 		$C.fill_style('#222')
-
 		$C.begin_path()
 		$C.move_to(this.points[0].x, this.points[0].y)
 		this.points.each(function(point) {
@@ -9214,6 +9633,13 @@ Warper.Image = Class.create(
 		$C.opacity(0.1)
 		if (this.active) $C.opacity(0.2)
 
+		$C.opacity(1)
+		$C.stroke_style('#d00')
+		$C.line_width(1)
+		if (this.outline) $C.stroke()
+		$C.opacity(0.1)
+
+		$C.stroke_style('#000')
 		if (this.active) {
 			$C.fill()
 			$C.line_width(2)
@@ -9225,7 +9651,20 @@ Warper.Image = Class.create(
 		$C.restore()
 
 	},
+	move_x: function(px) {
+		this.points.each(function(point){
+			point.x += px
+		},this)
+	},
+	move_y: function(px) {
+		this.points.each(function(point){
+			point.y += px
+		},this)
+	},
+
 	set_to_natural_size: function() {
+		this.opacity = 1.0
+		this.outline = false
 		if (this.image.width) {
 			this.points[1].x = this.points[0].x
 			this.points[1].y = this.points[0].y
@@ -9245,11 +9684,17 @@ Warper.Image = Class.create(
 	},
 	select: function() {
 		this.active = true
+		Events.arrow_keys_enabled = false
+		Event.observe(document, 'keyup', Warper.keyup) // custom keyup handler
+		Glop.trigger_draw()
 	},
 	deselect: function() {
 		this.active = false
 		this.active_point = false
+		Events.arrow_keys_enabled = true
+		Event.stopObserving(document, 'keyup', Warper.keyup) // custom keyup handler
 	},
+
 	select_point: function(point) {
 		if (this.active_point) { this.active_point.deselect() }
 		point.select()
@@ -9264,6 +9709,7 @@ Warper.Image = Class.create(
 		})
 		return inside_point
 	},
+
 	drag: function() {
 		if (!this.locked) {
 		if (!this.dragging) {
@@ -9273,6 +9719,11 @@ Warper.Image = Class.create(
 			this.points.each(function(point) {
 				point.drag(true)
 			})
+			if (this.mask && this.mask.points) {
+				this.mask.points.each(function(point) {
+					point.drag(true)
+				})
+			}
 			$C.cursor('move')
 		}
 		} else {
@@ -9286,9 +9737,33 @@ Warper.Image = Class.create(
 			point.dragging = false
 		})
 	},
+	save_state: function() {
+		if (this.history.last() != this.serialize_points()) this.history.push(this.serialize_points())
+	},
+	undo: function() {
+		if (this.history.last() == this.serialize_points()) this.history.pop()
+		if (this.history.length > 0) this.import_points(this.history.pop())
+	},
+	import_points: function(saved) {
+		saved = saved.evalJSON()
+		this.points.each(function(point,index) {
+			point.x = saved[index][0]
+			point.y = saved[index][1]
+		})
+	},
+	serialize_points: function() {
+		var prejson = []
+		this.points.each(function(point){
+			prejson.push([point.x,point.y])
+		})
+		return prejson.toJSON()
+	},
 	dblclick: function() {
-		if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
-		else this.opacity = this.opacity_low
+		if (Tool.active != "Mask") {
+			if (this.opacity == this.opacity_low) this.opacity = this.opacity_high
+			else this.opacity = this.opacity_low
+			$('tool_warp_transparent').toggleClassName('down')
+		}
 	},
 	coordinates: function() {
 		coordinates = []
@@ -9300,15 +9775,23 @@ Warper.Image = Class.create(
 		return coordinates
 	},
 	save: function() {
-		var coordinate_string = '',first = true
+		var coordinate_string = '', first = true, mask_coordinate_string = ''
 		this.coordinates().each(function(coord){
 			if (first) first = false
 			else coordinate_string += ':'
 			coordinate_string += coord[0]+','+coord[1]
 		})
+		first = true
+		if (this.mask) {
+			this.mask.coordinates().each(function(coord){
+				if (first) first = false
+				else mask_coordinate_string += ':'
+				mask_coordinate_string += coord[0]+','+coord[1]
+			})
+		}
 		new Ajax.Request('/warper/update', {
 		  	method: 'post',
-			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked },
+			parameters: { 'warpable_id': this.id,'points': coordinate_string, 'locked': this.locked, 'mask': mask_coordinate_string },
 			onSuccess: function(response) {
 				$l('updated warper points')
 			}
@@ -9367,6 +9850,7 @@ Warper.Image = Class.create(
 		$C.canvas.restore()
 
 	},
+
 	divide: function(u1, v1, u4, v4, p1, p2, p3, p4, limit) {
 		if (limit) {
 			var d1 = [p2[0] + p3[0] - 2 * p1[0], p2[1] + p3[1] - 2 * p1[1]];

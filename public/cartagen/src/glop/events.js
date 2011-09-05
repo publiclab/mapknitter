@@ -24,8 +24,12 @@ var Events = {
 		window.onmousewheel = document.onmousewheel = Events.wheel
 		
 		// keyboard:
+		Event.observe(document, 'keydown', Events.keydown)
 		Event.observe(document, 'keypress', Events.keypress)
 		Event.observe(document, 'keyup', Events.keyup)
+		if (Config.key_input) {
+			Keyboard.key_input = true
+		}
 		
 		// touchscreen (mobile phone) events:
 		element = $('main')
@@ -90,14 +94,23 @@ var Events = {
 		}
 		if (delta && !Config.live_gss) {
 			if (delta <0) {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) - (1/20)
+				else map.zoomOut()
 			} else {
-				Map.zoom = (Map.zoom * 1) + (delta/80)
+				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/20)
+				else map.zoomIn()
 			}
 			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
 		}
 		Glop.trigger_draw(5)
 		event.preventDefault()
+	},
+
+	keydown: function(e) {
+		var key = e.which || e.keyCode
+		if (key == 16 || e.shiftKey) {
+			Keyboard.shift = true
+		}
 	},
 	/**
 	 * Triggered when a key is pressed
@@ -105,46 +118,41 @@ var Events = {
 	 */
 	keypress: function(e) {
 		if (Events.enabled === false) return
+		if (Events.keys_enabled === false) return
 
-		var code;
 		if (!e) var e = window.event;
-
-		if (e.keyCode) code = e.keyCode;
-		else if (e.which) code = e.which;
-		var character = String.fromCharCode(code);
+		//else if (e.which) code = e.which;
+	
+		var character = e.which || e.keyCode;
+		character = String.fromCharCode(character);
 		if (Keyboard.key_input) {
-			switch(character) {
-				case "s": zoom_in(); break
-				case "w": zoom_out(); break
-				case "d": Map.rotate += 0.1; break
-				case "a": Map.rotate -= 0.1; break
-				case "f": Map.x += 20/Map.zoom; break
-				case "h": Map.x -= 20/Map.zoom; break
-				case "t": Map.y += 20/Map.zoom; break
-				case "g": Map.y -= 20/Map.zoom; break
-				case "x": localStorage.clear()
-			}
+			Keyboard.hotkey(character)
 		} else {
-			// just modifiers:
-			switch(character){
-				case "r": Keyboard.keys.set("r",true); break
-				case "z": Keyboard.keys.set("z",true); break
-				case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
-				case "b": if (Config.debug) Interface.download_bbox()
-			}
+			Keyboard.modifier(character)
 		}
-		Glop.trigger_draw(5)
 		// e.preventDefault()
 	},
+
 	/**
 	 * Triggered when a key is released
 	 */
 	keyup: function(e) {
-		if (Events.enabled === false) return
+		if (Events.enabled === true) {
+			Keyboard.shift = false
+			if (Events.arrow_keys_enabled === true) {
+				var character = e.keyIdentifier
+				switch(character) {	
+					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+					case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+					case 'Up': Map.y -= 20/Map.zoom; break
+					case 'Down': Map.y += 20/Map.zoom; break
+				}
 		
-		Keyboard.keys.set("r",false)
-		Keyboard.keys.set("z",false)
-		e.preventDefault()
+				Keyboard.keys.set("r",false)
+				Keyboard.keys.set("z",false)
+				e.preventDefault()
+			}
+		}
 	},
 	/**
 	 * Triggered when a touch is started. Mainly for touchscreen mobile platforms

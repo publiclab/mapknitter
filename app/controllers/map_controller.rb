@@ -1,28 +1,86 @@
+require 'open3'
 class MapController < ApplicationController
   caches_page :find
+  protect_from_forgery :except => :formats
 
   def index
     @maps = Map.find :all, :order => 'updated_at DESC', :limit => 25
+    respond_to do |format|
+      format.html {  }
+      format.xml  { render :xml => @maps }
+      format.json  { render :json => @maps }
+    end
   end
 
   def edit
     @map = Map.find_by_name params[:id]
-    @images = Warpable.find_all_by_map_id(params[:id],:conditions => ['parent_id IS NULL AND deleted = false'])
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+    else
+      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    end
   end
 
-  def new
+  # pt fm ac wpw
+  def images
+    @map = Map.find_by_name params[:id]
+    @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    @image_locations = []
+    if @images
+      @images.each do |image|
+        if image.nodes != ''
+          node = image.nodes.split(',').first
+          node_obj = Node.find(node)
+          @image_locations << [node_obj.lon,node_obj.lat]
+        else
+        end
+      end
+      render :layout => false
+    else
+      render :text => "<h2>There are no images in this map.</h2>"
+    end
+  end
 
+  # just a template pointer... maybe uneccessary
+  def new
+  end
+
+  def add_static_data
+    @map = Map.find params[:id]
+    static_data = @map.static_data.split(',')
+    static_data << params[:url]
+    @map.static_data = static_data.join(',')
+    @map.save
+  end
+
+  def cache
+    keys = params[:id].split(',')
+    keys.each do |key|
+      system('cd '+RAILS_ROOT+'/public/api/0.6/geohash && wget '+key+'.json')
+    end
+  end
+
+  def clear_cache
+      system('rm '+RAILS_ROOT+'/public/api/0.6/geohash/*.json')
   end
 
   def update_map
     @map = Map.find(params[:map][:id])
-    @map.update_attributes(params[:map])
-    location = GeoKit::GeoLoc.geocode(params[:map][:location])
-    @map.lat = location.lat
-    @map.lon = location.lng
-    @map.save
-    flash[:notice] = "Saved map."
-    redirect_to '/map/edit/'+@map.name
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+    else
+      @map.update_attributes(params[:map])
+      @map.author = params[:map][:author]
+      @map.description = params[:map][:description]
+  	location = GeoKit::GeoLoc.geocode(params[:map][:location])
+      @map.lat = location.lat
+      @map.lon = location.lng
+      @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
+      @map.save
+      redirect_to '/map/edit/'+@map.name
+    end
   end
 
   def create
@@ -52,7 +110,8 @@ class MapController < ApplicationController
             :name => params[:name],
             :location => params[:location]})
       end
-      if @map.save
+      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
+      #if @map.save
         redirect_to :action => 'show', :id => @map.name
       else
 	index
@@ -60,9 +119,17 @@ class MapController < ApplicationController
       end
     end
   end
-  
+ 
+  def login
+  end
+
+  # http://www.zacharyfox.com/blog/ruby-on-rails/password-hashing 
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) 
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
     @map.zoom = 1.6 if @map.zoom == 0
     @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
     @nodes = {}
@@ -74,11 +141,22 @@ class MapController < ApplicationController
           nodes << [node_obj.lon,node_obj.lat]
         end
         @nodes[warpable.id.to_s] = nodes
-      else
+      elsif (warpable.nodes == "none" && warpable.created_at == warpable.updated_at)
+	# delete warpables which have not been placed and are older than 1 hour:
+	warpable.delete if DateTime.now-1.hour > warpable.created_at
       end
       @nodes[warpable.id.to_s] ||= 'none'
     end
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
     render :layout => false
+    end
   end
 
   def search
@@ -90,6 +168,9 @@ class MapController < ApplicationController
     @map = Map.find(params[:id])
     @map.lat = params[:lat]
     @map.lon = params[:lon]
+    @map.vectors = true if params[:vectors] == 'true'
+    @map.vectors = false if params[:vectors] == 'false'
+    @map.tiles = params[:tiles] if params[:tiles]
     @map.zoom = params[:zoom]
     if @map.save
       render :text => 'success'
@@ -185,87 +266,119 @@ class MapController < ApplicationController
     end
   end
 
-  def export
-    respond_to do |format|
-      format.html { 
-	map = Map.find_by_name params[:id]
-	scale = 1
-	# determine optimal zoom level
-	widths = []
-	map.warpables.each do |warpable|
-		unless warpable.width.nil?
-			nodes = warpable.nodes_array
-			scale = 20037508.34
-    			y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
-    			x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
-    			y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
-    			x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
-			dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
-			widths << (warpable.width*scale)/dist
-			puts 'scale: '+scale.to_s+' & dist: '+dist.to_s
-		end
-	end
-
-	average = (widths.inject {|sum, n| sum + n })/widths.length
-	puts average.to_s+' = average'
-
-	# distort all warpables
-	warps = Warp.find_by_map_id(map.id)
-	lowest_x=0
-	lowest_y=0
-	warpable_coords = []
-	map.warpables.each do |warpable|
-		my_warpable_coords = warpable.generate_affine_distort(average,map.name)
-		warpable_coords << my_warpable_coords
-		lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
-		lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
-	end
-	warp_string = "["
-	first = true
-	for i in 0..map.warpables.length-1 do
-		warp_string += "," unless first
-		first = false if first
-		x = (warpable_coords[i][0]-lowest_x).to_i.to_s
-		y = (warpable_coords[i][1]-lowest_y).to_i.to_s
-		
-		warp_string += "['"+map.warpables[i].id.to_s+".tif',"+x+","+y+"]"
-	end
-	warp_string += "]"
-
-	# generate photoshop script
-	path = RAILS_ROOT+"/public/warps/"+map.name+"/"	
-	text = File.read(RAILS_ROOT+'/lib/cartagen-photoshop-export.jsx')
-	text.gsub!('<document-title>',map.name)
-	text.gsub!('<document-width>',5000.to_s)
-	text.gsub!('<document-height>',5000.to_s)
-	text.gsub!('<cm-per-pixel>',average.to_s)
-
-	text.gsub!('<warps>',warp_string) # [['filename',x,y],['filename',x,y]]
-
-	# write photoshop script file
-	File.open(path+'cartagen-photoshop-export.jsx', 'w') {|f| f.write(text) }
-
-	# zip it up
-	gem 'rubyzip'
-	require 'zip/zip'
-	require 'zip/zipfilesystem'
-
-	path.sub!(%r[/$],'')
-	archive = File.join(RAILS_ROOT+'/public/warps/',File.basename(path))+'.zip'
-	FileUtils.rm archive, :force=>true
-
-	Zip::ZipFile.open(archive, 'w') do |zipfile|
-		Dir["#{path}/**/**"].reject{|f|f==archive}.each do |file|
-			zipfile.add(file.sub(path+'/',''),file)
-		end
-	end
-
-	system('chmod a+r '+archive)
-	# warn that it might take a while
-
-	render :text => '<a href="/warps/'+map.name+'.zip">'+map.name+'.zip</a>'
-      }
-    end
+  def formats
+	@map = Map.find params[:id] 
+	@export = Export.find_by_map_id(params[:id])
+	render :layout => false
   end
 
+  def output
+	@map = Map.find params[:id] 
+	if @export = Export.find_by_map_id(params[:id])
+		@running = (@export.status != 'complete' && @export.status != 'none' && @export.status != 'failed')
+	else
+		@running = false
+	end
+	render :layout => false
+  end
+
+  def layers
+	render :layout => false
+  end
+
+  def cancel_export
+	export = Export.find_by_map_id(params[:id])
+	export.status = 'none'
+	export.save
+	render :text => 'cancelled'
+  end
+
+  def progress
+	if export = Export.find_by_map_id(params[:id])
+		if  export.status == 'complete'
+			output = 'complete'
+		elsif export.status == 'none'
+			output = 'export has not been run'
+		elsif export.status == 'failed'
+			output = 'export failed'
+		else
+			output = ' <img class="export_status" src="/images/spinner-small.gif">'+ export.status
+		end
+	else
+		output = 'export has not been run'
+	end
+	render :text => output, :layout => false 
+  end
+
+  def export
+	map = Map.find_by_name params[:id]
+	begin
+		unless export = Export.find_by_map_id(map.id)
+			export = Export.new({:map_id => map.id,:status => 'starting'})
+		end
+		export.status = 'starting'
+		export.tms = false
+		export.geotiff = false
+		export.jpg = false
+		export.save       
+
+		directory = RAILS_ROOT+"/public/warps/"+map.name+"/"
+		stdin, stdout, stderr = Open3.popen3('rm -r '+directory)
+		puts stdout.readlines
+		puts stderr.readlines
+		stdin, stdout, stderr = Open3.popen3('rm -r '+RAILS_ROOT+'/public/tms/'+map.name)
+		puts stdout.readlines
+		puts stderr.readlines
+	
+		puts '> averaging scales'
+		pxperm = map.average_scale # pixels per meter
+	
+		puts '> distorting warpables'
+		origin = map.distort_warpables(pxperm)
+		warpable_coords = origin.pop	
+
+		export = Export.find_by_map_id(map.id)
+		export.status = 'compositing'
+		export.save
+	
+		puts '> generating composite tiff'
+		geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
+	
+		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
+		puts info
+		#stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
+		#puts stderr.readlines
+		#info = stdout.readlines.split(',') 
+	
+		export = Export.find_by_map_id(map.id)
+		if info[0] != ''
+			export.geotiff = true
+			export.size = info[0]
+			export.width = info[1]
+			export.height = info[2]
+			export.cm_per_pixel = 100.0000/pxperm
+			export.status = 'tiling'
+			export.save
+		end
+	
+		puts '> generating tiles'
+		export = Export.find_by_map_id(map.id)
+		export.tms = true if map.generate_tiles
+		export.status = 'creating jpg'
+		export.save
+
+		puts '> generating jpg'
+		export = Export.find_by_map_id(map.id)
+		export.jpg = true if map.generate_jpg
+		export.status = 'complete'
+		export.save
+	
+	rescue SystemCallError
+  	#	$stderr.print "failed: " + $!
+		export = Export.find_by_map_id(map.id)
+		export.status = 'failed'
+		export.save
+	end
+        render :text => "new Ajax.Updater('formats','/map/formats/#{map.id}')"
+  end
 end

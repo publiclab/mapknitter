@@ -6,6 +6,7 @@ var Warper = {
 	initialize: function() {
 		Glop.observe('cartagen:postdraw', this.draw.bindAsEventListener(this))
 		Glop.observe('mousedown',this.mousedown.bindAsEventListener(this))
+		Glop.observe('mouseup',this.mouseup.bindAsEventListener(this))
 		Glop.observe('dblclick', this.dblclick.bindAsEventListener(this))
 	},
 	/**
@@ -22,14 +23,15 @@ var Warper = {
  	 * The selected image. This would be deprecated if we implement multiple selection or grouping.
  	 */
 	active_image: false,
+
 	/*
- 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom
+ 	 * Sorts the Warper.images by polygon area; largest polygons at the bottom.
  	 */
 	sort_images: function() {
 		Warper.images.sort(Warper.sort_by_area)
 	},
 	/**
-	 * Compared two ways based on area
+	 * Compared two ways based on area, except for the active image which is sorted to top.
 	 * @param {Warper.Image} a
 	 * @param {Warper.Image} b
 	 */
@@ -38,6 +40,16 @@ var Warper = {
 		if ( a.area > b.area ) return -1;
 		return 0; // a == b
 	},
+	/**
+	 * Sorts warpable images to bring the active one to the top.
+	 * @param {Warper.Image} a
+	 * @param {Warper.Image} b
+	 */
+	sort_by_active: function(a,b) {
+		if (a == Warper.active_image) return 1;
+		if (b == Warper.active_image) return -1;
+	},
+
 	/*
  	 * Runs every frame upon glop:postdraw, i.e. at the end of the draw cycle. 
  	 * This places warpable images above most other features except labels.
@@ -45,6 +57,11 @@ var Warper = {
 	draw: function() {
 		Warper.images.each(function(image){ image.draw() })
 	},
+	mouseup: function() {
+		if (Warper.should_save) Warper.active_image.save_state()
+		Warper.should_save = false
+	},
+
 	/**
 	 * Click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
@@ -63,6 +80,7 @@ var Warper = {
 					image.select()
 					image.points.each(function(point){point.mousedown()})
 					inside_image = true
+					Warper.should_save = true
 				}
 			} else {
 				// if you're clicking outside while it's active, and the corners have been moved:
@@ -80,6 +98,7 @@ var Warper = {
 				if (point.is_inside()) {
 					Warper.active_image.select_point(point)
 					point_clicked = true
+					Warper.should_save = true
 				}
 			})
 			if (!point_clicked && Warper.active_image.active_point) {
@@ -87,11 +106,17 @@ var Warper = {
 			}
 		}
 		if (inside_image) {
-			// 'true' forces a change, in case you have an image selected and are selecting a second one
-			Tool.change('Warp',!same_image)
+			if (Tool.active != "Mask") {
+				// 'true' forces a change, in case you have an image selected and are selecting a second one
+				Tool.change('Warp',!same_image)
+				Warper.images.sort(Warper.sort_by_active)
+			} else {
+				
+			}
 		} else if (!Tool.hover && Tool.active == 'Warp') Tool.change('Pan')
 		}
 	},
+
 	/**
 	 * Double click event handler - defined here because if it's in Tool.Warp, 
 	 * it isn't activated unless the Warp tool is active. And for image ordering reasons.
@@ -107,6 +132,7 @@ var Warper = {
 			}	
 		}	
 	},
+
 	/**
 	 * A function which submits all the Images in the Warper.images array
 	 * to the Ruby backend for full-resolution warping.
@@ -123,10 +149,10 @@ var Warper = {
 		  }
 		});
 	},
+
 	/**
 	 * Creates a Warper.Image object to contain its resulting URI and 'random' coordinates.
-         * Places the incoming image at Map.x, Map.y, but randomize the corners to show the
-         * user that you can warp it. 
+         * Places the incoming image at Map.x, Map.y
 	 * @param {String} url Address of image file in form http://path/to/image.xxx where xxx is any browser-readable image format.
 	 * @param {Integer} id The unique id (primary key, from the database) of the image. Used for tracking/differentiating
 	 * @param {Boolean} randomize Whether to randomize the corner placement to 'suggest' to the user that the image is warpable.
@@ -148,6 +174,7 @@ var Warper = {
 			]),url,id,natural_size))
 		}
 	},
+
 	/**
 	 * Instantiates an existing image as a Warper.Image object, given an image and known points
 	 * in an array of [lon,lat] pairs.
@@ -169,6 +196,7 @@ var Warper = {
 		]),url,id))
 		Warper.images.last().locked = locked
 	},
+
 	/**
 	 * Convenience method to present points as objects with .x and .y values instead of [x,y]
 	 */
@@ -182,6 +210,7 @@ var Warper = {
 		}
 		return '(' + x + ', ' + y + ')'
 	},
+
 	getProjectiveTransform: function(points) {
 	  var eqMatrix = new Matrix(9, 8, [
 	    [ 1, 1, 1,   0, 0, 0, -points[2].x,-points[2].x,-points[2].x ], 
@@ -203,8 +232,21 @@ var Warper = {
 	    [-kernel[6][8], -kernel[7][8],             1]
 	  ]);
 	  return transform;
-	}
+	},
 	
+	/**
+	 * Custom keyup listener, triggered when a key is released
+	 */
+	keyup: function(e) {
+		var character = e.keyIdentifier, bump = 10 // amount in pixels to move with arrow keys
+		switch(character) {	
+			case 'Left': if (!e.shiftKey) Warper.active_image.move_x(-bump/Map.zoom); else Map.rotate += 0.1; break
+			case 'Right': if (!e.shiftKey) Warper.active_image.move_x(bump/Map.zoom); else Map.rotate -= 0.1; break
+			case 'Up': Warper.active_image.move_y(-bump/Map.zoom); break
+			case 'Down': Warper.active_image.move_y(bump/Map.zoom); break
+		}
+		e.preventDefault()
+	},
 }
 document.observe('cartagen:init',Warper.initialize.bindAsEventListener(Warper))
 //= require "control_point"

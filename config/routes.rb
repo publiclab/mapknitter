@@ -42,6 +42,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.root :controller => "map", :action => "find", :id => "20 ames st cambridge"
 
+  map.connect 'tms/:id/alt/:z/:x/:y.png', :controller => "utility", :action => "tms_alt"
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
   map.connect 'maps', :controller => "map", :action => "index"
   map.connect 'maps/:id', :controller => "map", :action => "show"
@@ -54,10 +55,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'demo/:id/:range', :controller => "map", :action => "find", :demo => true
   map.connect 'find/:id', :controller => "map", :action => "find"
   map.connect 'find/:id/:range', :controller => "map", :action => "find"
+  map.connect 'import/:name', :controller => "warper", :action => "import"
 
   map.connect 'author/:id', :controller => 'author', :action => 'show'
   map.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 
   map.connect ':controller/:action/:id'
+  map.connect ':controller.:format'
+  map.connect ':controller/:action.:format'
   map.connect ':controller/:action/:id.:format'
 end

@@ -1,0 +1,57 @@
+<h1>Map export</h1>
+
+<style>
+img.export_status {
+	float:left;
+	margin-right:4px;
+}
+.export_button {
+
+	padding:6px;
+	border:2px solid #900;
+	margin:2px;
+	line-height:44px;
+	background:#c00;
+	color:#fff;
+	text-decoration:none;
+	font-family: lucida grande, helvetica, sans-serif;
+	font-size: 14pt;
+	font-weight:bold;	
+
+}
+.export_button.inactive {
+	background:#ccc;
+	border-color:#aaa;
+}
+</style>
+
+<p>From this panel you can export this map in a variety of formats. These may already be available, but if you've changed the map at all, or want to see the most recent version, you can <b>re-generate the export</b>.</p>
+
+<p>This may take some time - a large map could take as long as <b>an hour or more</b>. Leave this panel open to monitor progress, or come back later to see how it's going. Closing this panel will not stop the export.</p>
+
+<script>
+function refresh_formats(response) {
+	eval(response)
+}
+</script>
+
+<div <% if @running %>style="display:none;"<% end %> id="run_export">Click this link to begin the export: <br />
+<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',{onSuccess: function(response){ eval(response.responseText) }});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
+<span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
+</div>
+
+<div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
+
+<script>
+new Ajax.PeriodicalUpdater('export_progress','/map/progress/<%= @map.id %>', {method: 'get', frequency: 5})
+new Ajax.Updater('formats','/map/formats/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>')
+</script>
+<p class='export_status'>
+<b>Status:</b> <span id='export_progress'>
+Loading...
+</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/map/cancel_export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>');$('running_export').hide();$('run_export').show()">cancel</a>)</p>
+
+<div id="formats">
+</div>
+
+<p>Export links may be unavailable while the export is running.</p>

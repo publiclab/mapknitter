@@ -128,7 +128,7 @@ var Cartagen = {
 	 */
 	setup: function(configs) {
 		$(document).observe('dom:loaded', function() {
-			$('canvas').insert('<canvas id="main"></canvas>')
+			$('canvas').insert('<canvas style="z-index:20;" id="main"></canvas>')
 			Cartagen.initialize(configs)
 		})	
 	},
@@ -310,7 +310,7 @@ var Cartagen = {
      * @param {Number} zoom_level     zoom_level to set the map to
 	 */
 	go_to: function(lat,lon,zoom_level) {
-		Map.zoom = zoom_level
+		Map.zoom = zoom_level || Map.zoom_level
 		Map.lat = lat
 		Map.lon = lon
 		Map.x = Projection.lon_to_x(Map.lon)
@@ -393,6 +393,41 @@ var Cartagen = {
 			}
 		})
 		
+	},
+
+	/**
+	 * Displays a list of all current tags in the map data you've loaded.
+	 */
+	tags: function(type,filter) {
+		type = type || "text"
+		filter = filter || true
+		var blacklist = ["created_by","tiger:upload_uuid","tiger:source","tiger:name_base","tiger:reviewed","tiger:cfcc","tiger:county","tiger:separated","tiger:name_base","tiger:name_type","tiger:tlid","tiger:zip_left","tiger:zip_right"]
+		var tags = []
+		Geohash.objects.each(function(obj) {
+			if (obj.tags) obj.tags.each(function(tag){ 
+				var uniq = true
+				// compare to already-imported tags:
+				tags.each(function(oldtag) {
+					if (oldtag[0] == tag[0] && oldtag[1] == tag[1]) uniq = false
+				})
+				if (uniq) {
+					if (filter) {
+						var blocked = false
+						blacklist.each(function(bad) {
+							if (tag[0] == bad || tag[1] == bad) blocked = true
+						})
+						if (!blocked) {
+							tags.push(tag)
+						}
+					} else {
+						tags.push(tag)
+					}
+				}
+			})
+		})
+		if (type == "text") return tags.toJSON()
+		else if (type == "alert") alert(tags.toJSON()) 
+		else return tags
 	}
 }
 

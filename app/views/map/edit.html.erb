@@ -17,10 +17,10 @@
 	
 		<input type='hidden' name='map[id]' value="<%= @map.id %>"/>
 		
-		<label for="name">Name</label><br />
-		<input class="text" type="text" name="map[name]" value="<%= @map.name %>" id="name"><br />
 		<label for="location">Place</label><br />
 		<input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
+		<label for="password">Password (optional -- to keep your map private)</label><br />
+		<input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password"><br />
 		<div id="geocode_results">
 			
 		</div>
@@ -66,6 +66,10 @@
 		<!--<label for="password">Password (optional)</label><br />
 		<input class="text" type="password" name="password" value="" id="password"><br />-->
 			
+		<% if @map.password != "" %>
+		<label for="password">Password (you must enter the password to save)</label><br />
+		<input class="text" type="password" name="password" id="password"><br />
+		<% end %>
 		<p><input type="submit" value="Save"></p>
 	</form>
 	</div>

@@ -16,7 +16,7 @@
 			body {
 				margin: 10px auto;
 				padding:30px;
-				width: 700px; 
+				width: 900px; 
 				background: white; 
 				font-family: georgia, times, serif;
 				box-shadow: 0 10px 15px #000;
@@ -60,7 +60,7 @@
 			}
 			
 			#list {
-				width: 400px;
+				width: 500px;
 			}
 			#list h3 {
 				border-top:1px solid #ddd;
@@ -82,7 +82,7 @@
 			}
 			
 			#sidebar {
-				width:250px;
+				width:350px;
 				margin-top:10px;
 				margin-left:10px;
 				float:right;
@@ -165,12 +165,13 @@
 		</style>
 	</head>
 	<body>
+	<div id="bodywrap">
 	<div id="header">
 		<div class="right">
-			<a href="http://wiki.grassrootsmapping.org">GrassrootsMapping Wiki &raquo;</a>
+			<a href="http://publiclaboratory.org/tool/balloon-mapping">About balloon mapping &raquo;</a>
 		</div>
 		<a href="/maps/"><img src="/images/knitter-logo.png" /></a>
-		<h2><a href="/maps/">Cartagen Knitter</a></h2>
+		<h2><a href="/maps/">Map Knitter</a></h2>
 	</div>
 
 	<% if flash[:notice] %>
@@ -187,6 +188,8 @@
 		<%= yield %>
 
 	<br style="clear:both;" />
+
+	</div>
 
 	<script type="text/javascript">
 	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

@@ -20,7 +20,6 @@ var Tool = {
 		Tool.hover = true
 	},
 	show_tooltip: function(tool_name) {
-		console.log(tool_name)
 		Tool.hide_tooltip()
 		$$('body')[0].insert("<div id='tooltip' class='tooltip'></div>")
 		$('tooltip').innerHTML = tool_name
@@ -50,7 +49,6 @@ var Tool = {
 	 * Function to change the active tool 
 	 */
 	change: function(new_tool,force) {
-		console.log('changing '+Tool.active+' to '+new_tool)
 		if (new_tool != Tool.active || force == true) {
 			old_tool = Tool.active
 			
@@ -59,7 +57,6 @@ var Tool = {
 			tool_events.each(function(tool_event) {
 				Glop.stopObserving(tool_event,Tool[old_tool][tool_event])
 				Glop.observe(tool_event,Tool[new_tool][tool_event])
-				console.log(new_tool+', '+tool_event)
 			})
 
 			if (!Object.isUndefined(Tool[old_tool].deactivate)) {
@@ -78,4 +75,43 @@ var Tool = {
 	drag: function() {
 		Tool[Tool.active].drag()
 	},
+	/**
+	 * Quickly batch-unpresses buttons
+	 */
+	unpress: function(list) {
+		list.each(function(button) {
+			$('tool_'+button).removeClassName('down')
+		})
+	},
+	/**
+	 * Adds a toolbar for tool-specific functions
+	 */
+	add_toolbar: function(name) {
+		$('toolbars').insert('<div class=\'toolbar\' id=\''+name+'\'></div>')
+	},
+	/**
+	 * Removes toolbar for tool-specific functions
+	 */
+	remove_toolbar: function(name) {
+		$(name).remove()
+	},
+	/**
+	 * Adds a toolbar button for tool <name>, with a <tooltip>, 
+	 * icon image <icon> and CSS <classes>; adds CSS class "down"
+	 * if <press> is true
+	 */
+	add_tool_specific_button: function(name,task,tooltip,icon,classes,press,init_tool) {
+		$('tool_specific').insert('<a name=\''+tooltip+'\' class=\''+classes+'\' id=\'tool_'+name+'\'  href=\'javascript:void(0);\'><img src=\''+icon+'\' /></a>')
+		$('tool_'+name).observe('mouseup',function(e){Glop.trigger_draw();task(e)})
+		if (press) {
+			Tool.unpress(['move','warp_rotate','warp_distort'])
+			$('tool_'+name).addClassName('down')
+		}
+	},
+	/**
+	 * Removes toolbar button for tool <name>
+	 */
+	remove_tool_specific_button: function(name) {
+		
+	}
 }

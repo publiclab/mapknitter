@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.2.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -28,11 +28,14 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  config.gem "json_pure"
+  #config.gem "json_pure"
   config.gem "httparty"
   config.gem "geokit"
-  config.gem "RubyInline"
+  #config.gem "RubyInline"
   config.gem "image_science"
+  config.gem "recaptcha", :lib => "recaptcha/rails"
+  #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
+
   # config.gem "rubyzip"
   # if you're going to use Amazon s3 for image storage:
   # config.gem "aws-s3"
@@ -43,7 +46,7 @@ Rails::Initializer.run do |config|
   # then run:
   # sudo gem install davetroy-geohash
   # Hmm, this might also be useful:
-  # config.gem "davetroy-geohash", :source => "http://gems.github.com"
+  config.gem "davetroy-geohash", :lib => 'geohash', :source => "http://gems.github.com"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
@@ -92,3 +95,5 @@ Rails::Initializer.run do |config|
 
   require 'json/add/rails'
 end
+
+ENV['PATH'] = "#{ENV['PATH']}:/Library/Frameworks/GDAL.framework/Programs"

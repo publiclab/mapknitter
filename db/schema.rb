@@ -9,7 +9,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100614190507) do
+ActiveRecord::Schema.define(:version => 20101014151404) do
+
+  create_table "exports", :force => true do |t|
+    t.integer  "map_id",       :default => 0
+    t.integer  "size",         :default => 0
+    t.integer  "width",        :default => 0
+    t.integer  "height",       :default => 0
+    t.float    "cm_per_pixel", :default => 0.0
+    t.string   "status",       :default => "none"
+    t.boolean  "tms",          :default => false
+    t.boolean  "jpg",          :default => false
+    t.boolean  "geotiff",      :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "keyvalues", :force => true do |t|
     t.string   "key"
@@ -32,6 +46,9 @@ ActiveRecord::Schema.define(:version => 20100614190507) do
     t.string   "author",                                      :default => "anonymous"
     t.decimal  "zoom",        :precision => 15, :scale => 10, :default => 2.0
     t.string   "location",                                    :default => ""
+    t.string   "static_data",                                 :default => ""
+    t.boolean  "vectors",                                     :default => true,        :null => false
+    t.string   "tiles",                                       :default => "",          :null => false
   end
 
   create_table "messages", :force => true do |t|
@@ -88,20 +105,6 @@ ActiveRecord::Schema.define(:version => 20100614190507) do
     t.string   "transform_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "warps", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "map_id",       :default => 0, :null => false
-    t.integer  "warpable_id",  :default => 0, :null => false
   end
 
   create_table "ways", :force => true do |t|

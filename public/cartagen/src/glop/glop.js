@@ -103,6 +103,7 @@ var Glop = {
 		//      a) if there are remaining tasks to be completed
 		//		b) measuring whether a canvas has been drawn on, or drawn 'completely'
 		if (new_snapshot != Glop.snapshot || force_draw || Glop.changed_size) {
+			Glop.fire('cartagen:change')
 			$C.thaw('background')
 		} else {
 			$C.freeze('background')
@@ -131,7 +132,7 @@ var Glop = {
 		 * is set to true, GLOP will not raw the objects array.
 		 */
 		draw_event = $('main').fire('glop:draw')
-		if (!draw_event.no_draw) {
+		if (Config.vectors && !draw_event.no_draw) {
 			objects.each(function(object) { 
 				object.draw()
 			})

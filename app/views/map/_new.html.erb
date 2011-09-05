@@ -2,7 +2,7 @@
 	<h3>Make a new map</h3>
 	<% form_for :map, @map, :url => { :controller => "map", :action => "create" }, :html => {:id => "new_map", :class => "map"} do |f| %>
 		<%= error_messages_for 'map' %>	
-		<label for="name">Name</label><br />
+		<label for="name">Map title/URL (you won't be able to change this)</label><br />
 		<input class="text" type="text" name="name" value="<%= params[:name] %>" id="name"><br />
 		<label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label><br />
 		<input class="text" type="text" name="location" value="<%= params[:location] || 'Paris, France' %>" id="new_map_place"><br />
@@ -42,6 +42,8 @@
 
 		</script>
 		<div id="lat_lon" style="display:none;">
+			<p style='font-size:10px;font-family:lucida grande,lucida sans console,sans-serif;'>
+				In decimal degress, i.e. '72.222 or -142.03441'</p>
 			<label for="latitude">Latitude</label><br />
 			<input type="text" name="latitude" /><br />
 			<label for="longitude">Longitude</label><br />
@@ -49,7 +51,8 @@
 		</div>
 		<label for="author">Author</label><br />
 		<input class="text" type="text" name="author" value="<%= params[:author] || 'anonymous' %>" id="author"><br />
-		<label for="description">Description</label><br />
+		<p><%= recaptcha_tags :display => {:theme => "white"} %></p>
+		<label for="description">Description (will be shown in an overlay on the map)</label><br />
 		<textarea name="description" rows="8" cols="24"></textarea>
 		
 		<!--<label for="password">Password (optional)</label><br />
