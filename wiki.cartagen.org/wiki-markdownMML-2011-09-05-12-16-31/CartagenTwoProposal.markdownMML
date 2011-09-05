@@ -1,0 +1,45 @@
+Here we are outlining key elements of a possible Cartagen 2.0 release. 
+
+###Structural###
+
+* rafael.js abstraction (upstream to Fred)
+* Consolidation of Projection, conversion to spher merc standards
+* creation of Scale class with easy conversions, meters/degrees/pixels
+* separation of Cartagen javascript code from Ruby - server vs. client repos
+* formalizing interconnects between cartagen and a parent codebase for server/client agnosticism
+* test suite - base on a test map a la Acid2
+* separate Knitter and others into \PublicLaboratory.org mapper toolkit, with raster analysis features -- NDVI, etc
+* z-index in GSS spec, use as basis for multipass rendering (casings, dotted lines, consolidate stroke() calls for optimization)
+* x,y for mercator, use scale (pix_per_unit), with Projection.units = meters as default
+
+###Rendering###
+
+* dotted, styled line drawing and label-follow-line code
+* tween_to, tween_zoom_to, underlying tween ability (upstream to Fred)
+* slider for detail_per_scale, to speed up render or improve detail
+* clone coastlines from Halcyon or Mapnik
+
+###Interface###
+
+* cleanup and formalization of Tool/Toolbar classes
+* Standardize and smoove out widgets (Modalbox?) and such
+* debug and optimization for devices (tablets!)
+* Cartagen.setup({type:'fullscreen'}) - or 'div' or 'touch', or 'auto'
+* Cartagen.add(feature)
+* Cartagen.features = []
+* Full Cartagen map editor, generating OSM JSON
+* Style editor with color wheel, line styling (share with Fred)
+* measure_distance(lat1,lon1,lat2,lon2) - or extract_way() with live mouse UI, follow_ways option, follow_tagged_way('highway')
+* .wizard() call for GUI map setup
+* implement hash signaling for geohashing -- when you move, the URL becomes cartagen.org#==geohash== or reverse geocoded placename, zoom, etc
+
+###Import/Export###
+
+* Import class - native import of \GeoJSON
+* high-res, tiled, geotiff, PDF export WITH traced material + labelling
+* On feature import, separately save pure features for bbox export in a popup (json) move this to the client side
+* TMS generation using to_data_URL or similar -- perhaps stored in localStorage?
+
+###Extensions/Plugins system###
+
+* so building on Cartagen can be reproduced and ported to other projects

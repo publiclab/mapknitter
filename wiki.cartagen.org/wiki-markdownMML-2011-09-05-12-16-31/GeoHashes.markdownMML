@@ -1,0 +1,40 @@
+Geohashes can be thought of as rectangular subdivisions of the Earth's surface. Learn more here: [Geohash at Wikipedia](http://en.wikipedia.org/wiki/Geohash). They were invented by Gustavo Niemeyer in 2008.
+
+A degree of latitude is ~111.3km anywhere on earth. A degree of longitude varies depending on your latitude, but at the equator, it is also ~111.3km.
+
+## Dimensions in lon,lat of geohashes of length _n_: ##
+
+N   | Longitude                 | Latitude                  | east/west distance at equator                  | north/south distance at equator                  |
+----|---------------------------|---------------------------|---------------------------|---------------------------|
+12: | 0.00000033527612686157227 | 0.00000016763806343078613 | ~3.7cm | ~1.8cm |
+11: | 0.000001341104507446289   | 0.000001341104507446289   | ~14.9cm | ~14.9cm |
+10: | 0.000010728836059570312   | 0.000005364418029785156   | ~1.19m | ~0.60m |
+9:  | 0.00004291534423828125    | 0.00004291534423828125    | ~4.78m | ~4.78m |
+8:  | 0.00034332275390625       | 0.000171661376953125      | ~38.2m | ~19.1m |
+7:  | 0.001373291015625         | 0.001373291015625         | ~152.8m | ~152.8m |
+6:  | 0.010986328125            | 0.0054931640625           | ~1.2km | ~0.61km |
+5:  | 0.0439453125              | 0.0439453125              | ~4.9km | ~4.9km |
+4:  | 0.3515625                 | 0.17578125                | ~39km | ~19.6km |
+3:  | 1.40625                   | 1.40625                   | ~157km | ~157km |
+2:  | 11.25                     | 5.625                     | ~1252km | ~626km |
+1:  | 45                        | 45                        | ~5018km | ~5018km |
+
+
+*IGNORE THE FOLLOWING NUMBERS*
+
+They're wrong - i used x,y instead of lat/lon, and as a result they're only valid for Rome; projected values are location-specific. But they're interesting anyways and I wasted a half-hour on them so I'm saving them.
+
+N   | x                   | y                    |
+----|---------------------|----------------------|
+12: | 0.03352761268615723 | 0.022274659015238285 |
+11: | 0.1341104507446289  | 0.1781972600147128   |
+10: | 1.0728836059570312  | 0.7127890586853027   |
+9:  | 4.291534423828125   | 5.702313330955803    |
+8:  | 34.332275390625     | 22.809258637949824   |
+7:  | 137.3291015625      | 182.4745806204155    |
+6:  | 1098.6328125        | 729.8819535905495    |
+5:  | 4394.53125          | 5838.531777993776    |
+4:  | 35156.25            | 23348.537284125574   |
+3:  | 140625              | 187680.11060012504   |
+2:  | 1125000             | 744941.5192134883    |
+1:  | 4500000             | 6966582.671835422    |

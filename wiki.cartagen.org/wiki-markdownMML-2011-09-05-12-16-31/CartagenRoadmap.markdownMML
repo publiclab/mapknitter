@@ -1,0 +1,7 @@
+## 0.5 ##
+
+The 0.5 branch is the first stable release of Cartagen, intended for developers. 0.5 was released 7/10/09. Future releases of 0.5 (0.5.1, 0.5.2, etc.) will be stability updates and bug fixes. These updates will also be meged into the 0.6 branch.
+
+## 0.6 ##
+
+The 0.6 branch will focus mainly on speed. It will have performace updates that enalbe it to run on older computers and mobile platforms. A few features will be added, including GSS-controlled context menus. It is expected to be released in the late summer of 2009.

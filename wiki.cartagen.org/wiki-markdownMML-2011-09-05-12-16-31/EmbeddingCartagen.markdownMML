@@ -1,0 +1,5 @@
+As of Cartagen 0.5, the scroll wheel zooming scrolls both the page and the map; we're looking at a way to disable page scrolling while the user is hovering in the iFrame.
+
+There's an example of multiple iframes of Cartagen on a single page here:
+
+http://unterbahn.com/cartagen-gss-gallery/

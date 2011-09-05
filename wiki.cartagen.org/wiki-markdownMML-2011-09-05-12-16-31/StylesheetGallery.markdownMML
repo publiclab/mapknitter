@@ -1,0 +1,72 @@
+Stylesheets demonstrating the use of GSS:
+
+
+### Warcraft II stylesheet ###
+
+Mapping the world in the style of classic computer game Warcraft II:
+
+<http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/warcraft.gss>
+
+Stylesheet: <http://unterbahn.com/cartagen/warcraft.gss>
+
+![Screenshot](http://farm3.static.flickr.com/2510/3753496047_fe4565959b.jpg)
+
+### Newsflow ###
+
+This map was made with Cartagen, but goes further than basic stylesheeting. Still of interest: <http://newsflow.cartagen.org/>
+
+Stylesheet: <http://newsflow.cartagen.org/style.gss>
+
+![Screenshot](http://farm3.static.flickr.com/2461/3966975886_15091b990d.jpg)
+
+### Localized labels ###
+
+Labeling in different languages based on URL parameter:
+
+<http://cartagen.org/find/brussels?gss=http://unterbahn.com/cartagen/localization.gss&language=fr>
+
+<http://cartagen.org/find/brussels?gss=http://unterbahn.com/cartagen/localization.gss&language=nl>
+
+Stylesheet: <http://unterbahn.com/cartagen/localization.gss>
+
+![Screenshot](http://farm4.static.flickr.com/3139/3712503182_2de47ea46a.jpg?v=0)
+
+### Mapping authorship ###
+
+Coloring by author name:
+
+<http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/authors.gss>
+
+Stylesheet: <http://unterbahn.com/cartagen/authors.gss>
+
+![Screenshot](http://farm3.static.flickr.com/2594/3966967238_7a7bfffac3.jpg)
+
+### Street widths ###
+
+Using tagged street widths to 
+
+<http://cartagen.org?gss=http://unterbahn.com/cartagen/width.gss>
+
+Stylesheet: <http://unterbahn.com/cartagen/width.gss>
+
+![Screenshot](http://farm4.static.flickr.com/3633/3510685883_8768c518d2.jpg?v=0)
+
+### Red outlines ###
+
+<http://cartagen.org/find/tjornin%20reykjav%C3%ADk?gss=http://unterbahn.com/cartagen/natalie.gss?live=true>
+
+Stylesheet: <http://unterbahn.com/cartagen/natalie.gss>
+
+(you have to pan around a bit to get this one to render in)
+
+![Screenshot](http://farm4.static.flickr.com/3333/3513697886_8a6ed6112b.jpg?v=0)
+
+### Patterns ###
+
+Use patterns to display stylized maps:
+
+<http://mushroommap.com?gss=/styles/ben/styles.gss>
+
+Stylesheet: <http://cartagen.org/styles/ben/styles.gss>
+
+![Patterned Map](/resources/bens-style.png)

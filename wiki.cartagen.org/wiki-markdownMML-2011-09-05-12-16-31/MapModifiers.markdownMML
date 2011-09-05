@@ -1,0 +1,22 @@
+**Zoom level**
+
+To change the initial zoom level, add the *zoom_level* parameter to your URL:
+
+<code>http://cartagen.org/find/london?zoom_level=0.2</code>
+
+Try zoom levels ranging from 0.1 to 3.
+
+**To view LIVE \OpenStreetMap data**
+
+add "**?live=true**" to the end of your URL, like:
+
+<code>http://cartagen.org/find/sweden?live=true</code>
+
+This will bypass cached data, and will load the most recent edited data from OSM. This is useful for checking your edits on OSM, since openstreetmap.org only regenerates tiles on a weekly basis, as far as I can tell. (Some zoom level **DO** seem to update, but it's hard to tell... inconsistent)
+
+**To use your own stylesheet**
+
+add "**?gss=http://yoursite.com/yourstylesheet.gss**" to the end of your URL, like:
+
+<code>http://cartagen.org/find/sweden?gss=http://unterbahn.com/cartagen/style.gss</code>
+

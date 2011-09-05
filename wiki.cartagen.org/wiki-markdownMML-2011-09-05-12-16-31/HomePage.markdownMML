@@ -1,0 +1,74 @@
+<div class="column" style='float:right;width:240px;padding:10px;border-left:1px solid #ccc;margin:15px;margin-right:0;padding-right:0'>
+			<h3 style='margin-top:0'>AboutGss &raquo;</h3>
+			<h3 style='margin-top:0'>GssUsage &raquo;</h3>
+			<h3 style='margin-top:0'><a href="http://cartagen.org/api/">API Docs</a>  &raquo;</h3>
+			<h3 style='margin-top:0'>CartagenTwoProposal &raquo;</h3>
+<hr />
+			<h3 style='margin-top:0'>StylesheetGallery &raquo;</h3>
+			<p>See a variety of stylesheets demonstrating Cartagen's abilities:</p>
+			<a href="http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/authors.gss"><img src="http://farm3.static.flickr.com/2594/3966967238_7a7bfffac3_m.jpg"></a>
+			<a href="http://newsflow.cartagen.org"><img src="http://farm3.static.flickr.com/2461/3966975886_15091b990d_m.jpg"></a>
+			<a href="http://cartagen.org/find/london?gss=http://unterbahn.com/cartagen/warcraft.gss"><img src="http://farm3.static.flickr.com/2510/3753496047_fe4565959b_m.jpg"></a>
+			<a href="http://fwish.cartagen.org"><img src="http://farm3.static.flickr.com/2619/3824100955_2f2753c009_m.jpg"></a>
+
+</div>
+
+## What Is It? ##
+
+Cartagen (<http://cartagen.org>) is a vector-based, client-side framework for rendering maps in native HTML 5. Written in \JavaScript, it uses the new Canvas element to load mapping data from various sources, including  \OpenStreetMap. 
+
+#### In short, Cartagen lets you make beautiful, customized maps with a simple stylesheet. ####
+
+Maps are styled with Geographic Style Sheets (GSS), a cascading stylesheet specification for geospatial information – a decision which leverages literacy in CSS to make map styling more accessible. However, GSS is a scripting language as well, making Cartagen an ideal framework for mapping dynamic data. See AboutGss and GssUsage for more on GSS.
+
+Mobile devices and networks have made possible distributed reporting of geographic and temporal data, from unfolding natural disasters to organizing protests in real time. Cartagen allows users to integrate real time data streams and display them in novel ways. 
+
+#### Cartagen can display maps that change based on live data streams. ####
+
+It also offers the possibility of rendering \OpenStreetMap data which is not currently efficient with tile-based systems - such as authorship and time data. A simple but useful example is that Cartagen can show live \OpenStreetMap data -- in the sense that viewers see edits occurring in real time, with no rendering load on the server. 
+
+With powerful mapping tools such as these, there is an opportunity for users to create their own maps -- not just pushpins and overlays, but completely 
+___ maps which incorporate rich and dynamic data, and most of all maps which tell stories. Instead of a single canonical map for everyone, individuals and communities can make locally and personally relevant maps. 
+
+## How Do I Use It? ##
+
+<http://cartagen.org/> is a demonstration of the latest version of Cartagen -- use it to experiment with the technology, explore the world, and create you own  maps! In addition, you can download Cartagen and use it on your own website, or read and change the code to fit your needs. More at GettingStarted.
+
+You can also look at the [video introduction](http://www.vimeo.com/5542907):
+
+See Also:
+
+
+
+<object width="701" height="438"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=5542907&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=f06&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=5542907&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=f06&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="701" height="438"></embed></object><p><a href="http://vimeo.com/5542907">Cartagen 0.5 Demo</a> from <a href="http://vimeo.com/user263756">Jeffrey Warren</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+
+## Troubleshooting ##
+
+For help using Cartagen, see: TroubleshootingCartagen
+
+
+<div class="column" style='float:right;width:240px;padding:10px;border-left:1px solid #ccc;margin: 15px;margin-right:0;padding-right:0'>
+<img src='http://farm3.static.flickr.com/2666/3920239192_057e1fc7e6_m.jpg'/>
+
+<h3>Cartagen SMS</h3>
+
+<p>Also read about CartagenSMS, a tool for reporting geographic data in real time, <b>without a GPS</b>.</p>
+
+<h3>CartagenAerial</h3>
+<h3>GrassrootsMappingLima</h3>
+<h3>CartagenSextant</h3>
+<h3>MapWarpingWithCartagen</h3>
+</div>
+
+## How Can I Help? ##
+
+Head to the DeveloperCenter for ways to work with Cartagen, change it to fit your needs, and contribute to the project.
+
+## Who Are You? ##
+
+The Cartagen project is led by researchers at the MIT Media Lab in Cambridge, Massachusetts, USA, but we welcome contributions from anyone. Read about the CartagenContributors, or ContactUs.
+
+## Misc. ##
+
+Cartagen uses a version of  the GLOP Javascript Canvas environment developed at the MIT Media Lab. For details see 
+

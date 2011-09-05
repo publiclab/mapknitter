@@ -1,0 +1,76 @@
+## Installing Cartagen ##
+
+To run Cartagen on your own server, you'll need:
+
+1. A copy of Cartagen Client Edition
+2. Data files - A sample file, containing data for Rome, is included with the Client Edition. See below for creating and using custom data files from <http://cartagen.org>
+
+Below is an in-depth walk-through of how to get set up.
+
+### Getting The Code ###
+
+To get an official release, download the latest zip file from <http://code.google.com/p/cartagen/downloads/list>.
+
+![Downloading Cartagen](/resources/client-setup/step1.png)
+
+When prompted, save the file. If you ware not prompted, it is probably placed automatically into your downloads folder.
+
+![Saving Cartagen](/resources/client-setup/step2.png)
+
+Cartagen is packaged as a zip file. Extract the file. Depending on your system, you may need to double-click th file, or right-click and select "extract" or "unarchive".
+
+![Extracting Cartagen](/resources/client-setup/step3.png)
+
+## Setting it up ##
+
+You should now be able to open up the index.html file included in the distribution to view some sample data, several layers of map data from Rome, provided under Creative Commons Sharealike-Attribution by <http://openstreetmap.org>.
+
+### Configuring Cartagen for another location ###
+
+If you want to display a location other than Rome, you'll need to get your own data files. First, search for the place you want data from on <http://cartagen.org>:
+
+![Searching for a Location](/resources/client-setup/step4.png)
+
+Then, click the "Download data" link:
+
+![Prompt to select bounding box](/resources/client-setup/step5.png)
+
+Click "OK", then click and drag to select and area:
+
+![Selecting an area](/resources/client-setup/step6.png)
+
+Wait for the data to be generated, then choose to save the file if prompted. If you are not prompted to save the file, it is probably placed in your downloads folder automatically. Be sure to keep track of the code that you are given, as well. You may want to copy and paste t to a file, or just keep the browser window open. We'll use this code later.
+
+![Download prompt and code](/resources/client-setup/step7.png)
+
+Place the downloaded file into the Cartagen folder.
+
+![Moving data file](/resources/client-setup/step8.png)
+
+Open the index.html file in the Cartagen folder using a text editor, for example "\TextEdit", "Notepad", or "GEdit".
+
+![Opening index.html](/resources/client-setup/step9.png)
+
+Replace the "static_map_layers" code with your downloaded data file, and replace the latitude/longitude lines with the code you were provided when you downloaded the data.
+
+![Old code](/resources/client-setup/step10.png)
+
+![New code](/resources/client-setup/step11.png)
+
+Thats it! Just save the file and open it in your web browser:
+
+![New map in browser](/resources/client-setup/step12.png)
+
+## Advanced Configuration ##
+
+### Your own map data ###
+
+Say you want to grab the latest \OpenStreetMap data, or your own OSM-XML formatted dataset. Learn how to convert your 'osm.xml' files into 'osm.json' format at ImportingData
+
+### Bleeding Edge Version ###
+
+If you want to test out the latest new features and get the ltest fixes, you can use the bleeding-edge development version. The bleeding-edge version is for development purposes oly. It is unlikely to be stable or suitable for public consumption. See <http://code.google.com/p/cartagen/source/checkout> for instructions on how to get it from the project's subversion repository. You'll want to use the "public" folder, which contains the client edition.
+
+### Customizing Cartagen ###
+
+To customize Cartagen, change the parameters in the Cartagen.setup command at the top of index.html. Read more at CustomizingCartagen.

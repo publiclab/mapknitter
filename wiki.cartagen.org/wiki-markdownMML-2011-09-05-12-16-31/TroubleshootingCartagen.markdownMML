@@ -1,0 +1,13 @@
+## I've selected a large bbox of data, and now my map crashes the browser! ##
+
+Cartagen wasn't designed to load that large of a file all at once; for anything over about 1mb, I'd recommend loading it 'by tile'. We generally refer to this as DynamicLoading. This will allow you to load a very large map (even of the whole world!) in pieces. For most cases, you can do this **WITHOUT** running Ruby on Rails, or your own PlanetServer.
+
+## Safari crashes sometimes! ##
+
+This is a known bug in Safari 4: if you check your console, you will see:
+
+10/2/09 7:41:38 PM	[0x0-0x424424].com.apple.Safari[59690]	Assertion failed: ((min.y == p[0].y && max.y == p[order].y) || (min.y == p[order].y && max.y == p[0].y)), function crossing_count, file Paths/path-crossing.c, line 176.
+
+We hope the \WebKit team (or Apple?) will resolve it soon.
+
+Bug report: https://bugs.webkit.org/show_bug.cgi?id=30074

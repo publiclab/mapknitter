@@ -1,0 +1,94 @@
+## Configuring Cartagen ##
+
+### By Map Viewers ###
+Any Cartagen installation (including <http://cartagen.org>) can be configured by the user. Simply modify the URL ro include configuration parameters:
+
+<http://cartagen.org?lat=123.22&lon=123.45&debug=true>
+
+That example starts the map at latitude 123.22 and longitude 123.45, and enables debugging mode.
+
+### By Map Owners ####
+
+If you are using your own installation of Cartagen, you can modify Cartagen.setup to set default values for configuration parameters. Open index.html and edit the Cartagen.setup call that looks like this:
+
+
+<pre>Cartagen.setup({
+			stylesheet: "static/rome/style.gss",
+			static_map: true,
+			static_map_layers: [
+				"static/rome/park.js",
+				"static/rome/rail.js",
+				"static/rome/waterway.js",
+				"static/rome/primary.js",
+				"static/rome/secondary.js",
+				"static/rome/building.js",
+				"static/rome/area.js"
+				],
+			lat: 41.92,
+			lng: 12.12
+		})</pre>
+
+## Configuration options ##
+
+### lat / lon / zoom_level ###
+
+Specifies the starting latitude, longitude and zoom level of the map. Defaults to the middle of Rome.
+
+### stylesheet (or gss)###
+
+Sets the GSS stylesheet to use for the map. On server edition sites (such as cartagen.org), this can be any url. For client edition sites, this must be a path to file on th same site.
+
+<pre>http://cartgen.org/?stylesheet="http://example.com/styles.gss"</pre>
+
+
+<pre>http://example.com/?gss=/path/to/styles.gss</pre>
+
+### powersave ###
+
+Allows Cartagen to go into "powersave" mode, which re-draws the map less often. Cartagen will automatically exit powersave mode when you interact with th map. By default, this is enabled.
+
+### zoom_out_limit ###
+
+The farthest out Cartagen will allow the user to zoom. By default, this is 0.02. Decrease this to allow the user to zoom out more, increase this to allow the user to zoom out less.
+
+### simplify ###
+
+Simplifies ways by only drawing some noes. Making this more than 1 will decrease the quality of the map, but make the map work faster. Defaults to 1.
+
+### live_gss ###
+
+If this is true, it means that a live GSS editor (like the one on <http://cartagen.org> is available. If you remove the GSS editor, set this to false. Defaults to true.
+
+### static_map ###
+
+If this is set to false, Cartagen will load map data from a server in addition to static files. This only works with Cartagen server edition. Defaults to false.
+
+### static_map_layers ###
+
+An array (or comma-seperated string) of map layers to load from static data files.
+
+<pre>http://cartagen.org/?static_map_layers=http://example.com/a.json,http://example.com/b.json,http://example.com/c.json</pre>
+
+<pre>Cartagen.setup({
+	static_map_layers: ['a.json', 'b.json', c.json']
+}</pre>
+
+### live ###
+
+If set to true, Cartagen will constantly re-load data. This is useful if data is being loaded from a live source, however, it in not recommended unless needed, because it slows down Cartagen greatly. Defaults to false.
+
+### debug ###
+
+Enables debug mode if set to true. Messages will be printed to the console, a geohash grid will be shown, and debug context menu items will be available. Defaults to false.
+
+### fullscreen ###
+
+Hides the overlay (or any element called "brief"). Not used on sites that don't have an overlay (or an element called "brief"). Defaults to false.
+
+### load_user_features ###
+
+Causes Cartagen to load data from the CartagenAPI. This will only work on a CartagenServer installation. Defaults to false.
+
+### grid ###
+
+Set this to a color to draw a geohash grid on top of the map in the specified color.

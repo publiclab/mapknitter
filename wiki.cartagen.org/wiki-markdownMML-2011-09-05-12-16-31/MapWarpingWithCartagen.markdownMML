@@ -1,0 +1,25 @@
+This is now possible with the [Cartagen Knitter](http://wiki.grassrootsmapping.org/show/CartagenKnitter).
+
+
+Related work:
+
+[Perspective texturing in canvas](http://tulrich.com/geekstuff/canvas/perspective.html)
+
+[Projective Texturing with Canvas](http://acko.net/blog/projective-texturing-with-canvas)
+
+[Michal Migurski's canvas-warp](http://github.com/migurski/canvas-warp)
+
+This ought to be a separate application from the main Cartagen framework... though eventually perhaps integrated? Discuss.
+
+Required steps:
+
+* Ability to upload an image 
+* Image may need to be stored at various sizes (attachment-fu; weardrobe code example)
+* Display of an image at approx 240 x 180px with control points at corners (zoomable)
+* implement projective texturing for that image
+* user clicks 'save' button and it's saved as a raster image (base64)
+* warped coordinates are stored
+* User clicks 'complete' upon finishing the map
+* ImageMagick performs the distortions at full resolution [ImageMagick docs](http://www.imagemagick.org/Usage/distorts/affine/)
+* image is offered as WMS? or whatever
+* cartagen can import/display the tileset for tracing

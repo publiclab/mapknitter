@@ -1,0 +1,58 @@
+This API works with the server edition only. Note that bounding box coordinates are submitted as latitudes/longitudes of the sides. They are ordered counter-clockwise starting with the left bound.
+
+To see an implementation of the API, see public/cartagen/src/interface/user.js in the Cartagen source.
+
+## Writing Nodes ##
+
+Submit a request to /node/write, passing these parameters:
+
+* name: a short string that describes what the node represents
+* color: a color string, i.e. "rgb(1,10, 25)", "rgba(10,30,100,0.5)", "green", or "#ff090e"
+* lat: The latitude of the node
+* lon: The longitude of the node
+* author: The name of the submitter. Use "anonymous" if the name is unknown
+
+The server will respond with the id of the node, as plain text.
+
+## Reading Nodes ##
+
+Submit a request to /node/read, passing one or both of these parameters:
+
+* bbox: Comma-seperated bounding box to find nodes in
+* timestamp: Time, as a UTC time string (i.e. Fri, 19 Jun 2009 16:49:36 GMT)
+
+The server will respond with a JSON object with the property 'node', which is an array of objects with the following properties:
+
+* id: The id of the node
+* name: a short string that describes what the node represents
+* color: A color string, i.e. "rgb(10 20, 30)"
+* lat: The latitude of the node
+* lon: The longitude of the node
+* author: The name of the author
+* way_id: The id of the way the node belongs to, or 0 if it does not belong to a node.
+* order: The position in the way that this node appear, or 0 if this node does not have a way -- the first node in a way has order 0, the econd one has order 1, the third has order 2, etc.
+
+## Writing Ways ##
+
+Submit a request to /way/write passing the parameter "way" which should correspond to a JSON object with the following properties:
+
+* name: a short string that describes what the way represents
+* color: A color string, i.e. "rgb(1, 2, 3)"
+* author: Name of the submitter
+* bbox: Array of bbox sides
+* nodes: Array of tuples in [x, y] format, each tuple representing node of the way
+
+The server will respond with the way's id in plain text format.
+
+## Reading Ways ##
+
+Submit a request to /way/read with the parameter "ids" corresponding to a comma-seperated list of bounding box bounds.
+
+The server will respond with a JSON object with two properties: "node" and "way". The "way" property is an array of objects with the following properties:
+
+* id: The id of the way
+* name: a short string that describes what the way represents
+* author: The name of the author
+* color: The color of this way
+
+The "node" property is an array of objects with the same properties as those returned by reading a node (see above)

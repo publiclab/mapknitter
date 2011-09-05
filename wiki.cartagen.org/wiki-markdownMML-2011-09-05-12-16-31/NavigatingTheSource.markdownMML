@@ -1,0 +1,30 @@
+## Requirements ##
+
+Cartagen is a Ruby on Rails application. Before you can work on it, you will need [Ruby](http://ruby-lang.org), [Rails](http://rubyonrails.org/) and [Rake](http://rake.rubyforge.org).
+
+## Working on the Javascript ##
+
+The Cartagen Javascript is in public/cartagen/src. However, it is concatenated info public/cartagen/cartagen.js by [Sprockets](http://getsprockets.org/). If you're just modifying files, just make sure not to move or change lines starting with `//=` -- those lines are Sprocket directives. If you nee to add or move files, take a look at <http://getsprockets.org/installation_and_usage> to see how to get your files into the concatenated cartagen.js
+
+To build cartagen.js, just run `rake build` from public/cartagen. To have Cartagen automatically build wheneve the src/ directory is changed, run `rake autobuild`. Be aware, though, that autobuild only checks every 5 seconds, so wait a few seconds after making a change before testing it in a browser.
+
+Cartagen uses the [Prototype JavaScript Framework](http://www.prototypejs.org/). You should be at least somewhat familiar with Protoype before developing with Cartagen -- it will save you a lot of time.
+
+The Javascript source is documented with [JsDoc Toolkit](http://code.google.com/p/jsdoc-toolkit/). Please try to add documentation for any functions or properties you add.
+
+#### Conventions ####
+
+* Functions and variables are use under_score_naming, unless they are node/way properties used for styling, in which case they are camelCased to be CSS-like
+* Classes are \CamelCased with the first letter capitalized
+* Avoid globals! Find namespaces to put things in.
+* In general, classes and namespaces should have their own file.
+* If you can't find a good place to put something becuase it is used by many parts of Cartagen, put it in util/util.js.
+* Don't use console.log() or any other console method - use Cartagen's debugging methods. The most common one is $l(), which logs a message to the browser's console. Various other methods are in the $D namespace.
+
+#### X, Y Coordinates ####
+
+Coordinates in Cartagen can get complicated; there's latitude, longitude, Map x, Map y, Screen x, Screen y... an more! Learn all about it on the CartagenCoordinates page.
+
+## Geohashes ##
+
+Cartagen makes extensive use of the [Geohash](http://en.wikipedia.org/wiki/Geohash) geocoding system invented by Gustavo Niemeyer. Read more about GeoHashes

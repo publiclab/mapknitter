@@ -1,0 +1,534 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg-flat.dtd" >
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+          <title>Api Class Map Prop Lon in Cartagen Wiki</title>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
+          <style type="text/css">
+            h1#pageName, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover { 
+              color: #008B26; 
+            }
+            .newWikiWord { background-color: white; font-style: italic; }
+            body {
+background-color:#FFF;
+color:#333;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:1em;
+line-height:1.3em;
+}
+
+#Container {
+margin:0 10px;
+text-align:center;
+}
+
+#Content {
+border-top:none;
+margin:auto;
+padding:0.3em;
+text-align:left;
+width:100%;
+max-width:55em;
+}
+
+a:visited {
+color:#555;
+}
+
+h1,h2,h3,h4,h5,h6 {
+color:#333;
+font-family:georgia, verdana, sans-serif;
+}
+
+h1 {
+font-size:200%;
+}
+
+h2 {
+font-size:173%;
+}
+
+h3 {
+font-size:144%;
+}
+
+h4 {
+font-size:120%;
+}
+
+h5,h6 {
+font-size:100%
+}
+
+h1#pageName {
+line-height:1em;
+margin:0.2em 0 0.2em 0;
+padding:0;
+}
+
+h1#pageName small {
+color:#444;
+font-size:35%;
+line-height:1em;
+padding:0;
+}
+
+#svg_logo {
+float:left;
+margin:.5em .25em 0 -.625em;
+width:1.5em;
+height:1.625em;
+}
+
+a.nav,a.nav:link,a.nav:visited {
+background-color:#FFF;
+color:#000;
+}
+
+table {
+border:double #000;
+border-collapse:collapse;
+}
+
+td {
+border:thin solid #888;
+}
+
+li {
+margin-bottom:0.5em;
+}
+
+.newWikiWord {
+background-color:#DDD;
+}
+
+.newWikiWord a:hover {
+background-color:#FFF;
+}
+
+.deleteWikiWord {
+background-color:#FCC;
+border: 3px solid blue;
+padding: 2px;
+}
+
+.deleteWikiWord:hover, .deleteWikiWord a:hover {
+background-color:#F88;
+}
+
+
+form#navigationSearchForm {
+display:inline;
+}
+
+form#navigationSearchForm input {
+font-size:80%;
+}
+
+.navigation {
+color:#555;
+font-size:90%;
+margin-top:0.3em;
+}
+
+.navigation a:hover {
+background-color:#000;
+color:#FFF;
+text-decoration:none;
+}
+
+.navigation a {
+color:#000;
+font-weight:bold;
+}
+
+.navigation small a {
+font-size:90%;
+font-weight:normal;
+}
+
+.navOn {
+color:#444;
+font-weight:bold;
+text-decoration:none;
+}
+
+div.help {
+font-family:verdana, arial, helvetica, sans-serif;
+font-size:75%;
+}
+
+div.inputBox {
+background-color:#EEE;
+font-family:verdana, arial, helvetica, sans-serif;
+font-size:80%;
+margin-bottom:1.5em;
+padding:0.3em;
+}
+
+blockquote {
+display:block;
+font-size:90%;
+font-style:italic;
+line-height:1.5em;
+margin:0 0 1.5em;
+padding:0 2.5em;
+}
+
+pre {
+background-color:#DDD;
+font-size:90%;
+overflow:auto;
+padding:1em;
+}
+
+ol.setup {
+font-family:georgia, verdana, sans-serif;
+font-size:110%;
+margin-top:1em;
+padding-left:1.5em;
+}
+
+.byline {
+color:#666;
+font-size:.8em;
+font-style:italic;
+margin-bottom:1em;
+padding-top:1px;
+}
+
+p.show_diff {
+background: #eee;
+padding: 3px;
+border: 1px solid silver;
+font-size:.85em;
+}
+
+span.webName {
+font-size:.5em;
+}
+
+span.views, span.linked {
+font-size:.85em;
+}
+.views a, .linked a {
+font-weight: normal
+}
+span.revisions {
+font-size:.95em
+}
+
+#allPages, #wantedPages {
+float: left;
+width: 280px;
+}
+#allPages {
+margin-right: 30px;
+}
+#allPages h2, #wantedPages h2 {
+font-size: 1.2em;
+} 
+
+.pageType {
+font-size: .75em;
+font-style: italic;
+}
+
+p.pageStats, span.unlock {
+font-size: .85em;
+}
+
+.diffdel,del.diffmod, .diffdel *, del.diffmod * {
+background-color:#FAA;
+text-decoration:line-through;
+}
+
+.diffins,ins.diffmod, .diffins *, ins.diffmod * {
+background-color:#AFA;
+text-decoration:underline;
+}
+
+.diffmod, .diffmod * {
+border: 2px solid #FE0;
+}
+
+#footer {
+color:#666;
+font-size:.75em;
+font-style:italic;
+line-height:1.2em;
+padding-top:2em;
+text-align:right;
+}
+
+#footer a:link,#footer a:visited {
+color:#777;
+font-style:italic;
+}
+#footer a:hover {
+color:#FFF;
+}
+
+div.web_normal {
+	padding:4px;
+}
+
+div.web_protected {
+	padding:4px;
+	background-color:#DDD;
+}
+
+div.inputFieldWithPrompt {
+margin:0.75em 0;
+}
+
+div.errorExplanation {
+background-color:#FFA;
+color:#900;
+font-style:italic;
+font-weight:bold;
+margin:1.5em 0;
+padding:1em;
+width:100%;
+}
+
+div.errorExplanation h2 {
+display:none;
+}
+
+div.errorExplanation ul {
+border:none;
+margin:0.5em 0 0 2em;
+padding:0;
+}
+
+div.fieldWithErrors input {
+border:1px solid #900;
+}
+
+div.info {
+background-color:#DDD;
+color:#060;
+font-weight:bold;
+margin-top:0.5em;
+padding:0.5em;
+width:100%;
+}
+
+div#editFormButtons {
+margin:0.5em 0 0;
+}
+
+div#editFormButtons span {
+white-space:nowrap;
+}
+
+div#editForm textarea#content {
+}
+
+div#MarkupHelp {
+float:right;
+margin-top:0.5em;
+width:25%;
+}
+
+div#MarkupHelp table {
+border-bottom:3px solid #BBB;
+border-left:3px solid #999;
+border-right:3px solid #BBB;
+border-top:3px solid #999;
+margin-bottom:0;
+}
+
+div#MarkupHelp td {
+border:1px solid #999;
+border-width:1px 0;
+font-size:80%;
+margin:0;
+padding:0.2em;
+vertical-align:top;
+white-space:nowrap;
+}
+
+div#MarkupHelp td.arrow {
+color:#666;
+padding:0 0.75em;
+}
+
+div#MarkupHelp h3 {
+font-size:90%;
+font-weight:bold;
+margin:0 0 5px;
+padding:5px 0 0;
+}
+
+div#MarkupHelp p {
+font-size:70%;
+}
+
+div.rightHandSide {
+border-left:1px dotted #ccc;
+border-bottom:1px dotted #ccc;
+float:right;
+font-size:80%;
+margin-left:0.7em;
+padding-left:1.5em;
+width:25%;
+}
+
+.newsList {
+margin-top:1.5em;
+}
+
+.newsList p {
+margin-bottom:2.5em;
+}
+
+.property {
+color:#666;
+font-size:80%;
+}
+
+a,li span {
+color:#000;
+}
+
+a:hover,a.nav:hover, a:hover math {
+background-color:#000;
+color:#FFF;
+}
+
+div.errorExplanation p,div.errorExplanation li {
+border:none;
+margin:0;
+padding:0;
+}
+
+merror {display:inline;font-size:1em;}
+math[display=block] {overflow:auto;}
+math { white-space: nowrap }
+.maruku-eq-number {float:right}
+.maruku-equation {text-align:center}
+.blockquotesource {margin-left:1em;}
+fieldset.search {display:inline; border:none;padding:0;margin:0;top:5px;position:relative;}
+span.keyboard {
+ background: #CCC;
+ color: #000;
+ border: outset 2px;
+ font-family:verdana, arial, sans-serif;
+ font-size: .7em;
+ margin-left:5px;
+ padding:1px 2px;
+}
+.centeredfigure {
+ position:relative;
+ margin:auto;
+ text-align:center;
+}
+
+body {counter-reset: theorem lemma proposition corollary definition example remark note}
+.un_theorem *, .num_theorem *,
+.un_lemma *, .num_lemma *,
+.un_prop *, .num_prop *,
+.un_cor *, .num_cor * {font-style: italic}
+span.theorem_label {font-style:normal; font-weight:bold;}
+.proof span.theorem_label {font-style:italic;}
+.num_theorem .theorem_label:after {
+   content: " " counter(theorem); counter-increment: theorem;}
+.num_lemma .theorem_label:after {
+   content: " " counter(lemma); counter-increment: lemma;}
+.num_prop .theorem_label:after {
+   content: " " counter(proposition); counter-increment: proposition;}
+.num_cor .theorem_label:after {
+   content: " " counter(corollary); counter-increment: corollary;}
+.num_defn .theorem_label:after {
+   content: " " counter(definition); counter-increment: definition;}
+.num_example .theorem_label:after {
+   content: " " counter(example); counter-increment: example;}
+.num_remark .theorem_label:after {
+   content: " " counter(remark); counter-increment: remark;}
+.num_note .theorem_label:after {
+   content: " " counter(note); counter-increment: note;}
+
+
+          </style>
+          <style type="text/css">
+            html { background:#ddd;padding: 5px 20px;font-size:0.8em; font-family:Lucida Grande,Helvetica,sans-serif;}
+img { border:0; }
+body { background:white;padding:30px; }
+code,pre { background:#E3E6F5;padding:12px;font-size:1.1em;}
+code { line-height:3em; }
+a { color:#F87858; }
+a:hover { background:#eee; }
+a:visited, a:hover { color:#C95325; }
+table { border: 2px solid #ccc; border-bottom:none; border-right:none; }
+td, th { padding:5px 8px; border-right: 2px solid #ccc; border-bottom: 2px solid #ccc; }
+div.sidebar {
+float:right;
+width:240px;
+padding:10px;
+border-left:1px solid #ccc;
+margin:15px;
+margin-right:0;
+padding-right:0;
+}
+div.header {
+font-family:georgia,serif;
+width: 100%;
+margin-top: 10px;
+margin-bottom: 10px;
+padding-top: 8px;
+padding-bottom: 8px;
+border-top:1px solid #ccc;
+border-bottom:1px solid #ccc;
+font-size:1.2em;
+text-align: center;
+}
+div.header a {
+padding:4px;
+}
+div.header a img {
+display:none;
+}
+
+h1 {
+font-size:3.5em;
+font-weight:normal;
+letter-spacing:-1px;
+}
+h2 {
+line-height:1.4em;
+font-size:2.2em;
+display: block;
+letter-spacing:-1px;
+width:100%;
+/*border-bottom: 2px solid #ddd;*/
+padding-top:8px;
+font-weight:normal;
+}
+h3 {
+font-weight:normal;
+font-style:italic;
+}
+    
+    
+    
+    
+    
+    
+    
+          </style>
+        </head>
+        <body>
+          <h1 id="pageName">
+            <span class="webName">Cartagen Wiki</span><br />
+            Api Class Map Prop Lon    
+          </h1>
+          <p>See <a class='existingWikiWord' href='CartagenCoordinates.xhtml'>Cartagen Coordinates</a> for a discussion of coordinate systems.</p>
+          <div class="byline">
+            Created on March 01, 2010 18:42:26
+            by
+            <a class="existingWikiWord" href="Jeffrey+Warren.xhtml">Jeffrey Warren</a>
+          </div>
+        </body>
+        </html>

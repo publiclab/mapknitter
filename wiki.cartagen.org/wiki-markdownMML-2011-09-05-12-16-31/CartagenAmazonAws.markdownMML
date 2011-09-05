@@ -1,0 +1,21 @@
+###Notes###
+
+* [Outline of Ubuntu on Amazon EC2](http://www.ubuntu.com/cloud/public-steps)
+* [Getting started with EC2](http://paulstamatiou.com/how-to-getting-started-with-amazon-ec2)
+* [Ubuntu's EC2 starters guide](https://help.ubuntu.com/community/EC2StartersGuide)
+* [Creating a New Image for EC2 by Rebundling a Running Instance](http://alestic.com/2009/06/ec2-ami-bundle) - good
+* [Creating an AMI](http://docs.amazonwebservices.com/AmazonEC2/dg/2006-06-26/creating-an-ami.html) - Amazon's official
+
+###Ubuntu 9.10 AMIs###
+
+[http://uec-images.ubuntu.com/releases/karmic/release/](http://uec-images.ubuntu.com/releases/karmic/release/)
+
+###\MapBox by [DevelopmentSeed]()###
+
+_\MapBox offers Postgres data files on an EBS. They also have an EC2 image, but not of the Rails port, so it's not useful for serving Cartagen PlanetServer_
+
+* [Latest Amazon EBS images](http://mapbox.com/data/osm-planet) (~weekly)
+* [Using \MapBox EBSs](http://mapbox.com/osm-planet/using-osm-planet-ebs)
+* [TileMill](http://thecloudmarket.com/search?search_term=openstreetmap)
+
+Search for more AMIs at [thecloudmarket.com](http://thecloudmarket.com/)

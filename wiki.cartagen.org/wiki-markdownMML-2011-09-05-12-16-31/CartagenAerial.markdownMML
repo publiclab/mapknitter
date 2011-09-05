@@ -1,0 +1,35 @@
+Cartagen Aerial is a sub-project attempting to use low-cost weather-balloon photography as a base layer for mapping. Weather balloon photography, when rectified, can provide very high-resolution images from which to base mapping efforts.
+
+## Weather balloon photography ##
+
+*Links:*
+
+[1337arts](http://space.1337arts.com/)
+
+*Rough estimates:*
+
+`4/3*PI*r^3*0.64`
+
+or in most programming languages:
+
+`4.0000/3*3.141592*r*r*r*0.64`
+
+r = diameter in feet
+
+Diameter | Volume (cu ft) | lift power |
+-----|:-------------------:|-------------------:|
+3' | 14.1 | 0.9 lbs |
+4' | 33.5 | 2.14 lbs |
+5' | 65.45 | 33.51 lbs |
+8' | 268.1 | 17.16 lbs |
+16' | 2145 | 137 lbs |
+
+### Rectifying ###
+
+There's a problem that photos are such high resolution that we can't rectify them... there's no building corners for reference. So I'm trying to turn on the Google Maps satellite layer to use low-res images to rectify high-res ones. 
+
+Use this line:
+
+`to_map.addLayer(googleSat);`
+
+or drag this into your bookmarks bar:

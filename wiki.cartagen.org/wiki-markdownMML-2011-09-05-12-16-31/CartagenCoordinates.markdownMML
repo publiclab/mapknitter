@@ -1,0 +1,21 @@
+<img src="http://farm5.static.flickr.com/4055/4399100349_600d1e21dc.jpg" />
+
+The Cartagen coordinate system describes x and y coordinates for both the entire map (effectively the whole world) and for the viewport - creating confusion for some developers. Here we outline all the notable coordinate systems you can use in \JavaScript:
+
+### Viewport coordinates ###
+
+* **Map.lon** - the longitude of the spot on the planet the Viewport is centered on, i.e. the spot we're looking at, in longitude.
+* **Map.lat** - the latitude of the spot on the planet the Viewport is centered on, i.e. the spot we're looking at.
+* **Map.x** - the y position on the planet of the center of the viewport (what's on the screen). This is basically a direct projection from Map.lon.
+* **Map.y** - the y position on the planet of the center of the viewport (what's on the screen). This is basically a direct projection from Map.lat.
+* **Map.zoom** - ...
+
+Map.x and Map.y may not be 1:1 scale to the pixel dimensions of the browser window. They should be related via the Map.zoom
+
+### Mouse coordinates ###
+
+* **Mouse.x** - The x position of the mouse pointer with regard to the Viewport in pixels
+* **Mouse.y** - The y position of the mouse pointer with regard to the Viewport in pixels
+* **Map.pointer_x** - The x position of the mouse pointer with regard to the _planet_ - that is, the lat/lon position of the mouse on the planet, projected into x/y.
+* **Map.pointer_y** - The y position of the mouse pointer with regard to the _planet_ - that is, the lat/lon position of the mouse on the planet, projected into x/y.
+
