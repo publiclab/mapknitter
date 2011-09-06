@@ -14,6 +14,7 @@ class MapController < ApplicationController
 
   def edit
     @map = Map.find_by_name params[:id]
+    @export = Export.find_by_map_id(@map.id)
     if @map.password != "" && !Password::check(params[:password],@map.password) 
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
@@ -141,7 +142,7 @@ class MapController < ApplicationController
           nodes << [node_obj.lon,node_obj.lat]
         end
         @nodes[warpable.id.to_s] = nodes
-      elsif (warpable.nodes == "none" && warpable.created_at == warpable.updated_at)
+      elsif (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
 	# delete warpables which have not been placed and are older than 1 hour:
 	warpable.delete if DateTime.now-1.hour > warpable.created_at
       end

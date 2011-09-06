@@ -11,6 +11,11 @@
 		<% end %>
 	</div>
 
+	<h3>Export formats</h3>
+	<p>Available export formats, if any:</p>
+
+	<%= render :partial => "map/formats" %>
+
 	<div class='box'>
 	<h3>Edit map details:</h3>
 	<form class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
