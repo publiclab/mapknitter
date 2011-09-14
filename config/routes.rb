@@ -40,21 +40,12 @@ ActionController::Routing::Routes.draw do |map|
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing the them or commenting them out if you're using named routes and resources.
 
-  map.root :controller => "map", :action => "find", :id => "20 ames st cambridge"
+  map.root :controller => "map", :action => "index"
 
   map.connect 'tms/:id/alt/:z/:x/:y.png', :controller => "utility", :action => "tms_alt"
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
   map.connect 'maps', :controller => "map", :action => "index"
   map.connect 'maps/:id', :controller => "map", :action => "show"
-  map.connect 'generate/:tag.:format', :controller => 'extract', :action => "osm_to_json_by_tag"
-  map.connect 'static/:city/:tag.:format', :controller => "extract", :action => "osm_to_json_by_tag"
-  map.connect 'static/:city.:format', :controller => "extract", :action => "osm_to_json"
-  map.connect 'map/plot.:format', :controller => "map", :action => "plot"
-  map.connect 'map/tag.:format', :controller => "map", :action => "tag"
-  map.connect 'demo/:id', :controller => "map", :action => "find", :demo => true
-  map.connect 'demo/:id/:range', :controller => "map", :action => "find", :demo => true
-  map.connect 'find/:id', :controller => "map", :action => "find"
-  map.connect 'find/:id/:range', :controller => "map", :action => "find"
   map.connect 'import/:name', :controller => "warper", :action => "import"
 
   map.connect 'author/:id', :controller => 'author', :action => 'show'
