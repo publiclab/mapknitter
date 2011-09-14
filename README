@@ -1,81 +1,44 @@
-                _                         
-  ___ __ _ _ __| |_ __ _  __ _  ___ _ __  
- / __/ _` | '__| __/ _` |/ _` |/ _ \ '_ \ 
-| (_| (_| | |  | || (_| | (_| |  __/ | | |
- \___\__,_|_|   \__\__,_|\__, |\___|_| |_|
-                         |___/
+oooo                     o8o      .       .                      
+`888                     `"'    .o8     .o8                      
+ 888  oooo  ooo. .oo.   oooo  .o888oo .o888oo  .ooooo.  oooo d8b 
+ 888 .8P'   `888P"Y88b  `888    888     888   d88' `88b `888""8P 
+ 888888.     888   888   888    888     888   888ooo888  888     
+ 888 `88b.   888   888   888    888 .   888 . 888    .o  888     
+o888o o888o o888o o888o o888o   "888"   "888" `Y8bod8P' d888b    
 
-Cartagen is a vector-based, client-side framework for rendering maps in native HTML 5. Maps are styled in GSS, a cascading stylesheet specification for geospatial information – a decision which leverages literacy in CSS to make map styling more accessible. 
 
-http://cartagen.org is a demonstration of the latest release of Cartagen. Test it out, visit places, and create your own maps!
+Use Public Laboratory's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
 
-=================================================
-Quick links
+Copyright 2010-2011 Jeffrey Warren
 
-Installation Packages: http://github.com/jywarren/cartagen/downloads
-Source Code: http://github.com/jywarren/cartagen
-Cartagen Wiki: http://wiki.cartagen.org/
-API Documentation: http://cartagen.org/api/
-GSS Usage: http://wiki.cartagen.org/wiki/show/GssUsage
+==========================
+LICENSE
+==========================
 
-=================================================
-What to install
+PLOTS Map Knitter is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Cartagen is available in two 'editions' - each of which fulfills a different set of requirements.
+PLOTS Map Knitter is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-*** Client Edition ***
+You should have received a copy of the GNU General Public License
+along with PLOTS Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
-The client edition is the simplest version of Cartagen, and the easiest to get started with – you don’t need a web server to run it. However, you must provide it with static data or every location you want it to load - it cannot dynamically fetch data from a server. Download a copy from: http://github.com/jywarren/cartagen/downloads
+==========================
+ABOUT
+==========================
 
-Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenClient
+Use Public Laboratory's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
 
-*** Server Edition ***
+Read more about PLOTS Map Knitter at: http://publiclaboratory.org/wiki/plots-map-toolkit
 
-The server edition is not yet officially released. If you are interested in it, you can get it from the development repository via subversion. It is not recommended for end-users, as installation and setup procedures are not fully in place. Read more at the Cartagen Wiki: http://wiki.cartagen.org/wiki/show/CartagenServer
+The Public Laboratory for Open Technology and Science (PLOTS) is a community which develops and applies open-source tools to environmental exploration and investigation. By democratizing inexpensive and accessible “Do-It-Yourself” techniques, Public Laboratory creates a collaborative network of practitioners who actively re-imagine the human relationship with the environment.
 
-=================================================
-Requirements
+The core PLOTS program is focused on “civic science” in which we research open source hardware and software tools and methods to generate knowledge and share data about community environmental health. Our goal is to increase the ability of underserved communities to identify, redress, remediate, and create awareness and accountability around environmental concerns. PLOTS achieves this by providing online and offline training, education and support, and by focusing on locally-relevant outcomes that emphasize human capacity and understanding.
 
-*** Client Edition ***
+Join now at: http://publiclaboratory.org/join
 
-Cartagen Client requires a modern JavaScript browser (recommended: Safari 3+, Firefox 3.1+, Chrome)
-
-*** Server Edition ***
-
-Cartagen Server requires a server with Ruby and the following gems:
-
-"json"
-"httparty"
-"geokit"
-"davetroy-geohash"
-
-However you can install these gems by running: 'rake gems:install' in the root directory of Cartagen.
-
-=================================================
-Installation
-
-*** Client Edition ***
-
-Note: There is a full installation tutorial with screenshots available at http://wiki.cartagen.org/wiki/show/CartagenClient
-
-- Download a copy from: http://github.com/jywarren/cartagen/downloads
-- Decompress the .zip file (This is important - Cartagen cannot run within a .zip file!)
-- Open the folder cartagen-client-0.x.x and open index.html in a web browser.
-- You're done! Now learn how to get your own data set from OpenStreetMap here: http://wiki.cartagen.org/wiki/show/CartagenClient
-
-*** Server Edition ***
-
-Coming soon... read more at http://wiki.cartagen.org/wiki/show/CartagenServer
-
-=================================================
-Documentation
-
-Cartagen usage and documentation is available at http://wiki.cartagen.org, and a periodically downloaded version is available at http://github.com/jywarren/cartagen/downloads
-
-=================================================
-Development
-
-If you're interested in developing or modifying the Cartagen client-side source code (cartagen.js), review the README file at /public/cartagen/README, and see the following Wiki pages:
-
-http://wiki.cartagen.org/wiki/show/DeveloperCenter
-http://wiki.cartagen.org/wiki/show/NavigatingTheSource
