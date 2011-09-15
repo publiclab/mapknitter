@@ -2,12 +2,13 @@ require 'open3'
 class Map < ActiveRecord::Base
   before_validation :update_name
   validates_presence_of :name,:author
+  validates_uniqueness_of :name
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
   validates_format_of       :name,
                             :with => /[a-zA-Z0-9_-]/,  
                             :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
                             :on => :create                  
-#  has_many :warpables
+  has_many :warpables
 
   # Hash the password before saving the record
   def before_create

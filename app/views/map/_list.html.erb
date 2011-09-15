@@ -1,7 +1,8 @@
 <div id="list">
-	<% odd = false %>
+	<% odd = true %>
 	<% for map in @maps %>
-		<div class="<% puts 'odd' if odd %>">
+		<div class="map <%= 'odd' if odd %>">
+			<% if map.warpables.length > 0 %><a href="/maps/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
 			<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
 			<p><small><%= map.location %></small></p>
 			<p><small>
@@ -10,11 +11,11 @@
 			</small></p>
 			<p class="meta"><small>
 				<a href="/map/edit/<%= map.name %>">Edit</a> | 
-				Updated on <%= map.updated_at.to_s(:short) %> | 
-				<%= map.warpables.length %> images | 
-				<a href="/maps/<%= map.name %>">View map &raquo;</a>
+				Updated <%= map.updated_at.to_s(:short) %> | 
+				<%= map.warpables.length %> images 
 			</small></p>
 		</div>
+		<% odd = !odd %>
 	<% end %>
 </div>
 

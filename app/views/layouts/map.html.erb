@@ -15,10 +15,13 @@
 	<div id="bodywrap">
 	<div id="header">
 		<div class="right">
-			<a href="http://publiclaboratory.org/tool/balloon-mapping">About balloon mapping &raquo;</a>
+			<a href="http://publiclaboratory.org/wiki/mapknitter">Intro</a> |
+			<a href="http://publiclaboratory.org/tool/balloon-mapping">Get images</a> |
+			<a href="http://publiclaboratory.org/wiki/mapknitter-help">Help</a> |
+			<a href="http://publiclaboratory.org/archive">Map Archive</a>
 		</div>
-		<a href="/maps/"><img src="/images/knitter-logo.png" /></a>
-		<h2><a href="/maps/">PLOTS Map Knitter</a></h2>
+		<a href="/" style="float:left;"><img src="/images/mapknitter.png" /></a>
+	<br style="clear:both;" />
 	</div>
 
 	<% if flash[:notice] %>
@@ -38,13 +41,18 @@
 
 	</div>
 
-	<script type="text/javascript">
-	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	<script type="text/javascript">
-	try {
-	var pageTracker = _gat._getTracker("UA-180781-29");
-	pageTracker._trackPageview();
-	} catch(err) {}</script></body>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7636025-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 </html>

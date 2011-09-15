@@ -1,8 +1,8 @@
-html { background: #333; }
+html { background: #fff; }
 body {
-	margin: 10px auto;
-	padding:30px;
-	width: 900px; 
+	margin: 0 auto;
+	padding:0 30px 30px 30px;
+	width: 1000px; 
 	background: white; 
 	font-family: georgia, times, serif;
 	box-shadow: 0 10px 15px #000;
@@ -10,15 +10,27 @@ body {
 }
 
 img { border:0; }
-a { color:#B3221C; }
+a { color:#30f; }
 a:hover { color:#a00; }
 h1, h2, h3 { font-weight:normal; }
 h1 { font-size:2em; }
-
+h1 { border-bottom:1px solid #bbb;padding-bottom:6px }
+h2 { border-bottom:1px solid #bbb;padding-bottom:6px }
 h3 a { text-decoration:none; }
 
 #header {
-	border-bottom:3px solid #222;
+	width:980px;
+	display:block;
+	background:#202020;
+	padding:30px 10px 5px;
+	margin-bottom:20px;
+	color:white;
+}
+#header a {
+	color:white;
+}
+#header a:hover {
+	color:#30f;
 }
 #header h2 {
 	margin-top:0;
@@ -30,15 +42,14 @@ h3 a { text-decoration:none; }
 	color:black;
 }
 #header h2 a:hover {
-	color:#900;
+	color:#30f;
 }
 #header img {
 	float:left;
 }
-
 #header .right {
 	float:right;
-	margin-top:26px;
+	margin-top:46px;
 }
 
 #main {
@@ -46,13 +57,11 @@ h3 a { text-decoration:none; }
 }
 
 #list {
-	width: 500px;
+	width: 600px;
 }
 #list h3 {
-	border-top:1px solid #ddd;
 	font-weight:normal;
 	margin-bottom:3px;
-	padding-top:10px;
 }
 #list h3 small {
 	font-size: 0.6em;
@@ -62,26 +71,41 @@ h3 a { text-decoration:none; }
 	margin-bottom:6px;
 }
 #list .meta {
-	text-align:right;
 	font-size:12px;
 	font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
 }
 
+#list .map {
+	border-bottom:1px dotted #aaa;
+	width:250px;
+	float:left;
+	margin-right:40px;
+	margin-bottom:20px;
+}
+#list .map.odd {
+	clear:left;
+}
+
 #sidebar {
-	width:350px;
+	width:360px;
 	margin-top:10px;
 	margin-left:10px;
 	float:right;
 }
 #sidebar h3 {
 	margin-top:5px;
+	margin-bottom:8px;
 	font-style:italic;
+	font-size:1.7em;
 }
 
+.box h2 {
+	background:#333;
+	padding:10px;
+}
 .box {
-	border:3px solid #161;
+	border:8px solid #ddd;
 	padding:14px;
-	background:#98BE66;
 }
 form.map {
 }
@@ -111,9 +135,8 @@ div.flash.error {
 	background:#f99;
 }
 #search {
-	border:3px solid #161;
+	border:8px solid #ddd;
 	padding:14px;
-	background:#98BE66;
 	margin-bottom:12px;
 }
 #search h3 {
