@@ -17,6 +17,13 @@ class MapController < ApplicationController
     end
   end
 
+  def all
+    @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC'
+    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @authors = Map.authors
+    render "map/index"
+  end
+
   def edit
     @map = Map.find_by_name params[:id]
     @export = Export.find_by_map_id(@map.id)
@@ -42,6 +49,7 @@ class MapController < ApplicationController
 
   def region
     @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
+    @maps = @maps.paginate :page => params[:page], :per_page => 24
   end
 
   # pt fm ac wpw
