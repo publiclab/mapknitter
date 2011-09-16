@@ -5,7 +5,8 @@ class MapController < ApplicationController
 
   def index
     # only maps with at least 1 warpable:
-    @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :limit => 24, :joins => :warpables, :group => "maps.id"
+    @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id"
+    @maps = @maps.paginate :page => params[:page], :per_page => 2
     @featured = Map.find :all, :joins => :warpables, :group => "maps.id", :select => 'maps.*, count(warpables.id) AS warpables_count', :conditions => ["password IS NOT NULL"], :order => 'warpables_count DESC', :limit => 2
     @authors = Map.authors
 
@@ -28,8 +29,14 @@ class MapController < ApplicationController
   end
 
   def archive
-    map = Map.find_by_name(params[:id])
-    map.archived = true
+    if APP_CONFIG["password"] == params[:pwd]
+      map = Map.find_by_name(params[:id])
+      map.archived = true
+      map.save
+      flash[:notice] = "Archived map."
+    else
+      flash[:error] = "Failed to archive map."
+    end
     redirect_to "/"
   end
 

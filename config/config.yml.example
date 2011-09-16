@@ -1,7 +1,9 @@
 development:
   password: xxx
+  file_storage: :file_system
 
 test:
 
 production:
   password: xxx
+  file_storage: :s3
