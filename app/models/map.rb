@@ -29,7 +29,7 @@ class Map < ActiveRecord::Base
 
   def self.authors
     authors = []
-    maps_authors = Map.find :all, :group => "maps.author"
+    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password != "" AND archived = false']
     maps_authors.each do |map|
       authors << map.author
     end
