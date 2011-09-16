@@ -19,6 +19,19 @@ class Map < ActiveRecord::Base
     self.name = self.name.gsub(/\W/, '-').downcase
   end
 
+  def self.bbox(minlat,minlon,maxlat,maxlon)
+	Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
+  end
+
+  def self.authors
+    authors = []
+    maps_authors = Map.find :all, :group => "maps.author"
+    maps_authors.each do |map|
+      authors << map.author
+    end
+    authors
+  end
+
   def validate
     self.name != 'untitled'
     self.name = self.name.gsub(' ','-')

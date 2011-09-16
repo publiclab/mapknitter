@@ -1,6 +1,6 @@
 <div id="main">
 	<div class='left'>
-		<a id="intro-graphic" href="javascript:void;" onClick="$('#video').show();$('#intro-graphic').hide();"><img src="images/intro-graphic.jpg" /></a>
+		<a id="intro-graphic" href="javascript:void;" onClick="$('#video').show();$('#intro-graphic').hide();"><img src="/images/intro-graphic.jpg" /></a>
 		<div id="video" style="display:none;">
 		<p style="padding:10px;border:2px solid #ccc;height:375px;width:550px;">Video coming soon...</p>
 		</div>
@@ -13,4 +13,7 @@
 <div id="sidebar">
 <%= render :partial => "map/search"  %>
 <%= render :partial => "map/new" %>
+<%= render :partial => "map/regions" %>
+<%= render :partial => "map/authors" %>
+<p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a></p>
 </div>

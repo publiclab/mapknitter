@@ -2,7 +2,7 @@ html { background: #fff; }
 body {
 	margin: 0 auto;
 	padding:0 30px 30px 30px;
-	width: 1000px; 
+	width: 920px; 
 	background: white; 
 	font-family: georgia, times, serif;
 	box-shadow: 0 10px 15px #000;
@@ -19,7 +19,7 @@ h2 { border-bottom:1px solid #bbb;padding-bottom:6px }
 h3 a { text-decoration:none; }
 
 #header {
-	width:980px;
+	width:900px;
 	display:block;
 	background:#202020;
 	padding:30px 10px 5px;
@@ -57,7 +57,7 @@ h3 a { text-decoration:none; }
 }
 
 #list {
-	width: 600px;
+	width: 500px;
 }
 #list h3 {
 	font-weight:normal;
@@ -77,35 +77,40 @@ h3 a { text-decoration:none; }
 
 #list .map {
 	border-bottom:1px dotted #aaa;
-	width:250px;
+	width:230px;
 	float:left;
-	margin-right:40px;
 	margin-bottom:20px;
+	margin-right:0;
 }
 #list .map.odd {
 	clear:left;
+	margin-right:30px;
 }
 
 #sidebar {
 	width:360px;
-	margin-top:10px;
 	margin-left:10px;
 	float:right;
 }
 #sidebar h3 {
 	margin-top:5px;
-	margin-bottom:8px;
+	margin-bottom:12px;
 	font-style:italic;
 	font-size:1.7em;
 }
 
+#authors ul {
+	font-size:0.9em;
+	padding:4px 12px;
+}
+
 .box h2 {
-	background:#333;
 	padding:10px;
 }
 .box {
 	border:8px solid #ddd;
 	padding:14px;
+	margin-bottom:12px;
 }
 form.map {
 }
@@ -137,7 +142,6 @@ div.flash.error {
 #search {
 	border:8px solid #ddd;
 	padding:14px;
-	margin-bottom:12px;
 }
 #search h3 {
 	margin-bottom:4px;

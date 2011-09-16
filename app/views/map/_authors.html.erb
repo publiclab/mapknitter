@@ -1,0 +1,10 @@
+<div class="box" id='authors'>
+<h3>Authors</h3>
+
+<ul>
+<% for author in @authors %>
+  <li><a href="/author/<%= author %>"><%= author %></a></li>
+<% end %>
+</ul>
+
+</div>

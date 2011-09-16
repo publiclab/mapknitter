@@ -7,6 +7,8 @@ class MapController < ApplicationController
     # only maps with at least 1 warpable:
     @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC', :limit => 24, :joins => :warpables, :group => "maps.id"
     @featured = Map.find :all, :joins => :warpables, :group => "maps.id", :select => 'maps.*, count(warpables.id) AS warpables_count', :conditions => ["password IS NOT NULL"], :order => 'warpables_count DESC', :limit => 2
+    @authors = Map.authors
+
     respond_to do |format|
       format.html {  }
       format.xml  { render :xml => @maps }
@@ -23,6 +25,10 @@ class MapController < ApplicationController
     else
       @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
     end
+  end
+
+  def region
+    @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
   end
 
   # pt fm ac wpw
