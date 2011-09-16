@@ -3,7 +3,14 @@ require "ftools"
 
 class Warpable < ActiveRecord::Base
   
-  has_attachment APP_CONFIG["attachments"]
+  has_attachment :content_type => :image, 
+                 :storage => APP_CONFIG["file_storage"], 
+                 #:storage => :s3, 
+                 #:storage => :file_system,
+                 :path_prefix => 'public/warpables', 
+                 :max_size => 30.megabytes,
+                 :processor => :image_science,
+                 :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
 
   # validates_as_attachment
 
