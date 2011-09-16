@@ -2,7 +2,7 @@
 	<% odd = true %>
 	<% for map in @maps %>
 		<div class="map <%= 'odd' if odd %>">
-			<% if map.warpables.length > 0 %><a href="/maps/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
+			<% if !map.private && map.warpables.length > 0 %><a href="/maps/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
 			<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
 			<p><small><%= map.location %></small></p>
 			<p><small>

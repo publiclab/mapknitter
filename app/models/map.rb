@@ -19,6 +19,10 @@ class Map < ActiveRecord::Base
     self.name = self.name.gsub(/\W/, '-').downcase
   end
 
+  def private
+    self.password != ""
+  end
+
   def self.bbox(minlat,minlon,maxlat,maxlon)
 	Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
   end
