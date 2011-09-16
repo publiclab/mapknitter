@@ -7,7 +7,8 @@ class Warpable < ActiveRecord::Base
                  :storage => APP_CONFIG["file_storage"], 
                  #:storage => :s3, 
                  #:storage => :file_system,
-                 :path_prefix => 'public/warpables', 
+                 :path_prefix => APP_CONFIG["file_path_prefix"],
+                 #:path_prefix => 'public/warpables', 
                  :max_size => 30.megabytes,
                  :processor => :image_science,
                  :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }

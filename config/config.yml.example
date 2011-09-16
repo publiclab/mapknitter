@@ -1,9 +1,11 @@
 development:
   password: xxx
-  file_storage: :file_system
+  file_storage: "file_system"
+  file_path_prefix: "public/warpables"
 
 test:
 
 production:
   password: xxx
-  file_storage: :s3
+  file_storage: "s3"
+  file_path_prefix: "warpables"

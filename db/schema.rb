@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101014151404) do
+ActiveRecord::Schema.define(:version => 20110916060555) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -23,14 +23,6 @@ ActiveRecord::Schema.define(:version => 20101014151404) do
     t.boolean  "geotiff",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "keyvalues", :force => true do |t|
-    t.string   "key"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "message_id", :default => 0
   end
 
   create_table "maps", :force => true do |t|
@@ -47,17 +39,10 @@ ActiveRecord::Schema.define(:version => 20101014151404) do
     t.decimal  "zoom",        :precision => 15, :scale => 10, :default => 2.0
     t.string   "location",                                    :default => ""
     t.string   "static_data",                                 :default => ""
-    t.boolean  "vectors",                                     :default => true,        :null => false
-    t.string   "tiles",                                       :default => "",          :null => false
-  end
-
-  create_table "messages", :force => true do |t|
-    t.string   "author"
-    t.string   "text"
-    t.string   "source"
-    t.string   "location_string"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.boolean  "vectors",                                     :default => false,       :null => false
+    t.string   "tiles",                                       :default => "google",    :null => false
+    t.string   "email",                                       :default => "",          :null => false
+    t.boolean  "archived",                                    :default => false,       :null => false
   end
 
   create_table "nodes", :force => true do |t|
@@ -71,11 +56,6 @@ ActiveRecord::Schema.define(:version => 20101014151404) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
-  end
-
-  create_table "tweets", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "warpables", :force => true do |t|
