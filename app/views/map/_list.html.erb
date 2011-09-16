@@ -11,6 +11,7 @@
 			</small></p>
 			<p class="meta"><small>
 				<a href="/map/edit/<%= map.name %>">Edit</a> | 
+				<% if params[:pwd] == APP_CONFIG[:password] %><a href="/map/archive/<%= map.name %>?pwd=<%= APP_CONFIG[:password] %>">Delete</a> | <% end %>
 				Updated <%= map.updated_at.to_s(:short) %> | 
 				<%= map.warpables.length %> images 
 			</small></p>

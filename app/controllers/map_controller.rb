@@ -5,7 +5,7 @@ class MapController < ApplicationController
 
   def index
     # only maps with at least 1 warpable:
-    @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC', :limit => 24, :joins => :warpables, :group => "maps.id"
+    @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :limit => 24, :joins => :warpables, :group => "maps.id"
     @featured = Map.find :all, :joins => :warpables, :group => "maps.id", :select => 'maps.*, count(warpables.id) AS warpables_count', :conditions => ["password IS NOT NULL"], :order => 'warpables_count DESC', :limit => 2
     @authors = Map.authors
 
@@ -25,6 +25,12 @@ class MapController < ApplicationController
     else
       @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
     end
+  end
+
+  def archive
+    map = Map.find_by_name(params[:id])
+    map.archived = true
+    redirect_to "/"
   end
 
   def region
@@ -159,7 +165,7 @@ class MapController < ApplicationController
 
   def search
     params[:id] ||= params[:q]
-    @maps = Map.find(:all, :conditions => ['name LIKE ? OR location LIKE ? OR description LIKE ?',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
+    @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
   end
  
   def update
