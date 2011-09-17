@@ -24,8 +24,10 @@
 		
 		<label for="location">Place</label><br />
 		<input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
-<!--		<label for="password">Password (optional -- to keep your map private)</label><br />
+		<% if params[:password] == APP_CONFIG["password"] %>
+		<label for="password">Password (optional -- to keep your map private)</label><br />
 		<input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password"><br />-->
+		<% end %>
 		<div id="geocode_results">
 			
 		</div>
