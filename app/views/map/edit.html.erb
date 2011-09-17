@@ -75,7 +75,6 @@
 		<% if @map.password != "" %>
 		<label for="password">Password (you must enter the password to save)</label><br />
 		<input class="text" type="password" name="password" id="password"><br />
-		<% if params[:pwd] %><input type="hidden" name="pwd" value="<%= params[:pwd] %>" /><% end %>
 		<% end %>
 		<p><input type="submit" value="Save"></p>
 	</form>
