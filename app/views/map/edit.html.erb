@@ -16,7 +16,12 @@
 
 	<%= render :partial => "map/formats" %>
 
-	<div class='box'>
+
+	
+</div>
+
+<div id="sidebar">
+<div class='box'>
 	<h3>Edit map details:</h3>
 	<form class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
 	
@@ -26,7 +31,7 @@
 		<input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
 		<% if params[:password] == APP_CONFIG["password"] %>
 		<label for="password">Password (optional -- to keep your map private)</label><br />
-		<input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password"><br />-->
+		<input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password"><br />
 		<% end %>
 		<div id="geocode_results">
 			
@@ -80,8 +85,5 @@
 		<% end %>
 		<p><input type="submit" value="Save"></p>
 	</form>
-	</div>
-
-	
 </div>
-
+</div>
