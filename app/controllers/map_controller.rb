@@ -27,7 +27,7 @@ class MapController < ApplicationController
   def edit
     @map = Map.find_by_name params[:id]
     @export = Export.find_by_map_id(@map.id)
-    if @map.password == "" || Password::check(params[:password],@map.password) || params[:pwd] == APP_CONFIG["password"] 
+    if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"] 
       @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
     else
       flash[:error] = "That password is incorrect." if params[:password] != nil
@@ -36,7 +36,7 @@ class MapController < ApplicationController
   end
 
   def archive
-    if APP_CONFIG["password"] == params[:pwd]
+    if APP_CONFIG["password"] == params[:password]
       map = Map.find_by_name(params[:id])
       map.archived = true
       map.save
@@ -86,15 +86,14 @@ class MapController < ApplicationController
 
   def update_map
     @map = Map.find(params[:map][:id])
-    if @map.password == "" || Password::check(params[:password],@map.password) || params[:pwd] == APP_CONFIG["password"]
+    if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
       @map.author = params[:map][:author]
       @map.description = params[:map][:description]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
       @map.lat = location.lat
       @map.lon = location.lng
-      @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
       if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-	#@map.save
+	@map.save
         flash[:notice] = "Map saved"
       else
         flash[:error] = "Failed to save"
@@ -155,7 +154,7 @@ class MapController < ApplicationController
   # http://www.zacharyfox.com/blog/ruby-on-rails/password-hashing 
   def show
     @map = Map.find_by_name(params[:id],:order => 'version DESC')
-    if @map.password != "" && !Password::check(params[:password],@map.password) 
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
@@ -191,6 +190,7 @@ class MapController < ApplicationController
   def search
     params[:id] ||= params[:q]
     @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
+    @maps = @maps.paginate :page => params[:page], :per_page => 24
   end
  
   def update
