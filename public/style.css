@@ -86,6 +86,10 @@ h3 a { text-decoration:none; }
 	clear:left;
 	margin-right:30px;
 }
+#list .map .description {
+	font-size:0.9em;
+	font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
+}
 
 #sidebar {
 	width:360px;

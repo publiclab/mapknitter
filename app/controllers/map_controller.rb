@@ -27,11 +27,11 @@ class MapController < ApplicationController
   def edit
     @map = Map.find_by_name params[:id]
     @export = Export.find_by_map_id(@map.id)
-    if @map.password != "" && !Password::check(params[:password],@map.password) 
+    if @map.password == "" || Password::check(params[:password],@map.password) || params[:pwd] == APP_CONFIG["password"] 
+      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    else
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
-    else
-      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
     end
   end
 
@@ -86,19 +86,23 @@ class MapController < ApplicationController
 
   def update_map
     @map = Map.find(params[:map][:id])
-    if @map.password != "" && !Password::check(params[:password],@map.password) 
-      flash[:error] = "That password is incorrect." if params[:password] != nil
-      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
-    else
-      @map.update_attributes(params[:map])
+    if @map.password == "" || Password::check(params[:password],@map.password) || params[:pwd] == APP_CONFIG["password"]
       @map.author = params[:map][:author]
       @map.description = params[:map][:description]
-  	location = GeoKit::GeoLoc.geocode(params[:map][:location])
+	location = GeoKit::GeoLoc.geocode(params[:map][:location])
       @map.lat = location.lat
       @map.lon = location.lng
       @map.password = Password.update(params[:map][:password]) if @map.password != "" && @map.password != "*****"
-      @map.save
+      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+	#@map.save
+        flash[:notice] = "Map saved"
+      else
+        flash[:error] = "Failed to save"
+      end
       redirect_to '/map/edit/'+@map.name
+    else
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
     end
   end
 
@@ -117,16 +121,22 @@ class MapController < ApplicationController
 	  @map = Map.new({:lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
+            :description => params[:description],
+            :email => params[:email],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
-            :name => params[:name]})
+            :name => params[:name],
+            :description => params[:description],
+            :email => params[:email]})
 	end
       else
 	puts 'nogeocoding'
         @map = Map.new({:lat => params[:latitude],
             :lon => params[:longitude],
             :name => params[:name],
+            :description => params[:description],
+            :email => params[:email],
             :location => params[:location]})
       end
       if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save

@@ -65,6 +65,7 @@
 		</script>
 		<label for="author">Author</label><br />
 		<input class="text" type="text" name="map[author]" value="<%= @map.author %>" id="author"><br />
+		<p><%= recaptcha_tags :display => {:theme => "white"} %></p>
 		<label for="description">Description</label><br />
 		<textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
 		
@@ -74,6 +75,7 @@
 		<% if @map.password != "" %>
 		<label for="password">Password (you must enter the password to save)</label><br />
 		<input class="text" type="password" name="password" id="password"><br />
+		<% if params[:pwd] %><input type="hidden" name="pwd" value="<%= params[:pwd] %>" /><% end %>
 		<% end %>
 		<p><input type="submit" value="Save"></p>
 	</form>
