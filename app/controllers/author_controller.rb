@@ -6,4 +6,9 @@ class AuthorController < ApplicationController
 		render :layout => 'map'
 	end
 
+	def list
+		@maps = Map.find :all
+		redirect_to "/" if APP_CONFIG["password"] == params[:password]
+	end
+
 end
