@@ -269,6 +269,7 @@ class MapController < ApplicationController
 
   def export
 	map = Map.find_by_name params[:id]
+	if verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
 	begin
 		unless export = Export.find_by_map_id(map.id)
 			export = Export.new({:map_id => map.id,:status => 'starting'})
@@ -337,5 +338,8 @@ class MapController < ApplicationController
 		export.save
 	end
         render :text => "new Ajax.Updater('formats','/map/formats/#{map.id}')"
+    else
+        render :text => "$('export_progress').replace('Export failed; RECAPTCHA thinks you are not a human!');"
+    end
   end
 end
