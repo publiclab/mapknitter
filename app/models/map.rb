@@ -9,6 +9,7 @@ class Map < ActiveRecord::Base
                             :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
                             :on => :create                  
   has_many :warpables
+  has_one :export
 
   # Hash the password before saving the record
   def before_create

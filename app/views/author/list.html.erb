@@ -1,7 +1,12 @@
 <div id="main">
 	
 	<% @maps.each do |map| %>	
-	<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %>" <<a href="mailto:<%= map.email %>"><%= map.email %></a>>,</a></small> </h3>
+	<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> 
+		<small>
+			by "<a href="/author/<%= map.author %>"><%= map.author %></a>" 
+			<% if map.email != '' %><<a href="mailto:<%= map.email %>"><%= map.email %></a>>,</a></small> <% end %>
+		</small>
+	</h3>
 	<% end %>
 
 </div>

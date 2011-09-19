@@ -116,6 +116,55 @@ h3 a { text-decoration:none; }
 	padding:14px;
 	margin-bottom:12px;
 }
+
+.formats {
+	padding-top:6px;
+	font-family: lucida grande, lucida sans console, helvetica, arial, sans-serif;
+	font-size:10px;
+	font-weight:bold;
+	line-height:24px;
+}
+.formats .geotiff_stats {
+	font-weight:normal;
+	font-style:italic;
+}
+.formats a {
+	color:#222;
+	padding:4px;
+}
+.formats .geotiff {
+	border:2px solid #06B2C0;
+}
+.formats .geotiff:hover {
+	background:#06A2C0;
+}
+.formats .jpg {
+	border:2px solid #A1C53F;
+}
+.formats .jpg:hover {
+	background:#91C03F;
+}
+.formats .tms-alt {
+	color:#222;
+	border:2px solid #FFAA33;
+}
+.formats .tms-alt:hover {
+	background:#FF8833;
+}
+.formats .tms {
+	color:#222;
+	border:2px solid #FFC833;
+}
+.formats .tms:hover {
+	background:#FFB833;
+}
+.formats .openlayers {
+	border:2px solid #F67821;
+}
+.formats .openlayers:hover {
+	background:#EA6821;
+}
+
 form.map {
 }
 form.map input.text {

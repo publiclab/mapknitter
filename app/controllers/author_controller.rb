@@ -8,7 +8,11 @@ class AuthorController < ApplicationController
 
 	def list
 		@maps = Map.find :all
-		redirect_to "/" if APP_CONFIG["password"] == params[:password]
+		if APP_CONFIG["password"] != params[:password]
+			redirect_to "/" 
+		else 
+			render :layout => 'map'
+		end
 	end
 
 end

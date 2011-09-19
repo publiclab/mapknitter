@@ -15,6 +15,22 @@
 				Updated <%= map.updated_at.to_s(:short) %> | 
 				<%= map.warpables.length %> images 
 			</small></p>
+			<p class="formats">
+			<% unless map.export.nil? %>
+			<% if map.export.geotiff %>
+				<a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
+				<br />
+				<span class="geotiff_stats"><%= map.export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.export.size) %>, <%= map.export.width %> x <%= map.export.height %> px</span>
+			<% end %><br />
+			<% if map.export.tms %>
+				<a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
+				<a class="openlayers" target="_blank" href="/tms/<%= map.name %>/openlayers.html">OpenLayers</a>
+			<% end %>
+			<% if map.export.jpg %>
+				<a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
+			<% end %>
+			<% end %>
+			</p>
 		</div>
 		<% odd = !odd %>
 	<% end %>
