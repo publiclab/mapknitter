@@ -99,6 +99,12 @@ img {
 	background:#800;
 }
 
+#map.transparent {
+	-moz-opacity: 0.5;
+	opacity:.5;
+	filter:alpha(opacity=50);
+}
+
 .toolbar {
 	float:left;
 	margin-right:4px;

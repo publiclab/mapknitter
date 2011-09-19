@@ -222,6 +222,16 @@ var Knitter = {
 		})
 	},
 
+	background_transparent: false,
+	toggle_background: function() {
+		if (Knitter.background_transparent) {
+			$('map').removeClassName('transparent');
+		} else {
+			$('map').addClassName('transparent');
+		}
+		Knitter.background_transparent = !Knitter.background_transparent
+	},
+
 	center_on_warpables: function() {
 		if (warpables.length > 0) {
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0

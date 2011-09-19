@@ -82,7 +82,8 @@
             <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
             <a name='Toggle vector data' class='silk<%= " down" if @map.vectors %>' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
             <a id="tagreport" name='Show all tags' class='silk' style="display:none;" href="javascript:void(0);" onClick="Cartagen.tags('alert');"><img src="/images/silk-grey/tag_blue.png" /></a>
-            <a name='Choose a background layer for reference' class='last silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
+            <a name='Choose a background layer for reference' class='silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
+            <a name='Dim background layer to see your own images' class='last silk' href="javascript:void(0);" onClick="Knitter.toggle_background();"><img src="/images/silk-grey/contrast_low.png" /></a>
     	</div>
 	</div>
 
