@@ -183,6 +183,11 @@ form.map input.loading {
 	font-size:13px;
 	font-style:italic;	
 }
+
+#images {
+	width:500px;
+}
+
 div.flash {
 	padding:5px;
 	color:#090;
