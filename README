@@ -53,7 +53,7 @@ You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (not a hard limit but that's what 
 4) Install Amazon S3 gem with "gem install aws-s3" if you are using Amazon S3 for most image storage
 5) Copy and configure config/database.yml from config/database.yml.example
 6) Initialize database with "rake db:migrate"
-7) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example
+7) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
 8) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
-9) Start rails with "script/server -p 3001" or "passenger start -p 3001" from the Rails root and open http://localhost:3001 in a web browser.
+9) Start rails with "script/server -p 3000" or "passenger start -p 3000" from the Rails root and open http://localhost:3000 in a web browser.
 
