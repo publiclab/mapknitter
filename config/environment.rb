@@ -47,7 +47,7 @@ Rails::Initializer.run do |config|
   # then run:
   # sudo gem install davetroy-geohash
   # Hmm, this might also be useful:
-  config.gem "davetroy-geohash", :lib => 'geohash', :source => "http://gems.github.com"
+  #config.gem "davetroy-geohash", :lib => 'geohash', :source => "http://gems.github.com"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
