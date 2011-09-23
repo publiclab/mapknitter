@@ -26,13 +26,14 @@ Rails::Initializer.run do |config|
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
-  # config.gem "aws-s3", :lib => "aws/s3"
 
+  config.gem "mysql"
   #config.gem "json_pure"
   config.gem "httparty"
   config.gem "geokit"
   #config.gem "RubyInline"
   config.gem "image_science"
+  #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
   config.gem "recaptcha", :lib => "recaptcha/rails"
   #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
   config.gem 'will_paginate', :version => '~> 2.3.16'

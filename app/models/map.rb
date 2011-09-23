@@ -111,10 +111,7 @@ class Map < ActiveRecord::Base
   
 # generates a tileset at RAILS_ROOT/public/tms/<map_name>/
   def generate_tiles
-    # get google api key from /config/google_api.yml
-    google_api_key = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxRa3MXy-HPtdEPHe3QoK4dKUOddYRRF_6vITnMAbxADhyUdRZNdR5kvTA'
-	# cartagen.org:
-	#'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
+    google_api_key = APP_CONFIG["google_map_api_key"]
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')

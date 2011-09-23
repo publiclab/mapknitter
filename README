@@ -42,3 +42,18 @@ The core PLOTS program is focused on “civic science” in which we research op
 
 Join now at: http://publiclaboratory.org/join
 
+INSTALLATION
+
+You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (not a hard limit but that's what we're on for now), and GDAL (gdal.org)
+
+1) Download source from http://github.com/jywarren/mapknitter
+2) Run rake gems:install from Rails root to install mysql, geokit, image_science, recaptcha, will_paginate.
+3) Install davetroy-geohash from github source; first add github source with "gem sources -a http://gems.github.com" then run "gem install davetroy-geohash". (probably not needed anymore really)
+3) Manually run "gem install RubyInline" - this was causing trouble when done from environment.rb
+4) Install Amazon S3 gem with "gem install aws-s3" if you are using Amazon S3 for most image storage
+5) Copy and configure config/database.yml from config/database.yml.example
+6) Initialize database with "rake db:migrate"
+7) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example
+8) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
+9) Start rails with "script/server -p 3001" or "passenger start -p 3001" from the Rails root and open http://localhost:3001 in a web browser.
+
