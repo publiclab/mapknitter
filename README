@@ -65,6 +65,19 @@ BITNAMI INSTALLATION
 
 This is experimental, but if it works, you'll have a local version which you can carry around on a USB stick. We hope it will be useful for low-bandwidth situations. But beware - it hasn't been tested!
 
+From the Bitnami RubyStack README:
+To install BitNami RubyStack you will need:
+
+    - Intel x86 or compatible processor
+    - Minimum of 512 MB RAM 
+    - Minimum of 150 MB hard drive space
+    - TCP/IP protocol support
+    - Compatible operantig systems:
+      - An x86 Linux operating system.
+      - A 32-bit Windows operating system such as Windows 2000, XP, Vista
+      or Windows Server 2003.
+      - An OS X operating system (PowerPC or x86).
+
 1) Download the Bitnami.org RubyStack: http://bitnami.org/stack/rubystack, and run the installer.
 2) Place this MapKnitter folder in the resulting "projects" folder inside "rubystack-2.2-2" (get MapKnitter at http://github.com/jywarren/mapknitter or https://github.com/jywarren/mapknitter/zipball/master)
 3) Open a shell prompt/terminal, and enter the "rubystack-2.2-2" folder.
