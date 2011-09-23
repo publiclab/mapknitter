@@ -2,6 +2,7 @@ development:
   password: xxx
   file_storage: "file_system"
   file_path_prefix: "public/warpables"
+  google_maps_api_key: "ABQIAAAANO6Yx8ihhesSqnPHx9a3RxTJQa0g3IQ9GZqIMmInSLzwtGDKaBQ91cMdUJWDReC9dY9YGCKrEorVnA"
 
 test:
 
@@ -9,3 +10,4 @@ production:
   password: xxx
   file_storage: "s3"
   file_path_prefix: "warpables"
+  google_maps_api_key: "ABQIAAAANO6Yx8ihhesSqnPHx9a3RxTJQa0g3IQ9GZqIMmInSLzwtGDKaBQ91cMdUJWDReC9dY9YGCKrEorVnA"
