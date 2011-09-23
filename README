@@ -42,7 +42,9 @@ The core PLOTS program is focused on “civic science” in which we research op
 
 Join now at: http://publiclaboratory.org/join
 
+==========================
 INSTALLATION
+==========================
 
 You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (not a hard limit but that's what we're on for now), and GDAL (gdal.org)
 
@@ -56,4 +58,17 @@ You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (not a hard limit but that's what 
 7) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
 8) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
 9) Start rails with "script/server -p 3000" or "passenger start -p 3000" from the Rails root and open http://localhost:3000 in a web browser.
+
+==========================
+BITNAMI INSTALLATION
+==========================
+
+This is experimental, but if it works, you'll have a local version which you can carry around on a USB stick. We hope it will be useful for low-bandwidth situations. But beware - it hasn't been tested!
+
+1) Download the Bitnami.org RubyStack: http://bitnami.org/stack/rubystack, and run the installer.
+2) Place this MapKnitter folder in the resulting "projects" folder inside "rubystack-2.2-2" (get MapKnitter at http://github.com/jywarren/mapknitter or https://github.com/jywarren/mapknitter/zipball/master)
+3) Open a shell prompt/terminal, and enter the "rubystack-2.2-2" folder.
+4) Type ".rubyconsole" to start the Bitnami ruby console.
+5) Type "cd projects/mapknitter" to enter the MapKnitter project folder.
+6) Follow the above steps for a normal installation. 
 
