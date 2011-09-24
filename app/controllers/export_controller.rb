@@ -10,4 +10,8 @@ class ExportController < ApplicationController
 		send_file 'public/warps/'+params[:id]+'/'+params[:id]+'-geo.tif'
 	end
 
+	def mbtiles
+		send_file 'public/warps/'+params[:id]+'/'+params[:id]+'.mbtiles'
+	end
+
 end

@@ -37,12 +37,15 @@ class MapController < ApplicationController
 
   def archive
     if APP_CONFIG["password"] == params[:password]
-      map = Map.find_by_name(params[:id])
-      map.archived = true
-      map.save
-      flash[:notice] = "Archived map."
+      @map = Map.find_by_name(params[:id])
+      @map.archived = true
+      if @map.save
+        flash[:notice] = "Archived map."
+      else
+        flash[:error] = "Failed to archive map."
+      end
     else
-      flash[:error] = "Failed to archive map."
+      flash[:error] = "Failed to archive map. Wrong password."
     end
     redirect_to "/"
   end
@@ -93,8 +96,7 @@ class MapController < ApplicationController
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
       @map.lat = location.lat
       @map.lon = location.lng
-      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-	@map.save
+      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
         flash[:notice] = "Map saved"
       else
         flash[:error] = "Failed to save"
