@@ -50,6 +50,13 @@ class MapController < ApplicationController
     redirect_to "/"
   end
 
+  #def delete
+  #  if APP_CONFIG["password"] == params[:password]
+  #    @map = Map.find_by_name(params[:id])
+  #    @map.delete
+  #  end
+  #end
+
   def region
     @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
     @maps = @maps.paginate :page => params[:page], :per_page => 24
@@ -96,10 +103,14 @@ class MapController < ApplicationController
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
       @map.lat = location.lat
       @map.lon = location.lng
-      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
-        flash[:notice] = "Map saved"
+      if location
+        if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
+          flash[:notice] = "Map saved"
+        else
+          flash[:error] = "Failed to save"
+        end
       else
-        flash[:error] = "Failed to save"
+        flash[:error] = "Location not recognized"
       end
       redirect_to '/map/edit/'+@map.name
     else
