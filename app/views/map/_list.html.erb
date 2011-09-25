@@ -13,7 +13,6 @@
 				<% if map.archived %><i>Archived</i> | <% end %> 
 				<a href="/map/edit/<%= map.name %>">Edit</a> | 
 				<% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
-				<!--<%# if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% #end %>-->
 				Updated <%= map.updated_at.to_s(:short) %> | 
 				<%= map.warpables.length %> images 
 			</small></p>
