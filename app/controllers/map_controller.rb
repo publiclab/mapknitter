@@ -104,10 +104,14 @@ class MapController < ApplicationController
       @map.lat = location.lat
       @map.lon = location.lng
       if location
-        if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
-          flash[:notice] = "Map saved"
+        if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+          if @map.save
+            flash[:notice] = "Map saved"
+          else
+            flash[:error] = "Failed to save"
+          end
         else
-          flash[:error] = "Failed to save"
+          flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
         end
       else
         flash[:error] = "Location not recognized"
