@@ -1,6 +1,5 @@
 require 'open3'
 class MapController < ApplicationController
-  caches_page :find
   protect_from_forgery :except => [:formats, :export]
 
   def index
