@@ -50,12 +50,13 @@ class MapController < ApplicationController
     redirect_to "/"
   end
 
-  #def delete
-  #  if APP_CONFIG["password"] == params[:password]
-  #    @map = Map.find_by_name(params[:id])
-  #    @map.delete
-  #  end
-  #end
+  def delete
+    if APP_CONFIG["deletion_active"] && APP_CONFIG["password"] == params[:password]
+      @map = Map.find_by_name(params[:id])
+      @map.delete
+    end
+    redirect_to "/"
+  end
 
   def region
     @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
@@ -101,6 +102,7 @@ class MapController < ApplicationController
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
+      @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
       @map.lat = location.lat
       @map.lon = location.lng
       if location
