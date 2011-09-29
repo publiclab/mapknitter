@@ -105,7 +105,9 @@ h3 a { text-decoration:none; }
 
 #authors ul {
 	font-size:0.9em;
-	padding:4px 12px;
+}
+#new_maps ul {
+	font-size:0.9em;
 }
 
 .box h2 {

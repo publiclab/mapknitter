@@ -37,6 +37,10 @@ class Map < ActiveRecord::Base
     authors
   end
 
+  def self.new_maps
+    self.find(:all, :order => "created_at DESC", :limit => 12)
+  end
+
   def validate
     self.name != 'untitled'
     self.name = self.name.gsub(' ','-')

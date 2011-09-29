@@ -7,8 +7,6 @@ class MapController < ApplicationController
     # only maps with at least 1 warpable:
     @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id"
     @maps = @maps.paginate :page => params[:page], :per_page => 24
-    @featured = Map.find :all, :joins => :warpables, :group => "maps.id", :select => 'maps.*, count(warpables.id) AS warpables_count', :conditions => ["password IS NOT NULL"], :order => 'warpables_count DESC', :limit => 2
-    @authors = Map.authors
 
     respond_to do |format|
       format.html {  }
@@ -20,7 +18,6 @@ class MapController < ApplicationController
   def all
     @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC'
     @maps = @maps.paginate :page => params[:page], :per_page => 24
-    @authors = Map.authors
     render "map/index"
   end
 
