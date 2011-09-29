@@ -6992,7 +6992,7 @@ var Events = {
 	last_event: 0,
 
 	init: function() {
-		Glop.observe('mousemove', Events.mousemove)
+		document.observe('mousemove', Events.mousemove)
 		Glop.observe('mousedown', Events.mousedown)
 		Glop.observe('mouseup', Events.mouseup)
 		Glop.observe('dblclick', Events.dblclick)
@@ -7993,7 +7993,7 @@ var Tool = {
 	},
 	update_tooltip: function() {
 		if ($('tooltip')) {
-			$('tooltip').style.top = (-Mouse.y)+'px'
+			$('tooltip').style.top = -Config.padding_top+'px'
 			$('tooltip').style.left = (-Mouse.x)+'px'
 		}
 	},
