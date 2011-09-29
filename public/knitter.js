@@ -29,6 +29,18 @@ var Knitter = {
 			Knitter.save_current_location()
 		})
 		Glop.observe('glop:predraw', function() { $C.clear();})
+		// disable default "delete" key (in Chrome it goes "back")
+		window.addEventListener ('keydown', function (e) {
+			// If the key pressed was a backspace key, handle it specially
+			if (e.keyIdentifier == 'U+0008' || e.keyIdentifier == 'Backspace') {
+				// If the target of the backspace was the body element, handle it specially
+				if (e.target == document.body) {
+					// Prevent the default Backspace action from happening
+					e.preventDefault ();
+				}
+			}
+		}, true);
+
 		var first_new_image = true
 		warpables.each(function(warpable,index) {
 			if (warpable.nodes != 'none') {

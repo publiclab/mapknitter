@@ -52,7 +52,7 @@ class MapController < ApplicationController
 
   def delete
     if APP_CONFIG["deletion_active"] && APP_CONFIG["password"] == params[:password]
-      @map = Map.find_by_name(params[:id])
+      @map = Map.find params[:id]
       @map.delete
     end
     redirect_to "/"
