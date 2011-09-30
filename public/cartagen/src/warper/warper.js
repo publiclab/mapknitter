@@ -173,6 +173,8 @@ var Warper = {
 				[Map.x, Map.y]
 			]),url,id,natural_size))
 		}
+		Knitter.new_image = Warper.images.last()
+		Knitter.new_image.highlight = true
 	},
 
 	/**
