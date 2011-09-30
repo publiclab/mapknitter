@@ -30,7 +30,7 @@ class Map < ActiveRecord::Base
 
   def self.authors
     authors = []
-    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password != "" AND archived = false']
+    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password = "" AND archived = false']
     maps_authors.each do |map|
       authors << map.author
     end
@@ -38,7 +38,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    self.find(:all, :order => "created_at DESC", :limit => 12)
+    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = false'])
   end
 
   def validate

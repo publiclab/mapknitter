@@ -93,33 +93,38 @@ class MapController < ApplicationController
   end
 
   def update_map
-    @map = Map.find(params[:map][:id])
-    if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
+    begin
+      @map = Map.find(params[:map][:id])
+      if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
       @map.author = params[:map][:author]
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
-      @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
-      @map.lat = location.lat
-      @map.lon = location.lng
-      if location
-        if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-          if @map.save
-            flash[:notice] = "Map saved"
+        @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
+        @map.lat = location.lat
+        @map.lon = location.lng
+        if location
+          if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+            if @map.save
+              flash[:notice] = "Map saved"
+            else
+              flash[:error] = "Failed to save"
+            end
           else
-            flash[:error] = "Failed to save"
+            flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
           end
         else
-          flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
+          flash[:error] = "Location not recognized"
         end
+        redirect_to '/map/edit/'+@map.name
       else
-        flash[:error] = "Location not recognized"
+        flash[:error] = "That password is incorrect." if params[:password] != nil
+        redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
       end
-      redirect_to '/map/edit/'+@map.name
-    else
-      flash[:error] = "That password is incorrect." if params[:password] != nil
-      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
-    end
+    rescue
+        flash[:error] = "Geocoding failed. Please enter a more specific address."
+        redirect_to "/map/edit/"+params[:id]
+    end 
   end
 
   def create
@@ -138,12 +143,14 @@ class MapController < ApplicationController
             :lon => location.lng,
             :name => params[:name],
             :description => params[:description],
+            :author => params[:author],
             :email => params[:email],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
             :name => params[:name],
             :description => params[:description],
+            :author => params[:author],
             :email => params[:email]})
 	end
       else

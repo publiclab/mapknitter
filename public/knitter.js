@@ -135,8 +135,8 @@ var Knitter = {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
 		bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
-
-		map.zoomToExtent( bounds )
+		//map.zoomToExtent( bounds )
+		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
 			map.addControl(switcherControl);
@@ -146,6 +146,7 @@ var Knitter = {
 		Glop.observe('glop:draw', Knitter.openLayersDraw)
 			
 		Knitter.save.submitted()
+		// Is this necessary if nothing has happened on the map yet?
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
@@ -253,6 +254,10 @@ var Knitter = {
 					warpable.nodes.each(function(node) {
 						var lon = Projection.x_to_lon(-node[0])
 						var lat = Projection.y_to_lat(node[1])
+						if (maxlon == undefined) maxlon = lon
+						if (maxlat == undefined) maxlat = lat
+						if (minlon == undefined) minlon = lon
+						if (minlat == undefined) minlat = lat
 						if (lon > maxlon) maxlon = lon 
 						if (lat > maxlat) maxlat = lat 
 						if (lon < minlon) minlon = lon 
@@ -265,10 +270,12 @@ var Knitter = {
 				}
 			},this)
 			if (latcount > 0) Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
-			var bounds = new OpenLayers.Bounds();
-			bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(spher_merc,latlon))
-			bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(spher_merc,latlon))
-			map.zoomToExtent( bounds )
+			Knitter.bounds = new OpenLayers.Bounds()
+			Knitter.bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(latlon,spher_merc))
+			Knitter.bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(latlon,spher_merc))
+			console.log(Knitter.bounds)
+			map.zoomToExtent( Knitter.bounds )
+			//map.zoomOut()
 		}
 	}
 }
