@@ -88,6 +88,7 @@ class Map < ActiveRecord::Base
 	warpables.each do |warpable|
 		current += 1
 		export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
+		puts 'warping '+current.to_s+' of '+warpables.length.to_s
 		export.save
 		my_warpable_coords = warpable.generate_perspectival_distort(scale,self.name)
 		puts '- '+my_warpable_coords.to_s
@@ -115,7 +116,7 @@ class Map < ActiveRecord::Base
   
 # generates a tileset at RAILS_ROOT/public/tms/<map_name>/
   def generate_tiles
-    google_api_key = APP_CONFIG["google_map_api_key"]
+    google_api_key = APP_CONFIG["google_maps_api_key"]
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
