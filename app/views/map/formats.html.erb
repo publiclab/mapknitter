@@ -1,7 +1,7 @@
 <% unless @export.nil? %>
 <% if @export.tms %>
 <p>
-<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a><br />
+<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
 <a target="_blank" href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
 <br />
 <a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
