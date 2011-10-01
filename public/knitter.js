@@ -273,7 +273,6 @@ var Knitter = {
 			Knitter.bounds = new OpenLayers.Bounds()
 			Knitter.bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(latlon,spher_merc))
 			Knitter.bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(latlon,spher_merc))
-			console.log(Knitter.bounds)
 			map.zoomToExtent( Knitter.bounds )
 			//map.zoomOut()
 		}
