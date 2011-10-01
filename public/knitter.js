@@ -135,7 +135,7 @@ var Knitter = {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
 		bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
-		//map.zoomToExtent( bounds )
+		map.zoomToExtent( bounds )
 		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
