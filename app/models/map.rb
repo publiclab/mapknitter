@@ -55,25 +55,55 @@ class Map < ActiveRecord::Base
 	puts '> calculating scale'
 	pxperms = []
 	self.warpables.each do |warpable|
+		pxperms << 100.00/warpable.cm_per_pixel unless warpable.width.nil?
+	end
+	average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
+	puts 'average scale = '+average.to_s+' px/m'
+        average
+  end
+
+  def average_cm_per_pixel
+	scales = []
+	count = 0
+	self.warpables.each do |warpable|
 		unless warpable.width.nil?
-			nodes = warpable.nodes_array
-			# haversine might be more appropriate for large images
-			scale = 20037508.34
-    			y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
-    			x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
-    			y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
-    			x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
-			dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
-			puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
-			puts (x2-x1).to_s+','+(y2-y1).to_s
-			pxperms << (warpable.width)/dist unless warpable.width.nil? || dist.nil?
-			puts 'scale: '+pxperms.last.to_s+' & dist: '+dist.to_s
+			count += 1
+			res = warpable.cm_per_pixel 
+			scales << res unless res == nil
 		end
 	end
-	puts pxperms
-	average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
-	puts 'average scale = '+average.to_s
+	average = (scales.inject {|sum, n| sum + n })/count
+	puts 'average scale = '+average.to_s+' cm/px'
         average
+  end
+
+  def images_histogram
+	hist = []
+	self.warpables.each do |warpable|
+		res = warpable.cm_per_pixel.to_i
+		hist[res] = 0 if hist[res] == nil 
+		hist[res] += 1
+	end
+	(0..hist.length-1).each do |bin|
+		hist[bin] = 0 if hist[bin] == nil
+	end
+	hist
+  end
+
+  def grouped_images_histogram(binsize)
+	hist = []
+	self.warpables.each do |warpable|
+		res = warpable.cm_per_pixel
+		if res != nil
+			res = (warpable.cm_per_pixel/(0.001+binsize)).to_i
+			hist[res] = 0 if hist[res] == nil 
+			hist[res] += 1
+		end
+	end
+	(0..hist.length-1).each do |bin|
+		hist[bin] = 0 if hist[bin] == nil
+	end
+	hist
   end
 
   # distort all warpables, returns upper left corner coords in x,y

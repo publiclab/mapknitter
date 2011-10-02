@@ -38,6 +38,24 @@ class Warpable < ActiveRecord::Base
     end
   end 
 
+  def cm_per_pixel
+	unless self.width.nil? || self.nodes == ''
+		nodes = self.nodes_array
+		# haversine might be more appropriate for large images
+		scale = 20037508.34
+    		y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
+    		x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
+    		y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
+    		x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
+		dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
+		#puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
+		#puts (x2-x1).to_s+','+(y2-y1).to_s
+		#puts 'scale: '+((warpable.width)/dist).to_s+' & dist: '+dist.to_s
+		scale = (dist*100)/(self.width) unless self.width.nil? || dist.nil?
+	end
+	scale
+  end
+
   def nodes_array
     Node.find self.nodes.split(',')
   end

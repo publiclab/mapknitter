@@ -312,7 +312,7 @@ class MapController < ApplicationController
 		puts stderr.readlines
 	
 		puts '> averaging scales'
-		pxperm = map.average_scale # pixels per meter
+		pxperm = 100/(params[:resolution]).to_f || map.average_scale # pixels per meter
 	
 		puts '> distorting warpables'
 		origin = map.distort_warpables(pxperm)

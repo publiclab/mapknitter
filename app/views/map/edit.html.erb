@@ -5,6 +5,21 @@
 
 	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
 
+<% 
+hist = @map.images_histogram 
+grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+%>
+
+	<p>
+	<%= hist[0] %> cm/px <span class="bar"><%= grouphist.join(',') %></span> <%= hist.length-1 %> cm/px
+	</p>
+
+	Average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px
+
+	<script>
+	$('.bar').sparkline('html', {type: 'bar'});
+	</script>
+
 	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
 	<div id='images'>
 		<% @images.each do |image| %>
