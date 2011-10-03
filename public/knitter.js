@@ -280,13 +280,13 @@ var Knitter = {
 	export_intro: function() {
 		$('export_intro').show();
 		$('export_options').hide();
-		$('export_intro').removeClassName('active');
-		$('export_options').addClassName('active');
+		$('export_intro_tab').addClassName('active');
+		$('export_options_tab').removeClassName('active');
 	},
 	export_options: function() {
 		$('export_intro').hide();
 		$('export_options').show();
-		$('export_intro').addClassName('active');
-		$('export_options').removeClassName('active');
+		$('export_intro_tab').removeClassName('active');
+		$('export_options_tab').addClassName('active');
 	},
 }

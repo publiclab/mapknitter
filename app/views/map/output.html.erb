@@ -4,7 +4,6 @@ img.export_status {
 	margin-right:4px;
 }
 .export_button {
-
 	padding:6px;
 	border:2px solid #900;
 	margin:2px;
@@ -15,7 +14,6 @@ img.export_status {
 	font-family: lucida grande, helvetica, sans-serif;
 	font-size: 14pt;
 	font-weight:bold;	
-
 }
 .export_button.inactive {
 	background:#ccc;
@@ -33,7 +31,7 @@ img.export_status {
 	font-size:10px;
 	border:1px solid #555;
 	border-bottom:none;
-	background:#aaa;
+	background:#ccc;
 }
 #export_tabs a.active {
 	background:none;
@@ -42,12 +40,28 @@ img.export_status {
 	border-top:1px solid #555;
 	clear:both;
 }
+#resolution_slider_handle {
+	height:14px;
+	width:6px;
+	background:#666;
+	cursor:move; 
+	position: absolute;
+	margin-top:-5px;
+}
+#resolution_slider {
+	position: relative;
+	height:2px;
+	width:400px;
+	background:#222;
+	margin:6px;
+	margin-bottom:20px;
+}
 
 </style>
 
 <div id="export_tabs">
-	<a class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
-	<a href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
+	<a id="export_intro_tab" class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
+	<a id="export_options_tab" href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
 </div>
 
 <div id="export_intro" class="export_panel"><small>
@@ -60,31 +74,48 @@ img.export_status {
 <% 
 hist = @map.images_histogram 
 grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+resolution = @map.average_cm_per_pixel.to_s[0..4]
 %>
 
 <div id="export_options" class="export_panel" style="display:none;">
 <p>
-<%= hist[0] %> cm/px <canvas style="display:inline;height:100px;" id="export_graph"></canvas> <%= hist.length-1 %> cm/px
+<%= hist[0] %> cm/px <canvas style="display:inline;height:70px;" id="export_graph"></canvas> <%= hist.length-1 %> cm/px
 </p>
 
-Average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px
-
-<p>
-<label for="map_resolution">Enter a resolution:</label> <input name="resolution" id="map_resolution" type="text" value="<%= @map.average_cm_per_pixel.to_s[0..4] %>" />
+<p><small>Slide to select an export resolution:</small>
+<div id="resolution_slider">
+	<div id="resolution_slider_handle"></div>
+</div>
+<script>
+	Knitter.resolution_slider = new Control.Slider('resolution_slider_handle','resolution_slider', {
+	  range: $R(0, 100),
+	  //values: [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,24,28,32,36,40,45,50,55,60,70,80,90,100],//$R(0, 200),
+	  sliderValue: <%= resolution.to_i %>,
+	  alignX: -200,
+	  //alignY: -5,
+	  //handleImage: 'slider_2handle',
+	  onSlide: function(value) {
+		$('map_resolution').value = parseInt(value*100)/100
+	  },
+	  onChange: function(value) {}
+	});
+</script>
+<label for="map_resolution">Enter a resolution:</label> 
+<input onChange="Knitter.resolution_slider.setValue($('map_resolution').value)" name="resolution" id="map_resolution" type="text" value="<%= resolution %>" />
 </p>
 </div>
 
 <script>
-//http://willarson.com/code/sparklines/sparklines.html
-var opts = {
-  "background":"#CCCCCC",
-  "stroke":"#444444",
-}
-sparkline = new Sparkline('export_graph', [<%= grouphist.join(',') %>], opts).draw()
+	//http://willarson.com/code/sparklines/sparklines.html
+	var opts = {
+	  "background":"#CCCCCC",
+	  "stroke":"#444444",
+	}
+	sparkline = new Sparkline('export_graph', [<%= grouphist.join(',') %>], opts).draw()
 
-function refresh_formats(response) {
-	eval(response)
-}
+	function refresh_formats(response) {
+		eval(response)
+	}
 </script>
 
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
@@ -102,7 +133,7 @@ function refresh_formats(response) {
 	},
 	onSuccess: function(response){ eval(response.responseText) },
 	onFailure: function(response){
-		$('export_progress').insert('failed (ajax fail)') 
+		$('export_progress').insert('failed (ajax fail)... ') 
 		eval(response.responseText)
 		$('active_export_button').show()
 		$('inactive_export_button').hide() 
@@ -110,7 +141,7 @@ function refresh_formats(response) {
 	});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
 
 <span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
- (average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="export_options()" href="javascript:void(0);">Adjust</a>)
+ (average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
 </div>
 
 <div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>

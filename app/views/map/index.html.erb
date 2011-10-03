@@ -15,8 +15,8 @@
 <%= render :partial => "map/authors" %>
 <%= render :partial => "map/new_maps" %>
 <p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a>. MapKnitter uses <a href="http://gdal.org">GDAL</a></p>
-<p>MapKnitter is hosting <b><%= Export.count(:all, :conditions => ["cm_per_pixel != ''"]) %> completed maps</b> of an average resolution of <b><%= Export.average_cm_per_pixel.to_i %> cm per pixel</b>. </p>
-<p><small>Resolutions</small></p>
+<p>MapKnitter is hosting <b><%= Export.count(:all, :conditions => ["cm_per_pixel != ''"]) %> completed maps</b> of an average resolution of <b><%= Export.average_cm_per_pixel.to_i %> cm per pixel</b>. Currently exporting <%= Export.exporting %> maps.</p>
+<p><small>Resolutions:</small></p>
 <p><small>0 cm/px
 <span class="bar"><%= Export.histogram_cm_per_pixel[0..40].join(',') %></span>
 40 cm/px

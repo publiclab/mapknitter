@@ -33,4 +33,8 @@ class Export < ActiveRecord::Base
 		hist
 	end
 
+	def self.exporting
+		Export.count :all, :conditions => ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now-24.hours).to_s(:db)]
+	end
+
 end
