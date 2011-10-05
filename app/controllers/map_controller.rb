@@ -300,6 +300,7 @@ class MapController < ApplicationController
 		export.status = 'starting'
 		export.tms = false
 		export.geotiff = false
+		export.zip = false
 		export.jpg = false
 		export.save       
 

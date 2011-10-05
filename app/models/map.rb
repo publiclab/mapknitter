@@ -154,9 +154,11 @@ class Map < ActiveRecord::Base
   end
 
   # zips up tiles at RAILS_ROOT/public/tms/<map_name>.zip
-  def generate_zip
-    zip = RAILS_ROOT+'/public/tms/'+self.name+'.zip '+RAILS_ROOT+'/public/tms/'+self.name+"/*"
-#    puts gdal2tiles
+  def zip_tiles
+      rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
+      system(Gdal.ulimit+rmzip)
+    zip = 'cd public/tms/ && zip '+self.name+'.zip '+self.name+"/* && cd ../../"
+#    puts zip 
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+zip)
   end

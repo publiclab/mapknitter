@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(:version => 20111005211631) do
     t.boolean  "geotiff",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "zip",          :default => 0.0,    :null => false
+    t.boolean  "zip",          :default => false,  :null => false
   end
 
   create_table "maps", :force => true do |t|
