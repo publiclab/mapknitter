@@ -157,7 +157,7 @@ class Map < ActiveRecord::Base
   def zip_tiles
       rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
       system(Gdal.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip '+self.name+'.zip '+self.name+"/* && cd ../../"
+    zip = 'cd public/tms/ && zip -r '+self.name+'.zip '+self.name+'/ && cd ../../'
 #    puts zip 
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+zip)
