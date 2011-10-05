@@ -14,4 +14,9 @@ class ExportController < ApplicationController
 		send_file 'public/warps/'+params[:id]+'/'+params[:id]+'.mbtiles'
 	end
 
+	def list
+		@exports = Export.find :all, :conditions => ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',(DateTime.now-24.hours).to_s(:db)]
+		render :layout => "map"
+	end
+
 end
