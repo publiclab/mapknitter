@@ -345,6 +345,12 @@ class MapController < ApplicationController
 		puts '> generating tiles'
 		export = Export.find_by_map_id(map.id)
 		export.tms = true if map.generate_tiles
+		export.status = 'zipping tiles'
+		export.save
+
+		puts '> zipping tiles'
+		export = Export.find_by_map_id(map.id)
+		export.zip = true if map.zip_tiles
 		export.status = 'creating jpg'
 		export.save
 

@@ -38,7 +38,7 @@ class Warpable < ActiveRecord::Base
     end
   end 
 
-  def cm_per_pixel
+  def get_cm_per_pixel
 	unless self.width.nil? || self.nodes == ''
 		nodes = self.nodes_array
 		# haversine might be more appropriate for large images
@@ -54,6 +54,18 @@ class Warpable < ActiveRecord::Base
 		scale = (dist*100)/(self.width) unless self.width.nil? || dist.nil?
 	end
 	scale
+  end
+
+  def self.histogram_cm_per_pixel
+	w = Warpable.find :all, :conditions => ['cm_per_pixel != 0 AND cm_per_pixel < 500'], :order => "cm_per_pixel DESC"
+	hist = []
+	(0..w.first.cm_per_pixel.to_i).each do |bin|
+		hist[bin] = 0
+	end
+	w.each do |warpable|
+		hist[warpable.cm_per_pixel.to_i] += 1
+	end
+	hist
   end
 
   def nodes_array

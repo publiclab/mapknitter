@@ -11,7 +11,7 @@ grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 %>
 
 	<p>
-	<%= hist[0] %> cm/px <span class="bar"><%= grouphist.join(',') %></span> <%= hist.length-1 %> cm/px
+	0 cm/px <span class="bar"><%= grouphist.join(',') %></span> <%= hist.length-1 %> cm/px
 	</p>
 
 	Average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px

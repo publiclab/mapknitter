@@ -81,6 +81,7 @@ class WarperController < ApplicationController
     end
     @warpable.nodes = node_ids.join(',')
     @warpable.locked = params[:locked]    
+    @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
     @warpable.save
     render :text => 'success'
   end

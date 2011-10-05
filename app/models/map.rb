@@ -144,7 +144,7 @@ class Map < ActiveRecord::Base
 	geotiff_location
   end
   
-# generates a tileset at RAILS_ROOT/public/tms/<map_name>/
+  # generates a tileset at RAILS_ROOT/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
@@ -152,6 +152,15 @@ class Map < ActiveRecord::Base
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
   end
+
+  # zips up tiles at RAILS_ROOT/public/tms/<map_name>.zip
+  def generate_zip
+    zip = RAILS_ROOT+'/public/tms/'+self.name+'.zip '+RAILS_ROOT+'/public/tms/'+self.name+"/*"
+#    puts gdal2tiles
+#    puts system('which gdal2tiles.py')
+    system(Gdal.ulimit+zip)
+  end
+ 
  
   def generate_jpg
 	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg'
