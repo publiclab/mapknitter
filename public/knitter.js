@@ -82,7 +82,9 @@ var Knitter = {
 		Knitter.openlayers_on = true;
 	},
 
-	start_openlayers: function(layer) {
+	start_openlayers: function(layer,tile_url,tile_layer) {
+		if (layer == "none") $('map').hide()
+		else $('map').show()
 		if (!Knitter.openlayers_on) Knitter.init_openlayers(layer)
 		// http://isse.cr.usgs.gov/ArcGIS/services/Combined/TNM_Large_Scale_Imagery/MapServer/WMSServer?request=GetCapabilities&service=WMS
 		// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
@@ -97,8 +99,8 @@ var Knitter = {
 			var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 20});
 			map.addLayer(yahoosat)
 		} else if (layer == 'TMS') {
-			tile_url = prompt('Enter a TMS URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
-	       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url,
+			Config.tile_url = tile_url || Config.tile_url
+	       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", Config.tile_url,
 				{ //projection: latlon,
 		                  //displayProjection: spher_merc,
 				  //getURL: Knitter.overlay_getTileURL,
@@ -115,10 +117,10 @@ var Knitter = {
 		} else if (layer == 'WMS') {
 			projection: latlon,
 			//wms_url = prompt('Enter a WMS URI','http://msrmaps.com/ogcmap.ashx')
-			wms_url = prompt('Enter a WMS URI','http://isse.cr.usgs.gov/arcgis/services/Combined/SDDS_Imagery/MapServer/WMSServer?SERVICE=WMS&VERSION=1.1.1&STYLES=&SRS=EPSG:4326&FORMAT=image/png&layers=0&request=map&')
-			wms_layer = prompt('Enter a WMS layer','0')
-			map.addLayer(new OpenLayers.Layer.WMS('WMS',wms_url,{
-			layers: wms_layer
+			Config.tile_url = tile_url || Config.tile_url
+			Config.tile_layer = tile_layer || Config.tile_layer
+			map.addLayer(new OpenLayers.Layer.WMS('WMS',Config.tile_url,{
+			layers: Config.tile_layer
 				//layers:'DOQ'
 				//layers:'osm'
 			}))
@@ -153,7 +155,9 @@ var Knitter = {
 				lat: Map.lat,
 				lon: Map.lon,
 				zoom: Map.zoom,
-				tiles: layer // here we might add a WMS url too
+				tiles: layer,
+				tile_url: Config.tile_url,
+				tile_layer: Config.tile_layer
 			},
 			onSuccess: Knitter.save.saved,
 			on0: Knitter.save.failed,

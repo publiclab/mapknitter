@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111005211631) do
+ActiveRecord::Schema.define(:version => 20111006153011) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -44,6 +44,8 @@ ActiveRecord::Schema.define(:version => 20111005211631) do
     t.string   "tiles",                                       :default => "google",    :null => false
     t.string   "email",                                       :default => "",          :null => false
     t.boolean  "archived",                                    :default => false,       :null => false
+    t.text     "tile_url",                                                             :null => false
+    t.text     "tile_layer",                                                           :null => false
   end
 
   create_table "nodes", :force => true do |t|

@@ -15,7 +15,9 @@
 		lng: <%= @map.lon %>,
 		zoom: <%= @map.zoom %>,
 		map_name: '<%= @map.name %>',
-		vectors: <%= @map.vectors %>
+		vectors: <%= @map.vectors %>,
+		<% if @map.tile_url != "" %>tile_url: "<%= @map.tile_url %>",<% end %>
+		<% if @map.tile_layer != ""%>tile_layer: "<%= @map.tile_layer %>",<% end %>
 	})
 
 	var warpables = [

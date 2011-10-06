@@ -223,7 +223,16 @@ class MapController < ApplicationController
     @map.lon = params[:lon]
     @map.vectors = true if params[:vectors] == 'true'
     @map.vectors = false if params[:vectors] == 'false'
-    @map.tiles = params[:tiles] if params[:tiles]
+    if params[:tiles]
+      @map.tiles = params[:tiles]
+      if params[:tiles] == "TMS" || params[:tiles] == "WMS" 
+        @map.tile_url = params[:tile_url] 
+      else # clear layer information 
+        @map.tile_url = ""
+        @map.tile_layer = ""
+      end
+      @map.tile_layer = params[:tile_layer] if params[:tiles] == "WMS" 
+    end
     @map.zoom = params[:zoom]
     if @map.save
       render :text => 'success'
