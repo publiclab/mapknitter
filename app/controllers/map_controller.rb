@@ -207,7 +207,7 @@ class MapController < ApplicationController
 	puts @map.lon
       @map.save
     end
-    render :layout => false
+    render :layout => 'knitter'
     end
   end
 

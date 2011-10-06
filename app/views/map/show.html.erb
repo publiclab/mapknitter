@@ -1,64 +1,36 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<script type="text/javascript" charset="utf-8">
 
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<title>MapKnitter: <%= @map[:name] %></title>
-	<meta name="description" content="<%= @map.description %>" />
-	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
-	<script type="text/javascript">
-		cartagen_base_uri = '/cartagen'
-	</script>
-	<script type='text/javascript' src='http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' charset="utf-8"></script>
-	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/knitter.js" type="text/javascript" charset="utf-8"></script>
-	<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script type="text/javascript" src="/javascripts/scriptaculous.js"></script>
-	<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="/javascripts/sparklines.min.js"></script>
-	<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
-	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-	<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%= APP_CONFIG["google_maps_api_key"] %>' type='text/javascript'></script>
-	<script type="text/javascript" charset="utf-8">
+	var map;
+        var mapBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+	var mapMinZoom = 14, mapMaxZoom = 20;
+	var spher_merc = new OpenLayers.Projection("EPSG:4326")
+	var latlon = new OpenLayers.Projection("EPSG:900913")
 
-		var map;
-	        var mapBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
-		var mapMinZoom = 14, mapMaxZoom = 20;
-		var spher_merc = new OpenLayers.Projection("EPSG:4326")
-		var latlon = new OpenLayers.Projection("EPSG:900913")
+	Cartagen.setup({
+		stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
+		static_map: false,
+		padding_top: -46,
+		key_input: true,
+		lat: <%= @map.lat %>,
+		lng: <%= @map.lon %>,
+		zoom: <%= @map.zoom %>,
+		map_name: '<%= @map.name %>',
+		vectors: <%= @map.vectors %>
+	})
 
-		Cartagen.setup({
-			stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
-			static_map: false,
-			padding_top: -46,
-			key_input: true,
-			lat: <%= @map.lat %>,
-			lng: <%= @map.lon %>,
-			zoom: <%= @map.zoom %>,
-			map_name: '<%= @map.name %>',
-			vectors: <%= @map.vectors %>
-		})
+	var warpables = [
+		<% @warpables.each do |warpable| %>
+		{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
+		<% end %>
+	]
 
-		var warpables = [
-			<% @warpables.each do |warpable| %>
-			{id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
-			<% end %>
-		]
+	document.observe('cartagen:init', function() {
+		Knitter.map_id = <%= @map.id %>
+		Knitter.start_openlayers('<%= @map.tiles %>')
+		Knitter.setup()
+	})
 
-		document.observe('cartagen:init', function() {
-			Knitter.map_id = <%= @map.id %>
-			Knitter.start_openlayers('<%= @map.tiles %>')
-			Knitter.setup()
-		})
-
-	</script>
-</head>
-<body>
+</script>
 
 <div id="google" style="display:none;"><%= @map.description %></div>
 
@@ -74,7 +46,6 @@
             <a name='Embed this map on your site' class='first silk' href="javascript:void(0);" onClick="Interface.display_knitter_iframe()"><img src="/images/silk-grey/page_white_code.png" /></a>
             <a name='Edit map details' class='silk' href="/map/edit/<%= @map.name %>" target="_blank"><img src="/images/silk-grey/map_edit.png" /></a>
             <a name='Export your map in standard GIS formats' class='last silk' href="javascript:void(0);" target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:'90%'})" href="javascript:void(0);"><img src="/images/silk-grey/map_go.png" /></a>
-            <!--<a id="tool_move" name='Move an image (m)' class='' href="javascript:void(0);" onClick="Tool.change('Pan');"><img src="/images/tools/stock-tool-move-22.png" /></a>-->
             <!--<a id="tool_trace" name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>-->
     	</div>
     	<div class="toolbar">
@@ -82,8 +53,8 @@
             <a name='View all images' class='silk' href="/map/images/<%= @map.name %>" onClick="Modalbox.show('/map/images/<%= @map.name %>', {title: 'Click an image to see it on the map', width: 600, height: 450});return false;"><img src="/images/silk-grey/photos.png" /></a>
             <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate()) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
             <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
-            <a name='Toggle vector data' class='silk<%= " down" if @map.vectors %>' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
-            <a id="tagreport" name='Show all tags' class='silk' style="display:none;" href="javascript:void(0);" onClick="Cartagen.tags('alert');"><img src="/images/silk-grey/tag_blue.png" /></a>
+            <a id="tool_vectors" name='Toggle vector data' class='silk<%= " down" if @map.vectors %>' href="javascript:void(0);" onClick="Knitter.toggle_vectors();"><img src="/images/silk-grey/chart_line.png" /></a>
+            <a id="tagreport" name='Show all tags' class='silk' <% unless @map.vectors %>style="display:none;"<% end %> href="javascript:void(0);" onClick="Cartagen.tags('alert');"><img src="/images/silk-grey/tag_blue.png" /></a>
             <a name='Choose a background layer for reference' class='silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
             <a name='Dim background layer to see your own images' class='last silk' href="javascript:void(0);" onClick="Knitter.toggle_background();"><img src="/images/silk-grey/contrast_low.png" /></a>
     	</div>
@@ -101,14 +72,3 @@
 
 <div id="canvas" style="width:100%; height:100%; position:absolute; top:0;  z-index 10;"></div>
 
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-180781-29");
-pageTracker._trackPageview();
-} catch(err) {}</script>
-</body>
-</html>

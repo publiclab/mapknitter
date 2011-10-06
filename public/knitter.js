@@ -217,8 +217,10 @@ var Knitter = {
 	},
 
 	toggle_vectors: function() {
-		Config.vectors = !Config.vectors;
+		Config.vectors = !Config.vectors
 		$('tagreport').toggle()
+		if (Config.vectors) $('tool_vectors').addClassName('down')
+		else $('tool_vectors').removeClassName('down')
 		if ($('loading_message')) $('loading_message').hide()
 		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
