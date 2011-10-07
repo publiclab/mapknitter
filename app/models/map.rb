@@ -62,6 +62,26 @@ class Map < ActiveRecord::Base
         average
   end
 
+  def best_cm_per_pixel
+    hist = self.images_histogram
+    scores = []
+    (0..(hist.length-1)).each do |i|
+      scores[i] = 0
+      scores[i] += hist[i-3] if i > 3
+      scores[i] += hist[i-2] if i > 2
+      scores[i] += hist[i-1] if i > 1
+      scores[i] += hist[i]
+      scores[i] += hist[i+1] if i < hist.length - 2
+      scores[i] += hist[i+2] if i < hist.length - 3
+      scores[i] += hist[i+3] if i < hist.length - 4
+    end
+    highest = 0
+    scores.each_with_index do |s,i|
+      highest = i if s > scores[highest]
+    end
+    highest
+  end
+
   def average_cm_per_pixel
 	scales = []
 	count = 0
