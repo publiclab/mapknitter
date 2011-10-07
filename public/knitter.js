@@ -129,6 +129,7 @@ var Knitter = {
 		Glop.observe('glop:draw',function(){$('map').setStyle({height:Glop.height+'px'})})
 		if (Config.tile_type == 'WMS') Glop.observe('mouseup',function() {map.layers.first().refresh()})
 
+		// the following is complete nonsense and resolves to a point, not a bbox:
 		var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
 		var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
 		var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
@@ -137,7 +138,11 @@ var Knitter = {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
 		bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
+		//if (warpables.length = 0) 
 		map.zoomToExtent( bounds )
+		console.log(lat1,lon1,lat2,lon2)
+		console.log(bounds)
+		console.log('initial extent based on viewport sync with Cartagen')
 		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
@@ -254,16 +259,16 @@ var Knitter = {
 	center_on_warpables: function() {
 		if (warpables.length > 0) {
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
-			var maxlat,maxlon,minlat,minlon
+			var maxlat = 0,maxlon = 0,minlat = 0,minlon = 0
 			warpables.each(function(warpable){
 				if (warpable.nodes != "none") {
 					warpable.nodes.each(function(node) {
 						var lon = Projection.x_to_lon(-node[0])
 						var lat = Projection.y_to_lat(node[1])
-						if (maxlon == undefined) maxlon = lon
-						if (maxlat == undefined) maxlat = lat
-						if (minlon == undefined) minlon = lon
-						if (minlat == undefined) minlat = lat
+						if (maxlon == 0) maxlon = lon
+						if (maxlat == 0) maxlat = lat
+						if (minlon == 0) minlon = lon
+						if (minlat == 0) minlat = lat
 						if (lon > maxlon) maxlon = lon 
 						if (lat > maxlat) maxlat = lat 
 						if (lon < minlon) minlon = lon 
@@ -275,12 +280,9 @@ var Knitter = {
 	                		})
 				}
 			},this)
-			if (latcount > 0) Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
-			Knitter.bounds = new OpenLayers.Bounds()
-			Knitter.bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(latlon,spher_merc))
-			Knitter.bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(latlon,spher_merc))
-			map.zoomToExtent( Knitter.bounds )
-			//map.zoomOut()
+			if (latcount > 0) Cartagen.go_to((maxlat+minlat)/2,(maxlon+minlon)/2,Map.zoom)
+			// the "+2" is a hack... this equation would work without it if the map were only one tile wide.
+			map.zoomTo(parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2)
 		}
 	},
 	export_intro: function() {
