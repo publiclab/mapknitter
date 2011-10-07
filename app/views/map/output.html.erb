@@ -73,6 +73,10 @@ img.export_status {
 
 <% 
 hist = @map.images_histogram 
+(0..100).each do |i|
+	hist[i] = 0 if !hist[i]
+end
+hist = hist[0..100]
 grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 resolution = @map.average_cm_per_pixel.to_s[0..4]
 %>
