@@ -8,8 +8,7 @@ var Knitter = {
 			$('save_saved').show()
 			$('save_saving').hide()
 			$('save_failed').hide()
-			//console.log(response)
-		},
+			//console.log(response) },
 		submitted: function(response) {
 			Knitter.save.state = "saving"
 			$('save_saved').hide()
@@ -140,9 +139,9 @@ var Knitter = {
 		bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
 		//if (warpables.length = 0) 
 		map.zoomToExtent( bounds )
-		console.log(lat1,lon1,lat2,lon2)
-		console.log(bounds)
-		console.log('initial extent based on viewport sync with Cartagen')
+		//console.log(lat1,lon1,lat2,lon2)
+		//console.log(bounds)
+		//console.log('initial extent based on viewport sync with Cartagen')
 		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
