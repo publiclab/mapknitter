@@ -8,7 +8,8 @@ var Knitter = {
 			$('save_saved').show()
 			$('save_saving').hide()
 			$('save_failed').hide()
-			//console.log(response) },
+			//console.log(response)
+		},
 		submitted: function(response) {
 			Knitter.save.state = "saving"
 			$('save_saved').hide()
