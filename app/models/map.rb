@@ -50,6 +50,36 @@ class Map < ActiveRecord::Base
     Warpable.find :all, :conditions => {:map_id => self.id, :deleted => false} 
   end
 
+  def nodes
+    nodes = {}
+    self.warpables.each do |warpable|
+      if warpable.nodes != ''
+        w_nodes = []
+        warpable.nodes.split(',').each do |node|
+          node_obj = Node.find(node)
+          w_nodes << [node_obj.lon,node_obj.lat]
+        end
+        nodes[warpable.id.to_s] = w_nodes
+      end
+      nodes[warpable.id.to_s] ||= 'none'
+    end
+    nodes
+  end
+
+  # Finds any warpables which have not been placed on the map manually, and deletes them.
+  # Also returns remaining valid warpables.
+  def flush_unplaced_warpables
+    more_than_one_unplaced = false
+    self.warpables.each do |warpable|
+      if (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
+	# delete warpables which have not been placed and are older than 1 hour:
+	warpable.delete if DateTime.now-5.minutes > warpable.created_at || more_than_one_unplaced
+        more_than_one_unplaced = true
+      end
+    end
+    warpables
+  end 
+
   def average_scale
 	# determine optimal zoom level
 	puts '> calculating scale'

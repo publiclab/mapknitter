@@ -25,7 +25,7 @@ class MapController < ApplicationController
     @map = Map.find_by_name params[:id]
     @export = Export.find_by_map_id(@map.id)
     if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"] 
-      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+      @images = @map.flush_unplaced_warpables
     else
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
@@ -183,24 +183,8 @@ class MapController < ApplicationController
       redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
     @map.zoom = 1.6 if @map.zoom == 0
-    @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
-    @nodes = {}
-    more_than_one_unplaced = false
-    @warpables.each do |warpable|
-      if warpable.nodes != ''
-        nodes = []
-        warpable.nodes.split(',').each do |node|
-          node_obj = Node.find(node)
-          nodes << [node_obj.lon,node_obj.lat]
-        end
-        @nodes[warpable.id.to_s] = nodes
-      elsif (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
-	# delete warpables which have not been placed and are older than 1 hour:
-	warpable.delete if DateTime.now-5.minutes > warpable.created_at || more_than_one_unplaced
-        more_than_one_unplaced = true
-      end
-      @nodes[warpable.id.to_s] ||= 'none'
-    end
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
     if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
