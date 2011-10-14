@@ -20,17 +20,21 @@ grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 	$('.bar').sparkline('html', {type: 'bar'});
 	</script>
 
-	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
-	<div id='images'>
-		<% @images.each do |image| %>
-		<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
-		<% end %>
-	</div>
-
 	<h3>Export formats</h3>
 	<p>Available export formats, if any:</p>
 
 	<%= render :partial => "map/formats" %>
+
+	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+	<div id='images'>
+		<% @images.each do |image| %>
+		<p>
+			<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+			 <%= image.cm_per_pixel.to_s[0..3] %> cm/px, 
+			 <%= time_ago_in_words(image.created_at) %> ago
+		</p>
+		<% end %>
+	</div>
 
 
 	

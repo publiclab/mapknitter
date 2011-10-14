@@ -185,6 +185,7 @@ class MapController < ApplicationController
     @map.zoom = 1.6 if @map.zoom == 0
     @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
     @nodes = {}
+    more_than_one_unplaced = false
     @warpables.each do |warpable|
       if warpable.nodes != ''
         nodes = []
@@ -195,7 +196,8 @@ class MapController < ApplicationController
         @nodes[warpable.id.to_s] = nodes
       elsif (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
 	# delete warpables which have not been placed and are older than 1 hour:
-	warpable.delete if DateTime.now-5.minutes > warpable.created_at
+	warpable.delete if DateTime.now-5.minutes > warpable.created_at || more_than_one_unplaced
+        more_than_one_unplaced = true
       end
       @nodes[warpable.id.to_s] ||= 'none'
     end
