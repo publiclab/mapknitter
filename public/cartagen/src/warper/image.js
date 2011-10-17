@@ -14,6 +14,11 @@ Warper.Image = Class.create(
 		this.opacity = this.opacity_high
 		this.locked = false
 		this.outline = false
+		this.highlight = false
+		this.highlight_start = 0
+		this.highlight_length = 0
+		this.start_timestamp = Date.now()
+		this.age = 0
 	
 		this.subdivision_limit = 5	
 		this.offset_x = 0
@@ -55,6 +60,16 @@ Warper.Image = Class.create(
 	patch_size: function() {
 		return 100/Map.zoom
 	},
+	/**
+	 * Highlights image for x seconds
+	 */	
+	highlight_for: function(seconds) {
+		var ms = seconds*1000
+		this.highlight = true
+		this.highlight_start = Date.now()
+		this.highlight_length = ms
+	},
+
 
 	/**
 	 * Duh.
@@ -67,6 +82,11 @@ Warper.Image = Class.create(
 	 * Executes every frame; draws warped image.
 	 */
 	draw: function() {
+		this.age = Date.now() - this.start_timestamp
+		if (this.highlight && (this.highlight_start + this.highlight_length - Date.now() < 0)) {
+			this.highlight = false
+		}
+
 		if (this.waiting_for_natural_size) {
 			this.set_to_natural_size()
 		}
@@ -109,6 +129,12 @@ Warper.Image = Class.create(
 		$C.stroke_style('#d00')
 		$C.line_width(1)
 		if (this.outline) $C.stroke()
+		$C.stroke_style('#AED11C')
+		$C.line_width(20/Map.zoom)
+		if (this.highlight && (this.highlight_start + this.highlight_length - Date.now() > 0)) {
+			$C.opacity(1-(Date.now()-this.highlight_start)/(0.01+this.highlight_length))
+		}
+		if (this.highlight) $C.stroke()
 		$C.opacity(0.1)
 
 		$C.stroke_style('#000')

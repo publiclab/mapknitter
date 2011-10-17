@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>MapKnitter: <%= @map[:name] %></title>
+	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
+	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
+	<script type="text/javascript">
+		cartagen_base_uri = '/cartagen'
+	</script>
+	<script type='text/javascript' src='http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' charset="utf-8"></script>
+	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/knitter.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript" src="/javascripts/scriptaculous.js"></script>
+	<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="/javascripts/sparklines.min.js"></script>
+	<script src="/javascripts/OpenLayers.js" type="text/javascript" charset="utf-8"></script>
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%= APP_CONFIG["google_maps_api_key"] %>' type='text/javascript'></script>
+</head>
+<body>
+
+<%= yield %>
+
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-180781-29");
+			pageTracker._trackPageview();
+		} catch(err) {}
+	</script>
+</body>
+</html>

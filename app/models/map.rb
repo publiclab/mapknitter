@@ -30,11 +30,15 @@ class Map < ActiveRecord::Base
 
   def self.authors
     authors = []
-    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password != "" AND archived = false']
+    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password = "" AND archived = false']
     maps_authors.each do |map|
       authors << map.author
     end
     authors
+  end
+
+  def self.new_maps
+    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = false'])
   end
 
   def validate
@@ -46,30 +50,110 @@ class Map < ActiveRecord::Base
     Warpable.find :all, :conditions => {:map_id => self.id, :deleted => false} 
   end
 
+  def nodes
+    nodes = {}
+    self.warpables.each do |warpable|
+      if warpable.nodes != ''
+        w_nodes = []
+        warpable.nodes.split(',').each do |node|
+          node_obj = Node.find(node)
+          w_nodes << [node_obj.lon,node_obj.lat]
+        end
+        nodes[warpable.id.to_s] = w_nodes
+      end
+      nodes[warpable.id.to_s] ||= 'none'
+    end
+    nodes
+  end
+
+  # Finds any warpables which have not been placed on the map manually, and deletes them.
+  # Also returns remaining valid warpables.
+  def flush_unplaced_warpables
+    more_than_one_unplaced = false
+    self.warpables.each do |warpable|
+      if (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
+	# delete warpables which have not been placed and are older than 1 hour:
+	warpable.delete if DateTime.now-5.minutes > warpable.created_at || more_than_one_unplaced
+        more_than_one_unplaced = true
+      end
+    end
+    warpables
+  end 
+
   def average_scale
 	# determine optimal zoom level
 	puts '> calculating scale'
 	pxperms = []
 	self.warpables.each do |warpable|
+		pxperms << 100.00/warpable.cm_per_pixel unless warpable.width.nil?
+	end
+	average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
+	puts 'average scale = '+average.to_s+' px/m'
+        average
+  end
+
+  def best_cm_per_pixel
+    hist = self.images_histogram
+    scores = []
+    (0..(hist.length-1)).each do |i|
+      scores[i] = 0
+      scores[i] += hist[i-3] if i > 3
+      scores[i] += hist[i-2] if i > 2
+      scores[i] += hist[i-1] if i > 1
+      scores[i] += hist[i]
+      scores[i] += hist[i+1] if i < hist.length - 2
+      scores[i] += hist[i+2] if i < hist.length - 3
+      scores[i] += hist[i+3] if i < hist.length - 4
+    end
+    highest = 0
+    scores.each_with_index do |s,i|
+      highest = i if s > scores[highest]
+    end
+    highest
+  end
+
+  def average_cm_per_pixel
+	scales = []
+	count = 0
+	self.warpables.each do |warpable|
 		unless warpable.width.nil?
-			nodes = warpable.nodes_array
-			# haversine might be more appropriate for large images
-			scale = 20037508.34
-    			y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
-    			x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
-    			y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
-    			x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
-			dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
-			puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
-			puts (x2-x1).to_s+','+(y2-y1).to_s
-			pxperms << (warpable.width)/dist unless warpable.width.nil? || dist.nil?
-			puts 'scale: '+pxperms.last.to_s+' & dist: '+dist.to_s
+			count += 1
+			res = warpable.cm_per_pixel 
+			scales << res unless res == nil
 		end
 	end
-	puts pxperms
-	average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
-	puts 'average scale = '+average.to_s
+	average = (scales.inject {|sum, n| sum + n })/count
+	puts 'average scale = '+average.to_s+' cm/px'
         average
+  end
+
+  def images_histogram
+	hist = []
+	self.warpables.each do |warpable|
+		res = warpable.cm_per_pixel.to_i
+		hist[res] = 0 if hist[res] == nil 
+		hist[res] += 1
+	end
+	(0..hist.length-1).each do |bin|
+		hist[bin] = 0 if hist[bin] == nil
+	end
+	hist
+  end
+
+  def grouped_images_histogram(binsize)
+	hist = []
+	self.warpables.each do |warpable|
+		res = warpable.cm_per_pixel
+		if res != nil
+			res = (warpable.cm_per_pixel/(0.001+binsize)).to_i
+			hist[res] = 0 if hist[res] == nil 
+			hist[res] += 1
+		end
+	end
+	(0..hist.length-1).each do |bin|
+		hist[bin] = 0 if hist[bin] == nil
+	end
+	hist
   end
 
   # distort all warpables, returns upper left corner coords in x,y
@@ -84,6 +168,7 @@ class Map < ActiveRecord::Base
 	warpables.each do |warpable|
 		current += 1
 		export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
+		puts 'warping '+current.to_s+' of '+warpables.length.to_s
 		export.save
 		my_warpable_coords = warpable.generate_perspectival_distort(scale,self.name)
 		puts '- '+my_warpable_coords.to_s
@@ -109,14 +194,25 @@ class Map < ActiveRecord::Base
 	geotiff_location
   end
   
-# generates a tileset at RAILS_ROOT/public/tms/<map_name>/
+  # generates a tileset at RAILS_ROOT/public/tms/<map_name>/
   def generate_tiles
-    google_api_key = APP_CONFIG["google_map_api_key"]
+    google_api_key = APP_CONFIG["google_maps_api_key"]
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
   end
+
+  # zips up tiles at RAILS_ROOT/public/tms/<map_name>.zip
+  def zip_tiles
+      rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
+      system(Gdal.ulimit+rmzip)
+    zip = 'cd public/tms/ && zip -r '+self.name+'.zip '+self.name+'/ && cd ../../'
+#    puts zip 
+#    puts system('which gdal2tiles.py')
+    system(Gdal.ulimit+zip)
+  end
+ 
  
   def generate_jpg
 	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg'

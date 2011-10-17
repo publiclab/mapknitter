@@ -1,12 +1,9 @@
-<h1>Map export</h1>
-
 <style>
 img.export_status {
 	float:left;
 	margin-right:4px;
 }
 .export_button {
-
 	padding:6px;
 	border:2px solid #900;
 	margin:2px;
@@ -17,24 +14,124 @@ img.export_status {
 	font-family: lucida grande, helvetica, sans-serif;
 	font-size: 14pt;
 	font-weight:bold;	
-
 }
 .export_button.inactive {
 	background:#ccc;
 	border-color:#aaa;
 }
+
+#export_tabs {
+	font-weight:bold;
+}
+#export_tabs a {
+	display:block;
+	float:left;
+	margin-left:3px;
+	padding:5px;
+	font-size:10px;
+	border:1px solid #555;
+	border-bottom:none;
+	background:#ccc;
+}
+#export_tabs a.active {
+	background:none;
+}
+.export_panel {
+	border-top:1px solid #555;
+	clear:both;
+}
+#resolution_slider_handle {
+	height:14px;
+	width:6px;
+	background:#666;
+	cursor:move; 
+	position: absolute;
+	margin-top:-5px;
+}
+#resolution_slider {
+	position: relative;
+	height:2px;
+	width:400px;
+	background:#222;
+	margin:6px;
+	margin-bottom:20px;
+}
+
 </style>
 
-<small>
+<div id="export_tabs">
+	<a id="export_intro_tab" class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
+	<a id="export_options_tab" href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
+</div>
+
+<div id="export_intro" class="export_panel"><small>
 <p>From this panel you can export this map in a variety of formats. These may already be available, but if you've changed the map at all, or want to see the most recent version, you can <b>re-generate the export</b>. All formats are generated together, but sequentially, so if you're waiting for a JPG you will have to let all the other formats commplete first.</p>
 
 <p>This may take some time - a large map could take as long as <b>an hour or more</b>. Leave this panel open to monitor progress, or come back later to see how it's going. Closing this panel will not stop the export.</p>
 </small>
+</div>
+
+<% 
+hist = @map.images_histogram 
+(0..100).each do |i|
+	hist[i] = 0 if !hist[i]
+end
+hist = hist[0..100]
+grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+resolution = @map.average_cm_per_pixel.to_s[0..4]
+%>
+
+<div id="export_options" class="export_panel" style="display:none;">
+
+<p><small>Slide to select an export resolution:</small></p>
+<canvas style="margin:6px;display:inline;" width="400" height="70" id="export_graph"></canvas>
+<p style="height:10px;width:400px;margin:6px;margin-top:0;"><small>
+<span style="float:left;"><%= hist[0] %> cm/px</span>  <span style="float:right;"><%= hist.length-1 %> cm/px</span>
+</small></p>
+
+<div id="resolution_slider">
+	<div id="redzone" style="width:<%= 4*(resolution.to_i/2).to_i %>px;height:5px;border-top:2px solid #600;background:#f88;position:absolute;"></div>
+	<div id="resolution_slider_handle"></div>
+</div>
+<script>
+	Knitter.resolution_slider = new Control.Slider('resolution_slider_handle','resolution_slider', {
+	  range: $R(0, 100),
+	  //values: [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,24,28,32,36,40,45,50,55,60,70,80,90,100],//$R(0, 200),
+	  sliderValue: <%= resolution.to_i %>,
+	  alignX: -200,
+	  //alignY: -5,
+	  //handleImage: 'slider_2handle',
+	  onSlide: function(value) {
+		$('map_resolution').value = parseInt(value*100)/100
+		if (value*2 > <%= resolution %>) $('map_resolution').setStyle({color: "black"})
+		else $('map_resolution').setStyle({color:"red"})
+	  },
+	  onChange: function(value) {
+		if (value*2 > <%= resolution %>) $('map_resolution').setStyle({color: "black"})
+		else $('map_resolution').setStyle({color:"red"})
+	  }
+	});
+</script>
+<label for="map_resolution">Enter a resolution:</label> 
+<input onChange="Knitter.resolution_slider.setValue($('map_resolution').value)" name="resolution" id="map_resolution" type="text" value="<%= resolution %>" />
+</p>
+</div>
 
 <script>
-function refresh_formats(response) {
-	eval(response)
-}
+	//http://willarson.com/code/sparklines/sparklines.html
+	var opts = {
+	  'left_padding':0,
+	  'right_padding':0,
+	  "background":"#EEEEEE",
+	  "stroke":"#444444",
+	  'scale_from_zero':true,
+	}
+
+	sparkline = new Sparkline('export_graph', [<%= hist.join(',') %>], opts).draw()
+
+	function refresh_formats(response) {
+		eval(response)
+	}
 </script>
 
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
@@ -48,16 +145,19 @@ function refresh_formats(response) {
 	parameters: {
 		recaptcha_response_field: Recaptcha.get_response(),
 		recaptcha_challenge_field: Recaptcha.get_challenge(),
+		resolution: $('map_resolution').value,
 	},
 	onSuccess: function(response){ eval(response.responseText) },
 	onFailure: function(response){
-		$('export_progress').insert('failed (ajax fail)') 
+		$('export_progress').insert('failed (ajax fail)... ') 
 		eval(response.responseText)
 		$('active_export_button').show()
 		$('inactive_export_button').hide() 
 	},
 	});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
+
 <span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
+ (recommended resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
 </div>
 
 <div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>

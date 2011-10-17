@@ -9,7 +9,7 @@ var Events = {
 	 */
 	init: function() {
 		// Observe mouse events:
-		Glop.observe('mousemove', Events.mousemove)
+		document.observe('mousemove', Events.mousemove)
 		Glop.observe('mousedown', Events.mousedown)
 		Glop.observe('mouseup', Events.mouseup)
 		Glop.observe('dblclick', Events.dblclick)
@@ -44,7 +44,6 @@ var Events = {
 		Event.observe(window, 'resize', Events.resize);
 	},
 	/**
-	 * Triggered when moused is moved on the canvas
 	 * @param {Event} event
 	 */
 	mousemove: function(event) { 

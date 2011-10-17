@@ -2,18 +2,28 @@
 	<div class='left'>
 		<a id="intro-graphic" href="javascript:void;" onClick="$('#video').show();$('#intro-graphic').hide();"><img src="/images/intro-graphic.jpg" /></a>
 		<div id="video" style="display:none;">
-		<p style="padding:10px;border:2px solid #ccc;height:375px;width:500px;">Video coming soon...</p>
+		<iframe width="480" height="360" src="http://www.youtube.com/embed/NOikqxIIFBc" frameborder="0" allowfullscreen></iframe>
 		</div>
 	</div>
-<!--	<h2>Featured Maps</h2>-->
-	<%# render :partial => 'map/list', :collection => @featured, :as => :map %>
 	<h2>Recent Maps</h2>
 	<%= render :partial => 'map/list' %>
 </div>
 <div id="sidebar">
-<%= render :partial => "map/search"  %>
+<%= render :partial => "map/search" %>
 <%= render :partial => "map/new" %>
 <%= render :partial => "map/regions" %>
 <%= render :partial => "map/authors" %>
-<p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a></p>
+<%= render :partial => "map/new_maps" %>
+<p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a>. MapKnitter uses <a href="http://gdal.org">GDAL</a></p>
+<p>MapKnitter is hosting <b><%= Export.count(:all, :conditions => ["cm_per_pixel != ''"]) %> completed maps</b> of an average resolution of <b><%= Export.average_cm_per_pixel.to_i %> cm per pixel</b>. Images average. Currently exporting <%= Export.exporting %> maps.</p>
+<p><small>Resolutions:</small></p>
+<p><small><b>Maps:</b> 0 cm/px
+<span class="bar"><%= Export.histogram_cm_per_pixel[0..40].join(',') %></span>
+40 cm/px
+</small></p>
+<p><small><b>Images:</b> 0 cm/px
+<span class="bar"><%= Warpable.histogram_cm_per_pixel[0..40].join(',') %></span>
+40 cm/px
+</small></p>
+<script>$('.bar').sparkline('html', {type: 'bar'});</script>
 </div>

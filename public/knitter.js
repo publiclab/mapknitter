@@ -29,6 +29,18 @@ var Knitter = {
 			Knitter.save_current_location()
 		})
 		Glop.observe('glop:predraw', function() { $C.clear();})
+		// disable default "delete" key (in Chrome it goes "back")
+		window.addEventListener ('keydown', function (e) {
+			// If the key pressed was a backspace key, handle it specially
+			if (e.keyIdentifier == 'U+0008' || e.keyIdentifier == 'Backspace') {
+				// If the target of the backspace was the body element, handle it specially
+				if (e.target == document.body) {
+					// Prevent the default Backspace action from happening
+					e.preventDefault ();
+				}
+			}
+		}, true);
+
 		var first_new_image = true
 		warpables.each(function(warpable,index) {
 			if (warpable.nodes != 'none') {
@@ -70,7 +82,9 @@ var Knitter = {
 		Knitter.openlayers_on = true;
 	},
 
-	start_openlayers: function(layer) {
+	start_openlayers: function(layer,tile_url,tile_layer) {
+		if (layer == "none") $('map').hide()
+		else $('map').show()
 		if (!Knitter.openlayers_on) Knitter.init_openlayers(layer)
 		// http://isse.cr.usgs.gov/ArcGIS/services/Combined/TNM_Large_Scale_Imagery/MapServer/WMSServer?request=GetCapabilities&service=WMS
 		// http://raster.nationalmap.gov/ArcGIS/rest/services/Combined/TNM_Large_Scale_Imagery/MapServer
@@ -85,8 +99,8 @@ var Knitter = {
 			var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 20});
 			map.addLayer(yahoosat)
 		} else if (layer == 'TMS') {
-			tile_url = prompt('Enter a TMS URI','http://maps.grassrootsmapping.org/chandeleur-may-9-balloon/')
-	       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", tile_url,
+			Config.tile_url = tile_url || Config.tile_url
+	       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", Config.tile_url,
 				{ //projection: latlon,
 		                  //displayProjection: spher_merc,
 				  //getURL: Knitter.overlay_getTileURL,
@@ -103,10 +117,10 @@ var Knitter = {
 		} else if (layer == 'WMS') {
 			projection: latlon,
 			//wms_url = prompt('Enter a WMS URI','http://msrmaps.com/ogcmap.ashx')
-			wms_url = prompt('Enter a WMS URI','http://isse.cr.usgs.gov/arcgis/services/Combined/SDDS_Imagery/MapServer/WMSServer?SERVICE=WMS&VERSION=1.1.1&STYLES=&SRS=EPSG:4326&FORMAT=image/png&layers=0&request=map&')
-			wms_layer = prompt('Enter a WMS layer','0')
-			map.addLayer(new OpenLayers.Layer.WMS('WMS',wms_url,{
-			layers: wms_layer
+			Config.tile_url = tile_url || Config.tile_url
+			Config.tile_layer = tile_layer || Config.tile_layer
+			map.addLayer(new OpenLayers.Layer.WMS('WMS',Config.tile_url,{
+			layers: Config.tile_layer
 				//layers:'DOQ'
 				//layers:'osm'
 			}))
@@ -115,6 +129,7 @@ var Knitter = {
 		Glop.observe('glop:draw',function(){$('map').setStyle({height:Glop.height+'px'})})
 		if (Config.tile_type == 'WMS') Glop.observe('mouseup',function() {map.layers.first().refresh()})
 
+		// the following is complete nonsense and resolves to a point, not a bbox:
 		var lat1 = Projection.y_to_lat(Map.y-Glop.height/2)
 		var lon1 = Projection.x_to_lon(Map.x-Glop.width/2)
 		var lat2 = Projection.y_to_lat(Map.y+Glop.height/2)
@@ -123,8 +138,12 @@ var Knitter = {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
 		bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
-
+		//if (warpables.length = 0) 
 		map.zoomToExtent( bounds )
+		//console.log(lat1,lon1,lat2,lon2)
+		//console.log(bounds)
+		//console.log('initial extent based on viewport sync with Cartagen')
+		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
 			map.addControl(switcherControl);
@@ -134,13 +153,16 @@ var Knitter = {
 		Glop.observe('glop:draw', Knitter.openLayersDraw)
 			
 		Knitter.save.submitted()
+		// Is this necessary if nothing has happened on the map yet?
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
 				lat: Map.lat,
 				lon: Map.lon,
 				zoom: Map.zoom,
-				tiles: layer // here we might add a WMS url too
+				tiles: layer,
+				tile_url: Config.tile_url,
+				tile_layer: Config.tile_layer
 			},
 			onSuccess: Knitter.save.saved,
 			on0: Knitter.save.failed,
@@ -204,8 +226,10 @@ var Knitter = {
 	},
 
 	toggle_vectors: function() {
-		Config.vectors = !Config.vectors;
+		Config.vectors = !Config.vectors
 		$('tagreport').toggle()
+		if (Config.vectors) $('tool_vectors').addClassName('down')
+		else $('tool_vectors').removeClassName('down')
 		if ($('loading_message')) $('loading_message').hide()
 		Knitter.save.submitted()
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
@@ -235,12 +259,16 @@ var Knitter = {
 	center_on_warpables: function() {
 		if (warpables.length > 0) {
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
-			var maxlat,maxlon,minlat,minlon
+			var maxlat = 0,maxlon = 0,minlat = 0,minlon = 0
 			warpables.each(function(warpable){
 				if (warpable.nodes != "none") {
 					warpable.nodes.each(function(node) {
 						var lon = Projection.x_to_lon(-node[0])
 						var lat = Projection.y_to_lat(node[1])
+						if (maxlon == 0) maxlon = lon
+						if (maxlat == 0) maxlat = lat
+						if (minlon == 0) minlon = lon
+						if (minlat == 0) minlat = lat
 						if (lon > maxlon) maxlon = lon 
 						if (lat > maxlat) maxlat = lat 
 						if (lon < minlon) minlon = lon 
@@ -252,11 +280,21 @@ var Knitter = {
 	                		})
 				}
 			},this)
-			if (latcount > 0) Cartagen.go_to(latsum/latcount,lonsum/loncount,Map.zoom)
-			var bounds = new OpenLayers.Bounds();
-			bounds.extend(new OpenLayers.LonLat(maxlon,maxlat))//.transform(spher_merc,latlon))
-			bounds.extend(new OpenLayers.LonLat(minlon,minlat))//.transform(spher_merc,latlon))
-			map.zoomToExtent( bounds )
+			if (latcount > 0) Cartagen.go_to((maxlat+minlat)/2,(maxlon+minlon)/2,Map.zoom)
+			// the "+2" is a hack... this equation would work without it if the map were only one tile wide.
+			map.zoomTo(parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2)
 		}
-	}
+	},
+	export_intro: function() {
+		$('export_intro').show();
+		$('export_options').hide();
+		$('export_intro_tab').addClassName('active');
+		$('export_options_tab').removeClassName('active');
+	},
+	export_options: function() {
+		$('export_intro').hide();
+		$('export_options').show();
+		$('export_intro_tab').removeClassName('active');
+		$('export_options_tab').addClassName('active');
+	},
 }

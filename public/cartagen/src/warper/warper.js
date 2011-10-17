@@ -173,6 +173,8 @@ var Warper = {
 				[Map.x, Map.y]
 			]),url,id,natural_size))
 		}
+		Knitter.new_image = Warper.images.last()
+		Knitter.new_image.highlight_for(5)
 	},
 
 	/**
@@ -209,6 +211,17 @@ var Warper = {
 			y = point.y
 		}
 		return '(' + x + ', ' + y + ')'
+	},
+
+	/**
+	 * Fetches the image of the given ID (based on server-side rails primary key, typically)
+	 */
+	get_image_by_id: function(id) {
+		var match
+		Warper.images.each(function(image){
+			if (image.id == id) match = image
+		})
+		return match
 	},
 
 	getProjectiveTransform: function(points) {

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110916060555) do
+ActiveRecord::Schema.define(:version => 20111006153011) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20110916060555) do
     t.boolean  "geotiff",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "zip",          :default => false,  :null => false
   end
 
   create_table "maps", :force => true do |t|
@@ -43,6 +44,8 @@ ActiveRecord::Schema.define(:version => 20110916060555) do
     t.string   "tiles",                                       :default => "google",    :null => false
     t.string   "email",                                       :default => "",          :null => false
     t.boolean  "archived",                                    :default => false,       :null => false
+    t.text     "tile_url",                                                             :null => false
+    t.text     "tile_layer",                                                           :null => false
   end
 
   create_table "nodes", :force => true do |t|
@@ -72,6 +75,8 @@ ActiveRecord::Schema.define(:version => 20110916060555) do
     t.string   "nodes",        :default => ""
     t.boolean  "locked",       :default => false, :null => false
     t.boolean  "deleted",      :default => false, :null => false
+    t.text     "history",                         :null => false
+    t.float    "cm_per_pixel", :default => 0.0,   :null => false
   end
 
   create_table "warpeds", :force => true do |t|

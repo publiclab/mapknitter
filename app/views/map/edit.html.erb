@@ -5,17 +5,36 @@
 
 	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
 
-	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
-	<div id='images'>
-		<% @images.each do |image| %>
-		<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
-		<% end %>
-	</div>
+<% 
+hist = @map.images_histogram 
+grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+%>
+
+	<p>
+	0 cm/px <span class="bar"><%= grouphist.join(',') %></span> <%= hist.length-1 %> cm/px
+	</p>
+
+	Average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px
+
+	<script>
+	$('.bar').sparkline('html', {type: 'bar'});
+	</script>
 
 	<h3>Export formats</h3>
 	<p>Available export formats, if any:</p>
 
 	<%= render :partial => "map/formats" %>
+
+	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+	<div id='images'>
+		<% @images.each do |image| %>
+		<p>
+			<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+			 <%= image.cm_per_pixel.to_s[0..3] %> cm/px, 
+			 <%= time_ago_in_words(image.created_at) %> ago
+		</p>
+		<% end %>
+	</div>
 
 
 	

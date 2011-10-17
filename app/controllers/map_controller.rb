@@ -6,8 +6,6 @@ class MapController < ApplicationController
     # only maps with at least 1 warpable:
     @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id"
     @maps = @maps.paginate :page => params[:page], :per_page => 24
-    @featured = Map.find :all, :joins => :warpables, :group => "maps.id", :select => 'maps.*, count(warpables.id) AS warpables_count', :conditions => ["password IS NOT NULL"], :order => 'warpables_count DESC', :limit => 2
-    @authors = Map.authors
 
     respond_to do |format|
       format.html {  }
@@ -19,7 +17,6 @@ class MapController < ApplicationController
   def all
     @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC'
     @maps = @maps.paginate :page => params[:page], :per_page => 24
-    @authors = Map.authors
     render "map/index"
   end
 
@@ -27,7 +24,7 @@ class MapController < ApplicationController
     @map = Map.find_by_name params[:id]
     @export = Export.find_by_map_id(@map.id)
     if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"] 
-      @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+      @images = @map.flush_unplaced_warpables
     else
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
@@ -49,12 +46,13 @@ class MapController < ApplicationController
     redirect_to "/"
   end
 
-  #def delete
-  #  if APP_CONFIG["password"] == params[:password]
-  #    @map = Map.find_by_name(params[:id])
-  #    @map.delete
-  #  end
-  #end
+  def delete
+    if APP_CONFIG["deletion_active"] && APP_CONFIG["password"] == params[:password]
+      @map = Map.find params[:id]
+      @map.delete
+    end
+    redirect_to "/"
+  end
 
   def region
     @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
@@ -94,32 +92,38 @@ class MapController < ApplicationController
   end
 
   def update_map
-    @map = Map.find(params[:map][:id])
-    if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
+    begin
+      @map = Map.find(params[:map][:id])
+      if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
       @map.author = params[:map][:author]
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
-      @map.lat = location.lat
-      @map.lon = location.lng
-      if location
-        if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-          if @map.save
-            flash[:notice] = "Map saved"
+        @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
+        @map.lat = location.lat
+        @map.lon = location.lng
+        if location
+          if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+            if @map.save
+              flash[:notice] = "Map saved"
+            else
+              flash[:error] = "Failed to save"
+            end
           else
-            flash[:error] = "Failed to save"
+            flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
           end
         else
-          flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
+          flash[:error] = "Location not recognized"
         end
+        redirect_to '/map/edit/'+@map.name
       else
-        flash[:error] = "Location not recognized"
+        flash[:error] = "That password is incorrect." if params[:password] != nil
+        redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
       end
-      redirect_to '/map/edit/'+@map.name
-    else
-      flash[:error] = "That password is incorrect." if params[:password] != nil
-      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
-    end
+    rescue
+        flash[:error] = "Geocoding failed. Please enter a more specific address."
+        redirect_to "/map/edit/"+params[:id]
+    end 
   end
 
   def create
@@ -138,12 +142,14 @@ class MapController < ApplicationController
             :lon => location.lng,
             :name => params[:name],
             :description => params[:description],
+            :author => params[:author],
             :email => params[:email],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
             :name => params[:name],
             :description => params[:description],
+            :author => params[:author],
             :email => params[:email]})
 	end
       else
@@ -176,22 +182,8 @@ class MapController < ApplicationController
       redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
     @map.zoom = 1.6 if @map.zoom == 0
-    @warpables = Warpable.find :all, :conditions => {:map_id => @map.id, :deleted => false} 
-    @nodes = {}
-    @warpables.each do |warpable|
-      if warpable.nodes != ''
-        nodes = []
-        warpable.nodes.split(',').each do |node|
-          node_obj = Node.find(node)
-          nodes << [node_obj.lon,node_obj.lat]
-        end
-        @nodes[warpable.id.to_s] = nodes
-      elsif (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
-	# delete warpables which have not been placed and are older than 1 hour:
-	warpable.delete if DateTime.now-1.hour > warpable.created_at
-      end
-      @nodes[warpable.id.to_s] ||= 'none'
-    end
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
     if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
@@ -200,7 +192,7 @@ class MapController < ApplicationController
 	puts @map.lon
       @map.save
     end
-    render :layout => false
+    render :layout => 'knitter'
     end
   end
 
@@ -216,7 +208,16 @@ class MapController < ApplicationController
     @map.lon = params[:lon]
     @map.vectors = true if params[:vectors] == 'true'
     @map.vectors = false if params[:vectors] == 'false'
-    @map.tiles = params[:tiles] if params[:tiles]
+    if params[:tiles]
+      @map.tiles = params[:tiles]
+      if params[:tiles] == "TMS" || params[:tiles] == "WMS" 
+        @map.tile_url = params[:tile_url] 
+      else # clear layer information 
+        @map.tile_url = ""
+        @map.tile_layer = ""
+      end
+      @map.tile_layer = params[:tile_layer] if params[:tiles] == "WMS" 
+    end
     @map.zoom = params[:zoom]
     if @map.save
       render :text => 'success'
@@ -293,6 +294,7 @@ class MapController < ApplicationController
 		export.status = 'starting'
 		export.tms = false
 		export.geotiff = false
+		export.zip = false
 		export.jpg = false
 		export.save       
 
@@ -305,7 +307,7 @@ class MapController < ApplicationController
 		puts stderr.readlines
 	
 		puts '> averaging scales'
-		pxperm = map.average_scale # pixels per meter
+		pxperm = 100/(params[:resolution]).to_f || map.average_scale # pixels per meter
 	
 		puts '> distorting warpables'
 		origin = map.distort_warpables(pxperm)
@@ -338,6 +340,12 @@ class MapController < ApplicationController
 		puts '> generating tiles'
 		export = Export.find_by_map_id(map.id)
 		export.tms = true if map.generate_tiles
+		export.status = 'zipping tiles'
+		export.save
+
+		puts '> zipping tiles'
+		export = Export.find_by_map_id(map.id)
+		export.zip = true if map.zip_tiles
 		export.status = 'creating jpg'
 		export.save
 

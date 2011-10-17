@@ -31,7 +31,7 @@ var Tool = {
 	},
 	update_tooltip: function() {
 		if ($('tooltip')) {
-			$('tooltip').style.top = (-Mouse.y)+'px'
+			$('tooltip').style.top = -Config.padding_top+'px'
 			$('tooltip').style.left = (-Mouse.x)+'px'
 		}
 	},
