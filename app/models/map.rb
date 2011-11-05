@@ -1,7 +1,7 @@
 require 'open3'
 class Map < ActiveRecord::Base
   before_validation :update_name
-  validates_presence_of :name,:author
+  validates_presence_of :name,:author,:lat,:lon
   validates_uniqueness_of :name
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
   validates_format_of       :name,
@@ -44,6 +44,7 @@ class Map < ActiveRecord::Base
   def validate
     self.name != 'untitled'
     self.name = self.name.gsub(' ','-')
+    self.lat >= -90 && self.lat <= 90 && self.lon >= -180 && self.lat <= 180
   end
 
   def warpables

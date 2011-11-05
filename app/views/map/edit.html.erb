@@ -5,9 +5,9 @@
 
 	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">View map &raquo;</a></h3>
 
-<% 
-hist = @map.images_histogram 
-grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+<% if @images.length > 0
+	hist = @map.images_histogram 
+	grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 %>
 
 	<p>
@@ -15,6 +15,8 @@ grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 	</p>
 
 	Average resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px
+
+<% end %>
 
 	<script>
 	$('.bar').sparkline('html', {type: 'bar'});

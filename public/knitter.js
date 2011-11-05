@@ -108,6 +108,7 @@ var Knitter = {
 	                	  //units: "m",
 	                          //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
 				  //tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
+				  numZoomLevels: 20,
 				  serviceVersion: '.', 
 				  layername: '.', 
 				  type: 'png', 
