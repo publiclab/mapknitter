@@ -88,13 +88,16 @@ class Warpable < ActiveRecord::Base
   def generate_perspectival_distort(pxperm,path)
     require 'net/http'
     
-    working_directory = RAILS_ROOT+"/public/warps/"+path+"-working/"
-    directory = RAILS_ROOT+"/public/warps/"+path+"/"
+    working_directory = "public/warps/"+path+"-working/"
+    directory = "public/warps/"+path+"/"
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
 
     local_location = working_directory+self.id.to_s+'-'+self.filename
-    completed_local_location = directory+self.id.to_s+'.tif'
+    completed_local_location = directory+self.id.to_s+'.png'
+    masked_local_location = directory+self.id.to_s+'-masked.png'
+    mask_location = directory+self.id.to_s+'-mask.png'
+    #completed_local_location = directory+self.id.to_s+'.tif'
     geotiff_location = directory+self.id.to_s+'-geo-unwarped.tif'
     warped_geotiff_location = directory+self.id.to_s+'-geo.tif'
 
@@ -132,6 +135,7 @@ class Warpable < ActiveRecord::Base
     end
 
     points = ""
+    maskpoints = ""
     coordinates = ""
     first = true
  
@@ -164,6 +168,8 @@ class Warpable < ActiveRecord::Base
       source_corners = [[0,0],[self.width,0],[self.width,self.height],[0,self.height]]
     end
 
+    maxdimension = 0
+
     self.nodes_array.each do |node|
       corner = source_corners.shift
       nx1 = corner[0]
@@ -172,10 +178,18 @@ class Warpable < ActiveRecord::Base
       ny2 = y1-(pxperm*Cartagen.spherical_mercator_lat_to_y(node.lat,scale))
    
       points = points + '  ' unless first
+      maskpoints = maskpoints + ' ' unless first
       points = points + nx1.to_s + ',' + ny1.to_s + ' ' + nx2.to_i.to_s + ',' + ny2.to_i.to_s
+      maskpoints = maskpoints + nx2.to_i.to_s + ',' + ny2.to_i.to_s
       first = false
       # we need to find an origin; find northwestern-most point
       coordinates = coordinates+' -gcp '+nx2.to_s+', '+ny2.to_s+', '+node.lon.to_s + ', ' + node.lat.to_s
+      
+      # identify largest dimension to set canvas size for ImageMagick:
+      maxdimension = nx1.to_i if maxdimension < nx1.to_i
+      maxdimension = ny1.to_i if maxdimension < ny1.to_i
+      maxdimension = nx2.to_i if maxdimension < nx2.to_i
+      maxdimension = ny2.to_i if maxdimension < ny2.to_i
     end
 
     height = (y1-y2).to_i.to_s
@@ -187,46 +201,46 @@ class Warpable < ActiveRecord::Base
 	# -equalize
 	# -contrast-stretch 0
 
-    #imageMagick = "convert -monitor -background transparent "
-    imageMagick = "convert -background transparent "
+    imageMagick = "convert "
     imageMagick += "-contrast-stretch 0 "
     imageMagick += local_location+" "
-#    if rotation == 6 || rotation == 8
-#    	imageMagick += "-crop "+width+"x"+height+"+0+0\! "
-#    else
-#    	imageMagick += "-crop "+height+"x"+width+"+0+0\! "
-#    end
+    imageMagick += "-crop "+maxdimension.to_i.to_s+"x"+maxdimension.to_i.to_s+"+0+0! "
+    imageMagick += "-flatten "
+    imageMagick += "-distort Perspective '"+points+"' "
+    imageMagick += "-flatten "
     if width > height
 	imageMagick += "-crop "+width+"x"+width+"+0+0\! "
     else
 	imageMagick += "-crop "+height+"x"+height+"+0+0\! "
     end
-#    imageMagick += "-background transparent -flatten "
-    imageMagick += "-background transparent -flatten "
-    imageMagick += "-matte -virtual-pixel white +antialias "
-    imageMagick += "-distort Perspective '"+points+"' "
-    imageMagick += "-background transparent -flatten "
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
 	system(Gdal.ulimit+imageMagick)
-	#stdin, stdout, stderr = Open3.popen3(imageMagick)
-	#puts stdout.readlines
-	#puts stderr.readlines
 
-    gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+completed_local_location+' '+geotiff_location
+    # create a mask (later we can blur edges here)
+    imageMagick2 = 'convert '
+    if width > height
+	imageMagick2 += "-size "+width+"x"+width+" "
+    else
+	imageMagick2 += "-size "+height+"x"+height+" "
+    end
+    imageMagick2 += ' xc:none -draw "fill white stroke none polyline '
+    imageMagick2 += maskpoints + '" '+mask_location
+    puts imageMagick2
+	system(Gdal.ulimit+imageMagick2)
+
+    imageMagick3 = 'composite '+mask_location+' '+completed_local_location+' -compose DstIn -alpha Set '+masked_local_location
+    puts imageMagick3
+	system(Gdal.ulimit+imageMagick3)
+
+    gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+masked_local_location+' '+geotiff_location
     puts gdal_translate
 	system(Gdal.ulimit+gdal_translate)
-	#stdin, stdout, stderr = Open3.popen3(gdal_translate)
-	#puts stdout.readlines
-	#puts stderr.readlines   
  
     gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
 	system(Gdal.ulimit+gdalwarp)
-	#stdin, stdout, stderr = Open3.popen3(gdalwarp)
-	#puts stdout.readlines
-	#puts stderr.readlines   
     
     [x1,y1]
   end
