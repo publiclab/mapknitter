@@ -182,11 +182,32 @@ class Map < ActiveRecord::Base
   end
 
   def generate_composite_tiff(coords,origin)
-        directory = RAILS_ROOT+"/public/warps/"+self.name+"/"
-        geotiff_location = directory+self.name+'-geo.tif'
+        directory = "public/warps/"+self.name+"/"
+        geotiff_location = directory+self.name+'-geo-merge.tif'
 	geotiffs = ''
+	minlat = nil
+	minlon = nil
+	maxlat = nil
+	maxlon = nil
+	self.warpables.each do |warpable|
+		warpable.nodes_array.each do |n|
+			minlat = n.lat if minlat == nil || n.lat < minlat
+			minlon = n.lon if minlon == nil || n.lon < minlon
+			maxlat = n.lat if maxlat == nil || n.lat > maxlat
+			maxlon = n.lon if maxlon == nil || n.lon > maxlon
+		end
+	end
+	first = true
 	self.warpables.each do |warpable|
         	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
+		if first
+			gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+			first = false
+		else
+			gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+		end
+		puts gdalwarp
+		system(Gdal.ulimit+gdalwarp)
         end
 	gdal_merge = "gdal_merge.py -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
