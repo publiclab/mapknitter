@@ -116,6 +116,7 @@ class Map < ActiveRecord::Base
   def average_cm_per_pixel
 	scales = []
 	count = 0
+	average = 0
 	self.warpables.each do |warpable|
 		unless warpable.width.nil?
 			count += 1
@@ -123,7 +124,7 @@ class Map < ActiveRecord::Base
 			scales << res unless res == nil
 		end
 	end
-	average = (scales.inject {|sum, n| sum + n })/count
+	average = (scales.inject {|sum, n| sum + n })/count if scales
 	puts 'average scale = '+average.to_s+' cm/px'
         average
   end
