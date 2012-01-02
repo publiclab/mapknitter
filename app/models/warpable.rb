@@ -192,6 +192,12 @@ class Warpable < ActiveRecord::Base
       maxdimension = ny2.to_i if maxdimension < ny2.to_i
     end
 
+    # close mask polygon:
+    maskpoints = maskpoints + ' '
+      nx2 = -x1+(pxperm*Cartagen.spherical_mercator_lon_to_x(self.nodes_array.first.lon,scale))
+      ny2 = y1-(pxperm*Cartagen.spherical_mercator_lat_to_y(self.nodes_array.first.lat,scale))
+    maskpoints = maskpoints + nx2.to_i.to_s + ',' + ny2.to_i.to_s
+
     height = (y1-y2).to_i.to_s
     width = (-x1+x2).to_i.to_s
 
@@ -219,14 +225,19 @@ class Warpable < ActiveRecord::Base
 	system(Gdal.ulimit+imageMagick)
 
     # create a mask (later we can blur edges here)
-    imageMagick2 = 'convert '
+    imageMagick2 = 'convert +antialias '
     if width > height
 	imageMagick2 += "-size "+width+"x"+width+" "
     else
 	imageMagick2 += "-size "+height+"x"+height+" "
     end
-    imageMagick2 += ' xc:none -draw "fill white stroke none polyline '
-    imageMagick2 += maskpoints + '" '+mask_location
+	# attempt at blurred edges in masking, but I've given up, as gdal_merge doesn't seem to respect variable-opacity alpha channels
+    	#imageMagick2 += ' xc:none -draw "fill black stroke red stroke-width 10 polyline '
+    	#imageMagick2 += maskpoints + '" '
+    	#imageMagick2 += ' -alpha set -channel A -transparent red -blur 0x8 -level 50%,100% '+mask_location
+    imageMagick2 += ' xc:none -draw "fill black stroke none polyline '
+    imageMagick2 += maskpoints + '" '
+    imageMagick2 += ' '+mask_location
     puts imageMagick2
 	system(Gdal.ulimit+imageMagick2)
 
@@ -238,7 +249,8 @@ class Warpable < ActiveRecord::Base
     puts gdal_translate
 	system(Gdal.ulimit+gdal_translate)
  
-    gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
+    #gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
+    gdalwarp = 'gdalwarp -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
 	system(Gdal.ulimit+gdalwarp)
     
