@@ -188,7 +188,7 @@ class Map < ActiveRecord::Base
 	self.warpables.each do |warpable|
         	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
         end
-	gdal_merge = "gdal_merge.py -n 0 -o "+geotiff_location+geotiffs
+	gdal_merge = "gdal_merge.py -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
