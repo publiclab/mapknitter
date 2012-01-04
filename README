@@ -46,7 +46,7 @@ Join now at: http://publiclaboratory.org/join
 INSTALLATION
 ==========================
 
-You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (Ruby 1.9.x doesn't work for now as there is no packaged version of the geohash gem yet for 1.9.x), and GDAL (gdal.org)
+You'll need Ruby on Rails ~2.3.11, Ruby 1.8.7 (Ruby 1.9.x doesn't work for now as there is no packaged version of the geohash gem yet for 1.9.x), and GDAL >=1.7.x (gdal.org)
 
 1) Download source from http://github.com/jywarren/mapknitter
 2) Run rake gems:install from Rails root to install mysql, geokit, image_science, recaptcha, will_paginate.
@@ -79,7 +79,7 @@ To install BitNami RubyStack you will need:
       - An OS X operating system (PowerPC or x86).
 
 You will also need: 
-    - GDAL (gdal.org)
+    - GDAL >= 1.7.x (gdal.org)
     - some source of local tiles, such as from TileStream (mapbox.com)
 
 1) Download the Bitnami.org RubyStack: http://bitnami.org/stack/rubystack, and run the installer.

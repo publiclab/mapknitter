@@ -254,7 +254,7 @@ var Knitter = {
 		})
 	},
 
-	background_transparent: false,
+	background_transparent: true,
 	toggle_background: function() {
 		if (Knitter.background_transparent) {
 			$('map').removeClassName('transparent');

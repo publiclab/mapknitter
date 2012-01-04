@@ -8,7 +8,7 @@
 
 	Cartagen.setup({
 		stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
-		static_map: false,
+		static_map: true,
 		padding_top: -46,
 		key_input: true,
 		lat: <%= @map.lat %>,
@@ -70,7 +70,7 @@
 
 </div>
 
-<div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" id="map"></div>
+<div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" class="transparent" id="map"></div>
 
 <div id="canvas" style="width:100%; height:100%; position:absolute; top:0;  z-index 10;"></div>
 

@@ -116,6 +116,7 @@ class Map < ActiveRecord::Base
   def average_cm_per_pixel
 	scales = []
 	count = 0
+	average = 0
 	self.warpables.each do |warpable|
 		unless warpable.width.nil?
 			count += 1
@@ -123,7 +124,7 @@ class Map < ActiveRecord::Base
 			scales << res unless res == nil
 		end
 	end
-	average = (scales.inject {|sum, n| sum + n })/count
+	average = (scales.inject {|sum, n| sum + n })/count if scales
 	puts 'average scale = '+average.to_s+' cm/px'
         average
   end
@@ -181,13 +182,34 @@ class Map < ActiveRecord::Base
   end
 
   def generate_composite_tiff(coords,origin)
-        directory = RAILS_ROOT+"/public/warps/"+self.name+"/"
-        geotiff_location = directory+self.name+'-geo.tif'
+        directory = "public/warps/"+self.name+"/"
+        geotiff_location = directory+self.name+'-geo-merge.tif'
 	geotiffs = ''
+	minlat = nil
+	minlon = nil
+	maxlat = nil
+	maxlon = nil
+	self.warpables.each do |warpable|
+		warpable.nodes_array.each do |n|
+			minlat = n.lat if minlat == nil || n.lat < minlat
+			minlon = n.lon if minlon == nil || n.lon < minlon
+			maxlat = n.lat if maxlat == nil || n.lat > maxlat
+			maxlon = n.lon if maxlon == nil || n.lon > maxlon
+		end
+	end
+	first = true
 	self.warpables.each do |warpable|
         	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
+		if first
+			gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+			first = false
+		else
+			gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+		end
+		puts gdalwarp
+		system(Gdal.ulimit+gdalwarp)
         end
-	gdal_merge = "gdal_merge.py -n 0 -o "+geotiff_location+geotiffs
+	gdal_merge = "gdal_merge.py -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -o "+geotiff_location+geotiffs
 	#gdal_merge = "gdal_merge.py -v -n 0 -init 255 -o "+geotiff_location+geotiffs
 	puts gdal_merge
@@ -208,7 +230,7 @@ class Map < ActiveRecord::Base
   def zip_tiles
       rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
       system(Gdal.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip -r '+self.name+'.zip '+self.name+'/ && cd ../../'
+    zip = 'cd public/tms/ && zip -rq '+self.name+'.zip '+self.name+'/ && cd ../../'
 #    puts zip 
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+zip)
