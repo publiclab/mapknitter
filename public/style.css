@@ -194,6 +194,7 @@ div.flash {
 	padding:5px;
 	color:#090;
 	background:#9f9;
+	margin-bottom:8px;
 }
 div.flash.error {
 	color:#900;

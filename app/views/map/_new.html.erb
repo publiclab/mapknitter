@@ -53,7 +53,7 @@
 		<input class="text" type="text" name="author" value="<%= params[:author] || 'anonymous' %>" id="author"><br />
 		<label for="email">Email address</label><br />
 		<input class="text" type="text" name="email" value="<%= params[:email] || '' %>" id="email"><br />
-		<p><%= recaptcha_tags :display => {:theme => "white"} %></p>
+		<% if Rails.env.production? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
 		<label for="description">Description (will be shown in an overlay on the map)</label><br />
 		<textarea name="description" rows="8" cols="24"></textarea>
 		

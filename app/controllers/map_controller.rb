@@ -1,7 +1,6 @@
 require 'open3'
 class MapController < ApplicationController
-  caches_page :find
-  protect_from_forgery :except => [:formats, :export]
+  protect_from_forgery :except => [:export]
 
   def index
     # only maps with at least 1 warpable:
@@ -23,7 +22,7 @@ class MapController < ApplicationController
 
   def edit
     @map = Map.find_by_name params[:id]
-    @export = Export.find_by_map_id(@map.id)
+    @export = @map.latest_export
     if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"] 
       @images = @map.flush_unplaced_warpables
     else
@@ -92,6 +91,7 @@ class MapController < ApplicationController
     @map.save
   end
 
+  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
   def update_map
     begin
       @map = Map.find(params[:map][:id])
@@ -104,7 +104,7 @@ class MapController < ApplicationController
         @map.lat = location.lat
         @map.lon = location.lng
         if location
-          if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+          if Rails.env.development? || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
             if @map.save
               flash[:notice] = "Map saved"
             else
@@ -162,7 +162,7 @@ class MapController < ApplicationController
             :email => params[:email],
             :location => params[:location]})
       end
-      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
+      if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
       #if @map.save
         redirect_to :action => 'show', :id => @map.name
       else
@@ -240,19 +240,17 @@ class MapController < ApplicationController
     render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles, :layout => false
   end
   
-  # displays a map for the place name in the URL: "cartagen.org/find/cambridge, MA"
-  def formats
-	@map = Map.find params[:id] 
-	@export = Export.find_by_map_id(params[:id])
-	render :layout => false
-  end
-
   def output
 	@map = Map.find params[:id] 
-	if @export = Export.find_by_map_id(params[:id])
+	if @export = @map.latest_export
 		@running = (@export.status != 'complete' && @export.status != 'none' && @export.status != 'failed')
 	else
 		@running = false
+	end
+	if @nrg_export = @map.get_export('nrg')
+		@nrg_running = (@nrg_export.status != 'complete' && @nrg_export.status != 'none' && @nrg_export.status != 'failed')
+	else
+		@nrg_running = false
 	end
 	render :layout => false
   end
@@ -261,35 +259,20 @@ class MapController < ApplicationController
 	render :layout => false
   end
 
-  def cancel_export
-	export = Export.find_by_map_id(params[:id])
-	export.status = 'none'
-	export.save
-	render :text => 'cancelled'
-  end
-
-  def progress
-	if export = Export.find_by_map_id(params[:id])
-		if  export.status == 'complete'
-			output = 'complete'
-		elsif export.status == 'none'
-			output = 'export has not been run'
-		elsif export.status == 'failed'
-			output = 'export failed'
-		else
-			output = ' <img class="export_status" src="/images/spinner-small.gif">'+ export.status
-		end
-	else
-		output = 'export has not been run'
-	end
-	render :text => output, :layout => false 
+  # start with NRG
+  def composite
+	# write this in map model, really
+	@map = Map.find_by_name params[:id]
+	@map.composite(params[:type],params[:infrared])
+        render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
 
   def export
+	export_type = "normal"
 	map = Map.find_by_name params[:id]
-	if verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
+	if Rails.env.development? || verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
 	begin
-		unless export = Export.find_by_map_id(map.id)
+		unless export = map.get_export(export_type) # searches only "normal" exports
 			export = Export.new({:map_id => map.id,:status => 'starting'})
 		end
 		export.status = 'starting'
@@ -314,7 +297,7 @@ class MapController < ApplicationController
 		origin = map.distort_warpables(pxperm)
 		warpable_coords = origin.pop	
 
-		export = Export.find_by_map_id(map.id)
+		export = map.get_export(export_type)
 		export.status = 'compositing'
 		export.save
 	
@@ -323,11 +306,8 @@ class MapController < ApplicationController
 	
 		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
 		puts info
-		#stdin, stdout, stderr = Open3.popen3("identify -quiet -format '%b,%w,%h' #{geotiff_location}")
-		#puts stderr.readlines
-		#info = stdout.readlines.split(',') 
 	
-		export = Export.find_by_map_id(map.id)
+		export = map.get_export(export_type)
 		if info[0] != ''
 			export.geotiff = true
 			export.size = info[0]
@@ -339,30 +319,30 @@ class MapController < ApplicationController
 		end
 	
 		puts '> generating tiles'
-		export = Export.find_by_map_id(map.id)
+		export = map.get_export(export_type)
 		export.tms = true if map.generate_tiles
 		export.status = 'zipping tiles'
 		export.save
 
 		puts '> zipping tiles'
-		export = Export.find_by_map_id(map.id)
+		export = map.get_export(export_type)
 		export.zip = true if map.zip_tiles
 		export.status = 'creating jpg'
 		export.save
 
 		puts '> generating jpg'
-		export = Export.find_by_map_id(map.id)
-		export.jpg = true if map.generate_jpg
+		export = map.get_export(export_type)
+		export.jpg = true if map.generate_jpg("normal")
 		export.status = 'complete'
 		export.save
 	
 	rescue SystemCallError
   	#	$stderr.print "failed: " + $!
-		export = Export.find_by_map_id(map.id)
+		export = map.get_export(export_type)
 		export.status = 'failed'
 		export.save
 	end
-        render :text => "new Ajax.Updater('formats','/map/formats/#{map.id}')"
+        render :text => "new Ajax.Updater('formats','/export/formats/#{map.id}')"
     else
         render :text => "$('export_progress').replace('Export failed; RECAPTCHA thinks you are not a human!');"
     end
