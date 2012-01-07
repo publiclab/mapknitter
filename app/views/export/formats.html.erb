@@ -1,0 +1,36 @@
+<% unless @export.nil? %>
+<% if @export.tms %>
+<p>
+<% if @export.export_type == "nrg" %>
+	<a target="_blank" href="/tms/<%= @map.name %>-nrg/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
+	<a target="_blank" href="/tms/<%= @map.name %>-nrg">Tiled Map Service (TMS)</a><!-- (OSM-style <a href="/tms/<%= @map.name %>-nrg/alt">TMS here</a>)-->
+<% else %>
+	<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
+	<a target="_blank" href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
+<% end %>
+<% if @export.zip %><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a><% end %>
+<br />
+<a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
+<a target="_blank" href="http://maps.google.com/maps?q=http://cartagen.org/tms/<%= @map.name %>/doc.kml">Google Maps viewer</a> (beta, low res)<br />
+</p>
+<% end %>
+<% if @export.geotiff %>
+<p>
+<% if @export.export_type == "nrg" %>
+	<a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>-nrg.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+<% else %>
+	<a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+<% end %>
+</p>
+<% end %>
+
+<% if @export.jpg %>
+<p>
+<% if @export.export_type == "nrg" %>
+	<a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>-nrg.jpg">JPG</a> (for faster download and printing)
+<% else %>
+	<a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>.jpg">JPG</a> (for faster download and printing)
+<% end %>
+</p>
+<% end %>
+<% end %>

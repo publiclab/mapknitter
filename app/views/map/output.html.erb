@@ -62,6 +62,7 @@ img.export_status {
 <div id="export_tabs">
 	<a id="export_intro_tab" class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
 	<a id="export_options_tab" href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
+	<a id="export_multispectral_tab" href="javascript:void(0);" onClick="Knitter.export_multispectral();">Multispectral (experimental)</a>
 </div>
 
 <div id="export_intro" class="export_panel"><small>
@@ -71,77 +72,22 @@ img.export_status {
 </small>
 </div>
 
-<% 
-hist = @map.images_histogram 
-(0..100).each do |i|
-	hist[i] = 0 if !hist[i]
-end
-hist = hist[0..100]
-grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
-resolution = @map.average_cm_per_pixel.to_s[0..4]
-%>
+<!-- Other tabs: -->
+<%= render :partial => "export_options" %>
+<%= render :partial => "export_multispectral" %>
 
-<div id="export_options" class="export_panel" style="display:none;">
+<div id="export_normal">
 
-<p><small>Slide to select an export resolution:</small></p>
-<canvas style="margin:6px;display:inline;" width="400" height="70" id="export_graph"></canvas>
-<p style="height:10px;width:400px;margin:6px;margin-top:0;"><small>
-<span style="float:left;"><%= hist[0] %> cm/px</span>  <span style="float:right;"><%= hist.length-1 %> cm/px</span>
-</small></p>
-
-<div id="resolution_slider">
-	<div id="redzone" style="width:<%= 4*(resolution.to_i/2).to_i %>px;height:5px;border-top:2px solid #600;background:#f88;position:absolute;"></div>
-	<div id="resolution_slider_handle"></div>
-</div>
-<script>
-	Knitter.resolution_slider = new Control.Slider('resolution_slider_handle','resolution_slider', {
-	  range: $R(0, 100),
-	  //values: [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,24,28,32,36,40,45,50,55,60,70,80,90,100],//$R(0, 200),
-	  sliderValue: <%= resolution.to_i %>,
-	  alignX: -200,
-	  //alignY: -5,
-	  //handleImage: 'slider_2handle',
-	  onSlide: function(value) {
-		$('map_resolution').value = parseInt(value*100)/100
-		if (value*2 > <%= resolution %>) $('map_resolution').setStyle({color: "black"})
-		else $('map_resolution').setStyle({color:"red"})
-	  },
-	  onChange: function(value) {
-		if (value*2 > <%= resolution %>) $('map_resolution').setStyle({color: "black"})
-		else $('map_resolution').setStyle({color:"red"})
-	  }
-	});
-</script>
-<label for="map_resolution">Enter a resolution:</label> 
-<input onChange="Knitter.resolution_slider.setValue($('map_resolution').value)" name="resolution" id="map_resolution" type="text" value="<%= resolution %>" />
-</p>
-</div>
-
-<script>
-	//http://willarson.com/code/sparklines/sparklines.html
-	var opts = {
-	  'left_padding':0,
-	  'right_padding':0,
-	  "background":"#EEEEEE",
-	  "stroke":"#444444",
-	  'scale_from_zero':true,
-	}
-
-	sparkline = new Sparkline('export_graph', [<%= hist.join(',') %>], opts).draw()
-
-	function refresh_formats(response) {
-		eval(response)
-	}
-</script>
-
+<% if Rails.env.production? %>
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
 <div id="recaptcha-container"></div>
 <script type="text/javascript">
 	Recaptcha.create('6LdN6sYSAAAAAOWasGXVBoKdvouels_oDnB_Zs3I',"recaptcha-container", {theme:"white"});
 </script>
 <br />
+<% end %>
 
-<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',{
+<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?type=normal&authenticity_token=<%= form_authenticity_token %>',{
 	parameters: {
 		recaptcha_response_field: Recaptcha.get_response(),
 		recaptcha_challenge_field: Recaptcha.get_challenge(),
@@ -158,20 +104,23 @@ resolution = @map.average_cm_per_pixel.to_s[0..4]
 
 <span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
  (recommended resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
-</div>
 
 <div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
 
 <script>
-new Ajax.PeriodicalUpdater('export_progress','/map/progress/<%= @map.id %>', {method: 'get', frequency: 5})
-new Ajax.Updater('formats','/map/formats/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>')
+Knitter.updaters.push(new Ajax.PeriodicalUpdater('export_progress','/export/progress/<%= @map.id %>?type=normal', {method: 'get', frequency: 5}))
+new Ajax.Updater('formats','/export/formats/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>')
 </script>
+
 <p class='export_status'>
 <b>Status:</b> <span id='export_progress'>
 Loading...
-</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/map/cancel_export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>');$('running_export').hide();$('run_export').show()">cancel</a>)</p>
+</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/export/cancel/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>');$('running_export').hide();$('run_export').show()">cancel</a>)</p>
 
 <div id="formats">
 </div>
 
 <p>Export links may be unavailable while the export is running.</p>
+
+</div>
+</div>

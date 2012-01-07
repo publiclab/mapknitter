@@ -1,5 +1,18 @@
 class Export < ActiveRecord::Base
 
+	validates_inclusion_of :export_type, :in => %w(normal nrg ndvi)
+
+	# fetches bands column from db and separates it by "," and ":" into a nested array
+	# [["infrared",<map_id>],["ultraviolet",<map_id>]
+	def self.bands
+		b = self.bands_string.split(",")
+		b.each do |band|
+			b = b.split(":")
+			b[1] = b[1].to_i
+		end
+		b
+	end
+
 	def self.average_cm_per_pixel
 		e = Export.find :all, :conditions => ['cm_per_pixel != "" AND cm_per_pixel < 500'] 
 		sum = 0

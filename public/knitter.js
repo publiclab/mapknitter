@@ -293,16 +293,36 @@ var Knitter = {
 			map.zoomTo(parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2)
 		}
 	},
+	export_tabs: ['export_intro','export_options','export_multispectral'],
+	export_hide_tabs: function() {
+		Knitter.export_tabs.each(function(tab) {
+			$(tab).hide();
+			$(tab+'_tab').removeClassName('active');
+		})
+	},
 	export_intro: function() {
+		Knitter.export_hide_tabs();
+		$('export_normal').show();
 		$('export_intro').show();
-		$('export_options').hide();
 		$('export_intro_tab').addClassName('active');
-		$('export_options_tab').removeClassName('active');
 	},
 	export_options: function() {
-		$('export_intro').hide();
+		Knitter.export_hide_tabs();
+		$('export_normal').show();
 		$('export_options').show();
-		$('export_intro_tab').removeClassName('active');
 		$('export_options_tab').addClassName('active');
+	},
+	export_multispectral: function() {
+		Knitter.export_hide_tabs();
+		$('export_normal').hide();
+		$('export_multispectral').show();
+		$('export_multispectral_tab').addClassName('active');
+	},
+	// for now, just used to store the "export progress" checkers, which run every 5 secs and fill up the logs.
+	updaters: [],
+	cancel_updaters: function() {
+		Knitter.updaters.each(function(u){
+			u.stop()
+		})
 	},
 }
