@@ -12,14 +12,7 @@
 
 <!-- Custom export pane for multispectral -->
 
-<div <% if @nrg_running %>style="display:none;"<% end %> id="run_nrg_export">Prove that you're a person, then click EXPORT to begin: <br />
-<div id="nrg-recaptcha-container"></div>
-<% if Rails.env.production? %>
-	<script type="text/javascript">
-		Recaptcha.create('6LdN6sYSAAAAAOWasGXVBoKdvouels_oDnB_Zs3I',"nrg-recaptcha-container", {theme:"white"});
-	</script>
-<br />
-<% end %>
+<div <% if @nrg_running %>style="display:none;"<% end %> id="run_nrg_export">Prove that you're a person (at bottom), then click EXPORT to begin: <br />
 
 <a id="active_nrg_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/composite/<%= @map.name %>?type=nrg&authenticity_token=<%= form_authenticity_token %>',{
 	parameters: {

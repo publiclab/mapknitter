@@ -76,15 +76,18 @@ img.export_status {
 <%= render :partial => "export_options" %>
 <%= render :partial => "export_multispectral" %>
 
-<div id="export_normal">
-
 <% if Rails.env.production? %>
-<div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
 <div id="recaptcha-container"></div>
 <script type="text/javascript">
 	Recaptcha.create('6LdN6sYSAAAAAOWasGXVBoKdvouels_oDnB_Zs3I',"recaptcha-container", {theme:"white"});
 </script>
 <br />
+<% end %>
+
+<div id="export_normal">
+
+<% if Rails.env.production? %>
+<div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
 <% end %>
 
 <a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?type=normal&authenticity_token=<%= form_authenticity_token %>',{
