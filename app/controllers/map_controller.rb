@@ -20,6 +20,10 @@ class MapController < ApplicationController
     render "map/index"
   end
 
+  def view
+    edit
+  end
+
   def edit
     @map = Map.find_by_name params[:id]
     @export = @map.latest_export

@@ -17,6 +17,7 @@ h1 { font-size:2em; }
 h1 { border-bottom:1px solid #bbb;padding-bottom:6px }
 h2 { border-bottom:1px solid #bbb;padding-bottom:6px }
 h3 a { text-decoration:none; }
+h3 small { font-size:14px; }
 
 #header {
 	width:900px;
@@ -117,6 +118,18 @@ h3 a { text-decoration:none; }
 	border:8px solid #ddd;
 	padding:14px;
 	margin-bottom:12px;
+}
+
+#preview {
+	border:0;
+	border:2px dotted #ccc;
+	width:920px;
+	height:375px;
+}
+
+#images .image {
+	float:left;
+	font-size:12px;
 }
 
 .formats {
