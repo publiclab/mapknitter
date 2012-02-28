@@ -116,7 +116,7 @@
 	<h3>Export formats</h3>
 	<p>Available export formats, if any:</p>
 
-	<% if @export.tms %>
+	<% if false # @export.tms %>
 	<i>Embed code:</i><br />
 	<textarea id="embedcode"><iframe style="border:0;" width="500px" height="375px" src="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17"></iframe></textarea>
 	<% end %>
