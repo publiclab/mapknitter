@@ -232,9 +232,9 @@ class Warpable < ActiveRecord::Base
 	imageMagick2 += "-size "+height+"x"+height+" "
     end
 	# attempt at blurred edges in masking, but I've given up, as gdal_merge doesn't seem to respect variable-opacity alpha channels
-    	imageMagick2 += ' xc:none -draw "fill black stroke red stroke-width 25 polyline '
+    	imageMagick2 += ' xc:none -draw "fill black stroke red stroke-width 30 polyline '
     	imageMagick2 += maskpoints + '" '
-    	imageMagick2 += ' -alpha set -channel A -transparent red -blur 0x8 -level 50%,100% -channel R -evaluate set 0 +channel '+mask_location
+    	imageMagick2 += ' -alpha set -channel A -transparent red -blur 0x8 -channel R -evaluate set 0 +channel '+mask_location
     #imageMagick2 += ' xc:none -draw "fill black stroke none polyline '
     #imageMagick2 += maskpoints + '" '
     #imageMagick2 += ' '+mask_location
