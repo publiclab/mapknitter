@@ -2,8 +2,8 @@
 	<% odd = true %>
 	<% for map in @maps %>
 		<div class="map <%= 'odd' if odd %>">
-			<% if !map.private && map.warpables.length > 0 %><a href="/maps/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
-			<h3><a href ="/maps/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
+			<% if !map.private && map.warpables.length > 0 %><a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
+			<h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
 			<p><small><%= map.location %></small></p>
 			<p class="description"><small>
 				<%= truncate(map.description,:length =>200) %>
@@ -11,7 +11,8 @@
 			</small></p>
 			<p class="meta"><small>
 				<% if map.archived %><i>Archived</i> | <% end %> 
-				<a href="/map/edit/<%= map.name %>">Edit</a> | 
+				<a href="/map/view/<%= map.name %>">View</a> | 
+				<a href="/map/show/<%= map.name %>">Edit</a> | 
 				<% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
 				<% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
 				Updated <%= map.updated_at.to_s(:short) %> | 
