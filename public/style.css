@@ -120,6 +120,20 @@ h3 small { font-size:14px; }
 	margin-bottom:12px;
 }
 
+.box.form {
+	border:0;
+	border-top:8px solid #aaa;
+	background:#ddd;
+	padding:6px 14px;
+}
+.box.form small {
+	font-style:normal;
+}
+#sidebar .box.form h3 {
+	font-size:20px;
+	margin-bottom:6px;
+}
+
 #preview {
 	border:0;
 	width:920px;
@@ -249,4 +263,11 @@ div.flash.error {
 }
 .errorExplanation ul {
 	padding-left:21px;
+}
+
+#footer {
+	border-top:8px solid #ccc;
+	margin-top:8px;
+	font-size:0.9em;
+	font-style:italic;
 }
