@@ -57,6 +57,26 @@ h3 small { font-size:14px; }
 	float:left;
 }
 
+.button {
+	font-size:18px;
+	text-decoration:none;
+	color:white;
+	padding:12px;
+        background:#4C6ACB;
+        -moz-border-radius-topleft:5px;
+        -webkit-border-top-left-radius:5px;
+        -moz-border-radius-bottomleft:5px;
+        -webkit-border-bottom-left-radius:5px;
+        -moz-border-radius-topright:5px;
+        -webkit-border-top-right-radius:5px;
+        -moz-border-radius-bottomright:5px;
+        -webkit-border-bottom-right-radius:5px;
+}
+a:hover.button {
+	background:#35b;
+	color:#ccc;
+}
+
 #list {
 	width: 500px;
 }

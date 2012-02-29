@@ -8,10 +8,12 @@
 
 <div id="main">
 	<h2><%= @map.name %></h2>	
-	<p><small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a>
-	<% if admin && @map.email != '' %><<a href="mailto:<%= @map.email %>"><%= @map.email %></a>>,</a><% end %></small></p>
-
-	<h3><a style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
+	<p>
+		<small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a>
+		<% if admin && @map.email != '' %><<a href="mailto:<%= @map.email %>"><%= @map.email %></a>>,</a><% end %></small>
+	</p>
+	
+	<h3 style="clear:left;padding-top:12px;"><a class="button" style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
 
 	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
 	<div id='images'>
