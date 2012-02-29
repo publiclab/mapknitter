@@ -124,6 +124,22 @@ a:hover.button {
 	font-size:1.7em;
 }
 
+div.notice {
+	padding-top:0;
+	margin-top:16px;
+	border:none;
+	border-top:8px solid #fd6;
+	background:#ffa;
+}
+
+#license .badge {
+	padding-right:4px;
+	padding-bottom:20px;
+	float:left;
+	margin-right:6px;
+	display:block;
+}
+
 #authors ul {
 	font-size:0.9em;
 }

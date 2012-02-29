@@ -3,7 +3,7 @@
 
 <ul>
 <% for map in Map.new_maps %>
-  <li><a href="/maps/<%= map.name %>"><%= map.name %></a> by <a href="/author/<%= map.author %>"><%= map.author %></a> <%= time_ago_in_words(map.created_at) %> ago; <%= map.warpables.length %> images </li>
+  <li><a href="/map/view/<%= map.name %>"><%= map.name %></a> by <a href="/author/<%= map.author %>"><%= map.author %></a> <%= time_ago_in_words(map.created_at) %> ago; <%= map.warpables.length %> images </li>
 <% end %>
 </ul>
 

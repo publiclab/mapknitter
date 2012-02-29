@@ -37,6 +37,37 @@
 
 <div id="sidebar">
 
+<% if @export %>
+<div class="box notice">
+	<p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclaboratory.org/archive">the Public Laboratory Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
+	<p><a class="button" href="http://publiclaboratory.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
+</div>
+<% end %>
+
+<div id="license">
+<p><small>
+<% if @map.license == "publicdomain" %>
+<p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
+  <a class="badge" rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
+  To the extent possible under law,
+  <a rel="dct:publisher" href="http://publiclaboratory.org">
+    <span property="dct:title"><%= @map.author %></span></a>
+  has waived all copyright and related or neighboring rights to
+  "<span property="dct:title"><%= @map.name %></span>".
+<!--This work is published from:
+<span property="vcard:Country" datatype="dct:ISO3166"
+      content="US" about="http://publiclaboratory.org">
+  United States</span>.
+-->
+</p>
+<% elsif @map.license == "cc-by" %>
+<a class="badge" rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. 
+<% else %>
+&copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclaboratory.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
+<% end %>
+</small></p>
+</div>
 
 <% if @images.length > 0
 	hist = @map.images_histogram 
