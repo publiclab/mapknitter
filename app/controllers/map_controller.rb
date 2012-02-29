@@ -149,12 +149,14 @@ class MapController < ApplicationController
             :description => params[:description],
             :author => params[:author],
             :email => params[:email],
+            :license => params[:license],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
             :name => params[:name],
             :description => params[:description],
             :author => params[:author],
+            :license => params[:license],
             :email => params[:email]})
 	end
       else
@@ -164,6 +166,7 @@ class MapController < ApplicationController
             :name => params[:name],
             :description => params[:description],
             :email => params[:email],
+            :license => params[:license],
             :location => params[:location]})
       end
       if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
@@ -351,4 +354,16 @@ class MapController < ApplicationController
         render :text => "$('export_progress').replace('Export failed; RECAPTCHA thinks you are not a human!');"
     end
   end
+
+  def emails
+    if params[:password] == APP_CONFIG["password"]
+      @maps = Map.find :all
+      emails = []
+      @maps.each do |m|
+        emails << m.email if m.email != ""
+      end
+      render :text => emails.uniq.join(',')
+    end
+  end 
+
 end

@@ -59,7 +59,14 @@
 		
 		<!--<label for="password">Password (optional)</label><br />
 		<input class="text" type="password" name="password" value="" id="password"><br />-->
-			
+		
+		<br />
+		<label for="license">Allow others to use your map by dedicating it to the public domain or licensing it with an <a href="http://publiclaboratory.org/wiki/licenses">open source license</a></label><br />
+		<select name="license">
+			<option value="publicdomain" label="Public Domain" />
+			<option value="cc-by" label="Creative Commons Attribution" />
+			<option value="copyright" label="No license; copyright only" />
+		</select>
 
 		<p><input type="submit" value="Save"></p>
 	<% end %>
