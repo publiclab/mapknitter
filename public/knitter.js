@@ -65,7 +65,6 @@ var Knitter = {
 	init_openlayers: function(format) {
 		if (format == 'WMS') {
 		       	map = new OpenLayers.Map('map', { controls: [], 
-		       	// map = new OpenLayers.Map({div: 'map', controls: [], // OpenLayers 2.11
 				projection: spher_merc,
                			displayProjection: spher_merc,
        				maxExtent: new OpenLayers.Bounds(-180,-90,180,90),	

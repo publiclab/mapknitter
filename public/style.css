@@ -158,6 +158,8 @@ div.notice {
 
 #images .image {
 	float:left;
+	width:100px;
+	height:150px;
 	font-size:12px;
 }
 
