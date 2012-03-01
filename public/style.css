@@ -282,6 +282,7 @@ div.flash.error {
 }
 
 #footer {
+	clear:both;
 	border-top:8px solid #ccc;
 	margin-top:8px;
 	font-size:0.9em;
