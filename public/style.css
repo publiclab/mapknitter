@@ -204,10 +204,10 @@ div.notice {
 .formats .tms:hover {
 	background:#FFB833;
 }
-.formats .openlayers {
+.formats .openlayers, .formats .leaflet {
 	border:2px solid #F67821;
 }
-.formats .openlayers:hover {
+.formats .openlayers:hover, .formats .leaflet:hover {
 	background:#EA6821;
 }
 
