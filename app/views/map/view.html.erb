@@ -28,6 +28,49 @@
 		<% end %>
 		<br style="clear:left;" />
 	</div>
+
+	<h2>Nearby maps</h2>
+	<div id="list">
+		<% odd = true %>
+		<% @map.nearby_maps(0.1)[0..3].each do |map| %>
+			<% if !map.archived && !map.private && map.warpables.length > 0 %>
+			<div class="map <%= 'odd' if odd %>">
+				<a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a>
+				<h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
+				<p><small><%= map.location %></small></p>
+				<p class="description"><small>
+					<%= truncate(map.description,:length =>200) %>
+					<% if !map.description %><i>no description</i><% end %>
+				</small></p>
+				<p class="meta"><small>
+					<% if map.archived %><i>Archived</i> | <% end %> 
+					<a href="/map/view/<%= map.name %>">View</a> | 
+					<a href="/map/show/<%= map.name %>">Edit</a> | 
+					Updated <%= map.updated_at.to_s(:short) %> | 
+					<%= map.warpables.length %> images 
+				</small></p>
+				<p class="formats">
+				<% unless map.latest_export.nil? %>
+				<% if map.latest_export.geotiff %>
+					<a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
+					<br />
+					<span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
+				<% end %><br />
+				<% if map.latest_export.tms %>
+					<a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web viewer</a>
+					<a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
+				<% end %>
+				<% if map.latest_export.jpg %>
+					<a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
+				<% end %>
+				<% end %>
+				</p>
+			</div>
+			<% odd = !odd %>
+			<% end %>
+		<% end %>
+	</div>
+	<br style="clear:both;" />
 	
 	<h2 id="comments">Comments</h2>
 
