@@ -131,6 +131,9 @@ div.notice {
 	border-top:8px solid #fd6;
 	background:#ffa;
 }
+div.notice p {
+	padding-bottom:8px;
+}
 
 #license .badge {
 	padding-right:4px;
