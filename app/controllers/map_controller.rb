@@ -360,10 +360,14 @@ class MapController < ApplicationController
       @maps = Map.find :all
       emails = []
       @maps.each do |m|
-        emails << m.email if m.email != ""
+        emails << m.name+","+m.author+","+m.email if m.email != ""
       end
-      render :text => emails.uniq.join(',')
+      render :text => emails.uniq.join("#")
     end
   end 
+
+  def exports
+    render :text => ActiveSupport::JSON.encode(Export.exporting) if params[:password] == APP_CONFIG["password"]
+  end
 
 end
