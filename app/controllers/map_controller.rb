@@ -150,6 +150,7 @@ class MapController < ApplicationController
             :author => params[:author],
             :email => params[:email],
             :license => params[:license],
+            :tiles => params[:tiles],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
@@ -157,6 +158,7 @@ class MapController < ApplicationController
             :description => params[:description],
             :author => params[:author],
             :license => params[:license],
+            :tiles => params[:tiles],
             :email => params[:email]})
 	end
       else
@@ -167,6 +169,7 @@ class MapController < ApplicationController
             :description => params[:description],
             :email => params[:email],
             :license => params[:license],
+            :tiles => params[:tiles],
             :location => params[:location]})
       end
       if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
