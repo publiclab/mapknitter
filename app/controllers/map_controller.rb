@@ -146,6 +146,7 @@ class MapController < ApplicationController
             :author => params[:author],
             :email => params[:email],
             :license => params[:license],
+            :tiles => params[:tiles],
             :location => params[:location]})
         rescue
 	  @map = Map.new({
@@ -153,6 +154,7 @@ class MapController < ApplicationController
             :description => params[:description],
             :author => params[:author],
             :license => params[:license],
+            :tiles => params[:tiles],
             :email => params[:email]})
 	end
       else
@@ -163,6 +165,7 @@ class MapController < ApplicationController
             :description => params[:description],
             :email => params[:email],
             :license => params[:license],
+            :tiles => params[:tiles],
             :location => params[:location]})
       end
       if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
@@ -356,10 +359,14 @@ class MapController < ApplicationController
       @maps = Map.find :all
       emails = []
       @maps.each do |m|
-        emails << m.email if m.email != ""
+        emails << m.name+","+m.author+","+m.email if m.email != ""
       end
-      render :text => emails.uniq.join(',')
+      render :text => emails.uniq.join("#")
     end
   end 
+
+  def exports
+    render :text => ActiveSupport::JSON.encode(Export.exporting) if params[:password] == APP_CONFIG["password"]
+  end
 
 end

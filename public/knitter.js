@@ -66,15 +66,15 @@ var Knitter = {
 		if (format == 'WMS') {
 		       	map = new OpenLayers.Map('map', { controls: [], 
 				projection: spher_merc,
-               			displayProjection: spher_merc,
+   			displayProjection: spher_merc,
        				maxExtent: new OpenLayers.Bounds(-180,-90,180,90),	
 			});
 		} else {
 		       	map = new OpenLayers.Map('map', { controls: [], 
 	  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
-		                units: "m",
+		    units: "m",
 				projection: latlon,
-               			displayProjection: spher_merc,
+   			displayProjection: spher_merc,
        				maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
 				maxResolution: 156543.0339
 			});
@@ -99,23 +99,33 @@ var Knitter = {
 				numZoomLevels: 23,
 				maxZoomLevel: 22,
 			        resolutions: [156543.03390625, 78271.516953125, 39135.7584765625,
-		                      19567.87923828125, 9783.939619140625, 4891.9698095703125,
-		                      2445.9849047851562, 1222.9924523925781, 611.4962261962891,
-                		      305.74811309814453, 152.87405654907226, 76.43702827453613,
-        		              38.218514137268066, 19.109257068634033, 9.554628534317017,
-		                      4.777314267158508, 2.388657133579254, 1.194328566789627,
-		                      0.5971642833948135, 0.25, 0.1, 0.05],
+		          19567.87923828125, 9783.939619140625, 4891.9698095703125,
+		          2445.9849047851562, 1222.9924523925781, 611.4962261962891,
+    		      305.74811309814453, 152.87405654907226, 76.43702827453613,
+        		  38.218514137268066, 19.109257068634033, 9.554628534317017,
+		          4.777314267158508, 2.388657133579254, 1.194328566789627,
+		          0.5971642833948135, 0.25, 0.1, 0.05],
 				serverResolutions: [156543.03390625, 78271.516953125, 39135.7584765625,
-	                            19567.87923828125, 9783.939619140625,
-	                            4891.9698095703125, 2445.9849047851562,
-	                            1222.9924523925781, 611.4962261962891,
-	                            305.74811309814453, 152.87405654907226,
-	                            76.43702827453613, 38.218514137268066,
-	                            19.109257068634033, 9.554628534317017,
-	                            4.777314267158508, 2.388657133579254,
-	                            1.194328566789627, 0.5971642833948135]
+	                19567.87923828125, 9783.939619140625,
+	                4891.9698095703125, 2445.9849047851562,
+	                1222.9924523925781, 611.4962261962891,
+	                305.74811309814453, 152.87405654907226,
+	                76.43702827453613, 38.218514137268066,
+	                19.109257068634033, 9.554628534317017,
+	                4.777314267158508, 2.388657133579254,
+	                1.194328566789627, 0.5971642833948135]
 			} );
 			map.addLayer(gsat)
+		} else if (layer == 'osm') {
+			var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
+	    "http://tile.openstreetmap.org/",
+	    { type: 'png', getURL: osm_getTileURL, displayOutsideMaxExtent: true, attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'} );
+			map.addLayer(osm)
+		} else if (layer == 'bing') {
+			var apiKey = "AhYrUtF-jMIlTiblfgB_spQXBgc3u1_4h1mrgm_vEmyrnHLbA8v8452MolECULTX"
+			//Only in later versions of OpenLayers: //var bingsat = new OpenLayers.Layer.Bing("Aerial", {type: "Aerial", apiKey:apiKey, sphericalMercator:true});
+			var bingsat = new OpenLayers.Layer.VirtualEarth("Virtual Earth Aerial",	{'type': VEMapStyle.Aerial, 'sphericalMercator': true, numZoomLevels: 20 });
+			map.addLayer(bingsat)
 		} else if (layer == 'yahoo') {
 			var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 22});
 			map.addLayer(yahoosat)
@@ -130,11 +140,11 @@ var Knitter = {
 			Config.tile_url = tile_url || Config.tile_url
 	       		var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", Config.tile_url,
 				{ //projection: latlon,
-		                  //displayProjection: spher_merc,
+		      //displayProjection: spher_merc,
 				  //getURL: Knitter.overlay_getTileURL,
 				  //maxResolution:156543.0339,
-	                	  //units: "m",
-	                          //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
+	    	  //units: "m",
+	              //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
 				  //tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
 				  numZoomLevels: 22,
 				  serviceVersion: '.', 
@@ -176,7 +186,7 @@ var Knitter = {
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
 			map.addControl(switcherControl);
-	                switcherControl.maximizeControl();
+	    switcherControl.maximizeControl();
 		}
 		Knitter.openLayersDraw()
 		Glop.observe('glop:draw', Knitter.openLayersDraw)
@@ -227,7 +237,7 @@ var Knitter = {
 	        	z = z + 1;
 	        }
 		if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom ) {
-	              //console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
+	  //console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
 			return this.url + z + "/" + x + "/" + y + "." + this.type;
 		} else {
 			return "http://www.maptiler.org/img/none.png";
@@ -302,11 +312,11 @@ var Knitter = {
 						if (lat > maxlat) maxlat = lat 
 						if (lon < minlon) minlon = lon 
 						if (lat < minlat) minlat = lat 
-               			        	lonsum += lon
-               			        	latsum += lat
+   			        	lonsum += lon
+   			        	latsum += lat
 						loncount += 1
 						latcount += 1
-	                		})
+	    		})
 				}
 			},this)
 			if (latcount > 0) Cartagen.go_to((maxlat+minlat)/2,(maxlon+minlon)/2,Map.zoom)
@@ -347,3 +357,19 @@ var Knitter = {
 		})
 	},
 }
+
+function osm_getTileURL(bounds) {
+	var res = this.map.getResolution();
+	var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+	var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+	var z = this.map.getZoom();
+	var limit = Math.pow(2, z);
+	
+	if (y < 0 || y >= limit) {
+	    return "http://www.maptiler.org/img/none.png";
+	} else {
+	    x = ((x % limit) + limit) % limit;
+	    return this.url + z + "/" + x + "/" + y + "." + this.type;
+	}
+}
+

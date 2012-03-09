@@ -1,6 +1,7 @@
 class Export < ActiveRecord::Base
 
 	validates_inclusion_of :export_type, :in => %w(normal nrg ndvi)
+	belongs_to :map
 
 	# fetches bands column from db and separates it by "," and ":" into a nested array
 	# [["infrared",<map_id>],["ultraviolet",<map_id>]
@@ -46,8 +47,12 @@ class Export < ActiveRecord::Base
 		hist
 	end
 
-	def self.exporting
+	def self.export_count
 		Export.count :all, :conditions => ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now-24.hours).to_s(:db)]
+	end
+
+	def self.exporting
+		Export.find :all, :conditions => ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now-24.hours).to_s(:db)]
 	end
 
 end

@@ -207,12 +207,22 @@
 		<p><i>This map has not been exported yet. <a href="http://publiclaboratory.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
 	<% end %>
 
+	<% if @map.license == "publicdomain" || "cc-by" %>
+	<p>Learn how to <a href="http://publiclaboratory.org/wiki/editing-openstreetmap-balloon-maps">use your map to contribute to OpenStreetMap</a>.</p>
+	<% end %>
 </div>
+
+<% if @export && @export.jpg %>
+<div class='box'>
+<p><a class="button" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg">Print this map</a>
+</p>
+<p>Order a poster-sized print of this map. It may take a moment to generate the poster so please be patient. If this is your map, we may be able to offer a discount; please <a href="mailto:retail@publiclaboratory.org">get in touch</a>.</p>
+</div>
+<% end %>
 
 <div class='box'>
         <h3>Multispectral export formats</h3>
         <p>If this map has been composited with another to generate infrared composite layers, they will be displayed here.</p>
-
 	<% @export = @map.get_export('nrg') %>
         <%= render :partial => "formats" %>
 </div>  
