@@ -45,8 +45,7 @@
 	<a style="float:left;" href="/"><img src="/images/mapknitter-small-masked.png"/></a>
 	<div id="toolbars">
 	<div class="toolbar">
-            <a name='Embed this map on your site' class='first silk' href="javascript:void(0);" onClick="Interface.display_knitter_iframe()"><img src="/images/silk-grey/page_white_code.png" /></a>
-            <a name='Edit map details' class='silk' href="/map/edit/<%= @map.name %>" target="_blank"><img src="/images/silk-grey/map_edit.png" /></a>
+            <a name='View map details' class='first silk' href="/map/view/<%= @map.name %>" target="_blank"><img src="/images/silk-grey/map_edit.png" /></a>
             <a name='Export your map in standard GIS formats' class='last silk' href="javascript:void(0);" target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:'90%',afterHide: function() {Knitter.cancel_updaters()}})" href="javascript:void(0);"><img src="/images/silk-grey/map_go.png" /></a>
             <!--<a id="tool_trace" name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>-->
     	</div>

@@ -21,17 +21,13 @@ class MapController < ApplicationController
   end
 
   def view
-    edit
-  end
-
-  def edit
     @map = Map.find_by_name params[:id]
     @export = @map.latest_export
     if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"] 
       @images = @map.flush_unplaced_warpables
     else
       flash[:error] = "That password is incorrect." if params[:password] != nil
-      redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+      redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
     end
   end
 
@@ -120,14 +116,14 @@ class MapController < ApplicationController
         else
           flash[:error] = "Location not recognized"
         end
-        redirect_to '/map/edit/'+@map.name
+        redirect_to '/map/view/'+@map.name
       else
         flash[:error] = "That password is incorrect." if params[:password] != nil
-        redirect_to "/map/login/"+params[:id]+"?to=/map/edit/"+params[:id]
+        redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
       end
     rescue
         flash[:error] = "Geocoding failed. Please enter a more specific address."
-        redirect_to "/map/edit/"+params[:id]
+        redirect_to "/map/view/"+params[:id]
     end 
   end
 

@@ -1,4 +1,6 @@
-<% if @export && @export.tms %>
+<% if @export && @export.tms && nrg = @map.get_export('nrg') %>
+<iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
+<% elsif @export && @export.tms %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17"></iframe>
 <% else %>
 <p><i>This map has not been exported yet. <a href="http://publiclaboratory.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
@@ -212,8 +214,7 @@
         <p>If this map has been composited with another to generate infrared composite layers, they will be displayed here.</p>
 
 	<% @export = @map.get_export('nrg') %>
-        <%= render :template => "export/formats", :object => @map.get_export('nrg') %>
-        <%# render :partial => "formats" %>
+        <%= render :partial => "formats" %>
 </div>  
 
 </div>

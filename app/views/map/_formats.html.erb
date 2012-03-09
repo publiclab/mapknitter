@@ -2,8 +2,15 @@
 <% unless @export.nil? %>
 <% if @export.tms %>
 <p>
-<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
-<a target="_blank" href="/tms/<%= @map.name %>">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
+<% if @export.export_type == "nrg" %>
+	<a target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>-nrg/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a><br />
+	<a target="_blank" href="/tms/<%= @map.name %>-nrg/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
+	<a target="_blank" href="/tms/<%= @map.name %>-nrg/">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
+<% else %>
+	<a target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a><br />
+	<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
+	<a target="_blank" href="/tms/<%= @map.name %>/">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
+<% end %>
 <% if @export.zip %><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a><% end %>
 <br />
 <a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
@@ -12,7 +19,11 @@
 <% end %>
 <% if @export.geotiff %>
 <p>
-<a href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+<% if @export.export_type == "nrg" %>
+	<a href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+<% else %>
+	<a href="/export/geotiff/<%= @map.name %>-nrg.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+<% end %>
 </p>
 <% end %>
 <% if @export.jpg %>

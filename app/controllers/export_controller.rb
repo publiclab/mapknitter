@@ -23,8 +23,7 @@ class ExportController < ApplicationController
   	def formats
 		@map = Map.find params[:id] 
 		@export = @map.get_export(params[:type])
-		#render :layout => false
-		render :layout => "hello dumb world"
+		render :layout => false
 	end
 
 	def cancel
