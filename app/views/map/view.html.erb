@@ -14,6 +14,10 @@
 		<small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a>
 		<% if admin && @map.email != '' %><<a href="mailto:<%= @map.email %>"><%= @map.email %></a>>,</a><% end %></small>
 	</p>
+
+	<% if @map.description %>
+	<p><%= @map.description %></p>
+	<% end %>
 	
 	<h3 style="clear:left;padding-top:12px;"><a class="button" style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
 
