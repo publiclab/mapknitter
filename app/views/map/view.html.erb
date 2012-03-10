@@ -1,4 +1,4 @@
-<% if @export && @export.tms && nrg = @map.get_export('nrg') %>
+<% if nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17"></iframe>
@@ -207,7 +207,7 @@
 		<p><i>This map has not been exported yet. <a href="http://publiclaboratory.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
 	<% end %>
 
-	<% if @map.license == "publicdomain" || "cc-by" %>
+	<% if @map.license == "publicdomain" || @map.license == "cc-by" %>
 	<p><a href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">Use your map to contribute to OpenStreetMap</a>.</p>
 	<% end %>
 </div>
