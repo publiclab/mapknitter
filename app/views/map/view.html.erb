@@ -208,7 +208,7 @@
 	<% end %>
 
 	<% if @map.license == "publicdomain" || "cc-by" %>
-	<p>Learn how to <a href="http://publiclaboratory.org/wiki/editing-openstreetmap-balloon-maps">use your map to contribute to OpenStreetMap</a>.</p>
+	<p><a href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">Use your map to contribute to OpenStreetMap</a>.</p>
 	<% end %>
 </div>
 
