@@ -117,6 +117,14 @@ var Knitter = {
 			} );
 			map.addLayer(gsat)
 		} else if (layer == 'osm') {
+			var mapbox = new OpenLayers.Layer.TMS( "MapBox OpenStreetMap",
+				[ "http://a.tile.mapbox.com/","http://b.tile.mapbox.com/",
+					"http://c.tile.mapbox.com/","http://d.tile.mapbox.com/" ],
+				{ 'layername': 'mapbox.mapbox-streets', 'type':'jpg',
+					'buffer': 0, 'transitionEffect':'resize', 
+					attribution: 'rendered by <a href="http://mapbox.com">MapBox</a>, from <a href="http://www.openstreetmap.org/">OpenStreetMap data</a>'} );
+			map.addLayer(mapbox)
+		} else if (layer == 'osm') {
 			var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
 	    "http://tile.openstreetmap.org/",
 	    { type: 'png', getURL: osm_getTileURL, displayOutsideMaxExtent: true, attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'} );
