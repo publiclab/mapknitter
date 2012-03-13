@@ -1,6 +1,6 @@
 <p><small><i>(<a href="http://publiclaboratory.org/wiki/map-formats">Learn what to do</a> with these formats)</i></small></p>
 <% unless @export.nil? %>
-<% if @export.tms %>
+<% if @export.tms || @export.export_type == "nrg" %>
 <p>
 <% if @export.export_type == "nrg" %>
 	<a target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>-nrg/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a><br />
