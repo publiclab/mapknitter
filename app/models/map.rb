@@ -41,6 +41,7 @@ class Map < ActiveRecord::Base
   # get latest export of export_type <export_type>, i.e. "normal", "nrg" or "ndvi"
   def get_export(export_type)
     Export.find_by_map_id(self.id,:conditions => {:export_type => export_type},:order => "created_at DESC")
+    
   end
 
   def self.authors
