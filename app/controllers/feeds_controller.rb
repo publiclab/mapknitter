@@ -2,7 +2,14 @@ class FeedsController < ApplicationController
 
   def all
     #(Warpable.all + Map.all).sort_by(&:created_at)
-    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => ''},:joins => :warpables)
+    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => ''},:joins => :warpables, :group => "maps.id")
+    render :layout => false
+    response.headers["Content-Type"] = "application/xml; charset=utf-8"
+  end
+
+  def plots
+    #(Warpable.all + Map.all).sort_by(&:created_at)
+    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => ''},:joins => :exports, :group => "maps.id")
     render :layout => false
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
