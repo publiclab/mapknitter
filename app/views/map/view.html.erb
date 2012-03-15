@@ -8,6 +8,8 @@
 
 <br style="clear:left;" />
 
+<% if !map.private && map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= map.warpables.first.public_filename(:medium) %>" /><% end %>
+
 <div id="main">
 	<h2><%= @map.name %></h2>	
 	<p>
