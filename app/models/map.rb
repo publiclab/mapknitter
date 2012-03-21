@@ -373,4 +373,12 @@ class Map < ActiveRecord::Base
     end
   end
 
+  def license_link
+	if self.license == "cc-by"
+		"<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>" 
+	elsif self.license == "publicdomain"
+		"<a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public Domain</a>"
+	end
+  end
+
 end
