@@ -20,6 +20,12 @@ class MapController < ApplicationController
     render "map/index"
   end
 
+  def license
+    @maps = Map.find :all, :conditions => {:password => '',:license => params[:id]}, :order => 'updated_at DESC'
+    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    render "map/search"
+  end
+
   def view
     @map = Map.find_by_name params[:id]
     @export = @map.latest_export

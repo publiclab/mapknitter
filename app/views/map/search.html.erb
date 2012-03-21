@@ -1,5 +1,11 @@
 <div id="main">
+	<% if params[:action] == "license" && params[:id] == "cc-by" %>
+	<h2>Maps licensed as <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons</a></h2>
+	<% elsif params[:action] == "license" && params[:id] == "publicdomain" %>
+	<h2>Maps released into the <a href="http://creativecommons.org/publicdomain/zero/1.0/">Public Domain</a></h2>
+	<% else %>
 	<h1>Search results for '<%= params[:id] %>'</h1>
+	<% end %>
 	<% if @maps.length == 0 %>
 	<p><i>No maps found </i></a>
 	<% end %>
