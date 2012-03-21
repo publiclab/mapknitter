@@ -116,7 +116,7 @@ var Knitter = {
 	                1.194328566789627, 0.5971642833948135]
 			} );
 			map.addLayer(gsat)
-		} else if (layer == 'osm') {
+		} else if (layer == 'mapbox') {
 			var mapbox = new OpenLayers.Layer.TMS( "MapBox OpenStreetMap",
 				[ "http://a.tile.mapbox.com/","http://b.tile.mapbox.com/",
 					"http://c.tile.mapbox.com/","http://d.tile.mapbox.com/" ],
@@ -190,6 +190,9 @@ var Knitter = {
 		//console.log(lat1,lon1,lat2,lon2)
 		//console.log(bounds)
 		//console.log('initial extent based on viewport sync with Cartagen')
+
+		//scalebar = new OpenLayers.Control.ScaleBar();
+		//map.addControl(scalebar);
 		
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()

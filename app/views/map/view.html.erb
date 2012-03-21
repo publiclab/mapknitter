@@ -8,10 +8,12 @@
 
 <br style="clear:left;" />
 
+<% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.public_filename(:medium) %>" /><% end %>
+
 <div id="main">
 	<h2><%= @map.name %></h2>	
 	<p>
-		<small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a>
+		<small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a> (<a href="/feeds/author/<%= @map.author %>">RSS</a>)
 		<% if admin && @map.email != '' %><<a href="mailto:<%= @map.email %>"><%= @map.email %></a>>,</a><% end %></small>
 	</p>
 
