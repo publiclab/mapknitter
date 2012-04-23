@@ -126,8 +126,15 @@ var Knitter = {
 			map.addLayer(mapbox)
 		} else if (layer == 'osm') {
 			var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
-	    "http://tile.openstreetmap.org/",
-	    { type: 'png', getURL: osm_getTileURL, displayOutsideMaxExtent: true, attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'} );
+	    			"http://tile.openstreetmap.org/",
+	    			{ type: 'png', 
+				numZoomLevels: 23,
+				maxZoomLevel: 22,
+				getURL: osm_getTileURL, 
+				displayOutsideMaxExtent: true, 
+				attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+				} 
+			);
 			map.addLayer(osm)
 		} else if (layer == 'bing') {
 			var apiKey = "AhYrUtF-jMIlTiblfgB_spQXBgc3u1_4h1mrgm_vEmyrnHLbA8v8452MolECULTX"
