@@ -1,3 +1,7 @@
+<% zoom = (-Math.log((maxlon-minlon)/360)/Math.log(2))+2 %>
+
+<h1><%= zoom %></h1>
+
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
