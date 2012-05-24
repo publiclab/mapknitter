@@ -25,6 +25,8 @@
 	<p><%= @map.description %></p>
 	<% end %>
 	
+	<p><a href="http://www.openstreetmap.org/?lat=<%= @map.lat %>&lon=<%= @map.lon %>">View this location in OpenStreetMap</a></p>
+
 	<h3 style="clear:left;padding-top:12px;"><a class="button" style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
 
 	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>

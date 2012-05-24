@@ -49,6 +49,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'import/:name', :controller => "warper", :action => "import"
 
   map.connect 'author/list', :controller => 'author', :action => 'list'
+  map.connect 'author/emails', :controller => 'author', :action => 'emails'
   map.connect 'author/:id', :controller => 'author', :action => 'show'
   map.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 

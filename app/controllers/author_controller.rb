@@ -15,4 +15,18 @@ class AuthorController < ApplicationController
 		end
 	end
 
+	def emails
+		@maps = Map.find :all
+		if APP_CONFIG["password"] != params[:password]
+			redirect_to "/" 
+		else 
+			emails = []
+			@maps.each do |map|
+				emails << map.email
+			end
+			emails = emails.uniq
+			render :text => emails.join(','), :template => false
+		end
+	end
+
 end

@@ -5,15 +5,17 @@ class Map < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
   validates_format_of       :name,
-                            :with => /[a-zA-Z0-9_-]/,  
+                            :with => /^[\w-]*$/,  
                             :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
                             :on => :create                  
+  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+
   has_many :warpables
   has_many :exports
 
   def validate
     self.name != 'untitled'
-    self.name = self.name.gsub(' ','-')
+    self.name = self.name.gsub(' ','-').gsub('_','-').downcase
     self.lat >= -90 && self.lat <= 90 && self.lon >= -180 && self.lat <= 180
   end
 
