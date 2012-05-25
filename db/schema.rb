@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111006153011) do
+ActiveRecord::Schema.define(:version => 20120525201148) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -23,7 +23,10 @@ ActiveRecord::Schema.define(:version => 20111006153011) do
     t.boolean  "geotiff",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "zip",          :default => false,  :null => false
+    t.boolean  "zip",          :default => false,    :null => false
+    t.text     "bands_string",                       :null => false
+    t.string   "export_type",  :default => "normal", :null => false
+    t.integer  "user_id",      :default => 0
   end
 
   create_table "maps", :force => true do |t|
@@ -46,6 +49,8 @@ ActiveRecord::Schema.define(:version => 20111006153011) do
     t.boolean  "archived",                                    :default => false,       :null => false
     t.text     "tile_url",                                                             :null => false
     t.text     "tile_layer",                                                           :null => false
+    t.string   "license",                                     :default => "copyright"
+    t.integer  "user_id",                                     :default => 0
   end
 
   create_table "nodes", :force => true do |t|
@@ -60,6 +65,22 @@ ActiveRecord::Schema.define(:version => 20111006153011) do
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
   end
+
+  create_table "users", :force => true do |t|
+    t.string   "login",                     :limit => 40
+    t.string   "name",                      :limit => 100, :default => ""
+    t.string   "email",                     :limit => 100
+    t.string   "crypted_password",          :limit => 40
+    t.string   "salt",                      :limit => 40
+    t.string   "identity_url",              :limit => 40
+    t.string   "role",                      :limit => 40
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "remember_token",            :limit => 40
+    t.datetime "remember_token_expires_at"
+  end
+
+  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
   create_table "warpables", :force => true do |t|
     t.integer  "parent_id"
@@ -79,19 +100,6 @@ ActiveRecord::Schema.define(:version => 20111006153011) do
     t.float    "cm_per_pixel", :default => 0.0,   :null => false
   end
 
-  create_table "warpeds", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "transform_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "ways", :force => true do |t|
     t.string   "color",                                       :default => "red"
     t.string   "author",                                      :default => "anonymous"
@@ -103,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20111006153011) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
+    t.boolean  "complete",                                    :default => true
   end
 
 end
