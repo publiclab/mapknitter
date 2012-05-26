@@ -50,11 +50,10 @@ ActionController::Routing::Routes.draw do |map|
   # consider removing the them or commenting them out if you're using named routes and resources.
 
   # Registered user pages:
-  map.profile '/profile', :controller => 'users', :action => 'profile'
+  map.profile '/profile/:id', :controller => 'users', :action => 'profile'
   map.dashboard '/dashboard', :controller => 'users', :action => 'dashboard'
-  map.assign '/map/assign', :controller => 'map', :action => 'assign'
+  map.assign '/assign/:id', :controller => 'map', :action => 'assign'
   #map.comments '/comments', :controller => 'users', :action => 'comments'
-
 
   map.root :controller => "map", :action => "index"
 

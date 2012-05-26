@@ -2,8 +2,10 @@ require 'digest/sha1'
 
 class User < ActiveRecord::Base
   include Authentication
-  include Authentication::ByPassword
+#  include Authentication::ByPassword
   include Authentication::ByCookieToken
+
+  has_many :maps
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
@@ -47,5 +49,4 @@ class User < ActiveRecord::Base
     write_attribute :email, (value ? value.downcase : nil)
   end
 
-  
 end

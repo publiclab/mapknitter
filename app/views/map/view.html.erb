@@ -1,6 +1,6 @@
-<% zoom = (-Math.log((maxlon-minlon)/360)/Math.log(2))+2 %>
+<%# zoom = (-Math.log((maxlon-minlon)/360)/Math.log(2))+2 %>
 
-<h1><%= zoom %></h1>
+<!--<h1><%#= zoom %></h1>-->
 
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
@@ -25,8 +25,6 @@
 	<p><%= @map.description %></p>
 	<% end %>
 	
-	<p><a href="http://www.openstreetmap.org/?lat=<%= @map.lat %>&lon=<%= @map.lon %>">View this location in OpenStreetMap</a></p>
-
 	<h3 style="clear:left;padding-top:12px;"><a class="button" style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
 
 	<% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
@@ -187,8 +185,6 @@
 	    
 
 		</script>
-		<label for="author">Author</label><br />
-		<input class="text" type="text" name="map[author]" value="<%= @map.author %>" id="author"><br />
 		<p><%= recaptcha_tags :display => {:theme => "white"} %></p>
 		<label for="description">Description</label><br />
 		<textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea><br />

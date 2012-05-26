@@ -97,12 +97,10 @@ class MapController < ApplicationController
     @map.save
   end
 
-  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
   def update_map
     begin
       @map = Map.find(params[:map][:id])
       if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
-      @map.author = params[:map][:author]
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
@@ -215,6 +213,7 @@ class MapController < ApplicationController
     @maps = @maps.paginate :page => params[:page], :per_page => 24
   end
  
+  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
   def update
     @map = Map.find(params[:id])
     @map.lat = params[:lat]
@@ -385,12 +384,12 @@ class MapController < ApplicationController
         @maps.each do |map|
           map.user_id = @user.id
           map.author = @user.login
-          map.save
+          map.save!
         end
         flash[:notice] = "Assigned "+@maps.length.to_s+" maps to "+@user.login
         redirect_to "/"
       else
-        @maps = Map.find_all_by_author(params[:id])
+        @maps = Map.find_all_by_author(params[:author])
       end
     else
       flash[:error] = "You must be logged in and an admin to assign maps."

@@ -25,7 +25,7 @@
                 <% if logged_in? %>
                 || 
                 <a href="/dashboard">Dashboard</a> | 
-                <a href="/profile"><%=h current_user.login %></a> | 
+                <a href="/profile/<%= current_user.login %>"><%=h current_user.login %></a> | 
                 <%= link_to 'Logout', logout_path %>
                 <% else %>
                 || <%= link_to 'Log in', login_path %>
