@@ -1,0 +1,17 @@
+<h1>Log In</h1>
+
+<p><i>Use your <a href="http://publiclaboratory.org">PublicLaboratory.org</a> username to log in. If you do not yet have one, sign up there first!</i></p>
+
+<p><i>To associate your maps with your new account, please email <a href="mailto:web@publiclaboratory.org">web@publiclaboratory.org</a></i></p>
+
+<% form_tag session_path do -%>
+<p><%= label_tag 'login' %><br />
+<%= text_field_tag 'login', @login %></p>
+
+<input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
+
+<p><%= label_tag 'remember_me', 'Remember me' %>
+<%= check_box_tag 'remember_me', '1', @remember_me %></p>
+
+<p><%= submit_tag 'Log in' %></p>
+<% end -%>

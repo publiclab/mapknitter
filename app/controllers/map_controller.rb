@@ -97,12 +97,10 @@ class MapController < ApplicationController
     @map.save
   end
 
-  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
   def update_map
     begin
       @map = Map.find(params[:map][:id])
       if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
-      @map.author = params[:map][:author]
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
 	location = GeoKit::GeoLoc.geocode(params[:map][:location])
@@ -174,8 +172,8 @@ class MapController < ApplicationController
             :tiles => params[:tiles],
             :location => params[:location]})
       end
+      @map.user_id = current_user.id if logged_in?
       if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
-      #if @map.save
         redirect_to :action => 'show', :id => @map.name
       else
 	index
@@ -215,6 +213,7 @@ class MapController < ApplicationController
     @maps = @maps.paginate :page => params[:page], :per_page => 24
   end
  
+  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
   def update
     @map = Map.find(params[:id])
     @map.lat = params[:lat]
@@ -286,6 +285,7 @@ class MapController < ApplicationController
 	begin
 		unless export = map.get_export(export_type) # searches only "normal" exports
 			export = Export.new({:map_id => map.id,:status => 'starting'})
+			export.user_id = current_user.id if logged_in?
 		end
 		export.status = 'starting'
 		export.tms = false
@@ -373,6 +373,28 @@ class MapController < ApplicationController
 
   def exports
     render :text => ActiveSupport::JSON.encode(Export.exporting) if params[:password] == APP_CONFIG["password"]
+  end
+
+  def assign
+    if logged_in? && current_user.role == "admin"
+      if params[:claim] == "true"
+        # assign each spectrum the current user's id
+        @user = User.find_by_login(params[:id])
+        @maps = Map.find_all_by_author(params[:author])
+        @maps.each do |map|
+          map.user_id = @user.id
+          map.author = @user.login
+          map.save!
+        end
+        flash[:notice] = "Assigned "+@maps.length.to_s+" maps to "+@user.login
+        redirect_to "/"
+      else
+        @maps = Map.find_all_by_author(params[:author])
+      end
+    else
+      flash[:error] = "You must be logged in and an admin to assign maps."
+      redirect_to "/login"
+    end
   end
 
 end

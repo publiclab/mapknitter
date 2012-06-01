@@ -2,6 +2,8 @@
 # Likewise, all the methods added will be available for all controllers.
 require_dependency 'password'
 
+include AuthenticatedSystem
+
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 

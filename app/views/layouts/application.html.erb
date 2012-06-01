@@ -18,9 +18,19 @@
 	<div id="header">
 		<div class="right">
 			<a href="http://publiclaboratory.org/wiki/mapknitter">Intro</a> |
-			<a href="http://publiclaboratory.org/tool/balloon-mapping">Aerial photography guide</a> |
+			<a href="http://publiclaboratory.org/tool/balloon-mapping">Aerial photography</a> |
 			<a href="http://publiclaboratory.org/wiki/mapknitter-help">Help</a> |
 			<a href="http://publiclaboratory.org/archive">Map Archive</a>
+
+                <% if logged_in? %>
+                || 
+                <a href="/dashboard">Dashboard</a> | 
+                <a href="/profile/<%= current_user.login %>"><%=h current_user.login %></a> | 
+                <%= link_to 'Logout', logout_path %>
+                <% else %>
+                || <%= link_to 'Log in', login_path %>
+                <% end %>
+
 		</div>
 		<a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
 	<br style="clear:both;" />
@@ -45,7 +55,7 @@
 
 	<div id="footer">
 		<p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a> hosted by the <a href="http://publiclaboratory.org">Public Laboratory for Open Technology and Science</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a>.</p>
-		<p>MapKnitter uses <a href="http://gdal.org">GDAL</a>, <a href="http://leaflet.cloudmade.org">Leaflet</a>, <a href="http://openlayers.org">OpenLayers</a>, <a href="http://prototypejs.org">Prototype</a>, <a href="http://rubyonrails.org">Ruby on Rails</a> and other open source software.</p>
+		<p>MapKnitter uses <a href="http://gdal.org">GDAL</a>, <a href="http://leaflet.cloudmade.org">Leaflet</a>, <a href="http://openlayers.org">OpenLayers</a>, <a href="http://prototypejs.org">Prototype</a>, <a href="http://rubyonrails.org">Ruby on Rails</a>, <a href="http://imagemagick.org">ImageMagick</a>, and other open source software.</p>
 	</div>
 
 <script type="text/javascript">
