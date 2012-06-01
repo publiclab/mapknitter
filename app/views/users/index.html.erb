@@ -1,0 +1,7 @@
+<h2>Users (<%= @users.length %>)</h2>
+
+<% @users.each do |user| %>
+<div class="user">
+	<a href="/profile/<%= user.login %>"><%= user.login %></a> (<%= user.maps.length %> maps) - <%= time_ago_in_words(user.created_at) %> ago
+</div>
+<% end %>

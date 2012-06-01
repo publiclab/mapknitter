@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
+
+  def index
+    @users = User.find :all
+  end
   
   def profile
     @user = User.find_by_login(params[:id])
