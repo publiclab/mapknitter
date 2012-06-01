@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120525215158) do
+ActiveRecord::Schema.define(:version => 20120601185008) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(:version => 20120525215158) do
     t.string   "email",                     :limit => 100
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40
-    t.string   "identity_url",              :limit => 40
+    t.string   "identity_url"
     t.string   "role",                      :limit => 40,  :default => "basic"
     t.datetime "created_at"
     t.datetime "updated_at"

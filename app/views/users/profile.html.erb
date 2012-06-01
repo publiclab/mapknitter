@@ -1,5 +1,5 @@
 <div id="main">
-	<h2><%= @user.login %> (<%= current_user.maps.length %> maps)</h2>
+	<h2><%= @user.login %><% if @user.maps %> (<%= @maps.length %> maps)<% end %></h2>
 
 	<p><a href="http://publiclaboratory.org/people/<%= @user.login %>">Public Lab profile &raquo;</a></p>
 

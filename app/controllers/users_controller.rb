@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   end
   
   def profile
+    params[:id] = current_user.login if logged_in? && params[:id] == 0
     @user = User.find_by_login(params[:id])
     @maps = @user.maps
     @maps = @maps.paginate :page => params[:page], :per_page => 24

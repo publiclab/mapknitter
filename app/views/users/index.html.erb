@@ -5,3 +5,23 @@
 	<a href="/profile/<%= user.login %>"><%= user.login %></a> (<%= user.maps.length %> maps) - <%= time_ago_in_words(user.created_at) %> ago
 </div>
 <% end %>
+
+<% if current_user.role == "admin" %>
+
+<h2>Assign maps</h2>
+
+<form action="/map/assign">
+
+<label for="id">MapKnitter user:</label>
+<input type="text" name="id"/>
+
+<br />
+<label for="id">Map author name:</label>
+<input type="text" name="author"/>
+
+<br />
+<input type="submit" value="Search"/>
+
+</form>
+
+<% end %>
