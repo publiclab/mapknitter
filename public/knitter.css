@@ -133,6 +133,7 @@ img {
 	background:#888;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#555))
 }
+
 .toolbar a.first {
 	border-left:1px solid #555;
 	-moz-border-radius-topleft:5px;
@@ -147,6 +148,39 @@ img {
 	-moz-border-radius-bottomright:5px;
 	-webkit-border-bottom-right-radius:5px;
 }
+.toolbar a.blue {
+	width:auto;
+	background:#469;
+	border-color:#235;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#469), to(#358))
+}
+.toolbar a.green {
+	width:auto;
+	background:#294;
+	border-color:#040;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#294), to(#183))
+}
+.toolbar a.blue, .toolbar a.green {
+	padding-left:22px;
+	padding-right:22px;
+}
+.toolbar a.blue:hover {
+	background:#555;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#358), to(#247))
+}
+.toolbar a.blue:active {
+	background:#888;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#247), to(#136))
+}
+.toolbar a.green:hover {
+	background:#555;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#183), to(#072))
+}
+.toolbar a.green:active {
+	background:#888;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#072), to(#061))
+}
+
 .toolbar a.silk img {
 	padding-top:4px;
 }
