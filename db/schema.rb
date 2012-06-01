@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120229164021) do
+ActiveRecord::Schema.define(:version => 20120525215158) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20120229164021) do
     t.text     "tile_url",                                                             :null => false
     t.text     "tile_layer",                                                           :null => false
     t.string   "license",                                     :default => "copyright"
+    t.integer  "user_id",                                     :default => 0
   end
 
   create_table "nodes", :force => true do |t|
@@ -72,7 +73,7 @@ ActiveRecord::Schema.define(:version => 20120229164021) do
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40
     t.string   "identity_url",              :limit => 40
-    t.string   "role",                      :limit => 40
+    t.string   "role",                      :limit => 40,  :default => "basic"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "remember_token",            :limit => 40
@@ -99,6 +100,19 @@ ActiveRecord::Schema.define(:version => 20120229164021) do
     t.float    "cm_per_pixel", :default => 0.0,   :null => false
   end
 
+  create_table "warpeds", :force => true do |t|
+    t.integer  "parent_id"
+    t.string   "content_type"
+    t.string   "filename"
+    t.string   "thumbnail"
+    t.integer  "size"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "transform_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ways", :force => true do |t|
     t.string   "color",                                       :default => "red"
     t.string   "author",                                      :default => "anonymous"
@@ -110,7 +124,6 @@ ActiveRecord::Schema.define(:version => 20120229164021) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
-    t.boolean  "complete",                                    :default => true
   end
 
 end
