@@ -173,6 +173,8 @@ class MapController < ApplicationController
             :location => params[:location]})
       end
       @map.user_id = current_user.id if logged_in?
+      @map.author = current_user.login if logged_in?
+      @map.email = current_user.email if logged_in?
       if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
         redirect_to :action => 'show', :id => @map.name
       else

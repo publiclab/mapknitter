@@ -3,7 +3,12 @@ class UsersController < ApplicationController
   include AuthenticatedSystem
 
   def index
-    @users = User.find :all
+    if logged_in?
+      @users = User.find :all
+    else
+      flash[:error] = "You must log in to view that page."
+      redirect_to "/login"
+    end
   end
   
   def profile
