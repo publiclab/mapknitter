@@ -74,7 +74,8 @@ var Knitter = {
 	  			tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
 		    units: "m",
 				projection: latlon,
-   			displayProjection: spher_merc,
+				//numZoomLevels: 22, 
+ 	 			displayProjection: spher_merc,
        				maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
 				maxResolution: 156543.0339
 			});
@@ -139,7 +140,12 @@ var Knitter = {
 		} else if (layer == 'bing') {
 			var apiKey = "AhYrUtF-jMIlTiblfgB_spQXBgc3u1_4h1mrgm_vEmyrnHLbA8v8452MolECULTX"
 			//Only in later versions of OpenLayers: //var bingsat = new OpenLayers.Layer.Bing("Aerial", {type: "Aerial", apiKey:apiKey, sphericalMercator:true});
-			var bingsat = new OpenLayers.Layer.VirtualEarth("Virtual Earth Aerial",	{'type': VEMapStyle.Aerial, 'sphericalMercator': true, numZoomLevels: 20 });
+			var bingsat = new OpenLayers.Layer.VirtualEarth("Virtual Earth Aerial",	{
+				'type': VEMapStyle.Aerial, 
+				numZoomLevels: 23,
+				maxZoomLevel: 22,
+				'sphericalMercator': true
+			});
 			map.addLayer(bingsat)
 		} else if (layer == 'yahoo') {
 			var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 22});
