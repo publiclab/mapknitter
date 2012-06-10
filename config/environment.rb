@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.11' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -43,6 +43,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3"
   # you also need to install 'freeimage':
   ##### sudo port install freeimage
+  ##### or: sudo aptitude install libfreeimage3 libfreeimage-dev
   # we also need davetroy-geohash, but it's not in the default gem sources, so try adding github to your gem sources:
   # gem sources -a http://gems.github.com
   # then run:
