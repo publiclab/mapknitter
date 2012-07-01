@@ -41,6 +41,25 @@
 		<br style="clear:left;" />
 	</div>
 
+	<h2>Tags</h2>
+	
+	<p>
+	<% if @map.tags %>
+	<% @map.tags.each_with_index do |tag,i| %>
+	        <a href="/tag/<%= tag.name %>"><%= tag.name %></a><%= "," unless i == @map.tags.length-1 %>
+	<% end %>
+	<% end %>
+	</p>
+	<% if logged_in? %>
+	<p>
+	<form id="tag" action="/tag/create">
+	        <input type="text" name="tag[name]" />
+	        <input type="hidden" name="tag[map_id]" value="<%= @map.id %>" />
+	        <input type="submit" value="Tag" />
+	</form>
+	</p>
+	<% end %>		
+
 	<h2>Nearby maps</h2>
 	<div id="list">
 		<% odd = true %>
@@ -83,7 +102,7 @@
 		<% end %>
 	</div>
 	<br style="clear:both;" />
-	
+
 	<h2 id="comments">Comments</h2>
 
 	<p>No comments (feature in development)</p>

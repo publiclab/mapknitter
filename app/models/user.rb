@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
 
   has_many :maps
+  has_many :tags
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40

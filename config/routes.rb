@@ -4,6 +4,8 @@ ActionController::Routing::Routes.draw do |map|
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.resources :users
+  map.tags '/tag/create', :controller => 'tag', :action => 'create'
+  map.tags '/tag/:id', :controller => 'tag', :action => 'show'
 
   map.open_id_complete '/session', :controller => "session", :action => "create", :conditions => { :method => :get }
   map.resource :session
