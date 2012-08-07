@@ -329,7 +329,7 @@ class Map < ActiveRecord::Base
 		end
 	end
 	first = true
-	warpables = self.warpables.sort{|a,b|b.cm_per_px <=> a.cm_per_px}
+	warpables = self.warpables.sort{|a,b|b.poly_area <=> a.poly_area}
 	warpables.each do |warpable|
         	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
 		if first

@@ -38,6 +38,34 @@ class Warpable < ActiveRecord::Base
     end
   end 
 
+  def poly_area
+	area = 0
+	nodes = self.nodes_array
+	nodes.each_with_index do |node,index|
+		if index < nodes.length-1
+			nextnode = nodes[index+1]
+		else
+			nextnode = nodes[0]
+		end
+		if index > 0
+			last = nodes[index-1]
+		else
+			last = nodes[nodes.length-1]
+		end
+		scale = 20037508.34
+		# inefficient but workable, we don't use this that often:
+
+    		nodey = Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
+    		nodex = Cartagen.spherical_mercator_lon_to_x(node.lon,scale)
+    		lasty = Cartagen.spherical_mercator_lat_to_y(last.lat,scale)
+    		lastx = Cartagen.spherical_mercator_lon_to_x(last.lon,scale)
+    		nexty = Cartagen.spherical_mercator_lat_to_y(nextnode.lat,scale)
+    		nextx = Cartagen.spherical_mercator_lon_to_x(nextnode.lon,scale)
+		area += lastx*nodey-nodex*lasty+nodex*nexty-nextx*nodey
+	end
+	(area/2).abs
+  end
+
   def get_cm_per_pixel
 	unless self.width.nil? || self.nodes == ''
 		nodes = self.nodes_array

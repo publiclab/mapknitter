@@ -104,6 +104,7 @@ img.export_status {
 		$('inactive_export_button').hide() 
 	},
 	});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
+</div>
 
 <span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
  (recommended resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
