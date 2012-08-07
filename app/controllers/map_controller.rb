@@ -276,7 +276,9 @@ class MapController < ApplicationController
   def composite
 	# write this in map model, really
 	@map = Map.find_by_name params[:id]
-	@map.composite(params[:type],params[:infrared])
+	if Rails.env.development? || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+		@map.composite(params[:type],params[:infrared])
+	end
         render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
 

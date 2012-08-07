@@ -44,7 +44,6 @@ class Map < ActiveRecord::Base
   # get latest export of export_type <export_type>, i.e. "normal", "nrg" or "ndvi"
   def get_export(export_type)
     Export.find_by_map_id(self.id,:conditions => {:export_type => export_type},:order => "created_at DESC")
-    
   end
 
   def self.authors
@@ -330,7 +329,8 @@ class Map < ActiveRecord::Base
 		end
 	end
 	first = true
-	self.warpables.each do |warpable|
+	warpables = self.warpables.sort{|a,b|b.cm_per_px <=> a.cm_per_px}
+	warpables.each do |warpable|
         	geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
 		if first
 			gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
