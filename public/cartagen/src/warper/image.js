@@ -70,7 +70,6 @@ Warper.Image = Class.create(
 		this.highlight_length = ms
 	},
 
-
 	/**
 	 * Duh.
 	 */
@@ -193,6 +192,7 @@ Warper.Image = Class.create(
 		this.active_point = false
 		Events.arrow_keys_enabled = true
 		Event.stopObserving(document, 'keyup', Warper.keyup) // custom keyup handler
+		Knitter.update_map_to_center()
 	},
 
 	select_point: function(point) {

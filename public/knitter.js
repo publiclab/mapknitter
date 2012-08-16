@@ -25,9 +25,6 @@ var Knitter = {
 		},
 	},
 	setup: function() {
-		Glop.observe('pan:mouseup', function () {
-			Knitter.save_current_location()
-		})
 		Glop.observe('glop:predraw', function() { $C.clear();})
 		// disable default "delete" key (in Chrome it goes "back")
 		window.addEventListener ('keydown', function (e) {
@@ -217,12 +214,22 @@ var Knitter = {
 			
 		Knitter.save.submitted()
 		// Is this necessary if nothing has happened on the map yet?
+		Knitter.update_map(Map.lat,Map.lon,Map.zoom,layer)
+	},
+
+	update_map_to_center: function() {
+		loc = Knitter.find_map_center()
+		Knitter.update_map(loc.lat,loc.lon,loc.zoom,false)
+	},
+
+	update_map: function(lat,lon,zoom,layer) {
+		layer = layer || false
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
 			parameters: {
-				lat: Map.lat,
-				lon: Map.lon,
-				zoom: Map.zoom,
+				lat: lat,
+				lon: lon,
+				zoom: zoom,
 				tiles: layer,
 				tile_url: Config.tile_url,
 				tile_layer: Config.tile_layer
@@ -319,8 +326,8 @@ var Knitter = {
 		Knitter.background_transparent = !Knitter.background_transparent
 	},
 
-	center_on_warpables: function() {
-		if (warpables.length > 0) {
+	find_map_center: function() {
+		if (warpables.length > 0) { 
 			var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
 			var maxlat = 0,maxlon = 0,minlat = 0,minlon = 0
 			warpables.each(function(warpable){
@@ -336,18 +343,29 @@ var Knitter = {
 						if (lat > maxlat) maxlat = lat 
 						if (lon < minlon) minlon = lon 
 						if (lat < minlat) minlat = lat 
-   			        	lonsum += lon
-   			        	latsum += lat
+   				        	lonsum += lon
+   				        	latsum += lat
 						loncount += 1
 						latcount += 1
-	    		})
+			    		})
 				}
 			},this)
-			if (latcount > 0) Cartagen.go_to((maxlat+minlat)/2,(maxlon+minlon)/2,Map.zoom)
-			// the "+2" is a hack... this equation would work without it if the map were only one tile wide.
-			map.zoomTo(parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2)
-		}
+			zoom = parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2
+			return { lat:(maxlat+minlat)/2,
+				lon:(maxlon+minlon)/2,
+				zoom:zoom,
+				width:maxlon-minlon
+			}
+		} else { return false }
 	},
+	
+	center_on_warpables: function() {
+		loc = Knitter.find_map_center()
+		Cartagen.go_to(loc.lat,lon,loc.zoom)
+		// the "+2" is a hack... this equation would work without it if the map were only one tile wide.
+		map.zoomTo(parseInt(-Math.log((loc.width)/360)/Math.log(2))+2)
+	},
+
 	export_tabs: ['export_intro','export_options','export_multispectral'],
 	export_hide_tabs: function() {
 		Knitter.export_tabs.each(function(tab) {

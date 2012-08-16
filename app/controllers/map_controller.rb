@@ -222,7 +222,7 @@ class MapController < ApplicationController
     @map.lon = params[:lon]
     @map.vectors = true if params[:vectors] == 'true'
     @map.vectors = false if params[:vectors] == 'false'
-    if params[:tiles]
+    if params[:tiles] && params[:tiles] != 'false'
       @map.tiles = params[:tiles]
       if params[:tiles] == "TMS" || params[:tiles] == "WMS" 
         @map.tile_url = params[:tile_url] 
