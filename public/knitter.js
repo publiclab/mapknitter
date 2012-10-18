@@ -361,7 +361,7 @@ var Knitter = {
 	
 	center_on_warpables: function() {
 		loc = Knitter.find_map_center()
-		Cartagen.go_to(loc.lat,lon,loc.zoom)
+		Cartagen.go_to(loc.lat,loc.lon,loc.zoom)
 		// the "+2" is a hack... this equation would work without it if the map were only one tile wide.
 		map.zoomTo(parseInt(-Math.log((loc.width)/360)/Math.log(2))+2)
 	},

@@ -9,8 +9,8 @@ class FeedsController < ApplicationController
 
   def plots
     #(Warpable.all + Map.all).sort_by(&:created_at)
-    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => 'cc-by'},:joins => :exports, :group => "maps.id")
-    @maps = @maps+Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => 'publicdomain'},:joins => :exports, :group => "maps.id")
+    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => ["archived = false AND password = '' AND license = 'cc-by' AND author != 'anonymous'"],:joins => :exports, :group => "maps.id")
+    @maps = @maps+Map.find(:all,:order => "id DESC",:limit => 20, :conditions => ["archived = false AND password = '' AND license = 'publicdomain' AND author != 'anonymous'"],:joins => :exports, :group => "maps.id")
     render :layout => false
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
