@@ -269,6 +269,7 @@ class MapController < ApplicationController
   end
 
   def layers
+	@map = Map.find params[:id]
 	render :layout => false
   end
 
