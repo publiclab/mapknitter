@@ -65,12 +65,14 @@ Object.extend(Geohash, {
 	 * @see Geohash.get_objects
 	 */
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
-		// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
-			this.get_objects()
-			this.last_get_objects[3] = false
-			//$l('re-getting-objects')
-			Cartagen.last_loaded_geohash_frame = Glop.frame
+		if (Config.vectors) {
+			if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
+			// if (Geohash.objects.length == 0 || Math.abs(this.last_get_objects[0] - Map.x) > 50 || Math.abs(this.last_get_objects[1] - Map.y) > 50) {
+				this.get_objects()
+				this.last_get_objects[3] = false
+				//$l('re-getting-objects')
+				Cartagen.last_loaded_geohash_frame = Glop.frame
+			}
 		}
 	},
 	/**
@@ -403,7 +405,7 @@ Object.extend(Geohash, {
 		this.key = this.get_key(Map.lat, Map.lon, this.key_length)
 		
 		var bbox = decodeGeoHash(this.key) //[lon1, lat2, lon2, lat1]
-		
+
 		this.fill_bbox(this.key, this.keys)
 		this.get_keys_upward(this.key)
 

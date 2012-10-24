@@ -54,7 +54,7 @@ var TaskManager = Class.create(
 		
 		this.get_completed(cur_tasks)
 		
-		Geohash.get_objects()
+		if (Config.vectors) Geohash.get_objects()
 		Glop.trigger_draw()
 		
 		if (this.tasks.length < 1) this.stop()
