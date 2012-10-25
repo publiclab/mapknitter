@@ -203,18 +203,17 @@ var Knitter = {
 
 		//scalebar = new OpenLayers.Control.ScaleBar();
 		//map.addControl(scalebar);
-		
+			
 		if (Config.tile_switcher) {
 	         	var switcherControl = new OpenLayers.Control.LayerSwitcher()
 			map.addControl(switcherControl);
-	    switcherControl.maximizeControl();
+	    		switcherControl.maximizeControl();
 		}
 		Knitter.openLayersDraw()
 		Glop.observe('glop:draw', Knitter.openLayersDraw)
-			
-		Knitter.save.submitted()
-		// Is this necessary if nothing has happened on the map yet?
-		Knitter.update_map(Map.lat,Map.lon,Map.zoom,layer)
+		//Knitter.update_map(Map.lat,Map.lon,Map.zoom,layer)
+		setTimeout(Knitter.update_map_to_center,1000)
+		
 	},
 
 	update_map_to_center: function() {
@@ -223,6 +222,7 @@ var Knitter = {
 	},
 
 	update_map: function(lat,lon,zoom,layer) {
+		Knitter.save.submitted()
 		layer = layer || false
 		new Ajax.Request('/map/update/'+Knitter.map_id,{
 			method: 'get',
