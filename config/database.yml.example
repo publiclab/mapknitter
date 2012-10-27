@@ -1,17 +1,11 @@
 development:
-  adapter: mysql
-  database: cartagen_development
-  username: 
-  password: 
+  adapter: sqlite3
+  database: production.db
 
 production:
-  adapter: mysql
-  database: cartagen_production
-  username: 
-  password: 
+  adapter: sqlite3
+  database: production.db
 
 test:
-  adapter: mysql
-  database: cartagen_test
-  username: 
-  password: 
+  adapter: sqlite3
+  database: test.db
