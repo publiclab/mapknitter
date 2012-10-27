@@ -273,7 +273,7 @@ var Cartagen = {
 		this.label_queue = []
 
 		/**
-		 *@name Cartagen#cartagen:predraw
+		 *@name Cartagen#cartagen:postdraw
 		 *Fires just after labels are drawn
 		 *@event
 		 */

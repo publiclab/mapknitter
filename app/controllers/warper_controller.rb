@@ -9,6 +9,7 @@ class WarperController < ApplicationController
 
   def new
     @map_id = params[:id]
+    render :layout => false
   end
 
   def create
@@ -47,6 +48,7 @@ class WarperController < ApplicationController
 
   def uploaded_confirmation
     @warpable = Warpable.find params[:id]
+    render :layout => false
   end
   
   def show

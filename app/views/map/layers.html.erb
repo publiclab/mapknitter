@@ -20,3 +20,11 @@
 <p><a href="javascript:void(0);" onClick="Knitter.start_openlayers('none');Modalbox.hide();location.reload()">no tile background layer</a></p>
 
 <a href="javascript:void(0);" onClick="Modalbox.hide();" >cancel</a>
+
+<h1>Nearby maps</h1>
+
+<% @map.nearby_maps(0.03).each do |map| %>
+	<% if !map.archived && !map.private && map.warpables.length > 0 %>
+<p><a href="javascript:void(0);" onClick="Knitter.start_openlayers('TMS','http://mapknitter.org/tms/<%= map.name %>/');Modalbox.hide();location.reload()"><%= map.name %></a> (by <a href="/author/<%= map.author %>"><%= map.author %></a>)</p>
+	<% end %>
+<% end %>

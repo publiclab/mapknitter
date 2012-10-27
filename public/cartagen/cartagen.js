@@ -6819,7 +6819,7 @@ var TaskManager = Class.create(
 
 		this.get_completed(cur_tasks)
 
-		Geohash.get_objects()
+		if (Config.vectors) Geohash.get_objects()
 		Glop.trigger_draw()
 
 		if (this.tasks.length < 1) this.stop()
@@ -8856,10 +8856,12 @@ Object.extend(Geohash, {
 		Glop.observe('cartagen:postdraw', this.draw_bboxes.bindAsEventListener(this))
 	},
 	draw: function() {
-		if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
-			this.get_objects()
-			this.last_get_objects[3] = false
-			Cartagen.last_loaded_geohash_frame = Glop.frame
+		if (Config.vectors) {
+			if (this.last_get_objects[3] || Geohash.objects.length == 0 || Map.zoom/this.last_get_objects[2] > 1.1 || Map.zoom/this.last_get_objects[2] < 0.9 || Math.abs(this.last_get_objects[0] - Map.x) > 100 || Math.abs(this.last_get_objects[1] - Map.y) > 100) {
+				this.get_objects()
+				this.last_get_objects[3] = false
+				Cartagen.last_loaded_geohash_frame = Glop.frame
+			}
 		}
 	},
 	put: function(lat,lon,feature,length) {

@@ -2,7 +2,7 @@
 
 	<p><%= @images.length %> images in this map</p>
 		<% @images.each_with_index do |image,index| %>
-		<a href="javascript:void(0);" onClick="Modalbox.hide();Warper.get_image_by_id('<%= image.id %>').highlight_for(5);Cartagen.go_to(<%= @image_locations[index][1] %>,<%= @image_locations[index][0] %>);"><img src="<%= image.public_filename(:thumb) %>" /></a>
+		<a href="javascript:void(0);" onClick="Modalbox.hide();Warper.get_image_by_id('<%= image.id %>').highlight_for(5);Cartagen.go_to(<%= @image_locations[index][1] if @image_locations[index] %>,<%= @image_locations[index][0] if @image_locations[index] %>);"><img src="<%= image.public_filename(:thumb) %>" /></a>
 		<% end %>
 	<br style="clear:both;" />
 	<p>Click on an image to center the map on its location.</p>
