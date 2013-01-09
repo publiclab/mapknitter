@@ -1,3 +1,4 @@
+<script src="http://leaflet.cloudmade.com/dist/leaflet.js"></script>
 <%# zoom = (-Math.log((maxlon-minlon)/360)/Math.log(2))+2 %>
 
 <!--<h1><%#= zoom %></h1>-->
@@ -5,10 +6,52 @@
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
-<iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>"></iframe>
+<iframe id="preview" src="/leaflet/annotate/index.html?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&notes=<% @map.annotations(0.5).each do |note| %><%= note.description %>,<%= note.lat %>,<%= note.lon %>|<% end %>"></iframe>
 <% else %>
-<p><i>This map has not been exported yet. <a href="http://publiclaboratory.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
+<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclaboratory.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
+<iframe id="preview" src="/leaflet/annotate/index.html?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&notes=<% @map.annotations(0.5).each do |note| %><%= note.description %>,<%= note.lat %>,<%= note.lon %>|<% end %>"></iframe>
 <% end %>
+
+<script>
+  var description = ""
+  annotate = function() {
+    alert('click on the map to place an annotation')
+
+    map.on('click', function(e) {
+      var description = prompt("Enter text")
+      L.marker([e.latlng.lat, e.latlng.lng]).addTo(map).bindPopup(description).openPopup();
+      $.ajax({
+         url: "/annotation/create/",
+         type: "GET",
+         data: {
+           description: description,
+           lat: e.latlng.lat,
+           lon: e.latlng.lng
+         },
+         failure: function(result) {
+           alert('failed dummy!!')
+         },
+         success: function(result) {
+           location.reload()
+         }
+      })
+    })
+  }
+  <% @map.annotations(0.5).each do |note| %>
+    L.marker([<%= note.lat %>, <%= note.lon %>]).addTo(map).bindPopup("<b><%= note.author %>:</b> <%= note.description %>").openPopup();
+  <% end %>
+</script>
+
+<style>
+  #annotations {
+    background:#333;
+    padding:4px;
+  }
+</style>
+
+<div id="annotations">
+<a style="font-family:lucida grande,sans-serif;font-size:10px;color:white;" href="javascript:void(0)" onClick="annotate()">Add annotation</a>
+</div>
 
 <br style="clear:left;" />
 
