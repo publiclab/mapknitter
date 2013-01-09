@@ -29,7 +29,7 @@
            lon: e.latlng.lng
          },
          failure: function(result) {
-           alert('failed dummy!!')
+           location.reload()
          },
          success: function(result) {
            location.reload()
@@ -49,9 +49,11 @@
   }
 </style>
 
+<% if logged_in? %>
 <div id="annotations">
 <a style="font-family:lucida grande,sans-serif;font-size:10px;color:white;" href="javascript:void(0)" onClick="annotate()">Add annotation</a>
 </div>
+<% end %>
 
 <br style="clear:left;" />
 

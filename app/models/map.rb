@@ -385,7 +385,7 @@ class Map < ActiveRecord::Base
   end
 
   def annotations(dist)
-    Node.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist])
+    Node.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
   end
 
 end
