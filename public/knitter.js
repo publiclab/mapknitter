@@ -351,10 +351,14 @@ var Knitter = {
 				}
 			},this)
 			zoom = parseInt(-Math.log((maxlon-minlon)/360)/Math.log(2))+2
-			return { lat:(maxlat+minlat)/2,
-				lon:(maxlon+minlon)/2,
-				zoom:zoom,
-				width:maxlon-minlon
+			if (loncount) {
+				return { lat:(maxlat+minlat)/2,
+					lon:(maxlon+minlon)/2,
+					zoom:zoom,
+					width:maxlon-minlon
+				}
+			} else {
+				return false
 			}
 		} else { return false }
 	},
