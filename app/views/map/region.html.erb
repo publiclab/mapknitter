@@ -1,5 +1,5 @@
 <div id="main">
-	<h2>Maps in "<%= params[:id] %>"</h2>	
+	<% if params[:id] %><h2>Maps in "<%= params[:id] %>"</h2><% else %><h2>Maps near <%= params[:minlon][0..12] %>&deg; N,<%= params[:minlon][0..12] %>&deg; W</h2><% end %>	
 	
 	<%= render :partial => 'map/list' %>
 	

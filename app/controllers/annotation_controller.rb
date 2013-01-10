@@ -16,4 +16,9 @@ class AnnotationController < ApplicationController
 		end
 	end
 
+	def index
+		@notes = Node.find :all, :order => "id DESC"
+		@notes = @notes.paginate :page => params[:page], :per_page => 24
+	end
+
 end

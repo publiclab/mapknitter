@@ -6,6 +6,7 @@ class MapController < ApplicationController
     # only maps with at least 1 warpable:
     @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id"
     @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @notes = Node.find :all, :order => "id DESC", :limit => 5
 
     respond_to do |format|
       format.html {  }
