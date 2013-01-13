@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120601185008) do
+ActiveRecord::Schema.define(:version => 20120701165519) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -64,6 +64,15 @@ ActiveRecord::Schema.define(:version => 20120601185008) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
+  end
+
+  create_table "tags", :force => true do |t|
+    t.string   "user_id"
+    t.string   "name"
+    t.integer  "map_id"
+    t.integer  "warpable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|
