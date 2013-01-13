@@ -1,0 +1,126 @@
+<div class="modal hide fade" id="pointmodal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Add an annotation</h4>
+  </div>
+  <div class="modal-body">
+    <p>Click to add a labelled point.</p>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn btn-large">Cancel</a>
+    <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_point()">Begin</a>
+  </div>
+</div>
+<div class="modal hide fade" id="polymodal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Add an annotated polygon</h4>
+  </div>
+  <div class="modal-body">
+    <p>Click to begin adding a labelled polygon. Double-click to finish the polygon.</p>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn btn-large">Cancel</a>
+    <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_poly()">Begin</a>
+  </div>
+</div>
+
+<script>
+  (function(){
+
+  <% @map.polygons(0.1).each do |poly| %>
+  $A.poly = new L.Polygon([<% poly.nodes.each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>]<%= "," if i != poly.nodes.length-1 %><% end %>],{}).addTo(map).bindPopup("<%= poly.description %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='/annotation/delete_poly/<%= poly.id %>?back=/map/view/<%= @map.name %>'>x</a>)<% end %>")
+  <% end %>
+
+  $A = {
+    description: "",
+
+    add_point: function() {
+      map.on('click', function(e) {
+        $A.description = prompt("Enter a description")
+        $A.marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+        $.ajax({
+          url: "/annotation/create/",
+          type: "GET",
+          data: {
+            description: $A.description,
+            lat: e.latlng.lat,
+            lon: e.latlng.lng
+          },
+          failure: function(r) { location.reload() },
+          success: function(r) {
+            $A.marker.bindPopup($A.description+" (<a href='/annotation/delete/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
+            map.off('click',$A.on_poly_click)
+            map.off('dblclick',$A.save_poly)
+          }
+        })
+      })
+    },
+
+    add_poly: function() {
+      map.doubleClickZoom.disable();
+      $A.poly_nodes = []
+      $A.poly_nodexy = []
+
+      // begin click loop, adding to nodes
+      map.on('click',$A.on_poly_click)
+      map.on('dblclick',$A.save_poly)
+    },
+
+    distance: function(x,y,x2,y2) {
+      return Math.sqrt(Math.abs(x-x2)*Math.abs(x-x2)+Math.abs(y-y2)*Math.abs(y-y2))
+    },
+    on_poly_click: function(e) {
+      
+      // store new point
+      $A.poly_nodes.push([e.latlng.lat,e.latlng.lng])
+      $A.poly_nodexy.push([e.originalEvent.offsetX,e.originalEvent.offsetY])
+      if ($A.poly) {
+        // draw poly
+        $A.poly.addLatLng([e.latlng.lat,e.latlng.lng])
+      } else {
+        // create if none
+        $A.poly = new L.Polygon([[e.latlng.lat,e.latlng.lng]],{})
+        $A.poly.addTo(map)
+      }
+    },
+
+    save_poly: function() {   
+      $A.description = prompt("Enter a description")
+      map.off('click',$A.on_poly_click)
+      map.off('dblclick',$A.save_poly)
+      map.doubleClickZoom.enable();
+      $.ajax({
+        url: "/annotation/create_poly/",
+        type: "GET",
+        data: {
+          description: $A.description,
+          //color: ,
+          nodes: $A.poly_nodes,
+        },
+        failure: function(r) { location.reload() },
+        success: function(r) {
+          $A.poly.bindPopup($A.description+" (<a href='/annotation/delete_poly/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
+	}
+      })
+    }
+  }
+
+  })()
+</script>
+
+<style>
+  #toolbar {
+    background:#333;
+    padding:4px;
+    font-family:lucida grande, sans-serif;
+  }
+</style>
+
+<div id="toolbar">
+<% if logged_in? %>
+<a class="btn btn-small btn-inverse"  data-toggle="modal" href="#pointmodal"><i class="icon icon-comment icon-white"></i> Add annotation</a>
+<a class="btn btn-small btn-inverse" data-toggle="modal" href="#polymodal"><i class="icon icon-pencil icon-white"></i> Add poly</a>
+<% end %>
+<a class="btn btn-small btn-inverse" data-toggle="modal" href="#sharemodal"><i class="icon icon-share icon-white"></i> Share</a>
+</div>

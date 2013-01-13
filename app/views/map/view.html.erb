@@ -1,59 +1,14 @@
-<script src="http://leaflet.cloudmade.com/dist/leaflet.js"></script>
-<%# zoom = (-Math.log((maxlon-minlon)/360)/Math.log(2))+2 %>
-
-<!--<h1><%#= zoom %></h1>-->
-
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
-<iframe id="preview" src="/leaflet/annotate/index.html?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&notes=<% @map.annotations(0.5).each do |note| %><%= note.description %>,<%= note.lat %>,<%= note.lon %>|<% end %>"></iframe>
+<%= render :partial => "leaflet" %>
 <% else %>
 <p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclaboratory.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
-<iframe id="preview" src="/leaflet/annotate/index.html?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&notes=<% @map.annotations(0.5).each do |note| %><%= note.description %>,<%= note.lat %>,<%= note.lon %>|<% end %>"></iframe>
+<%= render :partial => "leaflet" %>
 <% end %>
 
-<script>
-  var description = ""
-  annotate = function() {
-    alert('click on the map to place an annotation')
-
-    map.on('click', function(e) {
-      var description = prompt("Enter text")
-      L.marker([e.latlng.lat, e.latlng.lng]).addTo(map).bindPopup(description).openPopup();
-      $.ajax({
-         url: "/annotation/create/",
-         type: "GET",
-         data: {
-           description: description,
-           lat: e.latlng.lat,
-           lon: e.latlng.lng
-         },
-         failure: function(result) {
-           location.reload()
-         },
-         success: function(result) {
-           location.reload()
-         }
-      })
-    })
-  }
-  <% @map.annotations(0.5).each do |note| %>
-    L.marker([<%= note.lat %>, <%= note.lon %>]).addTo(map).bindPopup("<b><%= note.author %>:</b> <%= note.description %>").openPopup();
-  <% end %>
-</script>
-
-<style>
-  #annotations {
-    background:#333;
-    padding:4px;
-  }
-</style>
-
-<% if logged_in? %>
-<div id="annotations">
-<a style="font-family:lucida grande,sans-serif;font-size:10px;color:white;" href="javascript:void(0)" onClick="annotate()">Add annotation</a>
-</div>
-<% end %>
+<script>$A = {}</script>
+<%= render :partial => "annotations" %>
 
 <br style="clear:left;" />
 
@@ -146,6 +101,21 @@
 			<% end %>
 		<% end %>
 	</div>
+	
+	<% if logged_in? && (@map.author == current_user.login || current_user.role == "admin") %>
+	<br style="clear:both;" />
+	<h2 id="annotations">Map annotations</h2>
+	<ul>
+	<% (@map.annotations(0.1)+@map.polygons(0.1)).each do |note| %>
+	<li class="">
+		<a href="/profile/<%= note.author %>"><%= note.author %></a> said:</b> 
+		<%= note.description %> (<a href="/annotation/delete/<%= note.id %>?back=/map/view/<%= @map.name %>">x</a>)
+	</li>
+	<% end %>
+	</ul>
+
+	<% end %>
+
 	<br style="clear:both;" />
 
 	<h2 id="comments">Comments</h2>
@@ -167,7 +137,7 @@
 <p><small>
 <% if @map.license == "publicdomain" %>
 <p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
-  <a class="badge" rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
+  <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
   To the extent possible under law,
   <a rel="dct:publisher" href="http://publiclaboratory.org">
     <span property="dct:title"><%= @map.author %></span></a>
@@ -180,7 +150,7 @@
 -->
 </p>
 <% elsif @map.license == "cc-by" %>
-<a class="badge" rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
 <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. 
 <% else %>
 &copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclaboratory.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
