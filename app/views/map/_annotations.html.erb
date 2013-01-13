@@ -47,7 +47,8 @@
           data: {
             description: $A.description,
             lat: e.latlng.lat,
-            lon: e.latlng.lng
+            lon: e.latlng.lng,
+            map_id: <%= @map.id %>
           },
           failure: function(r) { location.reload() },
           success: function(r) {
@@ -96,7 +97,8 @@
         data: {
           description: $A.description,
           //color: ,
-          nodes: $A.poly_nodes,
+          map_id: <%= @map.id %>,
+          nodes: $A.poly_nodes
         },
         failure: function(r) { location.reload() },
         success: function(r) {

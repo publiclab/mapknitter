@@ -6,6 +6,7 @@ class AnnotationController < ApplicationController
 				:description => params[:description],
 				:lat => params[:lat],
 				:lon => params[:lon],
+				:map_id => params[:map_id],
 				:author => current_user.login
 				)
 			@note.save!
@@ -53,7 +54,8 @@ class AnnotationController < ApplicationController
 			@poly = Way.new(
 				:description => params[:description],
 				:author => current_user.login,
-				:color => params[:color]
+				:color => params[:color],
+				:map_id => params[:map_id]
 				)
 			@poly.save!
 			@nodes = params[:nodes]
