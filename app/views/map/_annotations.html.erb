@@ -36,7 +36,9 @@
     description: "",
 
     add_point: function() {
-      map.on('click', function(e) {
+      map.on('click',$A.save_point) 
+    },
+    save_point: function(e) {
         $A.description = prompt("Enter a description")
         $A.marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
         $.ajax({
@@ -50,11 +52,9 @@
           failure: function(r) { location.reload() },
           success: function(r) {
             $A.marker.bindPopup($A.description+" (<a href='/annotation/delete/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
-            map.off('click',$A.on_poly_click)
-            map.off('dblclick',$A.save_poly)
+            map.off('click',$A.save_point)
           }
         })
-      })
     },
 
     add_poly: function() {
