@@ -385,7 +385,12 @@ class Map < ActiveRecord::Base
   end
 
   def annotations(dist)
-    Node.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
+    Node.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id = 0',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
+  end
+
+  def polygons(dist)
+    nodes = Node.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id != 0',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
+    Way.find(nodes.collect(&:way_id).uniq)
   end
 
 end

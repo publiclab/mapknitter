@@ -7,17 +7,3 @@
 </ul>
 
 </div>
-<div class="box" id='annotations'>
-<h3>Annotations</h3>
-
-<ul>
-<% @notes.each do |note| %>
-	<li class="">
-		<a href="/profile/<%= note.author %>"><%= note.author %></a> said:</b> 
-<a href="/map/region/?minlon=<%= note.lon-0.1 %>&minlat=<%= note.lat-0.1 %>&maxlon=<%= note.lon+0.1 %>&maxlat=<%= note.lat+0.1 %>"><%= note.description %></a>
-	</li>
-<% end %>
-</ul>
-
-<a href="/annotation/">View all &raquo;</a>
-</div>

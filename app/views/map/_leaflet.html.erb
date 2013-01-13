@@ -1,0 +1,75 @@
+<div class="modal hide fade" id="sharemodal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Share a link or embed this map on your site</h4>
+  </div>
+  <div class="modal-body">
+
+	<p><a class="btn btn-mini" target="_blank" href="">permalink</a> (click for fullscreen)</p>
+	<p><b>Embed code:</b><br />
+	<textarea id="embedcode"></textarea>
+	</p>
+
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn btn-large">Close</a>
+  </div>
+</div>
+
+<style>
+#embedcode {
+	height:100px;
+	font-size:10px;
+}
+</style>
+    
+<div id="leafletmap" style="width:100%;height:300px;"></div>
+<link rel="stylesheet" href="/leaflet/leaflet.css">
+<script src="/leaflet/leaflet.js"></script>
+<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
+<script src="/leaflet/google.js"></script>
+
+<script>
+
+  $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="'+window.location+'"></iframe>')
+  var map
+
+  (function() {
+
+	var tms = "/tms/<%= @map.name %>/{z}/{x}/{y}.png"
+	var background_tms = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+	var minZoom = 12
+	var maxZoom = 22
+	var label = "Main"
+	var zoom = <%= @map.zoom %>
+	var google = new L.Google("SATELLITE",{opacity:0.5});
+	var main = new L.TileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
+
+	map = new L.Map('leafletmap', {
+		crs:L.CRS.EPSG3857,
+		layers: [google,main]
+	});
+
+	var baseMaps = {
+	    "Google": google
+	};
+	var overlayMaps = {
+	    "Overlay": main
+	};
+ 
+	var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
+	map.addControl(layersControl);
+
+        // Annotation CODE
+
+	notes = <%= @map.annotations(0.5).to_json %>
+	$.each(notes,function(i,note) {
+		note = note['node']
+		description = note['description']
+		lat = note['lat']
+		lon = note['lon']
+		L.marker([lat,lon]).addTo(map).bindPopup(description).openPopup();
+	})
+	map.setView(new L.LatLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
+  })()
+</script> 
