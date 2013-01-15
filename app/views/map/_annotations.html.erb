@@ -18,6 +18,17 @@
   </div>
   <div class="modal-body">
     <p>Click to begin adding a labelled polygon. Double-click to finish the polygon.</p>
+    <form class="form">
+      <label for="color">Polygon color:</label>
+      <select id="color">
+        <option value="red">Red</option>
+        <option value="orange">Orange</option>
+        <option value="blue">Blue</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+        <option value="purple">Purple</option>
+      </select>
+    </form>
   </div>
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn btn-large">Cancel</a>
@@ -29,7 +40,8 @@
   (function(){
 
   <% @map.polygons(0.1).each do |poly| %>
-  $A.poly = new L.Polygon([<% poly.nodes.each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>]<%= "," if i != poly.nodes.length-1 %><% end %>],{}).addTo(map).bindPopup("<%= poly.description %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='/annotation/delete_poly/<%= poly.id %>?back=/map/view/<%= @map.name %>'>x</a>)<% end %>")
+  $A.poly = new L.Polygon([<% poly.nodes.each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>]<%= "," if i != poly.nodes.length-1 %><% end %>],{color:"<%= poly.color %>"})
+  $A.poly.addTo(map).bindPopup("<%= poly.description %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='/annotation/delete_poly/<%= poly.id %>?back=/map/view/<%= @map.name %>'>x</a>)<% end %>")
   <% end %>
 
   $A = {
@@ -81,7 +93,7 @@
         $A.poly.addLatLng([e.latlng.lat,e.latlng.lng])
       } else {
         // create if none
-        $A.poly = new L.Polygon([[e.latlng.lat,e.latlng.lng]],{})
+        $A.poly = new L.Polygon([[e.latlng.lat,e.latlng.lng]],{color:$('#color').val()})
         $A.poly.addTo(map)
       }
     },
@@ -96,13 +108,18 @@
         type: "GET",
         data: {
           description: $A.description,
-          //color: ,
+          color: $('#color').val(),
           map_id: <%= @map.id %>,
           nodes: $A.poly_nodes
         },
         failure: function(r) { location.reload() },
         success: function(r) {
           $A.poly.bindPopup($A.description+" (<a href='/annotation/delete_poly/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
+          // add to layer based on color
+          // color = $('#color').val()
+          //if (!$A.layer[color]) $A.legend[color] = []
+          //$A.layer[color].push($A.poly)
+          $A.poly = false
 	}
       })
     }

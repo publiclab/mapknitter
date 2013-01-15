@@ -64,6 +64,7 @@ class AnnotationController < ApplicationController
 					:lat => node[1][0],
 					:lon => node[1][1],
 					:way_id => @poly.id,
+					:map_id => params[:map_id],
 					:author => current_user.login
 					)
 				note.save!

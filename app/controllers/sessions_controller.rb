@@ -16,6 +16,17 @@ class SessionsController < ApplicationController
     redirect_back_or_default('/')
   end
 
+  # only on local installations, to bypass OpenID; add "local: true" to config/config.yml
+  def local
+    if APP_CONFIG["local"] == true && @user = User.find_by_login(params[:login])
+      self.current_user = @user
+      successful_login
+    else
+      flash[:error] = "Forbidden"
+      redirect_to "/"
+    end
+  end
+
 protected
 
   def successful_login
@@ -51,6 +62,4 @@ protected
       end
     end
   end
-
-
 end
