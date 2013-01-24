@@ -36,94 +36,21 @@
   </div>
 </div>
 
+<script src="/javascripts/annotation.js" type="text/javascript"></script>
 <script>
   (function(){
 
   <% @map.polygons(0.1).each do |poly| %>
-  $A.poly = new L.Polygon([<% poly.nodes.each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>]<%= "," if i != poly.nodes.length-1 %><% end %>],{color:"<%= poly.color %>"})
+  $A.poly = new L.Polygon([<% Node.find_all_by_way_id(poly.id, :order => "way_order DESC").each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>,<%= note.way_order %>/<%= note.id %>]<%= "," if i != poly.nodes.length-1 %>
+<% end %>],{color:"<%= poly.color %>"})
   $A.poly.addTo(map).bindPopup("<%= poly.description %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='/annotation/delete_poly/<%= poly.id %>?back=/map/view/<%= @map.name %>'>x</a>)<% end %>")
+  $A.poly = false
   <% end %>
 
-  $A = {
-    description: "",
-
-    add_point: function() {
-      map.on('click',$A.save_point) 
-    },
-    save_point: function(e) {
-        $A.description = prompt("Enter a description")
-        $A.marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-        $.ajax({
-          url: "/annotation/create/",
-          type: "GET",
-          data: {
-            description: $A.description,
-            lat: e.latlng.lat,
-            lon: e.latlng.lng,
-            map_id: <%= @map.id %>
-          },
-          failure: function(r) { location.reload() },
-          success: function(r) {
-            $A.marker.bindPopup($A.description+" (<a href='/annotation/delete/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
-            map.off('click',$A.save_point)
-          }
-        })
-    },
-
-    add_poly: function() {
-      map.doubleClickZoom.disable();
-      $A.poly_nodes = []
-      $A.poly_nodexy = []
-
-      // begin click loop, adding to nodes
-      map.on('click',$A.on_poly_click)
-      map.on('dblclick',$A.save_poly)
-    },
-
-    distance: function(x,y,x2,y2) {
-      return Math.sqrt(Math.abs(x-x2)*Math.abs(x-x2)+Math.abs(y-y2)*Math.abs(y-y2))
-    },
-    on_poly_click: function(e) {
-      
-      // store new point
-      $A.poly_nodes.push([e.latlng.lat,e.latlng.lng])
-      $A.poly_nodexy.push([e.originalEvent.offsetX,e.originalEvent.offsetY])
-      if ($A.poly) {
-        // draw poly
-        $A.poly.addLatLng([e.latlng.lat,e.latlng.lng])
-      } else {
-        // create if none
-        $A.poly = new L.Polygon([[e.latlng.lat,e.latlng.lng]],{color:$('#color').val()})
-        $A.poly.addTo(map)
-      }
-    },
-
-    save_poly: function() {   
-      $A.description = prompt("Enter a description")
-      map.off('click',$A.on_poly_click)
-      map.off('dblclick',$A.save_poly)
-      map.doubleClickZoom.enable();
-      $.ajax({
-        url: "/annotation/create_poly/",
-        type: "GET",
-        data: {
-          description: $A.description,
-          color: $('#color').val(),
-          map_id: <%= @map.id %>,
-          nodes: $A.poly_nodes
-        },
-        failure: function(r) { location.reload() },
-        success: function(r) {
-          $A.poly.bindPopup($A.description+" (<a href='/annotation/delete_poly/"+r+"?back=/map/view/<%= @map.name %>'>x</a>)").openPopup();
-          // add to layer based on color
-          // color = $('#color').val()
-          //if (!$A.layer[color]) $A.legend[color] = []
-          //$A.layer[color].push($A.poly)
-          $A.poly = false
-	}
-      })
-    }
-  }
+  $A.initialize({
+    map_id: <%= @map.id %>,
+    map_name: "<%= @map.name %>"
+  })
 
   })()
 </script>

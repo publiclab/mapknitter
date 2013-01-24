@@ -32,6 +32,10 @@ class AnnotationController < ApplicationController
 	def delete_poly
 		@poly = Way.find params[:id]
 		if logged_in? && (current_user.login == @poly.author || current_user.role == "admin")
+			@nodes = Node.find_all_by_way_id @poly.id
+			@nodes.each do |n|
+				n.delete
+			end
 			@poly.destroy
 			flash[:notice] = "Annotation deleted."
 			redirect_to params[:back]
@@ -63,6 +67,7 @@ class AnnotationController < ApplicationController
 				note = Node.new(
 					:lat => node[1][0],
 					:lon => node[1][1],
+					:way_order => node[1][2],
 					:way_id => @poly.id,
 					:map_id => params[:map_id],
 					:author => current_user.login
