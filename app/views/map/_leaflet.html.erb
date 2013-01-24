@@ -60,16 +60,6 @@
 	var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
 	map.addControl(layersControl);
 
-        // Annotation CODE
-
-	notes = <%= @map.annotations(0.5).to_json %>
-	$.each(notes,function(i,note) {
-		note = note['node']
-		description = note['description']
-		lat = note['lat']
-		lon = note['lon']
-		L.marker([lat,lon]).addTo(map).bindPopup(description).openPopup();
-	})
 	map.setView(new L.LatLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
   })()
 </script> 

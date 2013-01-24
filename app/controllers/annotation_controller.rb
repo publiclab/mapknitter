@@ -25,7 +25,7 @@ class AnnotationController < ApplicationController
 			redirect_to params[:back]
 		else
 			flash[:error] = "You can't do that unless you're logged in."
-			redirect_to "/home"
+			redirect_to "/"
 		end
 	end
 

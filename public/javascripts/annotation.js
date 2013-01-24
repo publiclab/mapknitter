@@ -1,6 +1,8 @@
 $A = {
   description: "",
   node_index: 0,
+  polygons: {},
+  points: {},
   initialize: function(args) {
     this.map_id = args['map_id']
     this.map_name = args['map_name']
@@ -22,7 +24,8 @@ $A = {
         },
         failure: function(r) { location.reload() },
         success: function(r) {
-          $A.marker.bindPopup($A.description+" (<a href='/annotation/delete/"+r+"?back=/map/view/"+$A.map_name+"'>x</a>)").openPopup();
+          $A.marker.bindPopup($A.description+" (<a href='#' onClick='$A.delete_point("+r+")'>x</a>)").openPopup();
+          $A.points[''+r] = $A.marker
           map.off('click',$A.save_point)
         }
       })
@@ -74,14 +77,40 @@ $A = {
       },
       failure: function(r) { location.reload() },
       success: function(r) {
-        $A.poly.bindPopup($A.description+" (<a href='/annotation/delete_poly/"+r+"?back=/map/view/"+$A.map_name+"'>x</a>)").openPopup();
+        $A.poly.bindPopup($A.description+" (<a href='#' onClick='$A.delete_poly("+r+")'>x</a>)").openPopup();
         // add to layer based on color
         // color = $('#color').val()
         //if (!$A.layer[color]) $A.legend[color] = []
         //$A.layer[color].push($A.poly)
+        $A.polygons[''+r] = $A.poly
         $A.poly = false
         $A.node_index = 0 // track order of nodes
       }
     })
+  },
+
+  delete_point: function(id) {
+    $.ajax({
+      url: "/annotation/delete/"+id+"?back=/map/view/"+$A.map_name,
+      type: "GET",
+      failure: function(r) { alert('Annotation deletion failed. This may be a bug!') },
+      success: function(r) { 
+        alert('Deleted annotation') 
+        map.removeLayer($A.points[""+id])
+      }
+    })
+  },
+
+  delete_poly: function(id) {
+    $.ajax({
+      url: "/annotation/delete_poly/"+id+"?back=/map/view/"+$A.map_name,
+      type: "GET",
+      failure: function(r) { alert('Polygon deletion failed. This may be a bug!') },
+      success: function(r) { 
+        alert('Deleted polygon') 
+        map.removeLayer($A.polygons[""+id])
+      }
+    })
   }
+
 }
