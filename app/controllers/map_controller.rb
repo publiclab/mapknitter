@@ -279,7 +279,8 @@ class MapController < ApplicationController
 	# write this in map model, really
 	@map = Map.find_by_name params[:id]
 	if Rails.env.development? || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-		@map.composite(params[:type],params[:infrared])
+		# BRINGS SYSTEM TO A HALT! inspect ulimit params
+		#@map.composite(params[:type],params[:infrared])
 	end
         render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
