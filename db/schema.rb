@@ -110,19 +110,6 @@ ActiveRecord::Schema.define(:version => 20130113164917) do
     t.float    "cm_per_pixel", :default => 0.0,   :null => false
   end
 
-  create_table "warpeds", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "transform_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "ways", :force => true do |t|
     t.string   "color",                                       :default => "red"
     t.string   "author",                                      :default => "anonymous"
@@ -134,6 +121,7 @@ ActiveRecord::Schema.define(:version => 20130113164917) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
+    t.boolean  "complete",                                    :default => true
     t.integer  "map_id",                                      :default => 0
   end
 
