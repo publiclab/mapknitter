@@ -43,7 +43,7 @@
   <% @map.polygons(0.1).each do |poly| %>
   $A.poly = new L.Polygon([<% Node.find_all_by_way_id(poly.id, :order => "way_order DESC").each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>,<%= note.way_order %>/<%= note.id %>]<%= "," if i != poly.nodes.length-1 %>
 <% end %>],{color:"<%= poly.color %>"})
-  $A.poly.addTo(map).bindPopup("<%= poly.description %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='#' onClick='$A.delete_poly(<%= poly.id %>)'>x</a>)<% end %>")
+  $A.poly.addTo(map).bindPopup("<%= poly.body.gsub('"','\"').gsub("'","\'") %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='#' onClick='$A.delete_poly(<%= poly.id %>)'>x</a>)<% end %>")
   $A.polygons['<%= poly.id %>'] = $A.poly
   <% end %>
   $A.poly = false
@@ -51,7 +51,7 @@
   notes = <%= @map.annotations(0.5).to_json %>
   $.each(notes,function(i,note) {
     note = note['node']
-    description = note['description']
+    description = note['body']
     <% if logged_in? || (logged_in? && current_user.role == 'admin') %>
     if (note['author'] == '<%= current_user.login %>') {
       description += " (<a href='#' onClick='$A.delete_point("+note['id']+")'>x</a>)"

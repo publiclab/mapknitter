@@ -3,7 +3,7 @@ class AnnotationController < ApplicationController
 	def create
 		if logged_in?
 			@note = Node.new(
-				:description => params[:description],
+				:body => params[:description],
 				:lat => params[:lat],
 				:lon => params[:lon],
 				:map_id => params[:map_id],
@@ -56,7 +56,7 @@ class AnnotationController < ApplicationController
 		if logged_in?
 			params[:color] ||= "red"
 			@poly = Way.new(
-				:description => params[:description],
+				:body => params[:description],
 				:author => current_user.login,
 				:color => params[:color],
 				:map_id => params[:map_id]
