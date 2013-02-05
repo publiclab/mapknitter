@@ -46,7 +46,7 @@ class AnnotationController < ApplicationController
 	end
 
 	def index
-		@notes = Node.find :all, :order => "id DESC"
+		@notes = Node.find :all, :order => "id DESC", :conditions => ['map_id != 0 AND way_id = 0']
 		@notes = @notes.paginate :page => params[:page], :per_page => 24
 	end
 
