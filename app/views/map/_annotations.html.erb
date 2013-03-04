@@ -61,7 +61,7 @@
     lon = note['lon']
     marker = L.marker([lat,lon])
     $A.points[""+note['id']] = marker
-    marker.addTo(map).bindPopup(description).openPopup();
+    marker.addTo(map).bindPopup(description)
   })
 
   $A.initialize({
