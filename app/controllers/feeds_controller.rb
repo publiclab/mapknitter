@@ -22,7 +22,7 @@ class FeedsController < ApplicationController
   end
 
   def author
-    @maps = Map.find_all_by_author(params[:id],:order => "id DESC", :conditions => {:archived => false, :password => ''},:joins => :warpables)
+    @maps = Map.find_all_by_author(params[:id],:order => "id DESC", :conditions => {:archived => false, :password => ''},:joins => :warpables, :group => "maps.id")
     images = []
     @maps.each do |map|
       images = images + map.warpables
