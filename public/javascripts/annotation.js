@@ -1,12 +1,43 @@
 $A = {
   description: "",
   node_index: 0,
+  fullscreen: false,
   polygons: {},
   points: {},
   initialize: function(args) {
     this.map_id = args['map_id']
     this.map_name = args['map_name']
   },
+
+  toggle_fullscreen: function() {
+    if ($A.fullscreen) $A.end_fullscreen()
+    else $A.enter_fullscreen()
+  },
+  enter_fullscreen: function() {
+    $A.fullscreen = true
+    $('#leafletmap').css('position','absolute')
+    $('#leafletmap').css('top',0)
+    $('#leafletmap').css('left',0)
+    $('#leafletmap').css('z-index',10)
+    $('#toolbar').css('position','absolute')
+    $('#toolbar').css('bottom',0)
+    $('#toolbar').css('left',0)
+    $('#toolbar').css('width','100%')
+    $('#toolbar').css('z-index',11)
+    $('#leafletmap').css('width','100%')
+    $('#leafletmap').css('height','100%')
+    $('html').css('overflow','hidden')
+    map.invalidateSize()
+  },
+  end_fullscreen: function() {
+    $A.fullscreen = false
+    $('#leafletmap').css('position','relative')
+    $('#leafletmap').css('height','300px')
+    $('#toolbar').css('position','relative')
+    $('html').css('overflow','auto')
+    map.invalidateSize()
+  },
+
   add_point: function() {
     map.on('click',$A.save_point) 
   },
