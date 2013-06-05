@@ -81,7 +81,7 @@
 </style>
 
 <div id="toolbar">
-<% if logged_in? %>
+<% if logged_in? || @map.anon_annotatable %>
 <a class="btn btn-small btn-inverse"  data-toggle="modal" href="#pointmodal"><i class="icon icon-comment icon-white"></i> Add annotation</a>
 <a class="btn btn-small btn-inverse" data-toggle="modal" href="#polymodal"><i class="icon icon-pencil icon-white"></i> Add poly</a>
 <% end %>
