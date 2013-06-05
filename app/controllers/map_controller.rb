@@ -53,6 +53,19 @@ class MapController < ApplicationController
     redirect_to "/"
   end
 
+  def toggle_anon_annotations
+    @map = Map.find params[:id]
+    if logged_in? && current_user.login == @map.author
+      @map.anon_annotatable = !@map.anon_annotatable
+      @map.save
+      flash[:notice] = "Anonymous annotations allowed." if @map.anon_annotatable
+      flash[:notice] = "Anonymous annotations disallowed." if !@map.anon_annotatable
+    else
+      flash[:error] = "Failed to archive map. Wrong password."
+    end
+    redirect_to '/map/view/'+@map.name
+  end
+
   def delete
     if APP_CONFIG["deletion_active"] && APP_CONFIG["password"] == params[:password]
       @map = Map.find params[:id]
