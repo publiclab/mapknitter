@@ -88,4 +88,11 @@
 <a class="btn btn-small btn-inverse" data-toggle="modal" href="#sharemodal"><i class="icon icon-share icon-white"></i> Share</a>
 <a class="btn btn-small btn-inverse" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="icon icon-fullscreen icon-white"></i> Fullscreen</a>
 <a class="btn btn-small btn-inverse" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Permalink</a>
+<% if logged_in? && @map.author == current_user.login %>
+<% if @map.anon_annotatable %>
+  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Disable anonymous annotations</a>
+<% else %>
+  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Allow anonymous annotations</a>
+<% end %>
+<% end %>
 </div>
