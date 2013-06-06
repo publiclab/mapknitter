@@ -6,7 +6,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    params[:openid_url] = "publiclab.org/openid/"+params[:login] if params[:login]
+    params[:openid_url] = "publiclaboratory.org/people/"+params[:login]+"/identity" if params[:login]
+    #params[:openid_url] = "publiclab.org/openid/"+params[:login] if params[:login]
     open_id_authentication(params[:openid_url],params[:return_to])
   end
 
