@@ -3,7 +3,7 @@
 <% elsif @export && @export.tms %>
 <%= render :partial => "leaflet" %>
 <% else %>
-<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclaboratory.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
+<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
 <%= render :partial => "leaflet" %>
 <% end %>
 
@@ -127,8 +127,8 @@
 
 <% if @export %>
 <div class="box notice">
-	<p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclaboratory.org/archive">the Public Laboratory Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
-	<p><a class="button" href="http://publiclaboratory.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
+	<p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclab.org/archive">the Public Laboratory Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
+	<p><a class="button" href="http://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
 </div>
 <% end %>
 
@@ -138,13 +138,13 @@
 <p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
   <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
   To the extent possible under law,
-  <a rel="dct:publisher" href="http://publiclaboratory.org">
+  <a rel="dct:publisher" href="http://publiclab.org">
     <span property="dct:title"><%= @map.author %></span></a>
   has waived all copyright and related or neighboring rights to
   "<span property="dct:title"><%= @map.name %></span>".
 <!--This work is published from:
 <span property="vcard:Country" datatype="dct:ISO3166"
-      content="US" about="http://publiclaboratory.org">
+      content="US" about="http://publiclab.org">
   United States</span>.
 -->
 </p>
@@ -152,7 +152,7 @@
 <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
 <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. 
 <% else %>
-&copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclaboratory.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
+&copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclab.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
 <% end %>
 </small></p>
 </div>
@@ -245,11 +245,11 @@
 		<p>Available export formats:</p>
 		<%= render :partial => "map/formats" %>
 	<% else %>
-		<p><i>This map has not been exported yet. <a href="http://publiclaboratory.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
+		<p><i>This map has not been exported yet. <a href="http://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
 	<% end %>
 
 	<% if @map.license == "publicdomain" || @map.license == "cc-by" %>
-	<p><a href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">Use your map to contribute to OpenStreetMap</a>.</p>
+	<p>Use your map to contribute to OpenStreetMap <a href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">in Potlatch</a> or <a href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">in iD</a>.</p>
 	<% end %>
 </div>
 
@@ -257,7 +257,7 @@
 <div class='box'>
 <p><a class="button" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg">Print this map</a>
 </p>
-<p>Order a poster-sized print of this map. It may take a moment to generate the poster so please be patient. If this is your map, we may be able to offer a discount; please <a href="mailto:retail@publiclaboratory.org">get in touch</a>.</p>
+<p>Order a poster-sized print of this map. It may take a moment to generate the poster so please be patient. If this is your map, we may be able to offer a discount; please <a href="mailto:retail@publiclab.org">get in touch</a>.</p>
 </div>
 <% end %>
 
