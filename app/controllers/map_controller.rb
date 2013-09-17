@@ -117,7 +117,7 @@ class MapController < ApplicationController
       if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
       @map.description = params[:map][:description]
       @map.location = params[:map][:location]
-	location = GeoKit::GeoLoc.geocode(params[:map][:location])
+	location = GeoKit::GoogleV3Geocoder.geocode(params[:map][:location])
         @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
         @map.lat = location.lat
         @map.lon = location.lng

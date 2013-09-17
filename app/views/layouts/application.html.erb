@@ -2,43 +2,42 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>PLOTS Map Knitter</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>PLOTS Map Knitter</title>
 
-		<script src="/javascripts/jquery.min.js?<%= rand() %>" type="text/javascript"></script> 
-		<link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
-		<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="/javascripts/jquery.min.js?<%= rand() %>" type="text/javascript"></script> 
+    <script src="/javascripts/jquery-ui-1.8.21.custom.min.js" type="text/javascript"></script> 
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
-		<script type="text/javascript" src="/javascripts/jquery-autocomplete/jquery.autocomplete.js"></script> 
-		<script type="text/javascript" src="/javascripts/jquery-autocomplete/lib/jquery.ajaxQueue.js"></script> 
-		<link href="/javascripts/jquery-autocomplete/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" /> 
-		<script type="text/javascript" src="/javascripts/jquery.sparkline.min.js"></script>
-		<link href="/style.css" type="text/css" media="all" rel="stylesheet" /> 
-		<link href="/feeds/all" rel="alternate" type="application/rss+xml" title="Recent maps on MapKnitter.org" />
+    <script type="text/javascript" src="/javascripts/jquery.sparkline.min.js"></script>
+    <link href="/style.css" type="text/css" media="all" rel="stylesheet" /> 
+    <link href="/feeds/all" rel="alternate" type="application/rss+xml" title="Recent maps on MapKnitter.org" />
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw&sensor=false"></script>
 
-		<script type="text/javascript">
-	
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-7636025-1']);
-		  _gaq.push(['_trackPageview']);
-		
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-	
-		</script>
-	</head>
-	<body>
-	<div id="bodywrap">
-	<div id="header">
-		<div class="right">
-			<a href="http://publiclaboratory.org/wiki/mapknitter">Intro</a> |
-			<a href="http://publiclaboratory.org/tool/balloon-mapping">Aerial photography</a> |
-			<a href="http://publiclaboratory.org/wiki/mapknitter-help">Help</a> |
-			<a href="http://publiclaboratory.org/archive">Map Archive</a>
+    <script type="text/javascript">
+  
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-7636025-1']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  
+    </script>
+  </head>
+  <body>
+  <div id="bodywrap">
+  <div id="header">
+    <div class="right">
+      <a href="http://publiclaboratory.org/wiki/mapknitter">Intro</a> |
+      <a href="http://publiclaboratory.org/tool/balloon-mapping">Aerial photography</a> |
+      <a href="http://publiclaboratory.org/wiki/mapknitter-help">Help</a> |
+      <a href="http://publiclaboratory.org/archive">Map Archive</a>
 
                 <% if logged_in? %>
                 || 
@@ -49,33 +48,33 @@
                 || <%= link_to 'Log in', login_path %>
                 <% end %>
 
-		</div>
-		<a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
-	<br style="clear:both;" />
-	</div>
+    </div>
+    <a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
+  <br style="clear:both;" />
+  </div>
 
-	<% if flash[:notice] %>
-	<div class="flash notice">
-		<%= flash[:notice] %>	
-	</div>
-	<% end %>
-	<% if flash[:error] %>
-	<div class="flash error">
-		<%= flash[:error] %>	
-	</div>
-	<% end %>
+  <% if flash[:notice] %>
+  <div class="flash notice">
+    <%= flash[:notice] %>  
+  </div>
+  <% end %>
+  <% if flash[:error] %>
+  <div class="flash error">
+    <%= flash[:error] %>  
+  </div>
+  <% end %>
 
-		<%= yield %>
+    <%= yield %>
 
-	<br style="clear:both;" />
+  <br style="clear:both;" />
 
-	</div>
+  </div>
 
-	<div id="footer">
-		<p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a> hosted by the <a href="http://publiclaboratory.org">Public Laboratory for Open Technology and Science</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a>.</p>
-		<p>MapKnitter uses <a href="http://gdal.org">GDAL</a>, <a href="http://leaflet.cloudmade.org">Leaflet</a>, <a href="http://openlayers.org">OpenLayers</a>, <a href="http://prototypejs.org">Prototype</a>, <a href="http://rubyonrails.org">Ruby on Rails</a>, <a href="http://imagemagick.org">ImageMagick</a>, and other open source software.</p>
-	</div>
+  <div id="footer">
+    <p>MapKnitter is <a href="http://github.com/jywarren/mapknitter">open source software</a> hosted by the <a href="http://publiclaboratory.org">Public Laboratory for Open Technology and Science</a>. <a href="http://github.com/jywarren/mapknitter/issues">Submit bugs here</a>.</p>
+    <p>MapKnitter uses <a href="http://gdal.org">GDAL</a>, <a href="http://leaflet.cloudmade.org">Leaflet</a>, <a href="http://openlayers.org">OpenLayers</a>, <a href="http://prototypejs.org">Prototype</a>, <a href="http://rubyonrails.org">Ruby on Rails</a>, <a href="http://imagemagick.org">ImageMagick</a>, and other open source software.</p>
+  </div>
 
-	<script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script> 
+  <script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script> 
 </body>
 </html>

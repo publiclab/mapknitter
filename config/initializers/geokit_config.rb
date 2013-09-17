@@ -26,21 +26,15 @@ if defined? Geokit
 	# This is your Google Maps geocoder key. 
 	# See http://www.google.com/apis/maps/signup.html
 	# and http://www.google.com/apis/maps/documentation/#Geocoding_Examples
-  # For whooz.org:
-  # Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQdvN0FEuVcteV705f0fnXGaYEibxS-HQqHANNxOQU4ARfIjewUoqvuaQ'
-  # For localhost:
-  # Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxRqDtX07F3nozhmEw8PcvqFmxON_BSIyX0WokMpKFKWkLQ-HTNk69dlHA'
-  # For cartagen.org:
-  # Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQ5ix9qLsIfiytjxJIRHII0JHQkKRQXtEgA8345w3Mkz92z_BDeV0SCEA'
-  # For map.cartagen.org:
-  Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw'
+        #  Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw'
+        Geokit::Geocoders::google = 'ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw'
     
 	# This is your username and password for geocoder.us.
 	# To use the free service, the value can be set to nil or false.  For 
 	# usage tied to an account, the value should be set to username:password.
 	# See http://geocoder.us
 	# and http://geocoder.us/user/signup
-	Geokit::Geocoders::geocoder_us = false 
+#	Geokit::Geocoders::geocoder_us = false 
 
 	# This is your authorization key for geocoder.ca.
 	# To use the free service, the value can be set to nil or false.  For 
@@ -59,5 +53,5 @@ if defined? Geokit
 	# Be aware that there are Terms of Use restrictions on how you can use the 
 	# various geocoders.  Make sure you read up on relevant Terms of Use for each
 	# geocoder you are going to use.
-	Geokit::Geocoders::provider_order = [:google,:us]
+	Geokit::Geocoders::provider_order = [:google_v3_geocoder]
 end
