@@ -36,8 +36,8 @@ OpenID::Consumer::IdResHandler.class_eval do
           raise OpenID::ProtocolError, "current_url is not a valid URI: #{@current_url}"
         end
 
-        [:scheme, :host, :port, :path].each do |meth|
-        #[:scheme, :host, :path].each do |meth|
+        #[:scheme, :host, :port, :path].each do |meth|
+        [:scheme, :host, :path].each do |meth|
           if msg_return_to.send(meth) != app_parsed.send(meth)
             raise OpenID::ProtocolError, "return_to #{meth.to_s} does not match"
           end

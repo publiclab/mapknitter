@@ -26,8 +26,9 @@
 				<span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
 			<% end %><br />
 			<% if map.latest_export.tms %>
-				<a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web viewer</a>
+				<a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web view</a>
 				<a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
+				<a class="tms" href="/tms/<%= map.name %>.zip">ZIP</a>
 			<% end %>
 			<% if map.latest_export.jpg %>
 				<a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
