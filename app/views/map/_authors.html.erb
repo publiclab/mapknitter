@@ -2,9 +2,12 @@
 <h3>Authors</h3>
 
 <ul>
-<% for author in Map.authors %>
+<% authors = Map.authors %>
+<% for author in authors %>
   <li><a href="/author/<%= author %>"><%= author %></a></li>
 <% end %>
 </ul>
+
+<p><%= authors.length %> authors </p>
 
 </div>

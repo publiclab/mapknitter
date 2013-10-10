@@ -5,7 +5,7 @@
   </div>
   <div class="modal-body">
 
-	<p><a class="btn btn-mini" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">permalink</a> (click for fullscreen)</p>
+	<p><a class="btn btn-mini" target="_blank" href="http://archive.publiclab.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">permalink</a> (click for fullscreen)</p>
 	<p><b>Embed code:</b><br />
 	<textarea id="embedcode"></textarea>
 	</p>
@@ -31,7 +31,7 @@
 
 <script>
 
-  $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="'+window.location+'"></iframe>')
+  $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="http://archive.publiclab.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>"></iframe>')
   var map
 
   (function() {
