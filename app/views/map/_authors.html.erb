@@ -2,8 +2,8 @@
 <h3>Authors</h3>
 
 <ul>
-<% for author in Map.authors %>
-  <li><a href="/author/<%= author %>"><%= author %></a></li>
+<% for author in Map.authors(12) %>
+  <li><a href="/profile/<%= author %>"><%= author %></a></li>
 <% end %>
 </ul>
 

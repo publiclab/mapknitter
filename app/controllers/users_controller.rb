@@ -10,6 +10,10 @@ class UsersController < ApplicationController
       redirect_to "/login"
     end
   end
+
+  def authors
+    @authors = Map.authors
+  end
   
   def profile
     params[:id] = current_user.login if logged_in? && params[:id] == 0

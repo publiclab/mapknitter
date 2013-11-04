@@ -1,44 +1,45 @@
 <div id="list">
-	<% odd = true %>
-	<% for map in @maps %>
-		<div class="map <%= 'odd' if odd %>">
-			<% if !map.private && map.warpables.length > 0 %><a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
-			<h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/profile/<%= map.author %>"><%= map.author %></a></small> </h3>
-			<p><small><%= map.location %></small></p>
-			<p class="description"><small>
-				<%= truncate(map.description,:length =>200) %>
-				<% if !map.description %><i>no description</i><% end %>
-			</small></p>
-			<p class="meta"><small>
-				<% if map.archived %><i>Archived</i> | <% end %> 
-				<a href="/map/view/<%= map.name %>">View</a> | 
-				<a href="/map/show/<%= map.name %>">Edit</a> | 
-				<% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
-				<% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
-				Updated <%= map.updated_at.to_s(:short) %> | 
-				<%= map.warpables.length %> images 
-			</small></p>
-			<p class="formats">
-			<% unless map.latest_export.nil? %>
-			<% if map.latest_export.geotiff %>
-				<a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
-				<br />
-				<span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
-			<% end %><br />
-			<% if map.latest_export.tms %>
-				<a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web view</a>
-				<a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
-				<a class="tms" href="/tms/<%= map.name %>.zip">ZIP</a>
-			<% end %>
-			<% if map.latest_export.jpg %>
-				<a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
-			<% end %>
-			<% end %>
-			</p>
-		</div>
-		<% odd = !odd %>
-	<% end %>
-	<br style="clear:both;" />
-	<%= will_paginate @maps %>
+  <% odd = true %>
+  <% for map in @maps %>
+    <div class="map <%= 'odd' if odd %>">
+      <% if !map.private && map.warpables.length > 0 %><a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
+      <h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/profile/<%= map.author %>"><%= map.author %></a></small> </h3>
+      <p><small><%= map.location %></small></p>
+      <p class="description"><small>
+        <%= truncate(map.description,:length =>200) %>
+        <% if !map.description %><i>no description</i><% end %>
+      </small></p>
+      <p class="meta"><small>
+        <% if map.archived %><i>Archived</i> | <% end %> 
+        <a href="/map/view/<%= map.name %>">View</a> | 
+        <a href="/map/show/<%= map.name %>">Edit</a> | 
+        <% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
+        <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+        Updated <%= map.updated_at.to_s(:short) %> | 
+        <%= map.warpables.length %> images 
+      </small></p>
+      <p class="formats">
+      <% latest_export = map.latest_export %>
+      <% unless latest_export.nil? %>
+      <% if latest_export.geotiff %>
+        <a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
+        <br />
+        <span class="geotiff_stats"><%= latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(latest_export.size) %>, <%= latest_export.width %> x <%= latest_export.height %> px</span>
+      <% end %><br />
+      <% if latest_export.tms %>
+        <a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web view</a>
+        <a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
+        <a class="tms" href="/tms/<%= map.name %>.zip">ZIP</a>
+      <% end %>
+      <% if latest_export.jpg %>
+        <a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
+      <% end %>
+      <% end %>
+      </p>
+    </div>
+    <% odd = !odd %>
+  <% end %>
+  <br style="clear:both;" />
+  <%= will_paginate @maps unless @unpaginated %>
 </div>
 

@@ -46,13 +46,8 @@ class Map < ActiveRecord::Base
     Export.find_by_map_id(self.id,:conditions => {:export_type => export_type},:order => "created_at DESC")
   end
 
-  def self.authors
-    authors = []
-    maps_authors = Map.find :all, :group => "maps.author", :conditions => ['password = "" AND archived = false']
-    maps_authors.each do |map|
-      authors << map.author
-    end
-    authors
+  def self.authors(limit = 50)
+    Map.find(:all, :limit => limit, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = false']).collect(&:author)
   end
 
   def self.new_maps
