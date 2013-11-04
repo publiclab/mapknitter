@@ -31,7 +31,6 @@ Rails::Initializer.run do |config|
   #config.gem "json_pure"
   config.gem "httparty"
   config.gem "geokit"
-  config.gem "google-v3-geocoder"
   #config.gem "RubyInline"
   config.gem "image_science"
   #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
