@@ -76,7 +76,12 @@ class Map < ActiveRecord::Base
 
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
-     Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
+    if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
+
+      return []
+    else
+      return Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
+    end
   end
 
   # Finds any warpables which have not been placed on the map manually, and deletes them.

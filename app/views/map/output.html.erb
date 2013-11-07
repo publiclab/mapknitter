@@ -112,7 +112,7 @@ img.export_status {
 <div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
 
 <script>
-Knitter.updaters.push(new Ajax.PeriodicalUpdater('export_progress','/export/progress/<%= @map.id %>?type=normal', {method: 'get', frequency: 5}))
+Knitter.updaters.push(new Ajax.PeriodicalUpdater('export_progress','/export/progress/<%= @map.id %>?type=normal', {method: 'get', frequency: 10}))
 new Ajax.Updater('formats','/export/formats/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>')
 </script>
 
