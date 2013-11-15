@@ -74,7 +74,7 @@ var Knitter = {
         //numZoomLevels: 22, 
           displayProjection: spher_merc,
                maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-        maxResolution: 156543.0339
+        //maxResolution: 156543.0339
       });
     }
     Knitter.openlayers_on = true;
@@ -95,27 +95,13 @@ var Knitter = {
         type: G_SATELLITE_MAP, 
         sphericalMercator: true, 
         numZoomLevels: 23,
-        maxZoomLevel: 23,
-              resolutions: [313086.0678125, 156543.03390625, 78271.516953125, 39135.7584765625,
-              19567.87923828125, 9783.939619140625, 4891.9698095703125,
-              2445.9849047851562, 1222.9924523925781, 611.4962261962891,
-              305.74811309814453, 152.87405654907226, 76.43702827453613,
-              38.218514137268066, 19.109257068634033, 9.554628534317017,
-              4.777314267158508, 2.388657133579254, 1.194328566789627,
-              0.5971642833948135, 0.25, 0.1, 0.05],
-        serverResolutions: [313086.0678125, 156543.03390625, 78271.516953125, 39135.7584765625,
-                  19567.87923828125, 9783.939619140625,
-                  4891.9698095703125, 2445.9849047851562,
-                  1222.9924523925781, 611.4962261962891,
-                  305.74811309814453, 152.87405654907226,
-                  76.43702827453613, 38.218514137268066,
-                  19.109257068634033, 9.554628534317017,
-                  4.777314267158508, 2.388657133579254,
-                  1.194328566789627, 0.5971642833948135]
+        maxZoomLevel: 23
       } );
       map.addLayer(gsat)
       // not sure why nothing else works, but this allows more zooming in!
       map.layers[0].numZoomLevels = 24
+      map.layers[0].maxZoomLevel = 24
+      map.layers[0].resolutions.push(0.29858214168548586/2,0.29858214168548586/4,0.29858214168548586/8,0.29858214168548586/16)
     } else if (layer == 'mapbox') {
       var mapbox = new OpenLayers.Layer.TMS( "MapBox OpenStreetMap",
         [ "http://a.tile.mapbox.com/","http://b.tile.mapbox.com/",

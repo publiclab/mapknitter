@@ -17,9 +17,7 @@ Warper.ControlPoint = Class.create({
 	draw: function() {
 		this.style()
 		$C.save()
-			var linewidth = 3/Map.zoom
-			if (linewidth < 1) linewidth = 1
-			$C.line_width(linewidth)
+			$C.canvas.lineWidth = 3/Map.zoom
 			// go to the object's location:
 			$C.translate(this.x,this.y)
 			// draw the object:
