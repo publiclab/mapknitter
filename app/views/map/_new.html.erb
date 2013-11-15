@@ -30,7 +30,6 @@
           $("#new_map_place").autocomplete({
             //This bit uses the geocoder to fetch address values
             source: function(request, response) {
-console.log(request.term)
               geocoder.geocode( {'address': request.term }, function(results, status) {
                 response($.map(results, function(item) {
                   return {
