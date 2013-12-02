@@ -105,10 +105,17 @@ var User = {
 	geolocate: function() {
 		// geolocate if available
 		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(User.set_loc)
+			navigator.geolocation.getCurrentPosition(User.set_loc,User.error_loc)
 			return true
 		}
 		else return false
+	},
+	/**
+	 * Sets the user's location
+	 * @param {Location} loc The Loction object passed by navigator.geolocation
+	 */
+	error_loc: function(err) {
+		alert('ERROR(' + err.code + '): ' + err.message);
 	},
 	/**
 	 * Sets the user's location

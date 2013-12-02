@@ -7650,10 +7650,13 @@ var User = {
 	},
 	geolocate: function() {
 		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(User.set_loc)
+			navigator.geolocation.getCurrentPosition(User.set_loc,User.error_loc)
 			return true
 		}
 		else return false
+	},
+	error_loc: function(err) {
+		alert('ERROR(' + err.code + '): ' + err.message);
 	},
 	set_loc: function(loc) {
 		if (loc.coords) {
