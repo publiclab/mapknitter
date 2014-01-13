@@ -92,16 +92,23 @@ var Knitter = {
     Zoom.interval = 6 
     if (layer == 'google') {
       var gsat = new OpenLayers.Layer.Google("Google Satellite", {
-        type: G_SATELLITE_MAP, 
+        type: google.maps.MapTypeId.SATELLITE, 
         sphericalMercator: true, 
         numZoomLevels: 23,
         maxZoomLevel: 23
       } );
       map.addLayer(gsat)
+      map.layers[0].mapObject.setTilt(0);
+
       // not sure why nothing else works, but this allows more zooming in!
       map.layers[0].numZoomLevels = 24
       map.layers[0].maxZoomLevel = 24
       map.layers[0].resolutions.push(0.29858214168548586/2,0.29858214168548586/4,0.29858214168548586/8,0.29858214168548586/16)
+      map.setCenter(new OpenLayers.LonLat(10.2, 48.9).transform(
+        new OpenLayers.Projection("EPSG:4326"),
+        map.getProjectionObject()
+      ), 5);
+
     } else if (layer == 'mapbox') {
       var mapbox = new OpenLayers.Layer.TMS( "MapBox OpenStreetMap",
         [ "http://a.tile.mapbox.com/","http://b.tile.mapbox.com/",
