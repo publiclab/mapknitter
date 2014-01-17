@@ -1,39 +1,36 @@
-<p><small><i>(<a href="http://publiclab.org/wiki/map-formats">Learn what to do</a> with these formats)</i></small></p>
+<div class="btn-group">
+  <a class="btn btn-mini btn-inverse" href="http://publiclab.org/wiki/map-formats"><i class="icon-white icon-question-sign"></i>&nbsp;</a>
 <% unless @export.nil? %>
-<% if @export.tms || @export.export_type == "nrg" %>
-<p>
-<% if @export.export_type == "nrg" %>
-	<a target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>-nrg/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a><br />
-	<a target="_blank" href="/tms/<%= @map.name %>-nrg/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
-	<a target="_blank" href="/tms/<%= @map.name %>-nrg/">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
-<% else %>
-	<a target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a><br />
-	<a target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a> <small>(refresh your cache if you don't see an up-to-date version)</small><br />
-	<a target="_blank" href="/tms/<%= @map.name %>/">Tiled Map Service (TMS)</a> (OSM-style <a href="/tms/<%= @map.name %>/alt">TMS here</a>)
-<% end %>
-<% if @export.zip %><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a><% end %>
-<br />
-<a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
-<a target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">Google Maps viewer</a> (beta, low res)<br />
-</p>
+
+<% if @export.jpg %>
+  <a class="btn btn-mini btn-danger" href="/export/jpg/<%= @map.name %>.jpg">JPG</a>
 <% end %>
 <% if @export.geotiff %>
-<p>
 <% if @export.export_type == "nrg" %>
-	<a href="/export/geotiff/<%= @map.name %>-nrg.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
+  <a class="btn btn-mini btn-success" href="/export/geotiff/<%= @map.name %>-nrg.tif">GeoTIFF</a>
 <% else %>
-	<a href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)
-<% end %>
-</p>
-<% end %>
-<% if @export.jpg %>
-<p>
-<a href="/export/jpg/<%= @map.name %>.jpg">JPG</a> (for faster download and printing)
-</p>
-<% end %>
-<% if false#@export.mbtiles %>
-<p>
-<a href="/export/mbtiles/<%= @map.name %>.mbtiles">mbtiles</a>
-</p>
+  <a class="btn btn-mini btn-success" href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a>
 <% end %>
 <% end %>
+
+<% if @export.tms || @export.export_type == "nrg" %>
+<% if @export.export_type == "nrg" %>
+  <a class="btn btn-mini btn-warning" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>-nrg/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
+  <a class="btn btn-mini btn-warning" target="_blank" href="/tms/<%= @map.name %>-nrg/openlayers.html">OpenLayers viewer</a>
+  <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>-nrg/">TMS</a>
+  <a class="btn btn-mini btn-info" href="/tms/<%= @map.name %>/alt">OSM-TMS</a>
+<% else %>
+  <a class="btn btn-mini btn-warning" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
+  <a class="btn btn-mini btn-warning" target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a>
+  <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/">TMS</a>
+  <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/alt">OSM-TMS</a>
+<% end %>
+<% if @export.zip %>
+  <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a>
+<% end %>
+
+<% end %>
+<% end %>
+</div>
+<hr />
+

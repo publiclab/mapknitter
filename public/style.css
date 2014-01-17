@@ -20,6 +20,9 @@ h2 { border-bottom:1px solid #bbb;padding-bottom:6px }
 h3 a { text-decoration:none; }
 h3 small { font-size:14px; }
 
+.label { font-family: Arial; }
+.btn-mini { font-family: Arial; }
+
 #header {
 	width:900px;
 	display:block;

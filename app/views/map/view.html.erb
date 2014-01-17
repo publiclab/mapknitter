@@ -14,17 +14,29 @@
 <% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.public_filename(:medium) %>" /><% end %>
 
 <div id="main">
-  <h2><%= @map.name %></h2>  
+  <h2><%= @map.name %> <small><%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px</small></h2>  
   <p>
     <small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a> (<a href="/feeds/author/<%= @map.author %>">RSS</a>)
     <% if admin && @map.email != '' %><<a href="mailto:<%= @map.email %>"><%= @map.email %></a>>,</a><% end %></small>
   </p>
 
+  <% if @export %>
+    <%= render :partial => "map/formats" %>
+  <% else %>
+    <p><i>This map has not been exported yet. <a href="http://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
+  <% end %>
+
   <% if @map.description %>
   <p><%= @map.description %></p>
   <% end %>
   
-  <h3 style="clear:left;padding-top:12px;"><a class="button" style="text-decoration:underline" href="/maps/<%= @map.name %>">Edit map &raquo;</a></h3>
+  <div>
+    <a class="btn btn-primary" href="/maps/<%= @map.name %>">Edit this map</a>
+    <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
+      <a class="btn" href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">Contribute to OpenStreetMap in iD</a>
+      <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>
+    <% end %>
+  </div>
 
   <% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
   <div id='images'>
@@ -126,11 +138,13 @@
 <div id="sidebar">
 
 <% if @export %>
-<div class="box notice">
-  <p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclab.org/archive">the Public Laboratory Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
-  <p><a class="button" href="http://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
+<div class="alert alert-warning">
+  <p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclab.org/archive">the Public Lab Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
+  <p><a class="btn btn-primary" href="http://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
 </div>
 <% end %>
+
+<p><a href="http://store.publiclab.org/products/balloon-mapping-kit"><img src="/images/balloon-kit.jpg" /></a></p>
 
 <div id="license">
 <p><small>
@@ -244,39 +258,11 @@
   </form>
 </div>
 
-<div class='box'>
-  <h3>Export formats</h3>
-
-  <% if false # @export.tms %>
-  <i>Embed code:</i><br />
-  <textarea id="embedcode"><iframe style="border:0;" width="500px" height="375px" src="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=17"></iframe></textarea>
-  <% end %>
-
-  <% if @export %>
-    <p>Available export formats:</p>
-    <%= render :partial => "map/formats" %>
-  <% else %>
-    <p><i>This map has not been exported yet. <a href="http://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
-  <% end %>
-
-  <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
-  <p>Use your map to contribute to OpenStreetMap <a href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">in Potlatch</a> or <a href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">in iD</a>.</p>
-  <% end %>
-</div>
-
-<% if @export && @export.jpg %>
-<div class='box'>
-<p><a class="button" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg">Print this map</a>
-</p>
-<p>Order a poster-sized print of this map. It may take a moment to generate the poster so please be patient. If this is your map, we may be able to offer a discount; please <a href="mailto:retail@publiclab.org">get in touch</a>.</p>
-</div>
-<% end %>
-
-<div class='box'>
-        <h3>Multispectral export formats</h3>
-        <p>If this map has been composited with another to generate infrared composite layers, they will be displayed here.</p>
+<div class='well'>
+  <h3>Multispectral export formats</h3>
+  <p>If this map has been composited with another to generate infrared composite layers, they will be displayed here.</p>
   <% @export = @map.get_export('nrg') %>
-        <%= render :partial => "formats" %>
+  <%= render :partial => "formats" %>
 </div>  
 
 </div>
