@@ -62,6 +62,8 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => "map", :action => "index"
 
   map.connect 'tms/:id/alt/:z/:x/:y.png', :controller => "utility", :action => "tms_alt"
+  map.connect 'tms/:id/', :controller => "utility", :action => "tms_info"
+  map.connect 'tms/:id/alt/', :controller => "utility", :action => "tms_info"
   map.connect 'stylesheet/:id.gss', :controller => "map", :action => "stylesheet"
   map.connect 'maps', :controller => "map", :action => "index"
   map.connect 'maps/:id', :controller => "map", :action => "show"
