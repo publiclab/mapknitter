@@ -68,9 +68,12 @@ class MapController < ApplicationController
   end
 
   def delete
-    if APP_CONFIG["deletion_active"] && APP_CONFIG["password"] == params[:password]
+    if logged_in? && current_user.role == "admin"
       @map = Map.find params[:id]
       @map.delete
+      flash[:notice] = "Map deleted."
+    else
+      flash[:error] = "Only admins may delete maps."
     end
     redirect_to "/"
   end
