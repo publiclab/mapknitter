@@ -1,12 +1,12 @@
 <div id="main">
-	<h2><%= @user.login %><% if @user.maps %> (<%= @maps.length %> maps)<% end %></h2>
+  <h2><%= @user.login %><% if @user.maps %> (<%= @maps.length %> maps)<% end %> | <small><%= @user.role %></small></h2>
 
-	<p><a href="http://publiclaboratory.org/people/<%= @user.login %>">Public Lab profile &raquo;</a></p>
+  <p><a href="http://publiclaboratory.org/people/<%= @user.login %>">Public Lab profile &raquo;</a></p>
 
-	<hr />
+  <hr />
 
-	<%= render :partial => 'map/list' %>
-	
+  <%= render :partial => 'map/list' %>
+  
 </div>
 <div id ="sidebar">
 <%= render :partial => 'map/search' %>

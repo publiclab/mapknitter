@@ -116,36 +116,51 @@ class MapController < ApplicationController
   end
 
   def update_map
-    begin
-      @map = Map.find(params[:map][:id])
-      if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
-      @map.description = params[:map][:description]
-      @map.location = params[:map][:location]
-	location = GeoKit::GoogleV3Geocoder.geocode(params[:map][:location])
-        @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
-        @map.lat = location.lat
-        @map.lon = location.lng
-        if location
-          if Rails.env.development? || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
-            if @map.save
-              flash[:notice] = "Map saved"
+    @map = Map.find(params[:map][:id])
+    if params[:latitude] == '' && params[:longitude] == ''
+      puts 'geocoding'
+      begin
+        if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
+        @map.description = params[:map][:description]
+        @map.location = params[:map][:location]
+          location = GeoKit::GoogleV3Geocoder.geocode(params[:map][:location])
+          @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
+          @map.lat = location.lat
+          @map.lon = location.lng
+          if location
+            if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
+              if @map.save
+                flash[:notice] = "Map saved"
+              else
+                flash[:error] = "Failed to save"
+              end
             else
-              flash[:error] = "Failed to save"
+              flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
             end
           else
-            flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
+            flash[:error] = "Location not recognized"
           end
+          redirect_to '/map/view/'+@map.name
         else
-          flash[:error] = "Location not recognized"
+          flash[:error] = "That password is incorrect." if params[:password] != nil
+          redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
         end
-        redirect_to '/map/view/'+@map.name
-      else
-        flash[:error] = "That password is incorrect." if params[:password] != nil
-        redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
-      end
-    rescue
+      rescue
         flash[:error] = "Geocoding failed. Please enter a more specific address."
         redirect_to "/map/view/"+params[:id]
+      end
+    else
+      puts 'nogeocoding'
+      @map.lat = params[:latitude]
+      @map.lon = params[:longitude]
+      @map.description = params[:map][:description]
+      @map.location = params[:map][:location]
+      if @map.save
+        flash[:notice] = "Map updated."
+      else
+        flash[:error] = "The map could not be updated. Try a more specific location or contact web@publiclab.org if you continue to have trouble."
+      end
+      redirect_to '/map/view/'+@map.name
     end 
   end
 
@@ -193,7 +208,7 @@ class MapController < ApplicationController
       @map.user_id = current_user.id if logged_in?
       @map.author = current_user.login if logged_in?
       @map.email = current_user.email if logged_in?
-      if Rails.env.development? && @map.save || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") && @map.save
+      if Rails.env.development? && @map.save || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?) && @map.save
         redirect_to :action => 'show', :id => @map.name
       else
 	index
@@ -295,7 +310,7 @@ class MapController < ApplicationController
   def composite
 	# write this in map model, really
 	@map = Map.find_by_name params[:id]
-	if Rails.env.development? || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!")
+	if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
 		# BRINGS SYSTEM TO A HALT! inspect ulimit params
 		#@map.composite(params[:type],params[:infrared])
 	end
@@ -305,7 +320,7 @@ class MapController < ApplicationController
   def export
 	export_type = "normal"
 	map = Map.find_by_name params[:id]
-	if Rails.env.development? || verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
+	if Rails.env.development? || (verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
 	begin
 		unless export = map.get_export(export_type) # searches only "normal" exports
 			export = Export.new({:map_id => map.id,:status => 'starting'})

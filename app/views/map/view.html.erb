@@ -185,20 +185,29 @@
   $('.bar').sparkline('html', {type: 'bar'});
   </script>
 
-<div class='box form'>
-  <h3>Edit map details <small>(<a href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand +</a>)</small></h3>
+<div class='well'>
+  <h3>Edit map details<a class="pull-right btn" href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand <i class="caret"></i></a></h3>
   <form style="display:none;" class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
   
     <input type='hidden' name='map[id]' value="<%= @map.id %>"/>
     
-    <label for="location">Place</label><br />
-    <input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place"><br />
     <% if admin %>
-    <label for="password">Password (optional -- to keep your map private)</label><br />
-    <input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password"><br />
+    <label for="password">Password (optional -- to keep your map private)</label>
+    <input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password">
     <% end %>
+
+    <label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label>
+    <input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place">
     <div id="geocode_results">
       
+    </div>
+    <div id="lat_lon" style="display:none;">
+      <p style='font-size:10px;font-family:lucida grande,lucida sans console,sans-serif;'>
+        In decimal degress, i.e. '72.222 or -142.03441'</p>
+      <label for="latitude">Latitude</label>
+      <input id="latitude" type="text" name="latitude" value="<%= @map.lat %>"/>
+      <label for="longitude">Longitude</label>
+      <input id="longitude" type="text" name="longitude" value="<%= @map.lon %>" />
     </div>
     <style>
     .ui-autocomplete {
@@ -237,26 +246,26 @@
           select: function(event, ui) {
             $("#latitude").val(ui.item.latitude);
             $("#longitude").val(ui.item.longitude);
-            var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-            marker.setPosition(location);
-            map.setCenter(location);
+            //var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+            //marker.setPosition(location);
+            //map.setCenter(location);
           }
         });
       });
 
     </script>
-    <p><%= recaptcha_tags :display => {:theme => "white"} %></p>
-    <label for="description">Description</label><br />
-    <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea><br />
+    <% unless logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <label for="description">Description</label>
+    <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
     
     <!--<label for="password">Password (optional)</label><br />
     <input class="text" type="password" name="password" value="" id="password"><br />-->
       
     <% if @map.password != "" %>
-    <label for="password">Password (you must enter the password to save)</label><br />
-    <input class="text" type="password" name="password" id="password"><br />
+    <label for="password">Password (you must enter the password to save)</label>
+    <input class="text" type="password" name="password" id="password">
     <% end %>
-    <p><input type="submit" value="Save"></p>
+    <p><input class="btn" type="submit" value="Save"></p>
   </form>
 </div>
 

@@ -76,7 +76,7 @@ img.export_status {
 <%= render :partial => "export_options" %>
 <%= render :partial => "export_multispectral" %>
 
-<% if Rails.env.production? %>
+<% if Rails.env.production? && !logged_in? %>
 <div id="recaptcha-container"></div>
 <script type="text/javascript">
 	Recaptcha.create('6LdN6sYSAAAAAOWasGXVBoKdvouels_oDnB_Zs3I',"recaptcha-container", {theme:"white"});

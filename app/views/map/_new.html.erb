@@ -45,9 +45,9 @@
             select: function(event, ui) {
               $("#latitude").val(ui.item.latitude);
               $("#longitude").val(ui.item.longitude);
-              var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-              marker.setPosition(location);
-              map.setCenter(location);
+              //var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+              //marker.setPosition(location);
+              //map.setCenter(location);
             }
           });
 
@@ -68,7 +68,7 @@
       <label for="email">Email address</label>
       <input class="text" type="text" name="email" value="<%= params[:email] || '' %>" id="email">
     <% end %>
-    <% if Rails.env.production? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <% if Rails.env.production? && !logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
     <label for="description">Description (will be shown in an overlay on the map)</label>
     <textarea name="description" rows="8" cols="24"></textarea>
     
