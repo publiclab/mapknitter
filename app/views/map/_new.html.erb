@@ -1,5 +1,27 @@
-<div class="box">
-  <h3>Make a new map</h3>
+<div class="well">
+  <h3 style="margin-top:0;">Make a new map</h3>
+
+  <% unless logged_in? %><p>We strongly prefer that you <a href="/login">log in</a> or <a href="http://publiclab.org/signup">sign up for a Public Lab account</a> before making a map. However, if you wish to remain anonymous for privacy reasons, <a href="javascript:void();" onClick='$("#new-map-form").toggle();'>click here</a>.</p><% end %>
+
+  <% unless logged_in? %>
+    <div id="new-map-login">
+    <% form_tag(session_path, {:class => "form"}) do -%>
+ 
+      <%= text_field_tag 'login', @login, {:placeholder => "username"} %>
+      <br />
+      <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
+     
+      <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+      &nbsp; <%= check_box_tag 'remember_me', '1', @remember_me %><%= label_tag 'remember_me', 'Remember me', {:class => "checkbox inline", :style => "padding-left:5px;"} %>
+    <% end %>
+    </div>
+  <% end %>
+
+  <% unless logged_in? %>
+    <hr />
+    <div id="new-map-form" style="display:none;">
+  <% end %>
+
   <% form_for :map, @map, :url => { :controller => "map", :action => "create" }, :html => {:id => "new_map", :class => "map"} do |f| %>
     <%= error_messages_for 'map' %>  
     <label for="name">Map title/URL (you won't be able to change this)</label>
@@ -92,6 +114,9 @@
       <option value="osm">OpenStreetMap</option>
     </select>
 
-    <p><input type="submit" value="Save"></p>
+    <p><input class="btn btn-large btn-primary" type="submit" value="Begin"></p>
+
+  <% unless logged_in? %></div><% end %>
   <% end %>
+
 </div>
