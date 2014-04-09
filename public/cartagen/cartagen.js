@@ -6989,204 +6989,204 @@ var TimerManager = {
 	},
 }
 var Events = {
-	last_event: 0,
+  last_event: 0,
 
-	init: function() {
-		document.observe('mousemove', Events.mousemove)
-		Glop.observe('mousedown', Events.mousedown)
-		Glop.observe('mouseup', Events.mouseup)
-		Glop.observe('dblclick', Events.dblclick)
-		Glop.observe('mouseover', Events.mouseover)
-		Glop.observe('mouseout', Events.mouseout)
+  init: function() {
+    document.observe('mousemove', Events.mousemove)
+    Glop.observe('mousedown', Events.mousedown)
+    Glop.observe('mouseup', Events.mouseup)
+    Glop.observe('dblclick', Events.dblclick)
+    Glop.observe('mouseover', Events.mouseover)
+    Glop.observe('mouseout', Events.mouseout)
 
-		Tool.initialize()
+    Tool.initialize()
 
-		if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
-		window.onmousewheel = document.onmousewheel = Events.wheel
+    if (window.addEventListener) window.addEventListener('DOMMouseScroll', Events.wheel, false)
+    window.onmousewheel = document.onmousewheel = Events.wheel
 
-		Event.observe(document, 'keydown', Events.keydown)
-		Event.observe(document, 'keypress', Events.keypress)
-		Event.observe(document, 'keyup', Events.keyup)
-		if (Config.key_input) {
-			Keyboard.key_input = true
-		}
+    Event.observe(document, 'keydown', Events.keydown)
+    Event.observe(document, 'keypress', Events.keypress)
+    Event.observe(document, 'keyup', Events.keyup)
+    if (Config.key_input) {
+      Keyboard.key_input = true
+    }
 
-		element = $('main')
-		element.ontouchstart = Events.ontouchstart
-		element.ontouchmove = Events.ontouchmove
-		element.ontouchend = Events.ontouchend
-		element.ongesturestart = Events.ongesturestart
-		element.ongesturechange = Events.ongesturechange
-		element.ongestureend = Events.ongestureend
+    element = $('main')
+    element.ontouchstart = Events.ontouchstart
+    element.ontouchmove = Events.ontouchmove
+    element.ontouchend = Events.ontouchend
+    element.ongesturestart = Events.ongesturestart
+    element.ongesturechange = Events.ongesturechange
+    element.ongestureend = Events.ongestureend
 
-		Event.observe(window, 'resize', Events.resize);
-	},
-	mousemove: function(event) {
-		Events.enabled = true
-		Mouse.x = -1*Event.pointerX(event)
-		Mouse.y = -1*Event.pointerY(event)
-		Glop.trigger_draw(5)
-	},
-	mousedown: function(event) {
-		Events.mousemove(event)
-		if (!event.isLeftClick() || event.ctrlKey) return
-	        Mouse.down = true
-	        Mouse.click_frame = Glop.frame
-	        Mouse.click_x = Mouse.x
-	        Mouse.click_y = Mouse.y
-		Mouse.dragging = true
-		Glop.trigger_draw(5)
-	},
-	mouseup: function(event) {
-		if (event && (!event.isLeftClick() || event.ctrlKey)) return
-	        Mouse.up = true
-	        Mouse.down = false
-	        Mouse.release_frame = Glop.frame
-	        Mouse.dragging = false
-	        User.update()
-	},
-	wheel: function(event){
-		if (Events.enabled == false) return
-		var delta = 0
-		if (!event) event = window.event
-		if (event.wheelDelta) {
-			delta = event.wheelDelta/120
-			if (window.opera) delta = -delta
-		} else if (event.detail) {
-			delta = -event.detail/3
-		}
-		if (delta && !Config.live_gss) {
-			if (delta <0) {
-				if (!Config.tiles) Map.zoom = (Map.zoom * 1) - (1/20)
-				else map.zoomOut()
-			} else {
-				if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/20)
-				else map.zoomIn()
-			}
-			if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
-		}
-		Glop.trigger_draw(5)
-		event.preventDefault()
-	},
+    Event.observe(window, 'resize', Events.resize);
+  },
+  mousemove: function(event) {
+    Events.enabled = true
+    Mouse.x = -1*Event.pointerX(event)
+    Mouse.y = -1*Event.pointerY(event)
+    Glop.trigger_draw(5)
+  },
+  mousedown: function(event) {
+    Events.mousemove(event)
+    if (!event.isLeftClick() || event.ctrlKey) return
+          Mouse.down = true
+          Mouse.click_frame = Glop.frame
+          Mouse.click_x = Mouse.x
+          Mouse.click_y = Mouse.y
+    Mouse.dragging = true
+    Glop.trigger_draw(5)
+  },
+  mouseup: function(event) {
+    if (event && (!event.isLeftClick() || event.ctrlKey)) return
+          Mouse.up = true
+          Mouse.down = false
+          Mouse.release_frame = Glop.frame
+          Mouse.dragging = false
+          User.update()
+  },
+  wheel: function(event){
+    if (Events.enabled == false) return
+    var delta = 0
+    if (!event) event = window.event
+    if (event.wheelDelta) {
+      delta = event.wheelDelta/120
+      if (window.opera) delta = -delta
+    } else if (event.detail) {
+      delta = -event.detail/3
+    }
+    if (delta && !Config.live_gss) {
+      if (delta <0) {
+        if (!Config.tiles) Map.zoom = (Map.zoom * 1) - (1/20)
+        else Knitter.zoomOut()
+      } else {
+        if (!Config.tiles) Map.zoom = (Map.zoom * 1) + (1/20)
+        else Knitter.zoomIn()
+      }
+      if (Map.zoom < Config.zoom_out_limit) Map.zoom = Config.zoom_out_limit
+    }
+    Glop.trigger_draw(5)
+    event.preventDefault()
+  },
 
-	keydown: function(e) {
-		var key = e.which || e.keyCode
-		if (key == 16 || e.shiftKey) {
-			Keyboard.shift = true
-		}
-	},
-	keypress: function(e) {
-		if (Events.enabled === false) return
-		if (Events.keys_enabled === false) return
+  keydown: function(e) {
+    var key = e.which || e.keyCode
+    if (key == 16 || e.shiftKey) {
+      Keyboard.shift = true
+    }
+  },
+  keypress: function(e) {
+    if (Events.enabled === false) return
+    if (Events.keys_enabled === false) return
 
-		if (!e) var e = window.event;
+    if (!e) var e = window.event;
 
-		var character = e.which || e.keyCode;
-		character = String.fromCharCode(character);
-		if (Keyboard.key_input) {
-			Keyboard.hotkey(character)
-		} else {
-			Keyboard.modifier(character)
-		}
-	},
+    var character = e.which || e.keyCode;
+    character = String.fromCharCode(character);
+    if (Keyboard.key_input) {
+      Keyboard.hotkey(character)
+    } else {
+      Keyboard.modifier(character)
+    }
+  },
 
-	keyup: function(e) {
-		if (Events.enabled === true) {
-			Keyboard.shift = false
-			if (Events.arrow_keys_enabled === true) {
-				var character = e.keyIdentifier
-				switch(character) {
-					case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
-					case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
-					case 'Up': Map.y -= 20/Map.zoom; break
-					case 'Down': Map.y += 20/Map.zoom; break
-				}
+  keyup: function(e) {
+    if (Events.enabled === true) {
+      Keyboard.shift = false
+      if (Events.arrow_keys_enabled === true) {
+        var character = e.keyIdentifier
+        switch(character) {
+          case 'Left': if (!e.shiftKey) Map.x -= 20/Map.zoom; else Map.rotate += 0.1; break
+          case 'Right': if (!e.shiftKey) Map.x += 20/Map.zoom; else Map.rotate -= 0.1; break
+          case 'Up': Map.y -= 20/Map.zoom; break
+          case 'Down': Map.y += 20/Map.zoom; break
+        }
 
-				Keyboard.keys.set("r",false)
-				Keyboard.keys.set("z",false)
-				e.preventDefault()
-			}
-		}
-	},
-	ontouchstart: function(e){
-		e.preventDefault();
-		if(e.touches.length == 1){ // Only deal with one finger
-	 		var touch = e.touches[0]; // Get the information for finger #1
-		    var node = touch.target; // Find the node the drag started from
+        Keyboard.keys.set("r",false)
+        Keyboard.keys.set("z",false)
+        e.preventDefault()
+      }
+    }
+  },
+  ontouchstart: function(e){
+    e.preventDefault();
+    if(e.touches.length == 1){ // Only deal with one finger
+       var touch = e.touches[0]; // Get the information for finger #1
+        var node = touch.target; // Find the node the drag started from
 
-			Mouse.down = true
-			Mouse.click_frame = Glop.frame
-			Mouse.click_x = touch.screenX
-			Mouse.click_y = touch.screenY
-			Map.x_old = Map.x
-			Map.y_old = Map.y
-			Mouse.dragging = true
-			Glop.trigger_draw(5)
-		  }
-	},
-	ontouchmove: function(e) {
-		e.preventDefault();
-		if(e.touches.length == 1){ // Only deal with one finger
-			var touch = e.touches[0]; // Get the information for finger #1
-			var node = touch.target; // Find the node the drag started from
+      Mouse.down = true
+      Mouse.click_frame = Glop.frame
+      Mouse.click_x = touch.screenX
+      Mouse.click_y = touch.screenY
+      Map.x_old = Map.x
+      Map.y_old = Map.y
+      Mouse.dragging = true
+      Glop.trigger_draw(5)
+      }
+  },
+  ontouchmove: function(e) {
+    e.preventDefault();
+    if(e.touches.length == 1){ // Only deal with one finger
+      var touch = e.touches[0]; // Get the information for finger #1
+      var node = touch.target; // Find the node the drag started from
 
-			Mouse.drag_x = (touch.screenX - Mouse.click_x)
-			Mouse.drag_y = (touch.screenY - Mouse.click_y)
+      Mouse.drag_x = (touch.screenX - Mouse.click_x)
+      Mouse.drag_y = (touch.screenY - Mouse.click_y)
 
-			var d_x = -Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
-			var d_y = -Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
+      var d_x = -Math.cos(Map.rotate)*Mouse.drag_x+Math.sin(Map.rotate)*Mouse.drag_y
+      var d_y = -Math.cos(Map.rotate)*Mouse.drag_y-Math.sin(Map.rotate)*Mouse.drag_x
 
-			Map.x = Map.x_old+(d_x/Map.zoom)
-			Map.y = Map.y_old+(d_y/Map.zoom)
+      Map.x = Map.x_old+(d_x/Map.zoom)
+      Map.y = Map.y_old+(d_y/Map.zoom)
 
-			Glop.trigger_draw(5)
-		}
-	},
-	ontouchend: function(e) {
-		if(e.touches.length == 1) {
-			Mouse.up = true
-			Mouse.down = false
-			Mouse.release_frame = Glop.frame
-			Mouse.dragging = false
-		}
-		User.update()
-		Glop.trigger_draw(5)
-	},
-	ongesturestart: function(e) {
-		Map.zoom_old = Map.zoom
-	},
-	ongesturechange: function(e){
-		var node = e.target;
-		if (Map.rotate_old == null) Map.rotate_old = Map.rotate
-		Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
-		Map.zoom = Map.zoom_old*e.scale
-		Glop.trigger_draw(5)
-	},
-	gestureend: function(e){
-		Map.rotate_old = null
-		User.update()
-	},
-	dblclick: function(event) {
-	},
-	drag: function() {
-		if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
-			Mouse.drag_x = (Mouse.x - Mouse.click_x)
-			Mouse.drag_y = (Mouse.y - Mouse.click_y)
-			Tool.drag()
-		}
-	},
-	click_length: function() {
-		return Mouse.release_frame-Mouse.click_frame
-	},
-	resize: function() {
-		Glop.trigger_draw(5)
-	},
-	mouseover: function() {
-		Events.enabled = true
-	},
-	mouseout: function() {
-		Events.enabled = false
-	}
+      Glop.trigger_draw(5)
+    }
+  },
+  ontouchend: function(e) {
+    if(e.touches.length == 1) {
+      Mouse.up = true
+      Mouse.down = false
+      Mouse.release_frame = Glop.frame
+      Mouse.dragging = false
+    }
+    User.update()
+    Glop.trigger_draw(5)
+  },
+  ongesturestart: function(e) {
+    Map.zoom_old = Map.zoom
+  },
+  ongesturechange: function(e){
+    var node = e.target;
+    if (Map.rotate_old == null) Map.rotate_old = Map.rotate
+    Map.rotate = Map.rotate_old + (e.rotation/180)*Math.PI
+    Map.zoom = Map.zoom_old*e.scale
+    Glop.trigger_draw(5)
+  },
+  gestureend: function(e){
+    Map.rotate_old = null
+    User.update()
+  },
+  dblclick: function(event) {
+  },
+  drag: function() {
+    if (Mouse.dragging && !Prototype.Browser.MobileSafari && !window.PhoneGap) {
+      Mouse.drag_x = (Mouse.x - Mouse.click_x)
+      Mouse.drag_y = (Mouse.y - Mouse.click_y)
+      Tool.drag()
+    }
+  },
+  click_length: function() {
+    return Mouse.release_frame-Mouse.click_frame
+  },
+  resize: function() {
+    Glop.trigger_draw(5)
+  },
+  mouseover: function() {
+    Events.enabled = true
+  },
+  mouseout: function() {
+    Events.enabled = false
+  }
 }
 document.observe('cartagen:init', Events.init)
 
@@ -7556,73 +7556,73 @@ CanvasTextFunctions.enable = function( ctx)
     };
 }
 var Keyboard = {
-	keys: new Hash(),
-	key_input: false,
-	shift: false,
-	hotkeys: {
-		"=": function() {
-			if (Config.tiles) map.zoomIn()
-			else Map.zoom *= 1.1
-		},
-		"-": function() {
-			if (Config.tiles) map.zoomOut()
-			else Map.zoom *= 0.9
-		},
-		"x": function() {
-			localStorage.clear()
-		},
-		"r": function() {
-			Tool.unpress(['warp_distort'])
-			$('tool_warp_rotate').addClassName('down')
-			Tool.Warp.mode = 'rotate'
-		},
-		"d": function() {
-			Tool.unpress(['warp_rotate'])
-			$('tool_warp_distort').addClassName('down')
-			Tool.Warp.mode = 'default'
-		},
-		"t": function() {
-			Warper.active_image.dblclick()
-		},
-		"o": function() {
-			Warper.active_image.toggle_outline()
-		},
-		"l": function() {
-			Tool.Warp.lock_image()
-		},
-	},
-	hotkey: function(key) {
-		if (Keyboard.hotkeys[key]) Keyboard.hotkeys[key]()
-		Glop.trigger_draw()
-	},
-	modifier: function(key) {
-		switch(character){
-			case "r": Keyboard.keys.set("r",true); break
-			case "z": Keyboard.keys.set("z",true); break
-			case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
-			case "b": if (Config.debug) Interface.download_bbox()
-			case Event.KEY_UP: Cartagen.fire('keypress:up')
-			case Event.KEY_DOWN: Cartagen.fire('keypress:down')
-			case Event.KEY_LEFT: Cartagen.fire('keypress:left')
-			case Event.KEY_RIGHT: Cartagen.fire('keypress:right')
-		}
-	}
+  keys: new Hash(),
+  key_input: false,
+  shift: false,
+  hotkeys: {
+    "=": function() {
+      if (Config.tiles) map.zoomIn()
+      else Map.zoom *= 1.1
+    },
+    "-": function() {
+      if (Config.tiles) map.zoomOut()
+      else Map.zoom *= 0.9
+    },
+    "x": function() {
+      localStorage.clear()
+    },
+    "r": function() {
+      Tool.unpress(['warp_distort'])
+      $('tool_warp_rotate').addClassName('down')
+      Tool.Warp.mode = 'rotate'
+    },
+    "d": function() {
+      Tool.unpress(['warp_rotate'])
+      $('tool_warp_distort').addClassName('down')
+      Tool.Warp.mode = 'default'
+    },
+    "t": function() {
+      Warper.active_image.dblclick()
+    },
+    "o": function() {
+      Warper.active_image.toggle_outline()
+    },
+    "l": function() {
+      Tool.Warp.lock_image()
+    },
+  },
+  hotkey: function(key) {
+    if (Keyboard.hotkeys[key]) Keyboard.hotkeys[key]()
+    Glop.trigger_draw()
+  },
+  modifier: function(key) {
+    switch(character){
+      case "r": Keyboard.keys.set("r",true); break
+      case "z": Keyboard.keys.set("z",true); break
+      case "g": if (Config.debug && !Config.live_gss) Cartagen.show_gss_editor(); break
+      case "b": if (Config.debug) Interface.download_bbox()
+      case Event.KEY_UP: Cartagen.fire('keypress:up')
+      case Event.KEY_DOWN: Cartagen.fire('keypress:down')
+      case Event.KEY_LEFT: Cartagen.fire('keypress:left')
+      case Event.KEY_RIGHT: Cartagen.fire('keypress:right')
+    }
+  }
 }
 var Mouse = {
-	x: 0,
-	y: 0,
-	window_x: 0,
-	window_y: 0,
-	down: false,
-	up: false,
-	click_x: 0,
-	click_y: 0,
-	click_frame: 0,
-	release_frame: null,
-	dragging: false,
-	drag_x: null,
-	drag_y: null,
-	hovered_features: []
+  x: 0,
+  y: 0,
+  window_x: 0,
+  window_y: 0,
+  down: false,
+  up: false,
+  click_x: 0,
+  click_y: 0,
+  click_frame: 0,
+  release_frame: null,
+  dragging: false,
+  drag_x: null,
+  drag_y: null,
+  hovered_features: []
 }
 var User = {
 	color: Glop.random_color(),
@@ -7960,10 +7960,10 @@ var ContextMenu = {
 
 document.observe('cartagen:init', ContextMenu.init.bindAsEventListener(ContextMenu))
 var Zoom = {
-	initialize: function() {
-		Zoom.interval = 1.3
-		$$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval;map.zoomIn()'>+</a><a href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3);map.zoomOut()'>-</a></div>")
-	},
+  initialize: function() {
+    Zoom.interval = 1.3
+    $$('body')[0].insert("<div id='cartagen-controls'><style>#cartagen-controls { display:block;height:60px;width:30px;position:absolute;top:"+(18+(-1*Config.padding_top))+"px;right:8px;z-index:200; }#cartagen-controls a { display:block;height:30px;width:30px;text-decoration:none;text-align:center;color:white;background:#222;font-size:24px;font-style:bold;font-family:arial,sans-serif; }#cartagen-controls a:hover { background:#444; }#cartagen-controls a:active { background:#666; }</style><a id='zoomInBtn' href='javascript:void();' onClick='Map.zoom = Map.zoom*Zoom.interval;map.zoomIn();Knitter.openLayersDraw()'>+</a><a id='zoomOutBtn' href='javascript:void();' onClick='Map.zoom = Map.zoom*(1/1.3);map.zoomOut();Knitter.openLayersDraw()'>-</a></div>")
+  },
 }
 
 document.observe('cartagen:init', Zoom.initialize.bindAsEventListener(Zoom))
@@ -8726,116 +8726,116 @@ Tool.Mask = {
 
 var Interface = {
 
-	mousemove: function(event) {
-		Mouse.window_x = Event.pointerX(event)
-		Mouse.window_y = Event.pointerY(event)
-	},
+  mousemove: function(event) {
+    Mouse.window_x = Event.pointerX(event)
+    Mouse.window_y = Event.pointerY(event)
+  },
 
-	setup_tooltips: function() {
-		$$('.toolbar a').each(function(toolbar){
-			toolbar.onmouseover = function() {
-				Interface.show_tooltip(toolbar.name)
-			}
-			toolbar.onmouseout = function() {
-				$$('.tooltip').each(function(tooltip) {
-					tooltip.remove()
-				})
-			}
-		})
-	},
+  setup_tooltips: function() {
+    $$('.toolbar a').each(function(toolbar){
+      toolbar.onmouseover = function() {
+        Interface.show_tooltip(toolbar.name)
+      }
+      toolbar.onmouseout = function() {
+        $$('.tooltip').each(function(tooltip) {
+          tooltip.remove()
+        })
+      }
+    })
+  },
 
-	show_tooltip: function(name) {
-		$$('.tooltip').each(function(tooltip){
-			tooltip.remove()
-		})
-		$$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
-		$('tooltip').style.left = (Mouse.window_x)+'px'
-	},
+  show_tooltip: function(name) {
+    $$('.tooltip').each(function(tooltip){
+      tooltip.remove()
+    })
+    $$('body')[0].insert('<div class="tooltip" id="tooltip">'+name+'</div>')
+    $('tooltip').style.left = (Mouse.window_x)+'px'
+  },
 
-	display_iframe: function() {
-		if ($('iframe_code') != undefined) {
-			$('iframe_code').remove()
-		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
-		$('iframe_code').absolutize()
-		}
-	},
+  display_iframe: function() {
+    if ($('iframe_code') != undefined) {
+      $('iframe_code').remove()
+    } else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+    $('iframe_code').absolutize()
+    }
+  },
 
-	display_knitter_iframe: function() {
-		if ($('iframe_code') != undefined) {
-			$('iframe_code').remove()
-		} else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name,true)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
-		$('iframe_code').absolutize()
-		}
-	},
+  display_knitter_iframe: function() {
+    if ($('iframe_code') != undefined) {
+      $('iframe_code').remove()
+    } else { $$('body')[0].insert("<div style='padding:6px 10px;width:400px;z-index:999999;background:rgba(255,255,255,0.6);margin:8px;' id='iframe_code'><h3>Embed this map on your web site</h3><p>Copy this code and paste it into a blog post or HTML page:</p><textarea cols='40' rows='5'>"+Interface.get_iframe(Map.lat,Map.lon,Map.zoom,Config.stylesheet,'http://cartagen.org/maps/'+Config.map_name,true)+"</textarea><p style='text-align:right;'><br style='clear:both;' /></div>")
+    $('iframe_code').absolutize()
+    }
+  },
 
-	get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
-		width = width || 500
-		height = height || 300
-		zoom = zoom || 2
-		url = url || 'http://cartagen.org'
+  get_iframe: function(lat,lon,zoom,stylesheet,url,locked,height,width) {
+    width = width || 500
+    height = height || 300
+    zoom = zoom || 2
+    url = url || 'http://cartagen.org'
 
-		code = "<iframe height='"+height+"'width='"+width+"' src='"+url+'?fullscreen=true'
-		if (!Object.isUndefined(locked)) code += '&#038;locked=true'
-		if (!Object.isUndefined(stylesheet)) code += '&#038;gss='+stylesheet
-		code = code + "' style='border:0;'></iframe>"
- 		return code
-	},
+    code = "<iframe height='"+height+"'width='"+width+"' src='"+url+'?fullscreen=true'
+    if (!Object.isUndefined(locked)) code += '&#038;locked=true'
+    if (!Object.isUndefined(stylesheet)) code += '&#038;gss='+stylesheet
+    code = code + "' style='border:0;'></iframe>"
+     return code
+  },
 
-	display_loading: function() {
-		if (Config.vectors) {
-			var percent = Importer.parse_manager.completed
-			if (percent > 75 || (percent < 100)) {
-				$('loading_message').hide()
-			}
-			if (percent < 100) {
-				$C.save()
-		        $C.translate(Map.x,Map.y)
-				$C.rotate(-Map.rotate)
-		        $C.translate(-Map.x,-Map.y)
-				$C.fill_style('white')
-				$C.line_width(0)
-				$C.opacity(0.7)
-				var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
-				$C.begin_path()
-					$C.line_to(x,y)
-					$C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
-					$C.line_to(x,y)
-				$C.fill()
-				$C.opacity(0.9)
-				$C.line_width(6/Map.zoom)
-				$C.stroke_style('white')
-				$C.line_cap('square')
-				$C.begin_path()
-					$C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
-				$C.stroke()
-				var width = $C.measure_text("Lucida Grande, sans-serif",
-				             12,
-				             parseInt(percent)+"%")
-				$C.draw_text("Lucida Grande, sans-serif",
-				             12/Map.zoom,
-							 "#333",
-				             x-(width/(2*Map.zoom)),
-							 y+(6/Map.zoom),
-							 parseInt(percent)+"%")
-				$C.translate(Map.x,Map.y)
-				$C.rotate(Map.rotate)
-		        $C.translate(-Map.x,-Map.y)
-				$C.restore()
-			}
-		}
-	},
+  display_loading: function() {
+    if (Config.vectors) {
+      var percent = Importer.parse_manager.completed
+      if (percent > 75 || (percent < 100)) {
+        $('loading_message').hide()
+      }
+      if (percent < 100) {
+        $C.save()
+            $C.translate(Map.x,Map.y)
+        $C.rotate(-Map.rotate)
+            $C.translate(-Map.x,-Map.y)
+        $C.fill_style('white')
+        $C.line_width(0)
+        $C.opacity(0.7)
+        var x = Map.x-(1/Map.zoom*(Glop.width/2))+(40/Map.zoom), y = Map.y-(1/Map.zoom*(Glop.height/2))+(40/Map.zoom)
+        $C.begin_path()
+          $C.line_to(x,y)
+          $C.arc(x,y,24/Map.zoom,-Math.PI/2,Math.PI*2-Math.PI/2,false)
+          $C.line_to(x,y)
+        $C.fill()
+        $C.opacity(0.9)
+        $C.line_width(6/Map.zoom)
+        $C.stroke_style('white')
+        $C.line_cap('square')
+        $C.begin_path()
+          $C.arc(x,y,27/Map.zoom,-Math.PI/2,Math.PI*2*(percent/100)-Math.PI/2,false)
+        $C.stroke()
+        var width = $C.measure_text("Lucida Grande, sans-serif",
+          12,
+          parseInt(percent)+"%")
+        $C.draw_text("Lucida Grande, sans-serif",
+          12/Map.zoom,
+          "#333",
+          x-(width/(2*Map.zoom)),
+          y+(6/Map.zoom),
+          parseInt(percent)+"%")
+        $C.translate(Map.x,Map.y)
+        $C.rotate(Map.rotate)
+          $C.translate(-Map.x,-Map.y)
+        $C.restore()
+      }
+    }
+  },
 
-	display_loading_message: function(percent) {
-		if (Config.vectors) {
-	  		$$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:20;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...<p><small>(Use arrow keys and +/- to pan and zoom)</small></p></div></div>')
-		}
-	},
+  display_loading_message: function(percent) {
+    if (Config.vectors) {
+      $$('body')[0].insert('<div onClick="$(\'loading_message\').hide();" id="loading_message" style="position:absolute;z-index:20;top:25%;width:100%;text-align:center;-webkit-user-select:none;-moz-user-select:none;"><div style="width:200px;margin:auto;background:rgba(255,255,255,0.8);font-family:Lucida Grande,Lucida Sans Console,Georgia,sans-serif;font-size:16px;padding:14px;-moz-border-radius:10px;-webkit-border-radius:10px;"><p><img src="/images/spinner.gif" style="margin-bottom:12px;" /><br />Loading map data...<p><small>(Use arrow keys and +/- to pan and zoom)</small></p></div></div>')
+    }
+  },
 
-	download_bbox: function() {
-		Glop.paused = true
-		alert('Please select a bounding box to download')
-		Tool.change('Select')
-	}
+  download_bbox: function() {
+    Glop.paused = true
+    alert('Please select a bounding box to download')
+    Tool.change('Select')
+  }
 }
 document.observe('mousemove',Interface.mousemove)
 
@@ -9204,41 +9204,41 @@ var Viewport = {
 }
 
 var Map = {
-	init: function() {
-		this.x = Projection.lon_to_x(Config.lng)
-		this.y = Projection.lat_to_y(Config.lat)
-		Glop.observe('glop:predraw', this.draw.bindAsEventListener(this))
-		this.draw()
-	},
-	draw: function() {
-		var lon1 = Projection.x_to_lon(-Map.x - (Viewport.width/2))
-		var lon2 = Projection.x_to_lon(-Map.x + (Viewport.width/2))
-		var lat1 = Projection.y_to_lat(Map.y - (Viewport.height/2))
-		var lat2 = Projection.y_to_lat(Map.y + (Viewport.height/2))
-		this.bbox = [lon1, lat2, lon2, lat1]
-		this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
-		this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
-		this.lat = Projection.y_to_lat(this.y)
-		this.lon = Projection.x_to_lon(-this.x)
-		this.resolution = Math.round(Math.abs(Math.log(Map.zoom)))
-	},
-	pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x+Config.padding_left)/Map.zoom) },
-	pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y+Config.padding_top)/Map.zoom) },
-	bbox: [],
-	x: 0,
-	y: 0,
-	lat: 0,
-	lon: 0,
-	rotate: 0,
-	rotate_old: 0,
-	zoom_old: 0,
-	x_old: 0,
-	y_old: 0,
-	lon_width: 0,
-	lat_height: 0,
-	resolution: 0,
-	last_pos: [0,0],
-	 zoom: 0.5
+  init: function() {
+    this.x = Projection.lon_to_x(Config.lng)
+    this.y = Projection.lat_to_y(Config.lat)
+    Glop.observe('glop:predraw', this.draw.bindAsEventListener(this))
+    this.draw()
+  },
+  draw: function() {
+    var lon1 = Projection.x_to_lon(-Map.x - (Viewport.width/2))
+    var lon2 = Projection.x_to_lon(-Map.x + (Viewport.width/2))
+    var lat1 = Projection.y_to_lat(Map.y - (Viewport.height/2))
+    var lat2 = Projection.y_to_lat(Map.y + (Viewport.height/2))
+    this.bbox = [lon1, lat2, lon2, lat1]
+    this.lon_width = Math.abs(this.bbox[0]-this.bbox[2])
+    this.lat_height = Math.abs(this.bbox[1]-this.bbox[3])
+    this.lat = Projection.y_to_lat(this.y)
+    this.lon = Projection.x_to_lon(-this.x)
+    this.resolution = Math.round(Math.abs(Math.log(Map.zoom)))
+  },
+  pointer_x: function() { return Map.x+(((Glop.width/-2)-Mouse.x+Config.padding_left)/Map.zoom) },
+  pointer_y: function() { return Map.y+(((Glop.height/-2)-Mouse.y+Config.padding_top)/Map.zoom) },
+  bbox: [],
+  x: 0,
+  y: 0,
+  lat: 0,
+  lon: 0,
+  rotate: 0,
+  rotate_old: 0,
+  zoom_old: 0,
+  x_old: 0,
+  y_old: 0,
+  lon_width: 0,
+  lat_height: 0,
+  resolution: 0,
+  last_pos: [0,0],
+   zoom: 0.5
 }
 
 document.observe('cartagen:init', Map.init.bindAsEventListener(Map))

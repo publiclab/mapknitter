@@ -200,9 +200,9 @@ var Knitter = {
     //map.addControl(scalebar);
       
     if (Config.tile_switcher) {
-             var switcherControl = new OpenLayers.Control.LayerSwitcher()
+      var switcherControl = new OpenLayers.Control.LayerSwitcher()
       map.addControl(switcherControl);
-          switcherControl.maximizeControl();
+      switcherControl.maximizeControl();
     }
     Knitter.openLayersDraw()
     Glop.observe('glop:draw', Knitter.openLayersDraw)

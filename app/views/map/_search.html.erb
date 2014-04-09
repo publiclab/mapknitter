@@ -1,8 +1,8 @@
 <div class="box" id='search'>
 <h3>Search for a map</h3>
-<form action="/map/search" method='get'>
-	<input class='text' type='text' name='q' value='<%= params[:id] %>'/>
-	<input type='submit' value='search' />
+<form action="/map/search" method='get' class="form">
+  <input class='text' type='text' name='q' value='<%= params[:id] %>'/>
+  <input class="btn" type='submit' value='search' />
 </form>
 <p>
 <a href="/map/license/publicdomain">Public domain maps</a> | 
