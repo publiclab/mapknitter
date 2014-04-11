@@ -65,10 +65,10 @@
   </p>
   <% if logged_in? %>
   <p>
-  <form id="tag" action="/tag/create">
+  <form class="form" id="tag" action="/tag/create">
           <input type="text" name="tag[name]" />
           <input type="hidden" name="tag[map_id]" value="<%= @map.id %>" />
-          <input type="submit" value="Tag" />
+          <input class="btn" type="submit" value="Tag" />
   </form>
   </p>
   <% end %>    
