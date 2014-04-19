@@ -7,7 +7,7 @@ class MapController < ApplicationController
     @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id", :limit => 24
     @notes = Node.find :all, :order => "id DESC", :limit => 5
     @unpaginated = true
-    @authors = Map.find(:all, :limit => 12, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = false']).collect(&:author)
+    @authors = Map.find(:all, :limit => 12, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = "false"']).collect(&:author)
 
     respond_to do |format|
       format.html {  }
