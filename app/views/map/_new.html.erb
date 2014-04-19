@@ -1,5 +1,5 @@
-<div class="box">
-  <h3>Make a new map</h3>
+<div class="box well">
+  <h3 style="margin-top:0;">Make a new map</h3>
   <% form_for :map, @map, :url => { :controller => "map", :action => "create" }, :html => {:id => "new_map", :class => "map"} do |f| %>
     <%= error_messages_for 'map' %>  
     <label for="name">Map title/URL (you won't be able to change this)</label>
