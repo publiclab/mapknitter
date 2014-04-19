@@ -1,19 +1,16 @@
 <h1>Log In</h1>
 
-<p><i>Use your <a href="http://publiclab.org">PublicLab.org</a> username to log in. If you do not yet have one, sign up there first!</i></p>
-
-<p><b>Note: the old PublicLaboratory.org site is being retired. You must sign up on the new PublicLab.org website and create a password there.</b></p>
+<p><i>Use your <a href="http://publiclab.org">PublicLab.org</a> username to log in. If you don't have one, <a href="http://publiclab.org/signup">sign up there first</a>!</i></p>
 
 <p><i>To associate your maps with your new account, please email <a href="mailto:web@publiclab.org">web@publiclab.org</a></i></p>
 
-<% form_tag session_path do -%>
-<p><label for="login">Username</label>
-<%= text_field_tag 'login', @login %></p>
+<% form_tag(session_path, {:class => "form"}) do -%>
 
+<%= text_field_tag 'login', @login, {:placeholder => "username"} %>
+<br />
 <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
 
-<p><%= label_tag 'remember_me', 'Remember me' %>
-<%= check_box_tag 'remember_me', '1', @remember_me %></p>
+<%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+ &nbsp; <%= check_box_tag 'remember_me', '1', @remember_me %><%= label_tag 'remember_me', 'Remember me', {:class => "checkbox inline", :style => "padding-left:5px;"} %>
 
-<p><%= submit_tag 'Log in' %></p>
 <% end -%>

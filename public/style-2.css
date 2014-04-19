@@ -58,9 +58,9 @@ a:hover {
 
 #footer {
   border-top:1px solid #ddd;
-  font-size:0px;
-  color:#888;
+  font-size:10px;
   background:#eee;
+  color:#888;
   padding:20px;
 }
 
