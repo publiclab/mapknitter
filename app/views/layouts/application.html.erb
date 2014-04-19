@@ -12,7 +12,11 @@
     <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <script type="text/javascript" src="/javascripts/jquery.sparkline.min.js"></script>
-    <link href="/style.css" type="text/css" media="all" rel="stylesheet" /> 
+    <% if params[:controller] == "map" && params[:action] == "index" %>
+      <link href="/style-2.css" type="text/css" media="all" rel="stylesheet" /> 
+    <% else %>
+      <link href="/style.css" type="text/css" media="all" rel="stylesheet" /> 
+    <% end %>
     <link href="/feeds/all" rel="alternate" type="application/rss+xml" title="Recent maps on MapKnitter.org" />
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw&sensor=false"></script>
 
@@ -34,19 +38,19 @@
   <div id="bodywrap">
   <div id="header">
     <div class="right">
-      <a href="http://publiclaboratory.org/wiki/mapknitter">Intro</a> |
-      <a href="http://publiclaboratory.org/tool/balloon-mapping">Aerial photography</a> |
-      <a href="http://publiclaboratory.org/wiki/mapknitter-help">Help</a> |
-      <a href="http://publiclaboratory.org/archive">Map Archive</a>
+      <a href="http://publiclab.org/wiki/mapknitter">Intro</a> |
+      <a href="http://publiclab.org/wiki/balloon-mapping">Aerial photography</a> |
+      <a href="http://publiclab.org/wiki/mapknitter-help">Help</a> |
+      <a href="http://publiclab.org/archive">Map Archive</a>
 
-                <% if logged_in? %>
-                || 
-                <a href="/dashboard">Dashboard</a> | 
-                <a href="/profile/<%= current_user.login %>"><%=h current_user.login %></a> | 
-                <%= link_to 'Logout', logout_path %>
-                <% else %>
-                || <%= link_to 'Log in', login_path %>
-                <% end %>
+      <% if logged_in? %>
+      || 
+      <a href="/dashboard">Dashboard</a> | 
+      <a href="/profile/<%= current_user.login %>"><%=h current_user.login %></a> | 
+      <%= link_to 'Logout', logout_path %>
+      <% else %>
+      || <%= link_to 'Log in', login_path %>
+      <% end %>
 
     </div>
     <a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
