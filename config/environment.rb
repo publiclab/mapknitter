@@ -27,16 +27,17 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
 
-  config.gem "mysql"
+  config.gem "mysql", :version => '~> 2.9.1'
   #config.gem "json_pure"
-  config.gem "httparty"
-  config.gem "geokit"
+  config.gem "httparty", :version => '~> 0.11.0'
+  config.gem "geokit-rails", :version => '~> 1.1.4'
   #config.gem "RubyInline"
-  config.gem "image_science"
+  config.gem "image_science", :version => '~> 1.2.6'
   #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
   config.gem "recaptcha", :lib => "recaptcha/rails"
   #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
   config.gem 'will_paginate', :version => '~> 2.3.16'
+  config.gem 'oa-openid', :version => '~> 0.3.2'
 
   # config.gem "rubyzip"
   # if you're going to use Amazon s3 for image storage:

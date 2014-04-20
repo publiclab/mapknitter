@@ -47,11 +47,11 @@ class Map < ActiveRecord::Base
   end
 
   def self.authors(limit = 50)
-    Map.find(:all, :limit => limit, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = false']).collect(&:author)
+    Map.find(:all, :limit => limit, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = "false"']).collect(&:author)
   end
 
   def self.new_maps
-    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = false'])
+    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
   end
 
   def warpables
