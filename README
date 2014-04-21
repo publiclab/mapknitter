@@ -50,7 +50,7 @@ You'll need Ruby on Rails ~2.3.15, Ruby 1.8.7 (Ruby 1.9.x doesn't work for now a
 Check the version of ruby installed on your system by "ruby -v" If it displays a version other than 1.8.7, use a version manager like RVM to use ruby 1.8.7 as default.
 
 1) Download source from http://github.com/jywarren/mapknitter
-2) Install the compatible (with ruby 1.8.7) versions of the following gems using "gem install" : mysql, geokit, image_science, recaptcha, will_paginate, oa-openid, httparty.
+2) Install the compatible (with ruby 1.8.7) versions of the following gems using "gem install" : mysql(2.9.1), geokit-rails(1.1.4), image_science(1.2.6), recaptcha(0.3.6), will_paginate(2.3.16), oa-openid(0.3.2), httparty(0.11.0).
 For e.g.- use "gem install geokit-rails -v 1.1.4" to install geokit-rails version 1.1.4. The dependent libraries can be viewed by opening /config/environment.rb.
 3) Install davetroy-geohash from github source; first add github source with "gem sources -a http://gems.github.com" then run "gem install davetroy-geohash". (probably not needed anymore really)
 4) Manually run "gem install RubyInline" - this was causing trouble when done from environment.rb
