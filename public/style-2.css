@@ -30,6 +30,7 @@ a:hover {
 #header {
   background:#282830;
   margin-bottom:20px;
+  padding-top:10px;
 }
 
 #header h1 {
@@ -39,6 +40,7 @@ a:hover {
   padding:14px 0 4px 14px;
   margin:0;
   font-size:24px;
+  display:inline;
 }
 
 #header h1 small {
@@ -47,7 +49,7 @@ a:hover {
 }
 
 #header .right {
-  margin-top:30px;
+  margin-top:10px;
   margin-right:10px;
   float:right;
 }

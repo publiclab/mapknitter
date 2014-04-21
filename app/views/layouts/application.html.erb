@@ -38,6 +38,9 @@
   <body>
   <div id="bodywrap">
   <div id="header">
+    <% if params[:controller] == "map" && params[:action] == "index" %>
+      <h1><a href="/">MapKnitter</a> <small>by Public Lab</small></h1>
+    <% end %>
     <div class="right">
       <a href="http://publiclab.org/wiki/mapknitter">Intro</a> |
       <a href="http://publiclab.org/wiki/balloon-mapping">Aerial photography</a> |
@@ -54,9 +57,7 @@
       <% end %>
 
     </div>
-    <% if params[:controller] == "map" && params[:action] == "index" %>
-      <h1><a href="/">MapKnitter</a> <small>by Public Lab</small></h1>
-    <% else %>
+    <% unless params[:controller] == "map" && params[:action] == "index" %>
       <a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
       <br style="clear:both;" />
     <% end %>
