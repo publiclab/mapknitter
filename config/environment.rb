@@ -27,7 +27,7 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
 
-  config.gem "sqlite3"
+  config.gem "mysql", :version => '~> 2.9.1'
   #config.gem "json_pure"
   config.gem "httparty", :version => '~> 0.11.0'
   config.gem "geokit"
