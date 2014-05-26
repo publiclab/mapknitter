@@ -18,6 +18,7 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
+     paramName: 'warpable[\'uploaded_data\']' 
     });
 
     // Enable iframe cross-domain access via redirect option:
