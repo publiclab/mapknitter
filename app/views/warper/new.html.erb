@@ -7,6 +7,10 @@
 		<title>Cartagen: Maps</title>
 		<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    <%= stylesheet_link_tag "bootstrap.min" %>
+    <%= stylesheet_link_tag "jquery.fileupload" %>
+    <%= stylesheet_link_tag "jquery.fileupload-ui" %>
 	</head>
 	<body>
 		<%= error_messages_for :warpable %>
@@ -25,5 +29,19 @@
 		<p>
 			Where can you get images to upload?<br />Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
 		</p>
+    <%= javascript_include_tag "jquery.min" %>
+    <%= javascript_include_tag "jquery-fileupload/js/vendor/jquery.ui.widget" %>
+    <%= javascript_include_tag "jquery-fileupload/js/tmpl.min" %>
+    <%= javascript_include_tag "jquery-fileupload/js/canvas-to-blob.min" %>
+    <%= javascript_include_tag "jquery-fileupload/js/blueimp-gallery.min" %>
+    <%= javascript_include_tag "jquery-fileupload/js/jquery.iframe-transport" %>
+    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload" %>
+    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-process" %>
+    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-image" %>
+    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-ui" %>
+    <%= javascript_include_tag "jquery-fileupload/js/main" %>
+
+
+ 
 	</body>
 </html>
