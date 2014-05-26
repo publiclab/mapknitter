@@ -15,7 +15,7 @@
 	<body>
 		<%= error_messages_for :warpable %>
 
-		<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true,:id => "warpable_upload_form" }) do |f| -%>
+		<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>
 		  <p>
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>
 		    <input id="warpable_uploaded_data" name="warpable[uploaded_data]" size="30" type="file" />

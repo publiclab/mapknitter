@@ -6,10 +6,17 @@ class WarperController < ApplicationController
   rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
   rescue_from Timeout::Error, :with => :url_upload_not_found
   protect_from_forgery :except => [:update,:delete]  
+  #Convert model to json without including root name. Eg. 'warpable'
+  ActiveRecord::Base.include_root_in_json = false
 
   def new
     @map_id = params[:id]
-    render :layout => false
+    @warpable = Warpable.new
+    respond_to do |format|
+     format.html { render :layout => false } 
+     format.json { render :json => @warpable}
+    end
+
   end
 
   def create
@@ -18,10 +25,14 @@ class WarperController < ApplicationController
     map = Map.find(params[:map_id])
     map.updated_at = Time.now
     map.save
-    if @warpable.save
-      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
-    else
-      render :action => :new
+    respond_to do |format|     
+      if @warpable.save
+       format.html { redirect_to :action => 'uploaded_confirmation',:id => @warpable.id }
+       format.json { format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable }}
+      else
+       format.html { render :action => "new" }
+       format.json { render :json => @upload.errors, :status => :unprocessable_entity }
+      end
     end
   end
 
