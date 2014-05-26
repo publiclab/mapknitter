@@ -9,6 +9,14 @@ class WarperController < ApplicationController
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
+  def index
+    @warpable = Warpable
+
+    respond_to do |format|
+      format.json { render :json => @warpable.map{|w| w.fup_json } }
+    end
+  end
+
   def new
     @map_id = params[:id]
     @warpable = Warpable.new
@@ -64,6 +72,10 @@ class WarperController < ApplicationController
   
   def show
     @image = Warpable.find params[:id]
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render :json => @image }
+    end
   end
   
   def list
@@ -103,7 +115,10 @@ class WarperController < ApplicationController
     image = Warpable.find params[:id]
     image.deleted = true
     image.save
-    render :text => 'successfully deleted '+params[:id]
+    respond_to do |format|
+      format.html { render :text => 'successfully deleted '+params[:id]}
+      format.json { head :no_content }
+    end
   end
   
 end
