@@ -27,7 +27,7 @@
 	<body>
 		<%= error_messages_for :warpable %>
 
-		<% form_for(:warpable, :url => {:action => 'create.json'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
+		<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
 		<input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 		  <p>
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>		    
@@ -168,6 +168,13 @@
         template.addClass('in');
         $('#loading').remove();
       });
+      $('#fileupload').bind('fileuploaddone', function(e ,data)
+           {
+           parent.Modalbox.hide();
+           });
+      $(document).bind('drop dragover', function (e) {
+            e.preventDefault();
+            });
 
   });
 </script>

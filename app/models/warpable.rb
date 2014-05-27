@@ -19,8 +19,8 @@ class Warpable < ActiveRecord::Base
   def fup_json
    {"name" => read_attribute(:upload_file_name),
     "size" => read_attribute(:upload_file_size),
-    "url" => public_filename(self),
-    "delete_url" => upload_path(self),
+    "url" => self.public_filename(:medium),
+    "delete_url" => public_filename(self),
     "delete_type" => "DELETE"}
   end
 

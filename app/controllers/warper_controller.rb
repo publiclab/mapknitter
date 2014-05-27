@@ -38,11 +38,10 @@ class WarperController < ApplicationController
       if @warpable.save
         format.html {
           render :json => [@warpable.fup_json].to_json,
-          :content_type => 'text/html',
-          :layout => false
+          :content_type => 'text/html'
         }
 
-       format.json { format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable }}
+       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.public_filename() }
       else
        format.html { render :action => "new" }
        format.json { render :json => @warpable.errors, :status => :unprocessable_entity , :layout => false}

@@ -1,6 +1,3 @@
-<h3><%= @warpables.count %> images found. </h3>
-
-<% for image in @warpables %>
-<a href="<%= image.public_filename() %>"><img src="<%= image.public_filename(:thumb) %>" /></a><br />
-<a href="<%= image.public_filename() %>"><%= image.public_filename() %></a><br /><br />
-<% end %>
+<script type="text/javascript" charset="utf-8">
+	parent.Warper.new_image('<%= @warpable.public_filename(:medium) %>',<%= @warpable.id %>,true);parent.Modalbox.hide();
+</script>
