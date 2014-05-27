@@ -8,27 +8,27 @@
 		<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-    <%= stylesheet_link_tag "bootstrap.min" %>
-    <%= stylesheet_link_tag "jquery.fileupload" %>
-    <%= stylesheet_link_tag "jquery.fileupload-ui" %>
+    <%= stylesheet_link_tag "fileupload/fileupload-ui" %>
+    <%= stylesheet_link_tag "fileupload/bootstrap_and_overrides" %>
+
 
 
     <%= javascript_include_tag "jquery.min" %>
-    <%= javascript_include_tag "jquery-fileupload/js/vendor/jquery.ui.widget" %>
-    <%= javascript_include_tag "jquery-fileupload/js/tmpl.min" %>
-    <%= javascript_include_tag "jquery-fileupload/js/canvas-to-blob.min" %>
-    <%= javascript_include_tag "jquery-fileupload/js/blueimp-gallery.min" %>
-    <%= javascript_include_tag "jquery-fileupload/js/jquery.iframe-transport" %>
-    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload" %>
-    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-process" %>
-    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-image" %>
-    <%= javascript_include_tag "jquery-fileupload/js/jquery.fileupload-ui" %>
-    <%# javascript_include_tag "jquery-fileupload/js/main" %>
+    <%= javascript_include_tag "fileupload/vendor/jquery.ui.widget" %>
+    <%= javascript_include_tag "fileupload/vendor/load-image" %>
+    <%= javascript_include_tag "fileupload/vendor/canvas-to-blob" %>
+    <%= javascript_include_tag "fileupload/vendor/tmpl" %>
+    <%= javascript_include_tag "fileupload/jquery.iframe-transport" %>
+    <%= javascript_include_tag "fileupload/jquery.fileupload" %>
+    <%= javascript_include_tag "fileupload/jquery.fileupload-fp" %>
+    <%= javascript_include_tag "fileupload/jquery.fileupload-ui" %>
+    <%= javascript_include_tag "fileupload/locale" %>
 	</head>
 	<body>
 		<%= error_messages_for :warpable %>
 
-		<% form_for(:warpable, :url => {:action => 'new'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>
+		<% form_for(:warpable, :url => {:action => 'create.json'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
+		<input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 		  <p>
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>		    
 		  </p>
@@ -40,9 +40,8 @@
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <i class="icon-plus icon-white"></i>
-          <span>Add files...</span>
+          <span>Add files...</span>         
 		<input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" />
-		<input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
         </span>
         <button type="submit" class="btn btn-primary start">
           <i class="icon-upload icon-white"></i>
@@ -69,8 +68,10 @@
     <div class="fileupload-loading"></div>
     <br>
     <!-- The table listing the files available for upload/download -->
+    <div class="scrollWrapper">
     <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
     </table>
+   </div>
   <% end %>
 
 </div>
@@ -153,7 +154,7 @@
       // 
       // Load existing files:
       paramName = 'warpable[uploaded_data]'
-      url = '/warper'
+      url = 'warper/create.json'
       $.getJSON($('#fileupload').prop('action'), function (files) {
         var fu = $('#fileupload').data('blueimpFileupload'), 
           template;

@@ -36,11 +36,16 @@ class WarperController < ApplicationController
     map.save
     respond_to do |format|     
       if @warpable.save
-       format.html { redirect_to :action => 'uploaded_confirmation',:id => @warpable.id }
+        format.html {
+          render :json => [@warpable.fup_json].to_json,
+          :content_type => 'text/html',
+          :layout => false
+        }
+
        format.json { format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable }}
       else
        format.html { render :action => "new" }
-       format.json { render :json => @upload.errors, :status => :unprocessable_entity }
+       format.json { render :json => @warpable.errors, :status => :unprocessable_entity , :layout => false}
       end
     end
   end
