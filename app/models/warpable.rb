@@ -17,9 +17,10 @@ class Warpable < ActiveRecord::Base
 
   #Json formatting for file upload plugin
   def fup_json
-   {"name" => read_attribute(:upload_file_name),
-    "size" => read_attribute(:upload_file_size),
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
     "url" => self.public_filename(:medium),
+    "thumbnail_url" => self.public_filename(:thumb),
     "delete_url" => public_filename(self),
     "delete_type" => "DELETE"}
   end

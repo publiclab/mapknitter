@@ -144,6 +144,7 @@
         <input type="checkbox" name="delete" value="1">
       </td>
     </tr>
+
     {% } %}
 </script>
 
@@ -168,10 +169,11 @@
         template.addClass('in');
         $('#loading').remove();
       });
-      $('#fileupload').bind('fileuploaddone', function(e ,data)
-           {
-           parent.Modalbox.hide();
-           });
+//      $('#fileupload').bind('fileuploadprogressall', function(e ,data)
+//           {
+//           var progress = parseInt(data.loaded / data.total * 100, 10);
+//           if(data.loaded == data.total) parent.Modalbox.hide();
+//           });
       $(document).bind('drop dragover', function (e) {
             e.preventDefault();
             });
