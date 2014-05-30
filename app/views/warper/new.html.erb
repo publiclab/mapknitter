@@ -43,19 +43,6 @@
           <span>Add files...</span>         
 		<input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" />
         </span>
-        <button type="submit" class="btn btn-primary start">
-          <i class="icon-upload icon-white"></i>
-          <span>Start upload</span>
-        </button>
-        <button type="reset" class="btn btn-warning cancel">
-          <i class="icon-ban-circle icon-white"></i>
-          <span>Cancel upload</span>
-        </button>
-        <button type="button" class="btn btn-danger delete">
-          <i class="icon-trash icon-white"></i>
-          <span>Delete</span>
-        </button>
-        <input type="checkbox" class="toggle">
       </div>
       <div class="span5">
         <!-- The global progress bar -->
@@ -151,13 +138,13 @@
 <script type="text/javascript" charset="utf-8">
   $(function () {
       // Initialize the jQuery File Upload widget:
-      $('#fileupload').fileupload();
-      // 
-      // Change the default parameters name from files[]
-      paramName = 'warpable[uploaded_data]'
-      url = 'warper/new'
+    $('#fileupload').fileupload({      // Change the default parameters name from files[]
+      paramName:  'warpable[uploaded_data]',
+      autoUpload: 'true',
       // Set additonal form data to submit map_id
-      formData = {map_id: '<%=@map_id%>'}
+      formData:  {map_id: '<%=@map_id%>'}});
+      // 
+      
       $.getJSON($('#fileupload').prop('action'), function (files) {
         var fu = $('#fileupload').data('blueimpFileupload'), 
           template;
