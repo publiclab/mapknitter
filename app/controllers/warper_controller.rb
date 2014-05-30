@@ -10,13 +10,11 @@ class WarperController < ApplicationController
   ActiveRecord::Base.include_root_in_json = false
 
   #Unecessary
-  #def index
-  #  @warpable = Warpable
-
-  #  respond_to do |format|
-  #    format.json { render :json => @warpable.map{|w| w.fup_json } }
-  #  end
-  #end
+  def index
+    respond_to do |format|
+      format.json { render :json => {} }
+    end
+  end
 
   def new
     @map_id = params[:id]

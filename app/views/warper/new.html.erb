@@ -27,7 +27,7 @@
 	<body>
 		<%= error_messages_for :warpable %>
 
-		<% form_for(:warpable, :url => {:action => 'create'}, :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
+		<% form_for(:warpable, :url => '/warper/create', :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
 		<input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 		  <p>
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>		    
@@ -153,9 +153,11 @@
       // Initialize the jQuery File Upload widget:
       $('#fileupload').fileupload();
       // 
-      // Load existing files:
+      // Change the default parameters name from files[]
       paramName = 'warpable[uploaded_data]'
-      url = 'warper/create.json'
+      url = 'warper/new'
+      // Set additonal form data to submit map_id
+      formData = {map_id: '<%=@map_id%>'}
       $.getJSON($('#fileupload').prop('action'), function (files) {
         var fu = $('#fileupload').data('blueimpFileupload'), 
           template;
