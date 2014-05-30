@@ -44,7 +44,7 @@ class WarperController < ApplicationController
        format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.public_filename() }
       else
        format.html { render :action => "new" }
-       format.json { render :json => @warpable.errors, :status => :unprocessable_entity , :layout => false}
+       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
       end
     end
   end

@@ -25,11 +25,11 @@ class Warpable < ActiveRecord::Base
     "delete_type" => "DELETE"}
   end
 
-#  def error_json(error)
-#   {"name" => read_attribute(:upload_file_name),
-#    "size" => read_attribute(:upload_file_size),
-#    "error" => error}
-#  end
+  def fup_error_json
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
+    "error" => self.errors["base"]}                      
+  end
 
   def validate
     errors.add_to_base("You must choose a file to upload") unless self.filename
