@@ -140,6 +140,8 @@
     $('#fileupload').fileupload({      // Change the default parameters name from files[]
       paramName:  'warpable[uploaded_data]',
       autoUpload: 'true',
+      acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+      maxFileSize: 10000000,
       // Set additonal form data to submit map_id
       formData:  {map_id: '<%=@map_id%>'}});
       // 
