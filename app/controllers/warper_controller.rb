@@ -29,6 +29,7 @@ class WarperController < ApplicationController
   def create
     @warpable = Warpable.new(params[:warpable])
     @warpable.map_id = params[:map_id]
+    print params[:map_id]
     map = Map.find(params[:map_id])
     map.updated_at = Time.now
     map.save
