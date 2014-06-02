@@ -39,7 +39,7 @@ class WarperController < ApplicationController
           render :json => [@warpable.fup_json].to_json,
           :content_type => 'text/html'
 
-          redirect_to :action => 'upload_confirmation', :id => @warpable.id 
+          redirect_to :action => 'uploaded_confirmation', :id => @warpable.id 
         }
 
        format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.public_filename() }

@@ -156,7 +156,11 @@
           template[0].offsetWidth;
         template.addClass('in');
         $('#loading').remove();
+
       });
+      $('#fileupload').bind('fileuploaddone', function (e, data) { 
+
+        });
 //      $('#fileupload').bind('fileuploadprogressall', function(e ,data)
 //           {
 //           var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -165,6 +169,9 @@
       $(document).bind('drop dragover', function (e) {
             e.preventDefault();
             });
+     
+         	parent.Warper.new_image(files.url,files.id,true);parent.Modalbox.hide();
+
 
   });
 </script>
