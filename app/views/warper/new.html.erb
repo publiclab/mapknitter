@@ -114,6 +114,8 @@
         <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
         <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
         {% } else { %}
+
+   {%	parent.Warper.new_image(file.url,file.id,true); %}
         <td class="preview">{% if (file.thumbnail_url) { %}
           <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
           {% } %}</td>
@@ -145,6 +147,7 @@
     formData = $('form').serializeArray(); 
       
       $.getJSON($('#fileupload').prop('action'), function (files) {
+
         var fu = $('#fileupload').data('blueimpFileupload'), 
           template;
        // fu._adjustMaxNumberOfFiles(-files.length);
@@ -155,6 +158,7 @@
         fu._reflow = fu._transition && template.length &&
           template[0].offsetWidth;
         template.addClass('in');
+
         $('#loading').remove();
 
       });
@@ -170,7 +174,6 @@
             e.preventDefault();
             });
      
-         	parent.Warper.new_image(files.url,files.id,true);parent.Modalbox.hide();
 
 
   });
