@@ -12,7 +12,6 @@ class WarperController < ApplicationController
   #Unecessary
   def index
     respond_to do |format|
-      format.json { render :json => {} }
     end
   end
 
@@ -74,10 +73,10 @@ class WarperController < ApplicationController
   end
   
   def show
-    @image = Warpable.find params[:id]
+    @image = Warpable.all(:conditions => {:map_id => params[:map_id]} )
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @image.to_json }
+      format.json { render :json => @image.map{|img| img.fup_json} }
     end
   end
   

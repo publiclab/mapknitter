@@ -52,6 +52,10 @@ ActionController::Routing::Routes.draw do |map|
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing the them or commenting them out if you're using named routes and resources.
 
+  # Warper controller, handling uploads
+  map.connect 'warper/:map_id', :controller => 'warper', :action => 'show', :conditions => { :method => :get }, :requirements => { :map_id => /\d+/ }
+  map.connect 'warper/:id', :controller => 'warper', :action => 'create', :conditions => { :method => :post }, :requirements => { :id => /\d+/ }
+
   # Registered user pages:
   map.profile '/profile', :controller => 'users', :action => 'profile', :id => 0
   map.profile '/profile/:id', :controller => 'users', :action => 'profile'
