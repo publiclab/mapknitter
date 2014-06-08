@@ -86,14 +86,16 @@ img.export_status {
 
 <div id="export_normal">
 
-<% if Rails.env.production? %>
+<% if Rails.env.production? && !logged_in? %>
 <div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
 <% end %>
 
 <a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?type=normal&authenticity_token=<%= form_authenticity_token %>',{
 	parameters: {
+<% if Rails.env.production? && !logged_in? %>
 		recaptcha_response_field: Recaptcha.get_response(),
 		recaptcha_challenge_field: Recaptcha.get_challenge(),
+<% end %>
 		resolution: $('map_resolution').value,
 	},
 	onSuccess: function(response){ eval(response.responseText) },

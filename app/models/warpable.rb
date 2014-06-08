@@ -116,17 +116,23 @@ class Warpable < ActiveRecord::Base
   def generate_perspectival_distort(pxperm,path)
     require 'net/http'
     
-    working_directory = "public/warps/"+path+"-working/"
-    directory = "public/warps/"+path+"/"
-    Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
+    # believe everything in -working/ can be deleted; this is just so we can use the files locally outside of s3
+    working_directory = self.working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
-
     local_location = working_directory+self.id.to_s+'-'+self.filename
+
+    directory = self.warps_directory(path)
+    Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
     completed_local_location = directory+self.id.to_s+'.png'
+
+    # believe everything -masked.png can be deleted
     masked_local_location = directory+self.id.to_s+'-masked.png'
+    # believe everything -mask.png can be deleted
     mask_location = directory+self.id.to_s+'-mask.png'
     #completed_local_location = directory+self.id.to_s+'.tif'
+    # know everything -unwarped can be deleted
     geotiff_location = directory+self.id.to_s+'-geo-unwarped.tif'
+    # everything -geo WITH AN ID could be deleted, but there is a feature request to preserve these
     warped_geotiff_location = directory+self.id.to_s+'-geo.tif'
 
     northmost = self.nodes_array.first.lat
@@ -281,8 +287,24 @@ class Warpable < ActiveRecord::Base
     gdalwarp = 'gdalwarp -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
 	system(Gdal.ulimit+gdalwarp)
-    
+
+    # deletions could happen here; do it in distinct method so we can run it independently
+    self.delete_temp_files(path)
+
     [x1,y1]
+  end
+
+  def working_directory(path)
+    "public/warps/"+path+"-working/"
+  end
+
+  def warps_directory(path)
+    "public/warps/"+path+"/"
+  end
+
+  def delete_temp_files(path)
+    system('rm -r '+self.working_directory(path))
+    system('rm '+self.warps_directory(path)+'*.png')
   end
 
 end
