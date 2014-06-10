@@ -3,7 +3,7 @@ var EXIF = (function() {
 
     var debug = false;
 
-    var ExifTags = {
+    /*var ExifTags = {
 
         // version tags
         0x9000 : "ExifVersion",             // EXIF version
@@ -77,14 +77,14 @@ var EXIF = (function() {
         // other tags
         0xA005 : "InteroperabilityIFDPointer",
         0xA420 : "ImageUniqueID"            // Identifier assigned uniquely to each image
-    };
+    };*/
 
     var TiffTags = {
-        0x0100 : "ImageWidth",
-        0x0101 : "ImageHeight",
+        /*0x0100 : "ImageWidth",
+        0x0101 : "ImageHeight",*/
         0x8769 : "ExifIFDPointer",
         0x8825 : "GPSInfoIFDPointer",
-        0xA005 : "InteroperabilityIFDPointer",
+       /* 0xA005 : "InteroperabilityIFDPointer",
         0x0102 : "BitsPerSample",
         0x0103 : "Compression",
         0x0106 : "PhotometricInterpretation",
@@ -112,7 +112,7 @@ var EXIF = (function() {
         0x0110 : "Model",
         0x0131 : "Software",
         0x013B : "Artist",
-        0x8298 : "Copyright"
+        0x8298 : "Copyright"*/
     };
 
     var GPSTags = {
@@ -149,7 +149,7 @@ var EXIF = (function() {
         0x001E : "GPSDifferential"
     };
 
-    var StringValues = {
+    /*var StringValues = {
         ExposureProgram : {
             0 : "Not defined",
             1 : "Manual",
@@ -285,7 +285,7 @@ var EXIF = (function() {
             5 : "G",
             6 : "B"
         }
-    };
+    };*/
 
     function addEvent(element, event, handler) {
         if (element.addEventListener) { 
@@ -300,7 +300,7 @@ var EXIF = (function() {
     }
 
 
-    function base64ToArrayBuffer(base64, contentType) {
+    /*function base64ToArrayBuffer(base64, contentType) {
         contentType = contentType || base64.match(/^data\:([^\;]+)\;base64,/mi)[1] || ''; // e.g. 'data:image/jpeg;base64,...' => 'image/jpeg'
         base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
         var binary = atob(base64);
@@ -323,7 +323,7 @@ var EXIF = (function() {
             }
         };
         http.send();
-    }
+    }*/
 
     function getImageData(img, callback) {
         function handleBinaryFile(binFile) {
@@ -563,7 +563,46 @@ var EXIF = (function() {
             return false;
         }
 
-        tags = readTags(file, tiffOffset, tiffOffset + firstIFDOffset, TiffTags, bigEnd);        
+        tags = readTags(file, tiffOffset, tiffOffset + firstIFDOffset, TiffTags, bigEnd);
+
+        /*if (tags.ExifIFDPointer) {
+            exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
+            for (tag in exifData) {
+                switch (tag) {
+                    case "LightSource" :
+                    case "Flash" :
+                    case "MeteringMode" :
+                    case "ExposureProgram" :
+                    case "SensingMethod" :
+                    case "SceneCaptureType" :
+                    case "SceneType" :
+                    case "CustomRendered" :
+                    case "WhiteBalance" : 
+                    case "GainControl" : 
+                    case "Contrast" :
+                    case "Saturation" :
+                    case "Sharpness" : 
+                    case "SubjectDistanceRange" :
+                    case "FileSource" :
+                        exifData[tag] = StringValues[tag][exifData[tag]];
+                        break;
+        
+                    case "ExifVersion" :
+                    case "FlashpixVersion" :
+                        exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
+                        break;
+        
+                    case "ComponentsConfiguration" : 
+                        exifData[tag] = 
+                            StringValues.Components[exifData[tag][0]] +
+                            StringValues.Components[exifData[tag][1]] +
+                            StringValues.Components[exifData[tag][2]] +
+                            StringValues.Components[exifData[tag][3]];
+                        break;
+                }
+                tags[tag] = exifData[tag];
+            }
+        }*/
 
         if (tags.GPSInfoIFDPointer) {
             gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
@@ -597,16 +636,62 @@ var EXIF = (function() {
         return true;
     }
 
-    function getTag(img, tag) {
+    /*function getTag(img, tag) {
         if (!imageHasData(img)) return;
-        return img.exifdata[tag];
+        return img.exifdata[GPSTags];
+    }*/
+
+    function getGPSTags(img) {
+        if (!imageHasData(img)) return {};
+        var a, 
+            data = img.exifdata,
+            tags = {};
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                tags[a] = data[a];
+            }
+        }
+        return tags;
     }
+
+    /*function pretty(img) {
+        if (!imageHasData(img)) return "";
+        var a,
+            data = img.exifdata,
+            strPretty = "";
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                if (typeof data[a] == "object") {
+                    if (data[a] instanceof Number) {
+                        strPretty += a + " : " + data[a] + " [" + data[a].numerator + "/" + data[a].denominator + "]\r\n";
+                    } else {
+                        strPretty += a + " : [" + data[a].length + " values]\r\n";
+                    }
+                } else {
+                    strPretty += a + " : " + data[a] + "\r\n";
+                }
+            }
+        }
+        return strPretty;
+    }*/
 
     function readFromBinaryFile(file) {
         return findEXIFinJPEG(file);
     }
 
    
+    return {
+//        readFromBinaryFile : readFromBinaryFile,
+//        pretty : pretty,
+        getGPSTags : getGPSTags,
+//        getAllTags : getAllTags,
+        getData : getData,
+        
+//        Tags : ExifTags,
+//        TiffTags : TiffTags,
+//        GPSTags : GPSTags,
+//        StringValues : StringValues
+    };
 
 })();
 
