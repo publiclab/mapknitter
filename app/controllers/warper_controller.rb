@@ -73,7 +73,8 @@ class WarperController < ApplicationController
   end
   
   def show
-    @image = Warpable.all(:conditions => {:map_id => params[:map_id]} )
+   #Need some specific way
+    @image = #Warpable.all(:conditions => {:map_id => params[:map_id]} )
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @image.map{|img| img.fup_json} }
