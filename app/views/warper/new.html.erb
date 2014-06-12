@@ -23,12 +23,13 @@
     <%= javascript_include_tag "fileupload/jquery.fileupload-fp" %>
     <%= javascript_include_tag "fileupload/jquery.fileupload-ui" %>
     <%= javascript_include_tag "fileupload/locale" %>
+    <%= javascript_include_tag "gps-exif" %>
 	</head>
 	<body>
 		<%= error_messages_for :warpable %>
 
     <% form_for(:warpable, :url => "/warper/#{@map_id}", :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
-    <input id="wrpable_mp_id" name="map_id" type="hidden" value="<%= @map_id %>" />
+    <input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 		  <p>
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>		    
 		  </p>
@@ -115,7 +116,7 @@
         <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
         {% } else { %}
 
-   {%	parent.Warper.new_image(file.url,file.id,true); %}
+
         <td class="preview">{% if (file.thumbnail_url) { %}
           <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
           {% } %}</td>
@@ -162,32 +163,24 @@
         $('#loading').remove();
 
       });
+
       $('#fileupload').bind('fileuploaddone', function (e, data) { 
 
-        });
-//      $('#fileupload').bind('fileuploadprogressall', function(e ,data)
-//           {
-//           var progress = parseInt(data.loaded / data.total * 100, 10);
-//           if(data.loaded == data.total) parent.Modalbox.hide();
-//           });
+        EXIF.getData(data.files[0], function(){
+          var GPS = EXIF.getGPSTags(this); 
+          console.log(data.result.files[0].url);
+         	parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
+          console.table("GPS data:\n"+JSON.stringify(GPS));
+          }); 
+      });
       $(document).bind('drop dragover', function (e) {
             e.preventDefault();
             });
-     
-
-
   });
 </script>
-
-
-
-
 		<p>
 			Where can you get images to upload?<br />Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
 		</p>
 
-
-
- 
 	</body>
 </html>
