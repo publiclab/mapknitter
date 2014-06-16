@@ -164,13 +164,27 @@
 
       });
 
-      $('#fileupload').bind('fileuploaddone', function (e, data) { 
 
+      $('#fileupload').bind('fileuploaddone', function (e, data) { 
         EXIF.getData(data.files[0], function(){
-          var GPS = EXIF.getGPSTags(this); 
+          var GPS = EXIF.getGPSTags(this), latitude, longitude, canvas_height=1366, canvas_width=447, img_x , img_y; 
           console.log(data.result.files[0].url);
-         	parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
+//         	parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
           console.table("GPS data:\n"+JSON.stringify(GPS));
+          //Testingde)
+          if(GPS["GPSLatitude"] && GPS["GPSLongitude"] )
+            {
+            latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
+            longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
+            img_x = -1*(canvas_width/360.0) * (180+longitude);
+            img_y = (canvas_height/180.0) * (90-latitude);         
+            console.log("IMGX:"+img_x);            
+            console.log("IMGX:"+img_y);
+            parent.Warper.new_image_points(data.result.files[0].url, data.result.files[0].id,true, latitude, longitude)
+            }
+          console.log("latitude"+latitude);
+          console.log("longitude"+longitude);
+//          console.log$(parent.$("#main").get(0));
           }); 
       });
       $(document).bind('drop dragover', function (e) {

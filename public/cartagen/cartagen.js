@@ -9355,6 +9355,9 @@ var Warper = {
 	},
 
 	new_image: function(url,id,natural_size) {
+   console.log("Map x:"+Map.x);
+   console.log("Map y:"+Map.y);
+   console.log("Zoom "+Map.zoom);
 		if (!natural_size) {
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
 				[Map.x-100/Map.zoom, Map.y],
@@ -9370,6 +9373,26 @@ var Warper = {
 				[Map.x, Map.y]
 			]),url,id,natural_size))
 		}
+		Knitter.new_image = Warper.images.last()
+		Knitter.new_image.highlight_for(5)
+	},
+
+
+	new_image_points: function(url,id,natural_size,lat, lon) {
+      console.log("MX"+Map.x);
+      console.log("MY"+Map.y);
+      console.log("Zoom"+Map.zoom);
+
+      var x = Projection.lon_to_x(lon);
+      var y = Projection.lat_to_y(lat);
+      console.log("X"+x);   
+      console.log("Y"+y);   
+			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+        [x, y],
+        [x, y],       
+        [x, y],        
+        [x, y]        
+			]),url,id,natural_size))
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
 	},
