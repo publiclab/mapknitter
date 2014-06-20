@@ -9355,9 +9355,6 @@ var Warper = {
 	},
 
 	new_image: function(url,id,natural_size) {
-   console.log("Map x:"+Map.x);
-   console.log("Map y:"+Map.y);
-   console.log("Zoom "+Map.zoom);
 		if (!natural_size) {
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
 				[Map.x-100/Map.zoom, Map.y],
@@ -9367,26 +9364,28 @@ var Warper = {
 			]),url,id,natural_size))
 		} else {
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-				[Map.x, Map.y],
-				[Map.x, Map.y],
-				[Map.x, Map.y],
-				[Map.x, Map.y]
+				[Map.x-100, Map.y+100],
+				[Map.x+100, Map.y+100],
+				[Map.x+100, Map.y-100],
+				[Map.x-100, Map.y-100]
 			]),url,id,natural_size))
 		}
+  console.log(Warper.images.last());
+  console.log(Warper.images.last().centroid);
+  console.log(Warper.images.last().id);
+
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
 	},
 
 
-	new_image_points: function(url,id,natural_size,lat, lon) {
-      console.log("MX"+Map.x);
-      console.log("MY"+Map.y);
-      console.log("Zoom"+Map.zoom);
-
+	new_image_GPS: function(url,id,natural_size,lat, lon, rotation, altitude) {
       var x = Projection.lon_to_x(lon);
       var y = Projection.lat_to_y(lat);
-      console.log("X"+x);   
-      console.log("Y"+y);   
+      var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
+      var hh=IMG_HEIGHT/(2*Map.zoom), wh=IMG_WIDTH/(2*Map.zoom);
+
+      // We need to map the center of the image with GPS lat, lon.
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
         [x, y],
         [x, y],       
@@ -9395,6 +9394,13 @@ var Warper = {
 			]),url,id,natural_size))
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
+    console.log(Warper.images.last());
+    Warper.images.last().reset_centroid;
+    console.log(Warper.images.last().centroid[0]);
+    console.log(Warper.images.last().image.getWidth());
+
+    console.log("X:"+x);
+    console.log("Y:"+y);
 	},
 
 	load_image: function(url,points,id,locked) {
