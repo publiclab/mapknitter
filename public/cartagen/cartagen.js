@@ -9384,6 +9384,7 @@ var Warper = {
       var y = Projection.lat_to_y(lat);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
       var hh=(IMG_HEIGHT)/(Math.pow(2,(Map.zoom*1.3)+1)), wh=(IMG_WIDTH)/(Math.pow(2,(Map.zoom*1.3)+1));
+      var angle = 45 * Math.PI/180.0; //The angle to rotate the image in.
 
       // We need to map the center of the image with GPS lat, lon.
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
@@ -9392,17 +9393,50 @@ var Warper = {
         [x, y],        
         [x, y]        
 			]),url,id,natural_size))
+    console.log("Placing Image "+id+" at Lat:"+lat+", Long"+lon);
     Warper.images.last().move_x(-1*wh);
     Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
+    //Trying to rotate image
     console.log(Warper.images.last());
-    Warper.images.last().reset_centroid;
-    console.log(Warper.images.last().centroid[0]);
-    console.log(Warper.images.last().image.getWidth());
+    var image_points = Warper.images.last().points;
+    console.log("points: "+image_points[0]);
 
-    console.log("X:"+x);
-    console.log("Y:"+y);
+    // Dirty hack to get the points, can't seem to find any other way to do this,
+    // hopefully anish's project will give better options.
+    var i=0;
+    var origin_x, origin_y;
+    Warper.images.last().points.each(function(point){
+     if(i==2)
+       {
+       origin_x = point.x;
+       origin_y = point.y;
+       }
+     if(i==3)
+       {
+       origin_x = point.x - origin_x;
+       origin_y = point.y - origin_y;
+       }
+    i++;
+    console.log(point.x);
+    console.log(point.y);
+    },Warper.images.last())
+
+    console.log("Origin - ("+origin_x+","+origin_y+")");
+
+/*    Warper.images.last().points.each(function(point){
+     console.log("P-X: "+point.x+", P-Y: "+point.y);
+     var tx = (Math.cos(angle) * (point.x-origin_x)) - (Math.sin(angle)*(point.y-origin_y));
+     var ty = (Math.sin(angle) * (point.x-origin_x)) - (Math.cos(angle)*(point.y-origin_y));
+     console.log("P-Xc: "+tx+", P-Yc: "+ty);
+    },Warper.images.last()) */
+
+    Warper.images.last().points.each(function(point){
+     point.angle = 90;
+    },Warper.images.last())
+
+
 	},
 
 	load_image: function(url,points,id,locked) {
