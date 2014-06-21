@@ -9383,7 +9383,7 @@ var Warper = {
       var x = Projection.lon_to_x(lon);
       var y = Projection.lat_to_y(lat);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
-      var hh=IMG_HEIGHT/(2*Map.zoom), wh=IMG_WIDTH/(2*Map.zoom);
+      var hh=(IMG_HEIGHT)/(Math.pow(2,(Map.zoom*1.3)+1)), wh=(IMG_WIDTH)/(Math.pow(2,(Map.zoom*1.3)+1));
 
       // We need to map the center of the image with GPS lat, lon.
 			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
@@ -9392,6 +9392,8 @@ var Warper = {
         [x, y],        
         [x, y]        
 			]),url,id,natural_size))
+    Warper.images.last().move_x(-1*wh);
+    Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
     console.log(Warper.images.last());
