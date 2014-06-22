@@ -9398,16 +9398,17 @@ var Warper = {
     Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
-    //Trying to rotate image
+
+    //Trying to rotate image, we have to use rectangular coordinates
     console.log(Warper.images.last());
     var image_points = Warper.images.last().points;
-    console.log("points: "+image_points[0]);
+    console.log("points: "+image_points[0].x);
 
     // Dirty hack to get the points, can't seem to find any other way to do this,
     // hopefully anish's project will give better options.
     var i=0;
     var origin_x, origin_y;
-    Warper.images.last().points.each(function(point){
+   /* Warper.images.last().points.each(function(point){
      if(i==2)
        {
        origin_x = point.x;
@@ -9423,7 +9424,7 @@ var Warper = {
     console.log(point.y);
     },Warper.images.last())
 
-    console.log("Origin - ("+origin_x+","+origin_y+")");
+    console.log("Origin - ("+origin_x+","+origin_y+")");*/
 
 /*    Warper.images.last().points.each(function(point){
      console.log("P-X: "+point.x+", P-Y: "+point.y);
@@ -9432,10 +9433,31 @@ var Warper = {
      console.log("P-Xc: "+tx+", P-Yc: "+ty);
     },Warper.images.last()) */
 
-    Warper.images.last().points.each(function(point){
-     point.angle = 90;
-    },Warper.images.last())
+/*				this.parent_shape.points.each(function(point) {
+					point.angle = Math.atan2(point.y-this.parent_shape.centroid[1],point.x-this.parent_shape.centroid[0])
+					point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
+				},this)*/
 
+/*    Warper.images.last().points.each(function(point) {
+        point.angle = angle
+        point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
+     },Warper.images.last())*/
+
+    //Looking for a better way to solve rotation
+    console.log($C.canvas);
+    
+    //Need to tweak this a little
+
+    var distance_x = image_points[0].x * Math.cos(angle);
+    var distance_y = image_points[0].y * Math.sin(angle);
+
+    Warper.images.last().self_distance = Math.sqrt(Math.pow(Warper.images.last().centroid[1]-distance_y,2)+Math.pow(Warper.images.last().centroid[0]-distance_x,2));
+	Warper.images.last().self_angle = Math.atan2(Warper.images.last().centroid[1]-distance_y,Warper.images.last().centroid[0]-distance_x);
+    
+	    Warper.images.last().points.each(function(point) {
+		point.angle = Math.atan2(point.y-Warper.images.last().centroid[1],point.x-Warper.images.last().centroid[0]);
+		point.distance = (point.x-Warper.images.last().centroid[0])/Math.cos(point.angle);
+	},Warper.images.last())
 
 	},
 
