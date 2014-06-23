@@ -9379,32 +9379,56 @@ var Warper = {
 	},
 
 
-	new_image_GPS: function(url,id,natural_size,lat, lon, rotation, altitude) {
+	new_image_GPS: function(url,id,lat, lon, rotation, altitude) {
       var x = Projection.lon_to_x(lon);
       var y = Projection.lat_to_y(lat);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
       var hh=(IMG_HEIGHT)/(Math.pow(2,(Map.zoom*1.3)+1)), wh=(IMG_WIDTH)/(Math.pow(2,(Map.zoom*1.3)+1));
-      var angle = 45 * Math.PI/180.0; //The angle to rotate the image in.
+      var orig_x = x;
+      var orig_y = y;
+      var t,k;
+      var points = Array(4);
+      var angle = (Math.PI / 180) * 90; //The angle to rotate the image in.
+      var cos = Math.cos(angle);
+      var sin = Math.sin(angle);
+      points[0]= [ cos * (x-wh) - sin * (y-hh), sin * (x-wh) - cos * (y-hh) ];
+      points[1]= [ cos * (x+wh) - sin * (y-hh), sin * (x+wh) - cos * (y-hh) ];
+      points[2]= [ cos * (x+wh) - sin * (y+hh), sin * (x+wh) - cos * (y+hh) ];
+      points[3]= [ cos * (x-wh) - sin * (y+hh), sin * (x-wh) - cos * (y+hh) ];
+ 
+      console.log(points); 
+      console.log("Point 1: "+(x-wh)+", "+(y-hh));
+      console.log("Point 2: "+(x+wh)+", "+(y-hh));
+      console.log("Point 3: "+(x+wh)+", "+(y+hh));
+      console.log("Point 4: "+(x-wh)+", "+(y+hh));
 
-      // We need to map the center of the image with GPS lat, lon.
-			Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-        [x, y],
-        [x, y],       
-        [x, y],        
-        [x, y]        
-			]),url,id,natural_size))
+      console.log("X :",x);
+      console.log("Y :",y);
+      // We need to map the center of the image with GPS lat, lon. --, +-, ++, -+
+      // Math.cos(angle) * (
+		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
+        [x-wh , y-hh ],
+        [x+wh , y-hh ],       
+        [x+wh , y+hh ],        
+        [x-wh , y+hh ]        
+			]),url,id,false))
     console.log("Placing Image "+id+" at Lat:"+lat+", Long"+lon);
-    Warper.images.last().move_x(-1*wh);
-    Warper.images.last().move_y(-1*hh);
+ //   Warper.images.last().move_x(-1*wh);
+ //   Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
 
-    //Trying to rotate image, we have to use rectangular coordinates
     console.log(Warper.images.last());
     var image_points = Warper.images.last().points;
-    console.log("points: "+image_points[0].x);
+    console.log("point: "+x);
+    console.log("Centroid"+Warper.images.last().centroid);
 
-    // Dirty hack to get the points, can't seem to find any other way to do this,
+    /* -------------------------------------
+     *  [Math.cos(angle) * (x-wh - orig_x) - Math.sin(angle) * (y-hh - orig_y), Math.sin(angle) * (x-wh - orig_x) - Math.cos(angle) * (y-hh - orig_y)],
+        [Math.cos(angle) * (x+wh - orig_x) - Math.sin(angle) * (y-hh - orig_y), Math.sin(angle) * (x+wh - orig_x) - Math.cos(angle) * (y-hh - orig_y)],       
+        [Math.cos(angle) * (x+wh - orig_x) - Math.sin(angle) * (y+hh - orig_y), Math.sin(angle) * (x+wh - orig_x) - Math.cos(angle) * (y+hh - orig_y)],        
+        [Math.cos(angle) * (x-wh - orig_x) - Math.sin(angle) * (y+hh - orig_y), Math.sin(angle) * (x-wh - orig_x) - Math.cos(angle) * (y+hh - orig_y)]      */
+
     // hopefully anish's project will give better options.
     var i=0;
     var origin_x, origin_y;
@@ -9444,20 +9468,22 @@ var Warper = {
      },Warper.images.last())*/
 
     //Looking for a better way to solve rotation
+/*    Warper.images.last().reset_centroid();
     console.log($C.canvas);
-    
+    var cent_x=Warper.images.last().centroid[0];
+    console.log("Centroid"+cent_x); 
     //Need to tweak this a little
 
     var distance_x = image_points[0].x * Math.cos(angle);
     var distance_y = image_points[0].y * Math.sin(angle);
 
-    Warper.images.last().self_distance = Math.sqrt(Math.pow(Warper.images.last().centroid[1]-distance_y,2)+Math.pow(Warper.images.last().centroid[0]-distance_x,2));
-	Warper.images.last().self_angle = Math.atan2(Warper.images.last().centroid[1]-distance_y,Warper.images.last().centroid[0]-distance_x);
+    Warper.images.last().self_distance = Math.sqrt(Math.pow( wh - distance_y,2 )+Math.pow( hh - distance_x,2));
+	Warper.images.last().self_angle = 45;//Math.atan2( hh -distance_y, wh - distance_x);
     
 	    Warper.images.last().points.each(function(point) {
-		point.angle = Math.atan2(point.y-Warper.images.last().centroid[1],point.x-Warper.images.last().centroid[0]);
-		point.distance = (point.x-Warper.images.last().centroid[0])/Math.cos(point.angle);
-	},Warper.images.last())
+		point.angle = 45;//Math.atan2(point.y- hh ,point.x- wh );
+		point.distance = (point.x- wh )/Math.cos(point.angle);
+	},Warper.images.last())*/
 
 	},
 
