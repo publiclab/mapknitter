@@ -9382,12 +9382,12 @@ var Warper = {
 	new_image_GPS: function(url,id,GPS) {
       var latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
       var longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
-      var angle = (Math.PI / 180) * GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] ; //The angle to rotate the image in.
+      var angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ; //The angle to rotate the image in.
 
       var x = Projection.lon_to_x(longitude);
       var y = Projection.lat_to_y(latitude);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
-      var hh=(IMG_HEIGHT)/(Math.pow(2,(Map.zoom*1.3)+1)), wh=(IMG_WIDTH)/(Math.pow(2,(Map.zoom*1.3)+1));
+      var hh=(IMG_HEIGHT/2) / (2*(Map.zoom*1.3)), wh=(IMG_WIDTH/2) / (2*(Map.zoom*1.3));
       var points = Array(4);
       var cos = Math.cos(angle);
       var sin = Math.sin(angle);
