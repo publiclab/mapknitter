@@ -175,7 +175,7 @@
             {
             latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
             longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
-            parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, latitude, longitude)
+            parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS)
             }
           //Fallback to regular placement.  
           else

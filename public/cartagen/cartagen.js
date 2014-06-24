@@ -9379,24 +9379,33 @@ var Warper = {
 	},
 
 
-	new_image_GPS: function(url,id,lat, lon, rotation, altitude) {
-      var x = Projection.lon_to_x(lon);
-      var y = Projection.lat_to_y(lat);
+	new_image_GPS: function(url,id,GPS) {
+      var latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
+      var longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
+      var angle = (Math.PI / 180) * GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] ; //The angle to rotate the image in.
+
+      var x = Projection.lon_to_x(longitude);
+      var y = Projection.lat_to_y(latitude);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
       var hh=(IMG_HEIGHT)/(Math.pow(2,(Map.zoom*1.3)+1)), wh=(IMG_WIDTH)/(Math.pow(2,(Map.zoom*1.3)+1));
-      var orig_x = x;
-      var orig_y = y;
-      var t,k;
       var points = Array(4);
-      var angle = (Math.PI / 180) * 90; //The angle to rotate the image in.
       var cos = Math.cos(angle);
       var sin = Math.sin(angle);
-      points[0]= [ cos * (x-wh) - sin * (y-hh), sin * (x-wh) - cos * (y-hh) ];
-      points[1]= [ cos * (x+wh) - sin * (y-hh), sin * (x+wh) - cos * (y-hh) ];
-      points[2]= [ cos * (x+wh) - sin * (y+hh), sin * (x+wh) - cos * (y+hh) ];
-      points[3]= [ cos * (x-wh) - sin * (y+hh), sin * (x-wh) - cos * (y+hh) ];
+       
+      points[0]= [ cos * (-1*wh) - sin * (-1*hh) + x, sin * (-1*wh ) + cos * (-1*hh) + y ];
+      points[1]= [ cos * (wh)    - sin * (-1*hh) + x, sin * (wh)     + cos * (-1*hh) + y ];
+      points[2]= [ cos * (wh)    - sin * (hh   ) + x, sin * (wh)     + cos * (hh)    + y ];
+      points[3]= [ cos * (-1*wh) - sin * (hh   ) + x, sin * (-1*wh)  + cos * (hh)    + y ];
  
       console.log(points); 
+      console.log("X,Y: "+x+","+y);
+      console.log("wh, hh: "+wh+","+hh);
+
+      console.log("RPoint 1: "+points[0][0]+", "+points[0][1]);
+      console.log("RPoint 2: "+points[1][0]+", "+points[1][1]);
+      console.log("RPoint 3: "+points[2][0]+", "+points[2][1]);
+      console.log("RPoint 4: "+points[3][0]+", "+points[3][1]);
+
       console.log("Point 1: "+(x-wh)+", "+(y-hh));
       console.log("Point 2: "+(x+wh)+", "+(y-hh));
       console.log("Point 3: "+(x+wh)+", "+(y+hh));
@@ -9407,13 +9416,13 @@ var Warper = {
       // We need to map the center of the image with GPS lat, lon. --, +-, ++, -+
       // Math.cos(angle) * (
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
-        [x-wh , y-hh ],
-        [x+wh , y-hh ],       
-        [x+wh , y+hh ],        
-        [x-wh , y+hh ]        
+        [ points[0][0] , points[0][1] ],
+        [ points[1][0] , points[1][1] ],       
+        [ points[2][0] , points[2][1] ],        
+        [ points[3][0] , points[3][1] ]        
 			]),url,id,false))
     console.log("Placing Image "+id+" at Lat:"+lat+", Long"+lon);
- //   Warper.images.last().move_x(-1*wh);
+ //   Warper.images.last().move_x(-1*wh); 
  //   Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
