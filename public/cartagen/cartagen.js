@@ -9380,24 +9380,33 @@ var Warper = {
 
 
 	new_image_GPS: function(url,id,GPS) {
+
       var latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
       var longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
-      var angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ; //The angle to rotate the image in.
+      var angle = 0;
+      //The angle to rotate the image in.
+      if(GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
+          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+      if(GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", differs with different places, look into this later.
+          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
 
       var x = Projection.lon_to_x(longitude);
       var y = Projection.lat_to_y(latitude);
       var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
-      var hh=(IMG_HEIGHT/2) / (2*(Map.zoom*1.3)), wh=(IMG_WIDTH/2) / (2*(Map.zoom*1.3));
+
+      // Calculate the distance to move on map, Mapknitter uses Map.zoom = Zoom / 1.3.
+      var hh=(IMG_HEIGHT/2) / (2*(Map.zoom*1.3)), wh=(IMG_WIDTH/2) / (2*(Map.zoom*1.3)); 
       var points = Array(4);
       var cos = Math.cos(angle);
       var sin = Math.sin(angle);
-       
+      
+      //Position and rotate the image mathematically.
       points[0]= [ cos * (-1*wh) - sin * (-1*hh) + x, sin * (-1*wh ) + cos * (-1*hh) + y ];
       points[1]= [ cos * (wh)    - sin * (-1*hh) + x, sin * (wh)     + cos * (-1*hh) + y ];
       points[2]= [ cos * (wh)    - sin * (hh   ) + x, sin * (wh)     + cos * (hh)    + y ];
       points[3]= [ cos * (-1*wh) - sin * (hh   ) + x, sin * (-1*wh)  + cos * (hh)    + y ];
  
-      console.log(points); 
+/*      console.log(points); 
       console.log("X,Y: "+x+","+y);
       console.log("wh, hh: "+wh+","+hh);
 
@@ -9412,9 +9421,9 @@ var Warper = {
       console.log("Point 4: "+(x-wh)+", "+(y+hh));
 
       console.log("X :",x);
-      console.log("Y :",y);
-      // We need to map the center of the image with GPS lat, lon. --, +-, ++, -+
-      // Math.cos(angle) * (
+      console.log("Y :",y);*/
+
+      // We need to map the center of the image with GPS lat, lon.
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
         [ points[0][0] , points[0][1] ],
         [ points[1][0] , points[1][1] ],       
@@ -9422,77 +9431,8 @@ var Warper = {
         [ points[3][0] , points[3][1] ]        
 			]),url,id,false))
     console.log("Placing Image "+id+" at Lat:"+lat+", Long"+lon);
- //   Warper.images.last().move_x(-1*wh); 
- //   Warper.images.last().move_y(-1*hh);
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
-
-    console.log(Warper.images.last());
-    var image_points = Warper.images.last().points;
-    console.log("point: "+x);
-    console.log("Centroid"+Warper.images.last().centroid);
-
-    /* -------------------------------------
-     *  [Math.cos(angle) * (x-wh - orig_x) - Math.sin(angle) * (y-hh - orig_y), Math.sin(angle) * (x-wh - orig_x) - Math.cos(angle) * (y-hh - orig_y)],
-        [Math.cos(angle) * (x+wh - orig_x) - Math.sin(angle) * (y-hh - orig_y), Math.sin(angle) * (x+wh - orig_x) - Math.cos(angle) * (y-hh - orig_y)],       
-        [Math.cos(angle) * (x+wh - orig_x) - Math.sin(angle) * (y+hh - orig_y), Math.sin(angle) * (x+wh - orig_x) - Math.cos(angle) * (y+hh - orig_y)],        
-        [Math.cos(angle) * (x-wh - orig_x) - Math.sin(angle) * (y+hh - orig_y), Math.sin(angle) * (x-wh - orig_x) - Math.cos(angle) * (y+hh - orig_y)]      */
-
-    // hopefully anish's project will give better options.
-    var i=0;
-    var origin_x, origin_y;
-   /* Warper.images.last().points.each(function(point){
-     if(i==2)
-       {
-       origin_x = point.x;
-       origin_y = point.y;
-       }
-     if(i==3)
-       {
-       origin_x = point.x - origin_x;
-       origin_y = point.y - origin_y;
-       }
-    i++;
-    console.log(point.x);
-    console.log(point.y);
-    },Warper.images.last())
-
-    console.log("Origin - ("+origin_x+","+origin_y+")");*/
-
-/*    Warper.images.last().points.each(function(point){
-     console.log("P-X: "+point.x+", P-Y: "+point.y);
-     var tx = (Math.cos(angle) * (point.x-origin_x)) - (Math.sin(angle)*(point.y-origin_y));
-     var ty = (Math.sin(angle) * (point.x-origin_x)) - (Math.cos(angle)*(point.y-origin_y));
-     console.log("P-Xc: "+tx+", P-Yc: "+ty);
-    },Warper.images.last()) */
-
-/*				this.parent_shape.points.each(function(point) {
-					point.angle = Math.atan2(point.y-this.parent_shape.centroid[1],point.x-this.parent_shape.centroid[0])
-					point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
-				},this)*/
-
-/*    Warper.images.last().points.each(function(point) {
-        point.angle = angle
-        point.distance = (point.x-this.parent_shape.centroid[0])/Math.cos(point.angle)
-     },Warper.images.last())*/
-
-    //Looking for a better way to solve rotation
-/*    Warper.images.last().reset_centroid();
-    console.log($C.canvas);
-    var cent_x=Warper.images.last().centroid[0];
-    console.log("Centroid"+cent_x); 
-    //Need to tweak this a little
-
-    var distance_x = image_points[0].x * Math.cos(angle);
-    var distance_y = image_points[0].y * Math.sin(angle);
-
-    Warper.images.last().self_distance = Math.sqrt(Math.pow( wh - distance_y,2 )+Math.pow( hh - distance_x,2));
-	Warper.images.last().self_angle = 45;//Math.atan2( hh -distance_y, wh - distance_x);
-    
-	    Warper.images.last().points.each(function(point) {
-		point.angle = 45;//Math.atan2(point.y- hh ,point.x- wh );
-		point.distance = (point.x- wh )/Math.cos(point.angle);
-	},Warper.images.last())*/
 
 	},
 
