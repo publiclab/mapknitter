@@ -62,7 +62,6 @@ img.export_status {
 <div id="export_tabs">
 	<a id="export_intro_tab" class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
 	<a id="export_options_tab" href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
-	<a id="export_multispectral_tab" href="javascript:void(0);" onClick="Knitter.export_multispectral();">Multispectral (experimental)</a>
 </div>
 
 <div id="export_intro" class="export_panel"><small>
@@ -74,7 +73,6 @@ img.export_status {
 
 <!-- Other tabs: -->
 <%= render :partial => "export_options" %>
-<%= render :partial => "export_multispectral" %>
 
 <% if Rails.env.production? && !logged_in? %>
 <div id="recaptcha-container"></div>
