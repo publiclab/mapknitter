@@ -9381,30 +9381,68 @@ var Warper = {
 
 	new_image_GPS: function(url,id,GPS) {
 
-      var latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
-      var longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
-      var angle = 0;
+      var Latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
+      var Longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
+      var Angle = 0;
+      var Altitude;
+      var x,y;// The map coordinates corresponding to the latitude and longitude
+      var pixel_ratio;
+      var Altitude_to_zoom;
+      //The Map.zoom at which the scale amout is zero, ideally it should be when altitude(Map.zoom) = altitude
+      var scale_is_zero;
+
+      
+     
       //The angle to rotate the image in.
       if(GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
-          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
-      if(GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", differs with different places, look into this later.
-          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+      if(GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
+          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
 
-      var x = Projection.lon_to_x(longitude);
-      var y = Projection.lat_to_y(latitude);
-      var IMG_HEIGHT=375,IMG_WIDTH=500;// Set to the :medium image size delivered from the warper.
+      //calculate the altitude of the image
+      if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined'){
+          Altitude = GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef;
+          // Convert altitude to zoom, technically for large altitude it is not a possible conversion as at any altitude it 
+          // is not possible for a camera to see a complete view of earth, but in map's at the largest zoom the complete 
+          // earth is seen. So for small altitudes the following will work fine. 640 is an averaged value that seems to 
+          // work, need to verify this with multiple images.
+          Altitude_to_zoom = Altitude / 640;           
+          pixel_ratio = 2 / (Altitude_to_zoom);
+      }
+      else
+          pixel_ratio = 2 * (Map.zoom * 1.3);
+
+      console.log("Placing Image "+id+" at Lat:"+Latitude+", Long"+Longitude);
+      console.log("Using Image direction: "+Angle);
+      console.log("Using image altitude:  "+Altitude);
+      console.log("Map zoom            :  "+Map.zoom);
+      
+      //If the lat/long is available.
+      if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined'){
+          x = Projection.lon_to_x(Longitude);
+          y = Projection.lat_to_y(Latitude);
+          }
+      //If for some reason the lat/long is not available.
+      else{
+          x = Map.x;
+          y = Map.y;
+          }
+
+      var Img_height = 375, Img_width=500;// Set to the :medium image size delivered from the warper.
 
       // Calculate the distance to move on map, Mapknitter uses Map.zoom = Zoom / 1.3.
-      var hh=(IMG_HEIGHT/2) / (2*(Map.zoom*1.3)), wh=(IMG_WIDTH/2) / (2*(Map.zoom*1.3)); 
+      var hh=(Img_height / 2) / pixel_ratio, wh=(Img_width / 2) / pixel_ratio; 
       var points = Array(4);
-      var cos = Math.cos(angle);
-      var sin = Math.sin(angle);
-      
+      var Cos = Math.cos(Angle);
+      var Sin = Math.sin(Angle);
+        
+
+
       //Position and rotate the image mathematically.
-      points[0]= [ cos * (-1*wh) - sin * (-1*hh) + x, sin * (-1*wh ) + cos * (-1*hh) + y ];
-      points[1]= [ cos * (wh)    - sin * (-1*hh) + x, sin * (wh)     + cos * (-1*hh) + y ];
-      points[2]= [ cos * (wh)    - sin * (hh   ) + x, sin * (wh)     + cos * (hh)    + y ];
-      points[3]= [ cos * (-1*wh) - sin * (hh   ) + x, sin * (-1*wh)  + cos * (hh)    + y ];
+      points[0]= [ Cos * (-1*wh) - Sin * (-1*hh) + x, Sin * (-1*wh ) + Cos * (-1*hh) + y ];
+      points[1]= [ Cos * (wh)    - Sin * (-1*hh) + x, Sin * (wh)     + Cos * (-1*hh) + y ];
+      points[2]= [ Cos * (wh)    - Sin * (hh   ) + x, Sin * (wh)     + Cos * (hh)    + y ];
+      points[3]= [ Cos * (-1*wh) - Sin * (hh   ) + x, Sin * (-1*wh)  + Cos * (hh)    + y ];
  
 /*      console.log(points); 
       console.log("X,Y: "+x+","+y);
@@ -9430,7 +9468,7 @@ var Warper = {
         [ points[2][0] , points[2][1] ],        
         [ points[3][0] , points[3][1] ]        
 			]),url,id,false))
-    console.log("Placing Image "+id+" at Lat:"+lat+", Long"+lon);
+
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
 
