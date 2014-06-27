@@ -1,6 +1,10 @@
-/* Source Modified from
- * https://github.com/jseidelin/exif-js
- */
+/* Modified the Exif-js code written by Jacob Seidelin.
+ * Original Source:
+ *      https://github.com/jseidelin/exif-js
+ *      The MIT License (MIT)
+ *      Copyright (c) 2008 Jacob Seidelin
+ *      License: https://github.com/jseidelin/exif-js/blob/master/LICENSE.md    
+ *      */
 
 var EXIF = (function() {
 
