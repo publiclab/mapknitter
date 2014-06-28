@@ -171,7 +171,7 @@
           var GPS = EXIF.getGPSTags(this), latitude, longitude; 
 
           //Place with GPS data if available
-          if(GPS["GPSLatitude"] && GPS["GPSLongitude"] )
+          if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
             {
             latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
             longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);

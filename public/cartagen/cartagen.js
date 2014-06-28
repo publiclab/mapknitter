@@ -9370,10 +9370,6 @@ var Warper = {
 				[Map.x-100, Map.y-100]
 			]),url,id,natural_size))
 		}
-  console.log(Warper.images.last());
-  console.log(Warper.images.last().centroid);
-  console.log(Warper.images.last().id);
-
 		Knitter.new_image = Warper.images.last()
 		Knitter.new_image.highlight_for(5)
 	},
@@ -9396,28 +9392,28 @@ var Warper = {
       //The angle to rotate the image in.
       if(GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
           Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
-      if(GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
+      else if(GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
           Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+      else
+          console.log("No angle found");
 
       //calculate the altitude of the image
       if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined'){
           Altitude = GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef;
           // Convert altitude to zoom, technically for large altitude it is not a possible conversion as at any altitude it 
           // is not possible for a camera to see a complete view of earth, but in map's at the largest zoom the complete 
-          // earth is seen. So for small altitudes the following will work fine. 640 is an averaged value that seems to 
-          // work, need to verify this with multiple images.
-          Altitude_to_zoom = Altitude / 640;           
-          pixel_ratio = 2 / (Altitude_to_zoom);
+          // earth is seen. So for small altitudes the following will work fine. Need to verify the current approach with 
+          // multiple images. For correction based on altitude we need the original dimensions of the image that will 
+          // will be a sufficient measure of FOV of the camera from an altitude.
+          Altitude_to_zoom = 640 / Altitude;           
+          pixel_ratio = 2 * Altitude_to_zoom;
       }
-      else
+      else{
           pixel_ratio = 2 * (Map.zoom * 1.3);
+          console.log("No altitude found");
+          }
 
-      console.log("Placing Image "+id+" at Lat:"+Latitude+", Long"+Longitude);
-      console.log("Using Image direction: "+Angle);
-      console.log("Using image altitude:  "+Altitude);
-      console.log("Map zoom            :  "+Map.zoom);
-      
-      //If the lat/long is available.
+     //If the lat/long is available.
       if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined'){
           x = Projection.lon_to_x(Longitude);
           y = Projection.lat_to_y(Latitude);
@@ -9443,6 +9439,14 @@ var Warper = {
       points[1]= [ Cos * (wh)    - Sin * (-1*hh) + x, Sin * (wh)     + Cos * (-1*hh) + y ];
       points[2]= [ Cos * (wh)    - Sin * (hh   ) + x, Sin * (wh)     + Cos * (hh)    + y ];
       points[3]= [ Cos * (-1*wh) - Sin * (hh   ) + x, Sin * (-1*wh)  + Cos * (hh)    + y ];
+ 
+      console.log("Placing Image "+id+" at Lat:"+Latitude+", Long"+Longitude);
+      console.log("Using Image direction: "+Angle);
+      console.log("Using image altitude:  "+Altitude);
+      console.log("Map zoom            :  "+Map.zoom);
+      console.log("Zoom for image"+(Altitude_to_zoom/1.3))
+      console.log("hh,wh:"+hh+", "+wh);
+      
  
 /*      console.log(points); 
       console.log("X,Y: "+x+","+y);
