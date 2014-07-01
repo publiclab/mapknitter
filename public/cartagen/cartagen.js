@@ -9375,7 +9375,7 @@ var Warper = {
 	},
 
 
-	new_image_GPS: function(url,id,GPS) {
+	new_image_GPS: function(url,id,GPS, act_height , act_width) {
 
       var Latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
       var Longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
@@ -9387,7 +9387,8 @@ var Warper = {
       //The Map.zoom at which the scale amout is zero, ideally it should be when altitude(Map.zoom) = altitude
       var scale_is_zero;
 
-      
+      var Img_height = 375, Img_width=500;// Set to the :medium image size delivered from the warper.
+     
      
       //The angle to rotate the image in.
       if(GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
@@ -9398,19 +9399,27 @@ var Warper = {
           console.log("No angle found");
 
       //calculate the altitude of the image
-      if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined'){
+      if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined' && typeof act_height!== 'undefined' && typeof act_width !== 'undefined'){
           Altitude = GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef;
           // Convert altitude to zoom, technically for large altitude it is not a possible conversion as at any altitude it 
           // is not possible for a camera to see a complete view of earth, but in map's at the largest zoom the complete 
           // earth is seen. So for small altitudes the following will work fine. Need to verify the current approach with 
           // multiple images. For correction based on altitude we need the original dimensions of the image that will 
           // will be a sufficient measure of FOV of the camera from an altitude.
-          Altitude_to_zoom = 640 / Altitude;           
+          console.log(act_height+"::"+act_width);
+          //Some GPS data shows altitude as zero even though it is not, we need to account for errors or we will have infinity zoom.
+          if(Altitude >= 10)
+              Altitude_to_zoom = ( (act_height/Img_height) * (act_width/Img_width) * 10) / Altitude;           
+          else
+              Altitude_to_zoom = Map.zoom * 1.3;
+
           pixel_ratio = 2 * Altitude_to_zoom;
+          console.log("Zoom for image"+(Altitude_to_zoom))
       }
       else{
           pixel_ratio = 2 * (Map.zoom * 1.3);
-          console.log("No altitude found");
+          console.log("Cannot use altitude data");
+          console.log("Zoom"+Map.zoom*1.3)
           }
 
      //If the lat/long is available.
@@ -9424,7 +9433,6 @@ var Warper = {
           y = Map.y;
           }
 
-      var Img_height = 375, Img_width=500;// Set to the :medium image size delivered from the warper.
 
       // Calculate the distance to move on map, Mapknitter uses Map.zoom = Zoom / 1.3.
       var hh=(Img_height / 2) / pixel_ratio, wh=(Img_width / 2) / pixel_ratio; 
@@ -9443,8 +9451,6 @@ var Warper = {
       console.log("Placing Image "+id+" at Lat:"+Latitude+", Long"+Longitude);
       console.log("Using Image direction: "+Angle);
       console.log("Using image altitude:  "+Altitude);
-      console.log("Map zoom            :  "+Map.zoom);
-      console.log("Zoom for image"+(Altitude_to_zoom/1.3))
       console.log("hh,wh:"+hh+", "+wh);
       
  
