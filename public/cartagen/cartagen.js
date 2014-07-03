@@ -9400,16 +9400,16 @@ var Warper = {
 
       //calculate the altitude of the image
       if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined' && typeof act_height!== 'undefined' && typeof act_width !== 'undefined'){
-          Altitude = GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef;
+          Altitude = (GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef) / 10;
           // Convert altitude to zoom, technically for large altitude it is not a possible conversion as at any altitude it 
           // is not possible for a camera to see a complete view of earth, but in map's at the largest zoom the complete 
           // earth is seen. So for small altitudes the following will work fine. Need to verify the current approach with 
           // multiple images. For correction based on altitude we need the original dimensions of the image that will 
           // will be a sufficient measure of FOV of the camera from an altitude.
-          console.log(act_height+"::"+act_width);
+
           //Some GPS data shows altitude as zero even though it is not, we need to account for errors or we will have infinity zoom.
-          if(Altitude >= 10)
-              Altitude_to_zoom = ( (act_height/Img_height) * (act_width/Img_width) * 10) / Altitude;           
+          if(Altitude >0)
+              Altitude_to_zoom = ( (act_height/Img_height) * (act_width/Img_width) ) / Altitude;           
           else
               Altitude_to_zoom = Map.zoom * 1.3;
 
@@ -9440,8 +9440,6 @@ var Warper = {
       var Cos = Math.cos(Angle);
       var Sin = Math.sin(Angle);
         
-
-
       //Position and rotate the image mathematically.
       points[0]= [ Cos * (-1*wh) - Sin * (-1*hh) + x, Sin * (-1*wh ) + Cos * (-1*hh) + y ];
       points[1]= [ Cos * (wh)    - Sin * (-1*hh) + x, Sin * (wh)     + Cos * (-1*hh) + y ];
@@ -9454,23 +9452,6 @@ var Warper = {
       console.log("hh,wh:"+hh+", "+wh);
       
  
-/*      console.log(points); 
-      console.log("X,Y: "+x+","+y);
-      console.log("wh, hh: "+wh+","+hh);
-
-      console.log("RPoint 1: "+points[0][0]+", "+points[0][1]);
-      console.log("RPoint 2: "+points[1][0]+", "+points[1][1]);
-      console.log("RPoint 3: "+points[2][0]+", "+points[2][1]);
-      console.log("RPoint 4: "+points[3][0]+", "+points[3][1]);
-
-      console.log("Point 1: "+(x-wh)+", "+(y-hh));
-      console.log("Point 2: "+(x+wh)+", "+(y-hh));
-      console.log("Point 3: "+(x+wh)+", "+(y+hh));
-      console.log("Point 4: "+(x-wh)+", "+(y+hh));
-
-      console.log("X :",x);
-      console.log("Y :",y);*/
-
       // We need to map the center of the image with GPS lat, lon.
 		Warper.images.push(new Warper.Image($A([ // should build points clockwise from top left
         [ points[0][0] , points[0][1] ],
