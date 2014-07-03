@@ -9377,8 +9377,8 @@ var Warper = {
 
 	new_image_GPS: function(url,id,GPS, act_height , act_width) {
 
-      var Latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
-      var Longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
+      var Latitude;
+      var Longitude;
       var Angle = 0;
       var Altitude;
       var x,y;// The map coordinates corresponding to the latitude and longitude
@@ -9424,6 +9424,8 @@ var Warper = {
 
      //If the lat/long is available.
       if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined'){
+          Latitude = (GPS["GPSLatitude"][0]) + (GPS["GPSLatitude"][1]/60) + (GPS["GPSLatitude"][2]/3600);
+          Longitude = (GPS["GPSLongitude"][0]) + (GPS["GPSLongitude"][1]/60) + (GPS["GPSLongitude"][2]/3600);
           x = Projection.lon_to_x(Longitude);
           y = Projection.lat_to_y(Latitude);
           }
