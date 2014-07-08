@@ -79,6 +79,11 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'author/:id', :controller => 'author', :action => 'show'
   map.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 
+  #Beta Pages
+  map.connect 'beta', :controller => "beta", :action => "index"
+  map.connect 'beta/maps/:id', :controller => "beta", :action => "show"
+
+
   map.connect ':controller/:action/:id'
   map.connect ':controller.:format'
   map.connect ':controller/:action.:format'
