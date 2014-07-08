@@ -83,6 +83,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'beta', :controller => "beta", :action => "index"
   map.connect 'beta/maps/:id', :controller => "beta", :action => "show"
 
+  # Beta Warper controller, handling uploads
+  map.connect 'betawarper/:map_id', :controller => 'betawarper', :action => 'show', :conditions => { :method => :get }, :requirements => { :map_id => /\d+/ }
+  map.connect 'betawarper/:id', :controller => 'betawarper', :action => 'create', :conditions => { :method => :post }, :requirements => { :id => /\d+/ }
+
 
   map.connect ':controller/:action/:id'
   map.connect ':controller.:format'

@@ -6,12 +6,12 @@
   
       <p><a href="http://store.publiclab.org/products/balloon-mapping-kit"><img src="/images/balloon-kit.jpg" /></a></p>
   
-      <%= render :partial => "map/search" %>
-      <%= render :partial => "map/new" %>
+      <%= render :partial => "beta/search" %>
+      <%= render :partial => "beta/new" %>
       <div class="hidden-phone">
-        <%= render :partial => "map/regions" %>
-        <%= render :partial => "map/authors" %>
-        <%= render :partial => "map/new_maps" %>
+        <%= render :partial => "beta/regions" %>
+        <%= render :partial => "beta/authors" %>
+        <%= render :partial => "beta/new_maps" %>
 
         <h3>Statistics</h2>
         <% if (Export.count(:all, :conditions => ["cm_per_pixel != ''"]) > 0) %>
@@ -41,7 +41,7 @@
       <hr />
   
       <h2>Recent Maps <small>(<a href="/feeds/all">RSS</a>)</small></h2>
-      <%= render :partial => 'map/list' %>
+      <%= render :partial => 'beta/list' %>
     </div>
 
   </div>

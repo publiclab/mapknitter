@@ -1,0 +1,55 @@
+<div id="export_multispectral" class="export_panel" style="display:none;">
+
+<h3>Prototype (experimental) multispectral compositing:</h3>
+
+<p>Use this tool to combine an infrared map with a visible-light map to analyze vegetation health. <a href="http://publiclaboratory.org/wiki/mapknitter-multispectral">Learn how to use this feature</a> or <a href="http://publiclaboratory.org/tool/near-infrared-camera">read more about NRG compositing</a> on the Public Laboratory website.</p>
+<p>Select an infrared map which overlaps this map. If you don't see the map you're looking for, try exporting it again. <i>It must have been exported already to show up in this list</i>: </br >
+<select id="band">
+<% @map.nearby_maps(0.1).each do |map| %>
+  <% if map.get_export('normal') && map.get_export('normal').status == "complete" && map.warpables.length > 0 && map.id != @map.id %><option value="<%= map.id %>"><%= map.name %></option><% end %>
+<% end %>
+</select>
+</p>
+
+<!-- Custom export pane for multispectral -->
+
+<div <% if @nrg_running %>style="display:none;"<% end %> id="run_nrg_export">Prove that you're a person (at bottom), then click EXPORT to begin: <br />
+
+<a id="active_nrg_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/composite/<%= @map.name %>?type=nrg&authenticity_token=<%= form_authenticity_token %>',{
+	parameters: {
+		recaptcha_response_field: Recaptcha.get_response(),
+		recaptcha_challenge_field: Recaptcha.get_challenge(),
+		resolution: $('map_resolution').value,
+		infrared: $('band').value,
+	},
+	onSuccess: function(response){ eval(response.responseText) },
+	onFailure: function(response){
+		$('export_progress').insert('failed (ajax fail)... ') 
+		eval(response.responseText)
+		$('active_nrg_export_button').show()
+		$('inactive_nrg_export_button').hide() 
+	},
+	});$('active_nrg_export_button').hide();$('inactive_nrg_export_button').show()">Export NRG</a>
+
+<span style="display:none;" id="inactive_nrg_export_button" class="export_button inactive">Export NRG</span>
+ (recommended resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
+</div>
+
+<div <% if !@nrg_running %>style="display:none;"<% end %> id="running_nrg_export">This map is currently building an <b>NRG export</b>. Status is displayed below.</div>
+
+<script>
+Knitter.updaters.push(new Ajax.PeriodicalUpdater('nrg_export_progress','/export/progress/<%= @map.id %>?type=nrg', {method: 'get', frequency: 10}))
+new Ajax.Updater('nrg_formats','/export/formats/<%= @map.id %>?type=nrg&authenticity_token=<%= form_authenticity_token %>')
+</script>
+
+<p class='export_status'>
+<b>Status:</b> <span id='nrg_export_progress'>
+Loading...
+</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/export/cancel/<%= @map.id %>?type=nrg&authenticity_token=<%= form_authenticity_token %>');$('running_nrg_export').hide();$('run_nrg_export').show()">cancel</a>)</p>
+
+<div id="nrg_formats">
+</div>
+
+<p>Export links may be unavailable while the export is running.</p>
+
+</div>

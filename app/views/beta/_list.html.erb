@@ -1,0 +1,26 @@
+<div id="list container-fluid">
+  <% odd = true %>
+  <% for map in @maps %>
+    <div class="map span4 <%= 'odd' if odd %>" style="margin:0;margin-right:10px;">
+      <% if !map.private && map.warpables.length > 0 %><a href="/map/view/<%= map.name %>"><img style="width:100%;background:#ddd;" src="<%= map.warpables.first.public_filename(:small) %>" /></a><% end %>
+      <h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a></h3>
+      <p><small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
+      <p class="description"><small>
+        <%= truncate(map.description,:length =>200) %>
+        <% if !map.description %><i>no description</i><% end %>
+      </small></p>
+      <p class="meta"><small>
+        <% if map.archived %><i>Archived</i> | <% end %> 
+        <a href="/map/view/<%= map.name %>">View</a> | 
+        <% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
+        <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+        Updated <%= map.updated_at.to_s(:short) %> | 
+        <%= map.warpables.length %> images 
+      </small></p>
+    </div>
+    <% odd = !odd %>
+  <% end %>
+  <br style="clear:both;" />
+  <%= will_paginate @maps unless @unpaginated %>
+</div>
+

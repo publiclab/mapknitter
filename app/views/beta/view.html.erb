@@ -1,0 +1,280 @@
+<% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
+<iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
+<% elsif @export && @export.tms %>
+<%= render :partial => "leaflet" %>
+<% else %>
+<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
+<%= render :partial => "leaflet" %>
+<% end %>
+
+<%= render :partial => "annotations" %>
+
+<br style="clear:left;" />
+
+<% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.public_filename(:medium) %>" /><% end %>
+
+<div id="main">
+  <h2><%= @map.name %><% if @export %> <small><%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px</small><% end %></h2>  
+  <p>
+    <small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a> (<a href="/feeds/author/<%= @map.author %>">RSS</a>)
+    <% if logged_in? && current_user.role == "admin" && @map.email != '' %><a href="mailto:<%= @map.email %>"><%= @map.email %></a><% end %>
+    <% if logged_in? && current_user.role == "admin" %>| <a href="/map/delete/<%= @map.id %>">delete</a><% end %>
+    </small>
+  </p>
+
+  <% if @export %>
+    <%= render :partial => "map/formats" %>
+  <% else %>
+    <p><i>This map has not been exported yet. <a href="http://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
+  <% end %>
+
+  <% if @map.description %>
+  <p><%= @map.description %></p>
+  <% end %>
+  
+  <div>
+    <a class="btn btn-primary" href="/maps/<%= @map.name %>">Edit this map</a>
+    <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
+      <a class="btn" href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">Contribute to OpenStreetMap in iD</a>
+      <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>
+    <% end %>
+  </div>
+
+  <% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+  <div id='images'>
+    <% @images.each do |image| %>
+    <div class="image">
+      <a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+      <p>
+       <%= image.cm_per_pixel.to_s[0..2] %> cm/px<br /> 
+       <%= time_ago_in_words(image.created_at) %> ago
+      </p>
+    </div>
+    <% end %>
+    <br style="clear:left;" />
+  </div>
+
+  <h2>Tags</h2>
+  
+  <p>
+  <% if @map.tags %>
+  <% @map.tags.each_with_index do |tag,i| %>
+          <a href="/tag/<%= tag.name %>"><%= tag.name %></a><%= "," unless i == @map.tags.length-1 %>
+  <% end %>
+  <% end %>
+  </p>
+  <% if logged_in? %>
+  <p>
+  <form class="form" id="tag" action="/tag/create">
+          <input type="text" name="tag[name]" />
+          <input type="hidden" name="tag[map_id]" value="<%= @map.id %>" />
+          <input class="btn" type="submit" value="Tag" />
+  </form>
+  </p>
+  <% end %>    
+
+  <h2>Nearby maps</h2>
+  <div id="list">
+    <% odd = true %>
+    <% @map.nearby_maps(0.1)[0..3].each do |map| %>
+      <% if !map.archived && !map.private && map.warpables.length > 0 %>
+      <div class="map <%= 'odd' if odd %>">
+        <a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a>
+        <h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
+        <p><small><%= map.location %></small></p>
+        <p class="description"><small>
+          <%= truncate(map.description,:length =>200) %>
+          <% if !map.description %><i>no description</i><% end %>
+        </small></p>
+        <p class="meta"><small>
+          <% if map.archived %><i>Archived</i> | <% end %> 
+          <a href="/map/view/<%= map.name %>">View</a> | 
+          <a href="/map/show/<%= map.name %>">Edit</a> | 
+          Updated <%= map.updated_at.to_s(:short) %> | 
+          <%= map.warpables.length %> images 
+        </small></p>
+        <p class="formats">
+        <% unless map.latest_export.nil? %>
+        <% if map.latest_export.geotiff %>
+          <a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
+          <br />
+          <span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
+        <% end %><br />
+        <% if map.latest_export.tms %>
+          <a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web viewer</a>
+          <a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
+        <% end %>
+        <% if map.latest_export.jpg %>
+          <a class="jpg" href="/export/jpg/<%= map.name %>.jpg">JPG</a>
+        <% end %>
+        <% end %>
+        </p>
+      </div>
+      <% odd = !odd %>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <% if logged_in? && (@map.author == current_user.login || current_user.role == "admin") %>
+  <br style="clear:both;" />
+  <h2 id="annotations">Map annotations</h2>
+  <ul>
+  <% (@map.annotations(0.1)+@map.polygons(0.1)).each do |note| %>
+  <li class="">
+    <a href="/profile/<%= note.author %>"><%= note.author %></a> said:</b> 
+    <%= note.description %> (<a href="/annotation/delete/<%= note.id %>?back=/map/view/<%= @map.name %>">x</a>)
+  </li>
+  <% end %>
+  </ul>
+
+  <% end %>
+
+  <br style="clear:both;" />
+
+  <h2 id="comments">Comments</h2>
+
+  <p>No comments (feature in development)</p>
+
+</div>
+
+<div id="sidebar">
+
+<% if @export %>
+<div class="alert alert-warning">
+  <p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclab.org/archive">the Public Lab Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
+  <p><a class="btn btn-primary" href="http://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
+</div>
+<% end %>
+
+<p><a href="http://store.publiclab.org/products/balloon-mapping-kit"><img src="/images/balloon-kit.jpg" /></a></p>
+
+<div id="license">
+<p><small>
+<% if @map.license == "publicdomain" %>
+<p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
+  <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
+  To the extent possible under law,
+  <a rel="dct:publisher" href="http://publiclab.org">
+    <span property="dct:title"><%= @map.author %></span></a>
+  has waived all copyright and related or neighboring rights to
+  "<span property="dct:title"><%= @map.name %></span>".
+<!--This work is published from:
+<span property="vcard:Country" datatype="dct:ISO3166"
+      content="US" about="http://publiclab.org">
+  United States</span>.
+-->
+</p>
+<% elsif @map.license == "cc-by" %>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. 
+<% else %>
+&copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclab.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
+<% end %>
+</small></p>
+</div>
+
+<% if @images.length > 0
+  hist = @map.images_histogram 
+  grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+%>
+  <p>0 cm/px <span class="bar"><%= grouphist.join(',') %></span> <%= hist.length-1 %> cm/px</p>
+  <p>Average resolution: <%= @map.average_cm_per_pixel.to_s[0..2] %> cm/px</p>
+
+<% end %>
+  <script>
+  $('.bar').sparkline('html', {type: 'bar'});
+  </script>
+
+<div class='well'>
+  <h3>Edit map details<a class="pull-right btn" href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand <i class="caret"></i></a></h3>
+  <form style="display:none;" class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
+  
+    <input type='hidden' name='map[id]' value="<%= @map.id %>"/>
+    
+    <% if admin %>
+    <label for="password">Password (optional -- to keep your map private)</label>
+    <input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password">
+    <% end %>
+
+    <label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label>
+    <input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place">
+    <div id="geocode_results">
+      
+    </div>
+    <div id="lat_lon" style="display:none;">
+      <p style='font-size:10px;font-family:lucida grande,lucida sans console,sans-serif;'>
+        In decimal degress, i.e. '72.222 or -142.03441'</p>
+      <label for="latitude">Latitude</label>
+      <input id="latitude" type="text" name="latitude" value="<%= @map.lat %>"/>
+      <label for="longitude">Longitude</label>
+      <input id="longitude" type="text" name="longitude" value="<%= @map.lon %>" />
+    </div>
+    <style>
+    .ui-autocomplete {
+      background-color: white;
+      width: 300px;
+      border: 1px solid #cfcfcf;
+      list-style-type: none;
+      padding-left: 0px;
+    }
+    </style>
+    <script>
+      
+      /* JQuery search as you type
+      * Overrides the action and method of the form
+      *
+      */
+      var geocoder = new google.maps.Geocoder();
+
+      $(document).ready(function() { 
+
+        $("#new_map_place").autocomplete({
+          //This bit uses the geocoder to fetch address values
+          source: function(request, response) {
+            geocoder.geocode( {'address': request.term }, function(results, status) {
+              response($.map(results, function(item) {
+                return {
+                  label:  item.formatted_address,
+                  value: item.formatted_address,
+                  latitude: item.geometry.location.lat(),
+                  longitude: item.geometry.location.lng()
+                }
+              }));
+            })
+          },
+          //This bit is executed upon selection of an address
+          select: function(event, ui) {
+            $("#latitude").val(ui.item.latitude);
+            $("#longitude").val(ui.item.longitude);
+            //var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+            //marker.setPosition(location);
+            //map.setCenter(location);
+          }
+        });
+      });
+
+    </script>
+    <% unless logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <label for="description">Description</label>
+    <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
+    
+    <!--<label for="password">Password (optional)</label><br />
+    <input class="text" type="password" name="password" value="" id="password"><br />-->
+      
+    <% if @map.password != "" %>
+    <label for="password">Password (you must enter the password to save)</label>
+    <input class="text" type="password" name="password" id="password">
+    <% end %>
+    <p><input class="btn" type="submit" value="Save"></p>
+  </form>
+</div>
+
+<div class='well'>
+  <h3>Multispectral export formats</h3>
+  <p>If this map has been composited with another to generate infrared composite layers, they will be displayed here.</p>
+  <% @export = @map.get_export('nrg') %>
+  <%= render :partial => "formats" %>
+</div>  
+
+</div>
+
