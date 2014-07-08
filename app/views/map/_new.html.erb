@@ -47,6 +47,9 @@
       *
       */
         var geocoder = new google.maps.Geocoder();
+        function useImage(){
+            $("#GpsInput").click();
+            }
 
         $(document).ready(function() { 
 
@@ -74,7 +77,7 @@
             }
           });
             
-          $("#gps-input").change(function(e) {
+          $("#GpsInput").change(function(e) {
             EXIF.getData(e.target.files[0], function() {
               var GPS = EXIF.getGPSTags(this);
               var latitude;
@@ -116,9 +119,11 @@
       <input id="latitude" type="text" name="latitude" />
       <label for="longitude">Longitude</label>
       <input id="longitude" type="text" name="longitude" />
-      <div class="ImageReader">
-          <input id="gps-input" type="file" />
-      </div>
+
+        <div class="ImageReader" style="height:0px;overflow:hidden">
+          <input id="GpsInput" type="file" />
+        </div>
+      <button type="button" onclick="useImage();">Use Image</button>
    </div>
     <% if !logged_in? %>
       <label for="author">Author</label>
