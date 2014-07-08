@@ -117,13 +117,16 @@
         In decimal degress, i.e. '72.222 or -142.03441'</p>
       <label for="latitude">Latitude</label>
       <input id="latitude" type="text" name="latitude" />
+        <div class="ImageReader" style="position:relative;">
+          <button type="button" class="btn btn-default" onclick="useImage();" style="position:absolute;right:0;">Use Image</button>
+        </div>
       <label for="longitude">Longitude</label>
       <input id="longitude" type="text" name="longitude" />
 
-        <div class="ImageReader" style="height:0px;overflow:hidden">
+        <div style="height:0px;overflow:hidden">
           <input id="GpsInput" type="file" />
         </div>
-      <button type="button" onclick="useImage();">Use Image</button>
+
    </div>
     <% if !logged_in? %>
       <label for="author">Author</label>
