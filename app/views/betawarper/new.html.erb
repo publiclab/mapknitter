@@ -34,8 +34,6 @@
 		    <label for="warpable">Choose a file from your computer (10mb max):</label>		    
 		  </p>
 
-
-
     <div class="row fileupload-buttonbar">
       <div class="span7">
         <!-- The fileinput-button span is used to style the file input field as button -->
@@ -43,11 +41,6 @@
           <span>Add Image</span>         
 		<input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" />
         </span>
-      </div>
-      <div class="span5">
-
-
-
       </div>
     </div>
     <!-- The loading indicator is shown during image processing -->
@@ -93,9 +86,9 @@ window.locale = {
     <td>
 
 
-<div id="spinner" class="spinner">
-    <img id="img-spinner" src="/images/spinner.gif" alt="Loading"/>
-</div>
+    <div id="spinner" class="spinner">
+        <img id="img-spinner" src="/images/spinner.gif" alt="Loading"/>
+    </div>
 
     </td>
     <td class="start">{% if (!o.options.autoUpload) { %}
@@ -122,9 +115,8 @@ window.locale = {
         <td></td>
         <td class="name"><span>{%=file.name%}</span></td>
         <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-        <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
         {% } else { %}
-
 
         <td class="preview">{% if (file.thumbnail_url) { %}
           <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
@@ -203,10 +195,7 @@ window.locale = {
                 image.src = e.target.result;
                 };
             }
-
         reader.readAsDataURL(data.files[0]);
-
-
           }); 
       });
       $(document).bind('drop dragover', function (e) {
