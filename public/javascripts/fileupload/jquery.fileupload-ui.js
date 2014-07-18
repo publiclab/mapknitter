@@ -272,27 +272,6 @@
                         );
                 }
             },
-            // Callback for global upload progress events:
-            progressall: function (e, data) {
-                var $this = $(this),
-                    progress = parseInt(data.loaded / data.total * 100, 10),
-                    globalProgressNode = $this.find('.fileupload-progress'),
-                    extendedProgressNode = globalProgressNode
-                        .find('.progress-extended');
-                if (extendedProgressNode.length) {
-                    extendedProgressNode.html(
-                        ($this.data('blueimp-fileupload') || $this.data('fileupload'))
-                            ._renderExtendedProgress(data)
-                    );
-                }
-                globalProgressNode
-                    .find('.progress')
-                    .attr('aria-valuenow', progress)
-                    .find('.bar').css(
-                        'width',
-                        progress + '%'
-                    );
-            },
             // Callback for uploads start, equivalent to the global ajaxStart event:
             start: function (e) {
                 var that = $(this).data('blueimp-fileupload') ||
