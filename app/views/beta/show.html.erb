@@ -44,8 +44,11 @@
 <div id="header">
   <a style="float:left;" href="/"><img src="/images/mapknitter-small-masked.png"/></a>
   <div id="toolbars">
-    <div class="toolbar">
-      <a id="tool_upload" name='Upload an image' class='first silk green' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/betawarper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/add.png" /></a>
+      <div class="toolbar">
+
+ <a id="tool_upload" name='Upload an image' class='first silk green' data-toggle="modal" data-target="#uploadModal" onClick="$('#uploadModal').show();Tool.change('Warp');return false;"><img src="/images/silk-grey/add.png" /></a>  
+ <!--         <a id="tool_upload" name='Upload an image' class='first silk green' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/betawarper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/add.png" /></a> -->
+
       <a name='Export your map in standard GIS formats' class='last silk blue' href="javascript:void(0);" target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:'90%',afterHide: function() {Knitter.cancel_updaters()}})" href="javascript:void(0);"><img src="/images/silk-grey/map_go.png" /></a>
             <!--<a id="tool_trace" name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>-->
     </div>
@@ -71,4 +74,22 @@
 <div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" class="transparent" id="map"></div>
 
 <div id="canvas" style="width:100%; height:100%; position:absolute; top:0;  z-index 10;"></div>
-
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+           <h4 class="modal-title">Upload Image</h4>
+      </div>
+      <div class="modal-body" style="max-height:800px;">
+          <%# render :partial => '/betawarper/new' %>
+            <iframe src ='/betawarper/new/<%= @map.id %>' width='100%' height='100%' style='border:0;'></iframe>
+      </div>
+      <div class="modal-footer">
+		<p>
+			Where can you get images to upload?<br />Read about <a href="http://wiki.grassrootsmapping.org">Grassroots Mapping with Balloons and Kites</a>.
+		</p>
+      </div>
+    </div>
+  </div>
+</div>
