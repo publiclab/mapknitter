@@ -25,10 +25,10 @@
           
           $.getJSON($('#fileupload').prop('action'), function (files) {
     
+            var GPS = EXIF.getGPSTags(this), latitude, longitude; 
             var fu = $('#fileupload').data('blueimpFileupload'), 
               template;
            // fu._adjustMaxNumberOfFiles(-files.length);
-            console.log(files);
             template = fu._renderDownload(files)
               .appendTo($('#fileupload .files'));
             // Force reflow:
@@ -42,10 +42,11 @@
     
     
           $('#fileupload').bind('fileuploaddone', function (e, data) { 
-            console.log(data.result.files);
             EXIF.getData(data.files[0], function(){
               var GPS = EXIF.getGPSTags(this), latitude, longitude; 
             
+              if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
+                data.result.files[0].gps = true;
               if (typeof window.FileReader !== 'function') {
                 //We cannot correct image based on altitude if the image dimensions are not known.
                 console.log("File API is not supported by this browser");
@@ -60,7 +61,6 @@
                 reader.onload   = function(e){
                     var image   = new Image();
                     image.onload    = function(){
-                        console.log("(':"+this.width+","+this.height+":')");
     
                         //Place with GPS data if available
                         if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' ){
@@ -83,4 +83,5 @@
                 e.preventDefault();
                 });
       });
-            
+
+        

@@ -229,6 +229,11 @@ a.badge:hover {
   background-color: #c67605;
 }
 
+.label-indicate,
+.badge-indicate {
+  background-color: #005000;
+}
+
 .btn {
   display: inline-block;
   *display: inline;
