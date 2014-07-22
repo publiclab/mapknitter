@@ -1,8 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
+      <head>
         <%= stylesheet_link_tag "fileupload/fileupload-ui" %>
         <%= stylesheet_link_tag "fileupload/bootstrap_and_overrides" %>
         <%= javascript_include_tag "jquery.min" %>
@@ -20,11 +18,9 @@
         <%= javascript_include_tag "gps-exif" %>
 
         <%= javascript_include_tag "fileupload-handler" %>
-
     </head>
 
-    <body>
-
+   <body>
     <% form_for(:warpable, :url => "/warper/#{@map_id}", :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
     <input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 
@@ -95,11 +91,12 @@
             <td class="name">
               <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
             </td>
-            {% if(file.gps) { %}
-                <td class="indicate" colspan="2"><span class="label label-indicate">gps</span></td>
-            {% } %}
-                {% console.log(file.gps); %}
-                {% console.log(file); %}
+            <td class="indicate" colspan="2">
+                <span class="label label-indicate" id="lat-lon_{%=file.id%}" style="display:none;">lat-lon</span>
+                <span class="label label-indicate" id="angle_{%=file.id%}" style="display:none;">angle</span>
+                <span class="label label-indicate" id="altitude_{%=file.id%}" style="display:none;">altitude</span>
+            </td>
+
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             <td colspan="2"></td>
             {% } %}
@@ -108,7 +105,6 @@
         {% } %}
     </script>
     </div>
-
-    </body>
+   </body>
 </html>
 

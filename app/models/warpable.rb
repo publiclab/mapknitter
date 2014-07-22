@@ -11,6 +11,7 @@ class Warpable < ActiveRecord::Base
                  #:path_prefix => 'public/warpables', 
                  :max_size => 30.megabytes,
                  :processor => :image_science,
+                 :keep_profile => false,
                  :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
 
   # validates_as_attachment
