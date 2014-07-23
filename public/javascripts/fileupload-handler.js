@@ -45,9 +45,9 @@
             EXIF.getData(data.files[0], function(){
               var GPS = EXIF.getGPSTags(this), latitude, longitude; 
             
-              if(typeof GPS["GPSLatitude"] != 'undefined' && typeof GPS["GPSLongitude"] != 'undefined' )
+              if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
                 $("#lat-lon_"+data.result.files[0].id).css("display","");
-              if(typeof GPS["GPSImgDirection"] != 'undefined' && typeof GPS["GPSImgDirectionRef"] != 'undefined' )             
+              if(typeof GPS["GPSImgDirection"] !== 'undefined' && typeof GPS["GPSImgDirectionRef"] !== 'undefined' )             
                 $("#angle_"+data.result.files[0].id).css("display","");
               if (typeof window.FileReader !== 'function') {
                 //We cannot correct image based on altitude if the image dimensions are not known.
@@ -62,17 +62,14 @@
                     image.onload    = function(){
     
                         //Place with GPS data if available
-                        if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' ){
+                        if(typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined' ){
                             parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS, this.height, this.width);
+                            $("#altitude_"+data.result.files[0].id).css("display","");
                             }
                         //Fallback to regular placement.  
                         else{
                           	parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
                             }
-
-                        if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined')
-                            $("#altitude_"+data.result.files[0].id).css("display","");
-                            
                         };
                     image.src = e.target.result;
                     };
