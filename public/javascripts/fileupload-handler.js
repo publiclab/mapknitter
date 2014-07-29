@@ -44,31 +44,38 @@
           $('#fileupload').bind('fileuploaddone', function (e, data) { 
             EXIF.getData(data.files[0], function(){
               var GPS = EXIF.getGPSTags(this), latitude, longitude; 
+              var autoPlacementAllowed = true;
+              if($("#allowAutoPlacement").attr("checked") == "checked")
+                autoPlacementAllowed = false;
             
               if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
                 $("#lat-lon_"+data.result.files[0].id).css("display","");
               if(typeof GPS["GPSImgDirection"] !== 'undefined' && typeof GPS["GPSImgDirectionRef"] !== 'undefined' )             
                 $("#angle_"+data.result.files[0].id).css("display","");
+              
               if (typeof window.FileReader !== 'function') {
                 //We cannot correct image based on altitude if the image dimensions are not known.
                 console.log("File API is not supported by this browser");
-                parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS);
+                if(autoPlacementAllowed)
+                    parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS);
+                else
+                    parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
                 }
     
-            else{
+              else {
                 var reader  = new FileReader();
                 reader.onload   = function(e){
                     var image   = new Image();
                     image.onload    = function(){
     
                         //Place with GPS data if available
-                        if(typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined' ){
-                            parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS, this.height, this.width);
+                        if(typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined') {
                             $("#altitude_"+data.result.files[0].id).css("display","");
-                            }
-                        //Fallback to regular placement.  
-                        else{
-                          	parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
+                            if(autoPlacementAllowed)
+                                parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS, this.height, this.width);
+                            //Fallback to regular placement
+                            else
+                                parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
                             }
                         };
                     image.src = e.target.result;
