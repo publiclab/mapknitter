@@ -34,15 +34,11 @@ Rails::Initializer.run do |config|
   # config.gem "geokit-rails", :version => '~> 1.1.4'
   # #config.gem "RubyInline"
   # config.gem "image_science", :version => '~> 1.2.6'
-  # #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
-  # config.gem "recaptcha", :lib => "recaptcha/rails"
+  #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
+  # config.gem "recaptcha", :lib => "recaptcha/rails" # Passenger needs this line in order to load correctly -> why?
   # #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6
   # config.gem 'will_paginate', :version => '~> 2.3.16'
   # config.gem 'oa-openid', :version => '~> 0.3.2'
-
-  # Directs bundler where to find our gems
-  require 'vendor/bundler_gems/environment.rb' # add dependencies to load paths
-  Bundler.require_env :optional_environment # require the files
 
   # config.gem "rubyzip"
   # if you're going to use Amazon s3 for image storage:

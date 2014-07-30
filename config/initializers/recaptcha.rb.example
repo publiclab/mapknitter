@@ -1,3 +1,5 @@
+require "recaptcha/rails"
+
 Recaptcha.configure do |config|
 	config.public_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 	config.private_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
