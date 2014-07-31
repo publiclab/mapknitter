@@ -80,7 +80,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_whooz_session',
+    :key => '_whooz_session',
     :secret      => 'e420335fa23afd9cc84f118c9cb9985530d4f259b671fe1ec9c60466d6a07c6bbd268167674293b1cda7476f64f0012c23adca8fa0bcd9ee3ef70dcd0e9745e7'
   }
 

@@ -4,12 +4,15 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<link rel="stylesheet" type="text/css" href="/leaflet/leaflet.css"/>
+
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>MapKnitter: <%= @map[:name] %></title>
 	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
-	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
+	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
 	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
 	<script type="text/javascript">
 		cartagen_base_uri = '/cartagen'
@@ -25,6 +28,10 @@
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw&sensor=false"></script>
 	<script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script>
+
+	<!-- leaflet mapping library and plugins -->
+	<script src="/leaflet/leaflet-src.js"></script>
+	<script src="/leaflet-providers/leaflet-providers.js"></script>
 </head>
 <body>
 

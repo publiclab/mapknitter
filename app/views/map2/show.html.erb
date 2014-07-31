@@ -1,0 +1,11 @@
+<div id="knitter-map-pane"></div>
+<style>
+	html, body, #knitter-map-pane {
+		width: 100%;
+		height: 100%;
+	}
+</style>
+<script type="text/javascript" charset="utf-8">
+	var map = L.map('knitter-map-pane').setView([48, -87], 13);
+	L.tileLayer.provider('Stamen.Watercolor').addTo(map);
+</script>

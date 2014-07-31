@@ -80,4 +80,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller.:format'
   map.connect ':controller/:action.:format'
   map.connect ':controller/:action/:id.:format'
+
+  # new routes for annotations interface
+  map.connect 'edge/maps/:id', :controller => "map2", :action => "show"   
 end

@@ -16,7 +16,5 @@ config/initializers/recaptcha.rb
 config/config.yml
 config/initializers/site_keys.rb
 
-vendor/bundler_gems/gems
-vendor/bundler_gems/specifications
-vendor/bundler_gems/doc
-vendor/bundler_gems/environment.rb
+.bundle
+vendor/bundle
