@@ -1,11 +1,30 @@
 <div id="knitter-map-pane"></div>
+<div id="knitter-side-pane">
+	<h3><%= @map.name %></h3>
+</div>
 <style>
-	html, body, #knitter-map-pane {
+	html, body {
 		width: 100%;
 		height: 100%;
 	}
+	#knitter-map-pane {
+		width: 75%;
+		height: 100%;
+		float: left;
+	}
+	#knitter-side-pane {
+		width: 25%;
+		height: 100%;
+		float: left;
+	}
+	#knitter-side-pane h3 {
+		margin: 15px 15px;
+	}
+
 </style>
 <script type="text/javascript" charset="utf-8">
-	var map = L.map('knitter-map-pane').setView([48, -87], 13);
-	L.tileLayer.provider('Stamen.Watercolor').addTo(map);
+	var center = L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+		zoom = <%= @map.zoom %>,
+		map = L.map('knitter-map-pane').setView(center, zoom);
+	L.tileLayer.provider('OpenStreetMap.BlackAndWhite').addTo(map);
 </script>
