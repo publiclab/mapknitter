@@ -6,43 +6,22 @@ class WarperController < ApplicationController
   rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
   rescue_from Timeout::Error, :with => :url_upload_not_found
   protect_from_forgery :except => [:update,:delete]  
-  #Convert model to json without including root name. Eg. 'warpable'
-  ActiveRecord::Base.include_root_in_json = false
-
-  #Unecessary
-  def index
-    respond_to do |format|
-    end
-  end
 
   def new
     @map_id = params[:id]
-    @warpable = Warpable.new
-    respond_to do |format|
-     format.html { render :layout => false } 
-     format.json { render :json => @warpable}
-    end
-
+    render :layout => false
   end
 
   def create
     @warpable = Warpable.new(params[:warpable])
     @warpable.map_id = params[:map_id]
-    print params[:map_id]
     map = Map.find(params[:map_id])
     map.updated_at = Time.now
     map.save
-    respond_to do |format|     
-      if @warpable.save
-        format.html {
-          render :json => [@warpable.fup_json].to_json,
-          :content_type => 'text/html'
-        }
-       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.public_filename() }
-      else
-       format.html { render :action => "new" }
-       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
-      end
+    if @warpable.save
+      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
+    else
+      render :action => :new
     end
   end
 
@@ -73,12 +52,7 @@ class WarperController < ApplicationController
   end
   
   def show
-   #Need some specific way
-    @image = #Warpable.all(:conditions => {:map_id => params[:map_id]} )
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render :json => @image.map{|img| img.fup_json} }
-    end
+    @image = Warpable.find params[:id]
   end
   
   def list
@@ -118,10 +92,7 @@ class WarperController < ApplicationController
     image = Warpable.find params[:id]
     image.deleted = true
     image.save
-    respond_to do |format|
-      format.html { render :text => 'successfully deleted '+params[:id]}
-      format.json { head :no_content }
-    end
+    render :text => 'successfully deleted '+params[:id]
   end
   
 end
