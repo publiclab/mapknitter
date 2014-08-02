@@ -32,7 +32,10 @@
     Knitter.start_openlayers('<%= @map.tiles %>')
     Knitter.setup()
   })
-
+  
+  jQuery(document).ready(function() {
+    jQuery('#uploadModal').modal('hide');
+        });
 </script>
 
 <div id="google" style="display:none;"><%= @map.description %></div>
