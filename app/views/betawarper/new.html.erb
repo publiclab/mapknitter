@@ -20,22 +20,24 @@
     <% form_for(:warpable, :url => "/betawarper/#{@map_id}", :html => { :multipart => true,:id => "fileupload" }) do |f| -%>     
     <input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 
-    <div class="row fileupload-buttonbar">
-      <div class="span7">
-        <div style="float:right;padding-right: 10%;"> <input type="checkbox" id="allowAutoPlacement" > Disable GPS placement </div><br>
+    <div class="row fileupload-buttonbar" style="overflow-x: hidden;">
+      <div class="span7" style="position:fixed;z-index:10;background:#FFFFFF";>
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <span>Add Image</span>         
 		<input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" />
         </span>
+        <div style="float:right;padding-right: 10%;"> <input type="checkbox" id="allowAutoPlacement" > Disable GPS placement </div><br>
       </div>
     </div>
-    <!-- The loading indicator is shown during image processing -->
-    <div class="fileupload-loading"></div>
-    <br>
-    <!-- The table listing the files available for upload/download -->
-    <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
-    </table>
+    <div id="template" style="padding-top:10px;z-index:5;overflow:auto;">
+        <!-- The loading indicator is shown during image processing -->
+        <div class="fileupload-loading"></div>
+        <br>
+        <!-- The table listing the files available for upload/download -->
+        <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+        </table>
+    </div>
   <% end %>
    </div>
    </body>
