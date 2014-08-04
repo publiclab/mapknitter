@@ -36,3 +36,4 @@ Gemfile.lock
 vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
+public/lib
