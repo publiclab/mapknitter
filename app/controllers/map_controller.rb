@@ -176,7 +176,8 @@ class MapController < ApplicationController
 	puts 'geocoding'
         begin
           location = GeoKit::GeoLoc.geocode(params[:location])
-	  @map = Map.new({:lat => location.lat,
+	  @map = Map.new({
+            :lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
             :description => params[:description],

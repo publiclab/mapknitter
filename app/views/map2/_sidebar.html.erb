@@ -1,11 +1,82 @@
-<div id="knitter-side-pane">
+<div id="knitter-side-pane" class="container">
 	<form>
-		<input type="text" name="map-title" value="<%= @map.name %>"/>
+		<!-- Map title and author -->
+		<div class="form-group">
+			<input type="text" class="form-control h1" name="map-title" value="<%= @map.name %>"/>
+			by <a href="http://publiclab.org/search/<%= @map.author %>"><%= @map.author %></a>.
+		</div>
 
-		<label for="map-lat">Lat</label>
-		<input type="text" name="map-lat" value="<%= @map.lat %>"/>
+		<!-- Toolbar for uploading and viewing images and exporting the map. -->
+		<div class="btn-group btn-group-justified">
+			<!-- Upload images -->
+			<div class="btn-group">
+				<button type"button" class="btn btn-default">
+					<span class="glyphicon glyphicon-open"></span>
+				</button>
+			</div>
 
-		<label for="map-lng">Lng</label>
-		<input type="text" name="map-lng" value="<%= @map.lon %>"/>
+			<!-- View uploaded images -->
+			<div class="btn-group">
+				<button type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-picture"></span>
+				</button>
+			</div>
+
+			<!-- Export map -->
+			<div class="dropdown btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-save"></span>
+					<span class="caret"></span>							
+				</button>
+				<ul class="dropdown-menu dropdown-menu-right" role="menu">
+					<li class="dropdown-header">Export formats</li>
+					<li><a href=".">JPG</a></li>
+					<li><a href=".">GeoTIFF</a></li>
+					<li><a href=".">Tiled Map Service (TMS)</a></li>
+					<li><a href=".">OSM-TMS</a></li>
+					<li><a href=".">zipped TMS</a></li>
+					<li><a href=".">KML (beta)</a></li>
+					<li><a href=".">Order a print</a></li>
+				</ul>					
+			</div>
+		</div>
+
+		<!-- Map location -->
+		<div class="form-group">
+			<label for="map-location">Location</label>
+			<input type="text" class="form-control" name="map-location" value="<%= @map.location %>"/>
+		</div>
+
+		<!-- Map latitude -->
+		<div class="form-group">
+			<label for="map-lat">Lat</label>
+			<input type="text" class="form-control" name="map-lat" value="<%= @map.lat %>"/>
+		</div>
+
+		<!-- Map longitude -->
+		<div class="form-group">
+			<label for="map-lng">Lng</label>
+			<input type="text" class="form-control" name="map-lng" value="<%= @map.lon %>"/>
+		</div>
+
+		<!-- Map description -->
+		<div class="form-group">
+			<label for="map-description">Description</label>
+			<textarea class="form-control" name="map-description">
+			<%= @map.description %>
+			</textarea>
+		</div>
+
+		<!-- Map tags -->
+		<div class="form-group">
+			<label for="map-tags">Tags</label>
+			<input type="text" class="form-control" name="map-tags" value="<% @map.tags %>"/>
+		</div>
+
+		<!-- Comments -->
+		<div class="form-group">
+			<label for="map-comments">Comments</label>
+			<input type="text" class="form-control" name="map-comments" placeholder="Leave a comment"/>
+		</div>
 	</form>
 </div>

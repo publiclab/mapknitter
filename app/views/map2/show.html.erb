@@ -23,6 +23,18 @@
 <script type="text/javascript" charset="utf-8">
 	var center = L.latLng(<%= @map.lat %>, <%= @map.lon %>),
 		zoom = <%= @map.zoom %>,
-		map = L.map('knitter-map-pane').setView(center, zoom);
-	L.tileLayer.provider('OpenStreetMap.BlackAndWhite').addTo(map);
+		map = L.map('knitter-map-pane', { zoomControl: false })
+			.setView(center, zoom),
+		drawnItems = new L.FeatureGroup().addTo(map),
+		zoomControl = L.control.zoom({ position: 'topright' }).addTo(map),
+		illustrateControl = new L.Illustrate.Control({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map),
+		drawControl = new L.Control.Draw({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map);
+
+	L.tileLayer.provider('HERE.satelliteDay').addTo(map);
 </script>
