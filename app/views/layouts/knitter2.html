@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>MapKnitter: <%= @map[:name] %></title>
+	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+	<!-- Stylesheets for Bootstrap 3.2.0 -->
+	<link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>	
+
+	<!-- Stylesheets for Leaflet mapping library and plugins -->
+	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet/dist/leaflet.css"/>
+	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet-draw/dist/leaflet.draw.css"/>
+	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet-illustrate/dist/Leaflet.Illustrate.css"/>
+
+	<!-- Stylesheets for MapKnitter -->
+	<link rel="stylesheet" type="text/css" href="/style-2.css"/>	
+
+	<!-- Bootstrap 3.2.0 -->
+	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>	
+
+	<!-- Leaflet mapping library and plugins -->
+	<script src="/bower_components/leaflet/dist/leaflet-src.js"></script>
+	<script src="/bower_components/leaflet-providers/leaflet-providers.js"></script>
+	<script src="/bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
+	<script src="/bower_components/leaflet-illustrate/dist/Leaflet.Illustrate.js"></script>
+</head>
+<body>
+	<%= yield %>
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-180781-29");
+			pageTracker._trackPageview();
+		} catch(err) {}
+	</script>
+</body>
+</html>

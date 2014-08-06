@@ -1,0 +1,39 @@
+<!-- Map location -->
+<div class="form-group">
+	<label for="map-location">Location</label>
+	<input type="text" class="form-control" name="map-location" value="<%= @map.location %>"/>
+</div>
+
+<div id="latlngs">
+	<!-- Map latitude -->
+	<div class="form-group">
+		<label for="map-lat">Lat</label>
+		<input type="text" class="form-control" name="map-lat" value="<%= @map.lat %>"/>
+	</div>
+
+	<!-- Map longitude -->
+	<div class="form-group">
+		<label for="map-lng">Lng</label>
+		<input type="text" class="form-control" name="map-lng" value="<%= @map.lon %>"/>
+	</div>
+</div>
+
+<!-- Map description -->
+<div class="form-group">
+	<label for="map-description">Description</label>
+	<textarea class="form-control" name="map-description">
+	<%= @map.description %>
+	</textarea>
+</div>
+
+<!-- Map tags -->
+<div class="form-group">
+	<label for="map-tags">Tags</label>
+	<input type="text" class="form-control" name="map-tags" value="<% @map.tags %>"/>
+</div>
+
+<!-- Comments -->
+<div class="form-group">
+	<label for="map-comments">Comments</label>
+	<input type="text" class="form-control" name="map-comments" placeholder="Leave a comment"/>
+</div>

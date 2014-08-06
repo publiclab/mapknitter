@@ -6,19 +6,33 @@
 		height: 100%;
 	}
 	#knitter-map-pane {
-		width: 75%;
+		width: 70%;
 		height: 100%;
 		float: left;
 	}
 	#knitter-side-pane {
-		width: 25%;
+		width: 30%;
 		height: 100%;
 		float: left;
+		overflow: scroll;
+	}
+	#knitter-side-pane #latlngs {
+		width: 100%;
+	}
+	#knitter-side-pane #latlngs .form-group {
+		width: 47%;
+		float: left;
+		margin-right: 10px;
+	}
+	#knitter-side-pane #latlngs .form-group input {
+		width: 80%;
 	}
 	#knitter-side-pane h3 {
 		margin: 15px 15px;
 	}
-
+	#sidebar-info {
+		margin-top: 20px;
+	}
 </style>
 <script type="text/javascript" charset="utf-8">
 	var center = L.latLng(<%= @map.lat %>, <%= @map.lon %>),

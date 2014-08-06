@@ -5,6 +5,6 @@ class Map2Controller < ApplicationController
 
 		@map.zoom = 12
 
-		render :layout => 'knitter'
+		render :layout => 'knitter2'
 	end
 end

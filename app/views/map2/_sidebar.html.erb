@@ -15,13 +15,6 @@
 				</button>
 			</div>
 
-			<!-- View uploaded images -->
-			<div class="btn-group">
-				<button type="button" class="btn btn-default">
-					<span class="glyphicon glyphicon-picture"></span>
-				</button>
-			</div>
-
 			<!-- Export map -->
 			<div class="dropdown btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -41,42 +34,22 @@
 			</div>
 		</div>
 
-		<!-- Map location -->
-		<div class="form-group">
-			<label for="map-location">Location</label>
-			<input type="text" class="form-control" name="map-location" value="<%= @map.location %>"/>
-		</div>
+		<div id="sidebar-info">
+			<!-- Navigation tabs -->
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="active"><a href="#map-details" role="tab" data-toggle="tab">Details</a></li>
+				<li><a href="#map-images" role="tab" data-toggle="tab">Uploaded Images</a></li>
+			</ul>
 
-		<!-- Map latitude -->
-		<div class="form-group">
-			<label for="map-lat">Lat</label>
-			<input type="text" class="form-control" name="map-lat" value="<%= @map.lat %>"/>
-		</div>
-
-		<!-- Map longitude -->
-		<div class="form-group">
-			<label for="map-lng">Lng</label>
-			<input type="text" class="form-control" name="map-lng" value="<%= @map.lon %>"/>
-		</div>
-
-		<!-- Map description -->
-		<div class="form-group">
-			<label for="map-description">Description</label>
-			<textarea class="form-control" name="map-description">
-			<%= @map.description %>
-			</textarea>
-		</div>
-
-		<!-- Map tags -->
-		<div class="form-group">
-			<label for="map-tags">Tags</label>
-			<input type="text" class="form-control" name="map-tags" value="<% @map.tags %>"/>
-		</div>
-
-		<!-- Comments -->
-		<div class="form-group">
-			<label for="map-comments">Comments</label>
-			<input type="text" class="form-control" name="map-comments" placeholder="Leave a comment"/>
+			<!-- Tabbed panes -->
+			<div class="tab-content">
+				<div class="tab-pane active" id="map-details">
+					<%= render :partial => "sidebar_details" %>
+				</div>
+				<div class="tab-pane" id="map-images">
+					<%= render :partial => "sidebar_images" %>
+				</div>
+			</div>			
 		</div>
 	</form>
 </div>
