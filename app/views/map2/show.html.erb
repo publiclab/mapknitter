@@ -33,6 +33,9 @@
 	#sidebar-info {
 		margin-top: 20px;
 	}
+	.public-lab-primary button {
+		background-color: #f8e4e4;
+	}
 </style>
 <script type="text/javascript" charset="utf-8">
 	var center = L.latLng(<%= @map.lat %>, <%= @map.lon %>),
@@ -50,5 +53,5 @@
 			edit: { featureGroup: drawnItems }
 		}).addTo(map);
 
-	L.tileLayer.provider('HERE.satelliteDay').addTo(map);
+	L.tileLayer.provider('Esri.WorldImagery').addTo(map);
 </script>

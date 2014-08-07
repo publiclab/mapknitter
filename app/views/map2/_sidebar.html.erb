@@ -10,14 +10,14 @@
 		<div class="btn-group btn-group-justified">
 			<!-- Upload images -->
 			<div class="btn-group">
-				<button type"button" class="btn btn-default">
+				<button class="btn btn-default" title="Upload images" type"button">
 					<span class="glyphicon glyphicon-open"></span>
 				</button>
 			</div>
 
 			<!-- Export map -->
 			<div class="dropdown btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
 					<span class="glyphicon glyphicon-save"></span>
 					<span class="caret"></span>							
 				</button>
@@ -30,7 +30,15 @@
 					<li><a href=".">zipped TMS</a></li>
 					<li><a href=".">KML (beta)</a></li>
 					<li><a href=".">Order a print</a></li>
+					<li class="dropdown-header">Multispectral export formats</li>
+					<li><a href=".">Special format</a></li>
 				</ul>					
+			</div>
+
+			<div class="btn-group">
+				<button class="btn btn-default" title="Write a research note" type="button">
+					<span class="glyphicon glyphicon-file"></span>
+				</button>
 			</div>
 		</div>
 
@@ -39,6 +47,7 @@
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="active"><a href="#map-details" role="tab" data-toggle="tab">Details</a></li>
 				<li><a href="#map-images" role="tab" data-toggle="tab">Uploaded Images</a></li>
+				<li><a href="#map-edit-history" role="tab" data-toggle="tab">Edit History</a></li>
 			</ul>
 
 			<!-- Tabbed panes -->
@@ -48,6 +57,9 @@
 				</div>
 				<div class="tab-pane" id="map-images">
 					<%= render :partial => "sidebar_images" %>
+				</div>
+				<div class="tab-pane" id="map-edit-history">
+					<%= render :partial => "sidebar_edit_history" %>
 				</div>
 			</div>			
 		</div>
