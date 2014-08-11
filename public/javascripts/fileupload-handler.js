@@ -48,10 +48,14 @@ $(function () {
             if($("#allowAutoPlacement").attr("checked") == "checked")
             autoPlacementAllowed = false;
 
-        if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
-            $("#lat-lon_"+data.result.files[0].id).css("display","");
-        if(typeof GPS["GPSImgDirection"] !== 'undefined' && typeof GPS["GPSImgDirectionRef"] !== 'undefined' )             
-            $("#angle_"+data.result.files[0].id).css("display","");
+       // if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
+       //     $("#lat-lon_"+data.result.files[0].id).css("display","");
+       // if(typeof GPS["GPSImgDirection"] !== 'undefined' && typeof GPS["GPSImgDirectionRef"] !== 'undefined' )             
+       //     $("#angle_"+data.result.files[0].id).css("display",""); 
+
+         if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
+            $("#GPS_"+data.result.files[0].id).css("display","");
+
 
         if (typeof window.FileReader !== 'function') {
             //We cannot correct image based on altitude if the image dimensions are not known.
@@ -70,7 +74,7 @@ $(function () {
 
                     //Place with GPS data if available
                     if(typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined') {
-                        $("#altitude_"+data.result.files[0].id).css("display","");
+                        //$("#altitude_"+data.result.files[0].id).css("display","");
                         if(autoPlacementAllowed)
                             parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS, this.height, this.width);
                         //Fallback to regular placement

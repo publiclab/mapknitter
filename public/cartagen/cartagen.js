@@ -9399,11 +9399,10 @@ var Warper = {
         //calculate the altitude of the image
         if(typeof GPS.GPSAltitude !== 'undefined' && typeof GPS.GPSAltitudeRef !== 'undefined' && typeof act_height!== 'undefined' && typeof act_width !== 'undefined'){
             Altitude = (GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef) / 10;
-            // Convert altitude to zoom, technically for large altitude it is not a possible conversion as at any altitude it 
-            // is not possible for a camera to see a complete view of earth, but in map's at the largest zoom the complete 
-            // earth is seen. So for small altitudes the following will work fine. Need to verify the current approach with 
-            // multiple images. For correction based on altitude we need the original dimensions of the image that will 
-            // will be a sufficient measure of FOV of the camera from an altitude.
+            // Convert altitude to zoom, for large altitude it is not a possible conversion as at any altitude it 
+            // is not possible for a camera to see a complete view of earth
+            // For small altitudes the following will work fine. It is still experimental and needs testing. 
+            // For correction based on altitude we need the original dimensions of the image. 
 
             //Some GPS data shows altitude as zero even though it is not, we need to account for errors or we will have infinity zoom.
             if(Altitude >0)

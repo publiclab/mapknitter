@@ -92,9 +92,7 @@
               <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
             </td>
             <td class="indicate" colspan="2">
-                <span class="label label-indicate" id="lat-lon_{%=file.id%}" style="display:none;">lat-lon</span>
-                <span class="label label-indicate" id="angle_{%=file.id%}" style="display:none;">angle</span>
-                <span class="label label-indicate" id="altitude_{%=file.id%}" style="display:none;">altitude</span>
+                <span class="label label-indicate" id="GPS_{%=file.id%}" style="display:none;">GPS</span>
             </td>
 
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
