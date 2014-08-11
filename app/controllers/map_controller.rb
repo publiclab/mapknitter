@@ -243,6 +243,14 @@ class MapController < ApplicationController
     end
   end
 
+  def showBeta
+    @map = Map.find_by_name(params[:id], :order => 'version DESC')
+
+    @map.zoom = 12
+
+    render :layout => 'knitter2'
+  end  
+
   def search
     params[:id] ||= params[:q]
     @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)

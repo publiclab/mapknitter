@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128184718) do
+ActiveRecord::Schema.define(:version => 20140811185342) do
+
+  create_table "comments", :force => true do |t|
+    t.string   "user_id"
+    t.string   "body"
+    t.integer  "map_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
@@ -24,33 +32,34 @@ ActiveRecord::Schema.define(:version => 20130128184718) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "zip",          :default => false,    :null => false
-    t.text     "bands_string",                       :null => false
+    t.text     "bands_string", :default => "",       :null => false
     t.string   "export_type",  :default => "normal", :null => false
     t.integer  "user_id",      :default => 0
   end
 
   create_table "maps", :force => true do |t|
-    t.string   "name",                                        :default => ""
-    t.decimal  "lat",         :precision => 20, :scale => 10, :default => 0.0
-    t.decimal  "lon",         :precision => 20, :scale => 10, :default => 0.0
-    t.integer  "version",                                     :default => 1
-    t.string   "password",                                    :default => ""
-    t.text     "styles"
+    t.string   "name",             :default => ""
+    t.decimal  "lat",              :default => 0.0
+    t.decimal  "lon",              :default => 0.0
+    t.integer  "version",          :default => 1
+    t.string   "password",         :default => ""
+    t.text     "styles",           :default => ""
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description"
-    t.string   "author",                                      :default => "anonymous"
-    t.decimal  "zoom",        :precision => 15, :scale => 10, :default => 2.0
-    t.string   "location",                                    :default => ""
-    t.string   "static_data",                                 :default => ""
-    t.boolean  "vectors",                                     :default => false,       :null => false
-    t.string   "tiles",                                       :default => "google",    :null => false
-    t.string   "email",                                       :default => "",          :null => false
-    t.boolean  "archived",                                    :default => false,       :null => false
-    t.text     "tile_url",                                                             :null => false
-    t.text     "tile_layer",                                                           :null => false
-    t.string   "license",                                     :default => "copyright"
-    t.integer  "user_id",                                     :default => 0
+    t.text     "description",      :default => ""
+    t.string   "author",           :default => "anonymous"
+    t.decimal  "zoom",             :default => 2.0
+    t.string   "location",         :default => ""
+    t.string   "static_data",      :default => ""
+    t.boolean  "vectors",          :default => false,       :null => false
+    t.string   "tiles",            :default => "google",    :null => false
+    t.string   "email",            :default => "",          :null => false
+    t.boolean  "archived",         :default => false,       :null => false
+    t.text     "tile_url",         :default => "",          :null => false
+    t.text     "tile_layer",       :default => "",          :null => false
+    t.string   "license",          :default => "copyright"
+    t.integer  "user_id",          :default => 0
+    t.boolean  "anon_annotatable", :default => false
   end
 
   create_table "nodes", :force => true do |t|
@@ -77,6 +86,10 @@ ActiveRecord::Schema.define(:version => 20130128184718) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "tags", ["map_id"], :name => "index_tags_on_map_id"
+  add_index "tags", ["user_id"], :name => "index_tags_on_user_id"
+  add_index "tags", ["warpable_id"], :name => "index_tags_on_warpable_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
@@ -108,7 +121,7 @@ ActiveRecord::Schema.define(:version => 20130128184718) do
     t.string   "nodes",        :default => ""
     t.boolean  "locked",       :default => false, :null => false
     t.boolean  "deleted",      :default => false, :null => false
-    t.text     "history",                         :null => false
+    t.text     "history",      :default => "",    :null => false
     t.float    "cm_per_pixel", :default => 0.0,   :null => false
   end
 

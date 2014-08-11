@@ -1,0 +1,69 @@
+<div id="knitter-side-pane" class="container">
+	<!-- Map title and author -->
+	<div class="map-title clearfix">
+		<h3><%= @map.name %></h3>
+		<button class="btn btn-primary">Save</button>			
+	</div>
+
+	<div class="map-author">
+		by <a href="//publiclab.org/list/@map.author"><%= @map.author %></a>
+	</div>
+
+	<!-- Toolbar for uploading and viewing images and exporting the map. -->
+	<div class="btn-group btn-group-justified">
+		<!-- Upload images -->
+		<div class="btn-group">
+			<button class="btn btn-default" title="Upload images" type"button">
+				<span class="glyphicon glyphicon-open"></span>
+			</button>
+		</div>
+
+		<!-- Export map -->
+		<div class="dropdown btn-group">
+			<button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
+				<span class="glyphicon glyphicon-save"></span>
+				<span class="caret"></span>							
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				<li class="dropdown-header">Export formats</li>
+				<li><a href=".">JPG</a></li>
+				<li><a href=".">GeoTIFF</a></li>
+				<li><a href=".">Tiled Map Service (TMS)</a></li>
+				<li><a href=".">OSM-TMS</a></li>
+				<li><a href=".">zipped TMS</a></li>
+				<li><a href=".">KML (beta)</a></li>
+				<li><a href=".">Order a print</a></li>
+				<li class="dropdown-header">Multispectral export formats</li>
+				<li><a href=".">Special format</a></li>
+			</ul>					
+		</div>
+
+		<div class="btn-group">
+			<button class="btn btn-default" title="Write a research note" type="button">
+				<span class="glyphicon glyphicon-file"></span>
+			</button>
+		</div>
+	</div>
+
+	<div id="sidebar-info">
+		<!-- Navigation tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="active"><a href="#map-details" role="tab" data-toggle="tab">Details</a></li>
+			<li><a href="#map-images" role="tab" data-toggle="tab">Uploaded Images</a></li>
+			<li><a href="#map-editing" role="tab" data-toggle="tab">Editing</a></li>
+		</ul>
+
+		<!-- Tabbed panes -->
+		<div class="tab-content">
+			<div class="tab-pane active" id="map-details">
+				<%= render :partial => "sidebar_details" %>
+			</div>
+			<div class="tab-pane" id="map-images">
+				<%= render :partial => "sidebar_images" %>
+			</div>
+			<div class="tab-pane" id="map-editing">
+				<%= render :partial => "sidebar_editing" %>
+			</div>
+		</div>			
+	</div>
+</div>

@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   has_many :maps
   has_many :tags
+  has_many :comments
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40

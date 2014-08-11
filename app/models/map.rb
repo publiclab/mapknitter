@@ -13,6 +13,7 @@ class Map < ActiveRecord::Base
   has_many :warpables
   has_many :exports
   has_many :tags
+  has_many :comments
 
   def validate
     self.name != 'untitled'

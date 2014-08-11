@@ -1,0 +1,39 @@
+<!-- Map location -->
+<% form_for :map, @map do |m| %>
+	<div class="form-group">
+		<% m.label :location %>
+		<% m.text_field :location %>
+	</div>
+
+	<div id="latlngs">
+		<!-- Map latitude -->
+		<div class="form-group">
+			<%= m.label :lat %>:
+			<%= m.text_field :lat, :class => "form-control" %>
+		</div>
+
+		<!-- Map longitude -->
+		<div class="form-group">
+			<%= m.label :lon %>
+			<%= m.text_field :lon, :class => "form-control" %>
+		</div>
+	</div>
+
+	<!-- Map description -->
+	<div class="form-group">
+		<%= m.label :description %>
+		<%= m.text_area :description, :class => "form-control" %>
+	</div>
+
+	<!-- Map tags -->
+	<div class="form-group">
+		<%= m.label :tags %>
+		<%= m.text_field :tags, :class => "form-control" %>
+	</div>
+
+	<!-- Comments -->
+	<div class="form-group">
+		<%= m.label :comments %>
+		<%= m.text_area :comments, :class => "form-control" %>
+	</div>	
+<% end %><!-- End form -->
