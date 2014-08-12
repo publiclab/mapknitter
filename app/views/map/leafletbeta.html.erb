@@ -1,4 +1,9 @@
+<form id="test_form" >
+  <input type="file" id="inputimage" accept="image/*">
+  <img id="myImg" src="#" alt="your image" />
+</form>
 <div id="map" style="width:100%; height:100%; position:absolute; top:0;"></div>
+
 
 <style type="text/css">
             
@@ -27,7 +32,14 @@
             #map{
             	border: 2px solid;
             }
-
+			
+			
+		#inputimage
+		{
+		position:absolute; 
+		top:-100px;
+		}
+		
 </style>
 
 <script>
@@ -42,7 +54,35 @@
 			id: 'examples.map-i86knfo3'
 		}).addTo(map);
 
+          // Image Upload function starts here:	
+
+			$('#test').change(function() {
+			    $('#test_form').submit();
+			}); 
 		
+			// ends here
+			
+			
+          L.easyButton('fa-file-image-o', 
+              function (){
+                $("#inputimage").click();
+                },
+             ''
+            );
+            
+          $(":file").change(function () {
+        	if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+        		}
+		});
+		
+
+		function imageIsLoaded(e) {
+		    $('#myImg').attr('src', e.target.result);
+		};
+            
 			var imageUrl = '/images/aerialimage.jpg';
 			var imageBounds=[];
 			var markers=[];
@@ -73,5 +113,9 @@
 			for (i in markers) {
                 markers[i].on('drag', update);
             	}
-
+            
+            
+            
+            
+		
 </script>
