@@ -1,5 +1,5 @@
 <!-- Map location -->
-<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" }} do |m| %>
+<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" } } do |m| %>
 	<div class="form-group">
 		<% m.label :location %>
 		<% m.text_field :location %>
@@ -27,28 +27,13 @@
 
 	<!-- Map tags -->
 	<div class="form-group">
-		<label for="tags">Tags</label>
-		<p><span id="tags">
-			<% @map.tags.each do |tag| %>
-				<a href="/tags/<%= tag.name %>">
-					<span id="tag_<%= tag.id %>" class="label label-info">
-						<%= tag.name %>
-					</span>
-				</a>
-			<% end %>
-		</span></p>
-		<div class="input-group">
-			<span class="input-group-addon">
-				<span class="glyphicon glyphicon-tags"></span>
-			</span>
-			<input class="form-control" type="text" placeholder="Enter tags" name="tags"></input>
-		</div>
+		<%= render :partial => "sidebar_details_tags" %>
 	</div>
 
 	<!-- Comments -->
 	<div class="form-group">
-		<%= m.label :comments %>
-		<%= m.text_area :comments, :class => "form-control" %>
+		<%= render :partial => "sidebar_details_comments" %>
 	</div>
+	
 	<button class="btn btn-primary" type="submit">Save</button>	
 <% end %><!-- End form -->
