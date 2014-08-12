@@ -19,6 +19,8 @@ class MapsController < ApplicationController
   def edit
     @map = Map.find_by_name params[:id]
 
+    puts @map.tags
+
     @map.zoom = 12
 
     render :layout => 'knitter2'
@@ -27,9 +29,9 @@ class MapsController < ApplicationController
   def update
     @map = Map.find_by_name params[:id]    
     @map.description = params[:map][:description]
-    @map.comments = params[:map][:comments]
-    if params[:map][:tags]
-      params[:map][:tags].gsub(' ', ',').split(',').each do |tagname|
+
+    if params[:tags]
+      params[:tags].gsub(' ', ',').split(',').each do |tagname|
         @map.add_tag(tagname.strip, current_user)
       end
     end

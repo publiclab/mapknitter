@@ -3,6 +3,9 @@ class Tag < ActiveRecord::Base
     validates_presence_of :user_id, :on => :create, :message => "can't be blank"
     validates_presence_of :map_id, :on => :create, :message => "can't be blank"
 
+    belongs_to :map 
+    belongs_to :user
+
     def map
         Map.find self.map_id
     end

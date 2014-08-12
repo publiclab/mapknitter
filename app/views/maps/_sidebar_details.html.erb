@@ -22,13 +22,27 @@
 	<!-- Map description -->
 	<div class="form-group">
 		<%= m.label :description %>
-		<%= m.text_area :description, :class => "form-control" %>
+		<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
 	</div>
 
 	<!-- Map tags -->
 	<div class="form-group">
-		<%= m.label :tags %>
-		<%= m.text_field :tags, :class => "form-control" %>
+		<label for="tags">Tags</label>
+		<p><span id="tags">
+			<% @map.tags.each do |tag| %>
+				<a href="/tags/<%= tag.name %>">
+					<span id="tag_<%= tag.id %>" class="label label-info">
+						<%= tag.name %>
+					</span>
+				</a>
+			<% end %>
+		</span></p>
+		<div class="input-group">
+			<span class="input-group-addon">
+				<span class="glyphicon glyphicon-tags"></span>
+			</span>
+			<input class="form-control" type="text" placeholder="Enter tags" name="tags"></input>
+		</div>
 	</div>
 
 	<!-- Comments -->

@@ -395,20 +395,18 @@ class Map < ActiveRecord::Base
   end
 
   def has_tag(tagname)
-    Tag.find(:all, :conditions => { :map_id => self.id }).length > 0
+    Tag.find(:all, :conditions => { :map_id => self.id, :name => tagname }).length > 0
   end
 
   def add_tag(tagname, user)
     tagname = tagname.downcase
     unless self.has_tag(tagname)
-      tag = Tag.new({
+      tag = self.tags.create({
         :name => tagname,
         :user_id => user.id,
         :map_id => self.id 
       })
-      tag.save!
     end
-    return tag
   end
 
 end
