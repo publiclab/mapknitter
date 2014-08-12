@@ -394,4 +394,21 @@ class Map < ActiveRecord::Base
     Way.find(nodes.collect(&:way_id).uniq)
   end
 
+  def has_tag(tagname)
+    Tag.find(:all, :conditions => { :map_id => self.id }).length > 0
+  end
+
+  def add_tag(tagname, user)
+    tagname = tagname.downcase
+    unless self.has_tag(tagname)
+      tag = Tag.new({
+        :name => tagname,
+        :user_id => user.id,
+        :map_id => self.id 
+      })
+      tag.save!
+    end
+    return tag
+  end
+
 end

@@ -1,5 +1,5 @@
 <!-- Map location -->
-<% form_for :map, @map do |m| %>
+<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" }} do |m| %>
 	<div class="form-group">
 		<% m.label :location %>
 		<% m.text_field :location %>
@@ -35,5 +35,6 @@
 	<div class="form-group">
 		<%= m.label :comments %>
 		<%= m.text_area :comments, :class => "form-control" %>
-	</div>	
+	</div>
+	<button class="btn btn-primary" type="submit">Save</button>	
 <% end %><!-- End form -->
