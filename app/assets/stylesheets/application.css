@@ -1,0 +1,60 @@
+html, body {
+	width: 100%;
+	height: 100%;
+}
+#knitter-map-pane {
+	width: 70%;
+	height: 100%;
+	float: left;
+}
+#knitter-side-pane {
+	width: 30%;
+	height: 100%;
+	float: left;
+	overflow: scroll;
+}
+#knitter-side-pane #latlngs {
+	width: 100%;
+}
+#knitter-side-pane #latlngs .form-group {
+	width: 47%;
+	float: left;
+	margin-right: 10px;
+}
+#knitter-side-pane #latlngs .form-group input {
+	width: 80%;
+}
+#knitter-side-pane h3 {
+	margin: 15px 15px;
+}
+#sidebar-info {
+	margin-top: 20px;
+}
+.public-lab-primary button {
+	background-color: #f8e4e4;
+}
+.map-title h3 {
+	float: left;
+}
+.map-title button {
+	margin-top: 10px;
+	float: right;
+}
+#knitter-side-pane .label {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+#comments .comment-author {
+	background-color: #f2f2f2;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #d4d4d4;
+	margin-bottom: 5px;
+}
+#comments .comment-body {
+	margin-bottom: 5px;
+}
+#knitter-side-pane table {
+	width: 100%;
+	margin-bottom: 5px;
+}

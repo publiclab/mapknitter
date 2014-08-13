@@ -1,11 +1,12 @@
 <label for="tags">Tags</label>
 <p><span id="tags">
 	<% @map.tags.each do |tag| %>
-		<a href="/tags/<%= tag.name %>">
-			<span id="tag_<%= tag.id %>" class="label label-info">
+		<span id="tag_<%= tag.id %>" class="label label-info">
+			<a href="/tag/<%= tag.name %>">
 				<%= tag.name %>
-			</span>
-		</a>
+			</a>
+			<a class="tagdelete" data-remote="true" href="/tag/delete/<%= @map.id %>/<%= tag.id %>"><span class="glyphicon glyphicon-remove"></span></a>
+		</span>
 	<% end %>
 </span></p>
 <div class="input-group">

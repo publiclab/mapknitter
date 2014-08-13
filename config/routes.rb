@@ -76,7 +76,7 @@ ActionController::Routing::Routes.draw do |app|
   # app.connect 'author/:id', :controller => 'author', :action => 'show'
   # app.connect 'api/0.6/geohash/:id.json', :controller => 'api', :action => 'planet'
 
-  app.resources :maps
+  app.resources :maps, :tags
 
   # default routes
   # app.connect ':controller/:action/:id'

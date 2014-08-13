@@ -15,6 +15,7 @@ group :dependencies do
 	gem "RubyInline"
 	gem "rdoc"
 	gem "rdiscount", "2.1.7.1"
+	gem "sprockets", "2.12.1"
 end
 
 group :sqlite do
