@@ -1,4 +1,5 @@
 require 'open3'
+
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
 
@@ -14,6 +15,11 @@ class MapsController < ApplicationController
   end
 
   def show
+    @map = Map.find_by_name params[:id]
+
+    @map.zoom = 12
+
+    render :layout => 'knitter2'
   end
 
   def edit
@@ -26,9 +32,15 @@ class MapsController < ApplicationController
 
   def update
     @map = Map.find_by_name params[:id]    
-    @map.description = params[:map][:description]
 
-    if params[:comment]
+    # save lat, lon, location, description 
+    @map.description = params[:map][:description]
+    @map.location = params[:map][:location]
+    @map.lat = params[:map][:lat]
+    @map.lon = params[:map][:lon]
+
+    # save comments
+    if params[:comment] != ""
       @map.comments.create({
         :user_id => current_user.id,
         :map_id => @map.id,
@@ -36,6 +48,7 @@ class MapsController < ApplicationController
       });
     end
 
+    # save new tags
     if params[:tags]
       params[:tags].gsub(' ', ',').split(',').each do |tagname|
         @map.add_tag(tagname.strip, current_user)

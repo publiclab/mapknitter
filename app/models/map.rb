@@ -394,6 +394,8 @@ class Map < ActiveRecord::Base
     Way.find(nodes.collect(&:way_id).uniq)
   end
 
+  #--------------------
+
   def has_tag(tagname)
     Tag.find(:all, :conditions => { :map_id => self.id, :name => tagname }).length > 0
   end
@@ -408,5 +410,5 @@ class Map < ActiveRecord::Base
       })
     end
   end
-
+  
 end

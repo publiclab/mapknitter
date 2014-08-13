@@ -1,0 +1,31 @@
+<!-- Map location -->
+<b>Location</b>
+<p><%= @map.location %></p>
+
+<table>
+	<tr><td><b>Latitude</b></td><td><b>Longitude</b></td></tr>
+	<tr><td><%= @map.lat %></td><td><%= @map.lon %></td></tr>
+</table>
+
+<b>Description
+</b>
+<div>
+	<%= markdown_to_html(@map.description) %>
+</div>
+
+<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" } } do |m| %>
+
+<!-- Map tags -->
+<div class="form-group">
+	<%= render :partial => "edit_sidebar_details_tags" %>
+</div>
+
+<!-- Comments -->
+<div class="form-group">
+	<%= render :partial => "edit_sidebar_details_comments" %>
+</div>
+
+<% end %>
+
+</form>
+

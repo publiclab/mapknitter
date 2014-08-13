@@ -56,14 +56,14 @@
 		<!-- Tabbed panes -->
 		<div class="tab-content">
 			<div class="tab-pane active" id="map-details">
-				<%= render :partial => "sidebar_details" %>
+				<%= render :partial => mode + "_sidebar_details" %>
 			</div>
 			<div class="tab-pane" id="map-images">
 				<%= render :partial => "sidebar_images" %>
 			</div>
 			<div class="tab-pane" id="map-editing">
-				<%= render :partial => "sidebar_editing" %>
+				<%= render :partial => "sidebar_edit_history" %>
 			</div>
-		</div>			
+		</div>		
 	</div>
 </div>

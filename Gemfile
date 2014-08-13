@@ -14,6 +14,7 @@ group :dependencies do
 	gem "httparty", "0.11.0"
 	gem "RubyInline"
 	gem "rdoc"
+	gem "rdiscount", "2.1.7.1"
 end
 
 group :sqlite do

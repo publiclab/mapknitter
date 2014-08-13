@@ -49,6 +49,7 @@ GEM
       activesupport (= 2.3.15)
       rake (>= 0.8.3)
     rake (10.3.2)
+    rdiscount (2.1.7.1)
     rdoc (4.1.1)
       json (~> 1.4)
     recaptcha (0.3.6)
@@ -70,6 +71,7 @@ DEPENDENCIES
   oa-openid (= 0.3.2)
   passenger
   rails (= 2.3.15)
+  rdiscount (= 2.1.7.1)
   rdoc
   recaptcha (= 0.3.6)
   sqlite3

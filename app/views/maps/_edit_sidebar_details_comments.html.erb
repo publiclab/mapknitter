@@ -1,0 +1,14 @@
+<b>Comments</b>
+<div id="comments">
+	<% @map.comments.each do |comment| %>
+		<div class="comment">
+			<div class="comment-author">
+				<a href="//publiclab.org/list/<%= comment.author %>"><%= comment.author %></a>
+				commented <%= time_ago_in_words(comment.created_at) %> ago
+			</div>
+			<div class="comment-body" id="comment_<%= comment.id %>"><%= markdown_to_html(comment.body) %></div>
+		</div>
+	<% end %>
+</div></p>
+<label for="comment">Post Comment</label>
+<textarea class="form-control" placeHolder="Type **Markdown** here." name="comment"></textarea> 

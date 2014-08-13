@@ -1,0 +1,18 @@
+<script type="text/javascript">
+	var center = L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+		zoom = <%= @map.zoom %>,
+		map = L.map('knitter-map-pane', { zoomControl: false })
+			.setView(center, zoom),
+		drawnItems = new L.FeatureGroup().addTo(map),
+		zoomControl = L.control.zoom({ position: 'topright' }).addTo(map),
+		illustrateControl = new L.Illustrate.Control({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map),
+		drawControl = new L.Control.Draw({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map);
+
+	L.tileLayer.provider('Esri.WorldImagery').addTo(map);
+</script>
