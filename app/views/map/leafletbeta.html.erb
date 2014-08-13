@@ -45,6 +45,10 @@
 <script>
 
 		var map = new L.map('map').setView([51.505, -0.09], 13);
+		var imageBounds=[];
+		var markers=[];
+		var draggable={};
+		var newimg;
 
 		L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
 			maxZoom: 18,
@@ -54,21 +58,39 @@
 			id: 'examples.map-i86knfo3'
 		}).addTo(map);
 
-          // Image Upload function starts here:	
 
-			$('#test').change(function() {
-			    $('#test_form').submit();
-			}); 
-		
-			// ends here
-			
 			
           L.easyButton('fa-file-image-o', 
               function (){
                 $("#inputimage").click();
                 },
-             ''
+             'Upload image'
             );
+            
+         	L.easyButton('fa-adjust', 
+              function (){
+                changeopacity();
+                },
+             'Toggle Image Transparency'
+            );
+          
+          L.easyButton('fa-circle-o', 
+             function (){
+                outline();
+                },
+             'Outline'
+            );
+          
+          L.easyButton('fa-bitbucket', 
+              function (){
+                map.removeLayer(newimg);
+                for(var i=0; i<4; i++)
+                map.removeLayer(markers[i]);
+                },
+             'Delete Image'
+            );
+            
+          
             
           $(":file").change(function () {
         	if (this.files && this.files[0]) {
@@ -78,15 +100,10 @@
         		}
 		});
 		
-
+		
 		function imageIsLoaded(e) {
 		    $('#myImg').attr('src', e.target.result);
-		};
-            
-			var imageUrl = '/images/aerialimage.jpg';
-			var imageBounds=[];
-			var markers=[];
-			corners = [100, 100, 300, 100, 100, 300, 300, 300];
+			corners = [300, 200, 500, 200, 300, 400, 500, 400];
 			for(var i=0; i<8; i=i+2)
 			{
 				var a=map.layerPointToLatLng([corners[i],corners[i+1]]);
@@ -97,25 +114,32 @@
 				addidclass.id= "marker"+i;
 				addidclass.className = addidclass.className + " corner";
 			}
-
-
-			var newimg= new L.DistortableImage(imageUrl, imageBounds);
+			
+			newimg= new L.DistortableImage(e.target.result, imageBounds);
 			(newimg.bringToFront()).addTo(map);
 			
-			
-			
-			var draggable = new L.Draggable(newimg._image);
+			draggable = new L.Draggable(newimg._image);
 			draggable.enable();
 			
-			draggable.on('drag', update);
+			draggable.on('dragend', function(e){
+				var target=e.target;
+			  	for(var i=0;i<4;i=i+1)
+				  {
+				  	var htmlpos= map.latLngToContainerPoint(markers[i]._latlng);
+				  	htmlpos.x=htmlpos.x - (target._startPos).x + (target._newPos).x;
+				  	htmlpos.y=htmlpos.y - (target._startPos).y + (target._newPos).y;
+				  	var mappos= map.containerPointToLatLng(htmlpos);
+				  	markers[i].setLatLng(mappos);
+				  }
+				}
+			);
 			
 			
 			for (i in markers) {
                 markers[i].on('drag', update);
             	}
+		    
+		};
             
-            
-            
-            
-		
+			
 </script>
