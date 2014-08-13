@@ -18,12 +18,14 @@ class TagsController < ApplicationController
     def update
     end
 
-    def destroy(map_id, tag_id)
+    def destroy
         @tag = Tag.find(params[:id])
-        if logged_in? && (@tag.user_id == current_user.id || current_user.role == "admin")
+        map = Map.find(params[:map_id])
+
+        if logged_in? && (@tag.user_id.to_i == current_user.id || current_user.role == "admin")
               @tag.delete
               flash[:notice] = "Tag " + @tag.name + " deleted."
-              redirect_to "/maps/" + @tag.map.name
+              redirect_to "/maps/" + map.name
         else
               flash[:error] = "You must be logged in to delete tags."
               redirect_to "/login"

@@ -14,7 +14,11 @@ group :dependencies do
 	gem "httparty", "0.11.0"
 	gem "RubyInline"
 	gem "rdoc"
+
+	# markdown-to-html compiler
 	gem "rdiscount", "2.1.7.1"
+
+	# asset pipelining
 	gem "sprockets", "2.12.1"
 end
 
