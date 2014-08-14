@@ -51,4 +51,20 @@ class User < ActiveRecord::Base
     write_attribute :email, (value ? value.downcase : nil)
   end
 
+  def can_delete_comment(comment)
+    map = Map.find(comment.map_id)
+
+    self.role == "admin" || 
+    comment.user_id.to_i == self.id || 
+    comment.map.user_id == self.id
+  end
+
+  def can_edit_comment(comment)
+    comment.user_id.to_i == self.id
+  end
+
+  def owns?(resource)
+    resource.user_id == self.id
+  end
+
 end

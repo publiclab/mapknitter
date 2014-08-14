@@ -1,0 +1,22 @@
+<b><%= @map.comments.length %> Comments</b>
+<div id="comments">
+	<% @map.comments.each do |comment| %>
+		<div class="comment">
+			<div class="comment-author">
+				<a href="//publiclab.org/list/<%= comment.author %>"><%= comment.author %></a>
+				commented <%= time_ago_in_words(comment.created_at) %> ago
+
+				<% if current_user && current_user.can_edit_comment(comment) %>
+					<a class="btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span></a>
+				<% end %>
+
+				<% if current_user && current_user.can_delete_comment(comment) %>
+					<% link_to([@map, comment], :method => "delete", :class => "btn btn-default btn-xs pull-right") do %>
+						<span class="glyphicon glyphicon-trash"></span>
+					<% end %>
+				<% end %>
+			</div>
+			<div class="comment-body" id="comment_<%= comment.id %>"><%= markdown_to_html(comment.body) %></div>
+		</div>
+	<% end %>
+</div>
