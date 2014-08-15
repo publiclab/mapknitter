@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
 		$(".comment-edit-form[data-comment-id=" + id + "]").toggle();
 	});
 
-	/* Remove comment from the page if */
+	/* Remove comment from the page when it is deleted from the database via AJAX. */
 	$(".delete-comment-btn").click(function(event) {
 		var id = $(event.target).data("comment-id");
 
