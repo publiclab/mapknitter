@@ -5,6 +5,7 @@ module Sprockets
 			sprockets = Sprockets::Environment.new
 			sprockets.append_path 'app/assets/javascripts'
 			sprockets.append_path 'app/assets/stylesheets'
+			sprockets.append_path Rails.root.join('app/assets/bower_packages')
 			sprockets
 		end
 	end

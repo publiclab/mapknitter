@@ -10,27 +10,11 @@
 	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
-	<!-- Stylesheets for Bootstrap 3.2.0 -->
-	<link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>	
-
-	<!-- Stylesheets for Leaflet mapping library and plugins -->
-	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet/dist/leaflet.css"/>
-	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet-draw/dist/leaflet.draw.css"/>
-	<link rel="stylesheet" type="text/css" href="/bower_components/leaflet-illustrate/dist/Leaflet.Illustrate.css"/>
-
 	<!-- Stylesheets for MapKnitter -->
 	<link rel="stylesheet" type="text/css" href="/style-2.css"/>
 	<%= stylesheet_link_tag 'application' %>
 
-	<!-- Bootstrap 3.2.0 -->
-	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>	
-
-	<!-- Leaflet mapping library and plugins -->
-	<script src="/bower_components/leaflet/dist/leaflet-src.js"></script>
-	<script src="/bower_components/leaflet-providers/leaflet-providers.js"></script>
-	<script src="/bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
-	<script src="/bower_components/leaflet-illustrate/dist/Leaflet.Illustrate.js"></script>
+	<%= javascript_include_tag 'application' %>
 </head>
 <body>
 	<%= yield %>

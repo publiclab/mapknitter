@@ -18,4 +18,4 @@ config/initializers/site_keys.rb
 
 .bundle
 vendor/bundle
-public/bower_components
+app/assets/bower_packages
