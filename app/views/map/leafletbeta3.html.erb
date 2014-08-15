@@ -4,20 +4,9 @@
 	</form>
 	<div id="map" style="width:100%; height:100%; position:absolute; top:0;"></div>
 	
-	<div class="input-wrap" id='ip1' style="display:none">
-     <input type="range" id="sliderZ1" min="-180" max="180" value="0" onchange="rangevalueZ1.value=value"/>
-     <span class='opt'><output id="rangevalueZ1">0deg</output></span>
-  	</div>
-	
-	<div class="input-wrap2" id='ip2' style="display:none">
-     <input type="range" id="sliderZ2" min="10" max="200" value="10"/>
-     <span class='opt'><output id="rangevalueZ2">1</output></span>
-</div>
-
-
 <style type="text/css">
             
-           #imgcontainer {
+             #imgcontainer {
               position:relative;
               width: 100%;
               height: 100%;
@@ -28,11 +17,10 @@
               position: absolute;
               top: 0px;
               left: 0px;
-              transform-origin: center;
-              -webkit-transform-origin: center;
-              -moz-transform-origin: center;
-              -o-transform-origin: center;
-              
+              transform-origin: 0 0;
+              -webkit-transform-origin: 0 0;
+              -moz-transform-origin: 0 0;
+              -o-transform-origin: 0 0;
             }
             
             .corner {
@@ -50,60 +38,18 @@
 		position:absolute; 
 		top:-100px;
 		}
-		
-		.input-wrap {
-		  background-color:white;
-		  border-radius:5px;
-		  position:absolute;
-		  min-width:255px;
-		  left: 60px;
-		  color:#484848;
-		  height:27px;
-		}
-		
-		.input-wrap2 {
-		  background-color:white;
-		  border-radius:5px;
-		  position:absolute;
-		  min-width:255px;
-		  
-		  left: 60px;
-		  color:#484848;
-		  height:27px;
-		}
-		
-		#ip1{
-		top: 147px;
-		}
-		
-		#ip2{
-		top: 182px;
-		}
-		
-		#sliderZ1{
-		float:left;
-		}
-		
-		#sliderZ2{
-		float:left;
-		}
-		
-		
-		.opt {
-		float:left;
-		margin:5px;
-		}
+
 		
 </style>
 
 <script>
-
-		var map = new L.map('map').setView([51.505, -0.09], 13);
+var map = new L.map('map').setView([51.505, -0.09], 13);
 		var imageBounds=[];
 		var markers=[];
 		var draggable={};
 		var newimg;
-
+		
+		
 		L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
 			maxZoom: 18,
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -112,9 +58,7 @@
 			id: 'examples.map-i86knfo3'
 		}).addTo(map);
 
-		map.touchZoom.disable();
-		map.doubleClickZoom.disable();
-		map.scrollWheelZoom.disable();
+
 			
           L.easyButton('fa-file-image-o', 
               function (){
@@ -130,37 +74,14 @@
              'Toggle Image Transparency'
             );
             
-          L.easyButton('fa-refresh', 
-             function(){
-		    if (state){
-		    $('.input-wrap').show();
-			   state=false;
-			   }
-			   else{
-		    $('.input-wrap').hide();
-			    state=true;
-        			}
-        		rotate('img1');
-        		},
-             'Rotate Image'
-            );
-            
-          L.easyButton('fa-arrows-alt', 
-             function(){
-		    if (state2){
-		    $('.input-wrap2').show();
-			   state2=false;
-			   }
-			   else{
-		    $('.input-wrap2').hide();
-			   state2=true;
-        			}
-        		scale('img1');
-        		},
-             'Scale Image'
+         L.easyButton('fa-square-o', 
+              function (){
+                outline();
+                },
+             'Outline'
             );
           
-          L.easyButton('fa-bitbucket', 
+         L.easyButton('fa-bitbucket', 
               function (){
                 map.removeLayer(newimg);
                 for(var i=0; i<4; i++)
@@ -168,6 +89,8 @@
                 },
              'Delete Image'
             );
+            
+          
             
           $(":file").change(function () {
         	if (this.files && this.files[0]) {
@@ -185,14 +108,16 @@
 			{
 				var a=map.layerPointToLatLng([corners[i],corners[i+1]]);
 				imageBounds.push([a.lat,a.lng]);
-				
 			}
 			
 			newimg= new L.DistortableImage(e.target.result, imageBounds);
 			(newimg.bringToFront()).addTo(map);
 			
-		    
-		};
-            
+			draggable = new L.Draggable(newimg._image);
+			draggable.enable();
+			
+			}
+			
+		$( "#img1" ).wrap( "<div id='bordered'></div>" );
 			
 </script>

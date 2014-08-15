@@ -263,6 +263,48 @@ class MapController < ApplicationController
     end
   end
   
+  def leafletbeta2
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
+    @map.zoom = 1.6 if @map.zoom == 0
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
+    render :layout => 'leafletknitter'
+    end
+  end
+  
+  def leafletbeta3
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
+    @map.zoom = 1.6 if @map.zoom == 0
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
+    render :layout => 'leafletknitter'
+    end
+  end
+  
   def search
     params[:id] ||= params[:q]
     @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
