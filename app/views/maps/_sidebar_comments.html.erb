@@ -2,12 +2,12 @@
 <div id="comments">
 	<% @map.comments.each do |comment| %>
 		<div class="comment">
-			<div class="comment-author">
+			<div class="comment-header">
 				<a href="//publiclab.org/list/<%= comment.author %>"><%= comment.author %></a>
 				commented <%= time_ago_in_words(comment.created_at) %> ago
 
 				<% if current_user && current_user.can_edit_comment(comment) %>
-					<a class="btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span></a>
+					<a class="btn btn-default btn-xs pull-right edit-comment-btn"><span class="glyphicon glyphicon-pencil" id="comment_<%= comment.id %>"></span></a>
 				<% end %>
 
 				<% if current_user && current_user.can_delete_comment(comment) %>
@@ -15,8 +15,15 @@
 						<span class="glyphicon glyphicon-trash"></span>
 					<% end %>
 				<% end %>
-			</div>
-			<div class="comment-body" id="comment_<%= comment.id %>"><%= markdown_to_html(comment.body) %></div>
-		</div>
+			</div><!-- .comment-header -->
+			<div class="comment-body" id="body_comment_<%= comment.id %>"><%= markdown_to_html(comment.body) %></div><!-- .comment-body -->
+			<div class="comment-edit-form" id="edit_comment_<%= comment.id %>" style="display:none">
+				<% form_for [@map, comment] do |f| %>
+					<%= f.text_area :body, :class => "form-control" %>
+					<%= f.submit "Publish.", :class => "btn btn-primary" %>
+					<button class="btn btn-primary">Cancel</button>
+				<% end %>
+			</div><!-- .comment-edit-form -->
+		</div><!-- .comment -->
 	<% end %>
 </div>

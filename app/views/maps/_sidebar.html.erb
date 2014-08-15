@@ -57,6 +57,11 @@
 		<div class="tab-content">
 			<div class="tab-pane active" id="map-details">
 				<%= render :partial => mode + "_sidebar_details" %>
+
+				<!-- Comments -->
+				<div class="form-group">
+					<%= render :partial => "edit_sidebar_details_comments" %>
+				</div>
 			</div>
 			<div class="tab-pane" id="map-images">
 				<%= render :partial => "sidebar_images" %>

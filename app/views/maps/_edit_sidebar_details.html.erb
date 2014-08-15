@@ -1,5 +1,5 @@
 <!-- Map location -->
-<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" } } do |m| %>
+<% form_for @map do |m| %>
 	<div class="form-group">
 		<% m.label :location %>
 		<% m.text_field :location %>
@@ -29,11 +29,6 @@
 	<div class="form-group">
 		<%= render :partial => "edit_sidebar_details_tags" %>
 	</div>
-
-	<!-- Comments -->
-	<div class="form-group">
-		<%= render :partial => "edit_sidebar_details_comments" %>
-	</div>
 	
-	<button class="btn btn-primary" type="submit">Save</button>	
+	<%= m.submit "Save", :class => "btn btn-primary" %>
 <% end %><!-- End form -->

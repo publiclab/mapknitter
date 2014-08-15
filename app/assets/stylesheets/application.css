@@ -44,7 +44,7 @@ html, body {
 	margin-left: 2px;
 	margin-right: 2px;
 }
-#comments .comment-author {
+#comments .comment-header {
 	background-color: #f2f2f2;
 	padding: 10px;
 	border-radius: 5px;

@@ -1,4 +1,8 @@
 <%= render :partial => "sidebar_comments" %>
 
-<label for="comment">Post Comment</label>
-<textarea class="form-control" placeHolder="Type **Markdown** here." name="comment"></textarea> 
+<% form_for [@map, Comment.new] do |f| %>
+	<%= f.label :body %>
+	<%= f.text_area :body, :class => "form-control", :placeholder => "Type **Markdown** here." %>
+
+	<%= f.submit "Post comment", :class => "btn btn-primary" %>
+<% end %>

@@ -15,7 +15,7 @@ class MapsController < ApplicationController
   end
 
   def show
-    @map = Map.find_by_name params[:id]
+    @map = Map.find params[:id]
 
     @map.zoom = 12
 
@@ -23,7 +23,7 @@ class MapsController < ApplicationController
   end
 
   def edit
-    @map = Map.find_by_name params[:id]
+    @map = Map.find params[:id]
 
     @map.zoom = 12
 
@@ -31,22 +31,13 @@ class MapsController < ApplicationController
   end
 
   def update
-    @map = Map.find_by_name params[:id]    
+    @map = Map.find params[:id]
 
     # save lat, lon, location, description 
     @map.description = params[:map][:description]
     @map.location = params[:map][:location]
     @map.lat = params[:map][:lat]
     @map.lon = params[:map][:lon]
-
-    # save comments
-    if params[:comment] != ""
-      @map.comments.create({
-        :user_id => current_user.id,
-        :map_id => @map.id,
-        :body => params[:comment]
-      });
-    end
 
     # save new tags
     if params[:tags]
