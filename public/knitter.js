@@ -365,7 +365,7 @@ var Knitter = {
     map.zoomTo(parseInt(-Math.log((loc.width)/360)/Math.log(2))+2)
   },
 
-  export_tabs: ['export_intro','export_options','export_multispectral'],
+  export_tabs: ['export_intro','export_options'],
   export_hide_tabs: function() {
     Knitter.export_tabs.each(function(tab) {
       $(tab).hide();

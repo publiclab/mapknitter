@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>MapKnitter Sorter - beta</title>
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../flot/excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="../flot/jquery.js"></script> 
+	<script language="javascript" type="text/javascript" src="../flot/jquery.flot.js"></script> 
+	<script language="javascript" type="text/javascript" src="../flot/jquery.flot.crosshair.js"></script>
+<style type='text/css'>
+body {
+	font-family: courier new, sans-serif;
+}
+
+#drop_zone {
+	text-align:center;
+	background:#ccf;
+	font-size:24px;
+	color:#22a;
+	padding:40px;
+	border:5px dotted #44c;
+}
+
+#drop_zone.hover {
+	background:#bbf;
+}
+
+.red { color:red; }
+
+</style>
+</head>
+<body>
+
+<h1>MapKnitter Sorter (beta) <small>| <a href="http://mapknitter.org">&laquo; back to MapKnitter</a></small></h1>
+
+<p>Drag images below to analyze them for filesize; <a href="http://publiclab.org/notes/warren/6-20-2012/analytics-aerial-images-using-filesize">Public Lab research</a> has shown that sharp JPG images are often larger file sizes than blurry images of the same scene. Use the interface below to sort your images by filesize and find the sharp ones to <a href="http://mapknitter/">make a map</a>.</p>
+
+<div id="graph" style="display:none;width:100%;height:200px;"></div>
+
+<div id="controls">
+<input id="cutoff" type="text" value="3.5" />
+<a onClick="cutoff = parseFloat($('#cutoff').val());import_files()" href="javascript:void(0);">Apply cutoff</a> (in megabytes)
+
+
+
+<p id="notice" style="float:right;"></p>
+</div>
+<br />
+
+<div id="drop_zone">Drop files here</div>
+<output id="list"></output>
+
+<script>
+
+var cutoff = 0 //megabytes
+var files
+var reader = new FileReader();
+
+function show_img(img_id,i) {
+	reader.onload = (function(file) {
+		return function(e) {
+			//window.open(e.target.result,'_newtab').focus()
+			//window.location = e.target.result
+			console.log(e.target.result)
+		}
+	})(files[i])
+	reader.readAsDataURL(files[i])
+	// this may not work if popups are blocked
+}
+
+function handleFileSelect(evt) {
+        $('#graph').show()
+	evt.stopPropagation();
+	evt.preventDefault();
+
+	files = evt.dataTransfer.files; // FileList object.
+
+	import_files()
+	plot = $.plot($("#graph"),data,flotoptions);
+
+}
+
+function import_files() {
+
+    // files is a FileList of File objects. List some properties.
+    var output = [],chosen = 0;
+    for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+      if (!f.type.match('image.*')) {
+        continue;
+      }
+
+
+      // Closure to capture the file information.
+      reader.onload = (function(file) {
+        return function(e) {
+          // Render thumbnail -- too intensive!!
+          // document.getElementById(file.name.split('.')[0]+"_img").innerHTML = ['<img class="thumb" src="', e.target.result,
+          //                  '" title="', escape(file.name), '"/>'].join('');
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      //reader.readAsDataURL(f);
+
+      data[0].data.push([i,f.size])
+	var image_class = ''
+	if (f.size > cutoff*1000000 && cutoff != 0) { 
+		image_class = 'red'
+		chosen += 1
+	}
+      var img_id = f.name.split('.')[0]
+      output.push('<li class="'+image_class+'" id="'+img_id+'"><div  id="'+img_id+'_img"></div><strong>', escape(f.name), '</a></strong> (', f.type || 'n/a', ') - ',
+	// attempting to link to the image:
+      //output.push('<li class="'+image_class+'" id="'+img_id+'"><div  id="'+img_id+'_img"></div><strong><a href="javascript:void()" onClick="show_img(\''+img_id+'\','+i+')">', escape(f.name), '</a></strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+    }
+    $('#list').html('<ul>' + output.join('') + '</ul>')
+    $('#notice').text(chosen+' chosen, '+(chosen/files.length)*100+"%")
+  }
+
+  function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    $('#drop_zone').addClass('hover')
+  }
+
+  // Setup the dnd listeners.
+  var dropZone = document.getElementById('drop_zone');
+  dropZone.addEventListener('dragover', handleDragOver, false);
+  dropZone.addEventListener('dragout', function() { $('#drop_zone').removeClass('hover') }, false);
+  dropZone.addEventListener('drop', handleFileSelect, false);
+
+flotoptions = {
+        series: {
+                lines: { 
+                        show: true, 
+                        lineWidth: 1,
+                },
+        },
+        crosshair: { mode: "x" },
+        yaxis: { show: true, tickFormatter: function(n) { return (n/1000000)+"MB" } }, 
+        xaxis: { show: true },
+        shadowSize: 0,
+        grid: {
+                clickable: true,
+                hoverable:true,
+                borderWidth: 0,
+                backgroundColor: "#eee"
+        },
+        // Palette "i eat the rainbow" by svartedauden on Colourlovers: http://www.colourlovers.com/palette/1630898/i_eat_the_rainbow, CC-BY-NC
+        colors: [ "#333333", "#E02130", "#FAB243", "#429867", "#2B5166" ]//, "#482344" ]
+}
+
+	var data = [{label:"filesize",data:[]}]
+
+	var plot
+
+</script>
+
+</script>
+
+<div id='footer'>
+<p><a href="https://github.com/publiclab/mapknitter/">Open source software</a> by <a href="http://publiclab.org">Public Lab</a> | based on earlier <a href="https://github.com/jywarren/aerial-image-analytics/">open source software</a></p>
+</div>
+
+</body>
+</html>

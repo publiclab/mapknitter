@@ -60,6 +60,7 @@ ActionController::Routing::Routes.draw do |map|
   #map.comments '/comments', :controller => 'users', :action => 'comments'
 
   map.root :controller => "map", :action => "index"
+  map.connect 'sorter/', :controller => "utility", :action => "sorter"
 
   map.connect 'tms/:id/alt/:z/:x/:y.png', :controller => "utility", :action => "tms_alt"
   map.connect 'tms/:id/', :controller => "utility", :action => "tms_info"

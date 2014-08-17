@@ -1,5 +1,9 @@
 class UtilityController < ApplicationController
 
+  def sorter
+    render :file => "public/sorter.html"
+  end
+
   def tms_alt
     # /z/x/y.png
     # /z/x/y.png
