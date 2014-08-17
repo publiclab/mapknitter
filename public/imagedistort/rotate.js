@@ -1,6 +1,9 @@
+// Toggles to show/hide the slider which rotates the image
+// Image id should be passed as argument to rotate function
+
 	var state=true;
 	var c=1;
-// Box
+
 function rotate(imgid){
 
 	var box = document.getElementById(imgid);

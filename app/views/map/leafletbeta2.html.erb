@@ -64,13 +64,15 @@
 		map.doubleClickZoom.disable();
 		map.scrollWheelZoom.disable();
 
+		//Upload Image button
           L.easyButton('fa-file-image-o', 
               function (){
                 $("#inputimage").click();
                 },
              'Upload image'
             );
-            
+          
+          //Image transparency button  
          	L.easyButton('fa-adjust', 
               function (){
                 changeopacity();
@@ -78,7 +80,7 @@
              'Toggle Image Transparency'
             );
        
-          
+          //Delete image button
           L.easyButton('fa-bitbucket', 
               function (){
                 map.removeLayer(newimg);
@@ -98,7 +100,8 @@
         		}
 		});
 		
-		
+		//Provides the new uploaded image with an initial location and bounds
+		//Adds markers as control points on image corners
 		function imageIsLoaded(e) {
 		    $('#myImg').attr('src', e.target.result);
 			corners = [300, 200, 500, 200, 300, 400, 500, 400];
@@ -117,7 +120,7 @@
 			(newimg.bringToFront()).addTo(map);
 			
 			
-			
+			//Calls the update function on dragging the markers
 			for (i in markers) {
                 markers[i].on('drag', update);
             	}

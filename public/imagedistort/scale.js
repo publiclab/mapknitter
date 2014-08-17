@@ -1,6 +1,8 @@
+// Toggles to show/hide the slider which scales the image
+// Image id should be passed as argument to scale function
+
 var state2=true;
 var c2=1;
-// Box
 function scale(imgid){
 
 	var box = document.getElementById(imgid);

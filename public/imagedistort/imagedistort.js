@@ -1,3 +1,6 @@
+// Function used for distorting the image.
+// Pass the image id as argument in the udpate function to enable distortion on that image.
+
 function update() {
 			  var box = document.getElementById("img1");
 			  
@@ -43,11 +46,6 @@ function update() {
 			    m[3]*v[0] + m[4]*v[1] + m[5]*v[2],
 			    m[6]*v[0] + m[7]*v[1] + m[8]*v[2]
 			  ];
-			}
-			
-			function pdbg(m, v) {
-			  var r = multmv(m, v);
-			  return r + " (" + r[0]/r[2] + ", " + r[1]/r[2] + ")";
 			}
 			
 			function basisToPoints(x1, y1, x2, y2, x3, y3, x4, y4) {

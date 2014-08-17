@@ -1,3 +1,5 @@
+// Creates the Image Marker object by extending the Marker Class of Leaflet
+
 L.ImageMarker = L.Marker.extend({
 				options: {
 			pane: 'markerPane',

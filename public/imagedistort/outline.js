@@ -1,3 +1,6 @@
+// Toggles image outline
+// The image object should be passed as argument to outline function with variable name being newimg
+	
 	var clicked=false;
 	
 			function outline(){

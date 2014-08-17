@@ -59,7 +59,7 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
 		}).addTo(map);
 
 
-			
+		//Image upload button	
           L.easyButton('fa-file-image-o', 
               function (){
                 $("#inputimage").click();
@@ -67,6 +67,7 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
              'Upload image'
             );
             
+          //Image transparency button
          	L.easyButton('fa-adjust', 
               function (){
                 changeopacity();
@@ -74,6 +75,7 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
              'Toggle Image Transparency'
             );
             
+         //Image outline button
          L.easyButton('fa-square-o', 
               function (){
                 outline();
@@ -81,6 +83,7 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
              'Outline'
             );
           
+         //Delete image button 
          L.easyButton('fa-bitbucket', 
               function (){
                 map.removeLayer(newimg);
@@ -100,7 +103,7 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
         		}
 		});
 		
-		
+		//Provides the new uploaded image with an initial location and bounds
 		function imageIsLoaded(e) {
 		    $('#myImg').attr('src', e.target.result);
 			corners = [300, 200, 500, 200, 300, 400, 500, 400];
@@ -113,11 +116,10 @@ var map = new L.map('map').setView([51.505, -0.09], 13);
 			newimg= new L.DistortableImage(e.target.result, imageBounds);
 			(newimg.bringToFront()).addTo(map);
 			
+			//makes the image draggable
 			draggable = new L.Draggable(newimg._image);
 			draggable.enable();
 			
 			}
-			
-		$( "#img1" ).wrap( "<div id='bordered'></div>" );
 			
 </script>

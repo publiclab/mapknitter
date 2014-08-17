@@ -116,6 +116,7 @@
 		map.doubleClickZoom.disable();
 		map.scrollWheelZoom.disable();
 			
+		//Input image button	
           L.easyButton('fa-file-image-o', 
               function (){
                 $("#inputimage").click();
@@ -123,13 +124,15 @@
              'Upload image'
             );
             
+          //Image Transparency button  
          	L.easyButton('fa-adjust', 
               function (){
-                changeopacity();
+                changeopacity(); // Image object of which the opacity needs to be changed should be passed as an argument
                 },
              'Toggle Image Transparency'
             );
             
+          //Rotate Image slider button  
           L.easyButton('fa-refresh', 
              function(){
 		    if (state){
@@ -140,11 +143,12 @@
 		    $('.input-wrap').hide();
 			    state=true;
         			}
-        		rotate('img1');
+        		rotate('img1'); //Image id of the selected image should be passed as argument
         		},
              'Rotate Image'
             );
             
+          //Slider Image slider button
           L.easyButton('fa-arrows-alt', 
              function(){
 		    if (state2){
@@ -155,16 +159,17 @@
 		    $('.input-wrap2').hide();
 			   state2=true;
         			}
-        		scale('img1');
+        		scale('img1'); //Image id of the selected image should be passed as argument
         		},
              'Scale Image'
             );
           
+          //Delete Image button
           L.easyButton('fa-bitbucket', 
               function (){
-                map.removeLayer(newimg);
+                map.removeLayer(newimg); //Image object needs to be passed as argument
                 for(var i=0; i<4; i++)
-                map.removeLayer(markers[i]);
+                map.removeLayer(markers[i]); //Markers or control points array at the image edges need to be passed as arguments
                 },
              'Delete Image'
             );
@@ -177,7 +182,7 @@
         		}
 		});
 		
-		
+		//Provides the new uploaded image with an initial location and bounds
 		function imageIsLoaded(e) {
 		    $('#myImg').attr('src', e.target.result);
 			corners = [300, 200, 500, 200, 300, 400, 500, 400];
