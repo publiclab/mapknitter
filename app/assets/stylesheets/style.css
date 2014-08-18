@@ -1,0 +1,68 @@
+/* 
+Junction is provided under the OFL and is available at http://www.theleagueofmoveabletype.com/junction or https://github.com/theleagueof/junction 
+It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
+*/
+@font-face {
+    font-family: 'junction';
+    src: url('/fonts/junction/junction-webfont.eot');
+    src: url('/fonts/junction/junction-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/junction/junction-webfont.woff') format('woff'),
+         url('/fonts/junction/junction-webfont.ttf') format('truetype'),
+         url('/fonts/junction/junction-webfont.svg#junction') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, h2, h3 {
+  color:#282830;
+  font-weight:normal;
+  font-family: 'junction';
+}
+
+a {
+  color:#c44;
+}
+
+a:hover {
+  color:#a33;
+}
+
+#header {
+  background:#282830;
+  margin-bottom:20px;
+  padding-top:10px;
+}
+
+#header h1 {
+  color:#c44;
+  font-weight:normal;
+  font-family: 'junction';
+  padding:14px 0 4px 14px;
+  margin:0;
+  font-size:24px;
+  display:inline;
+}
+
+#header h1 small {
+  color:#ccc;
+  font-size:16px;
+}
+
+#header .right {
+  margin-top:10px;
+  margin-right:10px;
+  float:right;
+}
+
+#header img {
+  width:200px;
+}
+
+#footer {
+  border-top:1px solid #ddd;
+  font-size:10px;
+  background:#eee;
+  color:#888;
+  padding:20px;
+}
+

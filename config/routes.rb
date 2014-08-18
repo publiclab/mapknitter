@@ -16,7 +16,6 @@ ActionController::Routing::Routes.draw do |app|
   app.profile '/profile/:id', :controller => 'users', :action => 'profile'
   app.dashboard '/dashboard', :controller => 'users', :action => 'dashboard'
   app.assign '/assign/:id', :controller => 'map', :action => 'assign'
-  #app.comments '/comments', :controller => 'users', :action => 'comments'
 
   app.root :controller => "maps", :action => "index"
   app.connect 'sorter/', :controller => "utility", :action => "sorter"
@@ -25,6 +24,7 @@ ActionController::Routing::Routes.draw do |app|
   app.resources :maps do |maps|
     maps.resources :tags
     maps.resources :comments
+    maps.resources :uploads
   end
 
   #Beta Pages

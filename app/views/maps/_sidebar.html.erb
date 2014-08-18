@@ -12,7 +12,7 @@
 	<div class="btn-group btn-group-justified">
 		<!-- Upload images -->
 		<div class="btn-group">
-			<button class="btn btn-default" title="Upload images" type"button">
+			<button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
 				<span class="glyphicon glyphicon-open"></span>
 			</button>
 		</div>
@@ -72,3 +72,5 @@
 		</div>		
 	</div>
 </div>
+
+<%= render :partial => "/uploads/modal" %>
