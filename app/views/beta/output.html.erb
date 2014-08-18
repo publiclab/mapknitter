@@ -1,0 +1,130 @@
+<style>
+img.export_status {
+	float:left;
+	margin-right:4px;
+}
+.export_button {
+	padding:6px;
+	border:2px solid #900;
+	margin:2px;
+	line-height:44px;
+	background:#c00;
+	color:#fff;
+	text-decoration:none;
+	font-family: lucida grande, helvetica, sans-serif;
+	font-size: 14pt;
+	font-weight:bold;	
+}
+.export_button.inactive {
+	background:#ccc;
+	border-color:#aaa;
+}
+
+#export_tabs {
+	font-weight:bold;
+}
+#export_tabs a {
+	display:block;
+	float:left;
+	margin-left:3px;
+	padding:5px;
+	font-size:10px;
+	border:1px solid #555;
+	border-bottom:none;
+	background:#ccc;
+}
+#export_tabs a.active {
+	background:none;
+}
+.export_panel {
+	border-top:1px solid #555;
+	clear:both;
+}
+#resolution_slider_handle {
+	height:14px;
+	width:6px;
+	background:#666;
+	cursor:move; 
+	position: absolute;
+	margin-top:-5px;
+}
+#resolution_slider {
+	position: relative;
+	height:2px;
+	width:400px;
+	background:#222;
+	margin:6px;
+	margin-bottom:20px;
+}
+
+</style>
+
+<div id="export_tabs">
+	<a id="export_intro_tab" class="active" href="javascript:void(0);" onClick="Knitter.export_intro();">Export</a> 
+	<a id="export_options_tab" href="javascript:void(0);" onClick="Knitter.export_options();">Options</a>
+	<a id="export_multispectral_tab" href="javascript:void(0);" onClick="Knitter.export_multispectral();">Multispectral (experimental)</a>
+</div>
+
+<div id="export_intro" class="export_panel"><small>
+<p>From this panel you can export this map in a variety of formats. These may already be available, but if you've changed the map at all, or want to see the most recent version, you can <b>re-generate the export</b>. All formats are generated together, but sequentially, so if you're waiting for a JPG you will have to let all the other formats commplete first.</p>
+
+<p>This may take some time - a large map could take as long as <b>an hour or more</b>. Leave this panel open to monitor progress, or come back later to see how it's going. Closing this panel will not stop the export.</p>
+</small>
+</div>
+
+<!-- Other tabs: -->
+<%= render :partial => "export_options" %>
+<%= render :partial => "export_multispectral" %>
+
+<% if Rails.env.production? && !logged_in? %>
+<div id="recaptcha-container"></div>
+<script type="text/javascript">
+	Recaptcha.create('6LdN6sYSAAAAAOWasGXVBoKdvouels_oDnB_Zs3I',"recaptcha-container", {theme:"white"});
+</script>
+<br />
+<% end %>
+
+<div id="export_normal">
+
+<% if Rails.env.production? %>
+<div <% if @running %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
+<% end %>
+
+<a id="active_export_button" class="export_button active" href="javascript:void(0);" onClick="new Ajax.Request('/map/export/<%= @map.name %>?type=normal&authenticity_token=<%= form_authenticity_token %>',{
+	parameters: {
+		recaptcha_response_field: Recaptcha.get_response(),
+		recaptcha_challenge_field: Recaptcha.get_challenge(),
+		resolution: $('map_resolution').value,
+	},
+	onSuccess: function(response){ eval(response.responseText) },
+	onFailure: function(response){
+		$('export_progress').insert('failed (ajax fail)... ') 
+		eval(response.responseText)
+		$('active_export_button').show()
+		$('inactive_export_button').hide() 
+	},
+	});$('active_export_button').hide();$('inactive_export_button').show()">Export</a>
+</div>
+
+<span style="display:none;" id="inactive_export_button" class="export_button inactive">Export</span>
+ (recommended resolution: <%= @map.average_cm_per_pixel.to_s[0..4] %> cm/px <a onClick="Knitter.export_options()" href="javascript:void(0);">Adjust</a>)
+
+<div <% if !@running %>style="display:none;"<% end %> id="running_export">This map is currently building an export. Status is displayed below.</div>
+
+<script>
+Knitter.updaters.push(new Ajax.PeriodicalUpdater('export_progress','/export/progress/<%= @map.id %>?type=normal', {method: 'get', frequency: 10}))
+new Ajax.Updater('formats','/export/formats/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>')
+</script>
+
+<p class='export_status'>
+<b>Status:</b> <span id='export_progress'>
+Loading...
+</span> (<a href="javascript:void(0);" onClick="new Ajax.Request('/export/cancel/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>');$('running_export').hide();$('run_export').show()">cancel</a>)</p>
+
+<div id="formats">
+</div>
+
+<p>Export links may be unavailable while the export is running.</p>
+
+</div>
+</div>

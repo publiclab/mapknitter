@@ -1,4 +1,7 @@
 *.swp
+*.swo
+*~
+.ruby-version
 .DS_Store
 log/
 tmp/*

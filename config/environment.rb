@@ -27,13 +27,6 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
 
-  # commented these out in order to use the Gemfile instead
-  # config.gem "mysql", :version => '~> 2.9.1'
-  # #config.gem "json_pure"
-  # config.gem "httparty", :version => '~> 0.11.0'
-  # config.gem "geokit-rails", :version => '~> 1.1.4'
-  # #config.gem "RubyInline"
-  # config.gem "image_science", :version => '~> 1.2.6'
   #Configure at config/initializers/recaptcha.rb, copy from recaptcha.rb.example
   # config.gem "recaptcha", :lib => "recaptcha/rails" # Passenger needs this line in order to load correctly -> why?
   # #config.gem "exifr" # didnt use as incompatible with ruby 1.8.6

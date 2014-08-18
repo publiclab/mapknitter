@@ -1,0 +1,10 @@
+<div class="box" id='authors'>
+<h3>Recent authors</h3>
+
+<ul>
+<% for author in Map.authors(12) %>
+  <li><a href="/profile/<%= author %>"><%= author %></a></li>
+<% end %>
+</ul>
+
+</div>

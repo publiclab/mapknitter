@@ -15,6 +15,23 @@ class Warpable < ActiveRecord::Base
 
   # validates_as_attachment
 
+  #Json formatting for file upload plugin
+  def fup_json
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
+    "url" => self.public_filename(:medium),
+    "id" => self.read_attribute(:id),
+    "thumbnail_url" => self.public_filename(:thumb),
+    "delete_url" => public_filename(self),
+    "delete_type" => "DELETE"}
+  end
+
+  def fup_error_json
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
+    "error" => self.errors["base"]}                      
+  end
+
   def validate
     errors.add_to_base("You must choose a file to upload") unless self.filename
     
