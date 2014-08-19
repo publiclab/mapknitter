@@ -1,12 +1,11 @@
 require 'open-uri'
-class UploadsController < ApplicationController
+class WarpablesController < ApplicationController
   # avoid raising exceptions for common errors (e.g. file not found)
   rescue_from Errno::ENOENT, :with => :url_upload_not_found
   rescue_from Errno::ETIMEDOUT, :with => :url_upload_not_found
   rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
   rescue_from Timeout::Error, :with => :url_upload_not_found
-  protect_from_forgery :except => [:update,:delete] 
-   
+  protect_from_forgery :except => [:update,:delete]  
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
@@ -17,13 +16,12 @@ class UploadsController < ApplicationController
   end
 
   def new
-    @map_id = params[:id]
+    @map = Map.find params[:map_id]
     @warpable = Warpable.new
     respond_to do |format|
      format.html { render :layout => false } 
      format.json { render :json => @warpable}
     end
-
   end
 
   def create
@@ -94,7 +92,7 @@ class UploadsController < ApplicationController
 
     params[:points].split(':').each do |point|
       lon = point.split(',')[0], lat = point.split(',')[1]
-	node = Node.new({:color => 'black',
+  node = Node.new({:color => 'black',
                 :lat => lat,
                 :lon => lon,
                 :author => author,

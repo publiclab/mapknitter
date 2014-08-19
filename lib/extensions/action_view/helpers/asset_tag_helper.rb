@@ -24,8 +24,6 @@ module ActionView
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     # 
     def stylesheet_link_tag(*sources)
-      puts 'Generating a stylesheet link tag...'
-
       options = sources.extract_options!.stringify_keys
       debug   = options.key?(:debug) ? options.delete(:debug) : debug_assets?
 
@@ -42,8 +40,6 @@ module ActionView
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     #
     def javascript_include_tag(*sources)
-      puts 'Generating a javascript include tag...'
-
       options = sources.extract_options!.stringify_keys
       debug   = options.key?(:debug) ? options.delete(:debug) : debug_assets?
 

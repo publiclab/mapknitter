@@ -24,7 +24,7 @@ ActionController::Routing::Routes.draw do |app|
   app.resources :maps do |maps|
     maps.resources :tags
     maps.resources :comments
-    maps.resources :uploads
+    maps.resources :warpables
   end
 
   #Beta Pages

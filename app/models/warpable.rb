@@ -15,6 +15,8 @@ class Warpable < ActiveRecord::Base
 
   # validates_as_attachment
 
+  belongs_to :map
+
   #Json formatting for file upload plugin
   def fup_json
    {"name" => read_attribute(:filename),
