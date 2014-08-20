@@ -1,0 +1,75 @@
+<script type="text/javascript" charset="utf-8">
+
+  var map;
+        var mapBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+  var mapMinZoom = 14, mapMaxZoom = 23;
+  var spher_merc = new OpenLayers.Projection("EPSG:4326")
+  var latlon = new OpenLayers.Projection("EPSG:900913")
+
+  Cartagen.setup({
+    stylesheet: "/stylesheet/<%= @map[:name] %>.gss",
+    static_map: true,
+    static_map_layers: [],
+    padding_top: -46,
+    key_input: true,
+    lat: <%= @map.lat %>,
+    lng: <%= @map.lon %>,
+    zoom: <%= @map.zoom %>,
+    map_name: '<%= @map.name %>',
+    vectors: false,//<%= @map.vectors %>,
+    <% if @map.tile_url != "" %>tile_url: "<%= @map.tile_url %>",<% end %>
+    <% if @map.tile_layer != ""%>tile_layer: "<%= @map.tile_layer %>",<% end %>
+  })
+
+  var warpables = [
+    <% @warpables.each do |warpable| %>
+    {id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
+    <% end %>
+  ]
+
+  document.observe('cartagen:init', function() {
+    Knitter.map_id = <%= @map.id %>
+    Knitter.start_openlayers('<%= @map.tiles %>')
+    Knitter.setup()
+  })
+
+</script>
+
+<div id="google" style="display:none;"><%= @map.description %></div>
+
+<div id="browsers" style="display:none;">
+  <h3>WHOOPS</h3>
+  <p>MapKnitter is built on standards-compliant HTML 5 and Canvas, but is in development right now. It works best in Firefox, Chrome, or Safari, but IE8/9, Mobile Safari, and Android work to varying degrees, and are coming someday.</p>
+</div>
+
+<div id="header">
+  <a style="float:left;" href="/"><img src="/images/mapknitter-small-masked.png"/></a>
+  <div id="toolbars">
+    <div class="toolbar">
+      <a id="tool_upload" name='Upload an image' class='first silk green' href="/warper/new_iframe" onClick="Modalbox.show('<iframe src =\'/warper/new/<%= @map.id %>\' width=\'100%\' height=\'300\' style=\'border:0;\'></iframe>', {title: 'Select an image to upload', width: 600});Tool.change('Warp');return false;"><img src="/images/silk-grey/add.png" /></a>
+      <a name='Export your map in standard GIS formats' class='last silk blue' href="javascript:void(0);" target="_blank" onClick="Modalbox.show('/map/output/<%= @map.id %>',{title: 'Map export',height:'90%',afterHide: function() {Knitter.cancel_updaters()}})" href="javascript:void(0);"><img src="/images/silk-grey/map_go.png" /></a>
+            <!--<a id="tool_trace" name='Trace a shape' class='last' href="javascript:void(0);" onClick="Tool.change('Pen');Tool.Pen.new_shape()"><img src="/images/tools/stock-tool-pencil-22.png" /></a>-->
+    </div>
+    <div class="toolbar">
+      <a name='View map' class='first silk' href="/map/view/<%= @map.name %>" target="_blank"><img src="/images/silk-grey/map.png" /></a>
+      <a name='View all images' class='silk' href="/map/images/<%= @map.name %>" onClick="Modalbox.show('/map/images/<%= @map.name %>', {title: 'Click an image to see it on the map', width: 600, height: 450});return false;"><img src="/images/silk-grey/photos.png" /></a>
+      <a name='Geolocate your current position' class='silk' id="geolocate"  href="javascript:void(0);" onClick="if (User.geolocate() && User.lat != 0) {Cartagen.go_to(User.lat,User.lon,2)}"><img src="/images/silk-grey/house.png" /></a>
+      <script type="text/javascript" charset="utf-8">if (!User.geolocate) $('geolocate').hide()</script>
+      <a id="tagreport" name='Show all tags' class='silk' <% unless @map.vectors %>style="display:none;"<% end %> href="javascript:void(0);" onClick="Cartagen.tags('alert');"><img src="/images/silk-grey/tag_blue.png" /></a>
+      <a name='Choose a background layer for reference' class='silk' href="javascript:void(0);" onClick="Modalbox.show('/map/layers/<%= @map.id %>',{title: 'Add layers'})"><img src="/images/silk-grey/map_add.png" /></a>
+      <a name='Dim background layer to see your own images' class='last silk' href="javascript:void(0);" onClick="Knitter.toggle_background();"><img src="/images/silk-grey/contrast_low.png" /></a>
+    </div>
+  </div>
+
+  <div id="save_state">
+    <span style="display:none;" id="save_saved">Saved</span>
+    <span style="display:none;" id="save_saving">Saving...</span>
+    <span style="display:none;" id="save_failed">Failed to save</span>
+  </div>
+
+</div>
+
+<div style="width:100%; height:100%; position:absolute; top:46px; z-index: 1;" class="transparent" id="map"></div>
+
+<div id="canvas" style="width:100%; height:100%; position:absolute; top:0;  z-index 10;"></div>
+
