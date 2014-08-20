@@ -1,8 +1,8 @@
 //= require jquery-ui/jquery-ui.min.js
 
 jQuery(document).ready(function($) {
-	$("#knitter-map-pane").droppable();
-	makeDraggable($("#warpables tr img"));
+	$(".knitter-map-pane").droppable();
+	makeDraggable($(".warpables-all tr img"));
 });
 
 function makeDraggable($selection) {
@@ -13,6 +13,11 @@ function makeDraggable($selection) {
 }
 
 function addUploadedImageToSidebar($upload) {
-	$("#warpables tbody").append($upload);
+	/* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
+	$upload.find(".indicate").remove();
+	$upload.find("td:last").remove();
+
+	/* Add to sidebar. */
+	$(".warpables-all tbody").append($upload);
 	makeDraggable($upload.find("img"));
 }

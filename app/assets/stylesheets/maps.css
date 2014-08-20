@@ -11,7 +11,7 @@ html, body {
 	width: 30%;
 	height: 100%;
 	float: left;
-	overflow: scroll;
+	overflow: hidden;
 }
 #knitter-side-pane #latlngs {
 	width: 100%;
@@ -29,6 +29,7 @@ html, body {
 }
 #sidebar-info {
 	margin-top: 20px;
+	height: 100%;
 }
 .public-lab-primary button {
 	background-color: #f8e4e4;
@@ -58,6 +59,10 @@ html, body {
 	width: 100%;
 	margin-bottom: 5px;
 }
-#warpables tr img {
-	z-index: 1000;
+#knitter-side-pane .tab-content {
+	height: 70%;
+	overflow-y: scroll;
+}
+.tab-pane {
+	padding-top: 10px;
 }
