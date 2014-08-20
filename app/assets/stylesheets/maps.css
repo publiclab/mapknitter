@@ -61,7 +61,7 @@ html, body {
 }
 #knitter-side-pane .tab-content {
 	height: 70%;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 .tab-pane {
 	padding-top: 10px;
