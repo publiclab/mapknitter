@@ -7,6 +7,9 @@
 // iframe-transport is ajax file upload support for IE, Uncomment if needed      
 // javascript_include_tag  (file_upload + "js/jquery.iframe-transport")      
 
+// need this so that jQuery draggable is attached to jQuery objects (for use in map views)
+//= require jquery-ui/jquery-ui.min.js
+
 //= require uploads-gps-exif
 
 jQuery(document).ready(function($) {
