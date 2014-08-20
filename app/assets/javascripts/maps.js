@@ -2,12 +2,17 @@
 
 jQuery(document).ready(function($) {
 	$("#knitter-map-pane").droppable();
+	makeDraggable($("#warpables tr img"));
 });
 
-function addUploadedImageToSidebar($upload) {
-	$("#warpables tbody").append($upload);
-	$upload.find("img").draggable({ 
+function makeDraggable($selection) {
+	$selection.draggable({ 
 		helper: "clone",
 		revert: "invalid"
 	});
+}
+
+function addUploadedImageToSidebar($upload) {
+	$("#warpables tbody").append($upload);
+	makeDraggable($upload.find("img"));
 }

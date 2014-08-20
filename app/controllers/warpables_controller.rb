@@ -22,6 +22,11 @@ class WarpablesController < ApplicationController
     end
   end
 
+  def show
+    @warpable = Warpable.find params[:id]
+    send_file('public' + @warpable.public_filename, :type => @warpable.content_type)
+  end
+
   def create
     @warpable = Warpable.new(params[:warpable])
     @warpable.map_id = params[:map_id]
@@ -69,14 +74,14 @@ class WarpablesController < ApplicationController
     render :layout => false
   end
   
-  def show
-   #Need some specific way
-    @image = Warpable.find params[:id]
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render :json => @image.map{|img| img.fup_json} }
-    end
-  end
+  # def show
+  #  #Need some specific way
+  #   @image = Warpable.find params[:id]
+  #   respond_to do |format|
+  #     format.html # show.html.erb
+  #     format.json { render :json => @image.map{|img| img.fup_json} }
+  #   end
+  # end
   
   def list
     @warpables = Warpable.find :all, :conditions => ['parent_id is NULL AND deleted = false']
@@ -120,5 +125,5 @@ class WarpablesController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
 end
