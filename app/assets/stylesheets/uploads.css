@@ -1,3 +1,11 @@
+/*
+ *= require blueimp-file-upload/css/jquery.fileupload-ui
+ */
+
+ form {
+    overflow-x: hidden;
+ }
+
 .btn-file {
     position: relative;
     overflow: hidden;

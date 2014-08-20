@@ -5,19 +5,8 @@
 <%= stylesheet_link_tag     "application"                                         %>
 <%= javascript_include_tag  "application"                                         %>
 
-<%= javascript_include_tag  "blueimp-tmpl/js/tmpl.js"                             %>
-
-<%= stylesheet_link_tag     "blueimp-file-upload/css/jquery.fileupload-ui"        %>
-<%= javascript_include_tag  "blueimp-file-upload/js/vendor/jquery.ui.widget.js"   %>
-<%= javascript_include_tag  "blueimp-file-upload/js/jquery.fileupload"            %>
-<%= javascript_include_tag  "blueimp-file-upload/js/jquery.fileupload-process"    %>
-<%= javascript_include_tag  "blueimp-file-upload/js/jquery.fileupload-ui"         %>
-
-<%# iframe-transport is ajax file upload support for IE, Uncomment if needed      %>
-<%# javascript_include_tag  (file_upload + "js/jquery.iframe-transport")          %>
-
-<%= javascript_include_tag "uploads-gps-exif"                                     %>
-<%= javascript_include_tag "uploads"                                              %>
+<%= stylesheet_link_tag     "uploads"                                             %>
+<%= javascript_include_tag  "uploads"                                             %>
 
 </head>
 <body>
@@ -35,7 +24,7 @@
                 </div>
             </div><!-- .row -->
 
-            <div id="template" style="padding-top:10px;z-index:5;overflow:auto;">
+            <div id="uploaded-images-list" style="padding-top:10px;z-index:5;overflow:auto;">
                 <!-- The loading indicator is shown during image processing -->
                 <div class="fileupload-loading"></div><br>
 

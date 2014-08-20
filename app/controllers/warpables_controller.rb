@@ -9,10 +9,8 @@ class WarpablesController < ApplicationController
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
-  #Unecessary
   def index
-    respond_to do |format|
-    end
+    render :layout => false
   end
 
   def new

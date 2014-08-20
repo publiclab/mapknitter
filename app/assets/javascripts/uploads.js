@@ -1,46 +1,33 @@
+//= require blueimp-tmpl/js/tmpl.js
+//= require blueimp-file-upload/js/vendor/jquery.ui.widget
+//= require blueimp-file-upload/js/jquery.fileupload
+//= require blueimp-file-upload/js/jquery.fileupload-process
+//= require blueimp-file-upload/js/jquery.fileupload-ui
+
+// iframe-transport is ajax file upload support for IE, Uncomment if needed      
+// javascript_include_tag  (file_upload + "js/jquery.iframe-transport")      
+
+//= require uploads-gps-exif
+
 jQuery(document).ready(function($) {
     // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload({      // Change the default parameters name from files[]
+    $('#fileupload').fileupload({
         paramName:  'warpable[uploaded_data]',
         autoUpload: 'true',
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 10000000 
     });
         
-    formData = $('form').serializeArray(); 
+    formData = $('form').serializeArray();
 
-    $.getJSON($('#fileupload').prop('action') + '/new', function (files) {
-        var GPS = EXIF.getGPSTags(this), latitude, longitude,
-            fu = $('#fileupload').data('blueimpFileupload'),
-            template;
-
-        // fu._adjustMaxNumberOfFiles(-files.length);
-        template = fu._renderDownload(files)
-            .appendTo($('#fileupload .files'));
-
-        // Force reflow:
-        fu._reflow = fu._transition && template.length &&
-            template[0].offsetWidth;
-
-        template.addClass('in');
-
-        $('#loading').remove();
-    });
-
-
-    $('#fileupload').bind('fileuploaddone', function (e, data) { 
-        EXIF.getData(data.files[0], function(){
+    $('#fileupload').on('fileuploaddone', function (e, data) {
+        EXIF.getData(data.files[0], function() {
             var GPS = EXIF.getGPSTags(this), latitude, longitude; 
             var autoPlacementAllowed = true;
             if($("#allowAutoPlacement").attr("checked") == "checked")
             autoPlacementAllowed = false;
 
-            // if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
-            //     $("#lat-lon_"+data.result.files[0].id).css("display","");
-            // if(typeof GPS["GPSImgDirection"] !== 'undefined' && typeof GPS["GPSImgDirectionRef"] !== 'undefined' )             
-            //     $("#angle_"+data.result.files[0].id).css("display",""); 
-
-             if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
+            if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
                 $("#GPS_"+data.result.files[0].id).css("display","");
 
 
@@ -75,8 +62,28 @@ jQuery(document).ready(function($) {
             reader.readAsDataURL(data.files[0]);
         }); 
     });
+
     $(document).bind('drop dragover', function (e) {
         e.preventDefault();
+    });
+
+
+    /* 
+     * IF page is being viewed through an iframe, add the image preview and details
+     * to the sidebar in the parent page.
+     */
+    if (window.parent) {
+        window.addUploadedImageToSidebar = window.parent.addUploadedImageToSidebar;
+    }
+
+    $("#fileupload").fileupload({
+        completed: function() {
+            if (addUploadedImageToSidebar) {
+                var latestFile = $("#uploaded-images-list tr:last").clone();
+
+                addUploadedImageToSidebar(latestFile);
+            }
+        }
     });
 });
 
