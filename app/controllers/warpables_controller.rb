@@ -10,7 +10,12 @@ class WarpablesController < ApplicationController
   ActiveRecord::Base.include_root_in_json = false
 
   def index
-    render :layout => false
+    @map = Map.find params[:map_id]
+
+    respond_to do |format|
+      format.json { render :json => @map.warpables.public_filenames }
+      format.html { render :layout => false }
+    end
   end
 
   def new
@@ -18,13 +23,8 @@ class WarpablesController < ApplicationController
     @warpable = Warpable.new
     respond_to do |format|
      format.html { render :layout => false } 
-     format.json { render :json => @warpable}
+     format.json { render :json => @warpable }
     end
-  end
-
-  def show
-    @warpable = Warpable.find params[:id]
-    send_file('public' + @warpable.public_filename, :type => @warpable.content_type)
   end
 
   def create
@@ -74,14 +74,14 @@ class WarpablesController < ApplicationController
     render :layout => false
   end
   
-  # def show
-  #  #Need some specific way
-  #   @image = Warpable.find params[:id]
-  #   respond_to do |format|
-  #     format.html # show.html.erb
-  #     format.json { render :json => @image.map{|img| img.fup_json} }
-  #   end
-  # end
+  def show
+   #Need some specific way
+    @image = Warpable.find params[:id]
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render :json => @image.map{|img| img.fup_json} }
+    end
+  end
   
   def list
     @warpables = Warpable.find :all, :conditions => ['parent_id is NULL AND deleted = false']
@@ -125,5 +125,5 @@ class WarpablesController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
 end

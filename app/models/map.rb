@@ -10,10 +10,24 @@ class Map < ActiveRecord::Base
                             :on => :create                  
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
 
-  has_many :warpables
   has_many :exports
   has_many :tags
   has_many :comments
+
+  has_many :warpables do 
+    def public_filenames
+      filenames = {}
+      self.each do |warpable|
+        filenames[warpable.id] = {}
+        sizes = Array.new(Warpable::SIZES.keys).push(nil)
+        sizes.each do |size|
+          key = size != nil ? size : "original"
+          filenames[warpable.id][key] = warpable.public_filename(size)
+        end
+      end
+      filenames 
+    end
+  end
 
   def validate
     self.name != 'untitled'
@@ -53,10 +67,6 @@ class Map < ActiveRecord::Base
 
   def self.new_maps
     self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
-  end
-
-  def warpables
-    Warpable.find :all, :conditions => {:map_id => self.id, :deleted => false} 
   end
 
   def nodes
