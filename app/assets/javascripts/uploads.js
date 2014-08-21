@@ -13,7 +13,7 @@
 //= require uploads-gps-exif
 
 jQuery(document).ready(function($) {
-    // Initialize the jQuery File Upload widget:
+
     $('#fileupload').fileupload({
         paramName:  'warpable[uploaded_data]',
         autoUpload: 'true',
@@ -21,48 +21,74 @@ jQuery(document).ready(function($) {
         maxFileSize: 10000000 
     });
         
-    formData = $('form').serializeArray();
-
     $('#fileupload').on('fileuploaddone', function (e, data) {
         EXIF.getData(data.files[0], function() {
-            var GPS = EXIF.getGPSTags(this), latitude, longitude; 
-            var autoPlacementAllowed = true;
-            if($("#allowAutoPlacement").attr("checked") == "checked")
-            autoPlacementAllowed = false;
+            var GPS = EXIF.getGPSTags(this), 
+                checked = $("#allowAutoPlacement").attr("checked"),
+                autoPlacementAllowed = checked === "checked" ? false : true,
+                latLngDefined = typeof GPS["GPSLatitude"] !== 'undefined' 
+                    && typeof GPS["GPSLongitude"] !== 'undefined',
+                latitude, longitude;
 
-            if(typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined' )
-                $("#GPS_"+data.result.files[0].id).css("display","");
-
+            if(latLngDefined) {
+                $("#GPS_" + data.result.files[0].id).css("display","");
+            }
 
             if (typeof window.FileReader !== 'function') {
+
                 //We cannot correct image based on altitude if the image dimensions are not known.
                 console.log("File API is not supported by this browser");
-                if(autoPlacementAllowed)
-                parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS);
-                else
-                parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
+
+                if(autoPlacementAllowed) {
+                    parent.Warper.new_image_GPS(
+                        data.result.files[0].url, 
+                        data.result.files[0].id, 
+                        GPS
+                    );
+                } else {
+                    parent.Warper.new_image(
+                        data.result.files[0].url,
+                        data.result.files[0].id,
+                        true
+                    );                     
+                }                
             }
 
             else {
                 var reader  = new FileReader();
-                reader.onload   = function(e){
-                    var image   = new Image();
-                    image.onload    = function(){
 
-                        //Place with GPS data if available
-                        if(typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined') {
-                            //$("#altitude_"+data.result.files[0].id).css("display","");
-                            if(autoPlacementAllowed)
-                                parent.Warper.new_image_GPS(data.result.files[0].url, data.result.files[0].id, GPS, this.height, this.width);
-                            //Fallback to regular placement
-                            else
-                                parent.Warper.new_image(data.result.files[0].url,data.result.files[0].id,true); 
-                        }
-                    };
+                reader.onload = function(e) {
+                    var image = new Image();
+
+                    image.onload = function() { placeImage(); };
                     image.src = e.target.result;
                 };
             }
             reader.readAsDataURL(data.files[0]);
+
+            function placeImage() {
+                var hasAltitude = typeof GPS["GPSAltitude"] !== "undefined" 
+                        && typeof GPS["GPSAltitudeRef"] !== "undefined";
+
+                if(hasAltitude) {
+                    if(autoPlacementAllowed) {
+                        parent.Warper.new_image_GPS(
+                            data.result.files[0].url, 
+                            data.result.files[0].id, 
+                            GPS, 
+                            this.height, 
+                            this.width
+                        );
+                    } else {
+                        parent.Warper.new_image(
+                            data.result.files[0].url,
+                            data.result.files[0].id,
+                            true
+                        ); 
+                    }
+                }
+            };
+
         }); 
     });
 

@@ -20,6 +20,7 @@ group :dependencies do
 
 	# asset pipelining
 	gem "sprockets", "2.12.1"
+	gem "sass"
 end
 
 group :sqlite do

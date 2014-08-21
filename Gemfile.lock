@@ -57,6 +57,7 @@ GEM
     ruby-openid (2.5.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
+    sass (3.4.0)
     sprockets (2.12.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -81,6 +82,7 @@ DEPENDENCIES
   rdiscount (= 2.1.7.1)
   rdoc
   recaptcha (= 0.3.6)
+  sass
   sprockets (= 2.12.1)
   sqlite3
   will_paginate (= 2.3.16)

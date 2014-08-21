@@ -1,4 +1,8 @@
 <div id="knitter-map-pane"></div>
+<script>
+	initializeLeaflet(
+		{ lat: <%= @map.lat %>, lng: <%= @map.lon %> },
+		<%= @map.zoom %>
+	);
+</script>
 <%= render :partial => "sidebar", :locals => { :mode => "edit" } %>
-
-<%= render :partial => "leaflet_initializer" %>

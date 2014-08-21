@@ -2,7 +2,7 @@
 	<tbody>
 		<% @map.warpables.each do |warpable| %>
 			<tr>
-				<td><%= image_tag warpable.public_filename(:thumb) %></td>
+				<td class="warpable"><%= image_tag warpable.public_filename(:thumb) %></td>
 				<td><%= link_to(warpable.filename, [@map, warpable]) %></td>
 				<td><%= number_to_human_size warpable.size %></td>
 			</tr>

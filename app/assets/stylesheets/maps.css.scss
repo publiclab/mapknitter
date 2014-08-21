@@ -1,0 +1,66 @@
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+#knitter-map-pane {
+	width: 70%;
+	height: 100%;
+	float: left;
+}
+
+.public-lab-primary button { background-color: #f8e4e4; }
+
+#map-title {
+	h3 { float: left; }
+	button {
+		margin-top: 10px;
+		float: right;
+	}	
+}
+
+#comments {
+	.comment-header {
+		background-color: #f2f2f2;
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #d4d4d4;
+		margin-bottom: 5px;
+	}
+	.comment-body { margin-bottom: 5px; }	
+}
+
+.tab-pane { padding-top: 10px; }
+
+#knitter-side-pane {
+	width: 30%;
+	height: 100%;
+	float: left;
+	overflow: hidden;
+	#latlngs {
+		width: 100%;
+		.form-group {
+			width: 47%;
+			float: left;
+			margin-right: 10px;
+			input { width: 80%; }	
+		}				
+	}
+	h3 { margin: 15px 15px;	}
+	.label {
+		margin-left: 2px;
+		margin-right: 2px;
+	}
+	.tab-content {
+		height: 70%;
+		overflow-y: auto;
+	}
+	table {
+		width: 100%;
+		margin-bottom: 5px;
+	}
+	#sidebar-info {
+		margin-top: 20px;
+		height: 100%;
+	}		
+}
