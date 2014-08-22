@@ -51,20 +51,22 @@ class User < ActiveRecord::Base
     write_attribute :email, (value ? value.downcase : nil)
   end
 
-  def can_delete_comment(comment)
-    map = Map.find(comment.map_id)
-
-    self.role == "admin" || 
-    comment.user_id.to_i == self.id || 
-    comment.map.user_id == self.id
-  end
-
-  def can_edit_comment(comment)
-    comment.user_id.to_i == self.id
-  end
+  # Permissions for editing and deleting resources
 
   def owns?(resource)
-    resource.user_id == self.id
+    resource.user_id.to_i == self.id
+  end
+
+  def owns_map?(resource)
+    resource.map.user_id.to_i == self.id
+  end
+
+  def can_delete?(resource)
+    self.owns?(resource) || self.owns_map?(resource) || self.role == "admin"
+  end
+
+  def can_edit?(resource)
+    self.owns?(resource)
   end
 
 end

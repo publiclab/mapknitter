@@ -24,7 +24,7 @@ class TagsController < ApplicationController
         if logged_in? && (@tag.user_id.to_i == current_user.id || current_user.role == "admin")
               @tag.delete
               flash[:notice] = "Tag " + @tag.name + " deleted."
-              redirect_to "/maps/" + @tag.map.name
+              redirect_to @tag.map
         else
               flash[:error] = "You must be logged in to delete tags."
               redirect_to "/login"

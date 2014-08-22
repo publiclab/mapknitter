@@ -13,3 +13,10 @@ View
 views/map/*
 views/beta/*
 views/betawarper/*
+
+Scripts and stylesheets
+-----------
+public/style-2.css
+public/style.css
+public/cartagen/cartagen.js
+public/knitter.js

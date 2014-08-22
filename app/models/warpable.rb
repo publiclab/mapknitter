@@ -18,6 +18,7 @@ class Warpable < ActiveRecord::Base
   # validates_as_attachment
 
   belongs_to :map
+  belongs_to :user
 
   #Json formatting for file upload plugin
   def fup_json
@@ -326,6 +327,11 @@ class Warpable < ActiveRecord::Base
   def delete_temp_files(path)
     system('rm -r '+self.working_directory(path))
     system('rm '+self.warps_directory(path)+'*.png')
+  end
+
+  def user_id
+    Map.find self.map_id
+    map.user_id
   end
 
 end

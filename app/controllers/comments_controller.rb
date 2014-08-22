@@ -28,7 +28,7 @@ class CommentsController < ApplicationController
     def update
         @comment = Comment.find params[:id]
 
-        if logged_in? && current_user.can_edit_comment(@comment)
+        if logged_in? && current_user.can_edit?(@comment)
             Comment.update(@comment.id, :body => params[:comment][:body])
             redirect_to "/maps/" + params[:map_id]
         else
@@ -43,7 +43,7 @@ class CommentsController < ApplicationController
     def destroy
         @comment = Comment.find(params[:id])
 
-        if logged_in? && current_user.can_delete_comment(@comment)
+        if logged_in? && current_user.can_delete?(@comment)
             @comment.delete 
             flash[:notice] = "Comment by " + @comment.author + " deleted."
             redirect_to "show"

@@ -116,13 +116,24 @@ class WarpablesController < ApplicationController
     render :text => 'success'
   end
   
-  def delete
-    image = Warpable.find params[:id]
-    image.deleted = true
-    image.save
-    respond_to do |format|
-      format.html { render :text => 'successfully deleted '+params[:id]}
-      format.json { head :no_content }
+  # def delete
+  #   image = Warpable.find params[:id]
+  #   image.deleted = true
+  #   image.save
+  #   respond_to do |format|
+  #     format.html { render :text => 'successfully deleted '+params[:id]}
+  #     format.json { head :no_content }
+  #   end
+  # end
+
+  def destroy
+    @warpable = Warpable.find params[:id]
+    if logged_in? && current_user.can_delete?(@warpable)
+      @warpable.destroy
+      redirect_to @warpable.map
+    else
+      flash[:error] = "You must be logged in to delete tags."
+      redirect_to "/login"      
     end
   end
   

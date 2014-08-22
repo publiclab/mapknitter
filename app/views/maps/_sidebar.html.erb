@@ -2,6 +2,14 @@
 	<!-- Map title and author -->
 	<div class="map-title clearfix">
 		<h3><%= @map.name %></h3>
+		<div class="dropdown">
+			<a class="btn btn-default" data-toggle="dropdown">
+				<span class="glyphicon glyphicon-cog"></span>
+			</a>
+			<ul class="dropdown-menu" role="menu">
+				<li><a>Delete Map</a></li>
+			</ul>
+		</div>
 	</div>
 
 	<div class="map-author">

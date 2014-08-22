@@ -11,6 +11,11 @@
 				</td>
 				<td><%= link_to(warpable.filename, [@map, warpable]) %></td>
 				<td><%= number_to_human_size warpable.size %></td>
+				<% if logged_in? && current_user.can_delete?(warpable) %>
+					<td>
+						<%= link_to "&times;", [@map, warpable], :method => "delete", :class => "btn btn-danger" %>
+					</td>
+				<% end %>
 			</tr>
 		<% end %>
 	</tbody>
