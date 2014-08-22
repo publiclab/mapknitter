@@ -46,7 +46,7 @@ html, body {
 			input { width: 80%; }	
 		}				
 	}
-	h3 { margin: 15px 15px;	}
+	h3 { margin: 30px 0;	}
 	.label {
 		margin-left: 2px;
 		margin-right: 2px;
@@ -66,5 +66,12 @@ html, body {
 	#sidebar-info {
 		margin-top: 20px;
 		height: 100%;
-	}		
+	}
+	.settings {
+		float: right;
+	}
+	textarea {
+		height: 80px;
+		margin-bottom: 15px;
+	}
 }

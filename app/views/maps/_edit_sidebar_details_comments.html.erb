@@ -1,7 +1,7 @@
 <%= render :partial => "sidebar_comments" %>
 
 <% form_for [@map, Comment.new] do |f| %>
-	<%= f.label :body %>
+	<%= f.label :body, "Leave a comment" %>
 	<%= f.text_area :body, :class => "form-control", :placeholder => "Type **Markdown** here." %>
 
 	<%= f.submit "Post comment", :class => "btn btn-primary" %>

@@ -1,15 +1,16 @@
 <div id="knitter-side-pane" class="container">
 	<!-- Map title and author -->
 	<div class="map-title clearfix">
-		<h3><%= @map.name %></h3>
-		<div class="dropdown">
+		<h3><%= @map.name %>
+		<div class="dropdown settings">
 			<a class="btn btn-default" data-toggle="dropdown">
 				<span class="glyphicon glyphicon-cog"></span>
 			</a>
-			<ul class="dropdown-menu" role="menu">
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
 				<li><a>Delete Map</a></li>
 			</ul>
 		</div>
+		</h3>
 	</div>
 
 	<div class="map-author">

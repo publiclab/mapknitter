@@ -17,7 +17,11 @@
 <body>
 	<%= yield %>	
 	<script>
-		initializeLeaflet({ lat: <%= @map.lat %>, lng: <%= @map.lon %> }, <%= @map.zoom %>);
+		mapKnitter = new MapKnitter({
+			latlng: L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+			zoom: <%= @map.zoom %>,
+			warpablesUrl: "<%= url_for [@map, :warpables] %>"
+		});
 	</script>
 	<script type="text/javascript">
 		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -29,6 +33,5 @@
 			pageTracker._trackPageview();
 		} catch(err) {}
 	</script>
-
 </body>
 </html>
