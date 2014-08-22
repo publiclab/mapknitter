@@ -19,6 +19,5 @@ config/initializers/recaptcha.rb
 config/config.yml
 config/initializers/site_keys.rb
 
-.bundle
 vendor/bundle
 app/assets/bower_packages
