@@ -15,12 +15,9 @@
 	<%= javascript_include_tag 'maps' %>
 </head>
 <body>
-	<%= yield %>
+	<%= yield %>	
 	<script>
-		initializeLeaflet(
-			{ lat: <%= @map.lat %>, lng: <%= @map.lon %> },
-			<%= @map.zoom %>
-		);
+		initializeLeaflet({ lat: <%= @map.lat %>, lng: <%= @map.lon %> }, <%= @map.zoom %>);
 	</script>
 	<script type="text/javascript">
 		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
