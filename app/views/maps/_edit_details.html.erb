@@ -1,8 +1,8 @@
 <!-- Map location -->
 <% form_for @map do |m| %>
 	<div class="form-group">
-		<% m.label :location %>
-		<% m.text_field :location %>
+		<%= m.label :location %>
+		<%= m.text_field :location, :class => "form-control" %>
 	</div>
 
 	<div id="latlngs">
@@ -27,7 +27,7 @@
 
 	<!-- Map tags -->
 	<div class="form-group">
-		<%= render :partial => "edit_sidebar_details_tags" %>
+		<%= render :partial => "tags/index" %>
 	</div>
 	
 	<%= m.submit "Save", :class => "btn btn-primary" %>

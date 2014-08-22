@@ -13,14 +13,8 @@
 	<%= markdown_to_html(@map.description) %>
 </div>
 
-<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" } } do |m| %>
-
 <!-- Map tags -->
-<div class="form-group">
-	<%= render :partial => "edit_sidebar_details_tags" %>
-</div>
+<%= render :partial => "tags/index" %>
 
-<% end %>
-
-</form>
+<%= javascript_include_tag 'tags' %>
 

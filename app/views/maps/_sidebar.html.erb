@@ -66,11 +66,18 @@
 		<!-- Tabbed panes -->
 		<div class="tab-content">
 			<div class="tab-pane active" id="map-details-container">
-				<%= render :partial => mode + "_sidebar_details" %>
+				<%= render :partial => mode + "_details" %>
 
 				<!-- Comments -->
 				<div class="form-group">
-					<%= render :partial => "edit_sidebar_details_comments" %>
+					<%= render :partial => "comments/index" %>
+
+					<% form_for [@map, Comment.new] do |f| %>
+						<%= f.label :body, "Leave a comment" %>
+						<%= f.text_area :body, :class => "form-control", :placeholder => "Type **Markdown** here." %>
+
+						<%= f.submit "Post comment", :class => "btn btn-primary" %>
+					<% end %>
 				</div>
 			</div>
 			<div class="tab-pane" id="map-images-container">
