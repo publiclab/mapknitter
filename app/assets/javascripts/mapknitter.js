@@ -18,17 +18,30 @@ var MapKnitter = L.Class.extend({
 	},
 
 	placeImage: function(event, ui) {
-		var $img = jQuery(ui.helper),
+		var that = this,
+			$img = jQuery(ui.helper),
 			url = $img.attr("src"),
+			id = $img.attr("data-warpable-id"),
 			imgPosition = $img.offset();
 			upperLeft = L.point(imgPosition.left, imgPosition.top),
 			size = L.point($img.width(), $img.height()),
 			lowerRight = upperLeft.add(size);
 
-		L.imageOverlay(url, [
+		/* Place low-resolution image on the map. */
+		var lowres = L.imageOverlay(url, [
 			this._map.containerPointToLatLng(upperLeft), 
 			this._map.containerPointToLatLng(lowerRight)
 		]).addTo(this._map);
+
+		/* Load the high-resolution version on top of the low-res version. */
+		this.withWarpable(id, "original", function(img) {
+			var url = jQuery(img).attr("src");
+			L.imageOverlay(url, [
+				that._map.containerPointToLatLng(upperLeft), 
+				that._map.containerPointToLatLng(lowerRight)
+			]).addTo(that._map);
+			map.removeLayer(lowres);
+		});
 	},
 
 	withWarpables: function(callback) {
@@ -45,7 +58,7 @@ var MapKnitter = L.Class.extend({
 	withWarpable: function(id, size, callback) {
 		this.withWarpables(function(warpables) {
 			var url = warpables[id][size],
-				img = jQuery("<img/>").attr("src", url);
+				img = jQuery("<img/>").attr("src", url).attr("data-warpable-id", id);
 			callback(img);
 		});
 	},
