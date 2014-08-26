@@ -13,6 +13,8 @@
 		"blueimp-file-upload": "9.7.0",
 		"blueimp-tmpl": "2.5.4",
 
-		"jquery-ui":"1.11.1"
+		"jquery-ui":"1.11.1",
+
+		"junction": "theleagueof/junction"
 	}
 }

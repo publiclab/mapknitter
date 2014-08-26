@@ -1,0 +1,25 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="links col-md-3">
+			<a class="btn btn-primary create-map">
+				<span class="glyphicon glyphicon-pencil"></span> Create a map
+			</a>
+			<a class="btn btn-default create-map">
+				<span class="glyphicon glyphicon-pencil"></span> Create a map anonymously
+			</a>
+			<a href="http://store.publiclab.org/products/balloon-mapping-kit">
+				<img src="/images/balloon-kit.jpg" />
+			</a>
+			<div class="hidden-xs hidden-sm">
+				<%= render 'map/regions' %>
+				<%= render 'map/authors' %>
+				<%= render 'map/new_maps' %>
+				<%= render :partial => 'statistics' %>
+			</div>
+		</div><!-- .col-md-3 -->
+		<div class="maps-list col-md-9">
+			<h2>Recent maps</h2>
+			<%= render :partial => 'index' %>
+		</div><!-- .col-md-9 -->
+	</div><!-- .row -->
+</div>

@@ -1,4 +1,5 @@
 require 'open3'
+require 'will_paginate'
 
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
@@ -6,6 +7,11 @@ class MapsController < ApplicationController
   before_filter :require_user, :only => [:create, :new, :edit, :update, :destroy]
 
   def index
+    @maps = Map.find :all, :order => 'updated_at DESC', :joins => :warpables, :limit => 24, :group => "maps.id" 
+    @unpaginated = true
+    @maps = @maps.paginate :page => params[:page], :per_page => 24
+
+    render :layout => 'application2'
   end
 
   def new

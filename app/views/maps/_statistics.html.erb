@@ -1,0 +1,17 @@
+<h3>Statistics</h2>
+<% if (Export.count(:all, :conditions => ["cm_per_pixel != ''"]) > 0) %>
+    <p>
+        MapKnitter is hosting <b><%= Export.count(:all, :conditions => ["cm_per_pixel != ''"]) %> completed maps</b> of an average resolution of <b><%= Export.average_cm_per_pixel.to_i %> cm per pixel</b>. Images average. Currently exporting <%= Export.export_count %> maps.</p>
+        <p><small>Resolutions:</small></p>
+        <p><small><b>Maps:</b>
+            <br />0 cm/px
+            <span class="bar"><%= Export.histogram_cm_per_pixel[0..40].join(',') %></span>
+            40 cm/px
+        </small></p>
+        <p><small><b>Images:</b><br />
+            0 cm/px
+            <span class="bar"><%= Warpable.histogram_cm_per_pixel[0..40].join(',') %></span>
+            40 cm/px
+        </small></p>
+    <script>$('.bar').sparkline('html', {type: 'bar', color: '#c44'});</script>
+<% end %>

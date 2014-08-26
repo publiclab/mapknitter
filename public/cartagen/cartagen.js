@@ -1595,6 +1595,7 @@ Element.Methods = {
     },
 
     hide: function(element) {
+        debugger;
         element = $(element);
         element.style.display = 'none';
         return element;
