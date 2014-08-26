@@ -1,18 +1,26 @@
-<div class="knitter-side-pane">
+	<div class="knitter-side-pane">
 	<%= render :partial => 'header' %>
 
 	<div class="sidebar-content container">
 		<!-- Map title and author -->
 		<div class="map-title clearfix">
 			<h3><%= @map.name %>
-			<div class="dropdown settings">
-				<a class="btn btn-default" data-toggle="dropdown">
-					<span class="glyphicon glyphicon-cog"></span>
-				</a>
-				<ul class="dropdown-menu dropdown-menu-right" role="menu">
-					<li><a>Delete Map</a></li>
-				</ul>
-			</div>
+				<div class="pull-right dropdown">
+					<a href="#" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-cog"></span>
+					</a>
+					<ul class="dropdown-menu dropdown-menu-right" role="menu">
+						<li class="dropdown">
+							<a href="#" data-toggle="dropdown">Choose basemap</a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a>Esri</a></li>
+								<li><a>Google Maps</a></li>
+								<li><a>OpenStreetMap</a></li>
+							</ul>
+						</li>
+						<li><a>Delete Map</a></li>
+					</ul>
+				</div>
 			</h3>
 		</div>
 
