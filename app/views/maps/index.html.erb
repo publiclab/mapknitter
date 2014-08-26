@@ -19,7 +19,37 @@
 		</div><!-- .col-md-3 -->
 		<div class="maps-list col-md-9">
 			<h2>Recent maps</h2>
-			<%= render :partial => 'index' %>
+			<% odd = true %>
+			<div class="row">
+				<% @maps.each do |map| %>
+				<div class="map col-md-3 <%= 'odd' if odd %>">
+					<% if !map.private && map.warpables.length > 0 %>
+						<a href="<%= %>">
+							<img src="<%= map.warpables.first.public_filename(:small) %>" />
+						</a>
+					<% end %>
+					<h3><%= link_to map.name.capitalize, map %></a></h3>
+					<p>
+						<small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
+						<p class="description"><small>
+						    <%= truncate(markdown_to_html(map.description),:length =>200) %>
+						    <% if !map.description %><i>no description</i><% end %>
+						</small>
+					</p>
+					<p class="map map-meta">
+						<small>
+							<% if map.archived %><i>Archived</i> | <% end %> 
+							<% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+							Updated <%= map.updated_at.to_s(:short) %> | 
+							<%= map.warpables.length %> images 
+						</small>
+					</p>
+				</div>
+				<% odd = !odd %>
+				<% end %>
+			</div>
+			<br style="clear:both;" />
+			<%= will_paginate @maps unless @unpaginated %>
 		</div><!-- .col-md-9 -->
 	</div><!-- .row -->
 </div>
