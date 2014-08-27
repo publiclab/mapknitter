@@ -15,7 +15,7 @@ group :dependencies do
 	gem "RubyInline"
 	gem "rdoc"
 
-	# markdown-to-html compiler
+	# compiling markdown to html
 	gem "rdiscount", "2.1.7.1"
 
 	# asset pipelining

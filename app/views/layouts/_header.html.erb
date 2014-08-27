@@ -13,7 +13,7 @@
         <ul class="nav navbar-nav navbar-right ">
             <li> 
             <% if logged_in? %>
-                <a href="//publiclab.org/profile/<%= @map.author %>"><span class="glyphicon glyphicon-user"></span> <%= current_user.name %></a>
+                <a href="//publiclab.org/profile/<%= current_user.login %>"><span class="glyphicon glyphicon-user"></span> <%= current_user.login %></a>
             <% else %>
                 <a href="//publiclab.org/login"><span class="glyphicon glyphicon-user"></span> Log In</a>
             <% end %>

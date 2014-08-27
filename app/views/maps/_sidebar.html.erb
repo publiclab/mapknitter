@@ -10,15 +10,9 @@
 						<span class="glyphicon glyphicon-cog"></span>
 					</a>
 					<ul class="dropdown-menu dropdown-menu-right" role="menu">
-						<li class="dropdown">
-							<a href="#" data-toggle="dropdown">Choose basemap</a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a>Esri</a></li>
-								<li><a>Google Maps</a></li>
-								<li><a>OpenStreetMap</a></li>
-							</ul>
-						</li>
-						<li><a>Delete Map</a></li>
+						<% if logged_in? && current_user.can_delete?(@map) %>
+							<li><a>Delete Map</a></li>
+						<% end %>
 					</ul>
 				</div>
 			</h3>

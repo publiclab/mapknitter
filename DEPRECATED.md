@@ -7,6 +7,7 @@ betawarper_controller.rb
 
 warper_controller.rb
 tag_controller.rb
+api_controller.rb
 
 View
 -----------

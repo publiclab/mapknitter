@@ -41,7 +41,7 @@ html, body {
 			input { width: 80%; }	
 		}				
 	}
-	h3 { margin: 25px 0; }
+	.map-title h3 { padding: 25px 0; margin: 0; }
 	.label {
 		margin-left: 2px;
 		margin-right: 2px;
@@ -66,5 +66,8 @@ html, body {
 	textarea {
 		height: 80px;
 		margin-bottom: 15px;
+	}
+	.map-detail-label {
+		color: #999;
 	}
 }

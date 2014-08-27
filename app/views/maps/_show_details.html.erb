@@ -1,17 +1,16 @@
-<!-- Map location -->
-<b>Location</b>
-<p><%= @map.location %></p>
-
-<table>
-	<tr><td><b>Latitude</b></td><td><b>Longitude</b></td></tr>
-	<tr><td><%= @map.lat %></td><td><%= @map.lon %></td></tr>
-</table>
-
-<b>Description
-</b>
 <div>
 	<%= markdown_to_html(@map.description) %>
 </div>
+
+<p>
+	<span class="map-detail-label">Location</span>
+	<%= @map.location %>
+</p>
+
+
+<table>
+	<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+</table>
 
 <!-- Map tags -->
 <%= render :partial => "tags/index" %>
