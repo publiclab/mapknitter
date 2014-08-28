@@ -1,35 +1,50 @@
-<% content_for :title do %>
-	<input id="map-name" class="form-control" name="map-name" placeholder="New Map"/>
+<% form_for @map, :html => { :class => "new-map" } do |f| %>
+
+	<div class="sidebar-header"><h3>Create a new map</h3></div>
+	<p>Give your map a title, location, and description.</p>
+	<hr />
+
+	<div class="new-map-form">
+
+		<div class="form-group">
+			<%= f.label :name, "Title", :class => "h4" %>	
+			<%= f.text_field :name, :class => "form-control" %>					
+		</div>
+		<p>Good map titles are short and communicate clearly the subject of the map.  For example: 
+			<ul class="map-title-examples">
+				<li>"Infragram map of goat brush clearing"</li>
+				<li>"Construction near BART"</li>
+			</ul>
+		</p>		
+		<hr/>
+
+		<div class="form-group">
+			<%= f.label :location %>
+			<%= f.text_field :location, :class => "form-control" %>
+		</div>
+		<hr/>
+
+		<table class="form-group">
+			<tbody>
+				<tr><td>
+					<%= f.label :lat %>
+					<%= f.text_field :lat, :class => "form-control" %>
+				</td>
+				<td>
+					<%= f.label :lon %>
+					<%= f.text_field :lon, :class => "form-control" %>
+				</td></tr>
+			</tbody>
+		</table>
+		<hr/>
+
+		<!-- Map description -->
+		<div class="form-group">
+			<%= f.label :description %>
+			<%= f.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
+		</div>
+		<p>You can use the description to add links or attach explanatory images or videos to your map.</p>
+
+		<%= f.submit "Create map", :class => "btn btn-primary" %>	
+	</div><!-- .new-map-form -->
 <% end %>
-
-<!-- Map location -->
-<% form_for @map do |m| %>
-	<div class="form-group">
-		<%= m.label :location %>
-		<%= m.text_field :location, :class => "form-control", :placeholder => "Location" %>
-	</div>
-
-	<div id="latlngs">
-		<!-- Map latitude -->
-		<div class="form-group">
-			<%= m.label :lat %>:
-			<%= m.text_field :lat, :class => "form-control" %>
-		</div>
-
-		<!-- Map longitude -->
-		<div class="form-group">
-			<%= m.label :lon %>
-			<%= m.text_field :lon, :class => "form-control" %>
-		</div>
-	</div>
-
-	<!-- Map description -->
-	<div class="form-group">
-		<%= m.label :description %>
-		<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
-	</div>
-
-	<%= render :partial => 'tags/index' %>
-	
-	<%= m.submit "Create map", :class => "btn btn-primary" %>
-<% end %><!-- End form -->

@@ -21,6 +21,12 @@ class MapsController < ApplicationController
   end
 
   def create
+    @map = current_user.maps.create(params[:map])
+    if @map.save
+      redirect_to edit_map_url(@map)
+    else
+      render "new"
+    end
   end
 
   def show

@@ -5,7 +5,9 @@ var MapKnitter = L.Class.extend({
 		this._latlng = L.latLng(options.latlng);
 
 		this._map = L.map('knitter-map-pane', { zoomControl: false })
-				.setView(this._latlng, this._zoom),
+			.setView(this._latlng, this._zoom);
+
+		this._warpablesUrl = options.warpablesUrl;
 
 		/* Set up basemap and drawing toolbars. */
 		this.setupMap();
@@ -48,7 +50,7 @@ var MapKnitter = L.Class.extend({
 		if (this._warpables) {
 			if (callback) { callback(this._warpables); };
 		} else {
-			jQuery.getJSON(warpablesUrl, function(warpablesData) {
+			jQuery.getJSON(this._warpablesUrl, function(warpablesData) {
 				this._warpables = warpablesData;
 				if (callback) { callback(this._warpables); };
 			});	

@@ -12,42 +12,47 @@
 	</div>	
 <% end %>
 
-<!-- Map location -->
-<% form_for @map do |m| %>
-	<div class="form-group">
-		<%= m.label :location %>
-		<%= m.text_field :location, :class => "form-control" %>
-	</div>
-
-	<div id="latlngs">
-		<!-- Map latitude -->
+<% content_for :details do %>
+	<!-- Map location -->
+	<% form_for @map do |m| %>
 		<div class="form-group">
-			<%= m.label :lat %>:
-			<%= m.text_field :lat, :class => "form-control" %>
+			<%= m.label :location %>
+			<%= m.text_field :location, :class => "form-control" %>
 		</div>
 
-		<!-- Map longitude -->
-		<div class="form-group">
-			<%= m.label :lon %>
-			<%= m.text_field :lon, :class => "form-control" %>
+		<div id="latlngs">
+			<!-- Map latitude -->
+			<div class="form-group">
+				<%= m.label :lat %>:
+				<%= m.text_field :lat, :class => "form-control" %>
+			</div>
+
+			<!-- Map longitude -->
+			<div class="form-group">
+				<%= m.label :lon %>
+				<%= m.text_field :lon, :class => "form-control" %>
+			</div>
 		</div>
+
+		<!-- Map description -->
+		<div class="form-group">
+			<%= m.label :description %>
+			<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
+		</div>
+		
+		<%= m.submit "Save", :class => "btn btn-primary" %>
+	<% end %><!-- End form -->
+
+	<div class="tags">
+		<%= render :partial => "tags/index" %>
 	</div>
 
-	<!-- Map description -->
-	<div class="form-group">
-		<%= m.label :description %>
-		<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
+	<div class="comments">
+		<%= render :partial => "comments/index" %>
+		<%= render :partial => "comments/new" %>	
 	</div>
-	
-	<%= m.submit "Save", :class => "btn btn-primary" %>
-<% end %><!-- End form -->
+<% end %>
 
-<div class="tags">
-	<%= render :partial => "tags/index" %>
-</div>
-
-<div class="comments">
-	<%= render :partial => "comments/index" %>
-	<%= render :partial => "comments/new" %>	
-</div>
-
+<% content_for :warpables do %>
+	<%= render :partial => "/warpables/index" %>
+<% end %>

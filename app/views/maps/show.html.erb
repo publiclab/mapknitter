@@ -12,27 +12,33 @@
 	</div>	
 <% end %>
 
-<div>
-	<%= markdown_to_html(@map.description) %>
-</div>
+<% content_for :details do %>
+	<div>
+		<%= markdown_to_html(@map.description) %>
+	</div>
 
-<p>
-	<span class="map-detail-label">Location</span>
-	<%= @map.location %>
-</p>
+	<p>
+		<span class="map-detail-label">Location</span>
+		<%= @map.location %>
+	</p>
 
 
-<table>
-	<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
-</table>
+	<table>
+		<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+	</table>
 
-<div class="tags">
-	<%= render :partial => "tags/index" %>
-</div>
+	<div class="tags">
+		<%= render :partial => "tags/index" %>
+	</div>
 
-<div class="comments">
-	<%= render :partial => "comments/index" %>
-	<%= render :partial => "comments/new" %>
-</div>
+	<div class="comments">
+		<%= render :partial => "comments/index" %>
+		<%= render :partial => "comments/new" %>
+	</div>
 
-<%= javascript_include_tag 'tags' %>
+	<%= javascript_include_tag 'tags' %>
+<% end %>
+
+<% content_for :warpables do %>
+	<%= render :partial => "/warpables/index" %>
+<% end %>

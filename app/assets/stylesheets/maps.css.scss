@@ -31,8 +31,22 @@ html, body {
 	overflow: hidden;
 	font-family: 'Junction Light';
 	.sidebar-header { margin-bottom: 0; }
-	.map-title h3 { padding-top: 5px; padding-bottom: 25px; margin: 0; }
-	.sidebar-content { width: 100%; height: 88%; overflow: hidden; }
+	.sidebar-header h3 { 
+		padding-top: 5px; 
+		padding-bottom: 25px; 
+		margin: 0; 
+	}
+	.map-title-examples { list-style-type: none; }
+	.sidebar-content { 
+		width: 100%; 
+		height: 88%; 
+		overflow: hidden; 
+	}
+	.new-map { height: 100%; overflow: hidden; }
+	.new-map-form {
+		height: 80%;
+		overflow-y: auto;
+	}
 	.sidebar-only { display: block; }
 	.fullscreen-only { display: none; }
 	#latlngs {
