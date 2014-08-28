@@ -6,6 +6,8 @@ class MapsController < ApplicationController
 
   before_filter :require_user, :only => [:create, :new, :edit, :update, :destroy]
 
+  layout 'knitter2'
+
   def index
     @maps = Map.find :all, :order => 'updated_at DESC', :joins => :warpables, :limit => 24, :group => "maps.id" 
     @unpaginated = true
@@ -15,6 +17,7 @@ class MapsController < ApplicationController
   end
 
   def new
+    @map = current_user.maps.create(:author => current_user.login)
   end
 
   def create
@@ -24,16 +27,12 @@ class MapsController < ApplicationController
     @map = Map.find params[:id]
 
     @map.zoom = 12
-
-    render :layout => 'knitter2'
   end
 
   def edit
     @map = Map.find params[:id]
 
     @map.zoom = 12
-
-    render :layout => 'knitter2'
   end
 
   def update

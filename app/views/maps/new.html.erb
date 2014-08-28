@@ -1,8 +1,12 @@
+<% content_for :title do %>
+	<input id="map-name" class="form-control" name="map-name" placeholder="New Map"/>
+<% end %>
+
 <!-- Map location -->
 <% form_for @map do |m| %>
 	<div class="form-group">
 		<%= m.label :location %>
-		<%= m.text_field :location, :class => "form-control" %>
+		<%= m.text_field :location, :class => "form-control", :placeholder => "Location" %>
 	</div>
 
 	<div id="latlngs">
@@ -25,10 +29,7 @@
 		<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
 	</div>
 
-	<!-- Map tags -->
-	<div class="form-group">
-		<%= render :partial => "tags/index" %>
-	</div>
+	<%= render :partial => 'tags/index' %>
 	
-	<%= m.submit "Save", :class => "btn btn-primary" %>
+	<%= m.submit "Create map", :class => "btn btn-primary" %>
 <% end %><!-- End form -->

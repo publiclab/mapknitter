@@ -1,2 +1,53 @@
-<div id="knitter-map-pane"></div>
-<%= render :partial => "sidebar", :locals => { :mode => "edit" } %>
+<% content_for :title do %>
+	<%= @map.name %>
+	<div class="pull-right dropdown">
+		<a href="#" data-toggle="dropdown">
+			<span class="glyphicon glyphicon-cog"></span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-right" role="menu">
+			<% if logged_in? && current_user.can_delete?(@map) %>
+				<li><a>Delete Map</a></li>
+			<% end %>
+		</ul>
+	</div>	
+<% end %>
+
+<!-- Map location -->
+<% form_for @map do |m| %>
+	<div class="form-group">
+		<%= m.label :location %>
+		<%= m.text_field :location, :class => "form-control" %>
+	</div>
+
+	<div id="latlngs">
+		<!-- Map latitude -->
+		<div class="form-group">
+			<%= m.label :lat %>:
+			<%= m.text_field :lat, :class => "form-control" %>
+		</div>
+
+		<!-- Map longitude -->
+		<div class="form-group">
+			<%= m.label :lon %>
+			<%= m.text_field :lon, :class => "form-control" %>
+		</div>
+	</div>
+
+	<!-- Map description -->
+	<div class="form-group">
+		<%= m.label :description %>
+		<%= m.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
+	</div>
+	
+	<%= m.submit "Save", :class => "btn btn-primary" %>
+<% end %><!-- End form -->
+
+<div class="tags">
+	<%= render :partial => "tags/index" %>
+</div>
+
+<div class="comments">
+	<%= render :partial => "comments/index" %>
+	<%= render :partial => "comments/new" %>	
+</div>
+

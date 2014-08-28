@@ -1,4 +1,4 @@
-<% form_for :map, { :url => { :action => "update" }, :html => { :method => "put" } } do |m| %>
+<% form_for [@map, Tag.new], :html => { :method => "put" } do |m| %>
 	<div class="form-group">
 		<span class="map-detail-label"></span>
 		<p><span id="tags">

@@ -1,2 +1,38 @@
-<div id="knitter-map-pane"></div>
-<%= render :partial => "sidebar", :locals => { :mode => "show" } %>
+<% content_for :title do %>
+	<%= @map.name %>
+	<div class="pull-right dropdown">
+		<a href="#" data-toggle="dropdown">
+			<span class="glyphicon glyphicon-cog"></span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-right" role="menu">
+			<% if logged_in? && current_user.can_delete?(@map) %>
+				<li><a>Delete Map</a></li>
+			<% end %>
+		</ul>
+	</div>	
+<% end %>
+
+<div>
+	<%= markdown_to_html(@map.description) %>
+</div>
+
+<p>
+	<span class="map-detail-label">Location</span>
+	<%= @map.location %>
+</p>
+
+
+<table>
+	<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+</table>
+
+<div class="tags">
+	<%= render :partial => "tags/index" %>
+</div>
+
+<div class="comments">
+	<%= render :partial => "comments/index" %>
+	<%= render :partial => "comments/new" %>
+</div>
+
+<%= javascript_include_tag 'tags' %>
