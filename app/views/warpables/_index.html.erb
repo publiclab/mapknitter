@@ -1,7 +1,7 @@
 <table class="warpables-all table table-striped">
 	<tbody>
 		<% @map.warpables.each do |warpable| %>
-			<tr>
+			<tr id="warpable-<%= warpable.id %>">
 				<td class="warpable">
 					<%= image_tag warpable.public_filename(:thumb), 
 							:'data-warpable-id' => warpable.id,

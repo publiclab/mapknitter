@@ -96,7 +96,6 @@ jQuery(document).ready(function($) {
         e.preventDefault();
     });
 
-
     /* 
      * IF page is being viewed through an iframe, add the image preview and details
      * to the sidebar in the parent page.
