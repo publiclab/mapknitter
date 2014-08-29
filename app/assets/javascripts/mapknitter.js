@@ -66,18 +66,25 @@ var MapKnitter = L.Class.extend({
 	},
 
 	setupMap: function() {
-		var drawnItems = new L.FeatureGroup().addTo(this._map),
-			zoomControl = L.control.zoom({ position: 'topright' }).addTo(this._map),
-			illustrateControl = new L.Illustrate.Control({
-				position: 'topright',
-				edit: { featureGroup: drawnItems }
-			}).addTo(this._map),
-			drawControl = new L.Control.Draw({
-				position: 'topright',
-				edit: { featureGroup: drawnItems }
-			}).addTo(this._map);
+		var map = this._map,
+			drawnItems = new L.FeatureGroup().addTo(map);
 
-		L.tileLayer.provider('Esri.WorldImagery').addTo(this._map);
+		L.control.zoom({ position: 'topright' }).addTo(map);
+		L.tileLayer.provider('Esri.WorldImagery').addTo(map);
+
+		new L.Illustrate.Control({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map);
+
+		new L.Control.Draw({
+			position: 'topright',
+			edit: { featureGroup: drawnItems }
+		}).addTo(map);
+
+		map.on('draw:created', function(event) {
+			drawnItems.addLayer(event.layer);
+		});
 	},
 
 	enableDragAndDrop: function() {
@@ -96,6 +103,10 @@ var MapKnitter = L.Class.extend({
 				jQuery(warpable).draggable("option", "helper", function() { return img; });
 			});
 		});
+	},
+
+	addMetadata: function() {
+
 	}
 });
 
