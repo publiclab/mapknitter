@@ -7,10 +7,10 @@ Rack::OpenID.class_eval do
         url = req.scheme + "://"
         url << req.host
 
+        # Add port if MapKnitter is running on a non-standard port.
         scheme, port = req.scheme, req.port
-        if scheme == "https" && port != 443 ||
-            scheme == "http" && port != 80
-          #url << ":#{port}"
+        if scheme == "https" && port != 443 || scheme == "http" && port != 80
+          url << ":#{port}"
         end
 
         url

@@ -13,6 +13,7 @@ public/warps/*
 public/tms/*
 public/api/0.6/*
 db/schema.rb
+production.db
 config/database.yml
 config/amazon_s3.yml
 config/initializers/recaptcha.rb
