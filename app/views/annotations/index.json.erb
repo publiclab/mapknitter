@@ -1,0 +1,15 @@
+[
+<% @map.annotations.each_with_index do |annotation, i| %>
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "<%= annotation.type %>",
+      "coordinates": "<%= annotation.coordinates %>"
+    },
+    "properties": {
+      "style": "<%= annotation.style %>",
+      "text": "<%= annotation.text %>"
+    }
+  }<% if i != @map.annotations.length - 1 %>,<% end %>
+<% end %>
+]
