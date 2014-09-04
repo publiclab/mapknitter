@@ -53,27 +53,22 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 		this._map_id = options.map_id;
 
 		this._mapUrl = this.baseUrl + '/maps/' + this._map_id + '/';
-		this._resourcesUrl = this._mapUrl + this._name + 's';
+		this._resourcesUrl = this._mapUrl + this._name + 's/';
+	},
 
-		this._getResources = jQuery.ajax({
-			url: this._resourcesUrl,
-			dataType: 'json',
-			context: this,
-			success: function(data) { console.log(data); this._resources = data; },
-			error: function(jqXHR, status, thrownError) { console.log(thrownError);	}
-		});
+	retrieve: function(id, callback) {
+		this._retrieveResources(id, callback)
+			.done.call(this, function() {
+				console.log('retrieved resources');
+			});
 	},
 
 	create: function(annotation) {
-		this._getResources.done.call(this, function() {
-			var newResource;
-
-			this._createResource(annotation, newResource)
-				.done.call(this, function() {
-					console.log('created new resource');
-					console.log(newResource);
-				});
-		});
+		this._createResource(annotation, newResource)
+			.done.call(this, function() {
+				console.log('created new resource');
+				console.log(newResource);
+			});
 	},
 
 	update: function() {	
@@ -82,6 +77,30 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 
 	delete: function() {
 
+	},
+
+	_retrieveResources: function(id, callback) {
+		/* 
+		 * With the optional id argument, _retrieveResources gets a single resource, if it exists. 
+		 * Without the optional id argument, _retrieveResources gets all resources.
+		 */
+
+		var url;
+
+		if (!callback && typeof id === 'function') {
+			callback = id;
+			id = undefined;
+		}
+
+		url = id ? this._resourcesUrl + id : this._resourcesUrl;
+
+		return jQuery.ajax({
+			url: url,
+			dataType: 'json',
+			context: this,
+			success: function(data) { callback(data); },
+			error: function(jqXHR, status, thrownError) { console.log(thrownError);	}
+		});
 	},
 
 	_createResource: function(resource, dest) {
@@ -139,6 +158,11 @@ MapKnitter.Annotations.include({
 		}).addTo(map);
 
 		this._initEvents();
+
+		/* Get annotations for this map. */
+		this.retrieve(function(annotations) {
+			new L.GeoJSON(annotations).addTo(map);
+		});
 	},
 
 	_initEvents: function() {
@@ -152,7 +176,11 @@ MapKnitter.Annotations.include({
 
 			/* Create new database record via AJAX request; see MapKnitter.Resources#create. */
 			this.create(layer);
-		}, this);		
+		}, this);
+
+		map.on('draw:edit', function() {
+
+		});
 	},
 
 	toJSON: function(annotation) {
