@@ -14,7 +14,7 @@ class Tag < ActiveRecord::Base
         tags = Tag.find_all_by_name(self.name)
         maps = []
         tags.each do |tag|
-                maps << tag.map_id
+            maps << tag.map_id
         end
         Map.find maps.uniq
     end

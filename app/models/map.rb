@@ -13,13 +13,14 @@ class Map < ActiveRecord::Base
   has_many :exports
   has_many :tags
   has_many :comments
+  has_many :annotations
 
   has_many :warpables do 
     def public_filenames
       filenames = {}
       self.each do |warpable|
         filenames[warpable.id] = {}
-        sizes = Array.new(Warpable::SIZES.keys).push(nil)
+        sizes = Array.new(Warpable::THUMBNAILS.keys).push(nil)
         sizes.each do |size|
           key = size != nil ? size : "original"
           filenames[warpable.id][key] = warpable.public_filename(size)
@@ -393,10 +394,6 @@ class Map < ActiveRecord::Base
 	elsif self.license == "publicdomain"
 		"<a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public Domain</a>"
 	end
-  end
-
-  def annotations(dist)
-    Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id = 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
   end
 
   def polygons(dist)

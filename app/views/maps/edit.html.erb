@@ -51,6 +51,15 @@
 		<%= render :partial => "comments/index" %>
 		<%= render :partial => "comments/new" %>	
 	</div>
+	<script>
+		jQuery(document).ready(function($) {
+			var annotations = new MapKnitter.Annotations({
+				name: 	'annotation',
+				map_id: <%= @map.id %>,
+				map: 	mapKnitter.getMap()
+			});
+		});
+	</script>
 <% end %>
 
 <% content_for :warpables do %>

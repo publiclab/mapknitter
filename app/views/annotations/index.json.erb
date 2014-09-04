@@ -3,12 +3,15 @@
   {
     "type": "Feature",
     "geometry": {
-      "type": "<%= annotation.type %>",
+      "type": "Point",
       "coordinates": "<%= annotation.coordinates %>"
     },
     "properties": {
-      "style": "<%= annotation.style %>",
-      "text": "<%= annotation.text %>"
+      "annotation_type": "<%= annotation.annotation_type %>",
+      "style":  "<%= annotation.style %>",
+      "text":   "<%= annotation.text %>",
+      "id":     <%= annotation.id %>,
+      "url":    "<%= url_for([@map, annotation]) %>"
     }
   }<% if i != @map.annotations.length - 1 %>,<% end %>
 <% end %>

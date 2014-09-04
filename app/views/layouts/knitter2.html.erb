@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<%= csrf_meta_tags %>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>MapKnitter: <%= @map[:name] ? @map[:name] : "New map" %></title>
@@ -98,12 +99,12 @@
 
 	<%= render :partial => "/warpables/modal" %>
 	<script>
-		mapKnitter = new MapKnitter({
-			latlng: L.latLng(<%= @map.lat %>, <%= @map.lon %>),
-			zoom: <%= @map.zoom %>,
-			warpablesUrl: "<%= url_for [@map, :warpables] %>"
+		window.mapKnitter = new MapKnitter.Map({
+			latlng: 		L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+			zoom: 			<%= @map.zoom %>,
+			warpablesUrl: 	"<%= url_for [@map, :warpables] %>"
 		});
-	</script>
+	</script>	
 	<script type="text/javascript">
 		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

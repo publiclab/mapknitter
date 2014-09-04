@@ -8,13 +8,11 @@ class AnnotationsController < ApplicationController
 
   def create
     @map = Map.find params[:map_id]
-    annotation = @map.annotations.create params[:annotation]
-    annotation.user_id = current_user.id
+    @annotation = @map.annotations.create params[:annotation]
+    @annotation.user_id = current_user.id
 
-    if annotation.save
-      redirect_to edit_map_url(@map)
-    else
-      redirect_to session[:return_to]
+    if @annotation.save
+      respond_with(@map, @annotation, 201)
     end
   end
 
