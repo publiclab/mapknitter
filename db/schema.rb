@@ -9,7 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140811185342) do
+ActiveRecord::Schema.define(:version => 20140902201930) do
+
+  create_table "annotations", :force => true do |t|
+    t.integer  "map_id"
+    t.integer  "user_id"
+    t.string   "annotation_type"
+    t.string   "text"
+    t.string   "style"
+    t.string   "coordinates"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "comments", :force => true do |t|
     t.string   "user_id"
