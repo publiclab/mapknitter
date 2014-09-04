@@ -86,20 +86,23 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 
 	_createResource: function(resource, dest) {
 		/* POST to /maps/<%= this._map_id %>/<%= this._name %> */
-		var data 	= { map_id: this._map_id },
+		var data 	= {},
 			token 	= $("meta[name='csrf-token']").attr("content");
 
 		data[this._name] = this.toJSON(resource);
 
 		return jQuery.ajax({
-			url: 		this._resourcesUrl,
-			data: 		data,
-			type: 		'POST',
-			beforeSend: function(xhr) {
+			url: 			this._resourcesUrl,
+			data: 			JSON.stringify(data),
+			contentType: 	'application/json',
+			type: 			'POST',
+			beforeSend: 	function(xhr) {
+				/* Need to pass the csrf token in order to maintain the user session. */
 				xhr.setRequestHeader('X-CSRF-Token', token);
+				// xhr.setRequestHeader('Content-Type', 'application/json');
 			},
-			success: 	function(data) { dest = data; },
-			error: 		function(jqXHR, status, thrownError) { console.log(thrownError); }
+			success: 		function(data) { dest = data; },
+			error: 			function(jqXHR, status, thrownError) { console.log(thrownError); }
 		});
 	}
 
@@ -116,6 +119,7 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 	}
 })();
 MapKnitter.Annotations.include({
+
 	initialize: function(options) {
 		MapKnitter.Resources.prototype.initialize.call(this, options);
 
@@ -158,7 +162,7 @@ MapKnitter.Annotations.include({
 			text: 			this._getContent(annotation),
 		};
 
-		/* If the annotationa already exists in the database. */
+		/* If the annotation already exists in the database. */
 		if (annotation._mapknitter_id) {
 			json.id = annotation._mapknitter_id;
 		}
@@ -172,15 +176,15 @@ MapKnitter.Annotations.include({
 			coord;
 
 		if (annotation.getLatLng) {
-			latlngs = [annotation.getLatLng()];
+			coord = annotation.getLatLng();
+			coordinates = [coord.lng, coord.lat];
 		} else if (annotation.getLatLngs) {
 			latlngs = annotation.getLatLngs();
+			for (var i = 0; i < latlngs.length; i++) {
+				coord = latlngs[i];
+				coordinates.push([coord.lng, coord.lat]);
+			}			
 		}			
-
-		for (var i = 0; i < latlngs.length; i++) {
-			coord = latlngs[i];
-			coordinates.push([coord.lng, coord.lat]);
-		}
 
 		return coordinates;
 	},
