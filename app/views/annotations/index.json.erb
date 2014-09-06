@@ -1,19 +1,5 @@
 [
 <% @map.annotations.each_with_index do |annotation, i| %>
-  {
-    "type": "Feature",
-    "geometry": {
-      "type": "Point",
-      "coordinates": <%= annotation.coordinates.to_json %>
-    },
-    "properties": {
-      "annotation_type": "<%= annotation.annotation_type %>",
-      "id":     <%= annotation.id %>,
-      "map_id": <%= annotation.map_id %>,
-      "style":  <%= annotation.style.to_json %>,
-      "text":   "<%= annotation.text %>",
-      "url":    "<%= url_for([@map, annotation]) %>"
-    }
-  }<% if i != @map.annotations.length - 1 %>,<% end %>
+  <%= render :partial => 'show.json', :locals => { :annotation => annotation } %><% if i != @map.annotations.length - 1 %>,<% end %>
 <% end %>
 ]
