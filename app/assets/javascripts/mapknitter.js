@@ -64,10 +64,9 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 	},
 
 	create: function(annotation) {
-		this._createResource(annotation, newResource)
+		this._createResource(annotation)
 			.done.call(this, function() {
 				console.log('created new resource');
-				console.log(newResource);
 			});
 	},
 
@@ -184,47 +183,12 @@ MapKnitter.Annotations.include({
 	},
 
 	toJSON: function(annotation) {
-		var json = {
-			type: 			annotation.type,
-			coordinates: 	this._getGeoJSONCoordinates(annotation),
-			text: 			this._getContent(annotation),
-		};
+		var geojson = annotation.toGeoJSON(),
+			type = geojson.properties.pointType;
 
-		/* If the annotation already exists in the database. */
-		if (annotation._mapknitter_id) {
-			json.id = annotation._mapknitter_id;
-		}
+		geojson.properties.annotation_type = type;
 
-		return json;
-	},
-
-	_getGeoJSONCoordinates: function(annotation) {
-		var coordinates = [],
-			latlngs,
-			coord;
-
-		if (annotation.getLatLng) {
-			coord = annotation.getLatLng();
-			coordinates = [coord.lng, coord.lat];
-		} else if (annotation.getLatLngs) {
-			latlngs = annotation.getLatLngs();
-			for (var i = 0; i < latlngs.length; i++) {
-				coord = latlngs[i];
-				coordinates.push([coord.lng, coord.lat]);
-			}			
-		}			
-
-		return coordinates;
-	},
-
-	_getContent: function(annotation) {
-		var content = '';
-
-		if (annotation.getContent) {
-			content = annotation.getContent();
-		}
-
-		return content;
+		return geojson;
 	}
 
 });

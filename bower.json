@@ -7,7 +7,7 @@
 		"leaflet": "0.7.3",
 		"leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
 		"leaflet-draw": "Leaflet/Leaflet.draw#0.2.3",
-		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate",
+		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate#0da997b6ab",
 		"leaflet-image-distort": "manleyjster/ImageDistortLeaflet",
 
 		"bootstrap": "http://github.com/twbs/bootstrap/archive/v3.2.0.tar.gz",
