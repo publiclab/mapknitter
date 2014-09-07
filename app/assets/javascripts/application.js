@@ -5,5 +5,5 @@
 
 //= require leaflet/dist/leaflet
 //= require leaflet-providers/leaflet-providers.js
-//= require leaflet-draw/dist/leaflet.draw.js
+//= require leaflet-draw/dist/leaflet.draw-src.js
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js

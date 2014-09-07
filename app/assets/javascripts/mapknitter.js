@@ -63,15 +63,16 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 			});
 	},
 
-	create: function(annotation) {
-		this._createResource(annotation)
+	create: function(annotation, callback) {
+		this._createResource(annotation, callback)
 			.done.call(this, function() {
 				console.log('created new resource');
 			});
 	},
 
-	update: function() {	
+	update: function(resource, callback) {	
 		// PUT to /maps/:map_id/:resources/:id
+		this._updateResource(resource, callback);
 	},
 
 	delete: function() {
@@ -97,31 +98,59 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 			url: url,
 			dataType: 'json',
 			context: this,
-			success: function(data) { callback(data); },
+			success: function(data) { 
+				if (callback && typeof callback === 'function' ) { 
+					callback.call(this, data); 
+				} 
+			},
 			error: function(jqXHR, status, thrownError) { console.log(thrownError);	}
 		});
 	},
 
-	_createResource: function(resource, dest) {
-		/* POST to /maps/<%= this._map_id %>/<%= this._name %> */
-		var data 	= {},
-			token 	= $("meta[name='csrf-token']").attr("content");
+	_createResource: function(resource, callback) {
+		var options = this._postDefaults(resource, 'POST', callback);
+
+		return jQuery.ajax(options);
+	},
+
+	_updateResource: function(resource, callback) {
+		var options = this._postDefaults(resource, 'PUT', callback);
+
+		options.url = this._resourcesUrl + this.getResourceId(resource);
+
+		return jQuery.ajax(options);
+	},
+
+	_deleteResource: function() {
+
+	},
+
+	_postDefaults: function(resource, action, callback) {
+		var data = {},
+			token = jQuery("meta[name='csrf-token']").attr("content");
 
 		data[this._name] = this.toJSON(resource);
+		data._method = action;
 
-		return jQuery.ajax({
+		return {
 			url: 			this._resourcesUrl,
 			data: 			JSON.stringify(data),
 			contentType: 	'application/json',
-			type: 			'POST',
-			beforeSend: 	function(xhr) {
-				/* Need to pass the csrf token in order to maintain the user session. */
+			type: 			action,
+			beforeSend: function(xhr) {
 				xhr.setRequestHeader('X-CSRF-Token', token);
-				// xhr.setRequestHeader('Content-Type', 'application/json');
+
+				if (action !== 'POST') {
+					xhr.setRequestHeader('X-HTTP-Method-Override', action);
+				}
 			},
-			success: 		function(data) { dest = data; },
-			error: 			function(jqXHR, status, thrownError) { console.log(thrownError); }
-		});
+			success: function(data) {
+				if (callback && typeof callback === 'function') {
+					callback.call(this, data); 
+				}
+			},
+			error: function(jqXHR, status, thrownError) { console.log(thrownError); }
+		};	
 	}
 
 });
@@ -160,7 +189,13 @@ MapKnitter.Annotations.include({
 
 		/* Get annotations for this map. */
 		this.retrieve(function(annotations) {
-			new L.GeoJSON(annotations).addTo(map);
+			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.fromGeoJSON });
+
+			/* Need to add each layer individually in order for the edit toolbar to work. */
+			geojson.eachLayer(function(layer) {
+				console.log(layer);
+				this._drawnItems.addLayer(layer);
+			}, this);
 		});
 	},
 
@@ -177,9 +212,27 @@ MapKnitter.Annotations.include({
 			this.create(layer);
 		}, this);
 
-		map.on('draw:edit', function() {
+		map.on('draw:edited', function(event) {
+			var layers = event.layers;
 
-		});
+			/* Update each record via AJAX request; see MapKnitter.Resources#update. */
+			layers.eachLayer(function(layer) {
+				console.log(layer);
+				console.log('whatup');
+				this.update(layer, function(data) { console.log(data); });
+			}, this);
+		}, this);
+
+		map.on('draw:deleted', function(event) {
+			var layers = event.layers;
+
+			console.log('deleted');
+
+			/* Delete each record via AJAX request; see MapKnitter.Resources#delete. */
+			layers.eachLayer(function(layer) {
+				this.delete(layer);
+			}, this);
+		}, this);
 	},
 
 	toJSON: function(annotation) {
@@ -189,6 +242,21 @@ MapKnitter.Annotations.include({
 		geojson.properties.annotation_type = type;
 
 		return geojson;
+	},
+
+	fromGeoJSON: function(geojson, latlng) {
+		var textbox = new L.Illustrate.Textbox(latlng, {
+				text: geojson.properties.text
+			});
+
+		textbox.setSize(L.point(geojson.properties.style.width, geojson.properties.style.height));
+		textbox._mapKnitter_id = geojson.properties.id;
+
+		return textbox;
+	},
+
+	getResourceId: function(annotation) {
+		return annotation._mapKnitter_id;
 	}
 
 });

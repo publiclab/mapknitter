@@ -1,7 +1,7 @@
 require 'json'
 
 class AnnotationsController < ApplicationController
-  # before_filter :require_user, :except => [ :index, :show ]
+  before_filter :require_user, :except => [ :index, :show ]
   before_filter :find_map
 
   def index
