@@ -75,8 +75,8 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 		this._updateResource(resource, callback);
 	},
 
-	delete: function() {
-
+	deleteResource: function(resource, callback) {
+		this._deleteResource(resource, callback);
 	},
 
 	_retrieveResources: function(id, callback) {
@@ -121,8 +121,12 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 		return jQuery.ajax(options);
 	},
 
-	_deleteResource: function() {
+	_deleteResource: function(resource, callback) {
+		var options = this._postDefaults(resource, 'DELETE', callback);
 
+		options.url = this._resourcesUrl + this.getResourceId(resource);
+
+		return jQuery.ajax(options);
 	},
 
 	_postDefaults: function(resource, action, callback) {
@@ -140,6 +144,7 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader('X-CSRF-Token', token);
 
+				/* Hack to get around an issue in Rails 2.3: https://github.com/rails/rails/issues/612 */
 				if (action !== 'POST') {
 					xhr.setRequestHeader('X-HTTP-Method-Override', action);
 				}
@@ -230,7 +235,7 @@ MapKnitter.Annotations.include({
 
 			/* Delete each record via AJAX request; see MapKnitter.Resources#delete. */
 			layers.eachLayer(function(layer) {
-				this.delete(layer);
+				this.deleteResource(layer, function(data) { console.log(data); });
 			}, this);
 		}, this);
 	},

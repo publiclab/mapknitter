@@ -46,9 +46,10 @@ class AnnotationsController < ApplicationController
 
   def destroy
     @annotation = Annotation.find params[:id]
-    # if current_user.can_delete?(@annotation)
+    if current_user.can_delete?(@annotation)
       @annotation.delete 
-    # end
+      head :ok
+    end
   end
 
   def find_map
