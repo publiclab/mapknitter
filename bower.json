@@ -7,7 +7,7 @@
 		"leaflet": "0.7.3",
 		"leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
 		"leaflet-draw": "manleyjster/Leaflet.draw#enable-marker-editing",
-		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate#fdafa2a228436f3a0643d776ebab217cbb22b003",
+		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate#3be4d39fa2a4a4570e80b253f56c2742bd1f0fba",
 		"leaflet-image-distort": "manleyjster/ImageDistortLeaflet",
 
 		"bootstrap": "http://github.com/twbs/bootstrap/archive/v3.2.0.tar.gz",

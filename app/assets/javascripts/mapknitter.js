@@ -116,7 +116,7 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 	_updateResource: function(resource, callback) {
 		var options = this._postDefaults(resource, 'PUT', callback);
 
-		options.url = this._resourcesUrl + this.getResourceId(resource);
+		options.url = this._resourcesUrl + this.stampResource(resource);
 
 		return jQuery.ajax(options);
 	},
@@ -124,7 +124,7 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 	_deleteResource: function(resource, callback) {
 		var options = this._postDefaults(resource, 'DELETE', callback);
 
-		options.url = this._resourcesUrl + this.getResourceId(resource);
+		options.url = this._resourcesUrl + this.stampResource(resource);
 
 		return jQuery.ajax(options);
 	},
@@ -141,6 +141,7 @@ MapKnitter.Resources = MapKnitter.Class.extend({
 			data: 			JSON.stringify(data),
 			contentType: 	'application/json',
 			type: 			action,
+			context: this,
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader('X-CSRF-Token', token);
 
@@ -215,7 +216,9 @@ MapKnitter.Annotations.include({
 			this._onAnnotationAdd(layer);
 
 			/* Create new database record via AJAX request; see MapKnitter.Resources#create. */
-			this.create(layer);
+			this.create(layer, function(geojsonResponse) {
+				this.stampResource(layer, geojsonResponse.properties.id);
+			});
 		}, this);
 
 		map.on('draw:edited', function(event) {
@@ -248,7 +251,7 @@ MapKnitter.Annotations.include({
 			} else {
 				this.update(annotation, function(data) { console.log(data); });				
 			}
-		}, this);		
+		}, this);
 	},
 
 	toJSON: function(annotation) {
@@ -256,19 +259,31 @@ MapKnitter.Annotations.include({
 	},
 
 	fromGeoJSON: function(geojson, latlng) {
-		var textbox = new L.Illustrate.Textbox(latlng, {
+		var size = new L.Point(geojson.properties.style.width, geojson.properties.style.height),
+			textbox = new L.Illustrate.Textbox(latlng, {
 				textContent: geojson.properties.textContent,
-				size: new L.Point(geojson.properties.style.width, geojson.properties.style.height),
+				size: size,
 				rotation: geojson.properties.style.rotation
 			});
 
-		textbox._mapKnitter_id = geojson.properties.id;
+		textbox._mapknitter_id = geojson.properties.id;
 
 		return textbox;
 	},
 
-	getResourceId: function(annotation) {
-		return annotation._mapKnitter_id;
+	stampResource: function(annotation, id) {
+		var mapknitter_id;
+
+		/* If called with an id argument, sets the _mapknitter_id and returns it. */
+		/* If called without an id argument, returns the _mapknitter_id. */
+		if (id) {
+			annotation._mapknitter_id = id;
+			mapknitter_id = id;
+		} else {
+			mapknitter_id = annotation._mapknitter_id;
+		}
+
+		return mapknitter_id;
 	}
 
 });
