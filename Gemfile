@@ -23,6 +23,11 @@ group :dependencies do
 	gem "sass"
 end
 
+group :development do
+	gem "jshintrb"
+	gem "therubyracer"
+end
+
 group :sqlite do
 	# if you decide to use sqlite3 as the database
 	gem "sqlite3"
