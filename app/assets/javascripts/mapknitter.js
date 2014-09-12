@@ -195,7 +195,7 @@ MapKnitter.Annotations.include({
 
 		/* Get annotations for this map. */
 		this.retrieve(function(annotations) {
-			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.fromGeoJSON });
+			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.fromGeoJSON.bind(this) });
 
 			/* Need to add each layer individually in order for the edit toolbar to work. */
 			geojson.eachLayer(function(layer) {
@@ -266,7 +266,7 @@ MapKnitter.Annotations.include({
 				rotation: geojson.properties.style.rotation
 			});
 
-		textbox._mapknitter_id = geojson.properties.id;
+		this.stampResource(textbox, geojson.properties.id);
 
 		return textbox;
 	},
