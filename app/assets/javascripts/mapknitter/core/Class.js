@@ -1,4 +1,4 @@
-MapKnitter = {};
+var MapKnitter = {};
 
 /* 
  * MapKnitter.Class: A bare-bones version of Leaflet's Class feature, 

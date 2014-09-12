@@ -5,7 +5,7 @@
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
-	var sidebarNav = $(".knitter-side-pane .navbar-nav.sidebar-only");
+	var sidebarNav = $(".knitter-side-pane .navbar-nav.sidebar-only"),
 		navLinks = $(".knitter-side-pane .navbar-nav.fullscreen-only").find("li");
 
 	sidebarNav.find(".dropdown-menu").append(navLinks);
@@ -18,5 +18,5 @@ function addUploadedImageToSidebar($upload) {
 
 	/* Add to sidebar. */
 	jQuery(".warpables-all tbody").append($upload);
-	makeDraggable($upload.find("img"));
+	// makeDraggable($upload.find("img"));
 }
