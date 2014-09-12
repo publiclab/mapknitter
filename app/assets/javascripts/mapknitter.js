@@ -198,8 +198,8 @@ MapKnitter.Annotations.include({
 
 			/* Need to add each layer individually in order for the edit toolbar to work. */
 			geojson.eachLayer(function(layer) {
-				console.log(layer);
 				this._drawnItems.addLayer(layer);
+				this._onAnnotationAdd(layer);
 			}, this);
 		});
 	},
@@ -212,6 +212,7 @@ MapKnitter.Annotations.include({
 
 			/* Display annotation on the map. */
 			this._drawnItems.addLayer(layer);
+			this._onAnnotationAdd(layer);
 
 			/* Create new database record via AJAX request; see MapKnitter.Resources#create. */
 			this.create(layer);
@@ -222,7 +223,6 @@ MapKnitter.Annotations.include({
 
 			/* Update each record via AJAX request; see MapKnitter.Resources#update. */
 			layers.eachLayer(function(layer) {
-				console.log(layer);
 				console.log('whatup');
 				this.update(layer, function(data) { console.log(data); });
 			}, this);
@@ -240,21 +240,28 @@ MapKnitter.Annotations.include({
 		}, this);
 	},
 
+	_onAnnotationAdd: function(annotation) {
+		/* Need to listen for text edits on textboxes */
+		annotation.on('textedit', function() {
+			if (annotation.editing.enabled()) {
+				annotation.edited = true;
+			} else {
+				this.update(annotation, function(data) { console.log(data); });				
+			}
+		}, this);		
+	},
+
 	toJSON: function(annotation) {
-		var geojson = annotation.toGeoJSON(),
-			type = geojson.properties.pointType;
-
-		geojson.properties.annotation_type = type;
-
-		return geojson;
+		return annotation.toGeoJSON();
 	},
 
 	fromGeoJSON: function(geojson, latlng) {
 		var textbox = new L.Illustrate.Textbox(latlng, {
-				text: geojson.properties.text
+				textContent: geojson.properties.textContent,
+				size: new L.Point(geojson.properties.style.width, geojson.properties.style.height),
+				rotation: geojson.properties.style.rotation
 			});
 
-		textbox.setSize(L.point(geojson.properties.style.width, geojson.properties.style.height));
 		textbox._mapKnitter_id = geojson.properties.id;
 
 		return textbox;

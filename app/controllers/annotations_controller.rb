@@ -14,9 +14,9 @@ class AnnotationsController < ApplicationController
     respond_to do |format|
       format.json { 
         @annotation = @map.annotations.create(
-          :annotation_type => geojson[:properties][:annotation_type],
+          :annotation_type => geojson[:properties][:annotationType],
           :coordinates => geojson[:geometry][:coordinates],
-          :text => geojson[:properties][:text],
+          :text => geojson[:properties][:textContent],
           :style => geojson[:properties][:style],
           :user_id => current_user.id
         )
@@ -36,8 +36,9 @@ class AnnotationsController < ApplicationController
     @annotation = Annotation.find params[:id]
     geojson = params[:annotation]
     if current_user.can_edit?(@annotation)
-      Annotation.update(@annotation.id, 
-        :text => geojson[:properties][:text],
+      Annotation.update(@annotation.id,
+        :coordinates => geojson[:geometry][:coordinates],
+        :text => geojson[:properties][:textContent],
         :style => geojson[:properties][:style]
       )
       render :file => 'annotations/update.json.erb', :content_type => 'application/json'
