@@ -2,4 +2,4 @@
 
 # requires nodejs
 cd app/assets
-grunt
+grunt $1

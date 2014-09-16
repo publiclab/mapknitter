@@ -22,5 +22,5 @@ config/config.yml
 config/initializers/site_keys.rb
 
 vendor/bundle
-app/assets/bower_packages
+app/assets/bower_components
 app/assets/node_modules

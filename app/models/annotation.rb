@@ -8,4 +8,19 @@ class Annotation < ActiveRecord::Base
   def author
     User.find(self.user_id).login
   end
+
+  def geometry_type
+  	case self.annotation_type
+  	when 'polyline':
+  		geometry_type = 'LineString'
+  	when 'polygon':
+  		geometry_type = 'Polygon'
+  	when 'rectangle':
+  		geometry_type = 'Polygon'
+  	else
+  		geometry_type = 'Point'
+  	end
+
+  	return geometry_type
+  end
 end

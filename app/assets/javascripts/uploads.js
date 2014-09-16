@@ -26,9 +26,8 @@ jQuery(document).ready(function($) {
             var GPS = EXIF.getGPSTags(this), 
                 checked = $("#allowAutoPlacement").attr("checked"),
                 autoPlacementAllowed = checked === "checked" ? false : true,
-                latLngDefined = typeof GPS["GPSLatitude"] !== 'undefined' 
-                    && typeof GPS["GPSLongitude"] !== 'undefined',
-                latitude, longitude;
+                latLngDefined = typeof GPS.GPSLatitude !== 'undefined' && 
+                                typeof GPS.GPSLongitude !== 'undefined';
 
             if(latLngDefined) {
                 $("#GPS_" + data.result.files[0].id).css("display","");
@@ -63,12 +62,13 @@ jQuery(document).ready(function($) {
                     image.onload = function() { placeImage(); };
                     image.src = e.target.result;
                 };
+    
+                reader.readAsDataURL(data.files[0]);
             }
-            reader.readAsDataURL(data.files[0]);
 
             function placeImage() {
-                var hasAltitude = typeof GPS["GPSAltitude"] !== "undefined" 
-                        && typeof GPS["GPSAltitudeRef"] !== "undefined";
+                var hasAltitude = typeof GPS.GPSAltitude !== "undefined" && 
+                                  typeof GPS.GPSAltitudeRef !== "undefined";
 
                 if(hasAltitude) {
                     if(autoPlacementAllowed) {
@@ -87,8 +87,7 @@ jQuery(document).ready(function($) {
                         ); 
                     }
                 }
-            };
-
+            }
         }); 
     });
 

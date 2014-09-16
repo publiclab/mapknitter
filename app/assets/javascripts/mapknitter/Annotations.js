@@ -22,7 +22,7 @@ MapKnitter.Annotations.include({
 
 		/* Get annotations for this map. */
 		this.retrieve(function(annotations) {
-			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.fromGeoJSON.bind(this) });
+			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.pointToLayer.bind(this) });
 
 			/* Need to add each layer individually in order for the edit toolbar to work. */
 			geojson.eachLayer(function(layer) {
@@ -37,6 +37,8 @@ MapKnitter.Annotations.include({
 
 		map.on('draw:created', function(event) {
 			var layer = event.layer;
+
+			layer.type = event.layerType;
 
 			/* Display annotation on the map. */
 			this._drawnItems.addLayer(layer);
@@ -71,21 +73,33 @@ MapKnitter.Annotations.include({
 	},
 
 	_onAnnotationAdd: function(annotation) {
-		/* Need to listen for text edits on textboxes */
-		annotation.on('textedit', function() {
-			if (annotation.editing.enabled()) {
-				annotation.edited = true;
-			} else {
-				this.update(annotation, function(data) { console.log(data); });				
-			}
-		}, this);
+		switch (annotation.type) {
+			case 'textbox':
+				/* Focus on the textarea. */
+				annotation.getTextarea().focus();
+
+				/* Need to listen for text edits on textboxes */
+				annotation.on('textedit', function() {
+					if (annotation.editing.enabled()) {
+						annotation.edited = true;
+					} else {
+						this.update(annotation, function(data) { console.log(data); });				
+					}
+				}, this);
+				break;
+		}
+
 	},
 
 	toJSON: function(annotation) {
-		return annotation.toGeoJSON();
+		var geojson = annotation.toGeoJSON();
+
+		geojson.properties.annotation_type = annotation.type;
+
+		return geojson;
 	},
 
-	fromGeoJSON: function(geojson, latlng) {
+	pointToLayer: function(geojson, latlng) {
 		var size = new L.Point(geojson.properties.style.width, geojson.properties.style.height),
 			textbox = new L.Illustrate.Textbox(latlng, {
 				textContent: geojson.properties.textContent,

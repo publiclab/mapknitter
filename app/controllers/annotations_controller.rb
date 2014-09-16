@@ -14,7 +14,7 @@ class AnnotationsController < ApplicationController
     respond_to do |format|
       format.json { 
         @annotation = @map.annotations.create(
-          :annotation_type => geojson[:properties][:annotationType],
+          :annotation_type => geojson[:properties][:annotation_type],
           :coordinates => geojson[:geometry][:coordinates],
           :text => geojson[:properties][:textContent],
           :style => geojson[:properties][:style],
@@ -47,10 +47,10 @@ class AnnotationsController < ApplicationController
 
   def destroy
     @annotation = Annotation.find params[:id]
-    if current_user.can_delete?(@annotation)
+    # if current_user.can_delete?(@annotation)
       @annotation.delete 
       head :ok
-    end
+    # end
   end
 
   def find_map

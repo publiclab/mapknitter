@@ -43,6 +43,7 @@ module.exports = function(grunt) {
                 smarttabs: true,
                 globals: {
                     L: false,
+                    EXIF: false,
                     jQuery: false,
                     MapKnitter: true,
 
@@ -61,7 +62,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: 'javascripts/',
-                    src: [ '**.js', '!uploads-gps-exif.js' ]
+                    src: [ '**.js', '*/*.js', '*/*/*.js', '!uploads-gps-exif.js' ]
                 }]
             },
             config: {
@@ -75,8 +76,9 @@ module.exports = function(grunt) {
             },
             source: {
                 files: [
-                    'src/*.js',
-                    'src/core/*.js',
+                    'javascripts/*.js',
+                    'javascripts/*/*.js',
+                    'javascripts/*/*/*.js',
                     'Gruntfile.js'
                 ],
                 tasks: [ 'build' ]

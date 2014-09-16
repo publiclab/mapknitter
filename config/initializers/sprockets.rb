@@ -6,7 +6,7 @@ module Sprockets
 			sprockets.append_path 'app/assets/javascripts'
 			sprockets.append_path 'app/assets/stylesheets'
 			sprockets.append_path 'public'
-			sprockets.append_path Rails.root.join('app/assets/bower_packages')
+			sprockets.append_path Rails.root.join('app/assets/bower_components')
 
 			sprockets.css_compressor = :scss
 
