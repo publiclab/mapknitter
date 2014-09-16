@@ -10,13 +10,3 @@ jQuery(document).ready(function($) {
 
 	sidebarNav.find(".dropdown-menu").append(navLinks);
 });
-
-function addUploadedImageToSidebar($upload) {
-	/* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
-	$upload.find(".indicate").remove();
-	$upload.find("td:last").remove();
-
-	/* Add to sidebar. */
-	jQuery(".warpables-all tbody").append($upload);
-	// makeDraggable($upload.find("img"));
-}

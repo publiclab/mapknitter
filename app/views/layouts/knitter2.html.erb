@@ -12,8 +12,10 @@
 	<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
 	<%= stylesheet_link_tag 'application' %>
+	<%= stylesheet_link_tag 'uploads' %>
 	<%= javascript_include_tag 'application' %>
 	<%= javascript_include_tag 'maps' %>
+	<%= javascript_include_tag 'uploads' %>
 </head>
 <body>
 	<div id="knitter-map-pane"></div>
@@ -97,7 +99,7 @@
 		</div><!-- .sidebar-content -->
 	</div><!-- .knitter-side-pane -->
 
-	<%= render :partial => "/warpables/modal" %>
+	<%= render :partial => "/warpables/new" %>
 	<script>
 		window.mapKnitter = new MapKnitter.Map({
 			latlng: 		L.latLng(<%= @map.lat %>, <%= @map.lon %>),

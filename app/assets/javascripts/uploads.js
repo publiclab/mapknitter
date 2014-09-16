@@ -12,6 +12,16 @@
 
 //= require uploads-gps-exif
 
+function addUploadedImageToSidebar($upload) {
+    /* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
+    $upload.find(".indicate").remove();
+    $upload.find("td:last").remove();
+
+    /* Add to sidebar. */
+    jQuery(".warpables-all tbody").append($upload);
+    // makeDraggable($upload.find("img"));
+}
+
 jQuery(document).ready(function($) {
 
     $('#fileupload').fileupload({
@@ -95,21 +105,11 @@ jQuery(document).ready(function($) {
         e.preventDefault();
     });
 
-    /* 
-     * IF page is being viewed through an iframe, add the image preview and details
-     * to the sidebar in the parent page.
-     */
-    if (window.parent) {
-        window.addUploadedImageToSidebar = window.parent.addUploadedImageToSidebar;
-    }
-
     $("#fileupload").fileupload({
         completed: function() {
-            if (addUploadedImageToSidebar) {
-                var latestFile = $("#uploaded-images-list tr:last").clone();
+            var latestFile = $("#uploaded-images-list tr:last").clone();
 
-                addUploadedImageToSidebar(latestFile);
-            }
+            addUploadedImageToSidebar(latestFile);
         }
     });
 });
