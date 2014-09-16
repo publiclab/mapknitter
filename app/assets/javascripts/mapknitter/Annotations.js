@@ -89,22 +89,43 @@ MapKnitter.Annotations.include({
 	},
 
 	toJSON: function(annotation) {
-		var geojson = annotation.toGeoJSON();
+		var geojson = L.extend(annotation.toGeoJSON(), {
+				properties: { 
+					annotation_type: annotation.type,
+					style: {}
+				}
+			});
 
-		geojson.properties.annotation_type = annotation.type;
+		switch (annotation.type) {
+			case 'circle':
+				geojson.properties.style.radius = annotation.getRadius();
+				break;
+		}
 
 		return geojson;
 	},
 
 	_pointToLayer: function(geojson, latlng) {
-		var size = new L.Point(geojson.properties.style.width, geojson.properties.style.height),
-			textbox = new L.Illustrate.Textbox(latlng, {
-				textContent: geojson.properties.textContent,
-				size: size,
-				rotation: geojson.properties.style.rotation
-			});
+		var width, height, annotation;
 
-		return textbox;
+		switch(geojson.properties.annotation_type) {
+			case 'textbox':
+				width = geojson.properties.style.width;
+				height = geojson.properties.style.height;
+				annotation = new L.Illustrate.Textbox(latlng, {
+					textContent: geojson.properties.textContent,
+					size: new L.Point(width, height),
+					rotation: geojson.properties.style.rotation
+				});
+				break;
+			case 'circle':
+				annotation = new L.Circle(latlng, geojson.properties.style.radius);
+				break;
+			default:
+				annotation = new L.Marker(latlng);
+		}
+
+		return annotation;
 	},
 
 	stampResource: function(annotation, id) {
