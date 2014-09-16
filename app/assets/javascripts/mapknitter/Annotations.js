@@ -22,13 +22,13 @@ MapKnitter.Annotations.include({
 
 		/* Get annotations for this map. */
 		this.retrieve(function(annotations) {
-			var geojson = new L.GeoJSON(annotations, { pointToLayer: this.pointToLayer.bind(this) });
-
-			/* Need to add each layer individually in order for the edit toolbar to work. */
-			geojson.eachLayer(function(layer) {
-				this._drawnItems.addLayer(layer);
-				this._onAnnotationAdd(layer);
-			}, this);
+			new L.GeoJSON(annotations, { 
+				pointToLayer: this._pointToLayer.bind(this),
+				onEachFeature: function(geojson, layer) {
+					this._onAnnotationAdd(layer);
+					this.stampResource(layer, geojson.properties.id);					
+				}.bind(this)
+			});
 		});
 	},
 
@@ -41,7 +41,6 @@ MapKnitter.Annotations.include({
 			layer.type = event.layerType;
 
 			/* Display annotation on the map. */
-			this._drawnItems.addLayer(layer);
 			this._onAnnotationAdd(layer);
 
 			/* Create new database record via AJAX request; see MapKnitter.Resources#create. */
@@ -55,15 +54,12 @@ MapKnitter.Annotations.include({
 
 			/* Update each record via AJAX request; see MapKnitter.Resources#update. */
 			layers.eachLayer(function(layer) {
-				console.log('whatup');
 				this.update(layer, function(data) { console.log(data); });
 			}, this);
 		}, this);
 
 		map.on('draw:deleted', function(event) {
 			var layers = event.layers;
-
-			console.log('deleted');
 
 			/* Delete each record via AJAX request; see MapKnitter.Resources#delete. */
 			layers.eachLayer(function(layer) {
@@ -73,6 +69,8 @@ MapKnitter.Annotations.include({
 	},
 
 	_onAnnotationAdd: function(annotation) {
+		this._drawnItems.addLayer(annotation);
+
 		switch (annotation.type) {
 			case 'textbox':
 				/* Focus on the textarea. */
@@ -88,7 +86,6 @@ MapKnitter.Annotations.include({
 				}, this);
 				break;
 		}
-
 	},
 
 	toJSON: function(annotation) {
@@ -99,15 +96,13 @@ MapKnitter.Annotations.include({
 		return geojson;
 	},
 
-	pointToLayer: function(geojson, latlng) {
+	_pointToLayer: function(geojson, latlng) {
 		var size = new L.Point(geojson.properties.style.width, geojson.properties.style.height),
 			textbox = new L.Illustrate.Textbox(latlng, {
 				textContent: geojson.properties.textContent,
 				size: size,
 				rotation: geojson.properties.style.rotation
 			});
-
-		this.stampResource(textbox, geojson.properties.id);
 
 		return textbox;
 	},
