@@ -79,6 +79,8 @@ html, body {
 		bottom: 0;
 
 		@include sidebar-padding();
+
+		padding-bottom: $sidebar-padding;
 	}
 
 	.sidebar-buttons {
@@ -171,7 +173,6 @@ html, body {
 		border: 1px solid #d4d4d4;
 		margin-bottom: 5px;
 	}
-	.comment-body { margin-bottom: 5px; }	
 }
 	
 .tab-pane { padding-top: 10px; }
