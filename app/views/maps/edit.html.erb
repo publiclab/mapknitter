@@ -1,15 +1,20 @@
 <% content_for :title do %>
-	<%= @map.name %>
-	<div class="pull-right dropdown">
-		<a href="#" data-toggle="dropdown">
-			<span class="glyphicon glyphicon-cog"></span>
-		</a>
-		<ul class="dropdown-menu dropdown-menu-right" role="menu">
-			<% if logged_in? && current_user.can_delete?(@map) %>
-				<li><a>Delete Map</a></li>
-			<% end %>
-		</ul>
-	</div>	
+	<h3>
+		<%= @map.name %>
+		<div class="pull-right dropdown">
+			<a href="#" data-toggle="dropdown">
+				<span class="glyphicon glyphicon-cog"></span>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				<% if logged_in? && current_user.can_delete?(@map) %>
+					<li><a>Delete Map</a></li>
+				<% end %>
+			</ul>
+		</div>
+	</h3>
+	<div class="map-author">
+		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a>
+	</div>
 <% end %>
 
 <% content_for :details do %>

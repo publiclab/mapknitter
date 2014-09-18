@@ -21,6 +21,8 @@ group :dependencies do
 	# asset pipelining
 	gem "sprockets", "2.12.1"
 	gem "sass"
+
+	gem "friendly_id", "3.3.3.0"
 end
 
 group :development do

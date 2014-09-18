@@ -1,52 +1,84 @@
+/* Variables */
+$sidebar-width: 30%;
+$sidebar-min-width: 400px;
+$sidebar-padding: 15px;
+
+$sidebar-title-height: 87px;
+$sidebar-title-padding: 15px;
+
+                        // bootstrap                           // visual tweak
+$sidebar-header-height: 50px         + $sidebar-title-height + 1;
+
+
+
+$subtle-grey: #e5e5e5;
+
+/* Mixins */
+@mixin sidebar-padding() {
+	padding-left: $sidebar-padding;
+	padding-right: $sidebar-padding;
+}
+
+/* Global */
 html, body {
 	width: 100%;
 	height: 100%;
 }
 
+/* Map pane */
 #knitter-map-pane {
-	width: 70%;
-	height: 100%;
 	float: left;
+
+	width: 100% - $sidebar-width;
+
+	/* WARNING: calc does not work in all browsers. */
+	max-width: calc(100% - #{$sidebar-min-width});
+	height: 100%;
 }
 
-.public-lab-primary button { background-color: #f8e4e4; }
-
-#comments {
-	.comment-header {
-		background-color: #f2f2f2;
-		padding: 10px;
-		border-radius: 5px;
-		border: 1px solid #d4d4d4;
-		margin-bottom: 5px;
-	}
-	.comment-body { margin-bottom: 5px; }	
-}
-
-.tab-pane { padding-top: 10px; }
-
-.knitter-side-pane {
-	width: 30%;
-	height: 100%;
+/* Sidebar with map details */
+.sidebar {
+	position: relative;
 	float: left;
-	overflow: hidden;
+
+	height: 100%;
+	width: $sidebar-width;
+	min-width: $sidebar-min-width;
+
 	font-family: 'Junction Light';
-	.sidebar-header { margin-bottom: 0; }
-	.sidebar-header h3 { 
-		padding-top: 5px; 
-		padding-bottom: 25px; 
-		margin: 0; 
-	}
-	.map-title-examples { list-style-type: none; }
-	.sidebar-content { 
+
+	/* Override Bootstrap */
+	.navbar { margin-bottom: 0; }
+
+	.sidebar-container { 
 		width: 100%; 
-		height: 88%; 
-		overflow: hidden; 
+		height: 100%;
+		position: relative;
 	}
+
+	.sidebar-title {
+		@include sidebar-padding();
+		border-bottom: 1px solid $subtle-grey;
+		height: $sidebar-title-height;
+		padding-bottom: $sidebar-title-padding;
+		padding-top: $sidebar-title-padding;		
+		h3 { margin: 0; }
+	}
+
+	.sidebar-content {
+		position: absolute;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		height: calc(100% - #{$sidebar-header-height});
+		overflow-y: scroll;
+		overflow-x: hidden;
+
+		@include sidebar-padding();
+	}
+
+	.map-title-examples { list-style-type: none; }
 	.new-map { height: 100%; overflow: hidden; }
-	.new-map-form {
-		height: 80%;
-		overflow-y: auto;
-	}
 	.sidebar-only { display: block; }
 	.fullscreen-only { display: none; }
 	#latlngs {
@@ -87,3 +119,42 @@ html, body {
 		color: #999;
 	}
 }
+
+#comments {
+	.comment-header {
+		background-color: #f2f2f2;
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #d4d4d4;
+		margin-bottom: 5px;
+	}
+	.comment-body { margin-bottom: 5px; }	
+}
+
+
+/* 
+ * Override Bootstrap styles for when the nav is contained in the sidebar. 
+ * This is to ensure that the navbar maintains a fixed height,
+ * regardless of screen size, so that the top offset for .sidebar-wrap doesn't change.
+ */
+.sidebar-navbar-nav {
+	float: left;
+	margin: 0;
+
+	li {
+		float: left;
+		a {
+			padding-top:    15px;
+			padding-bottom: 15px;
+		}
+	}
+}
+
+.sidebar-navbar-right {
+	float: right !important;
+	margin-right: -15px;
+}
+	
+.tab-pane { padding-top: 10px; }
+
+.public-lab-primary button { background-color: #f8e4e4; }

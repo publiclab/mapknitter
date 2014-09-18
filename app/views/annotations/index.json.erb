@@ -1,5 +1,9 @@
-[
-<% @map.annotations.each_with_index do |annotation, i| %>
-  <%= render :partial => 'show.json', :locals => { :annotation => annotation } %><% if i != @map.annotations.length - 1 %>,<% end %>
-<% end %>
-]
+
+{
+	"type": "FeatureCollection",
+	"features": [
+		<% @map.annotations.each_with_index do |annotation, i| %>
+		  <%= render :partial => 'show.json', :locals => { :annotation => annotation } %><% if i != @map.annotations.length - 1 %>,<% end %>
+		<% end %>
+	]
+}
