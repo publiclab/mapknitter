@@ -8,7 +8,7 @@ $sidebar-title-padding: $sidebar-padding;
 
 /* Change this to reflect the height of the Bootstrap navbar. */
 $bootstrap-navbar-height: 50px;
-$sidebar-header-height: $sidebar-title-height + 1;
+$sidebar-header-height: $sidebar-title-height;
 
 $subtle-grey: #e5e5e5;
 
@@ -62,8 +62,7 @@ html, body {
 
 	.sidebar-header {
 		@include sidebar-padding();
-		border-bottom: 1px solid $subtle-grey;
-		height: $sidebar-title-height;
+		// height: $sidebar-title-height;
 		margin-top: $bootstrap-navbar-height;
 		padding-bottom: $sidebar-title-padding;
 		padding-top: $sidebar-title-padding;		
@@ -83,7 +82,19 @@ html, body {
 		@include sidebar-padding();
 	}
 
+	.sidebar-buttons {
+		padding-left: $sidebar-padding;
+		padding-right: $sidebar-padding;
+		margin-top: 15px;
+	}
+
+	.sidebar-tabs {
+		padding-left: $sidebar-padding;
+		padding-right: 0px;
+	}
+
 	.new-map .sidebar-content {
+		border-top: 1px solid $subtle-grey;		
 		top: $sidebar-header-height + $bootstrap-navbar-height;
 	}
 
