@@ -47,12 +47,12 @@ html, body {
 
 	font-family: 'Junction Light';
 
-	/* Override Bootstrap */
-	.navbar { 
-		margin-bottom: -$bootstrap-navbar-height; 
-	}
+	.navbar { margin-bottom: -$bootstrap-navbar-height; }
 
-	.sidebar-wrap { height: 100%; }
+	.sidebar-wrap { 
+		border-left: 1px solid $subtle-grey;
+		height: 100%;
+	}
 
 	.sidebar-inner-wrap {
 		position: absolute;
@@ -62,7 +62,6 @@ html, body {
 
 	.sidebar-header {
 		@include sidebar-padding();
-		// height: $sidebar-title-height;
 		margin-top: $bootstrap-navbar-height;
 		padding-bottom: $sidebar-title-padding;
 		padding-top: $sidebar-title-padding;		
@@ -88,19 +87,25 @@ html, body {
 		margin-top: 15px;
 	}
 
+	/* Styles for /maps/:id and /maps/:id/edit */
 	.sidebar-tabs {
 		padding-left: $sidebar-padding;
 		padding-right: 0px;
 	}
 
+	/* Styles for /maps/new */
 	.new-map .sidebar-content {
-		border-top: 1px solid $subtle-grey;		
+		border-top: 1px solid $subtle-grey;
 		top: $sidebar-header-height + $bootstrap-navbar-height;
 	}
 
-	.map-title-examples { list-style-type: none; }
+	/* Ensure that horizontal nav elements are hidden in the sidebar (not enough room). */
 	.sidebar-only { display: block; }
 	.fullscreen-only { display: none; }
+
+	/* Visual styles */
+	.map-title-examples { list-style-type: none; }
+
 	#latlngs {
 		width: 100%;
 		.form-group {
@@ -136,18 +141,6 @@ html, body {
 	}
 }
 
-#comments {
-	.comment-header {
-		background-color: #f2f2f2;
-		padding: 10px;
-		border-radius: 5px;
-		border: 1px solid #d4d4d4;
-		margin-bottom: 5px;
-	}
-	.comment-body { margin-bottom: 5px; }	
-}
-
-
 /* 
  * Override Bootstrap styles for when the nav is contained in the sidebar. 
  * This is to ensure that the navbar maintains a fixed height,
@@ -157,9 +150,9 @@ html, body {
 	float: left;
 	margin: 0;
 
-	li {
+	> li {
 		float: left;
-		a {
+		> a {
 			padding-top:    15px;
 			padding-bottom: 15px;
 		}
@@ -168,6 +161,17 @@ html, body {
 
 .sidebar-navbar-right {
 	float: right;
+}
+
+#comments {
+	.comment-header {
+		background-color: #f2f2f2;
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #d4d4d4;
+		margin-bottom: 5px;
+	}
+	.comment-body { margin-bottom: 5px; }	
 }
 	
 .tab-pane { padding-top: 10px; }
