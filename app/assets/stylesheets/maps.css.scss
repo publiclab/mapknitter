@@ -4,12 +4,11 @@ $sidebar-min-width: 400px;
 $sidebar-padding: 15px;
 
 $sidebar-title-height: 87px;
-$sidebar-title-padding: 15px;
+$sidebar-title-padding: $sidebar-padding;
 
-                        // bootstrap                           // visual tweak
-$sidebar-header-height: 50px         + $sidebar-title-height + 1;
-
-
+/* Change this to reflect the height of the Bootstrap navbar. */
+$bootstrap-navbar-height: 50px;
+$sidebar-header-height: $sidebar-title-height + 1;
 
 $subtle-grey: #e5e5e5;
 
@@ -40,6 +39,7 @@ html, body {
 .sidebar {
 	position: relative;
 	float: left;
+	overflow: hidden;
 
 	height: 100%;
 	width: $sidebar-width;
@@ -47,27 +47,35 @@ html, body {
 
 	font-family: 'Junction Light';
 
-	overflow: hidden;
-
 	/* Override Bootstrap */
-	.navbar { margin-bottom: 0; }
+	.navbar { 
+		margin-bottom: -$bootstrap-navbar-height; 
+	}
+
+	.sidebar-wrap { height: 100%; }
+
+	.sidebar-inner-wrap {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+	}
 
 	.sidebar-header {
 		@include sidebar-padding();
 		border-bottom: 1px solid $subtle-grey;
 		height: $sidebar-title-height;
+		margin-top: $bootstrap-navbar-height;
 		padding-bottom: $sidebar-title-padding;
 		padding-top: $sidebar-title-padding;		
 		h3 { margin: 0; }
 	}
 
 	.sidebar-content {
-		height: calc(100% - #{$sidebar-header-height} - 100px);
 		overflow-y: scroll;
 		overflow-x: hidden;
 
 		position: absolute;
-		top: $sidebar-header-height + 100px;
+		top: $sidebar-header-height + 100px + $bootstrap-navbar-height;
 		right: 0;
 		left: 0;
 		bottom: 0;
@@ -76,14 +84,10 @@ html, body {
 	}
 
 	.new-map .sidebar-content {
-		height: calc(100% - #{$sidebar-header-height});
-		top: $sidebar-header-height;
+		top: $sidebar-header-height + $bootstrap-navbar-height;
 	}
 
 	.map-title-examples { list-style-type: none; }
-	.new-map { 
-
-	}
 	.sidebar-only { display: block; }
 	.fullscreen-only { display: none; }
 	#latlngs {

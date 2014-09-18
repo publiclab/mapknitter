@@ -22,73 +22,75 @@
 	<div class="sidebar">
 		<%= render :partial => 'layouts/header' %>
 		<div class="sidebar-wrap">
-			<div class="sidebar-header"><%= yield :title %></div>
-			<% if @map.new_record? %>
-				<%= yield %>
-			<% else %>
-				<div class="sidebar-content-wrap">
-					<!-- Toolbar for uploading and viewing images and exporting the map. -->
-					<div class="btn-group btn-group-justified">
-						<!-- Upload images -->
-						<div class="btn-group">
-							<button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
-								<span class="glyphicon glyphicon-open"></span>
-							</button>
+			<div class="sidebar-inner-wrap">
+				<div class="sidebar-header"><%= yield :title %></div>
+				<% if @map.new_record? %>
+					<%= yield %>
+				<% else %>
+					<div class="sidebar-content-wrap">
+						<!-- Toolbar for uploading and viewing images and exporting the map. -->
+						<div class="btn-group btn-group-justified">
+							<!-- Upload images -->
+							<div class="btn-group">
+								<button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
+									<span class="glyphicon glyphicon-open"></span>
+								</button>
+							</div>
+
+							<!-- Write a research note on Public Lab -->
+							<div class="btn-group">
+								<a class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post">
+									<span class="glyphicon glyphicon-file"></span>
+								</a>
+							</div>
+
+							<!-- Export map -->
+							<div class="dropdown btn-group">
+								<button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
+									<span class="glyphicon glyphicon-save"></span>
+									<span class="caret"></span>							
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li class="dropdown-header">Export formats</li>
+									<li><a href=".">JPG</a></li>
+									<li><a href=".">GeoTIFF</a></li>
+									<li><a href=".">Tiled Map Service (TMS)</a></li>
+									<li><a href=".">OSM-TMS</a></li>
+									<li><a href=".">zipped TMS</a></li>
+									<li><a href=".">KML (beta)</a></li>
+									<li><a href=".">Order a print</a></li>
+									<li class="dropdown-header">Multispectral export formats</li>
+									<li><a href=".">Special format</a></li>
+								</ul>					
+							</div>
 						</div>
 
-						<!-- Write a research note on Public Lab -->
-						<div class="btn-group">
-							<a class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post">
-								<span class="glyphicon glyphicon-file"></span>
-							</a>
-						</div>
+						<div class="sidebar-tabs">
 
-						<!-- Export map -->
-						<div class="dropdown btn-group">
-							<button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-								<span class="glyphicon glyphicon-save"></span>
-								<span class="caret"></span>							
-							</button>
-							<ul class="dropdown-menu dropdown-menu-right" role="menu">
-								<li class="dropdown-header">Export formats</li>
-								<li><a href=".">JPG</a></li>
-								<li><a href=".">GeoTIFF</a></li>
-								<li><a href=".">Tiled Map Service (TMS)</a></li>
-								<li><a href=".">OSM-TMS</a></li>
-								<li><a href=".">zipped TMS</a></li>
-								<li><a href=".">KML (beta)</a></li>
-								<li><a href=".">Order a print</a></li>
-								<li class="dropdown-header">Multispectral export formats</li>
-								<li><a href=".">Special format</a></li>
-							</ul>					
-						</div>
-					</div>
+							<!-- Navigation tabs -->
+							<ul class="nav nav-tabs" role="tablist">
+								<li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
+								<li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images</a></li>
+								<li><a href="#map-editing-container" role="tab" data-toggle="tab">Edit History</a></li>
+							</ul>
 
-					<div class="sidebar-tabs">
+							<!-- Tabbed panes -->
+							<div class="tab-content sidebar-content">
+								<div class="tab-pane active" id="map-details-container">
+									<%= yield :details %>
+								</div>
+								<div class="tab-pane" id="map-images-container">
+									<%= yield :warpables %>
+								</div>
+								<div class="tab-pane" id="map-editing-container">
+									<%= render :partial => "sidebar_edit_history" %>
+								</div>
+							</div>	
 
-						<!-- Navigation tabs -->
-						<ul class="nav nav-tabs" role="tablist">
-							<li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
-							<li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images</a></li>
-							<li><a href="#map-editing-container" role="tab" data-toggle="tab">Edit History</a></li>
-						</ul>
-
-						<!-- Tabbed panes -->
-						<div class="tab-content sidebar-content">
-							<div class="tab-pane active" id="map-details-container">
-								<%= yield :details %>
-							</div>
-							<div class="tab-pane" id="map-images-container">
-								<%= yield :warpables %>
-							</div>
-							<div class="tab-pane" id="map-editing-container">
-								<%= render :partial => "sidebar_edit_history" %>
-							</div>
-						</div>	
-
-					</div><!-- .sidebar-tabs -->
-				</div><!-- .sidebar-content -->
-			<% end %>
+						</div><!-- .sidebar-tabs -->
+					</div><!-- .sidebar-content -->
+				<% end %>
+			</div><!-- .sidebar-inner-wrap -->
 		</div><!-- .sidebar-wrap -->
 	</div><!-- .sidebar -->
 
