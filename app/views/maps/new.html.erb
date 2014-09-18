@@ -1,12 +1,12 @@
-<% form_for @map, :html => { :class => "new-map" } do |f| %>
-
+<% content_for :title do %>
 	<div class="sidebar-title">
 		<h3>Create a new map</h3>
 		<p>Give your map a title, location, and description.</p>			
 	</div>
+<% end %>
 
-	<div class="new-map-form sidebar-content">
-
+<% form_for @map, :html => { :class => "new-map" } do |f| %>
+	<div class="sidebar-content">
 		<div class="form-group">
 			<%= f.label :name, "Title", :class => "h4" %>	
 			<%= f.text_field :name, :class => "form-control" %>					

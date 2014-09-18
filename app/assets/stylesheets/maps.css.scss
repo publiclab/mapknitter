@@ -47,16 +47,12 @@ html, body {
 
 	font-family: 'Junction Light';
 
+	overflow: hidden;
+
 	/* Override Bootstrap */
 	.navbar { margin-bottom: 0; }
 
-	.sidebar-container { 
-		width: 100%; 
-		height: 100%;
-		position: relative;
-	}
-
-	.sidebar-title {
+	.sidebar-header {
 		@include sidebar-padding();
 		border-bottom: 1px solid $subtle-grey;
 		height: $sidebar-title-height;
@@ -66,19 +62,28 @@ html, body {
 	}
 
 	.sidebar-content {
+		height: calc(100% - #{$sidebar-header-height} - 100px);
+		overflow-y: scroll;
+		overflow-x: hidden;
+
 		position: absolute;
+		top: $sidebar-header-height + 100px;
 		right: 0;
 		left: 0;
 		bottom: 0;
-		height: calc(100% - #{$sidebar-header-height});
-		overflow-y: scroll;
-		overflow-x: hidden;
 
 		@include sidebar-padding();
 	}
 
+	.new-map .sidebar-content {
+		height: calc(100% - #{$sidebar-header-height});
+		top: $sidebar-header-height;
+	}
+
 	.map-title-examples { list-style-type: none; }
-	.new-map { height: 100%; overflow: hidden; }
+	.new-map { 
+
+	}
 	.sidebar-only { display: block; }
 	.fullscreen-only { display: none; }
 	#latlngs {
@@ -97,10 +102,6 @@ html, body {
 			color: #000;
 			font-weight: normal;
 		}
-	}
-	.tab-content {
-		height: 70%;
-		overflow-y: auto;
 	}
 	table {
 		width: 100%;
@@ -151,8 +152,7 @@ html, body {
 }
 
 .sidebar-navbar-right {
-	float: right !important;
-	margin-right: -15px;
+	float: right;
 }
 	
 .tab-pane { padding-top: 10px; }

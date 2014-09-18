@@ -20,17 +20,13 @@
 <body>
 	<div id="knitter-map-pane"></div>
 	<div class="sidebar">
-		<div class="sidebar-container">
-			<div class="sidebar-header">
-				<%= render :partial => 'layouts/header' %>
-			</div>
-			<div class="sidebar-wrap">
+		<%= render :partial => 'layouts/header' %>
+		<div class="sidebar-wrap">
+			<div class="sidebar-header"><%= yield :title %></div>
 			<% if @map.new_record? %>
 				<%= yield %>
 			<% else %>
-				<!-- Map title and author -->
-				<div class="sidebar-title"><%= yield :title %></div>
-				<div class="sidebar-content">
+				<div class="sidebar-content-wrap">
 					<!-- Toolbar for uploading and viewing images and exporting the map. -->
 					<div class="btn-group btn-group-justified">
 						<!-- Upload images -->
@@ -78,7 +74,7 @@
 						</ul>
 
 						<!-- Tabbed panes -->
-						<div class="tab-content">
+						<div class="tab-content sidebar-content">
 							<div class="tab-pane active" id="map-details-container">
 								<%= yield :details %>
 							</div>
@@ -93,8 +89,7 @@
 					</div><!-- .sidebar-tabs -->
 				</div><!-- .sidebar-content -->
 			<% end %>
-			</div><!-- .sidebar-wrap -->
-		</div><!-- .sidebar-container -->
+		</div><!-- .sidebar-wrap -->
 	</div><!-- .sidebar -->
 
 	<%= render :partial => "/warpables/new" %>
