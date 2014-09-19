@@ -254,7 +254,7 @@
       });
 
     </script>
-    <% unless logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <% unless logged_in? || @map.user_id != 0 %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
     <label for="description">Description</label>
     <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
     
