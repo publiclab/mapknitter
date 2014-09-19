@@ -3,19 +3,30 @@ MapKnitter.Annotations.include({
 	initialize: function(options) {
 		MapKnitter.Resources.prototype.initialize.call(this, options);
 
-		var map = options.map;
+		var map = options.map
+			drawOptions = {};
 
 		this._map = map;
 		this._drawnItems = new L.FeatureGroup().addTo(map);
 
+		/* Read in styles from MapKnitter.Annotations.style */
+		for (var annotationType in MapKnitter.Annotations.style) {
+			if (MapKnitter.Annotations.style.hasOwnProperty(annotationType)) {
+				drawOptions[annotationType] = {
+					shapeOptions: MapKnitter.Annotations.style[annotationType]
+				}
+			}
+		}
+
 		new MapKnitter.Annotations.Toolbar({
 			position: 'topright',
-			edit: { featureGroup: this._drawnItems }
+			edit: { featureGroup: this._drawnItems },
+			draw: drawOptions
 		}).addTo(map);
 
 		this._initEvents();
 
-		/* Get annotations for this map. */
+		/* Get annotations for this map from the database. */
 		this.retrieve(function(annotations) {
 			new L.GeoJSON(annotations, { 
 				pointToLayer: this._pointToLayer.bind(this),
@@ -88,12 +99,14 @@ MapKnitter.Annotations.include({
 	},
 
 	toJSON: function(annotation) {
-		var geojson = L.extend(annotation.toGeoJSON(), {
-				properties: { 
-					annotation_type: annotation.type,
-					style: {}
-				}
-			});
+		var geojson = annotation.toGeoJSON();
+
+		if (!geojson.properties.style) {
+			geojson.properties.style = {};
+		}
+
+		/* Add annotation type and style. */
+		L.extend(geojson.properties, { annotation_type: annotation.type });
 
 		switch (annotation.type) {
 			case 'circle':
