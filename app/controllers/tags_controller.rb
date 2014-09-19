@@ -7,6 +7,19 @@ class TagsController < ApplicationController
     end
 
     def create
+        # there is identical code in MapsController#update.
+        # TODO: DRY up this functionality.
+
+        @map = Map.find params[:map_id]
+
+        # save new tags
+        if params[:tags]
+          params[:tags].gsub(' ', ',').split(',').each do |tagname|
+            @map.add_tag(tagname.strip, current_user)
+          end
+        end
+
+        redirect_to "/maps/" + params[:map_id]
     end
 
     def show

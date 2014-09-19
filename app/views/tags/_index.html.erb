@@ -1,4 +1,4 @@
-<% form_for [@map, Tag.new], :html => { :method => "put" } do |m| %>
+<% form_for [@map, Tag.new], :html => { :method => "post" } do |m| %>
 	<div class="form-group">
 		<span class="map-detail-label"></span>
 		<p><span id="tags">
@@ -17,7 +17,10 @@
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-tags"></span>
 			</span>
-			<input class="form-control" type="text" placeholder="Enter tags" name="tags"></input>
+			<input class="form-control" type="text" placeholder="Enter tags" name="tags" id="new-tags"></input>
 		</div>	
 	</div>
+	<script>
+		new MapKnitter.Tags({ tagInputId: 'new_tag' });
+	</script>
 <% end %>
