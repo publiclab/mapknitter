@@ -117,7 +117,8 @@ class MapController < ApplicationController
 
   def update_map
     @map = Map.find(params[:map][:id])
-    if @map.user_id != 0
+    if @map.user_id != 0 && logged_in?# if it's not anonymous
+      #if logged_in? && current_user.role == "admin"
       if params[:latitude] == '' && params[:longitude] == ''
         puts 'geocoding'
         begin
@@ -164,7 +165,7 @@ class MapController < ApplicationController
         redirect_to '/map/view/'+@map.name
       end 
     else
-      flash[:warning] = "This map cannot be edited by anonymous users. Please log in to edit it."
+      flash[:error] = "This map cannot be edited by anonymous users. Please log in to edit it."
       redirect_to '/map/view/'+@map.name
     end 
   end
