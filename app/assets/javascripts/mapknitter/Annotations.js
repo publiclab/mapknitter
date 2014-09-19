@@ -8,12 +8,7 @@ MapKnitter.Annotations.include({
 		this._map = map;
 		this._drawnItems = new L.FeatureGroup().addTo(map);
 
-		new L.Illustrate.Control({
-			position: 'topright',
-			edit: { featureGroup: this._drawnItems }
-		}).addTo(map);
-
-		new L.Control.Draw({
+		new MapKnitter.Annotations.Toolbar({
 			position: 'topright',
 			edit: { featureGroup: this._drawnItems }
 		}).addTo(map);
@@ -25,6 +20,7 @@ MapKnitter.Annotations.include({
 			new L.GeoJSON(annotations, { 
 				pointToLayer: this._pointToLayer.bind(this),
 				onEachFeature: function(geojson, layer) {
+					layer.type = geojson.properties.annotation_type;
 					this._onAnnotationAdd(layer);
 					this.stampResource(layer, geojson.properties.id);					
 				}.bind(this)
@@ -42,6 +38,11 @@ MapKnitter.Annotations.include({
 
 			/* Display annotation on the map. */
 			this._onAnnotationAdd(layer);
+
+			if (layer.type === 'textbox') {
+				/* Focus on the textarea. */
+				layer.getTextarea().focus();				
+			}
 
 			/* Create new database record via AJAX request; see MapKnitter.Resources#create. */
 			this.create(layer, function(geojsonResponse) {
@@ -70,12 +71,10 @@ MapKnitter.Annotations.include({
 
 	_onAnnotationAdd: function(annotation) {
 		this._drawnItems.addLayer(annotation);
+		this._setStyle(annotation);
 
 		switch (annotation.type) {
 			case 'textbox':
-				/* Focus on the textarea. */
-				annotation.getTextarea().focus();
-
 				/* Need to listen for text edits on textboxes */
 				annotation.on('textedit', function() {
 					if (annotation.editing.enabled()) {
@@ -126,6 +125,12 @@ MapKnitter.Annotations.include({
 		}
 
 		return annotation;
+	},
+
+	_setStyle: function(annotation) {
+		if (annotation.setStyle) {
+			annotation.setStyle(MapKnitter.Annotations.style[annotation.type]);
+		}
 	},
 
 	stampResource: function(annotation, id) {

@@ -23,7 +23,7 @@ group :dependencies do
 	gem "sass"
 	gem "autoprefixer-rails"
 
-	gem "friendly_id", "3.3.3.0"
+	# gem "friendly_id", "3.3.3.0"
 end
 
 group :development do
