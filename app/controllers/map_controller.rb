@@ -117,49 +117,55 @@ class MapController < ApplicationController
 
   def update_map
     @map = Map.find(params[:map][:id])
-    if params[:latitude] == '' && params[:longitude] == ''
-      puts 'geocoding'
-      begin
-        if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
-        @map.description = params[:map][:description]
-        @map.location = params[:map][:location]
-          location = GeoKit::GoogleV3Geocoder.geocode(params[:map][:location])
-          @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
-          @map.lat = location.lat
-          @map.lon = location.lng
-          if location
-            if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
-              if @map.save
-                flash[:notice] = "Map saved"
+    if @map.user_id != 0 && logged_in?# if it's not anonymous
+      #if logged_in? && current_user.role == "admin"
+      if params[:latitude] == '' && params[:longitude] == ''
+        puts 'geocoding'
+        begin
+          if @map.password == "" || Password::check(params[:password],@map.password) || params[:password] == APP_CONFIG["password"]
+          @map.description = params[:map][:description]
+          @map.location = params[:map][:location]
+            location = GeoKit::GoogleV3Geocoder.geocode(params[:map][:location])
+            @map.password = params[:map][:password] if params[:password] == APP_CONFIG["password"]
+            @map.lat = location.lat
+            @map.lon = location.lng
+            if location
+              if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
+                if @map.save
+                  flash[:notice] = "Map saved"
+                else
+                  flash[:error] = "Failed to save"
+                end
               else
-                flash[:error] = "Failed to save"
+                flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
               end
             else
-              flash[:error] = "ReCAPTCHA thinks you're not a human! Try one more time."
+              flash[:error] = "Location not recognized"
             end
+            redirect_to '/map/view/'+@map.name
           else
-            flash[:error] = "Location not recognized"
+            flash[:error] = "That password is incorrect." if params[:password] != nil
+            redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
           end
-          redirect_to '/map/view/'+@map.name
-        else
-          flash[:error] = "That password is incorrect." if params[:password] != nil
-          redirect_to "/map/login/"+params[:id]+"?to=/map/view/"+params[:id]
+        rescue
+          flash[:error] = "Geocoding failed. Please enter a more specific address."
+          redirect_to "/map/view/"+params[:id]
         end
-      rescue
-        flash[:error] = "Geocoding failed. Please enter a more specific address."
-        redirect_to "/map/view/"+params[:id]
-      end
-    else
-      puts 'nogeocoding'
-      @map.lat = params[:latitude]
-      @map.lon = params[:longitude]
-      @map.description = params[:map][:description]
-      @map.location = params[:map][:location]
-      if @map.save
-        flash[:notice] = "Map updated."
       else
-        flash[:error] = "The map could not be updated. Try a more specific location or contact web@publiclab.org if you continue to have trouble."
-      end
+        puts 'nogeocoding'
+        @map.lat = params[:latitude]
+        @map.lon = params[:longitude]
+        @map.description = params[:map][:description]
+        @map.location = params[:map][:location]
+        if @map.save
+          flash[:notice] = "Map updated."
+        else
+          flash[:error] = "The map could not be updated. Try a more specific location or contact web@publiclab.org if you continue to have trouble."
+        end
+        redirect_to '/map/view/'+@map.name
+      end 
+    else
+      flash[:error] = "This map cannot be edited by anonymous users. Please log in to edit it."
       redirect_to '/map/view/'+@map.name
     end 
   end
@@ -243,7 +249,70 @@ class MapController < ApplicationController
     render :layout => 'knitter'
     end
   end
-
+  
+  def leafletbeta
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
+    @map.zoom = 1.6 if @map.zoom == 0
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
+    render :layout => 'leafletknitter'
+    end
+  end
+  
+  def leafletbeta2
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
+    @map.zoom = 1.6 if @map.zoom == 0
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
+    render :layout => 'leafletknitter'
+    end
+  end
+  
+  def leafletbeta3
+    @map = Map.find_by_name(params[:id],:order => 'version DESC')
+    if @map.password != "" && !Password::check(params[:password],@map.password) && params[:password] != APP_CONFIG["password"]
+      flash[:error] = "That password is incorrect." if params[:password] != nil
+      redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
+    else
+    @map.zoom = 1.6 if @map.zoom == 0
+    @warpables = @map.flush_unplaced_warpables
+    @nodes = @map.nodes
+    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+      location = GeoKit::GeoLoc.geocode(@map.location)
+      @map.lat = location.lat
+      @map.lon = location.lng
+	puts @map.lat
+	puts @map.lon
+      @map.save
+    end
+    render :layout => 'leafletknitter'
+    end
+  end
+  
   def search
     params[:id] ||= params[:q]
     @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
