@@ -4,7 +4,7 @@ class MapController < ApplicationController
 
   def index
     # only maps with at least 1 warpable:
-    @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :joins => :warpables, :group => "maps.id", :limit => 24
+    @maps = Map.find :all, :conditions => {:archived => false, :password => ''}, :order => 'updated_at DESC', :group => "maps.id", :limit => 24
     @notes = Node.find :all, :order => "id DESC", :limit => 5
     @unpaginated = true
     @authors = Map.find(:all, :limit => 12, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = "false"']).collect(&:author)
@@ -333,11 +333,11 @@ class MapController < ApplicationController
 		export.jpg = false
 		export.save       
 
-		directory = RAILS_ROOT+"/public/warps/"+map.name+"/"
+		directory = Rails.root+"/public/warps/"+map.name+"/"
 		stdin, stdout, stderr = Open3.popen3('rm -r '+directory)
 		puts stdout.readlines
 		puts stderr.readlines
-		stdin, stdout, stderr = Open3.popen3('rm -r '+RAILS_ROOT+'/public/tms/'+map.name)
+		stdin, stdout, stderr = Open3.popen3('rm -r '+Rails.root+'/public/tms/'+map.name)
 		puts stdout.readlines
 		puts stderr.readlines
 	

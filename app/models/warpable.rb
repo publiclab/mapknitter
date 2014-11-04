@@ -1,99 +1,80 @@
-require "open3"
-require "fileutils"
-
 class Warpable < ActiveRecord::Base
-  
-  has_attachment :content_type => :image, 
-                 :storage => APP_CONFIG["file_storage"], 
-                 #:storage => :s3, 
-                 #:storage => :file_system,
-                 :path_prefix => APP_CONFIG["file_path_prefix"],
-                 #:path_prefix => 'public/warpables', 
-                 :max_size => 30.megabytes,
-                 :processor => :image_science,
-                 :thumbnails => { :medium => '500x375', :small => '240x180', :thumb => '100x100>' }
+ 
+  # remaming configs from attachment_fu: 
+  # :storage => APP_CONFIG["file_storage"], 
 
-  # validates_as_attachment
+  # Paperclip
+  has_attached_file :image,
+    #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
+    #:url => "/system/:attachment/:id/:style/:filename",
+    :path => "paperclip/:id/:style/:filename",
+    # should start using
+    #:path => "warpables/:id/:style/:filename",
+    :storage => :s3,
+    :s3_credentials => ":rails_root/config/amazon_s3.yml",
+    :styles => {
+      :medium=> "500x375",
+      :small=> "240x180",
+      :thumb =>   "100x100>" }
 
-  def validate
-    errors.add_to_base("You must choose a file to upload") unless self.filename
-    
-    unless self.filename == nil
-      
-      # Images should only be GIF, JPEG, or PNG
-      [:content_type].each do |attr_name|
-        enum = attachment_options[attr_name]
-        unless enum.nil? || enum.include?(send(attr_name))
-          errors.add_to_base("You can only upload images (GIF, JPEG, or PNG)")
-        end
-      end
-      
-      # Images should be less than 5 MB
-      [:size].each do |attr_name|
-        enum = attachment_options[attr_name]
-        unless enum.nil? || enum.include?(send(attr_name))
-          errors.add_to_base("Images should be smaller than 10 MB in size")
-        end
-      end
-    end
-  end 
+  belongs_to :map
 
   def poly_area
-	area = 0
-	nodes = self.nodes_array
-	nodes.each_with_index do |node,index|
-		if index < nodes.length-1
-			nextnode = nodes[index+1]
-		else
-			nextnode = nodes[0]
-		end
-		if index > 0
-			last = nodes[index-1]
-		else
-			last = nodes[nodes.length-1]
-		end
-		scale = 20037508.34
-		# inefficient but workable, we don't use this that often:
-
-    		nodey = Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
-    		nodex = Cartagen.spherical_mercator_lon_to_x(node.lon,scale)
-    		lasty = Cartagen.spherical_mercator_lat_to_y(last.lat,scale)
-    		lastx = Cartagen.spherical_mercator_lon_to_x(last.lon,scale)
-    		nexty = Cartagen.spherical_mercator_lat_to_y(nextnode.lat,scale)
-    		nextx = Cartagen.spherical_mercator_lon_to_x(nextnode.lon,scale)
-		area += lastx*nodey-nodex*lasty+nodex*nexty-nextx*nodey
-	end
-	(area/2).abs
+    area = 0
+    nodes = self.nodes_array
+    nodes.each_with_index do |node,index|
+      if index < nodes.length-1
+        nextnode = nodes[index+1]
+      else
+        nextnode = nodes[0]
+      end
+      if index > 0
+        last = nodes[index-1]
+      else
+        last = nodes[nodes.length-1]
+      end
+      scale = 20037508.34
+      # inefficient but workable, we don't use this that often:
+ 
+          nodey = Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
+          nodex = Cartagen.spherical_mercator_lon_to_x(node.lon,scale)
+          lasty = Cartagen.spherical_mercator_lat_to_y(last.lat,scale)
+          lastx = Cartagen.spherical_mercator_lon_to_x(last.lon,scale)
+          nexty = Cartagen.spherical_mercator_lat_to_y(nextnode.lat,scale)
+          nextx = Cartagen.spherical_mercator_lon_to_x(nextnode.lon,scale)
+      area += lastx*nodey-nodex*lasty+nodex*nexty-nextx*nodey
+    end
+    (area/2).abs
   end
 
   def get_cm_per_pixel
-	unless self.width.nil? || self.nodes == ''
-		nodes = self.nodes_array
-		# haversine might be more appropriate for large images
-		scale = 20037508.34
-    		y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
-    		x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
-    		y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
-    		x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
-		dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
-		#puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
-		#puts (x2-x1).to_s+','+(y2-y1).to_s
-		#puts 'scale: '+((warpable.width)/dist).to_s+' & dist: '+dist.to_s
-		scale = (dist*100)/(self.width) unless self.width.nil? || dist.nil?
-	end
-	scale
+    unless self.width.nil? || self.nodes == ''
+      nodes = self.nodes_array
+      # haversine might be more appropriate for large images
+      scale = 20037508.34
+          y1 = Cartagen.spherical_mercator_lat_to_y(nodes[0].lat,scale)
+          x1 = Cartagen.spherical_mercator_lon_to_x(nodes[0].lon,scale)
+          y2 = Cartagen.spherical_mercator_lat_to_y(nodes[1].lat,scale)
+          x2 = Cartagen.spherical_mercator_lon_to_x(nodes[1].lon,scale)
+      dist = Math.sqrt(((y2-y1)*(y2-y1))+((x2-x1)*(x2-x1)))
+      #puts 'x1,y1: '+x1.to_s+','+y1.to_s+' x2,y2: '+x2.to_s+','+y2.to_s
+      #puts (x2-x1).to_s+','+(y2-y1).to_s
+      #puts 'scale: '+((warpable.width)/dist).to_s+' & dist: '+dist.to_s
+      scale = (dist*100)/(self.width) unless self.width.nil? || dist.nil?
+    end
+    scale
   end
 
   def self.histogram_cm_per_pixel
-	w = Warpable.find :all, :conditions => ['cm_per_pixel != 0 AND cm_per_pixel < 500'], :order => "cm_per_pixel DESC"
-	hist = []
-	(0..w.first.cm_per_pixel.to_i).each do |bin|
-		hist[bin] = 0
-	end
-	w.each do |warpable|
-		hist[warpable.cm_per_pixel.to_i] += 1
-	end
-	hist
+    w = Warpable.find :all, :conditions => ['cm_per_pixel != 0 AND cm_per_pixel < 500'], :order => "cm_per_pixel DESC"
+    hist = []
+    (0..w.first.cm_per_pixel.to_i).each do |bin|
+      hist[bin] = 0
+    end
+    w.each do |warpable|
+      hist[warpable.cm_per_pixel.to_i] += 1
+    end
+    hist
   end
 
   def nodes_array
@@ -101,6 +82,7 @@ class Warpable < ActiveRecord::Base
   end
 
   # allow uploads via URL
+  # needs update for Paperclip!!
   require 'open-uri'
   attr_reader :url
   def url=(uri)
@@ -165,7 +147,7 @@ class Warpable < ActiveRecord::Base
         }
       }
     else
-      File.copy(RAILS_ROOT+'/public'+self.public_filename,local_location)
+      File.copy(Rails.root+'/public'+self.public_filename,local_location)
     end
 
     points = ""
@@ -174,20 +156,20 @@ class Warpable < ActiveRecord::Base
     first = true
  
 #EXIF orientation values: 
-#Value	0th Row	0th Column
-#1	top	left side
-#2	top	right side
-#3	bottom	right side
-#4	bottom	left side
-#5	left side	top
-#6	right side	top
-#7	right side	bottom
-#8	left side	bottom
-	
-	rotation = (`identify -format %[exif:Orientation] #{local_location}`).to_i	
-	#stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
-	#rotation = stdout.readlines.first.to_s.to_i
-	#puts stderr.readlines
+#Value  0th Row  0th Column
+#1  top  left side
+#2  top  right side
+#3  bottom  right side
+#4  bottom  left side
+#5  left side  top
+#6  right side  top
+#7  right side  bottom
+#8  left side  bottom
+  
+  rotation = (`identify -format %[exif:Orientation] #{local_location}`).to_i  
+  #stdin, stdout, stderr = Open3.popen3('identify -format %[exif:Orientation] #{local_location}')
+  #rotation = stdout.readlines.first.to_s.to_i
+  #puts stderr.readlines
 
     if rotation == 6
       puts 'rotated CCW'
@@ -235,11 +217,11 @@ class Warpable < ActiveRecord::Base
     height = (y1-y2).to_i.to_s
     width = (-x1+x2).to_i.to_s
 
-	# http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&t=11319
-	# http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=8764
-	# read about equalization 
-	# -equalize
-	# -contrast-stretch 0
+  # http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&t=11319
+  # http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=8764
+  # read about equalization 
+  # -equalize
+  # -contrast-stretch 0
 
     imageMagick = "convert "
     imageMagick += "-contrast-stretch 0 "
@@ -249,44 +231,44 @@ class Warpable < ActiveRecord::Base
     imageMagick += "-distort Perspective '"+points+"' "
     imageMagick += "-flatten "
     if width > height
-	imageMagick += "-crop "+width+"x"+width+"+0+0\! "
+  imageMagick += "-crop "+width+"x"+width+"+0+0\! "
     else
-	imageMagick += "-crop "+height+"x"+height+"+0+0\! "
+  imageMagick += "-crop "+height+"x"+height+"+0+0\! "
     end
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
-	system(Gdal.ulimit+imageMagick)
+  system(Gdal.ulimit+imageMagick)
 
     # create a mask (later we can blur edges here)
     imageMagick2 = 'convert +antialias '
     if width > height
-	imageMagick2 += "-size "+width+"x"+width+" "
+  imageMagick2 += "-size "+width+"x"+width+" "
     else
-	imageMagick2 += "-size "+height+"x"+height+" "
+  imageMagick2 += "-size "+height+"x"+height+" "
     end
-	# attempt at blurred edges in masking, but I've given up, as gdal_merge doesn't seem to respect variable-opacity alpha channels
-    	imageMagick2 += ' xc:none -draw "fill black stroke red stroke-width 30 polyline '
-    	imageMagick2 += maskpoints + '" '
-    	imageMagick2 += ' -alpha set -channel A -transparent red -blur 0x8 -channel R -evaluate set 0 +channel '+mask_location
+  # attempt at blurred edges in masking, but I've given up, as gdal_merge doesn't seem to respect variable-opacity alpha channels
+      imageMagick2 += ' xc:none -draw "fill black stroke red stroke-width 30 polyline '
+      imageMagick2 += maskpoints + '" '
+      imageMagick2 += ' -alpha set -channel A -transparent red -blur 0x8 -channel R -evaluate set 0 +channel '+mask_location
     #imageMagick2 += ' xc:none -draw "fill black stroke none polyline '
     #imageMagick2 += maskpoints + '" '
     #imageMagick2 += ' '+mask_location
     puts imageMagick2
-	system(Gdal.ulimit+imageMagick2)
+  system(Gdal.ulimit+imageMagick2)
 
     imageMagick3 = 'composite '+mask_location+' '+completed_local_location+' -compose DstIn -alpha Set '+masked_local_location
     puts imageMagick3
-	system(Gdal.ulimit+imageMagick3)
+  system(Gdal.ulimit+imageMagick3)
 
     gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+masked_local_location+' '+geotiff_location
     puts gdal_translate
-	system(Gdal.ulimit+gdal_translate)
+  system(Gdal.ulimit+gdal_translate)
  
     #gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     gdalwarp = 'gdalwarp -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
-	system(Gdal.ulimit+gdalwarp)
+  system(Gdal.ulimit+gdalwarp)
 
     # deletions could happen here; do it in distinct method so we can run it independently
     self.delete_temp_files(path)

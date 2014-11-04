@@ -1,14 +1,11 @@
 development:
-  bucket_name:
+  bucket: "grassrootsmapping"
   access_key_id: 
   secret_access_key: 
-
 test:
-  bucket_name: 
   access_key_id: 
   secret_access_key:
-
 production:
-  bucket_name: 
+  bucket: "grassrootsmapping"
   access_key_id: 
   secret_access_key: 

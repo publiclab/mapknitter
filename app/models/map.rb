@@ -245,7 +245,7 @@ class Map < ActiveRecord::Base
     puts '> generating tiles'
     # make tiles:
     google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'-nrg" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-nrg.tif '+RAILS_ROOT+'/public/tms/'+self.name+"-nrg/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'-nrg" -g "'+google_api_key+'" '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-nrg.tif '+Rails.root+'/public/tms/'+self.name+"-nrg/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
@@ -344,16 +344,16 @@ class Map < ActiveRecord::Base
 	geotiff_location
   end
   
-  # generates a tileset at RAILS_ROOT/public/tms/<map_name>/
+  # generates a tileset at Rails.root/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/tms/'+self.name+"/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
   end
 
-  # zips up tiles at RAILS_ROOT/public/tms/<map_name>.zip
+  # zips up tiles at Rails.root/public/tms/<map_name>.zip
   def zip_tiles
       rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
       system(Gdal.ulimit+rmzip)
@@ -364,8 +364,8 @@ class Map < ActiveRecord::Base
   end
  
   def generate_jpg(export_type)
-	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'.jpg' if export_type == "normal"
-	imageMagick = 'convert -background white -flatten '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-'+export_type+'.tif '+RAILS_ROOT+'/public/warps/'+self.name+'/'+self.name+'-nrg.jpg' if export_type == "nrg"
+	imageMagick = 'convert -background white -flatten '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'.jpg' if export_type == "normal"
+	imageMagick = 'convert -background white -flatten '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-'+export_type+'.tif '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-nrg.jpg' if export_type == "nrg"
 	system(Gdal.ulimit+imageMagick)
   end
  
