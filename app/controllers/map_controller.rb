@@ -172,11 +172,11 @@ class MapController < ApplicationController
       render :action=>"index", :controller=>"map"
     else
       if params[:latitude] == '' && params[:longitude] == ''
-	location = ''
-	puts 'geocoding'
+  location = ''
+  puts 'geocoding'
         begin
           location = GeoKit::GeoLoc.geocode(params[:location])
-	  @map = Map.new({:lat => location.lat,
+    @map = Map.new({:lat => location.lat,
             :lon => location.lng,
             :name => params[:name],
             :description => params[:description],
@@ -186,16 +186,16 @@ class MapController < ApplicationController
             :tiles => params[:tiles],
             :location => params[:location]})
         rescue
-	  @map = Map.new({
+    @map = Map.new({
             :name => params[:name],
             :description => params[:description],
             :author => params[:author],
             :license => params[:license],
             :tiles => params[:tiles],
             :email => params[:email]})
-	end
+  end
       else
-	puts 'nogeocoding'
+  puts 'nogeocoding'
         @map = Map.new({:lat => params[:latitude],
             :lon => params[:longitude],
             :name => params[:name],
@@ -211,7 +211,7 @@ class MapController < ApplicationController
       if Rails.env.development? && @map.save || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?) && @map.save
         redirect_to :action => 'show', :id => @map.name
       else
-	index
+  index
         render :action=>"index", :controller=>"map"
       end
     end
@@ -234,8 +234,8 @@ class MapController < ApplicationController
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
       @map.lon = location.lng
-	puts @map.lat
-	puts @map.lon
+  puts @map.lat
+  puts @map.lon
       @map.save
     end
     render :layout => 'knitter'
@@ -275,10 +275,10 @@ class MapController < ApplicationController
 
   def geolocate
     begin
-	@location = GeoKit::GeoLoc.geocode(params[:q])
-	render :layout => false
+      @location = GeoKit::GeoLoc.geocode(params[:q])
+      render :layout => false
     rescue
-	render :text => "No results"
+      render :text => "No results"
     end
   end
  
@@ -287,115 +287,115 @@ class MapController < ApplicationController
   end
   
   def output
-	@map = Map.find params[:id] 
-	if @export = @map.latest_export
-		@running = (@export.status != 'complete' && @export.status != 'none' && @export.status != 'failed')
-	else
-		@running = false
-	end
-	if @nrg_export = @map.get_export('nrg')
-		@nrg_running = (@nrg_export.status != 'complete' && @nrg_export.status != 'none' && @nrg_export.status != 'failed')
-	else
-		@nrg_running = false
-	end
-	render :layout => false
+    @map = Map.find params[:id] 
+    if @export = @map.latest_export
+      @running = (@export.status != 'complete' && @export.status != 'none' && @export.status != 'failed')
+    else
+      @running = false
+    end
+    if @nrg_export = @map.get_export('nrg')
+      @nrg_running = (@nrg_export.status != 'complete' && @nrg_export.status != 'none' && @nrg_export.status != 'failed')
+    else
+      @nrg_running = false
+    end
+    render :layout => false
   end
 
   def layers
-	@map = Map.find params[:id]
-	render :layout => false
+    @map = Map.find params[:id]
+    render :layout => false
   end
 
   # start with NRG
   def composite
-	# write this in map model, really
-	@map = Map.find_by_name params[:id]
-	if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
-		# BRINGS SYSTEM TO A HALT! inspect ulimit params
-		#@map.composite(params[:type],params[:infrared])
-	end
-        render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
+    # write this in map model, really
+    @map = Map.find_by_name params[:id]
+    if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
+      # BRINGS SYSTEM TO A HALT! inspect ulimit params
+      #@map.composite(params[:type],params[:infrared])
+    end
+          render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
 
   def export
-	export_type = "normal"
-	map = Map.find_by_name params[:id]
-	if Rails.env.development? || (verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
-	begin
-		unless export = map.get_export(export_type) # searches only "normal" exports
-			export = Export.new({:map_id => map.id,:status => 'starting'})
-			export.user_id = current_user.id if logged_in?
-		end
-		export.status = 'starting'
-		export.tms = false
-		export.geotiff = false
-		export.zip = false
-		export.jpg = false
-		export.save       
-
-		directory = Rails.root+"/public/warps/"+map.name+"/"
-		stdin, stdout, stderr = Open3.popen3('rm -r '+directory)
-		puts stdout.readlines
-		puts stderr.readlines
-		stdin, stdout, stderr = Open3.popen3('rm -r '+Rails.root+'/public/tms/'+map.name)
-		puts stdout.readlines
-		puts stderr.readlines
-	
-		puts '> averaging scales'
-		pxperm = 100/(params[:resolution]).to_f || map.average_scale # pixels per meter
-	
-		puts '> distorting warpables'
-		origin = map.distort_warpables(pxperm)
-		warpable_coords = origin.pop	
-
-		export = map.get_export(export_type)
-		export.status = 'compositing'
-		export.save
-	
-		puts '> generating composite tiff'
-		geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
-	
-		info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
-		puts info
-	
-		export = map.get_export(export_type)
-		if info[0] != ''
-			export.geotiff = true
-			export.size = info[0]
-			export.width = info[1]
-			export.height = info[2]
-			export.cm_per_pixel = 100.0000/pxperm
-			export.status = 'tiling'
-			export.save
-		end
-	
-		puts '> generating tiles'
-		export = map.get_export(export_type)
-		export.tms = true if map.generate_tiles
-		export.status = 'zipping tiles'
-		export.save
-
-		puts '> zipping tiles'
-		export = map.get_export(export_type)
-		export.zip = true if map.zip_tiles
-		export.status = 'creating jpg'
-		export.save
-
-		puts '> generating jpg'
-		export = map.get_export(export_type)
-		export.jpg = true if map.generate_jpg("normal")
-		export.status = 'complete'
-		export.save
-	
-	rescue SystemCallError
-  	#	$stderr.print "failed: " + $!
-		export = map.get_export(export_type)
-		export.status = 'failed'
-		export.save
-	end
-        render :text => "new Ajax.Updater('formats','/export/formats/#{map.id}')"
+    export_type = "normal"
+    map = Map.find_by_name params[:id]
+    if Rails.env.development? || (verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
+    begin
+      unless export = map.get_export(export_type) # searches only "normal" exports
+        export = Export.new({:map_id => map.id,:status => 'starting'})
+        export.user_id = current_user.id if logged_in?
+      end
+      export.status = 'starting'
+      export.tms = false
+      export.geotiff = false
+      export.zip = false
+      export.jpg = false
+      export.save       
+  
+      directory = Rails.root+"/public/warps/"+map.name+"/"
+      stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
+      puts stdout.readlines
+      puts stderr.readlines
+      stdin, stdout, stderr = Open3.popen3('rm -r '+Rails.root.to_s+'/public/tms/'+map.name)
+      puts stdout.readlines
+      puts stderr.readlines
+    
+      puts '> averaging scales'
+      pxperm = 100/(params[:resolution]).to_f || map.average_scale # pixels per meter
+    
+      puts '> distorting warpables'
+      origin = map.distort_warpables(pxperm)
+      warpable_coords = origin.pop  
+  
+      export = map.get_export(export_type)
+      export.status = 'compositing'
+      export.save
+    
+      puts '> generating composite tiff'
+      geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
+    
+      info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
+      puts info
+    
+      export = map.get_export(export_type)
+      if info[0] != ''
+        export.geotiff = true
+        export.size = info[0]
+        export.width = info[1]
+        export.height = info[2]
+        export.cm_per_pixel = 100.0000/pxperm
+        export.status = 'tiling'
+        export.save
+      end
+    
+      puts '> generating tiles'
+      export = map.get_export(export_type)
+      export.tms = true if map.generate_tiles
+      export.status = 'zipping tiles'
+      export.save
+  
+      puts '> zipping tiles'
+      export = map.get_export(export_type)
+      export.zip = true if map.zip_tiles
+      export.status = 'creating jpg'
+      export.save
+  
+      puts '> generating jpg'
+      export = map.get_export(export_type)
+      export.jpg = true if map.generate_jpg("normal")
+      export.status = 'complete'
+      export.save
+    
+    rescue SystemCallError
+      #  $stderr.print "failed: " + $!
+      export = map.get_export(export_type)
+      export.status = 'failed'
+      export.save
+    end
+      render :text => "new Ajax.Updater('formats','/export/formats/#{map.id}')"
     else
-        render :text => "$('export_progress').replace('Export failed; RECAPTCHA thinks you are not a human!');"
+      render :text => "$('export_progress').replace('Export failed; RECAPTCHA thinks you are not a human!');"
     end
   end
 

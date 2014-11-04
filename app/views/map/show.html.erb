@@ -23,7 +23,7 @@
 
   var warpables = [
     <% @warpables.each do |warpable| %>
-    {id: <%= warpable.id %>, img: '<%= warpable.public_filename(:medium) %>', nodes: <%= @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
+    {id: <%= warpable.id %>, img: '<%= warpable.image.url(:medium) %>', nodes: <%=raw @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
     <% end %>
   ]
 

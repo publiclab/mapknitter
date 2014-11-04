@@ -20,7 +20,7 @@ class ExportController < ApplicationController
     render :layout => "map"
   end
 
-    def formats
+  def formats
     @map = Map.find params[:id] 
     @export = @map.get_export(params[:type])
     render :layout => false

@@ -7,17 +7,23 @@ class Warpable < ActiveRecord::Base
   has_attached_file :image,
     #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
     #:url => "/system/:attachment/:id/:style/:filename",
-    :path => "paperclip/:id/:style/:filename",
-    # should start using
-    #:path => "warpables/:id/:style/:filename",
+    :path => "paperclip/:id/:style.:extension",
     :storage => :s3,
-    :s3_credentials => ":rails_root/config/amazon_s3.yml",
+    :s3_credentials => "config/amazon_s3.yml",
     :styles => {
       :medium=> "500x375",
       :small=> "240x180",
       :thumb =>   "100x100>" }
 
   belongs_to :map
+
+  ########################################################
+  # this is for migration to paperclip only; remove later!
+  # Returns true/false if an attachment is thumbnailable.  A thumbnailable attachment has an image content type and the parent_id attribute.
+  def thumbnailable?
+    !self.image.nil? && self.parent_id.nil?
+  end
+  ########################################################
 
   def poly_area
     area = 0
@@ -101,7 +107,7 @@ class Warpable < ActiveRecord::Base
     # believe everything in -working/ can be deleted; this is just so we can use the files locally outside of s3
     working_directory = self.working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
-    local_location = working_directory+self.id.to_s+'-'+self.filename
+    local_location = working_directory+self.id.to_s+'-'+self.image_file_name
 
     directory = self.warps_directory(path)
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
@@ -138,16 +144,16 @@ class Warpable < ActiveRecord::Base
     x2 = pxperm*Cartagen.spherical_mercator_lon_to_x(eastmost,scale)
     # puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
-    if (self.public_filename[0..3] == 'http')
+    if (self.image.url[0..3] == 'http')
       Net::HTTP.start('s3.amazonaws.com') { |http|
       #Net::HTTP.start('localhost') { |http|
-        resp = http.get(self.public_filename)
+        resp = http.get(self.image.url)
         open(local_location, "wb") { |file|
           file.write(resp.body)
         }
       }
     else
-      File.copy(Rails.root+'/public'+self.public_filename,local_location)
+      File.copy(Rails.root+'/public'+self.image.image_file_name,local_location)
     end
 
     points = ""

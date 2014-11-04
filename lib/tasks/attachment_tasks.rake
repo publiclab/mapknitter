@@ -5,7 +5,7 @@ namespace :utils do
   namespace :attachments do
     task :initialize_s3 => :environment do
       s3_config = YAML.load_file(File.join(File.dirname(__FILE__), '/../../config/amazon_s3.yml'))
-      s3_config = s3_config[RAILS_ENV].to_options
+      s3_config = s3_config[Rails.env].to_options
 
       @s3 = RightAws::S3.new(s3_config[:access_key_id], s3_config[:secret_access_key])
     end
@@ -81,7 +81,7 @@ namespace :utils do
 
         #Get thumbnails
         if obj.thumbnailable?
-          Klass.find(obj.thumbnail_ids).each do |child|
+          Klass.find_all_by_parent_id(obj.id).each do |child|
             original_key_name = "#{Klass.name.downcase.pluralize}/#{parent_id}/#{child.filename}"
             new_key_name = "paperclip/#{parent_id}/#{child.thumbnail}#{File.extname(child.filename).downcase}"
 

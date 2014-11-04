@@ -1,5 +1,6 @@
 require 'open3'
 class Map < ActiveRecord::Base
+
   before_validation :update_name
   validates_presence_of :name,:author,:lat,:lon
   validates_uniqueness_of :name

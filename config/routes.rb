@@ -82,6 +82,9 @@ Mapknitter::Application.routes.draw do
   get 'author/:id' => 'author#show'
   get 'api/0.6/geohash/:id.json' => 'api#planet'
 
+  post 'export/:action/:id' => 'export'
+  post 'map/export/:id' => 'map#export'
+
   # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.
   root :to => 'map#index'
