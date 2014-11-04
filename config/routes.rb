@@ -46,12 +46,18 @@ Mapknitter::Application.routes.draw do
   #     resources :products
   #   end
 
+  # these are a mess:
   get 'local/:login' => 'sessions#local'
   get 'logout' => 'sessions#destroy'
   get 'login' => 'sessions#new'
   get 'register' => 'users#create'
   get 'signup' => 'users#new'
+
+  # since rails 3.2, we use this to log in:
+  get 'sessions/create' => 'sessions#create'
+
   resources :users
+
   get 'tag/create' => 'tag#create'
   get 'tag/:id' => 'tag#show'
 

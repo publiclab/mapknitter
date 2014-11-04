@@ -1,5 +1,18 @@
 module ApplicationHelper
 
+  def current_user
+    user_id = session[:user_id] 
+    if user_id
+      begin
+        @user = User.find(user_id)
+      rescue
+        @user = nil
+      end
+    else
+      @user = nil
+    end
+  end
+
   # add this to app/helpers/application_helper.rb
   # http://www.emersonlackey.com/article/rails3-error-messages-for-replacemen
   def errors_for(object, message=nil)
