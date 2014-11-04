@@ -30,6 +30,7 @@ Rails::Initializer.run do |config|
   config.gem "mysql", :version => '~> 2.9.1'
   #config.gem "json_pure"
   config.gem "httparty", :version => '~> 0.11.0'
+  config.gem "geokit"
   config.gem "geokit-rails", :version => '~> 1.1.4'
   #config.gem "RubyInline"
   config.gem "image_science", :version => '~> 1.2.6'

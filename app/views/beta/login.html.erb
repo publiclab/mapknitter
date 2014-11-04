@@ -1,0 +1,15 @@
+<div id="main">
+	<h2>Log in</h2>	
+
+	<form class='map' id="map" action="<%= params[:to] %>" method="post" accept-charset="utf-8">
+	
+		<input type='hidden' name='authenticity_token' value="<%= form_authenticity_token %>"/>
+		
+		<label for="password">Password</label><br />
+		<input tabindex="1" class="text" type="password" name="password" value="" id=""><br />
+			
+		<p><input type="submit" value="Log in"></p>
+	</form>
+	
+</div>
+

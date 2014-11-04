@@ -1,0 +1,107 @@
+<div class="modal hide fade" id="pointmodal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Add an annotation</h4>
+  </div>
+  <div class="modal-body">
+    <p>Click to add a labelled point.</p>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn btn-large">Cancel</a>
+    <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_point()">Begin</a>
+  </div>
+</div>
+<div class="modal hide fade" id="polymodal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Add an annotated polygon</h4>
+  </div>
+  <div class="modal-body">
+    <p>Click to begin adding a labelled polygon. Double-click to finish the polygon.</p>
+    <form class="form">
+      <label for="color">Polygon color:</label>
+      <select id="color">
+        <option value="red">Red</option>
+        <option value="orange">Orange</option>
+        <option value="blue">Blue</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+        <option value="purple">Purple</option>
+      </select>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn btn-large">Cancel</a>
+    <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_poly()">Begin</a>
+  </div>
+</div>
+
+<script src="/javascripts/annotation.js?3" type="text/javascript"></script>
+<script>
+  (function(){
+
+  <% @map.polygons(0.1).each do |poly| %>
+  $A.poly = new L.Polygon([<% Node.find_all_by_way_id(poly.id, :order => "way_order DESC").each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>,<%= note.way_order %>/<%= note.id %>]<%= "," if i != poly.nodes.length-1 %>
+<% end %>],{color:"<%= poly.color %>"})
+  $A.poly.addTo(map).bindPopup("<%= poly.body.gsub('"','\"').gsub("'","\'") %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='#' onClick='$A.delete_poly(<%= poly.id %>)'>x</a>)<% end %>")
+  $A.polygons['<%= poly.id %>'] = $A.poly
+  <% end %>
+  $A.poly = false
+
+  notes = <%= @map.annotations(0.5).to_json %>
+  $.each(notes,function(i,note) {
+    note = note['node']
+    description = note['body']
+    <% if logged_in? || (logged_in? && current_user.role == 'admin') %>
+    if (note['author'] == '<%= current_user.login %>') {
+      description += " (<a href='#' onClick='$A.delete_point("+note['id']+")'>x</a>)"
+    }
+    <% end %>
+    lat = note['lat']
+    lon = note['lon']
+    marker = L.marker([lat,lon])
+    $A.points[""+note['id']] = marker
+    marker.addTo(map).bindPopup(description)
+  })
+
+  $A.initialize({
+    map_id: <%= @map.id %>,
+    map_name: "<%= @map.name %>"
+  })
+
+  })()
+</script>
+
+<style>
+  #toolbar {
+    background:#333;
+    padding:4px;
+    font-family:lucida grande, sans-serif;
+  }
+</style>
+
+<div id="toolbar">
+<% if logged_in? || @map.anon_annotatable %>
+<a class="btn btn-small btn-inverse"  data-toggle="modal" href="#pointmodal"><i class="icon icon-comment icon-white"></i> Add annotation</a>
+<a class="btn btn-small btn-inverse" data-toggle="modal" href="#polymodal"><i class="icon icon-pencil icon-white"></i> Add poly</a>
+<% end %>
+<a class="btn btn-small btn-inverse" data-toggle="modal" href="#sharemodal"><i class="icon icon-share icon-white"></i> Share</a>
+<a class="btn btn-small btn-inverse" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="icon icon-fullscreen icon-white"></i> Fullscreen</a>
+<a class="btn btn-small btn-inverse" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Permalink</a>
+<% if logged_in? && @map.author == current_user.login %>
+<% if @map.anon_annotatable %>
+  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Disable anonymous annotations</a>
+<% else %>
+  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Allow anonymous annotations</a>
+<% end %>
+<% end %>
+
+<% if @export && @export.jpg %>
+  <a class="btn btn-small btn-primary pull-right" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg"><i class="icon-white icon-print"></i> Order a print</a>
+<% end %>
+
+<div class="btn-group pull-right">
+  <a class="btn btn-inverse btn-small" target="_blank" href="/tms/<%= @map.name %>/doc.kml">beta KML</a>
+  <a class="btn btn-inverse btn-small" target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">low-res Google Maps viewer</a>
+</div>
+</div>
