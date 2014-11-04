@@ -22,9 +22,9 @@
     <div id="new-map-form" style="display:none;">
   <% end %>
 
-  <% form_for :map, :html => {:id => "new_map", :class => "map"} do |f| %>
+  <%= form_for :map, :html => {:id => "new_map", :class => "map"} do |f| %>
 
-    <%= errors_for @map, "Oops, we were unable to save your map." %>  
+    <%=raw errors_for @map, "Oops, we were unable to save your map." %>  
 
     <label for="name">Map title/URL (you won't be able to change this)</label>
     <input class="text" type="text" name="name" value="<%= params[:name] %>" id="name">

@@ -172,38 +172,40 @@ class MapController < ApplicationController
       render :action=>"index", :controller=>"map"
     else
       if params[:latitude] == '' && params[:longitude] == ''
-  location = ''
-  puts 'geocoding'
+        location = ''
+        # geocoding
         begin
           location = GeoKit::GeoLoc.geocode(params[:location])
-    @map = Map.new({:lat => location.lat,
-            :lon => location.lng,
-            :name => params[:name],
-            :description => params[:description],
-            :author => params[:author],
-            :email => params[:email],
-            :license => params[:license],
-            :tiles => params[:tiles],
-            :location => params[:location]})
+          @map = Map.new
+          @map.lat = location.lat
+          @map.lon = location.lng
+          @map.name = params[:name]
+          @map.description = params[:description]
+          @map.author = params[:author]
+          @map.email = params[:email]
+          @map.license = params[:license]
+          @map.tiles = params[:tiles]
+          @map.location = params[:location]
         rescue
-    @map = Map.new({
-            :name => params[:name],
-            :description => params[:description],
-            :author => params[:author],
-            :license => params[:license],
-            :tiles => params[:tiles],
-            :email => params[:email]})
-  end
+          @map = Map.new
+          @map.name = params[:name]
+          @map.description = params[:description]
+          @map.author = params[:author]
+          @map.license = params[:license]
+          @map.tiles = params[:tiles]
+          @map.email = params[:email]
+        end
       else
-  puts 'nogeocoding'
-        @map = Map.new({:lat => params[:latitude],
-            :lon => params[:longitude],
-            :name => params[:name],
-            :description => params[:description],
-            :email => params[:email],
-            :license => params[:license],
-            :tiles => params[:tiles],
-            :location => params[:location]})
+        # no geocoding
+        @map = Map.new
+        @map.lat = params[:latitude]
+        @map.lon = params[:longitude]
+        @map.name = params[:name]
+        @map.description = params[:description]
+        @map.email = params[:email]
+        @map.license = params[:license]
+        @map.tiles = params[:tiles]
+        @map.location = params[:location]
       end
       @map.user_id = current_user.id if logged_in?
       @map.author = current_user.login if logged_in?

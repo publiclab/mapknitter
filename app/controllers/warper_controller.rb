@@ -13,15 +13,20 @@ class WarperController < ApplicationController
   end
 
   def create
-    @warpable = Warpable.new(params[:warpable])
-    @warpable.map_id = params[:map_id]
-    map = Map.find(params[:map_id])
-    map.updated_at = Time.now
-    map.save
-    if @warpable.save
-      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
+    if @map.user_id != 0 && logged_in?# if it's not anonymous
+      @warpable = Warpable.new
+      @warpable.uploaded_data = params[:warpable][:uploaded_data]
+      @warpable.map_id = params[:map_id]
+      map = Map.find(params[:map_id])
+      map.updated_at = Time.now
+      map.save
+      if @warpable.save
+        redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
+      else
+        render :action => :new
+      end
     else
-      render :action => :new
+      render :text => "You must be logged in to add images to this map"
     end
   end
 
