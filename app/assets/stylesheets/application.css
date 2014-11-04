@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require_tree .
+ 
  *= require bootstrap/dist/css/bootstrap.css
  *= require leaflet/dist/leaflet.css
  *= require leaflet-draw/dist/leaflet.draw.css
@@ -19,4 +20,4 @@
  *= require maps.css
  *= require annotations
  *= require uploads.css 
- */
+*/

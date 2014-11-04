@@ -13,6 +13,7 @@
 // require jquery
 // require jquery_ujs
 //= require_tree .
+
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
 
