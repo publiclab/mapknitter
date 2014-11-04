@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141103164503) do
+ActiveRecord::Schema.define(:version => 20141104184417) do
 
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
