@@ -13,6 +13,7 @@ gem "oa-openid", "0.3.2"
 gem "httparty", "0.11.0"
 gem "RubyInline"
 gem "rdoc"
+gem "aws-s3"
 
 # if you decide to use sqlite3 as the database
 gem "sqlite3"
