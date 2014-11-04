@@ -48,7 +48,7 @@ You'll need Ruby 1.9.3 and GDAL >=1.7.x (gdal.org)
 Check the version of ruby installed on your system by "ruby -v" If it displays a version other than 1.9.3, use a version manager like RVM to use ruby 1.9.3 as default.
 
 1) Download source from https://github.com/publiclab/mapknitter
-2) Install gems with `bundle install` from the rails root folder
+2) Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3) Copy and configure config/database.yml from config/database.yml.example
 4) Initialize database with "rake db:migrate"
 5) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
