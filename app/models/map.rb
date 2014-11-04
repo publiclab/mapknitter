@@ -141,7 +141,8 @@ class Map < ActiveRecord::Base
           scales << res unless res == nil
         end
       end
-      average = (scales.inject {|sum, n| sum + n })/count if scales
+      sum = (scales.inject {|sum, n| sum + n }) if scales
+      average = sum/count if sum
       puts 'average scale = '+average.to_s+' cm/px'
       average
     else
@@ -248,7 +249,7 @@ class Map < ActiveRecord::Base
     puts '> generating tiles'
     # make tiles:
     google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'-nrg" -g "'+google_api_key+'" '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-nrg.tif '+Rails.root+'/public/tms/'+self.name+"-nrg/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'-nrg" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-nrg.tif '+Rails.root.to_s+'/public/tms/'+self.name+"-nrg/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
@@ -317,7 +318,7 @@ class Map < ActiveRecord::Base
   # generate a tiff from all warpable images in this set
   def generate_composite_tiff(coords,origin)
     directory = "public/warps/"+self.name+"/"
-    geotiff_location = directory+self.name+'-geo-merge.tif'
+    composite_location = directory+self.name+'-geo.tif'
     geotiffs = ''
     minlat = nil
     minlon = nil
@@ -344,13 +345,13 @@ class Map < ActiveRecord::Base
       puts gdalwarp
       system(Gdal.ulimit+gdalwarp)
     end
-    geotiff_location
+    composite_location
   end
   
   # generates a tileset at Rails.root/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root+'/public/tms/'+self.name+"/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.name+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
@@ -367,8 +368,8 @@ class Map < ActiveRecord::Base
   end
  
   def generate_jpg(export_type)
-    imageMagick = 'convert -background white -flatten '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'.jpg' if export_type == "normal"
-    imageMagick = 'convert -background white -flatten '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-'+export_type+'.tif '+Rails.root+'/public/warps/'+self.name+'/'+self.name+'-nrg.jpg' if export_type == "nrg"
+    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'.jpg' if export_type == "normal"
+    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-'+export_type+'.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-nrg.jpg' if export_type == "nrg"
     system(Gdal.ulimit+imageMagick)
   end
  

@@ -424,9 +424,9 @@ class MapController < ApplicationController
       export.save
     
       puts '> generating composite tiff'
-      geotiff_location = map.generate_composite_tiff(warpable_coords,origin)
+      composite_location = map.generate_composite_tiff(warpable_coords,origin)
     
-      info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
+      info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
       puts info
     
       export = map.get_export(export_type)

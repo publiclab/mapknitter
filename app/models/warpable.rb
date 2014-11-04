@@ -1,5 +1,7 @@
 class Warpable < ActiveRecord::Base
  
+  attr_accessible :image
+
   # remaming configs from attachment_fu: 
   # :storage => APP_CONFIG["file_storage"], 
 
@@ -15,7 +17,16 @@ class Warpable < ActiveRecord::Base
       :small=> "240x180",
       :thumb =>   "100x100>" }
 
+  validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif"]
+
   belongs_to :map
+  before_save :save_dimensions
+
+  def save_dimensions
+    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path)
+    self.width = geo.width
+    self.height = geo.height
+  end
 
   ########################################################
   # this is for migration to paperclip only; remove later!
@@ -107,7 +118,7 @@ class Warpable < ActiveRecord::Base
     # believe everything in -working/ can be deleted; this is just so we can use the files locally outside of s3
     working_directory = self.working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
-    local_location = working_directory+self.id.to_s+'-'+self.image_file_name
+    local_location = working_directory+self.id.to_s+'-'+self.image_file_name.to_s
 
     directory = self.warps_directory(path)
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
@@ -198,7 +209,7 @@ class Warpable < ActiveRecord::Base
       ny1 = corner[1]
       nx2 = -x1+(pxperm*Cartagen.spherical_mercator_lon_to_x(node.lon,scale))
       ny2 = y1-(pxperm*Cartagen.spherical_mercator_lat_to_y(node.lat,scale))
-   
+ 
       points = points + '  ' unless first
       maskpoints = maskpoints + ' ' unless first
       points = points + nx1.to_s + ',' + ny1.to_s + ' ' + nx2.to_i.to_s + ',' + ny2.to_i.to_s
