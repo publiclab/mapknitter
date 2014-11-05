@@ -44,8 +44,7 @@ Join now at: http://publiclab.org
 INSTALLATION
 ==========================
 
-You'll need Ruby 1.9.3 and GDAL >=1.7.x (gdal.org)
-Check the version of ruby installed on your system by "ruby -v" If it displays a version other than 1.9.3, use a version manager like RVM to use ruby 1.9.3 as default.
+You'll need Ruby 1.9.3-2.1.x and GDAL >=1.7.x (gdal.org), as well as ImageMagick
 
 1) Download source from https://github.com/publiclab/mapknitter
 2) Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
