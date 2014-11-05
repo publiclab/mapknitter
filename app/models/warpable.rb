@@ -84,14 +84,18 @@ class Warpable < ActiveRecord::Base
 
   def self.histogram_cm_per_pixel
     w = Warpable.find :all, :conditions => ['cm_per_pixel != 0 AND cm_per_pixel < 500'], :order => "cm_per_pixel DESC"
-    hist = []
-    (0..w.first.cm_per_pixel.to_i).each do |bin|
-      hist[bin] = 0
+    if w.length > 0
+      hist = []
+      (0..w.first.cm_per_pixel.to_i).each do |bin|
+        hist[bin] = 0
+      end
+      w.each do |warpable|
+        hist[warpable.cm_per_pixel.to_i] += 1
+      end
+      hist
+    else
+      []
     end
-    w.each do |warpable|
-      hist[warpable.cm_per_pixel.to_i] += 1
-    end
-    hist
   end
 
   def nodes_array
