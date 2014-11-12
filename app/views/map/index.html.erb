@@ -8,6 +8,7 @@
   
       <%= render :partial => "map/search" %>
       <%= render :partial => "map/new" %>
+
       <div class="hidden-phone">
         <%= render :partial => "map/regions" %>
         <%= render :partial => "map/authors" %>
@@ -19,12 +20,12 @@
           <p><small>Resolutions:</small></p>
           <p><small><b>Maps:</b>
           <br />0 cm/px
-          <span class="bar"><%= Export.histogram_cm_per_pixel[0..40].join(',') %></span>
+          <span class="bar"><%=raw Export.histogram_cm_per_pixel[0..40].join(',') %></span>
           40 cm/px
           </small></p>
           <p><small><b>Images:</b><br />
            0 cm/px
-          <span class="bar"><%= Warpable.histogram_cm_per_pixel[0..40].join(',') %></span>
+          <span class="bar"><%=raw Warpable.histogram_cm_per_pixel[0..40].join(',') %></span>
           40 cm/px
           </small></p>
           <script>$('.bar').sparkline('html', {type: 'bar', color: '#c44'});</script>

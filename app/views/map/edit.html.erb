@@ -31,7 +31,7 @@
 	<div id='images'>
 		<% @images.each do |image| %>
 		<p>
-			<a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+			<a href="<%= image.image.url %>"><img src="<%= image.image.url(:thumb) %>" /></a>
 			 <%= image.cm_per_pixel.to_s[0..3] %> cm/px, 
 			 <%= time_ago_in_words(image.created_at) %> ago
 		</p>

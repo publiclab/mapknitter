@@ -1,23 +1,33 @@
+require 'uri'
+
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
 
+  @@openid_url_base  = "http://publiclab.org/people/"
+  @@openid_url_suffix = "/identity"
+
   # render new.erb.html
-  def new
+  def new #login
+    @referer = params[:back_to]  
   end
 
-  def create
-    #params[:openid_url] = "publiclaboratory.org/people/"+params[:login]+"/identity" if params[:login]
-    params[:openid_url] = "publiclab.org/openid/"+params[:login] if params[:login]
-    open_id_authentication(params[:openid_url],params[:return_to])
-  end
-
-  def destroy
-    logout_killing_session!
-    flash[:notice] = "You have been logged out."
-    redirect_back_or_default('/')
+  def create #new
+    back_to = params[:back_to]
+    open_id = params[:open_id]
+    openid_url = URI.decode(open_id)
+    #possibly user is providing the whole URL
+    if openid_url.include? "publiclab"
+      if openid_url.include? "http"
+        url = openid_url
+      end
+    else 
+      url = @@openid_url_base + openid_url + @@openid_url_suffix
+    end
+    openid_authentication(url, back_to)
   end
 
   # only on local installations, to bypass OpenID; add "local: true" to config/config.yml
+  # this makes offline development possible; like on a plane! but do NOT leave it open on a production machine
   def local
     if APP_CONFIG["local"] == true && @user = User.find_by_login(params[:login])
       self.current_user = @user
@@ -28,39 +38,73 @@ class SessionsController < ApplicationController
     end
   end
 
-protected
-
-  def successful_login
-    if params[:remember_me] == "1"
-      self.current_user.remember_me
-      cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
-    end
-    redirect_back_or_default('/') 
-    flash[:notice] = "Logged in successfully"
-  end
-
   def failed_login(message = "Authentication failed.")
-    flash.now[:error] = message
-    logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
-    render :action => 'new'
+    flash[:danger] = message
+    redirect_to '/'
   end
 
-  def open_id_authentication(openid_url,return_to)
-    return_to ||= "/dashboard"
-    #authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
-    authenticate_with_open_id(openid_url, :required => [:nickname, :email],:return_to => "http://"+request.host+"/session?_method=post&return_to="+return_to) do |result, identity_url, registration|
-      if result.successful?
-        @user = User.find_or_initialize_by_identity_url(identity_url)
-        if @user.new_record?
-          @user.login = registration['nickname']
-          @user.email = registration['email']
-          @user.save(false) # bypasses validations... temporary: instead, store registration info in session, ask user to review?
-        end
-        self.current_user = @user
-        successful_login
+  def successful_login(back_to, id)
+    session[:user_id] = @current_user.id
+    flash[:success] = "You have successfully logged in."
+    if id
+      redirect_to '/sites/' + id.to_s + '/upload'
+    else
+      if back_to 
+        redirect_to back_to 
       else
-        failed_login result.message
+        redirect_to '/sites'
       end
     end
   end
+
+  def logout
+    session[:user_id] = nil 
+    flash[:success] = "You have successfully logged out."
+    redirect_to '/'
+  end
+
+#protected
+
+  def openid_authentication(openid_url, back_to)
+    #puts openid_url
+    authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
+      if result.successful?
+        @user = User.find_by_identity_url(identity_url)
+        if not @user
+          @user = User.new
+          @user.login = registration['nickname']
+          @user.email = registration['email']
+          @user.identity_url = identity_url
+          begin 
+            @user.save!
+          rescue ActiveRecord::RecordInvalid => invalid
+            puts invalid
+            failed_login "User can not be associated to local account. Probably the account already exists with different case!" 
+            return
+          end
+        end
+        nonce = params[:n]
+        if nonce 
+          tmp = Sitetmp.find_by nonce: nonce
+          if tmp 
+            data = tmp.attributes
+            data.delete("nonce")
+            site = Site.new(data)
+            site.save
+            tmp.destroy
+          end
+        end
+        @current_user = @user
+        if site
+          successful_login back_to, site.id
+        else
+          successful_login back_to, nil 
+        end
+      else
+        failed_login result.message
+        return false
+      end
+    end
+  end
+
 end

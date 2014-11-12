@@ -13,15 +13,20 @@ class WarperController < ApplicationController
   end
 
   def create
-    @warpable = Warpable.new(params[:warpable])
-    @warpable.map_id = params[:map_id]
-    map = Map.find(params[:map_id])
-    map.updated_at = Time.now
-    map.save
-    if @warpable.save
-      redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
+    @map = Map.find params[:map_id]
+    if @map.user_id != 0 && logged_in?# if it's not anonymous
+      @warpable = Warpable.create(params[:warpable])
+      @warpable.map_id = params[:map_id]
+      map = Map.find(params[:map_id])
+      map.updated_at = Time.now
+      map.save
+      if @warpable.save
+        redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
+      else
+        render :action => :new
+      end
     else
-      render :action => :new
+      render :text => "You must be logged in to add images to this map"
     end
   end
 
@@ -66,21 +71,24 @@ class WarperController < ApplicationController
     author = Map.find @warpable.map_id
 
     params[:points].split(':').each do |point|
-      lon = point.split(',')[0], lat = point.split(',')[1]
-	node = Node.new({:color => 'black',
-                :lat => lat,
-                :lon => lon,
-                :author => author,
-                :name => ''
-      })
+      lon = point.split(',')[0].to_f
+      lat = point.split(',')[1].to_f
+      node = Node.new
+      node.color = 'black'
+      node.lat = lat
+      node.lon = lon
+      node.author = author
+      node.name = ''
       node.save
+    puts node.lon,node.lat
       nodes << node
     end
 
     node_ids = []
     nodes.each do |node|
-      node_ids << node.id
+      node_ids << node.id.to_s
     end
+    puts params[:points]
     @warpable.nodes = node_ids.join(',')
     @warpable.locked = params[:locked]    
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel

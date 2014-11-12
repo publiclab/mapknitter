@@ -1,94 +1,76 @@
-oooo                     o8o      .       .                      
-`888                     `"'    .o8     .o8                      
- 888  oooo  ooo. .oo.   oooo  .o888oo .o888oo  .ooooo.  oooo d8b 
- 888 .8P'   `888P"Y88b  `888    888     888   d88' `88b `888""8P 
- 888888.     888   888   888    888     888   888ooo888  888     
- 888 `88b.   888   888   888    888 .   888 . 888    .o  888     
-o888o o888o o888o o888o o888o   "888"   "888" `Y8bod8P' d888b    
+MapKnitter
 
+Use Public Lab's Map Knitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/wiki/balloon-mapping) and combine them into:
 
-Use Public Laboratory's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
+* web "slippy maps" like Google Maps
+* GeoTiff
+* TMS
+* high resolution JPEG
 
-Copyright 2010-2011 Jeffrey Warren
+Copyright 2010-2014 Public Lab & Jeffrey Warren
 
 ==========================
 LICENSE
 ==========================
 
-PLOTS Map Knitter is free software: you can redistribute it and/or modify
+Map Knitter is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-PLOTS Map Knitter is distributed in the hope that it will be useful,
+Map Knitter is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with PLOTS Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
+along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
 ==========================
 ABOUT
 ==========================
 
-Use Public Laboratory's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
+Use Public Lab's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
 
-Read more about PLOTS Map Knitter at: http://publiclaboratory.org/wiki/plots-map-toolkit
+Read more about Map Knitter at: http://publiclab.org/wiki/plots-map-toolkit
 
-The Public Laboratory for Open Technology and Science (PLOTS) is a community which develops and applies open-source tools to environmental exploration and investigation. By democratizing inexpensive and accessible “Do-It-Yourself” techniques, Public Laboratory creates a collaborative network of practitioners who actively re-imagine the human relationship with the environment.
+The Public Laboratory for Open Technology and Science (Public Lab) is a community which develops and applies open-source tools to environmental exploration and investigation. By democratizing inexpensive and accessible “Do-It-Yourself” techniques, Public Lab creates a collaborative network of practitioners who actively re-imagine the human relationship with the environment.
 
-The core PLOTS program is focused on “civic science” in which we research open source hardware and software tools and methods to generate knowledge and share data about community environmental health. Our goal is to increase the ability of underserved communities to identify, redress, remediate, and create awareness and accountability around environmental concerns. PLOTS achieves this by providing online and offline training, education and support, and by focusing on locally-relevant outcomes that emphasize human capacity and understanding.
+The core Public Lab program is focused on “civic science” in which we research open source hardware and software tools and methods to generate knowledge and share data about community environmental health. Our goal is to increase the ability of underserved communities to identify, redress, remediate, and create awareness and accountability around environmental concerns. Public Lab achieves this by providing online and offline training, education and support, and by focusing on locally-relevant outcomes that emphasize human capacity and understanding.
 
-Join now at: http://publiclaboratory.org/join
+Join now at: http://publiclab.org
 
 ==========================
 INSTALLATION
 ==========================
 
-You'll need Ruby on Rails ~2.3.15, Ruby 1.8.7 (Ruby 1.9.x doesn't work for now as there is no packaged version of the geohash gem yet for 1.9.x), and GDAL >=1.7.x (gdal.org)
-Check the version of ruby installed on your system by "ruby -v" If it displays a version other than 1.8.7, use a version manager like RVM to use ruby 1.8.7 as default.
+You'll need Ruby 1.9.3-2.1.x and GDAL >=1.7.x (gdal.org), as well as ImageMagick
 
-1) Download source from http://github.com/jywarren/mapknitter
-2) Install the compatible (with ruby 1.8.7) versions of the following gems using "gem install" : mysql(2.9.1), geokit-rails(1.1.4), image_science(1.2.6), recaptcha(0.3.6), will_paginate(2.3.16), oa-openid(0.3.2), httparty(0.11.0).
-For e.g.- use "gem install geokit-rails -v 1.1.4" to install geokit-rails version 1.1.4. The dependent libraries can be viewed by opening /config/environment.rb.
-3) Install davetroy-geohash from github source; first add github source with "gem sources -a http://gems.github.com" then run "gem install davetroy-geohash". (probably not needed anymore really)
-4) Manually run "gem install RubyInline" - this was causing trouble when done from environment.rb
-5) Install Amazon S3 gem with "gem install aws-s3" if you are using Amazon S3 for most image storage
-6) Copy and configure config/database.yml from config/database.yml.example
-7) Initialize database with "rake db:migrate"
-8) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
-9) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
-10) Remove write permissions from the folder you have placed your app in.
-11) Start rails with "script/server -p 3000" or "passenger start -p 3000" from the Rails root and open http://localhost:3000 in a web browser.
+1) Download source from https://github.com/publiclab/mapknitter
+2) Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
+3) Copy and configure config/database.yml from config/database.yml.example
+4) Initialize database with "rake db:migrate"
+5) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
+6) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
+7) Start rails with "passenger start" from the Rails root and open http://localhost:3000 in a web browser.
 
 ==========================
-BITNAMI INSTALLATION
+BUGS AND SUPPORT
 ==========================
 
-This is experimental, but if it works, you'll have a local version which you can carry around on a USB stick. We hope it will be useful for low-bandwidth situations. But beware - it hasn't been tested!
+To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues 
 
-From the Bitnami RubyStack README:
-To install BitNami RubyStack you will need:
+For additional support, join the Public Lab website and mailing list at http://publiclab.org/lists or for urgent requests, email web@publiclab.org
 
-    - Intel x86 or compatible processor
-    - Minimum of 512 MB RAM 
-    - Minimum of 150 MB hard drive space
-    - TCP/IP protocol support
-    - Compatible operantig systems:
-      - An x86 Linux operating system.
-      - A 32-bit Windows operating system such as Windows 2000, XP, Vista
-      or Windows Server 2003.
-      - An OS X operating system (PowerPC or x86).
+For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
-You will also need: 
-    - GDAL >= 1.7.x (gdal.org)
-    - some source of local tiles, such as from TileStream (mapbox.com)
+==========================
+DEVELOPERS
+==========================
 
-1) Download the Bitnami.org RubyStack: http://bitnami.org/stack/rubystack, and run the installer.
-2) Place this MapKnitter folder in the resulting "projects" folder inside "rubystack-2.2-2" (get MapKnitter at http://github.com/jywarren/mapknitter or https://github.com/jywarren/mapknitter/zipball/master)
-3) Open a shell prompt/terminal, and enter the "rubystack-2.2-2" folder.
-4) Type ".rubyconsole" to start the Bitnami ruby console.
-5) Type "cd projects/mapknitter" to enter the MapKnitter project folder.
-6) Follow the above steps for a normal installation. 
+Development is occurring at https://github.com/publiclab/mapknitter/; please fork and submit pull requests.
+
+If you're a developer, consider joining the Public Lab developer list, also at http://publiclab.org/lists 
+
+
 
