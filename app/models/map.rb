@@ -10,9 +10,25 @@ class Map < ActiveRecord::Base
                         :on => :create                  
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
 
-  has_many :warpables
   has_many :exports
   has_many :tags
+  has_many :comments
+  has_many :annotations
+
+  has_many :warpables do 
+    def public_filenames
+      filenames = {}
+      self.each do |warpable|
+        filenames[warpable.id] = {}
+        sizes = Array.new(Warpable::THUMBNAILS.keys).push(nil)
+        sizes.each do |size|
+          key = size != nil ? size : "original"
+          filenames[warpable.id][key] = warpable.public_filename(size)
+        end
+      end
+      filenames 
+    end
+  end
 
   def validate
     self.name != 'untitled'
@@ -52,10 +68,6 @@ class Map < ActiveRecord::Base
 
   def self.new_maps
     self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
-  end
-
-  def warpables
-    Warpable.find :all, :conditions => {:map_id => self.id, :deleted => false} 
   end
 
   def nodes
@@ -388,13 +400,26 @@ class Map < ActiveRecord::Base
     end
   end
 
-  def annotations(dist)
-    Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id = 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
-  end
-
   def polygons(dist)
     nodes = Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id != 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "way_order DESC")
     Way.find(nodes.collect(&:way_id).uniq)
   end
 
+  #--------------------
+
+  def has_tag(tagname)
+    Tag.find(:all, :conditions => { :map_id => self.id, :name => tagname }).length > 0
+  end
+
+  def add_tag(tagname, user)
+    tagname = tagname.downcase
+    unless self.has_tag(tagname)
+      tag = self.tags.create({
+        :name => tagname,
+        :user_id => user.id,
+        :map_id => self.id 
+      })
+    end
+  end
+  
 end

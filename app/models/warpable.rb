@@ -2,9 +2,6 @@ class Warpable < ActiveRecord::Base
  
   attr_accessible :image
 
-  # remaming configs from attachment_fu: 
-  # :storage => APP_CONFIG["file_storage"], 
-
   # Paperclip
   has_attached_file :image,
     #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
@@ -21,6 +18,24 @@ class Warpable < ActiveRecord::Base
 
   belongs_to :map
   before_save :save_dimensions
+  belongs_to :user
+
+  #Json formatting for file upload plugin
+  def fup_json
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
+    "url" => self.public_filename(:medium),
+    "id" => self.read_attribute(:id),
+    "thumbnail_url" => self.public_filename(:thumb),
+    "delete_url" => public_filename(self),
+    "delete_type" => "DELETE"}
+  end
+
+  def fup_error_json
+   {"name" => read_attribute(:filename),
+    "size" => read_attribute(:size),
+    "error" => self.errors["base"]}                      
+  end
 
   def save_dimensions
     geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path)
@@ -308,6 +323,11 @@ class Warpable < ActiveRecord::Base
   def delete_temp_files(path)
     system('rm -r '+self.working_directory(path))
     system('rm '+self.warps_directory(path)+'*.png')
+  end
+
+  def user_id
+    Map.find self.map_id
+    map.user_id
   end
 
 end

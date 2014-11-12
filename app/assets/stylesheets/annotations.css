@@ -1,0 +1,8 @@
+/* Correct the background position when the textbox handler is not used with the */
+/* .leaflet-illustrate-create-textbox class. */
+.leaflet-draw-toolbar .leaflet-draw-draw-textbox {
+  background-position: -272px -2px;
+}
+.leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
+  background-position: -270px -1px;
+}

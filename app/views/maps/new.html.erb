@@ -1,0 +1,51 @@
+<% content_for :title do %>
+	<div class="sidebar-title new-map">
+		<h3>Create a new map</h3>
+		<p>Give your map a title, location, and description.</p>			
+	</div>
+<% end %>
+
+<% form_for @map, :html => { :class => "new-map" } do |f| %>
+	<div class="sidebar-content">
+		<div class="form-group">
+			<%= f.label :name, "Title", :class => "h4" %>	
+			<%= f.text_field :name, :class => "form-control" %>					
+		</div>
+		<p>Good map titles are short and communicate clearly the subject of the map.  For example: 
+			<ul class="map-title-examples">
+				<li>"Infragram map of goat brush clearing"</li>
+				<li>"Construction near BART"</li>
+			</ul>
+		</p>		
+		<hr/>
+
+		<div class="form-group">
+			<%= f.label :location %>
+			<%= f.text_field :location, :class => "form-control" %>
+		</div>
+		<hr/>
+
+		<table class="form-group">
+			<tbody>
+				<tr><td>
+					<%= f.label :lat %>
+					<%= f.text_field :lat, :class => "form-control" %>
+				</td>
+				<td>
+					<%= f.label :lon %>
+					<%= f.text_field :lon, :class => "form-control" %>
+				</td></tr>
+			</tbody>
+		</table>
+		<hr/>
+
+		<!-- Map description -->
+		<div class="form-group">
+			<%= f.label :description %>
+			<%= f.text_area :description, :placeholder => "Type **Markdown** here.", :class => "form-control" %>
+		</div>
+		<p>You can use the description to add links or attach explanatory images or videos to your map.</p>
+
+		<%= f.submit "Create map", :class => "btn btn-primary" %>	
+	</div><!-- .new-map-form -->
+<% end %>

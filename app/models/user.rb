@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
 
   has_many :maps
   has_many :tags
+  has_many :comments
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
@@ -37,6 +38,24 @@ class User < ActiveRecord::Base
 
   def email=(value)
     write_attribute :email, (value ? value.downcase : nil)
+  end
+
+  # Permissions for editing and deleting resources
+
+  def owns?(resource)
+    resource.user_id.to_i == self.id
+  end
+
+  def owns_map?(resource)
+    resource.map.user_id.to_i == self.id
+  end
+
+  def can_delete?(resource)
+    self.owns?(resource) || self.owns_map?(resource) || self.role == "admin"
+  end
+
+  def can_edit?(resource)
+    self.owns?(resource)
   end
 
 end

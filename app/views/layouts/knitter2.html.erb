@@ -3,42 +3,112 @@
 
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<title>MapKnitter: <%= @map[:name] %></title>
-	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
-	<link rel="stylesheet" href="/cartagen/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="/knitter.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<!--[if IE]><script type="text/javascript" src="/cartagen/excanvas.js"></script><![endif]-->
-	<script type="text/javascript">
-		cartagen_base_uri = '/cartagen'
-	</script>
-	<script type='text/javascript' src='http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' charset="utf-8"></script>
-	<script src="/cartagen/cartagen.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/knitter.js" type="text/javascript" charset="utf-8"></script>
-	<link rel="stylesheet" href="/modalbox/modalbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script type="text/javascript" src="/javascripts/scriptaculous.js"></script>
-	<script src="/modalbox/modalbox.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="/javascripts/sparklines.min.js"></script>
-	<script src="/javascripts/OpenLayers-2.14d.js" type="text/javascript" charset="utf-8"></script>
-	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?ABQIAAAANO6Yx8ihhesSqnPHx9a3RxQWBoXWBrlkEUL-tdL_AsWXzvTH0xT-5lfSNkW4zpDMdK9jmjmggAHvYw&sensor=false"></script>
-	<script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <%= csrf_meta_tags %>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>MapKnitter: <%= @map[:name] ? @map[:name] : "New map" %></title>
+  <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />  
+  <meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'uploads' %>
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag 'maps' %>
+  <%= javascript_include_tag 'uploads' %>
 </head>
 <body>
+  <div id="knitter-map-pane"></div>
+  <div class="sidebar">
+    <%= render :partial => 'layouts/header' %>
+    <div class="sidebar-wrap">
+      <div class="sidebar-inner-wrap">
+        <div class="sidebar-header"><%= yield :title %></div>
+        <% if @map.new_record? %>
+          <%= yield %>
+        <% else %>
+          <div class="sidebar-content-wrap">
+            <!-- Toolbar for uploading and viewing images and exporting the map. -->
+            <div class="btn-group btn-group-justified sidebar-buttons">
+              <!-- Upload images -->
+              <div class="btn-group">
+                <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
+                  <span class="glyphicon glyphicon-open"></span>
+                </button>
+              </div>
 
-<%= yield %>
+              <!-- Write a research note on Public Lab -->
+              <div class="btn-group">
+                <a class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post">
+                  <span class="glyphicon glyphicon-file"></span>
+                </a>
+              </div>
 
-	<script type="text/javascript">
-		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	<script type="text/javascript">
-		try {
-			var pageTracker = _gat._getTracker("UA-180781-29");
-			pageTracker._trackPageview();
-		} catch(err) {}
-	</script>
+              <!-- Export map -->
+              <div class="dropdown btn-group">
+                <button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
+                  <span class="glyphicon glyphicon-save"></span>
+                  <span class="caret"></span>              
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li class="dropdown-header">Export formats</li>
+                  <li><a href=".">JPG</a></li>
+                  <li><a href=".">GeoTIFF</a></li>
+                  <li><a href=".">Tiled Map Service (TMS)</a></li>
+                  <li><a href=".">OSM-TMS</a></li>
+                  <li><a href=".">zipped TMS</a></li>
+                  <li><a href=".">KML (beta)</a></li>
+                  <li><a href=".">Order a print</a></li>
+                  <li class="dropdown-header">Multispectral export formats</li>
+                  <li><a href=".">Special format</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="sidebar-tabs">
+              <!-- Navigation tabs -->
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
+                <li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images</a></li>
+                <li><a href="#map-editing-container" role="tab" data-toggle="tab">Edit History</a></li>
+              </ul>
+
+              <!-- Tabbed panes -->
+              <div class="tab-content sidebar-content">
+                <div class="tab-pane active" id="map-details-container">
+                  <%= yield :details %>
+                </div>
+                <div class="tab-pane" id="map-images-container">
+                  <%= yield :warpables %>
+                </div>
+                <div class="tab-pane" id="map-editing-container">
+                  <%= render :partial => "sidebar_edit_history" %>
+                </div>
+              </div>  
+
+            </div><!-- .sidebar-tabs -->
+          </div><!-- .sidebar-content -->
+        <% end %>
+      </div><!-- .sidebar-inner-wrap -->
+    </div><!-- .sidebar-wrap -->
+  </div><!-- .sidebar -->
+
+  <%= render :partial => "/warpables/new" %>
+  <script>
+    window.mapKnitter = new MapKnitter.Map({
+      latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+      zoom:       <%= @map.zoom %>,
+      warpablesUrl:   "<%= url_for [@map, :warpables] %>"
+    });
+  </script>  
+  <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    try {
+      var pageTracker = _gat._getTracker("UA-180781-29");
+      pageTracker._trackPageview();
+    } catch(err) {}
+  </script>
 </body>
 </html>

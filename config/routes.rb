@@ -110,4 +110,20 @@ Mapknitter::Application.routes.draw do
   get ':controller/:action.:format'
   get ':controller/:action/:id.:format'
 
+  # RESTful API
+  resources :maps do
+    resources :tags
+    resources :comments
+    resources :warpables
+    resources :annotations
+  end
+
+  #Beta Pages
+  get 'beta' => 'beta#index'
+  get 'beta/maps/:id' => 'beta#show'
+
+  # Beta Warper controller, handling uploads
+  get 'betawarper/:map_id' => 'betawarper#show', :requirements => { :map_id => /\d+/ }
+  post 'betawarper/:id' => 'betawarper#create', :requirements => { :id => /\d+/ }
+
 end

@@ -13,7 +13,7 @@
     <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <script type="text/javascript" src="/javascripts/jquery.sparkline.min.js"></script>
-    <% if params[:controller] == "map" && params[:action] == "index" %>
+    <% if params[:controller] == "map" && params[:action] == "index" || params[:controller] == "beta" && params[:action] == "index" %>
       <link href="/style-2.css" type="text/css" media="all" rel="stylesheet" /> 
     <% else %>
       <link href="/style.css" type="text/css" media="all" rel="stylesheet" /> 
@@ -38,7 +38,7 @@
   <body>
   <div id="bodywrap">
   <div id="header">
-    <% if params[:controller] == "map" && params[:action] == "index" %>
+    <% if params[:controller] == "map" && params[:action] == "index" || params[:controller] == "beta" && params[:action] == "index"%>
       <h1><a href="/">MapKnitter</a> <small>by Public Lab</small></h1>
     <% end %>
     <div class="right">
@@ -57,7 +57,7 @@
       <% end %>
 
     </div>
-    <% unless params[:controller] == "map" && params[:action] == "index" %>
+    <% unless params[:controller] == "map" && params[:action] == "index" || params[:controller] == "beta" && params[:action] == "index"%>
       <a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
     <% end %>
       <br style="clear:both;" />

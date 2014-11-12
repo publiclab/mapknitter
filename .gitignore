@@ -13,6 +13,9 @@
 # Ignore all logfiles and tempfiles.
 /tmp
 *.swp
+*.swo
+*~
+.ruby-version
 .DS_Store
 log/
 tmp/*
@@ -23,14 +26,13 @@ public/warpables/*
 public/warps/*
 public/tms/*
 db/schema.rb
+*.db
 config/database.yml
 config/amazon_s3.yml
 config/initializers/recaptcha.rb
 config/config.yml
 config/initializers/site_keys.rb
 Gemfile.lock
-# these are probably from when we used bundler with rails 2.3.x
-vendor/bundler_gems/gems
-vendor/bundler_gems/specifications
-vendor/bundler_gems/doc
-vendor/bundler_gems/environment.rb
+vendor/bundle
+app/assets/bower_components
+app/assets/node_modules

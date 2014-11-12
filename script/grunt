@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# requires nodejs
+cd app/assets
+grunt $1

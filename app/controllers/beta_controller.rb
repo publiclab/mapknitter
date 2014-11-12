@@ -1,5 +1,5 @@
 require 'open3'
-class MapController < ApplicationController
+class BetaController < ApplicationController
   protect_from_forgery :except => [:export]
 
   def index
@@ -242,8 +242,6 @@ class MapController < ApplicationController
       location = GeoKit::GeoLoc.geocode(@map.location)
       @map.lat = location.lat
       @map.lon = location.lng
-  puts @map.lat
-  puts @map.lon
       @map.save
     end
     render :layout => 'knitter'
@@ -385,7 +383,7 @@ class MapController < ApplicationController
       # BRINGS SYSTEM TO A HALT! inspect ulimit params
       #@map.composite(params[:type],params[:infrared])
     end
-          render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
+    render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
 
   def export

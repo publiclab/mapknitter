@@ -1,0 +1,180 @@
+/* Variables */
+$sidebar-width: 30%;
+$sidebar-min-width: 400px;
+$sidebar-padding: 15px;
+
+$sidebar-title-height: 87px;
+$sidebar-title-padding: $sidebar-padding;
+
+/* Change this to reflect the height of the Bootstrap navbar. */
+$bootstrap-navbar-height: 50px;
+$sidebar-header-height: $sidebar-title-height;
+
+$subtle-grey: #e5e5e5;
+
+/* Mixins */
+@mixin sidebar-padding() {
+	padding-left: $sidebar-padding;
+	padding-right: $sidebar-padding;
+}
+
+/* Global */
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+/* Map pane */
+#knitter-map-pane {
+	float: left;
+
+	width: 100% - $sidebar-width;
+
+	/* WARNING: calc does not work in all browsers. */
+	max-width: calc(100% - #{$sidebar-min-width});
+	height: 100%;
+}
+
+/* Sidebar with map details */
+.sidebar {
+	position: relative;
+	float: left;
+	overflow: hidden;
+
+	height: 100%;
+	width: $sidebar-width;
+	min-width: $sidebar-min-width;
+
+	font-family: 'Junction Light';
+
+	.navbar { margin-bottom: -$bootstrap-navbar-height; }
+
+	.sidebar-wrap { 
+		border-left: 1px solid $subtle-grey;
+		height: 100%;
+	}
+
+	.sidebar-inner-wrap {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+	}
+
+	.sidebar-header {
+		@include sidebar-padding();
+		margin-top: $bootstrap-navbar-height;
+		padding-bottom: $sidebar-title-padding;
+		padding-top: $sidebar-title-padding;		
+		h3 { margin: 0; }
+	}
+
+	.sidebar-content {
+		overflow-y: scroll;
+		overflow-x: hidden;
+
+		position: absolute;
+		top: $sidebar-header-height + 100px + $bootstrap-navbar-height;
+		right: 0;
+		left: 0;
+		bottom: 0;
+
+		@include sidebar-padding();
+
+		padding-bottom: $sidebar-padding;
+	}
+
+	.sidebar-buttons {
+		padding-left: $sidebar-padding;
+		padding-right: $sidebar-padding;
+		margin-top: 15px;
+	}
+
+	/* Styles for /maps/:id and /maps/:id/edit */
+	.sidebar-tabs {
+		padding-left: $sidebar-padding;
+		padding-right: 0px;
+	}
+
+	/* Styles for /maps/new */
+	.new-map .sidebar-content {
+		border-top: 1px solid $subtle-grey;
+		top: $sidebar-header-height + $bootstrap-navbar-height;
+	}
+
+	/* Ensure that horizontal nav elements are hidden in the sidebar (not enough room). */
+	.sidebar-only { display: block; }
+	.fullscreen-only { display: none; }
+
+	/* Visual styles */
+	.map-title-examples { list-style-type: none; }
+
+	#latlngs {
+		width: 100%;
+		.form-group {
+			width: 47%;
+			float: left;
+			margin-right: 10px;
+			input { width: 80%; }	
+		}				
+	}
+	.label {
+		margin-left: 2px;
+		margin-right: 2px;
+		a {
+			color: #000;
+			font-weight: normal;
+		}
+	}
+	table {
+		width: 100%;
+		margin-bottom: 5px;
+	}
+	.sidebar-tabs {
+		margin-top: 20px;
+		height: 100%;
+		overflow-y: auto;
+	}
+	textarea {
+		height: 80px;
+		margin-bottom: 15px;
+	}
+	.map-detail-label {
+		color: #999;
+	}
+}
+
+/* 
+ * Override Bootstrap styles for when the nav is contained in the sidebar. 
+ * This is to ensure that the navbar maintains a fixed height,
+ * regardless of screen size, so that the top offset for .sidebar-wrap doesn't change.
+ */
+.sidebar-navbar-nav {
+	float: left;
+	margin: 0;
+
+	> li {
+		float: left;
+		> a {
+			padding-top:    15px;
+			padding-bottom: 15px;
+		}
+	}
+}
+
+.sidebar-navbar-right {
+	float: right;
+}
+
+#comments {
+	.comment-header {
+		background-color: #f2f2f2;
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #d4d4d4;
+		margin-bottom: 5px;
+	}
+}
+	
+.tab-pane { padding-top: 10px; }
+
+.public-lab-primary button { background-color: #f8e4e4; }

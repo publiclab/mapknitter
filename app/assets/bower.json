@@ -1,0 +1,22 @@
+{
+	"name": "mapknitter",
+	"version": "0.1.0",
+	"dependencies": {
+		"jquery-ujs": "rails/jquery-ujs",
+
+		"leaflet": "0.7.3",
+		"leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
+		"leaflet-draw": "manleyjster/Leaflet.draw#enable-marker-editing",
+		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate#master",
+		"leaflet-image-distort": "manleyjster/ImageDistortLeaflet",
+
+		"bootstrap": "http://github.com/twbs/bootstrap/archive/v3.2.0.tar.gz",
+
+		"blueimp-file-upload": "9.7.0",
+		"blueimp-tmpl": "2.5.4",
+
+		"jquery-ui":"1.11.1",
+
+		"junction": "theleagueof/junction"
+	}
+}

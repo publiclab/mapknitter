@@ -1,0 +1,15 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "<%= annotation.geometry_type %>",
+    "coordinates": <%= annotation.coordinates.to_json %>
+  },
+  "properties": {
+    "annotation_type": "<%= annotation.annotation_type %>",
+    "id":     <%= annotation.id %>,
+    "map_id": <%= annotation.map_id %>,
+    "style":  <%= annotation.style.to_json %>,
+    "textContent":   "<%= annotation.text %>",
+    "url":    "<%= url_for([@map, annotation]) %>"
+  }
+}

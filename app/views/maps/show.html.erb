@@ -1,0 +1,49 @@
+<% content_for :title do %>
+	<h3 class="sidebar-title">
+		<%= @map.name %>
+		<div class="pull-right dropdown">
+			<a href="#" data-toggle="dropdown">
+				<span class="glyphicon glyphicon-cog"></span>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				<% if logged_in? && current_user.can_delete?(@map) %>
+					<li><a>Delete Map</a></li>
+				<% end %>
+			</ul>
+		</div>
+	</h3>
+	<div class="map-author">
+		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a>
+	</div>	
+<% end %>
+
+<% content_for :details do %>
+	<div>
+		<%= markdown_to_html(@map.description) %>
+	</div>
+
+	<p>
+		<span class="map-detail-label">Location</span>
+		<%= @map.location %>
+	</p>
+
+
+	<table>
+		<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+	</table>
+
+	<div class="tags">
+		<%= render :partial => "tags/index" %>
+	</div>
+
+	<div class="comments">
+		<%= render :partial => "comments/index" %>
+		<%= render :partial => "comments/new" %>
+	</div>
+
+	<%= javascript_include_tag 'tags' %>
+<% end %>
+
+<% content_for :warpables do %>
+	<%= render :partial => "/warpables/index" %>
+<% end %>

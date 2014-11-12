@@ -1,0 +1,57 @@
+<div id="header" class="navbar navbar-inverse navbar-static-top">
+    <div class="navbar-inner hidden-print" style="padding:0 10px;">
+        <a class="navbar-brand" id="brand" href="/"><strong>MapKnitter</strong><span class="fullscreen-only"> by Public Lab</span></a>
+        <a class="navbar-brand" id="brand-compact" href="/">MK</a>
+
+        <ul class="nav navbar-nav fullscreen-only">
+            <li><a href="">Getting Started</a></li>
+            <li><a>About Balloon Mapping</a></li>
+            <li><a>Getting Help</a></li>
+            <li><a>Cartography Collective</a></li>   
+        </ul>
+
+        <%#  
+          # Sidebar is collapsed into a dropdown when the navbar is in the sidebar.  
+          # All <li> tags are moved into the dropdown using jQuery.
+           %>
+        <ul class="nav navbar-nav sidebar-navbar-nav sidebar-only">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu"></ul>
+            </li>     
+        </ul>
+
+        <ul class="nav navbar-nav sidebar-navbar-nav sidebar-navbar-right">
+        <% if logged_in? %>
+            <li>
+                <a href="//publiclab.org/profile/<%= current_user.login %>"><span class="glyphicon glyphicon-user"></span> <%= current_user.login %></a>
+            </li>
+        <% else %>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login-menu">Log In <span class="caret"></span></a>
+                <div class="dropdown-menu login-form" role="menu" aria-labelled-by="login-menu">
+                    <% form_tag(session_path, {:class => "form"}) do -%>
+
+                    <div class="form-group">
+                        Log in using your Public Lab username, or <a href="http://publiclab.org/signup">create a Public Lab account</a>.
+                    </div>
+
+                    <div class="form-group">
+                        <%= text_field_tag 'login', @login, { :placeholder => "Username", :class => "form-control"} %>
+                        <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
+                        <label for="remember_me">
+                            <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
+                        </label>                                        
+                    </div>
+
+                    <div class="form-group">
+                        <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+                    </div>
+
+                    <% end %>                          
+                </div>
+            </li>                
+        <% end %>
+        </ul>
+    </div><!-- .navbar-inner -->
+</div><!-- #header -->
