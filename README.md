@@ -41,19 +41,40 @@ The core Public Lab program is focused on “civic science” in which we resear
 Join now at: http://publiclab.org
 
 ==========================
+PREREQUISITES
+==========================
+
+Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
+
+Install a database, if necessary:
+
+`sudo apt-get install mysql-server`
+
+Application-specific dependencies:
+
+`sudo apt-get install bundler curl gdal-bin imagemagick ruby-rmagick s3cmd install libfreeimage3 libfreeimage-dev ruby-dev librmagick-ruby libmagickcore-dev libmagickwand-dev python-gdal zip libopenssl-ruby libcurl4-openssl-dev libssl-dev libmysqlclient-dev`
+
+Install rvm for Ruby management (http://rvm.io)
+
+`curl -L https://get.rvm.io | bash -s stable`
+
+# you may need to enable 'Run command as a login shell' in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+
+`rvm install 2.1.2`
+
+==========================
 INSTALLATION
 ==========================
 
 You'll need Ruby 1.9.3-2.1.x and GDAL >=1.7.x (gdal.org), as well as ImageMagick
 
-1) Download source from https://github.com/publiclab/mapknitter
-2) Install bundler with `apt-get install bundler` (ubuntu/debian) if you don't have it already.
-3) Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
-4) Copy and configure config/database.yml from config/database.yml.example
-5) Initialize database with "rake db:migrate"
-6) Change the Google Maps API key at config/config.yml, which you can copy from config/config.yml.example. If you're running it locally, you can use the default which is provided; it's set up for http://localhost:3000. For a new one visit http://code.google.com/apis/maps/signup.html
-7) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
-8) Start rails with "passenger start" from the Rails root and open http://localhost:3000 in a web browser.
+1. Download source from https://github.com/publiclab/mapknitter
+2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
+3. Copy and configure config/database.yml from config/database.yml.example
+4. Copy and configure config/config.yml from config/config.yml.example
+5. Initialize database with "rake db:migrate"
+6. (Not necessary for basic development) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
+7. Start rails with "passenger start" from the Rails root and open http://localhost:3000 in a web browser.
 
 ==========================
 BUGS AND SUPPORT
