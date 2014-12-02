@@ -1,3 +1,13 @@
+<style>
+  #toolbar {
+    padding:4px;
+  }
+  #leafletmap {
+    width:920px;
+    height:300px;
+  }
+</style>
+<div style="height:300px;">
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclab.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
@@ -6,7 +16,7 @@
 <p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
 <%= render :partial => "leaflet" %>
 <% end %>
-
+</div>
 <%= render :partial => "annotations" %>
 
 <br style="clear:left;" />
