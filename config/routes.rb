@@ -81,6 +81,7 @@ Mapknitter::Application.routes.draw do
   post 'maps' => 'map#create'
   get 'map/create/:id' => 'map#index'
   get 'maps/:id' => 'map#show'
+  get 'map/embed/:id' => 'annotation#embed'
   get 'import/:name' => 'warper#import'
 
   get 'authors' => 'users#authors'
@@ -105,6 +106,7 @@ Mapknitter::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
 
+  get ':controller/:action'
   get ':controller/:action/:id'
   #get ':controller.:format' # this doesn't work -- what's it for?
   get ':controller/:action.:format'

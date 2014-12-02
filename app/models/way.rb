@@ -1,4 +1,5 @@
 class Way < ActiveRecord::Base
+  attr_accessible :body, :lat, :lon, :map_id
   has_many :nodes, :dependent => :destroy
   
   def bbox=(bbox)

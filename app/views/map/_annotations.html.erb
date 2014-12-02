@@ -48,9 +48,9 @@
   <% end %>
   $A.poly = false
 
-  notes = <%= @map.annotations(0.5).to_json %>
+  notes = <%=raw @map.annotations(0.5).to_json %>
   $.each(notes,function(i,note) {
-    note = note['node']
+    node = note['node']
     description = note['body']
     <% if logged_in? || (logged_in? && current_user.role == 'admin') %>
     if (note['author'] == '<%= current_user.login %>') {
@@ -75,7 +75,6 @@
 <style>
   #toolbar {
     background:#333;
-    padding:4px;
     font-family:lucida grande, sans-serif;
   }
 </style>
