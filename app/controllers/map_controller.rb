@@ -86,7 +86,7 @@ class MapController < ApplicationController
   # pt fm ac wpw
   def images
     @map = Map.find_by_name params[:id]
-    @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = false'])
+    @images = Warpable.find_all_by_map_id(@map.id,:conditions => ['parent_id IS NULL AND deleted = "false"'])
     @image_locations = []
     if @images
       @images.each do |image|
