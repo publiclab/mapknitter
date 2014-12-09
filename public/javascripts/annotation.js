@@ -1,4 +1,5 @@
 $A = {
+  annotations: L.layerGroup(),
   description: "",
   node_index: 0,
   fullscreen: false,
@@ -38,12 +39,19 @@ $A = {
     map.invalidateSize()
   },
 
+  getGeoJSON: function() {
+    document.open("text/plain")
+    document.write(JSON.stringify($A.annotations.toGeoJSON()))
+    document.close()
+  },
+
   add_point: function() {
     map.on('click',$A.save_point) 
   },
   save_point: function(e) {
       $A.description = prompt("Enter a description")
       $A.marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+      $A.annotations.addLayer($A.marker)
       $.ajax({
         url: "/annotation/create/",
         type: "GET",
@@ -115,6 +123,7 @@ $A = {
         //$A.layer[color].push($A.poly)
         $A.polygons[''+r] = $A.poly
         $A.poly = false
+        $A.annotations.addLayer($A.poly)
         $A.node_index = 0 // track order of nodes
       }
     })
