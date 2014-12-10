@@ -76,19 +76,22 @@ class AnnotationController < ApplicationController
       @poly.author = map.author if !logged_in? && map && map.anon_annotatable
       @poly.save!
       @nodes = params[:nodes]
-      @nodes.each do |node|
+      @nodes.keys.each do |key|
+        node = @nodes[key]
         note = Node.new(
-          :lat => node[1][0],
-          :lon => node[1][1],
-          :way_order => node[1][2],
+          :lat => node[0].to_f,
+          :lon => node[1].to_f,
+          :way_order => node[2].to_i,
           :way_id => @poly.id,
-          :map_id => params[:map_id]
+          :map_id => params[:map_id].to_i
         )
         note.author = current_user.login if logged_in?
         # anonyous annotations
         # be sure the annnotation is nearby the map... by .1 lat/lon
         note.author = map.author if !logged_in? && map && map.anon_annotatable
         note.save!
+        puts note
+        puts note.inspect
       end
       render :text => @poly.id
     else

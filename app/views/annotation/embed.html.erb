@@ -8,7 +8,8 @@
   <title>MapKnitter: <%= @map[:name] %></title>
   <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
 
-  <script src="/leaflet/leaflet-src.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -35,7 +36,7 @@
     }
   </style>
   <%= render :partial => "map/leaflet" %>
-  <%= render :partial => "map/annotations" %>
+  <% if params[:annotations] %><%= render :partial => "map/annotations" %><% end %>
   <script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script> 
 </body>
 </html>
