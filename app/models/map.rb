@@ -162,117 +162,6 @@ class Map < ActiveRecord::Base
     end
   end
 
-  # composite in infrared data to make an NRG
-  def composite(export_type,band_id)
-
-    # create an export based on the last normal export and start tracking status:
-    unless export = self.get_export(export_type) # searches only "normal" exports
-      export = Export.new({:map_id => self.id,:status => 'starting'})
-    end
-    export.export_type = 'nrg'
-    export.bands_string = 'nrg:'+band_id.to_s
-    export.status = 'starting'
-    export.tms = false
-    export.geotiff = false
-    export.zip = false
-    export.jpg = false
-    export.save
-
-    band_map = Map.find(band_id)
-    path = "public/warps/"+self.name+"/"
-    band_path = "public/warps/"+band_map.name+"/"
-
-    stdin, stdout, stderr = Open3.popen3('rm -r public/tms/'+self.name+"-nrg/")
-    puts stdout.readlines
-    puts stderr.readlines
-
-    stdin, stdout, stderr = Open3.popen3('rm '+path+self.name+"-nrg.tif")
-    puts stdout.readlines
-    puts stderr.readlines
-
-    stdin, stdout, stderr = Open3.popen3('rm '+path+self.name+"-nrg.jpg")
-    puts stdout.readlines
-    puts stderr.readlines
-
-    gdalbuildvrt = "gdalbuildvrt "+path+self.name+"-nrg.vrt "+path+self.name+"-geo.tif "+band_path+band_map.name+"-geo.tif" 
-    puts gdalbuildvrt
-    system(Gdal.ulimit+gdalbuildvrt)
-
-    # edit the XML file here - swap band #s and remove alpha layer
-    #require "rexml/document"
-    file = File.new( path+self.name+"-nrg.vrt" )
-    doc = REXML::Document.new file
-    bands = []
-    #doc.elements.each('VRTDataset/VRTRasterBand/SimpleSource/SourceBand') do |n|
-    # first, remove infrared SimpleSources from bands 2 and 3, visible from SimpleSource band 1
-    index = 0
-    doc.elements.each('VRTDataset/VRTRasterBand') do |rasterband|
-      sourceindex = 0
-      rasterband.elements.each('SimpleSource') do |source|
-        if index == 0 # if R band
-          if sourceindex == 0 # remove visible source
-            source.remove
-          else
-            # leave infrared "red" band
-            # ...but maybe this is wrong, we should blend all 3?
-          end
-        elsif index > 0 # if G,B,A band
-          if sourceindex == 1 # remove infrared source
-            source.remove 
-          else
-            source.elements.each("SourceBand") do |band|
-              band.text = band.text.to_i-1 # decrement band 
-            end
-          end
-        end
-        sourceindex += 1
-      end
-      rasterband.remove if index == 3 # delete alpha band
-      index += 1
-    end
-
-    # write VRT to log:
-    # puts doc
-    # Write the result back into the VRT file.
-    formatter = REXML::Formatters::Default.new
-    file = File.open( path+self.name+"-nrg.vrt", "w") do |f|
-      formatter.write(doc, f)
-    end
-
-    geotiff_location = path+self.name+"-nrg.tif"
-    gdalwarp = "gdalwarp "+path+self.name+"-nrg.vrt "+geotiff_location
-    puts gdalwarp
-    system(Gdal.ulimit+gdalwarp)
-   
-    info = (`identify -quiet -format '%b,%w,%h' #{geotiff_location}`).split(',')
-    puts info
-    
-    export = self.get_export(export_type)
-    if info[0] != ''
-      export.geotiff = true
-      export.size = info[0]
-      export.width = info[1]
-      export.height = info[2]
-      export.cm_per_pixel = 0 #100.0000/pxperm must get from gdalinfo?
-      export.status = 'tiling'
-      export.save
-    end
- 
-    puts '> generating tiles'
-    # make tiles:
-    google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'-nrg" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-nrg.tif '+Rails.root.to_s+'/public/tms/'+self.name+"-nrg/"
-#    puts gdal2tiles
-#    puts system('which gdal2tiles.py')
-    system(Gdal.ulimit+gdal2tiles)
-    export.tms = true
-    export.status = 'generating jpg'
-    export.save
-    export.jpg = true if self.generate_jpg("nrg")
-    export.status = 'complete'
-    export.save
-  end
-
   # for sparklines graph display
   def images_histogram
     hist = []
@@ -360,7 +249,7 @@ class Map < ActiveRecord::Base
     composite_location
   end
   
-  # generates a tileset at Rails.root/public/tms/<map_name>/
+  # generates a tileset at Rails.root.to_s/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
     gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.name+"/"

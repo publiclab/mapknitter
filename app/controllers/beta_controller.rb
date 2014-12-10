@@ -402,7 +402,7 @@ class BetaController < ApplicationController
       export.jpg = false
       export.save       
   
-      directory = Rails.root+"/public/warps/"+map.name+"/"
+      directory = Rails.root.to_s+"/public/warps/"+map.name+"/"
       stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
       puts stdout.readlines
       puts stderr.readlines

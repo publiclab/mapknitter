@@ -183,7 +183,7 @@ class Warpable < ActiveRecord::Base
         }
       }
     else
-      File.copy(Rails.root+'/public'+self.image.image_file_name,local_location)
+      File.copy(Rails.root.to_s+'/public'+self.image.image_file_name,local_location)
     end
 
     points = ""
