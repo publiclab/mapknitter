@@ -42,11 +42,11 @@
 
 
   <% @map.polygons(0.1).each do |poly| %>
-  $A.poly = new L.Polygon([<% Node.find_all_by_way_id(poly.id, :order => "way_order DESC").each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>,<%= note.way_order %>/<%= note.id %>]<%= "," if i != poly.nodes.length-1 %>
+    $A.poly = new L.polygon([<% Node.find_all_by_way_id(poly.id, :order => "way_order DESC").each_with_index do |note,i| %>[<%= note.lat %>,<%= note.lon %>,<%= note.way_order %>/<%= note.id %>]<%= "," if i != poly.nodes.length-1 %>
 <% end %>],{color:"<%= poly.color %>"})
-  $A.poly.addTo(map).bindPopup("<%= poly.body.gsub('"','\"').gsub("'","\'") %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='#' onClick='$A.delete_poly(<%= poly.id %>)'>x</a>)<% end %>")
-  $A.annotations.addLayer($A.poly)
-  $A.polygons['<%= poly.id %>'] = $A.poly
+    $A.poly.addTo(map).bindPopup("<%= poly.body.gsub('"','\"').gsub("'","\'") %><% if logged_in? && (poly.author == current_user.login || current_user.role == 'admin') %> (<a href='#' onClick='$A.delete_poly(<%= poly.id %>)'>x</a>)<% end %>")
+    $A.annotations.addLayer($A.poly)
+    $A.polygons['<%= poly.id %>'] = $A.poly
   <% end %>
   $A.poly = false
 
@@ -89,7 +89,6 @@
 <% end %>
 <a class="btn btn-small btn-inverse" data-toggle="modal" href="#sharemodal"><i class="icon icon-share icon-white"></i> Share</a>
 <a class="btn btn-small btn-inverse" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="icon icon-fullscreen icon-white"></i> Fullscreen</a>
-<a class="btn btn-small btn-inverse" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Permalink</a>
 <% if logged_in? && @map.author == current_user.login %>
 <% if @map.anon_annotatable %>
   <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Disable anonymous annotations</a>
@@ -105,6 +104,6 @@
 
 <div class="btn-group pull-right">
   <a class="btn btn-inverse btn-small" target="_blank" href="/tms/<%= @map.name %>/doc.kml">beta KML</a>
-  <a class="btn btn-inverse btn-small" target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">low-res Google Maps viewer</a>
+  <a class="btn btn-inverse btn-small" target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">gMaps</a>
 </div>
 </div>

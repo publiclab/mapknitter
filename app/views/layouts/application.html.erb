@@ -63,16 +63,20 @@
       <br style="clear:both;" />
   </div>
 
-  <% if flash[:notice] %>
-  <div class="alert alert-success">
-    <%= flash[:notice] %>  
+  <div class="container-fluid">
+    <div class="alert error"><button type="button" class="close" data-dismiss="alert">×</button><b>Warning:</b> MapKnitter is undergoing major infrastructural upgrades; please report any issues you encounter <a href="https://github.com/publiclab/mapknitter/issues">on Github</a> or to <a href="web@publiclab.org">web@publiclab.org</a></div>
+ 
+    <% if flash[:notice] %>
+    <div class="alert alert-success">
+      <%= flash[:notice] %>  
+    </div>
+    <% end %>
+    <% if flash[:error] %>
+    <div class="alert alert-error">
+      <%= flash[:error] %>  
+    </div>
+    <% end %>
   </div>
-  <% end %>
-  <% if flash[:error] %>
-  <div class="alert alert-error">
-    <%= flash[:error] %>  
-  </div>
-  <% end %>
 
     <%= yield %>
 

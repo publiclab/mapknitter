@@ -283,7 +283,7 @@ class Map < ActiveRecord::Base
 
   def polygons(dist)
     nodes = Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id != 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "way_order DESC")
-    Way.find(nodes.collect(&:way_id).uniq)
+    Way.where('id IN (?)',nodes.collect(&:way_id).uniq)
   end
 
 end

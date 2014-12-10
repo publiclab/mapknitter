@@ -8,6 +8,8 @@
 	<p><a class="btn btn-mini" target="_blank" href="/annotation/embed/<%= @map.name %>">permalink</a> (click for fullscreen)</p>
 	<p><b>Embed code:</b><br />
 	<textarea id="embedcode"></textarea>
+	<p><b>With annotations:</b><br />
+        <textarea id="embedcode-annotations"></textarea>
 	</p>
 
   </div>
@@ -19,7 +21,7 @@
 <div id="leafletmap"></div>
 
 <style>
-#embedcode {
+#embedcode, #embedcode-annotations {
   height:100px;
   font-size:10px;
 }
@@ -33,6 +35,7 @@
 <script>
 
   $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="http://mapknitter.org/annotation/embed/<%= @map.name %>"></iframe>')
+  $('#embedcode-annotations').val('<iframe style="border:none;" width="500" height="375" src="http://mapknitter.org/annotation/embed/<%= @map.name %>?annotations=true"></iframe>')
   var map
 
   (function() {
