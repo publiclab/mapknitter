@@ -6,7 +6,7 @@ class Warpable < ActiveRecord::Base
   has_attached_file :image,
     #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
     #:url => "/system/:attachment/:id/:style/:filename",
-    :path => "paperclip/:id/:style.:extension",
+    :path => "warpables/:id/:custom_filename.:extension",
     :storage => :s3,
     :s3_credentials => "config/amazon_s3.yml",
     :styles => {
@@ -177,6 +177,7 @@ class Warpable < ActiveRecord::Base
     if (self.image.url[0..3] == 'http')
       Net::HTTP.start('s3.amazonaws.com') { |http|
       #Net::HTTP.start('localhost') { |http|
+        puts (self.image.url)
         resp = http.get(self.image.url)
         open(local_location, "wb") { |file|
           file.write(resp.body)
@@ -328,6 +329,17 @@ class Warpable < ActiveRecord::Base
   def user_id
     Map.find self.map_id
     map.user_id
+  end
+
+  private
+
+  Paperclip.interpolates :custom_filename do |attachment, style|
+    if style == :original
+      custom_filename = basename(attachment,style) # generate hash path here
+    else
+      custom_filename = "#{basename(attachment,style)}_#{style}" # generate hash path here
+    end
+
   end
 
 end
