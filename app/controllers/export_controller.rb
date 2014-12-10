@@ -20,7 +20,7 @@ class ExportController < ApplicationController
     render :layout => "map"
   end
 
-    def formats
+  def formats
     @map = Map.find params[:id] 
     @export = @map.get_export(params[:type])
     render :layout => false
@@ -38,7 +38,7 @@ class ExportController < ApplicationController
     map = Map.find params[:id] 
     if export = map.get_export(params[:type])
       if  export.status == 'complete'
-        output = 'complete'
+        output = 'complete (<a href="/map/view/'+map.name+'">view</a>)'
       elsif export.status == 'none'
         output = 'export has not been run'
       elsif export.status == 'failed'

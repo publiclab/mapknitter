@@ -1,5 +1,10 @@
 class AnnotationController < ApplicationController
 
+  def embed
+    @map = Map.find_by_name params[:id]
+    render :layout => false
+  end
+
   def create
     map = Map.find(params[:map_id]) if params[:map_id]
     if logged_in? || (map && map.anon_annotatable)

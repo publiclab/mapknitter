@@ -1,19 +1,48 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-require_dependency 'password'
-
-include AuthenticatedSystem
-
 class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
   helper :all # include all helpers, all the time
 
-  # See ActionController::RequestForgeryProtection for details
-  # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery # :secret => 'e60163cd72d897fd0ae06095d71acfbc'
-  
-  # See ActionController::Base for details 
-  # Uncomment this to filter the contents of submitted sensitive data parameters
-  # from your application log (in this case, all fields with names like "password"). 
-  filter_parameter_logging :password
-  
+  before_filter :current_user
+  helper_method :logged_in?
+
+  def current_user
+    user_id = session[:user_id] 
+    if user_id
+      begin
+        @user = User.find(user_id)
+      rescue
+        @user = nil
+      end
+    else
+      @user = nil
+    end
+  end
+
+  private
+
+    def require_login
+      unless logged_in?
+        path_info = request.env['PATH_INFO']
+        flash[:warning] = "You must be logged in to access this section"
+        redirect_to '/login?back_to=' + URI.encode(path_info) # halts request cycle
+      end
+    end
+
+    def logged_in?
+      user_id = session[:user_id]
+
+      begin
+        if user_id and User.find(user_id)
+          return true
+        else
+          return false
+        end
+      rescue
+        return false
+      end
+    end
+
 end

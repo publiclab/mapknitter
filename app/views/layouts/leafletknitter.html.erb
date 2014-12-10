@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>MapKnitter: <%= @map[:name] %></title>
+	<meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
+	<script src="/leaflet/leaflet-src.js" type="text/javascript" charset="utf-8"></script>
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+	<link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="/imagedistort/imagemarker.js"></script>
+	<script src="/imagedistort/distortableimage.js"></script>
+	<script src="/imagedistort/opacity.js"></script>
+	<script src="/imagedistort/outline.js"></script>
+	<script src="/imagedistort/rotate.js"></script>
+	<script src="/imagedistort/scale.js"></script>
+	<script src="/imagedistort/imagedistort.js"></script>
+	<script src="/easybutton.js" type="text/javascript" charset="utf-8"></script>
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	
+</head>
+<body>
+
+<%= yield %>
+
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-180781-29");
+			pageTracker._trackPageview();
+		} catch(err) {}
+	</script>
+</body>
+</html>

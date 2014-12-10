@@ -1,17 +1,27 @@
+<style>
+  #toolbar {
+    padding:4px;
+  }
+  #leafletmap {
+    width:920px;
+    height:300px;
+  }
+</style>
+<div style="height:300px;">
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
-<iframe id="preview" src="http://archive.publiclaboratory.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
+<iframe id="preview" src="http://archive.publiclab.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
 <%= render :partial => "leaflet" %>
 <% else %>
 <p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
 <%= render :partial => "leaflet" %>
 <% end %>
-
+</div>
 <%= render :partial => "annotations" %>
 
 <br style="clear:left;" />
 
-<% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.public_filename(:medium) %>" /><% end %>
+<% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.image.url(:medium) %>" /><% end %>
 
 <div id="main">
   <h2><%= @map.name %><% if @export %> <small><%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px</small><% end %></h2>  
@@ -44,7 +54,7 @@
   <div id='images'>
     <% @images.each do |image| %>
     <div class="image">
-      <a href="<%= image.public_filename %>"><img src="<%= image.public_filename(:thumb) %>" /></a>
+      <a href="<%= image.image.url %>"><img src="<%= image.image.url(:thumb) %>" /></a>
       <p>
        <%= image.cm_per_pixel.to_s[0..2] %> cm/px<br /> 
        <%= time_ago_in_words(image.created_at) %> ago
@@ -79,7 +89,7 @@
     <% @map.nearby_maps(0.1)[0..3].each do |map| %>
       <% if !map.archived && !map.private && map.warpables.length > 0 %>
       <div class="map <%= 'odd' if odd %>">
-        <a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.public_filename(:small) %>" /></a>
+        <a href="/map/view/<%= map.name %>"><img src="<%= map.warpables.first.image.url(:small) %>" /></a>
         <h3><a href ="/map/view/<%= map.name %>"><%= map.name.capitalize %></a> <small>by <a href="/author/<%= map.author %>"><%= map.author %></a></small> </h3>
         <p><small><%= map.location %></small></p>
         <p class="description"><small>
@@ -191,7 +201,7 @@
   
     <input type='hidden' name='map[id]' value="<%= @map.id %>"/>
     
-    <% if admin %>
+    <% if logged_in? && (@map.author == current_user.login || current_user.role == "admin") %>
     <label for="password">Password (optional -- to keep your map private)</label>
     <input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password">
     <% end %>
@@ -254,7 +264,7 @@
       });
 
     </script>
-    <% unless logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <% unless logged_in? || @map.user_id != 0 %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
     <label for="description">Description</label>
     <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
     

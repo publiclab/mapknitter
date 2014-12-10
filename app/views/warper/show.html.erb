@@ -3,4 +3,4 @@
 Filename: <%= @image.filename %><br />
 Size: <%= @image.size %><br />
 
-<a href="<%= @image.public_filename() %>"><img src="<%= @image.public_filename(:medium) %>" /></a><br />
+<a href="<%= @image.image.url %>"><img src="<%= @image.image.url(:medium) %>" /></a><br />
