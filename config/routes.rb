@@ -80,6 +80,7 @@ Mapknitter::Application.routes.draw do
   get 'maps' => 'map#index'
   post 'maps' => 'map#create'
   get 'map/create/:id' => 'map#index'
+  get 'map/region/:id' => 'map#region'
   get 'maps/:id' => 'map#show'
   get 'map/embed/:id' => 'annotation#embed'
   get 'import/:name' => 'warper#import'

@@ -49,13 +49,19 @@
 	var google = new L.Google("SATELLITE",{opacity:0.5});
 	var main = new L.TileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
 
+        // add an OpenStreetMap tile layer
+        var osm = new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        })
+
 	map = new L.Map('leafletmap', {
 		crs:L.CRS.EPSG3857,
 		layers: [google,main]
 	});
 
 	var baseMaps = {
-	    "Google": google
+	    "Google Satellite": google,
+	    "OpenStreetMap": osm
 	};
 	var overlayMaps = {
 	    "Overlay": main
