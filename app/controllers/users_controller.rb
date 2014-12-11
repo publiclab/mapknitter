@@ -18,14 +18,12 @@ class UsersController < ApplicationController
   def profile
     params[:id] = current_user.login if logged_in? && params[:id] == 0
     @user = User.find_by_login(params[:id])
-    @maps = @user.maps
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.where(user_id: @user.id).paginate(:page => params[:page], :per_page => 24)
   end
 
   def dashboard
     if logged_in?
-      @maps = Map.find_all_by_user_id(current_user.id)
-      @maps = @maps.paginate :page => params[:page], :per_page => 24
+      @maps = Map.where(user_id: current_user.id).paginate(:page => params[:page], :per_page => 24)
     else
       flash[:error] = "You must be logged in to see your dashboard."
       redirect_to "/login"

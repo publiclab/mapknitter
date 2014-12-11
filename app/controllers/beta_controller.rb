@@ -17,14 +17,12 @@ class BetaController < ApplicationController
   end
 
   def all
-    @maps = Map.find :all, :conditions => {:password => ''}, :order => 'updated_at DESC'
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.where(password: '').order('updated_at DESC').paginate(:page => params[:page], :per_page => 24)
     render "map/index"
   end
 
   def license
-    @maps = Map.find :all, :conditions => {:password => '',:license => params[:id]}, :order => 'updated_at DESC'
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.where(password: '',license: params[:id]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 24)
     render "map/search"
   end
 
@@ -79,8 +77,7 @@ class BetaController < ApplicationController
   end
 
   def region
-    @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon])
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).paginate(:page => params[:page], :per_page => 24)
   end
 
   # pt fm ac wpw
@@ -313,8 +310,7 @@ class BetaController < ApplicationController
   
   def search
     params[:id] ||= params[:q]
-    @maps = Map.find(:all, :conditions => ['archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%"],:limit => 100)
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.where('archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%").paginate(:page => params[:page], :per_page => 24)
   end
  
   # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
