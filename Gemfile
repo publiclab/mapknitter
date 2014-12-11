@@ -5,7 +5,7 @@ ruby "2.1.2"
 gem "rails", "~>3.2"
 
 # dependencies
-gem "mysql", "2.9.1"
+gem "mysql2"
 gem "geokit-rails"
 gem "image_science", "1.2.6"
 gem "recaptcha", :require => "recaptcha/rails"
