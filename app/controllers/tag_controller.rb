@@ -22,8 +22,8 @@ class TagController < ApplicationController
 
   def show
     @tag = Tag.find_by_name(params[:id])
-    @maps = @tag.maps
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
+    @maps = Map.where('id IN (?)',Tag.where(name: params[:id]).collect(&:map_id).uniq).paginate(:page => params[:page], :per_page => 24)
+    
     render :template => "map/search"
   end
 
