@@ -1,10 +1,10 @@
 require 'open-uri'
 class WarperController < ApplicationController
   # avoid raising exceptions for common errors (e.g. file not found)
-  rescue_from Errno::ENOENT, :with => :url_upload_not_found
-  rescue_from Errno::ETIMEDOUT, :with => :url_upload_not_found
-  rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
-  rescue_from Timeout::Error, :with => :url_upload_not_found
+  #rescue_from Errno::ENOENT, :with => :url_upload_not_found
+  #rescue_from Errno::ETIMEDOUT, :with => :url_upload_not_found
+  #rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
+  #rescue_from Timeout::Error, :with => :url_upload_not_found
   protect_from_forgery :except => [:update,:delete]  
 
   def new
@@ -23,7 +23,9 @@ class WarperController < ApplicationController
       if @warpable.save
         redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
       else
-        render :action => :new
+puts @warpable.inspect
+puts @warpable.save
+        render :text => "There was an error."
       end
     else
       render :text => "You must be logged in to add images to this map"
