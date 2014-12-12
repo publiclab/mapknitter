@@ -10,7 +10,7 @@ class Warpable < ActiveRecord::Base
     #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
     #:url => "/system/:attachment/:id/:style/:filename",
     :path => "warpables/:id/:custom_filename.:extension",
-    :storage => :s3,
+    :storage => :s3, # also modify save_dimensions if you are not going to use s3
     :s3_credentials => "config/amazon_s3.yml",
     :styles => {
       :medium=> "500x375",
@@ -20,12 +20,20 @@ class Warpable < ActiveRecord::Base
   validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif"]
 
   belongs_to :map
-  before_save :save_dimensions
+  after_save :save_dimensions
 
+  # this has been modified to work with s3; 
   def save_dimensions
-    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path)
-    self.width = geo.width
-    self.height = geo.height
+    #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # old version, stopped working...?
+puts self.image.url
+    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
+    #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.path)) # local version
+
+    #Rails >= v3.1 only
+    self.update_column(:width, geo.width)
+    self.update_column(:height, geo.height)
+    #Rails >= v4.0 only
+    #self.update_columns(attributes)
   end
 
   ########################################################
