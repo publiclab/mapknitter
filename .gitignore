@@ -13,6 +13,7 @@
 # Ignore all logfiles and tempfiles.
 /tmp
 *.swp
+*.db
 .DS_Store
 log/
 tmp/*
@@ -28,9 +29,6 @@ config/amazon_s3.yml
 config/initializers/recaptcha.rb
 config/config.yml
 config/initializers/site_keys.rb
-Gemfile.lock
-# these are probably from when we used bundler with rails 2.3.x
-vendor/bundler_gems/gems
-vendor/bundler_gems/specifications
-vendor/bundler_gems/doc
-vendor/bundler_gems/environment.rb
+vendor/bundle
+public/lib
+node_modules

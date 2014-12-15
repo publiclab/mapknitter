@@ -6,14 +6,14 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="/leaflet/leaflet.js" type="text/javascript" charset="utf-8"></script>
-  <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <script src="/lib/leaflet/dist/leaflet.js" type="text/javascript" charset="utf-8"></script>
+  <link href="/lib/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/lib/leaflet/dist/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <script src="/javascripts/jquery.min.js"></script>
-  <script src="/id-leaflet-tmp/easybutton.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/lib/leaflet-distortableimage/lib/easybutton.js" type="text/javascript" charset="utf-8"></script>
 
-  <link rel="stylesheet" href="/id-leaflet-tmp/DistortableImageOverlay.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <script src="/id-leaflet-tmp/DistortableImageOverlay.js"></script>
+  <link rel="stylesheet" href="/lib/leaflet-distortableimage/DistortableImageOverlay.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <script src="/lib/leaflet-distortableimage/DistortableImageOverlay.js"></script>
 </head>
 <body style="margin:0;">
 
@@ -30,7 +30,7 @@
     (function(){
 
       // basic Leaflet map setup
-      map = new L.map('map').setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom %>);
+      map = new L.map('map').setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom.to_i-1 %>);
       L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -41,7 +41,8 @@
 
       // startup the ImageDistort plugin
       $L.initialize( {
-        uploadBtn: true // prompt and handle new images
+        uploadBtn: true, // prompt and handle new images
+        img_dir: '/lib/leaflet-distortableimage/src/images/'
       })
 
     <% @warpables.each do |warpable| %>
@@ -66,7 +67,6 @@
         });
       img.id = <%= warpable.id %>
       img.locked = <%= warpable.locked %>
-      setTimeout(1000,img.updateTransform())// kludge
 
     <% end %>
 
