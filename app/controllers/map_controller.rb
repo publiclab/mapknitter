@@ -77,7 +77,8 @@ class MapController < ApplicationController
   end
 
   def region
-    @maps = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).paginate(:page => params[:page], :per_page => 24)
+    ids = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).collect(&:id)
+    @maps = Map.where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24)
   end
 
   # pt fm ac wpw
