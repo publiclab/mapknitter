@@ -233,16 +233,20 @@ class BetaController < ApplicationController
       flash[:error] = "That password is incorrect." if params[:password] != nil
       redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
-    @map.zoom = 1.6 if @map.zoom == 0
-    @warpables = @map.flush_unplaced_warpables
-    @nodes = @map.nodes
-    if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
-      location = GeoKit::GeoLoc.geocode(@map.location)
-      @map.lat = location.lat
-      @map.lon = location.lng
-      @map.save
-    end
-    render :layout => 'knitter'
+      @map.zoom = 1.6 if @map.zoom == 0
+      @warpables = @map.flush_unplaced_warpables
+      @nodes = @map.nodes
+      if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
+        location = GeoKit::GeoLoc.geocode(@map.location)
+        @map.lat = location.lat
+        @map.lon = location.lng
+        @map.save
+      end
+      if params[:leaflet]
+        render :layout => false, :template => 'map/leaflet'
+      else
+        render :layout => 'knitter'
+      end
     end
   end
   
