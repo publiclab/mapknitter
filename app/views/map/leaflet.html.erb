@@ -8,9 +8,9 @@
 
   <script src="/leaflet/leaflet.js" type="text/javascript" charset="utf-8"></script>
   <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/leaflet/dist/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <script src="/jquery.min.js"></script>
-  <script src="../lib/easybutton.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <script src="/javascripts/jquery.min.js"></script>
+  <script src="/id-leaflet-tmp/easybutton.js" type="text/javascript" charset="utf-8"></script>
 
   <link rel="stylesheet" href="/id-leaflet-tmp/DistortableImageOverlay.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <script src="/id-leaflet-tmp/DistortableImageOverlay.js"></script>
@@ -54,19 +54,19 @@
       img = new L.DistortableImageOverlay(
         '<%= warpable.image.url(:medium) %>',
         { latlng:  [ 
-          new L.latLng(<%= @nodes[warpable.id.to_s][0][0] %>,
+          new L.latLng(<%= @nodes[warpable.id.to_s][0][1] %>,
                        <%= @nodes[warpable.id.to_s][0][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][1][0] %>,
+          new L.latLng(<%= @nodes[warpable.id.to_s][1][1] %>,
                        <%= @nodes[warpable.id.to_s][1][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][2][0] %>,
-                       <%= @nodes[warpable.id.to_s][2][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][3][0] %>,
+          new L.latLng(<%= @nodes[warpable.id.to_s][3][1] %>,
                        <%= @nodes[warpable.id.to_s][3][0] %>),
+          new L.latLng(<%= @nodes[warpable.id.to_s][2][1] %>,
+                       <%= @nodes[warpable.id.to_s][2][0] %>)
                    ]
         });
       img.id = <%= warpable.id %>
       img.locked = <%= warpable.locked %>
-      img.select()
+      setTimeout(1000,img.updateTransform())// kludge
 
     <% end %>
 
