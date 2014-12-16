@@ -65,8 +65,7 @@
                    ]
         });
       img.id = <%= warpable.id %>
-      img.locked = <%= warpable.locked %>
-      setTimeout(1000,img.updateTransform())// kludge
+      <% if warpable.locked %>img.lock()<% end %>
 
     <% end %>
 

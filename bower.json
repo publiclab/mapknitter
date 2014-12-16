@@ -1,16 +1,18 @@
 {
-	"name": "MapKnitter",
-	"version": "0.1.0",
-	"dependencies": {
-		"bootstrap": 			"~3.2.0",
-		"leaflet": 				"0.7.3",
-		"leaflet-draw": 		"Leaflet/Leaflet.draw#0.2.3",
-		"leaflet-illustrate": 	"manleyjster/Leaflet.Illustrate#0.0.2",
-		"leaflet-providers": 	"leaflet-extras/leaflet-providers#1.0.6",
-		"modalbox": 			"okonet/modalbox",
-		"cartagen": 			"jywarren/cartagen",
-		"flot": 				"flot/flot#0.8.3",
-		"scriptaculous": 		"http://script.aculo.us/dist/scriptaculous-js-1.9.0.zip",
-		"prototype": 			"sstephenson/prototype#1.7.2"
-	}
+  "name": "MapKnitter",
+  "version": "0.1.0",
+  "dependencies": {
+    "fontawesome":              "~4.2.0",
+    "bootstrap":                "~3.2.0",
+    "leaflet":                  "0.7.3",
+    "leaflet-draw":             "Leaflet/Leaflet.draw#0.2.3",
+    "leaflet-illustrate":       "manleyjster/Leaflet.Illustrate#0.0.2",
+    "leaflet-distortableimage": "publiclab/Leaflet.DistortableImage#0.0.3",
+    "leaflet-providers":        "leaflet-extras/leaflet-providers#1.0.6",
+    "modalbox":                 "okonet/modalbox",
+    "cartagen":                 "jywarren/cartagen",
+    "flot":                     "flot/flot#0.8.3",
+    "scriptaculous":            "http://script.aculo.us/dist/scriptaculous-js-1.9.0.zip",
+    "prototype":                "sstephenson/prototype#1.7.2"
+  }
 }
