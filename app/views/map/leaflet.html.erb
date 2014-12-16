@@ -32,13 +32,9 @@
 
     (function(){
 
-<<<<<<< HEAD
       // basic Leaflet map setup
       map = new L.map('map').setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom %>);
       L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
-=======
-      var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
->>>>>>> google tiles
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -52,6 +48,8 @@
         layers: [google]
       }).setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom.to_i-1 %>);
 
+      //map.fitBounds(map._layers[1]._bounds)
+
       var baseMaps = {
           "OpenStreetMap": mapbox,
           "Google Satellite": google
@@ -62,33 +60,41 @@
       var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
       map.addControl(layersControl);
 
-      // startup the ImageDistort plugin
+      // startup the Leaflet.DistortableImage plugin
       $L.initialize( {
         uploadBtn: true // prompt and handle new images
       })
 
     <% @warpables.each do |warpable| %>
-      // [NW,NE,SW,SE] :
-      // ["3.2753908708","51.3010115014"],
-      // ["14.252581938","51.3010115014"],
-      // ["14.252581938","45.9229294638"],
-      // ["3.2753908708","45.9229294638"]
-
       img = new L.DistortableImageOverlay(
         '<%= warpable.image.url(:medium) %>',
-        { latlng:  [ 
-          new L.latLng(<%= @nodes[warpable.id.to_s][0][1] %>,
-                       <%= @nodes[warpable.id.to_s][0][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][1][1] %>,
-                       <%= @nodes[warpable.id.to_s][1][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][3][1] %>,
-                       <%= @nodes[warpable.id.to_s][3][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][2][1] %>,
-                       <%= @nodes[warpable.id.to_s][2][0] %>)
-                   ]
-        });
-      img.id = <%= warpable.id %>
-      <% if warpable.locked %>img.lock()<% end %>
+        { 
+          <% unless warpable.nodes == '' %>
+          latlng:  [ 
+            new L.latLng(<%= @nodes[warpable.id.to_s][0][1] %>,
+                         <%= @nodes[warpable.id.to_s][0][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][1][1] %>,
+                         <%= @nodes[warpable.id.to_s][1][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][3][1] %>,
+                         <%= @nodes[warpable.id.to_s][3][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][2][1] %>,
+                         <%= @nodes[warpable.id.to_s][2][0] %>)
+                   ],
+          <% end %>
+          locked: <%= warpable.locked %> 
+      });
+      img.mk_id = <%= warpable.id %>
+      img.onDeselect = function() {
+        $.post('/warper/update',{
+          warpable_id: this.mk_id,
+          locked: this.locked,
+          points: 
+            this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
+            this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
+            this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
+            this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat
+        })
+      }
 
     <% end %>
 

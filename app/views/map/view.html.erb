@@ -44,7 +44,6 @@
   
   <div>
     <a class="btn btn-primary" href="/maps/<%= @map.name %>">Edit this map</a>
-    <a class="btn" href="/maps/<%= @map.name %>?leaflet=true">Preview new editor (read only)</a>
     <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
       <a class="btn" href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">Contribute to OpenStreetMap in iD</a>
       <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>

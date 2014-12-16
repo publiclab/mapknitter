@@ -211,6 +211,7 @@ class BetaController < ApplicationController
         @map.tiles = params[:tiles]
         @map.location = params[:location]
       end
+      @map.zoom = 17
       @map.user_id = current_user.id if logged_in?
       @map.author = current_user.login if logged_in?
       @map.email = current_user.email if logged_in?
@@ -234,8 +235,10 @@ class BetaController < ApplicationController
       redirect_to "/map/login/"+params[:id]+"?to=/maps/"+params[:id]
     else
       @map.zoom = 1.6 if @map.zoom == 0
+      # this was partially to combat spam, no longer as much an issue:
       @warpables = @map.flush_unplaced_warpables
       @nodes = @map.nodes
+      # set initial position:
       if !@warpables || @warpables && @warpables.length == 1 && @warpables.first.nodes == "none"
         location = GeoKit::GeoLoc.geocode(@map.location)
         @map.lat = location.lat
