@@ -11,9 +11,12 @@
   <link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <script src="/javascripts/jquery.min.js"></script>
   <script src="/id-leaflet-tmp/easybutton.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="/lib/leaflet-distortableimage/DistortableImageOverlay.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <script src="/lib/leaflet-distortableimage/DistortableImageOverlay.js"></script>
 
-  <link rel="stylesheet" href="/id-leaflet-tmp/DistortableImageOverlay.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <script src="/id-leaflet-tmp/DistortableImageOverlay.js"></script>
+  <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
+  <script src="/lib/leaflet-google/index.js"></script>
+
 </head>
 <body style="margin:0;">
 
@@ -29,15 +32,35 @@
 
     (function(){
 
+<<<<<<< HEAD
       // basic Leaflet map setup
       map = new L.map('map').setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom %>);
       L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
+=======
+      var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
+>>>>>>> google tiles
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'examples.map-i86knfo3'
-      }).addTo(map);
+      })
+
+      var google = new L.Google("SATELLITE",{opacity:0.5});
+
+      map = new L.map('map',{
+        layers: [google]
+      }).setView([<%= @map.lat %>,<%= @map.lon %>],<%= @map.zoom.to_i-1 %>);
+
+      var baseMaps = {
+          "OpenStreetMap": mapbox,
+          "Google Satellite": google
+      };
+      var overlayMaps = {
+      };
+   
+      var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
+      map.addControl(layersControl);
 
       // startup the ImageDistort plugin
       $L.initialize( {
