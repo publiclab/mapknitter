@@ -55,18 +55,18 @@
       img = new L.DistortableImageOverlay(
         '<%= warpable.image.url(:medium) %>',
         { latlng:  [ 
-          new L.latLng(<%= @nodes[warpable.id.to_s][0][1] %>,
-                       <%= @nodes[warpable.id.to_s][0][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][1][1] %>,
-                       <%= @nodes[warpable.id.to_s][1][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][3][1] %>,
-                       <%= @nodes[warpable.id.to_s][3][0] %>),
-          new L.latLng(<%= @nodes[warpable.id.to_s][2][1] %>,
-                       <%= @nodes[warpable.id.to_s][2][0] %>)
-                   ]
+            new L.latLng(<%= @nodes[warpable.id.to_s][0][1] %>,
+                         <%= @nodes[warpable.id.to_s][0][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][1][1] %>,
+                         <%= @nodes[warpable.id.to_s][1][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][3][1] %>,
+                         <%= @nodes[warpable.id.to_s][3][0] %>),
+            new L.latLng(<%= @nodes[warpable.id.to_s][2][1] %>,
+                         <%= @nodes[warpable.id.to_s][2][0] %>)
+                   ],
+          locked: <%= warpable.locked %> 
         });
       img.id = <%= warpable.id %>
-      img.locked = <%= warpable.locked %>
 
     <% end %>
 
