@@ -105,7 +105,6 @@ class Map < ActiveRecord::Base
       pxperms << 100.00/warpable.cm_per_pixel unless warpable.width.nil?
     end
     average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
-    puts 'average scale = '+average.to_s+' px/m'
     average
   end
 
@@ -143,7 +142,6 @@ class Map < ActiveRecord::Base
       end
       sum = (scales.inject {|sum, n| sum + n }) if scales
       average = sum/count if sum
-      puts 'average scale = '+average.to_s+' cm/px'
       average
     else
       0
