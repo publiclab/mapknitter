@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "dependencies": {
     "fontawesome":              "~4.2.0",
-    "bootstrap":                "~2.3",
+    "bootstrap-css":            "~2.3",
     "jquery":                   "~1.11",
+    "jquery-ui":                "~1.11",
     "openlayers":               "release-2.13.1",
     "leaflet":                  "0.7.3",
     "leaflet-google":           "https://raw.githubusercontent.com/shramov/leaflet-plugins/master/layer/tile/Google.js",
@@ -15,7 +16,6 @@
     "sparklines":               "~1.0.0",
     "modalbox":                 "okonet/modalbox",
     "cartagen":                 "jywarren/cartagen",
-    "flot":                     "flot/flot#0.8.3",
     "scriptaculous":            "http://script.aculo.us/dist/scriptaculous-js-1.9.0.zip",
     "prototype":                "sstephenson/prototype#1.7.2"
   }

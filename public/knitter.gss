@@ -1,8 +1,0 @@
-body: {
-/*	pattern:'/images/brown-paper.jpg'*/
-},
-way: {
-	menu: {
-		"Add a style &raquo;": function() { Cartagen.Builder.add_style(this) },
-	},
-},
