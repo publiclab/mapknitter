@@ -44,20 +44,23 @@ resolution = @map.average_cm_per_pixel.to_s[0..4]
 </p>
 
 <script>
-  //http://willarson.com/code/sparklines/sparklines.html
-  var opts = {
-    'left_padding':0,
-    'right_padding':0,
-    "background":"#EEEEEE",
-    "stroke":"#444444",
-    'scale_from_zero':true,
-  }
+  (function() {
  
-  sparkline = new Sparkline('export_graph', [<%= hist.join(',') %>], opts).draw()
- 
-  function refresh_formats(response) {
-    eval(response)
-  }
+    //http://willarson.com/code/sparklines/sparklines.html
+    var opts = {
+      'left_padding':0,
+      'right_padding':0,
+      "background":"#EEEEEE",
+      "stroke":"#444444",
+      'scale_from_zero':true,
+    }
+  
+    sparkline = new Sparkline('export_graph', [<%= hist.join(',') %>], opts).draw()
+  
+    function refresh_formats(response) {
+      eval(response)
+    }
+  })()
 </script>
 
 </div>
