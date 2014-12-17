@@ -258,7 +258,8 @@ class MapController < ApplicationController
     @maps = Map.where('archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%").paginate(:page => params[:page], :per_page => 24)
   end
  
-  # regularly-called "autosave" of warpable image nodes. Maybe rename "autosave"?
+  # Regularly-called "autosave" of warpable image nodes. 
+  # Maybe rename "autosave", move into warper controller?
   def update
     @map = Map.find(params[:id])
     @map.lat = params[:lat]
@@ -292,10 +293,6 @@ class MapController < ApplicationController
     end
   end
  
-  def stylesheet
-    render :text => Map.find_by_name(params[:id],:order => 'version DESC').styles, :layout => false
-  end
-  
   def output
     @map = Map.find params[:id] 
     if @export = @map.latest_export
@@ -314,17 +311,6 @@ class MapController < ApplicationController
   def layers
     @map = Map.find params[:id]
     render :layout => false
-  end
-
-  # start with NRG
-  def composite
-    # write this in map model, really
-    @map = Map.find_by_name params[:id]
-    if Rails.env.development? || (verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
-      # BRINGS SYSTEM TO A HALT! inspect ulimit params
-      #@map.composite(params[:type],params[:infrared])
-    end
-          render :text => "new Ajax.Updater('nrg_formats','/export/formats/#{@map.id}'?type=nrg)"
   end
 
   def export
@@ -422,28 +408,6 @@ class MapController < ApplicationController
 
   def exports
     render :text => ActiveSupport::JSON.encode(Export.exporting) if params[:password] == APP_CONFIG["password"]
-  end
-
-  def assign
-    if logged_in? && current_user.role == "admin"
-      if params[:claim] == "true"
-        # assign each spectrum the current user's id
-        @user = User.find_by_login(params[:id])
-        @maps = Map.find_all_by_author(params[:author])
-        @maps.each do |map|
-          map.user_id = @user.id
-          map.author = @user.login
-          map.save!
-        end
-        flash[:notice] = "Assigned "+@maps.length.to_s+" maps to "+@user.login
-        redirect_to "/"
-      else
-        @maps = Map.find_all_by_author(params[:author])
-      end
-    else
-      flash[:error] = "You must be logged in and an admin to assign maps."
-      redirect_to "/login"
-    end
   end
 
 end

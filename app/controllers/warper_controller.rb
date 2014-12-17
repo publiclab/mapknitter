@@ -23,8 +23,8 @@ class WarperController < ApplicationController
       if @warpable.save
         redirect_to :action => 'uploaded_confirmation',:id => @warpable.id
       else
-puts @warpable.inspect
-puts @warpable.save
+        puts @warpable.inspect
+        puts @warpable.save
         render :text => "There was an error."
       end
     else
@@ -32,7 +32,8 @@ puts @warpable.save
     end
   end
 
-  # cartagen.org/import/<map-name>/?url=http://myurl.com/image.jpg
+  # import an image via URL param
+  # mapknitter.org/import/<map-name>/?url=http://myurl.com/image.jpg
   def import
     map = Map.find_by_name params[:name]
     @warpable = Warpable.new
