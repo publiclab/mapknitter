@@ -5,11 +5,12 @@
     <title>MapKnitter by Public Lab</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="/lib/jquery/dist/jquery.min.js?<%= rand() %>"></script> 
-    <script src="/javascripts/jquery-ui-1.8.21.custom.min.js"></script> 
-    <link href="/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script> 
+    <script src="/lib/jquery-ui/jquery-ui.min.js"></script> 
+    <link href="/lib/bootstrap-css/css/bootstrap.css" rel="stylesheet">
+    <script src="/lib/bootstrap-css/js/bootstrap.js"></script>
     <script src="/lib/sparklines/source/sparkline.js"></script>
+    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
     <% if params[:controller] == "map" && params[:action] == "index" %>
       <link href="/style-2.css" rel="stylesheet" /> 
     <% else %>
