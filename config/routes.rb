@@ -68,15 +68,11 @@ Mapknitter::Application.routes.draw do
   get 'profile' => 'users#profile', :id => 0
   get 'profile/:id' => 'users#profile'
   get 'dashboard' => 'users#dashboard'
-  get 'assign/:id' => 'map#assign'
   #map.comments '/comments' => 'users#comments'
-
-  get 'sorter/' => 'utility#sorter'
 
   get 'tms/:id/alt/:z/:x/:y.png' => 'utility#tms_alt'
   get 'tms/:id/' => 'utility#tms_info'
   get 'tms/:id/alt/' => 'utility#tms_info'
-  get 'stylesheet/:id.gss' => 'map#stylesheet'
   get 'maps' => 'map#index'
   post 'maps' => 'map#create'
   get 'map/create/:id' => 'map#index'
@@ -89,7 +85,6 @@ Mapknitter::Application.routes.draw do
   get 'author/list' => 'author#list'
   get 'author/emails' => 'author#emails'
   get 'author/:id' => 'author#show'
-  get 'api/0.6/geohash/:id.json' => 'api#planet'
 
   post 'export/:action/:id' => 'export'
   post 'map/export/:id' => 'map#export'
