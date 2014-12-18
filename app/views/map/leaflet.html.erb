@@ -84,52 +84,56 @@
       });
       img.mk_id = <%= warpable.id %>
       img.onDeselect = function() {
-        $.post('/warper/update',{
-          warpable_id: this.mk_id,
-          locked: this.locked,
-          points: 
-            this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
-            this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
-            this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
-            this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat
+        $.ajax('/warper/update',{
+          type: 'POST',
+          data: {
+            warpable_id: this.mk_id,
+            locked: this.locked,
+            points: 
+              this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
+              this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
+              this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
+              this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat,
+          },
+          beforeSend: function(e) {
+            $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+          },
+          complete: function(e) {
+            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
+          },
+          error: function(e) {
+            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
+          }
         })
       }
 
     <% end %>
 
-    $L.highresBtn = L.easyButton('fa-delicious', 
-      $L.highres = function() {
-        $.each($L.images,function(i,img) {
-          img._image.src = img._image.src.split('_medium').join('')
-        })
-        $L.highresBtn._container.remove()
-      },
-      'Switch to high-res imagery',
-      map,
-      this
-    ) 
-
-    // fa-spinner
-    $L.saveBtn = L.easyButton('fa-circle fa-green', 
-      $L.highres = function() {
-        $.each($L.images,function(i,img) {
-          img._image.src = img._image.src.split('_medium').join('')
-        })
-        $L.highresBtn._container.remove()
-      },
-      'Switch to high-res imagery',
-      map,
-      this
-    ) 
+      $L.saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
+        function() {},
+        'Save status',
+        map,
+        this
+      ) 
+ 
+      $L.highResBtn = L.easyButton('fa-delicious', 
+        $L.highres = function() {
+          $.each($L.images,function(i,img) {
+            img._image.src = img._image.src.split('_medium').join('')
+          })
+          $L.highResBtn._container.remove()
+        },
+        'Switch to high-res imagery',
+        map,
+        this
+      ) 
 
     })()
       
   </script>
   <style>
-    .fa-green {
-      color:#3f3;
-    }
+    .fa-green { color:#3a3; }
+    .fa-red { color:#a33; }
   </style>
-
  
 </html>
