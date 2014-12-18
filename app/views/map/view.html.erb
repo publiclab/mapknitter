@@ -189,7 +189,7 @@
 
 <% if @images.length > 0
   hist = @map.images_histogram 
-  grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+  grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1) || []
 %>
   <p style="font-size:10px;font-family:sans-serif;">0 cm/px <span class="bar"></span> <%= hist.length-1 %> cm/px</p>
   <p>Average resolution: <%= @map.average_cm_per_pixel.to_s[0..2] %> cm/px</p>
