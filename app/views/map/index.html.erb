@@ -31,10 +31,10 @@
           <script>
             (function(){
             var s1 = new Sparkline($('#map-bars')[0],{
-              width:$('#sidebar').width()
+              width:$('#sidebar').width()*0.5
             }).draw([<%=raw Export.histogram_cm_per_pixel[0..40].join(',') %>])
             var s2 = new Sparkline($('#img-bars')[0],{
-              width:$('#sidebar').width()
+              width:$('#sidebar').width()*0.5
             }).draw([<%=raw Warpable.histogram_cm_per_pixel[0..40].join(',') %>])
             })()
           </script>
