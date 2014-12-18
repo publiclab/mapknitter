@@ -31,7 +31,7 @@
     (function(){
 
       var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
-        maxZoom: 18,
+        maxZoom: 24,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -64,7 +64,7 @@
 
     <% @warpables.each do |warpable| %>
       img = new L.DistortableImageOverlay(
-        '<%= warpable.image.url(:medium) %>',
+        '<% if params[:highres] %><%= warpable.image.url(:original) %><% else %><%= warpable.image.url(:medium) %><% end %>',
         { 
           <% unless warpable.nodes == '' %>
           latlng:  [ 
@@ -94,6 +94,18 @@
       }
 
     <% end %>
+
+    $L.highresBtn = L.easyButton('fa-delicious', 
+      $L.highres = function() {
+        $.each($L.images,function(i,img) {
+          img._image.src = img._image.src.split('_medium').join('')
+        })
+        $L.highresBtn._container.remove()
+      },
+      'Switch to high-res imagery',
+      map,
+      this
+    ) 
 
     })()
       

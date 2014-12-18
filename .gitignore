@@ -32,3 +32,4 @@ config/initializers/site_keys.rb
 vendor/bundle
 public/lib
 node_modules
+todo.txt
