@@ -20,7 +20,6 @@
 log/
 tmp/*
 tmp/**/*
-todo
 coverage*
 public/warpables/*
 public/warps/*
@@ -37,3 +36,5 @@ vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
 public/lib
+node_modules
+todo.txt
