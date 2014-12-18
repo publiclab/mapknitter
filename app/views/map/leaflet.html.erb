@@ -38,7 +38,10 @@
         id: 'examples.map-i86knfo3'
       })
 
-      var google = new L.Google("SATELLITE",{opacity:0.5});
+      var google = new L.Google("SATELLITE",{
+        maxZoom: 24,
+        opacity:0.5
+      });
 
       map = new L.map('map',{
         layers: [google]
