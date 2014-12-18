@@ -1,7 +1,4 @@
 class UsersController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
-  include AuthenticatedSystem
-
   def index
     if logged_in?
       @users = User.find :all
