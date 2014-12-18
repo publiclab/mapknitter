@@ -6,6 +6,7 @@ gem "rails", "~>3.2"
 # dependencies
 group :dependencies do
   gem "mysql", "2.9.1"
+  gem "mysql2"
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
@@ -13,9 +14,7 @@ group :dependencies do
   gem "oa-openid", "0.3.2"
   gem "ruby-openid", "~>2.5"
   gem 'open_id_authentication'
-  gem "httparty", "0.11.0"
   gem "RubyInline"
-  gem "rdoc"
   gem "paperclip", "4.2.0"
 
   # if you use amazon s3 for warpable image storage
@@ -28,7 +27,7 @@ group :dependencies do
   gem "rdiscount", "2.1.7.1"
 
   # asset pipelining
-  gem "sprockets", "2.12.1"
+  gem "sprockets"#, "2.12.1"
   gem "sass"
   gem "autoprefixer-rails"
 
