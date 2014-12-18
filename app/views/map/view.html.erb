@@ -49,6 +49,10 @@
       <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>
     <% end %>
   </div>
+  <hr />
+  <p>
+    <a class="btn" href="/maps/<%= @map.name %>?leaflet=true">Edit with new beta interface</a>
+  </p>
 
   <% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
   <div id='images'>

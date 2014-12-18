@@ -63,7 +63,7 @@
 
     <% @warpables.each do |warpable| %>
       img = new L.DistortableImageOverlay(
-        '<% if params[:highres] %><%= warpable.image.url(:original) %><% else %><%= warpable.image.url(:medium) %><% end %>',
+        '<%= warpable.image.url(:medium) %>',
         { 
           <% unless warpable.nodes == '' %>
           latlng:  [ 
