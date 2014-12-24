@@ -24,7 +24,7 @@
 <% if !@map.private && @map.warpables.length > 0 %><img id="image" style="display:none;" src="<%= @map.warpables.first.image.url(:medium) %>" /><% end %>
 
 <div id="main">
-  <h2><%= @map.name %><% if @export %> <small><%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px</small><% end %></h2>  
+  <h2><%= @map.name %><% if @export %> <small><%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px</small><% end %></h2>
   <p>
     <small>by <a href="/author/<%= @map.author %>"><%= @map.author %></a> (<a href="/feeds/author/<%= @map.author %>">RSS</a>)
     <% if logged_in? && current_user.role == "admin" && @map.email != '' %><a href="mailto:<%= @map.email %>"><%= @map.email %></a><% end %>
@@ -41,7 +41,7 @@
   <% if @map.description %>
   <p><%= @map.description %></p>
   <% end %>
-  
+
   <div>
     <a class="btn btn-primary" href="/maps/<%= @map.name %>">Edit this map</a>
     <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
@@ -60,7 +60,7 @@
     <div class="image">
       <a href="<%= image.image.url %>"><img src="<%= image.image.url(:thumb) %>" /></a>
       <p>
-       <%= image.cm_per_pixel.to_s[0..2] %> cm/px<br /> 
+       <%= image.cm_per_pixel.to_s[0..2] %> cm/px<br />
        <%= time_ago_in_words(image.created_at) %> ago
       </p>
     </div>
@@ -69,7 +69,7 @@
   </div>
 
   <h2>Tags</h2>
-  
+
   <p>
   <% if @map.tags %>
   <% @map.tags.each_with_index do |tag,i| %>
@@ -85,7 +85,7 @@
           <input class="btn" type="submit" value="Tag" />
   </form>
   </p>
-  <% end %>    
+  <% end %>
 
   <h2>Nearby maps</h2>
   <div id="list">
@@ -101,16 +101,16 @@
           <% if !map.description %><i>no description</i><% end %>
         </small></p>
         <p class="meta"><small>
-          <% if map.archived %><i>Archived</i> | <% end %> 
-          <a href="/map/view/<%= map.name %>">View</a> | 
-          <a href="/map/show/<%= map.name %>">Edit</a> | 
-          Updated <%= map.updated_at.to_s(:short) %> | 
-          <%= map.warpables.length %> images 
+          <% if map.archived %><i>Archived</i> | <% end %>
+          <a href="/map/view/<%= map.name %>">View</a> |
+          <a href="/map/show/<%= map.name %>">Edit</a> |
+          Updated <%= map.updated_at.to_s(:short) %> |
+          <%= map.warpables.length %> images
         </small></p>
         <p class="formats">
         <% unless map.latest_export.nil? %>
         <% if map.latest_export.geotiff %>
-          <a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a> 
+          <a class="geotiff" href="/export/geotiff/<%= map.name %>.tif">GeoTIFF</a>
           <br />
           <span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
         <% end %><br />
@@ -128,14 +128,14 @@
       <% end %>
     <% end %>
   </div>
-  
+
   <% if logged_in? && (@map.author == current_user.login || current_user.role == "admin") %>
   <br style="clear:both;" />
   <h2 id="annotations">Map annotations</h2>
   <ul>
   <% (@map.annotations(0.1)+@map.polygons(0.1)).each do |note| %>
   <li class="">
-    <a href="/profile/<%= note.author %>"><%= note.author %></a> said:</b> 
+    <a href="/profile/<%= note.author %>"><%= note.author %></a> said:</b>
     <%= note.description %> (<a href="/annotation/delete/<%= note.id %>?back=/map/view/<%= @map.name %>">x</a>)
   </li>
   <% end %>
@@ -180,15 +180,16 @@
 </p>
 <% elsif @map.license == "cc-by" %>
 <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
-<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. 
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 <% else %>
 &copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclab.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
 <% end %>
 </small></p>
 </div>
 
+<% grouphist = [] %>
 <% if @images.length > 0
-  hist = @map.images_histogram 
+  hist = @map.images_histogram
   grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1) || []
 %>
   <p style="font-size:10px;font-family:sans-serif;">0 cm/px <span class="bar"></span> <%= hist.length-1 %> cm/px</p>
@@ -203,9 +204,9 @@
 <div class='well'>
   <h3>Edit map details<a class="pull-right btn" href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand <i class="caret"></i></a></h3>
   <form style="display:none;" class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
-  
+
     <input type='hidden' name='map[id]' value="<%= @map.id %>"/>
-    
+
     <% if logged_in? && (@map.author == current_user.login || current_user.role == "admin") %>
     <label for="password">Password (optional -- to keep your map private)</label>
     <input class="text" type="password" name="map[password]" value="<%= "*****" if @map.password != "" %>" id="new_map_password">
@@ -214,7 +215,7 @@
     <label for="location">Place (to enter lat/lon, <a href="javascript:void(0);" onClick="$('#lat_lon').toggle()">click here</a>)</label>
     <input class="text" type="text" name="map[location]" value="<%= @map.location %>" id="new_map_place">
     <div id="geocode_results">
-      
+
     </div>
     <div id="lat_lon" style="display:none;">
       <p style='font-size:10px;font-family:lucida grande,lucida sans console,sans-serif;'>
@@ -234,14 +235,14 @@
     }
     </style>
     <script>
-      
+
       /* JQuery search as you type
       * Overrides the action and method of the form
       *
       */
       var geocoder = new google.maps.Geocoder();
 
-      $(document).ready(function() { 
+      $(document).ready(function() {
 
         $("#new_map_place").autocomplete({
           //This bit uses the geocoder to fetch address values
@@ -272,10 +273,10 @@
     <% unless logged_in? || @map.user_id != 0 %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
     <label for="description">Description</label>
     <textarea name="map[description]" rows="8" cols="24"><%= @map.description %></textarea>
-    
+
     <!--<label for="password">Password (optional)</label><br />
     <input class="text" type="password" name="password" value="" id="password"><br />-->
-      
+
     <% if @map.password != "" %>
     <label for="password">Password (you must enter the password to save)</label>
     <input class="text" type="password" name="password" id="password">
