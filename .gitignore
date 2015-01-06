@@ -38,3 +38,4 @@ app/assets/node_modules
 public/lib
 node_modules
 todo.txt
+.sass-cache

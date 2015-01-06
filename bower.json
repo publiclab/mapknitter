@@ -1,12 +1,15 @@
 {
   "name": "MapKnitter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "fontawesome":              "~4.2.0",
-    "bootstrap-css":            "~2.3",
+    "bootstrap":            "~3.2.0",
     "jquery":                   "~1.11",
     "jquery-ui":                "~1.11",
+    "jquery-ujs":               "~1.0.3",
     "openlayers":               "release-2.13.1",
+    "blueimp-file-upload":      "blueimp/jQuery-File-Upload#~9.8.1",
+    "blueimp-tmpl":             "2.5.4",
     "leaflet":                  "0.7.3",
     "leaflet-google":           "https://raw.githubusercontent.com/shramov/leaflet-plugins/master/layer/tile/Google.js",
     "leaflet-draw":             "Leaflet/Leaflet.draw#0.2.3",
@@ -17,6 +20,7 @@
     "modalbox":                 "okonet/modalbox",
     "cartagen":                 "jywarren/cartagen",
     "scriptaculous":            "http://script.aculo.us/dist/scriptaculous-js-1.9.0.zip",
-    "prototype":                "sstephenson/prototype#1.7.2"
+    "prototype":                "sstephenson/prototype#1.7.2",
+    "junction":                 "theleagueof/junction"
   }
 }

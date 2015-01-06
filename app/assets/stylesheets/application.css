@@ -11,7 +11,7 @@
  *= require_self
  *= require_tree .
  
- *= require bootstrap/dist/css/bootstrap.css
+ *= require bootstrap/dist/css/bootstrap.min.css
  *= require leaflet/dist/leaflet.css
  *= require leaflet-draw/dist/leaflet.draw.css
  *= require leaflet-illustrate/dist/Leaflet.Illustrate.css

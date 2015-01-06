@@ -3,6 +3,8 @@ source "https://rubygems.org"
 ruby "2.1.2"
 gem "rails", "~>3.2"
 
+gem "will_paginate", "3.0.7"
+
 # dependencies
 group :dependencies do
   gem "mysql", "2.9.1"
@@ -10,12 +12,11 @@ group :dependencies do
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
-  gem "will_paginate", "3.0.7"
   gem "oa-openid", "0.3.2"
   gem "ruby-openid", "~>2.5"
   gem 'open_id_authentication'
   gem "RubyInline"
-  gem "paperclip", "4.2.0"
+  gem "paperclip", "~>4.2.0"
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'

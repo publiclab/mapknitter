@@ -342,6 +342,7 @@ puts self.image.url
 
   private
 
+  # adjust filename behavior of Paperclip after migrating from attachment_fu 
   Paperclip.interpolates :custom_filename do |attachment, style|
     if style == :original
       custom_filename = basename(attachment,style) # generate hash path here

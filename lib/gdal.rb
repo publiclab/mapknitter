@@ -16,8 +16,4 @@ class Gdal
     end
   end
 
-#  def self.gdal_merge(args)
-#    self.raw()
-#  end
-
 end

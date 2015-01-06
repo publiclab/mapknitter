@@ -10,17 +10,17 @@ class Annotation < ActiveRecord::Base
   end
 
   def geometry_type
-  	case self.annotation_type
-  	when 'polyline':
-  		geometry_type = 'LineString'
-  	when 'polygon':
-  		geometry_type = 'Polygon'
-  	when 'rectangle':
-  		geometry_type = 'Polygon'
-  	else
-  		geometry_type = 'Point'
-  	end
+    case self.annotation_type
+    when 'polyline':
+      geometry_type = 'LineString'
+    when 'polygon':
+      geometry_type = 'Polygon'
+    when 'rectangle':
+      geometry_type = 'Polygon'
+    else
+      geometry_type = 'Point'
+    end
 
-  	return geometry_type
+    return geometry_type
   end
 end

@@ -1,5 +1,4 @@
 require 'open3'
-require 'will_paginate'
 
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
@@ -9,10 +8,7 @@ class MapsController < ApplicationController
   layout 'knitter2'
 
   def index
-    @maps = Map.find :all, :order => 'updated_at DESC', :joins => :warpables, :limit => 24, :group => "maps.id" 
-    @unpaginated = true
-    @maps = @maps.paginate :page => params[:page], :per_page => 24
-
+    @maps = Map.page(params[:page]).per_page(24).where(:archived => false,:password => '').order('updated_at DESC')
     render :layout => 'application2'
   end
 
@@ -31,13 +27,11 @@ class MapsController < ApplicationController
 
   def show
     @map = Map.find params[:id]
-
     @map.zoom = 12
   end
 
   def edit
     @map = Map.find params[:id]
-
     @map.zoom = 12
   end
 
