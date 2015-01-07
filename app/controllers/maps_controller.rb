@@ -25,6 +25,11 @@ class MapsController < ApplicationController
     end
   end
 
+  def view # legacy route
+    @map = Map.find_by_name params[:id]
+    redirect_to "/map/#{@map.id}", :status => :moved_permanently
+  end
+
   def show
     @map = Map.find params[:id]
     @map.zoom = 12

@@ -31,13 +31,18 @@ h1, h2 , h3, h4, h5, h6 {
   font-weight:normal;
 }
 
-#header, .sidebar-header {
+#header #brand, .sidebar-header {
   font-family:"Junction Light", lucida grande,lucida sans console,sans-serif; 
+}
+#header, .sidebar-header {
   .nav > li > a { color: #e0e0e0; }
   .nav > li > a:hover { color: #fff }
   .navbar-brand { color: #fff; }
   .navbar-brand strong { color: #c44; }
   .navbar-right { padding-right: 20px; }
+}
+#header .dropdown-menu {
+  padding:8px;
 }
 
 @media (max-width: 340px) {
