@@ -13,6 +13,25 @@
 
 ActiveRecord::Schema.define(:version => 20141104184417) do
 
+  create_table "annotations", :force => true do |t|
+    t.integer  "map_id"
+    t.integer  "user_id"
+    t.string   "annotation_type"
+    t.string   "text"
+    t.string   "style"
+    t.string   "coordinates"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "comments", :force => true do |t|
+    t.string   "user_id"
+    t.string   "body"
+    t.integer  "map_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "exports", :force => true do |t|
     t.integer  "map_id",       :default => 0
     t.integer  "size",         :default => 0
@@ -26,34 +45,34 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "zip",          :default => false,    :null => false
-    t.text     "bands_string", :default => "",       :null => false
+    t.text     "bands_string",                       :null => false
     t.string   "export_type",  :default => "normal", :null => false
     t.integer  "user_id",      :default => 0
   end
 
   create_table "maps", :force => true do |t|
-    t.string   "name",             :default => ""
-    t.decimal  "lat",              :default => 0.0
-    t.decimal  "lon",              :default => 0.0
-    t.integer  "version",          :default => 1
-    t.string   "password",         :default => ""
-    t.text     "styles",           :default => ""
+    t.string   "name",                                             :default => ""
+    t.decimal  "lat",              :precision => 20, :scale => 10, :default => 0.0
+    t.decimal  "lon",              :precision => 20, :scale => 10, :default => 0.0
+    t.integer  "version",                                          :default => 1
+    t.string   "password",                                         :default => ""
+    t.text     "styles"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description",      :default => ""
-    t.string   "author",           :default => "anonymous"
-    t.decimal  "zoom",             :default => 2.0
-    t.string   "location",         :default => ""
-    t.string   "static_data",      :default => ""
-    t.boolean  "vectors",          :default => false,       :null => false
-    t.string   "tiles",            :default => "google",    :null => false
-    t.string   "email",            :default => "",          :null => false
-    t.boolean  "archived",         :default => false,       :null => false
-    t.text     "tile_url",         :default => "",          :null => false
-    t.text     "tile_layer",       :default => "",          :null => false
-    t.string   "license",          :default => "copyright"
-    t.integer  "user_id",          :default => 0
-    t.boolean  "anon_annotatable", :default => false
+    t.text     "description"
+    t.string   "author",                                           :default => "anonymous"
+    t.decimal  "zoom",             :precision => 15, :scale => 10, :default => 2.0
+    t.string   "location",                                         :default => ""
+    t.string   "static_data",                                      :default => ""
+    t.boolean  "vectors",                                          :default => false,       :null => false
+    t.string   "tiles",                                            :default => "google",    :null => false
+    t.string   "email",                                            :default => "",          :null => false
+    t.boolean  "archived",                                         :default => false,       :null => false
+    t.text     "tile_url",                                                                  :null => false
+    t.text     "tile_layer",                                                                :null => false
+    t.string   "license",                                          :default => "copyright"
+    t.integer  "user_id",                                          :default => 0
+    t.boolean  "anon_annotatable",                                 :default => false
   end
 
   create_table "nodes", :force => true do |t|
@@ -69,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.string   "description",                                 :default => ""
     t.integer  "map_id",                                      :default => 0
     t.integer  "way_order",                                   :default => 0
+    t.text     "body"
   end
 
   create_table "tags", :force => true do |t|
@@ -110,25 +130,12 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "map_id",       :default => 0
-    t.string   "nodes",        :default => ""
-    t.boolean  "locked",       :default => false, :null => false
-    t.boolean  "deleted",      :default => false, :null => false
-    t.text     "history",      :default => "",    :null => false
-    t.float    "cm_per_pixel", :default => 0.0,   :null => false
-  end
-
-  create_table "warpeds", :force => true do |t|
-    t.integer  "parent_id"
-    t.string   "content_type"
-    t.string   "filename"
-    t.string   "thumbnail"
-    t.integer  "size"
-    t.integer  "width"
-    t.integer  "height"
-    t.string   "transform_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "map_id",             :default => 0
+    t.string   "nodes",              :default => ""
+    t.boolean  "locked",             :default => false, :null => false
+    t.boolean  "deleted",            :default => false, :null => false
+    t.text     "history",                               :null => false
+    t.float    "cm_per_pixel",       :default => 0.0,   :null => false
   end
 
   create_table "ways", :force => true do |t|
@@ -142,7 +149,9 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.datetime "updated_at"
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
+    t.boolean  "complete",                                    :default => true
     t.integer  "map_id",                                      :default => 0
+    t.text     "body"
   end
 
 end

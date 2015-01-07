@@ -24,7 +24,7 @@
 				<% @maps.each do |map| %>
 				<div class="map col-md-3 <%= 'odd' if odd %>">
 					<% if !map.private && map.warpables.length > 0 %>
-						<a href="<%= %>">
+						<a href="/maps/<%= map.id %>">
 							<img src="<%= map.warpables.first.image.url(:small) %>" />
 						</a>
 					<% end %>
