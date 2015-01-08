@@ -33,21 +33,21 @@
               <!-- Upload images -->
               <div class="btn-group">
                 <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
-                  <span class="glyphicon glyphicon-open"></span>
+                  <span class="fa fa-upload"></span>
                 </button>
               </div>
 
               <!-- Write a research note on Public Lab -->
               <div class="btn-group">
-                <a class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post">
-                  <span class="glyphicon glyphicon-file"></span>
+                <a target="_blank" class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post">
+                  <span class="fa fa-file"></span>
                 </a>
               </div>
 
               <!-- Export map -->
               <div class="dropdown btn-group">
                 <button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-                  <span class="glyphicon glyphicon-save"></span>
+                  <span class="fa fa-save"></span>
                   <span class="caret"></span>              
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -55,12 +55,12 @@
                   <li><a href=".">JPG</a></li>
                   <li><a href=".">GeoTIFF</a></li>
                   <li><a href=".">Tiled Map Service (TMS)</a></li>
-                  <li><a href=".">OSM-TMS</a></li>
+                  <li><a href=".">OSM-style TMS</a></li>
                   <li><a href=".">zipped TMS</a></li>
+                  <li class="dropdown-header">Beta export formats</li>
                   <li><a href=".">KML (beta)</a></li>
+                  <li class="dropdown-header">Miscellaneous</li>
                   <li><a href=".">Order a print</a></li>
-                  <li class="dropdown-header">Multispectral export formats</li>
-                  <li><a href=".">Special format</a></li>
                 </ul>
               </div>
             </div>
@@ -78,7 +78,7 @@
                   <%= yield :details %>
                 </div>
                 <div class="tab-pane" id="map-images-container">
-                  <%= yield :warpables %>
+                  <%= yield :warpables unless @map.warpables.empty? %>
                 </div>
                 <div class="tab-pane" id="map-editing-container">
                   <%= render :partial => "sidebar_edit_history" %>
@@ -92,12 +92,12 @@
     </div><!-- .sidebar-wrap -->
   </div><!-- .sidebar -->
 
-  <%= render :partial => "/warpables/new" %>
+  <%= render :partial => "/warpables/new" unless @map.warpables.empty? %>
   <script>
     window.mapKnitter = new MapKnitter.Map({
       latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
       zoom:       <%= @map.zoom %>,
-      warpablesUrl:   "<%= url_for [@map, :warpables] %>"
+      warpablesUrl:   "<%= url_for [@map, :warpables] unless @map.warpables.empty? %>"
     });
   </script>  
   <script type="text/javascript">

@@ -26,13 +26,24 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 }
 
 /* Application-wide styles */
-h1, h2 , h3, h4, h5, h6 {
-  font-family: 'Junction Regular', lucida grande,lucida sans console,sans-serif;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Junction Light', lucida grande,lucida sans console,sans-serif;
   font-weight:normal;
 }
 
-#header #brand, .sidebar-header {
+label small {
+  font-weight:normal;
+  color:#888;
+}
+
+#header #brand {
   font-family:"Junction Light", lucida grande,lucida sans console,sans-serif; 
+  padding-top:19px;
+  font-size:24px;
+}
+#header #brand small {
+  font-size:16px;
+  color:#888;
 }
 #header, .sidebar-header {
   .nav > li > a { color: #e0e0e0; }

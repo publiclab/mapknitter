@@ -8,11 +8,11 @@
 							:'data-map-id' => @map.id
 					%>
 				</td>
-				<td><%= link_to(warpable.image.url, [@map, warpable]) %></td>
+				<td><%= link_to(warpable.image_file_name, warpable.image.url) %></td>
 				<td><%= number_to_human_size warpable.image_file_size %></td>
 				<% if logged_in? && current_user.can_delete?(warpable) %>
 					<td>
-						<%= link_to "&times;", [@map, warpable], :method => "delete", :class => "btn btn-danger" %>
+						<%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable], :method => "delete", :class => "btn btn-danger" %>
 					</td>
 				<% end %>
 			</tr>

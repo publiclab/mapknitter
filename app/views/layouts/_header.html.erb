@@ -1,6 +1,6 @@
 <div id="header" class="navbar navbar-inverse navbar-static-top">
     <div class="navbar-inner hidden-print" style="padding:0 10px;">
-        <a class="navbar-brand" id="brand" href="/"><strong>MapKnitter</strong><span class="fullscreen-only"> by Public Lab</span></a>
+	    <span class="navbar-brand" id="brand"><a href="/">MapKnitter</a> <small class="fullscreen-only"> by <a href="http://publiclab.org">Public Lab</a></small></span>
         <a class="navbar-brand" id="brand-compact" href="/">MK</a>
 
         <ul class="nav navbar-nav fullscreen-only">
@@ -23,8 +23,12 @@
 
         <ul class="nav navbar-nav sidebar-navbar-nav sidebar-navbar-right">
         <% if logged_in? %>
-            <li>
-                <a href="//publiclab.org/profile/<%= current_user.login %>"><span class="glyphicon glyphicon-user"></span> <%= current_user.login %></a>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %> <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelled-by="logout-menu">
+			<li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
+			<li><a href="/logout">Log out</a></li>
+            	</ul>
             </li>
         <% else %>
             <li class="dropdown">

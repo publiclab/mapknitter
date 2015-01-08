@@ -3,7 +3,7 @@ $sidebar-width: 30%;
 $sidebar-min-width: 400px;
 $sidebar-padding: 15px;
 
-$sidebar-title-height: 87px;
+$sidebar-title-height: 100px;
 $sidebar-title-padding: $sidebar-padding;
 
 /* Change this to reflect the height of the Bootstrap navbar. */
@@ -65,7 +65,7 @@ html, body {
 		margin-top: $bootstrap-navbar-height;
 		padding-bottom: $sidebar-title-padding;
 		padding-top: $sidebar-title-padding;		
-		h3 { margin: 0; }
+		h3 { margin: 0 0 6px; }
 	}
 
 	.sidebar-content {
