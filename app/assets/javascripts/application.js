@@ -10,9 +10,6 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-// require jquery
-// require jquery_ujs
-//= require_tree .
 
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
@@ -23,3 +20,5 @@
 //= require leaflet-providers/leaflet-providers.js
 //= require leaflet-draw/dist/leaflet.draw-src.js
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js
+
+//= require_tree .

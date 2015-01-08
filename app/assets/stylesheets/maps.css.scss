@@ -45,7 +45,7 @@ html, body {
 	width: $sidebar-width;
 	min-width: $sidebar-min-width;
 
-	font-family: 'Junction Light';
+	h1, h2, h3, h4 { font-family: 'Junction Light'; }
 
 	.navbar { margin-bottom: -$bootstrap-navbar-height; }
 

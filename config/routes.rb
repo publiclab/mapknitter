@@ -61,7 +61,7 @@ Mapknitter::Application.routes.draw do
   get 'tag/create' => 'tag#create'
   get 'tag/:id' => 'tag#show'
 
-  get 'session' => 'session#create', :conditions => { :method => :get }
+  get 'session' => 'sessions#create', :conditions => { :method => :get }
   resources :sessions
 
   # Registered user pages:
@@ -78,6 +78,7 @@ Mapknitter::Application.routes.draw do
   get 'map/create/:id' => 'maps#index'
   get 'map/region/:id' => 'maps#region'
   get 'map/view/:id' => 'maps#view' # legacy
+  get 'maps/new' => 'maps#new' # legacy
   get 'maps/:id' => 'maps#view' # legacy
   get 'map/:id' => 'maps#show'
   get 'map/embed/:id' => 'annotation#embed'
