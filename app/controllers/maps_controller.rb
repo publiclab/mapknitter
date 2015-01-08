@@ -3,7 +3,7 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
 
-  before_filter :require_user, :only => [:create, :new, :edit, :update, :destroy]
+  before_filter :require_login, :only => [:create, :new, :edit, :update, :destroy]
 
   layout 'knitter2'
 

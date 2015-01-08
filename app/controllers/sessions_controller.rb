@@ -2,7 +2,6 @@ require 'uri'
 
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
-  include OpenIdAuthentication # shouldn't be necessary!!
   #protect_from_forgery :except => [:create]
 
   @@openid_url_base  = "http://publiclab.org/people/"

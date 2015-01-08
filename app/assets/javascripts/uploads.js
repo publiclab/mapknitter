@@ -25,7 +25,7 @@ function addUploadedImageToSidebar($upload) {
 jQuery(document).ready(function($) {
 
     $('#fileupload').fileupload({
-        paramName:  'warpable[uploaded_data]',
+        paramName:  'uploaded_data',
         autoUpload: 'true',
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 10000000 

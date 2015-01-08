@@ -24,11 +24,11 @@
 				<% @maps.each do |map| %>
 				<div class="map col-md-3 <%= 'odd' if odd %>">
 					<% if !map.private && map.warpables.length > 0 %>
-						<a href="/maps/<%= map.id %>">
+						<a href="/map/<%= map.id %>">
 							<img src="<%= map.warpables.first.image.url(:small) %>" />
 						</a>
 					<% end %>
-					<h3><%= link_to map.name.capitalize, map %></a></h3>
+					<h3><a href="/map/<%= map.id %>"><%= map.name.capitalize %></a></h3>
 					<p>
 						<small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
 						<p class="description"><small>

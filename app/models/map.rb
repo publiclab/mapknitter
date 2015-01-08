@@ -1,5 +1,6 @@
 require 'open3'
 class Map < ActiveRecord::Base
+  attr_accessible :author, :name, :lat, :lon, :location, :description
   before_validation :update_name
   validates_presence_of :name,:author,:lat,:lon
   validates_uniqueness_of :name
@@ -30,6 +31,7 @@ class Map < ActiveRecord::Base
     end
   end
 
+  # impose URL-safe sanity on name
   def validate
     self.name != 'untitled'
     self.name = self.name.gsub(' ','-').gsub('_','-').downcase
@@ -41,6 +43,7 @@ class Map < ActiveRecord::Base
     self.password = Password::update(self.password) if self.password != ""
   end
 
+  # this might have been for a migration; grep for it
   def update_name
     self.name = self.name.gsub(/\W/, '-').downcase
   end
