@@ -16,10 +16,10 @@ class MapsController < ApplicationController
     @map = current_user.maps.create(:author => current_user.login)
   end
 
-  def create
+  def create # should try to catch lat=0 lon=0 maps and error
     @map = current_user.maps.create(params[:map])
     if @map.save
-      redirect_to edit_map_url(@map)
+      redirect_to "/map/#{@map.id}"
     else
       render "new"
     end
