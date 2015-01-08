@@ -22,4 +22,4 @@
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js
 //= require sparklines/source/sparkline.js
 
-//= require_tree .
+// require_tree .

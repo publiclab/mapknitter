@@ -9,4 +9,8 @@ jQuery(document).ready(function($) {
 		navLinks = $(".sidebar .navbar-nav.fullscreen-only").find("li");
 
 	sidebarNav.find(".dropdown-menu").append(navLinks);
+	$('.sidebar-toggle').click(function(e){
+		$('#knitter-map-pane').toggleClass('fullscreen')
+		window.mapKnitter._map._onResize()
+	})
 });

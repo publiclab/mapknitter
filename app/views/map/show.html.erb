@@ -22,8 +22,8 @@ var map
   })
 
   warpables = [
-    <% @warpables.each do |warpable| %>
-    {id: <%= warpable.id %>, img: '<%= warpable.image.url(:medium) %>', nodes: <%=raw @nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
+    <% @map.warpables.each do |warpable| %>
+    {id: <%= warpable.id %>, img: '<%= warpable.image.url(:medium) %>', nodes: <%=raw @map.nodes[warpable.id.to_s].to_json %>, locked: <%= warpable.locked %>},
     <% end %>
   ]
 

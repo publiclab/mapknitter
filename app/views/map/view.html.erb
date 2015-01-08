@@ -11,13 +11,13 @@
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
 <iframe id="preview" src="http://archive.publiclab.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
-<%= render :partial => "leaflet" %>
+<%= render :partial => "map/leaflet" %>
 <% else %>
 <p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
-<%= render :partial => "leaflet" %>
+<%= render :partial => "map/leaflet" %>
 <% end %>
 </div>
-<%= render :partial => "annotations" %>
+<%= render :partial => "map/annotations" %>
 
 <br style="clear:left;" />
 
@@ -54,9 +54,9 @@
     <a class="btn" href="/maps/<%= @map.name %>?leaflet=true">Edit with new beta interface</a>
   </p>
 
-  <% if @images.length > 0 %><h2>Images in this map:</h2><% end %>
+  <% if @map.warpables.length > 0 %><h2>Images in this map:</h2><% end %>
   <div id='images'>
-    <% @images.each do |image| %>
+    <% @map.warpables.each do |image| %>
     <div class="image">
       <a href="<%= image.image.url %>"><img src="<%= image.image.url(:thumb) %>" /></a>
       <p>
@@ -188,7 +188,7 @@
 </div>
 
 <% grouphist = [] %>
-<% if @images.length > 0
+<% if @map.warpables.length > 0
   hist = @map.images_histogram
   grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1) || []
 %>

@@ -25,14 +25,22 @@ class MapsController < ApplicationController
     end
   end
 
-  def view # legacy route
+  def view # legacy route, redirect later
     @map = Map.find_by_name params[:id]
-    redirect_to "/map/#{@map.id}", :status => :moved_permanently
+    # legacy; later, just redirect this
+    # redirect_to "/map/#{@map.id}", :status => :moved_permanently
+    render :template => 'map/view', :layout => 'application'
   end
 
   def show
-    @map = Map.find params[:id]
+    if params[:legacy] # remove; legacy
+      @map = Map.find_by_name params[:id]
+    else
+      @map = Map.find params[:id]
+    end
     @map.zoom = 12
+    # remove once legacy is deprecated
+    render :template => 'map/show', :layout => 'knitter' if params[:legacy]
   end
 
   def edit
@@ -63,4 +71,19 @@ class MapsController < ApplicationController
 
   def destroy
   end
+
+  def region
+    area = params[:id] || "this area"
+    @title = "Maps in #{area}"
+    ids = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).collect(&:id)
+    @maps = Map.where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24)
+    render "maps/index", :layout => "application2"
+  end
+
+  def license
+    @title = "Maps licensed '#{params[:id]}'"
+    @maps = Map.where(password: '',license: params[:id]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 24)
+    render "maps/index", :layout => "application2"
+  end
+
 end

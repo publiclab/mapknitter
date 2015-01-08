@@ -13,7 +13,7 @@
 		<h3><%= @map.name %></h3>
 	</div>
 	<div class="map-author">
-		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a>
+		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a> | <a href="/maps/<%= @map.name %>">Legacy editor</a>
 	</div>	
 <% end %>
 
@@ -35,6 +35,8 @@
 	<div class="tags">
 		<%= render :partial => "tags/index" %>
 	</div>
+
+	<hr />
 
 	<div class="comments">
 		<%= render :partial => "comments/index" %>

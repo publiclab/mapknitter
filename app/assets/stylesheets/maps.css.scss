@@ -35,6 +35,22 @@ html, body {
 	height: 100%;
 }
 
+#knitter-map-pane.fullscreen {
+	width: 100%;
+	max-width: none;
+}
+
+.sidebar-toggle {
+	position:absolute;
+	z-index:99;
+	right:0;
+	top:50%;
+	padding:20px 10px;
+	background:white;
+	border-radius: 5px 0 0 5px;
+	cursor:pointer;
+}
+
 /* Sidebar with map details */
 .sidebar {
 	position: relative;

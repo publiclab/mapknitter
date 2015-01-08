@@ -75,12 +75,12 @@ Mapknitter::Application.routes.draw do
   get 'tms/:id/alt/' => 'utility#tms_info'
   get 'maps' => 'maps#index'
   post 'maps' => 'maps#create'
-  get 'map/create/:id' => 'maps#index'
   get 'map/region/:id' => 'maps#region'
+  get 'map/license/:id' => 'maps#license'
   get 'map/view/:id' => 'maps#view' # legacy
   get 'maps/new' => 'maps#new' # legacy
-  get 'maps/:id' => 'maps#view' # legacy
-  get 'map/:id' => 'maps#show'
+  get 'maps/:id' => 'maps#show', defaults: { legacy: true } # legacy
+  get 'map/:id' => 'maps#show', :as => 'map'
   get 'map/embed/:id' => 'annotation#embed'
   get 'import/:name' => 'warper#import'
 

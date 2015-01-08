@@ -18,7 +18,9 @@
   <%= javascript_include_tag 'uploads' %>
 </head>
 <body>
-  <div id="knitter-map-pane"></div>
+  <div id="knitter-map-pane">
+    <a class="sidebar-toggle"><i class="fa fa-chevron-left"></i></a>
+  </div>
   <div class="sidebar">
     <%= render :partial => 'layouts/header' %>
     <div class="sidebar-wrap">
@@ -68,8 +70,8 @@
               <!-- Navigation tabs -->
               <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
-                <li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images</a></li>
-                <li><a href="#map-editing-container" role="tab" data-toggle="tab">Edit History</a></li>
+		<li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images (<%= @map.warpables.length %>)</a></li>
+                <li><a href="#map-editing-container" role="tab" data-toggle="tab">History</a></li>
               </ul>
 
               <!-- Tabbed panes -->
