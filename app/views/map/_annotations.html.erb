@@ -1,4 +1,6 @@
-<div class="modal hide fade" id="pointmodal">
+<div class="modal fade" id="pointmodal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h4>Add an annotation</h4>
@@ -11,7 +13,11 @@
     <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_point()">Begin</a>
   </div>
 </div>
-<div class="modal hide fade" id="polymodal">
+</div>
+</div>
+<div class="modal fade" id="polymodal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h4>Add an annotated polygon</h4>
@@ -33,6 +39,8 @@
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn btn-large">Cancel</a>
     <a data-dismiss="modal" class="btn btn-large btn-primary" onClick="$A.add_poly()">Begin</a>
+  </div>
+  </div>
   </div>
 </div>
 
@@ -83,27 +91,29 @@
 </style>
 
 <div id="toolbar">
+<a href="/">MapKnitter</a>	
+&nbsp; <a href="/map/<%= @map.id %>">&laquo; Back to map</a> &nbsp; 
 <% if logged_in? || @map.anon_annotatable %>
-<a class="btn btn-small btn-inverse"  data-toggle="modal" href="#pointmodal"><i class="icon icon-comment icon-white"></i> Add annotation</a>
-<a class="btn btn-small btn-inverse" data-toggle="modal" href="#polymodal"><i class="icon icon-pencil icon-white"></i> Add poly</a>
+<a class="btn btn-sm btn-success"  data-toggle="modal" data-target="#pointmodal"><i class="fa fa-comment"></i> Add annotation</a>
+<a class="btn btn-sm btn-success" data-toggle="modal" href="#polymodal"><i class="fa fa-pencil"></i> Add poly</a>
 <% end %>
-<a class="btn btn-small btn-primary" data-toggle="modal" href="#sharemodal"><i class="icon icon-share icon-white"></i> Share</a>
-<a class="btn btn-small btn-inverse" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="icon icon-fullscreen icon-white"></i> Fullscreen</a>
+<a class="btn btn-sm btn-primary" data-toggle="modal" href="#sharemodal"><i class="fa fa-share"></i> Share</a>
+<a class="btn btn-sm btn-success" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="fa fa-fullscreen"></i> Fullscreen</a>
 <% if logged_in? && @map.author == current_user.login %>
 <% if @map.anon_annotatable %>
-  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Disable anonymous annotations</a>
+  <a class="btn btn-sm btn-success" href="/map/allow_anon_annotations/<%= @map.id %>">Disable anonymous annotations</a>
 <% else %>
-  <a class="btn btn-small btn-inverse" href="/map/allow_anon_annotations/<%= @map.id %>">Allow anonymous annotations</a>
-  <a class="btn btn-small btn-inverse" onClick="$A.getGeoJSON()">GeoJSON</a>
+  <a class="btn btn-sm btn-success" href="/map/allow_anon_annotations/<%= @map.id %>">Allow anonymous annotations</a>
+  <a class="btn btn-sm btn-success" onClick="$A.getGeoJSON()">GeoJSON</a>
 <% end %>
 <% end %>
 
 <% if @export && @export.jpg %>
-  <a class="btn btn-small btn-primary pull-right" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg"><i class="icon-white icon-print"></i> Order a print</a>
+  <a class="btn btn-sm btn-primary pull-right" href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg"><i class="fa-white fa-print"></i> Order a print</a>
 <% end %>
 
 <div class="btn-group pull-right">
-  <a class="btn btn-inverse btn-small" target="_blank" href="/tms/<%= @map.name %>/doc.kml">beta KML</a>
-  <a class="btn btn-inverse btn-small" target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">gMaps</a>
+  <a class="btn btn-success btn-sm" target="_blank" href="/tms/<%= @map.name %>/doc.kml">beta KML</a>
+  <a class="btn btn-success btn-sm" target="_blank" href="http://maps.google.com/maps?q=http://mapknitter.org/tms/<%= @map.name %>/doc.kml">gMaps</a>
 </div>
 </div>

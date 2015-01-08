@@ -49,20 +49,33 @@
               <!-- Export map -->
               <div class="dropdown btn-group">
                 <button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-                  <span class="fa fa-save"></span>
+                  <span class="fa fa-download"></span>
                   <span class="caret"></span>              
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li class="dropdown-header">Export formats</li>
-                  <li><a href=".">JPG</a></li>
-                  <li><a href=".">GeoTIFF</a></li>
-                  <li><a href=".">Tiled Map Service (TMS)</a></li>
-                  <li><a href=".">OSM-style TMS</a></li>
-                  <li><a href=".">zipped TMS</a></li>
-                  <li class="dropdown-header">Beta export formats</li>
-                  <li><a href=".">KML (beta)</a></li>
-                  <li class="dropdown-header">Miscellaneous</li>
-                  <li><a href=".">Order a print</a></li>
+		  <% if @map.exports.length == 0 || @map.exports.first.status == 'none' %>
+                  	<li class="dropdown-header">No export formats available</li>
+			<li><a href="/maps/export/<%= @map.id %>"><i class="fa fa-share"></i> Export the map</a></li>
+		  <% else %>
+                  	<li class="dropdown-header">Export formats</li>
+			<% if @map.exports.first.jpg %>
+			<li><a href="/export/jpg/<%= @map.name %>.jpg">JPG</a></li>
+			<% end %>
+			<% if @map.exports.first.geotiff %>
+			<li><a href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a></li>
+			<% end %>
+			<% if @map.exports.first.tms %>
+			<li><a target="_blank" href="/tms/<%= @map.name %>/">Tiled Map Service (TMS)</a></li>
+			<li><a target="_blank" href="/tms/<%= @map.name %>/alt">OSM-style TMS</a></li>
+			<% end %>
+			<% if @map.exports.first.zip %>
+			<li><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a></li>
+			<% end %>
+                  	<li class="dropdown-header">Miscellaneous</li>
+                  	<li><a href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg"><i class="icon-white icon-print"></i> Order a print</a></li>
+                  	<li class="dropdown-header">Exporting</li>
+			<li><a href="/maps/export/<%= @map.id %>"><i class="fa fa-share"></i> Re-export the map</a></li>
+		  <% end %>
                 </ul>
               </div>
             </div>
@@ -70,8 +83,8 @@
               <!-- Navigation tabs -->
               <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
-		<li><a href="#map-images-container" role="tab" data-toggle="tab">Uploaded Images (<%= @map.warpables.length %>)</a></li>
-                <li><a href="#map-editing-container" role="tab" data-toggle="tab">History</a></li>
+		<li><a href="#map-images-container" role="tab" data-toggle="tab">Images (<%= @map.warpables.length %>)</a></li>
+                <li><a href="#map-editing-container" role="tab" data-toggle="tab">Annotations</a></li>
               </ul>
 
               <!-- Tabbed panes -->
@@ -83,7 +96,7 @@
                   <%= yield :warpables unless @map.warpables.empty? %>
                 </div>
                 <div class="tab-pane" id="map-editing-container">
-                  <%= render :partial => "sidebar_edit_history" %>
+                  <%= render :partial => "sidebar_annotations" %>
                 </div>
               </div>  
 

@@ -8,13 +8,8 @@
   <title>MapKnitter: <%= @map[:name] %></title>
   <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />
 
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
-  <link rel="stylesheet" href="/leaflet/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-  <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
-  <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <%= stylesheet_link_tag 'annotations-embed-legacy' %>
+  <%= javascript_include_tag 'annotations-embed-legacy' %>
 
   <style>
     body { padding:0; }
@@ -34,9 +29,11 @@
       width:98%;
       padding:4px;
     }
+    #toolbar a {
+      color:white;
+    }
   </style>
   <%= render :partial => "map/leaflet" %>
   <% if params[:annotations] %><%= render :partial => "map/annotations" %><% end %>
-  <script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script> 
 </body>
 </html>

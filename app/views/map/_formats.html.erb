@@ -6,25 +6,13 @@
   <a class="btn btn-mini btn-danger" href="/export/jpg/<%= @map.name %>.jpg">JPG</a>
 <% end %>
 <% if @export.geotiff %>
-<% if @export.export_type == "nrg" %>
-  <a class="btn btn-mini btn-success" href="/export/geotiff/<%= @map.name %>-nrg.tif">GeoTIFF</a>
-<% else %>
   <a class="btn btn-mini btn-success" href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a>
 <% end %>
-<% end %>
-
 <% if @export.tms || @export.export_type == "nrg" %>
-<% if @export.export_type == "nrg" %>
-  <a class="btn btn-mini btn-warning" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>-nrg/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
-  <a class="btn btn-mini btn-warning" target="_blank" href="/tms/<%= @map.name %>-nrg/openlayers.html">OpenLayers viewer</a>
-  <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>-nrg/">TMS</a>
-  <a class="btn btn-mini btn-info" href="/tms/<%= @map.name %>/alt">OSM-TMS</a>
-<% else %>
   <a class="btn btn-mini btn-warning" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
   <a class="btn btn-mini btn-warning" target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a>
   <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/">TMS</a>
   <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/alt">OSM-TMS</a>
-<% end %>
 <% if @export.zip %>
   <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a>
 <% end %>
