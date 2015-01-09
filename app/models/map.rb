@@ -56,13 +56,12 @@ class Map < ActiveRecord::Base
     Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
   end
 
-  def latest_export
-    Export.find_by_map_id(self.id,:conditions => {:export_type => "normal"},:order => "created_at DESC")
+  def export
+    self.latest_export
   end
 
-  # get latest export of export_type <export_type>, i.e. "normal", "nrg" or "ndvi"
-  def get_export(export_type)
-    Export.find_by_map_id(self.id,:conditions => {:export_type => export_type},:order => "created_at DESC")
+  def latest_export
+    self.exports.last
   end
 
   def self.authors(limit = 50)
@@ -194,6 +193,87 @@ class Map < ActiveRecord::Base
     hist
   end
 
+  def run_export(user)
+    if Rails.env.development? || (verify_recaptcha(:model => self, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
+      begin
+        unless export = self.export
+          export = Export.new({
+            :map_id => self.id
+	  })
+        end
+        export.user_id = user.id if user
+        export.status = 'starting'
+        export.tms = false
+        export.geotiff = false
+        export.zip = false
+        export.jpg = false
+        export.save       
+     
+        directory = "#{Rails.root}/public/warps/"+self.name+"/"
+        stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
+        puts stdout.readlines
+        puts stderr.readlines
+        stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.name}")
+        puts stdout.readlines
+        puts stderr.readlines
+      
+        puts '> averaging scales'
+        pxperm = 100/(params[:resolution]).to_f || self.average_scale # pixels per meter
+      
+        puts '> distorting warpables'
+        origin = self.distort_warpables(pxperm)
+        warpable_coords = origin.pop  
+ 
+        export = self.export
+        export.status = 'compositing'
+        export.save
+      
+        puts '> generating composite tiff'
+        composite_location = self.generate_composite_tiff(warpable_coords,origin)
+      
+        info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
+        puts info
+      
+        export = self.export
+        if info[0] != ''
+          export.geotiff = true
+          export.size = info[0]
+          export.width = info[1]
+          export.height = info[2]
+          export.cm_per_pixel = 100.0000/pxperm
+          export.status = 'tiling'
+          export.save
+        end
+      
+        puts '> generating tiles'
+        export = self.export
+        export.tms = true if self.generate_tiles
+        export.status = 'zipping tiles'
+        export.save
+    
+        puts '> zipping tiles'
+        export = self.export
+        export.zip = true if self.zip_tiles
+        export.status = 'creating jpg'
+        export.save
+    
+        puts '> generating jpg'
+        export = self.export
+        export.jpg = true if self.generate_jpg
+        export.status = 'complete'
+        export.save
+      
+      rescue SystemCallError
+        export = self.export
+        export.status = 'failed'
+        export.save
+      end
+      return export.status
+    else
+      return "ReCAPTCHA failed"
+    end
+  end
+
   # distort all warpables, returns upper left corner coords in x,y
   def distort_warpables(scale)
     export = self.latest_export
@@ -269,9 +349,8 @@ class Map < ActiveRecord::Base
     system(Gdal.ulimit+zip)
   end
  
-  def generate_jpg(export_type)
-    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'.jpg' if export_type == "normal"
-    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-'+export_type+'.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-nrg.jpg' if export_type == "nrg"
+  def generate_jpg
+    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'.jpg'
     system(Gdal.ulimit+imageMagick)
   end
  

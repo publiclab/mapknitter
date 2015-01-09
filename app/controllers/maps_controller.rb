@@ -2,7 +2,6 @@ require 'open3'
 
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
-
   before_filter :require_login, :only => [:create, :new, :edit, :update, :destroy]
 
   layout 'knitter2'
@@ -72,6 +71,12 @@ class MapsController < ApplicationController
   def destroy
   end
 
+  def export
+    map = Map.find params[:id]
+    render :text => map.run_export(current_user)
+  end
+
+  # list by region
   def region
     area = params[:id] || "this area"
     @title = "Maps in #{area}"
@@ -80,6 +85,7 @@ class MapsController < ApplicationController
     render "maps/index", :layout => "application2"
   end
 
+  # list by license
   def license
     @title = "Maps licensed '#{params[:id]}'"
     @maps = Map.where(password: '',license: params[:id]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 24)

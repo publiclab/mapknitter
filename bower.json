@@ -3,7 +3,8 @@
   "version": "0.1.1",
   "dependencies": {
     "fontawesome":              "~4.2.0",
-    "bootstrap":            "~3.2.0",
+    "bootstrap":                "~3.2.0",
+    "seiyria-bootstrap-slider": "~4.4.0",
     "jquery":                   "~1.11",
     "jquery-ui":                "~1.11",
     "jquery-ujs":               "~1.0.3",

@@ -1,0 +1,86 @@
+<p>
+  Export maps to generate downloadable, printable, high-resolution files. <a onClick="$('#exporting-info').toggle();">Learn more &raquo;</a>
+</p>
+<div style="display:none;" id="exporting-info"> 
+  <p>From this panel you can export this map in a variety of formats. If you've changed the map at all since last exporting, you can re-run the export, but be aware that this will <b>delete and replace previously exported files</b>, so download them first if you want them. All formats are generated sequentially, so if you're waiting for a JPG you will have to let all the other formats complete first.</p>
+  <p>This may take some time - a large map could take as long as <b>an hour or more</b>. Closing this panel will not stop the export.</p>
+  <p><a href="//publiclab.org/wiki/mapknitter-exporting">Learn even more &raquo;</a></p>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#map-export-subtab" role="tab" data-toggle="tab">Export</a></li>
+  <li><a href="#map-export-options-subtab" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Advanced options</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="map-export-subtab">
+  
+    <% if Rails.env.production? && !logged_in? %>
+      <div id="recaptcha-container"></div><br />
+      <div <% if @map.export.running? %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
+    <% end %>
+
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        <span class="" id="export_progress">Loading...</span>
+      </div>
+    </div>
+
+    <button id="begin-upload" class="btn btn-lg btn-primary">Start export</button>
+
+  </div>
+
+  <div class="tab-pane" id="map-export-options-subtab">
+    <p>Tweak your export resolution; too high a resolution may stall the export (if the resulting file is too big!), while too low a resolution causes lots of processing to resize the images.</p>
+
+<% 
+# stuff for Sparklines graph; messy, could tuck into model
+hist = @map.images_histogram 
+(0..100).each do |i|
+ hist[i] = 0 if !hist[i]
+end
+hist = hist[0..100]
+grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
+resolution = @map.average_cm_per_pixel.to_s[0..4]
+%>
+
+    <p>Graph coming soon.</p><!-- Sparklines graph will go here -->
+
+    <p><b>Resolution:</b> <span id="resolution-label"><%= resolution %></span> cm/px</p>
+
+    <p><input style="width:100%" id="export-resolution" data-slider-id='exResSlider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="<%= resolution %>"/></p>
+
+  </div>
+</div>
+<script>
+var s
+(function(){
+	var exportResolutionSlider = new Slider('#export-resolution',{
+		min: 1,
+		formatter: function(value) {
+			return value + ' cm/px';
+		}
+	}).on('change',function() {
+		$('#resolution-label').html = exportResolutionSlider.getValue()
+	});
+	$('#begin-upload').click(function() {
+		$.ajax({
+			url: '/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',
+			data: {
+    			<% if Rails.env.production? && !logged_in? %>
+			recaptcha_response_field: Recaptcha.get_response(),
+			recaptcha_challenge_field: Recaptcha.get_challenge(),
+			<% end %>
+				resolution: exportResolutionSlider.getValue()
+			},
+		}).done(function(data){
+			$('#export_progress').html(data) 
+		}).fail(function(data){
+			$('#export_progress').html('Server not responding.') 
+			if (data) $('#export_progress').html(data) 
+			$('#begin-upload').removeClass('disabled')
+		})
+		$('#begin-upload').addClass('disabled')
+	})
+})()
+</script>

@@ -2,6 +2,7 @@
 // require cartagen/cartagen
 //= require knitter
 //= require mapknitter
+//= require seiyria-bootstrap-slider/dist/bootstrap-slider.min.js
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
@@ -13,4 +14,5 @@ jQuery(document).ready(function($) {
 		$('#knitter-map-pane').toggleClass('fullscreen')
 		window.mapKnitter._map._onResize()
 	})
+
 });
