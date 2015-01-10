@@ -1,0 +1,14 @@
+# Install an EditorConfig plugin for your editor to tweak your editor's settings
+# to match the conventions for this project:
+# http://editorconfig.org/
+
+root = true
+
+# Unix-style newlines
+[*]
+end_of_line = lf
+
+# Enforce indenting with 2 spaces for all ruby and javascript files
+[**.{rb,js}]
+indent_style = space
+indent_size = 2
