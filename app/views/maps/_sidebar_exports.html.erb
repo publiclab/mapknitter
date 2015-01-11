@@ -20,14 +20,16 @@
       <div <% if @map.export.running? %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
     <% end %>
 
-    <div class="progress">
+    <div class="progress"<% unless @map.export.running? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-        <span class="" id="export_progress">Loading...</span>
+        <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
     </div>
-
-    <button id="begin-upload" class="btn btn-lg btn-primary">Start export</button>
-
+    <p>
+      <button id="begin-upload" class="btn btn-lg btn-primary<% if @map.export && @map.export.running? %> disabled<% end %>">Start export</button>
+      <button <% unless @map.export && @map.export.running? %>style="display:none;"<% end %> id="cancel-upload" class="btn btn-lg btn-default"><i class="fa fa-cancel"></i> Cancel export</button>
+    </p>
+    <% if @map.export %><p style="color:#888;"> Last export run <%= time_ago_in_words @map.export.updated_at %> ago</p><% end %>
   </div>
 
   <div class="tab-pane" id="map-export-options-subtab">
@@ -53,34 +55,93 @@ resolution = @map.average_cm_per_pixel.to_s[0..4]
   </div>
 </div>
 <script>
-var s
+var exporting
 (function(){
-	var exportResolutionSlider = new Slider('#export-resolution',{
-		min: 1,
-		formatter: function(value) {
-			return value + ' cm/px';
-		}
-	}).on('change',function() {
-		$('#resolution-label').html = exportResolutionSlider.getValue()
-	});
-	$('#begin-upload').click(function() {
-		$.ajax({
-			url: '/map/export/<%= @map.name %>?authenticity_token=<%= form_authenticity_token %>',
-			data: {
-    			<% if Rails.env.production? && !logged_in? %>
-			recaptcha_response_field: Recaptcha.get_response(),
-			recaptcha_challenge_field: Recaptcha.get_challenge(),
-			<% end %>
-				resolution: exportResolutionSlider.getValue()
-			},
-		}).done(function(data){
-			$('#export_progress').html(data) 
-		}).fail(function(data){
-			$('#export_progress').html('Server not responding.') 
-			if (data) $('#export_progress').html(data) 
-			$('#begin-upload').removeClass('disabled')
-		})
-		$('#begin-upload').addClass('disabled')
-	})
+  var exportResolutionSlider = new Slider('#export-resolution',{
+    min: 1,
+    formatter: function(value) {
+      return value + ' cm/px';
+    }
+  }).on('change',function() {
+    $('#resolution-label').html = exportResolutionSlider.getValue()
+  });
+  
+  exportProgress = function() {
+    $.ajax({
+      url: '/export/progress/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+    }).done(function(data) {
+      $('.progress').show()
+      $('#export_progress').html(data)
+    })
+  }
+  <% if @map.export.running? %>
+    exporting = true
+    setInterval(exportProgress,5000)
+  <% end %>
+
+  $('#cancel-upload').click(function() {
+    $.ajax({
+      url: '/export/cancel/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      beforeSend: function() {
+        $('.progress-bar').addClass('progress-bar-warning')
+        $('.progress-bar').removeClass('progress-bar-danger')
+        $('.progress-bar').removeClass('progress-bar-success')
+        $('#export_progress').html('cancelling...') 
+      }
+    }).done(function(data){
+      $('.progress-bar').removeClass('progress-bar-warning')
+      $('.progress-bar').removeClass('active')
+      $('.progress-bar').removeClass('progress-bar-striped')
+      $('#begin-upload').html('Re-run export')
+      $('#begin-upload').show()
+      $('#cancel-upload').hide()
+      $('.progress').hide()
+    })
+  })
+
+
+  $('#begin-upload').click(function() {
+    $.ajax({
+      url: '/maps/export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      data: {
+          <% if Rails.env.production? && !logged_in? %>
+      recaptcha_response_field: Recaptcha.get_response(),
+      recaptcha_challenge_field: Recaptcha.get_challenge(),
+      <% end %>
+        resolution: exportResolutionSlider.getValue()
+      },
+      beforeSend: function() {
+        $('.progress').show()
+        $('.progress-bar').addClass('active')
+        $('.progress-bar').addClass('progress-bar-striped')
+        $('.progress-bar').removeClass('progress-bar-danger')
+        $('.progress-bar').removeClass('progress-bar-success')
+        if (exporting != true) { 
+          exporting = true
+          setInterval(exportProgress,5000)
+        }
+        $('#export_progress').html("starting export") 
+      }
+    }).done(function(data){
+      $('.progress-bar').addClass('progress-bar-success')
+      $('.progress-bar').removeClass('active')
+      $('.progress-bar').removeClass('progress-bar-striped')
+      $('#export_progress').html(data) 
+      $('#begin-upload').show()
+      $('#begin-upload').html('Re-run export')
+      $('#cancel-upload').hide()
+    }).fail(function(data){
+      console.log(data)
+      $('.progress-bar').addClass('progress-bar-danger')
+      $('.progress-bar').removeClass('active')
+      $('.progress-bar').removeClass('progress-bar-striped')
+      $('#export_progress').html('There was an error.')
+      $('#begin-upload').show()
+      $('#begin-upload').html('Retry export')
+      $('#cancel-upload').hide()
+    })
+    $('#begin-upload').hide()
+    $('#cancel-upload').show()
+  })
 })()
 </script>

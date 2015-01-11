@@ -73,7 +73,7 @@ class MapsController < ApplicationController
 
   def export
     map = Map.find params[:id]
-    render :text => map.run_export(current_user)
+    render :text => map.run_export(current_user,params[:resolution].to_f)
   end
 
   # list by region

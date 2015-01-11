@@ -193,7 +193,7 @@ class Map < ActiveRecord::Base
     hist
   end
 
-  def run_export(user)
+  def run_export(user,resolution)
     if Rails.env.development? || (verify_recaptcha(:model => self, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
       begin
         unless export = self.export
@@ -218,7 +218,7 @@ class Map < ActiveRecord::Base
         puts stderr.readlines
       
         puts '> averaging scales'
-        pxperm = 100/(params[:resolution]).to_f || self.average_scale # pixels per meter
+        pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
       
         puts '> distorting warpables'
         origin = self.distort_warpables(pxperm)

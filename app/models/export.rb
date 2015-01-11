@@ -7,7 +7,7 @@ class Export < ActiveRecord::Base
 
   # currently exporting?
   def running?
-    ['complete','none','failed'].include? self.status
+    !(['complete','none','failed'].include? self.status)
   end
 
   def self.average_cm_per_pixel

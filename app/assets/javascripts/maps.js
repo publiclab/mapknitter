@@ -14,5 +14,4 @@ jQuery(document).ready(function($) {
 		$('#knitter-map-pane').toggleClass('fullscreen')
 		window.mapKnitter._map._onResize()
 	})
-
 });

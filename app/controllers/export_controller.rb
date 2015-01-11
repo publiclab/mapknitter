@@ -28,7 +28,7 @@ class ExportController < ApplicationController
 
   def cancel
     map = Map.find params[:id] 
-    export = map.get_export(params[:type])
+    export = map.export
     export.status = 'none'
     export.save
     render :text => 'cancelled'
@@ -36,15 +36,15 @@ class ExportController < ApplicationController
 
   def progress
     map = Map.find params[:id] 
-    if export = map.get_export(params[:type])
+    if export = map.export
       if  export.status == 'complete'
-        output = 'complete (<a href="/map/view/'+map.name+'">view</a>)'
+        output = 'complete'
       elsif export.status == 'none'
-        output = 'export has not been run'
+        output = 'export not running'
       elsif export.status == 'failed'
         output = 'export failed'
       else
-        output = ' <img class="export_status" src="/images/spinner-small.gif">'+ export.status
+        output = export.status
       end
     else
       output = 'export has not been run'
