@@ -27,12 +27,16 @@ class ExportController < ApplicationController
   end
 
   def cancel
-    map = Map.find params[:id] 
-    export = map.export
-    export.status = 'none'
-    export.save
-    render :text => 'cancelled'
-  end
+		if logged_in? || @map.anonymous?
+			map = Map.find params[:id] 
+	    export = map.export
+	    export.status = 'none'
+	    export.save
+	    render :text => 'cancelled'
+		else
+			render :text => 'You must be logged in to export, unless the map is anonymous.'
+		end
+	end
 
   def progress
     map = Map.find params[:id] 

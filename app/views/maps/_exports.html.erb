@@ -1,0 +1,26 @@
+<% if @map.exports.length == 0 || @map.exports.first.status == 'none' %>
+  <li class="dropdown-header">No export formats available</li>
+<% else %>
+<% if !@map.exports.first.jpg && !@map.exports.first.geotiff && !@map.exports.first.tms && !@map.exports.first.zip %>
+  <li class="dropdown-header">No export formats available</li>
+<% else %>
+  <li class="dropdown-header">Export formats</li>
+<% end %>
+<% if @map.exports.first.jpg %>
+  <li><a href="/export/jpg/<%= @map.name %>.jpg">JPG</a></li>
+<% end %>
+<% if @map.exports.first.geotiff %>
+  <li><a href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a></li>
+<% end %>
+<% if @map.exports.first.tms %>
+  <li><a target="_blank" href="/tms/<%= @map.name %>/">Tiled Map Service (TMS)</a></li>
+  <li><a target="_blank" href="/tms/<%= @map.name %>/alt">OSM-style TMS</a></li>
+<% end %>
+<% if @map.exports.first.zip %>
+  <li><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a></li>
+<% end %>
+<% if @map.exports.first.jpg %>
+  <li class="dropdown-header">Miscellaneous</li>
+  <li><a href="http://www.zazzle.com/api/create/at-238652512768069879?rf=238652512768069879&ax=Linkover&pd=228632289886847720&fwd=ProductPage&ed=true&tc=&ic=&title=<%= @map.name %>&map=http://mapknitter.org/export/jpg/<%= @map.name %>.jpg"><i class="icon-white icon-print"></i> Order a print</a></li>
+<% end %>
+<% end %>

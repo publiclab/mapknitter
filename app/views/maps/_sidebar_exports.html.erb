@@ -25,10 +25,14 @@
         <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
     </div>
-    <p>
-      <button id="begin-upload" class="btn btn-lg btn-primary<% if @map.export && @map.export.running? %> disabled<% end %>">Start export</button>
-      <button <% unless @map.export && @map.export.running? %>style="display:none;"<% end %> id="cancel-upload" class="btn btn-lg btn-default"><i class="fa fa-cancel"></i> Cancel export</button>
-    </p>
+    <% if logged_in? || @map.anonymous? %>
+      <p>
+        <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.export.running? %> style="display:none;"<% end %>>Start export</button>
+        <button <% unless @map.export && @map.export.running? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
+      </p>
+    <% else %>
+      <p>You must be <a href="/login">logged in</a> to run exports, except on anonymous maps.</p>
+    <% end %>
     <% if @map.export %><p style="color:#888;"> Last export run <%= time_ago_in_words @map.export.updated_at %> ago</p><% end %>
   </div>
 
@@ -55,23 +59,34 @@ resolution = @map.average_cm_per_pixel.to_s[0..4]
   </div>
 </div>
 <script>
-var exporting
+var exporting, exportResolutionSlider
 (function(){
-  var exportResolutionSlider = new Slider('#export-resolution',{
+  exportResolutionSlider = new Slider('#export-resolution',{
     min: 1,
     formatter: function(value) {
       return value + ' cm/px';
     }
   }).on('change',function() {
-    $('#resolution-label').html = exportResolutionSlider.getValue()
+    $('#resolution-label').html(exportResolutionSlider.getValue())
   });
-  
+
+  updateExports = function() {
+    $.ajax({
+      url: '/maps/exports/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>'
+    }).done(function(data) {
+      $('.map-exports').html(data)
+    })
+  }
+
+  // 'complete', 'failed', ''
   exportProgress = function() {
     $.ajax({
-      url: '/export/progress/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      url: '/export/progress/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>'
     }).done(function(data) {
       $('.progress').show()
       $('#export_progress').html(data)
+      // change progress indicator appearance accordingly
+      // -- maybe have a handler which assigns prog indicator state based on status?
     })
   }
   <% if @map.export.running? %>
@@ -79,7 +94,7 @@ var exporting
     setInterval(exportProgress,5000)
   <% end %>
 
-  $('#cancel-upload').click(function() {
+  $('#cancel-export').click(function() {
     $.ajax({
       url: '/export/cancel/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
       beforeSend: function() {
@@ -92,56 +107,56 @@ var exporting
       $('.progress-bar').removeClass('progress-bar-warning')
       $('.progress-bar').removeClass('active')
       $('.progress-bar').removeClass('progress-bar-striped')
-      $('#begin-upload').html('Re-run export')
-      $('#begin-upload').show()
-      $('#cancel-upload').hide()
+      $('#begin-export').html('Re-run export')
+      $('#begin-export').show()
+      $('#cancel-export').hide()
       $('.progress').hide()
+      updateExports()
     })
   })
 
-
-  $('#begin-upload').click(function() {
+  $('#begin-export').click(function() {
+    $('.progress').show()
+    $('.progress-bar').addClass('active')
+    $('.progress-bar').addClass('progress-bar-striped')
+    $('.progress-bar').removeClass('progress-bar-danger')
+    $('.progress-bar').removeClass('progress-bar-success')
+    if (exporting != true) { 
+      exporting = true
+      setInterval(exportProgress,5000)
+    }
+    $('#begin-export').hide()
+    $('#cancel-export').show()
+    $('#export_progress').html("starting export") 
+    $('.map-exports').html('')
     $.ajax({
       url: '/maps/export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
       data: {
-          <% if Rails.env.production? && !logged_in? %>
-      recaptcha_response_field: Recaptcha.get_response(),
-      recaptcha_challenge_field: Recaptcha.get_challenge(),
-      <% end %>
+        <% if Rails.env.production? && !logged_in? %>
+          recaptcha_response_field: Recaptcha.get_response(),
+          recaptcha_challenge_field: Recaptcha.get_challenge(),
+        <% end %>
         resolution: exportResolutionSlider.getValue()
-      },
-      beforeSend: function() {
-        $('.progress').show()
-        $('.progress-bar').addClass('active')
-        $('.progress-bar').addClass('progress-bar-striped')
-        $('.progress-bar').removeClass('progress-bar-danger')
-        $('.progress-bar').removeClass('progress-bar-success')
-        if (exporting != true) { 
-          exporting = true
-          setInterval(exportProgress,5000)
-        }
-        $('#export_progress').html("starting export") 
       }
     }).done(function(data){
       $('.progress-bar').addClass('progress-bar-success')
       $('.progress-bar').removeClass('active')
       $('.progress-bar').removeClass('progress-bar-striped')
       $('#export_progress').html(data) 
-      $('#begin-upload').show()
-      $('#begin-upload').html('Re-run export')
-      $('#cancel-upload').hide()
+      $('#begin-export').show()
+      $('#begin-export').html('Re-run export')
+      $('#cancel-export').hide()
+      updateExports()
     }).fail(function(data){
       console.log(data)
       $('.progress-bar').addClass('progress-bar-danger')
       $('.progress-bar').removeClass('active')
       $('.progress-bar').removeClass('progress-bar-striped')
       $('#export_progress').html('There was an error.')
-      $('#begin-upload').show()
-      $('#begin-upload').html('Retry export')
-      $('#cancel-upload').hide()
+      $('#begin-export').show()
+      $('#begin-export').html('Retry export')
+      $('#cancel-export').hide()
     })
-    $('#begin-upload').hide()
-    $('#cancel-upload').show()
   })
 })()
 </script>

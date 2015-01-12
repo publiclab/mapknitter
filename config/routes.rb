@@ -79,7 +79,8 @@ Mapknitter::Application.routes.draw do
   get 'map/license/:id' => 'maps#license'
   get 'map/view/:id' => 'maps#view' # legacy
   get 'maps/new' => 'maps#new' # legacy
-  get 'maps/export/:id' => 'maps#export'
+  get 'maps/export/:id' => 'maps#export' # this perhaps should be post
+  get 'maps/exports/:id' => 'maps#exports'
   get 'export/progress/:id' => 'export#progress'
   get 'maps/:id' => 'maps#show', defaults: { legacy: true } # legacy
   get 'map/:id' => 'maps#show', :as => 'map'

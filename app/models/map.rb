@@ -52,6 +52,10 @@ class Map < ActiveRecord::Base
     self.password != ""
   end
 
+	def anonymous?
+		self.author == "" || self.user_id == 0 
+	end
+
   def self.bbox(minlat,minlon,maxlat,maxlon)
     Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
   end

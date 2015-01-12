@@ -71,9 +71,20 @@ class MapsController < ApplicationController
   def destroy
   end
 
+	# run the export
   def export
     map = Map.find params[:id]
-    render :text => map.run_export(current_user,params[:resolution].to_f)
+    if logged_in?
+      render :text => map.run_export(current_user,params[:resolution].to_f)
+		else
+			render :text => 'You must be logged in to export, unless the map is anonymous.'
+  	end
+  end
+
+	# render list of exports
+  def exports
+    @map = Map.find params[:id]
+    render :partial => "maps/exports", :layout => false
   end
 
   # list by region
