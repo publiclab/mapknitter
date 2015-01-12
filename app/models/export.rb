@@ -1,9 +1,8 @@
 class Export < ActiveRecord::Base
-  attr_accessible :map_id, :status
+  attr_accessible :map_id, :status, :user_id
 
-  # deprecate following line:
-  validates_inclusion_of :export_type, :in => %w(normal nrg ndvi)
   belongs_to :map
+  belongs_to :user
 
   # currently exporting?
   def running?

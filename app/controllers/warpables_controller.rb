@@ -75,7 +75,6 @@ class WarpablesController < ApplicationController
   end
   
   def show
-   #Need some specific way
     @image = Warpable.find params[:id]
     respond_to do |format|
       format.html # show.html.erb
@@ -115,16 +114,6 @@ class WarpablesController < ApplicationController
     @warpable.save
     render :text => 'success'
   end
-  
-  # def delete
-  #   image = Warpable.find params[:id]
-  #   image.deleted = true
-  #   image.save
-  #   respond_to do |format|
-  #     format.html { render :text => 'successfully deleted '+params[:id]}
-  #     format.json { head :no_content }
-  #   end
-  # end
 
   def destroy
     @warpable = Warpable.find params[:id]

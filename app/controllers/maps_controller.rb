@@ -38,8 +38,13 @@ class MapsController < ApplicationController
       @map = Map.find params[:id]
     end
     @map.zoom = 12
-    # remove once legacy is deprecated
-    render :template => 'map/show', :layout => 'knitter' if params[:legacy]
+    # remove following lines once the new leaflet interface is integrated
+    if params[:leaflet]
+      render :template => 'map/leaflet', :layout => false 
+    # remove following lines once legacy interface is deprecated
+    elsif params[:legacy]
+      render :template => 'map/show', :layout => 'knitter'
+    end
   end
 
   def edit
@@ -69,6 +74,20 @@ class MapsController < ApplicationController
   end
 
   def destroy
+  end
+
+  # used by leaflet to fetch corner coords of each warpable
+  def warpables
+    map = Map.find params[:id]
+    warpables = []
+    map.warpables.each do |warpable|
+      warpables << warpable
+      warpables.last[:nodes] = warpable.nodes_array
+      warpables.last[:src] = warpable.image.url
+      warpables.last[:src_medium] = warpable.image.url(:medium)
+      warpables.last[:src_thumb] = warpable.image.url(:thumb)
+    end
+    render :json => warpables
   end
 
 	# run the export

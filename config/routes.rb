@@ -79,8 +79,8 @@ Mapknitter::Application.routes.draw do
   get 'map/license/:id' => 'maps#license'
   get 'map/view/:id' => 'maps#view' # legacy
   get 'maps/new' => 'maps#new' # legacy
-  get 'maps/export/:id' => 'maps#export' # this perhaps should be post
   get 'maps/exports/:id' => 'maps#exports'
+  get 'maps/:id/warpables' => 'maps#warpables' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'export/progress/:id' => 'export#progress'
   get 'maps/:id' => 'maps#show', defaults: { legacy: true } # legacy
   get 'map/:id' => 'maps#show', :as => 'map'
@@ -93,7 +93,7 @@ Mapknitter::Application.routes.draw do
   get 'author/:id' => 'author#show'
 
   post 'export/:action/:id' => 'export'
-  post 'map/export/:id' => 'maps#export'
+  post 'maps/export/:id' => 'maps#export'
   post 'maps/:id' => 'maps#export'
   post 'warper/create/:id' => 'warper#create'
   post 'warper/update' => 'warper#update'
