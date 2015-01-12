@@ -95,7 +95,7 @@ class WarpablesController < ApplicationController
 
     params[:points].split(':').each do |point|
       lon = point.split(',')[0], lat = point.split(',')[1]
-  node = Node.new({:color => 'black',
+      node = Node.new({:color => 'black',
                 :lat => lat,
                 :lon => lon,
                 :author => author,
