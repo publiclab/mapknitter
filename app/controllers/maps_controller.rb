@@ -47,9 +47,13 @@ class MapsController < ApplicationController
     end
   end
 
+  def annotate
+    @map = Map.find params[:id]
+    @map.zoom = 12 # get rid of this; use setBounds or something
+  end
+
   def edit
     @map = Map.find params[:id]
-    @map.zoom = 12
   end
 
   def update
@@ -70,7 +74,7 @@ class MapsController < ApplicationController
 
     @map.save
 
-    redirect_to :action => "edit"
+    redirect_to :action => "show"
   end
 
   def destroy

@@ -1,0 +1,31 @@
+<%= form_for @map, :html => { :class => "edit-map" } do |f| %>
+
+  <div class="form-group">
+    <%= f.label :location, "Location <small>click on a location to zoom there</small>".html_safe %>
+    <div class="input-group">
+      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+      <%= f.text_field :location, :class => "form-control" %>
+    </div>
+  </div>
+
+  <table class="form-group">
+    <tbody>
+      <tr><td style="padding-right:6px;">
+        <%= f.label :latitude %>
+        <%= f.text_field :lat, :class => "form-control" %>
+      </td>
+      <td>
+        <%= f.label :longitude %>
+        <%= f.text_field :lon, :class => "form-control" %>
+      </td></tr>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <%= f.label :description %>
+    <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control" %>
+  </div>
+
+  <%= f.submit "Save", :class => "btn btn-primary btn-lg" %>  
+<% end %>
+<script><%= render :partial => 'maps/geocoder.js' %></script>

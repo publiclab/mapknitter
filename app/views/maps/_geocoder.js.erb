@@ -1,0 +1,48 @@
+var geocoder = new google.maps.Geocoder();
+
+jQuery(document).ready(function($) {
+
+  $('#map_location').submit(function(e) {
+    e.preventDefault();
+  })
+
+  window.mapKnitter.getMap().on('drag',function(e) {
+    $("#map_lat").val(window.mapKnitter.getMap().getCenter().lat);
+    $("#map_lon").val(window.mapKnitter.getMap().getCenter().lon);
+  })
+
+  $("#map_location").autocomplete({
+    autoFocus: true,
+    //This bit uses the geocoder to fetch address values
+    source: function(request, response) {
+      geocoder.geocode( {'address': request.term }, function(results, status) {
+        response($.map(results, function(item) {
+          return {
+            label:  item.formatted_address,
+            value: item.formatted_address,
+            latitude: item.geometry.location.lat(),
+            longitude: item.geometry.location.lng(),
+            bounds: item.geometry.bounds
+          }
+        }));
+      })
+    },
+    //This bit is executed upon selection of an address
+    select: function(event, ui) {
+      var b = ui.item.bounds
+      $("#map_lat").val(ui.item.latitude);
+      $("#map_lon").val(ui.item.longitude);
+      if (b) {
+        window.mapKnitter.getMap().fitBounds([
+          [b.getNorthEast().lat(), b.getNorthEast().lng()],
+          [b.getSouthWest().lat(), b.getSouthWest().lng()]
+          ]);
+      } else {
+        window.mapKnitter.getMap().panTo([ui.item.latitude,
+                                      ui.item.longitude])
+        window.mapKnitter.getMap().setZoom(14)
+      }
+    }
+  });
+
+})

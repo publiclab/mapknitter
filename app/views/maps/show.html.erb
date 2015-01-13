@@ -19,18 +19,26 @@
 
 <% content_for :details do %>
 	<div>
-		<%= markdown_to_html(@map.description) %>
+		<%=raw markdown_to_html(@map.description) %>
 	</div>
 
 	<p>
 		<span class="map-detail-label">Location</span>
-		<%= @map.location %>
+    <a href="https://www.openstreetmap.org/#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>"><%= @map.location %></a>
 	</p>
-
 
 	<table>
 		<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
 	</table>
+
+  <hr />
+  <p>
+    <a onClick="$('#map-edit-container').toggle()" class="btn btn btn-default">Edit details</a>
+  </p>
+
+  <div style="display:none;" id="map-edit-container">
+    <%= render :partial => 'maps/edit' %>
+	</div>
 
 	<div class="tags">
 		<%= render :partial => "tags/index" %>

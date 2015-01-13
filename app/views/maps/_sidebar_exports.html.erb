@@ -17,18 +17,18 @@
   
     <% if Rails.env.production? && !logged_in? %>
       <div id="recaptcha-container"></div><br />
-      <div <% if @map.export.running? %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
+      <div <% if @map.exporting? %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
     <% end %>
 
-    <div class="progress"<% unless @map.export.running? %> style="display:none;"<% end %>>
+    <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
         <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
     </div>
     <% if logged_in? || @map.anonymous? %>
       <p>
-        <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.export.running? %> style="display:none;"<% end %>>Start export</button>
-        <button <% unless @map.export && @map.export.running? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
+        <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
+        <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
     <% else %>
       <p>You must be <a href="/login">logged in</a> to run exports, except on anonymous maps.</p>
@@ -89,7 +89,7 @@ var exporting, exportResolutionSlider
       // -- maybe have a handler which assigns prog indicator state based on status?
     })
   }
-  <% if @map.export.running? %>
+  <% if @map.exporting? %>
     exporting = true
     setInterval(exportProgress,5000)
   <% end %>

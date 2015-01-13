@@ -68,17 +68,19 @@ Mapknitter::Application.routes.draw do
   get 'profile' => 'users#profile', :id => 0
   get 'profile/:id' => 'users#profile'
   get 'dashboard' => 'users#dashboard'
-  #map.comments '/comments' => 'users#comments'
 
   get 'tms/:id/alt/:z/:x/:y.png' => 'utility#tms_alt'
   get 'tms/:id/' => 'utility#tms_info'
   get 'tms/:id/alt/' => 'utility#tms_info'
   get 'maps' => 'maps#index'
-  post 'maps' => 'maps#create'
+  post 'maps' => 'maps#create' # legacy, will be replaced by resourceful route
+  put 'map/:id' => 'maps#update' # legacy, will be replaced by resourceful route
   get 'map/region/:id' => 'maps#region'
   get 'map/license/:id' => 'maps#license'
   get 'map/view/:id' => 'maps#view' # legacy
-  get 'maps/new' => 'maps#new' # legacy
+  get 'maps/new' => 'maps#new' # legacy, will be replaced by resourceful route
+  get 'maps/:id/edit' => 'maps#edit' # legacy, will be replaced by resourceful route
+  get 'maps/:id/annotate' => 'maps#annotate'
   get 'maps/exports/:id' => 'maps#exports'
   get 'maps/:id/warpables' => 'maps#warpables' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'export/progress/:id' => 'export#progress'
@@ -96,8 +98,8 @@ Mapknitter::Application.routes.draw do
   post 'maps/export/:id' => 'maps#export'
   post 'maps/:id' => 'maps#export'
   post 'warper/create/:id' => 'warper#create'
-  post 'warper/update' => 'warper#update'
-  post 'warper/delete/:id' => 'warper#delete'
+  #post 'warper/update' => 'warper#update'
+  #post 'warper/delete/:id' => 'warper#delete'
 
   # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.
@@ -122,13 +124,5 @@ Mapknitter::Application.routes.draw do
     resources :warpables
     resources :annotations
   end
-
-  #Beta Pages
-  get 'beta' => 'beta#index'
-  get 'beta/maps/:id' => 'beta#show'
-
-  # Beta Warper controller, handling uploads
-  get 'betawarper/:map_id' => 'betawarper#show', :requirements => { :map_id => /\d+/ }
-  post 'betawarper/:id' => 'betawarper#create', :requirements => { :id => /\d+/ }
 
 end

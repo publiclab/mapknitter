@@ -60,6 +60,10 @@ class Map < ActiveRecord::Base
     Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
   end
 
+  def exporting?
+    self.export && self.export.running?
+  end
+
   def export
     self.latest_export
   end

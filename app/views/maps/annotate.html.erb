@@ -1,0 +1,23 @@
+<% content_for :title do %>
+	<h3 class="sidebar-title">
+		<%= @map.name %>
+	</h3>
+	<div class="map-author">
+		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a>
+  </div>
+  <br /><p>
+  <%= link_to "&laquo; Back to main interface".html_safe, map_path(@map), :class => 'btn btn-default' %>
+  </p>
+<% end %>
+
+<% content_for :details do %>
+	<script>
+		jQuery(document).ready(function($) {
+			var annotations = new MapKnitter.Annotations({
+				name: 	'annotation',
+				map_id: <%= @map.id %>,
+				map: 	mapKnitter.getMap()
+			});
+		});
+	</script>
+<% end %>
