@@ -1,55 +1,58 @@
 <div class="container-fluid">
-	<div class="row">
-		<div class="links col-md-3">
-			<a class="btn btn-primary create-map" href="<%= new_map_url %>">
-				<span class="fa fa-pencil"></span> Create a map
-			</a>
-			<a class="btn btn-default create-map">
-				<span class="fa fa-pencil"></span> Create a map anonymously
-			</a>
-			<a href="http://store.publiclab.org/products/balloon-mapping-kit">
-				<img src="/images/balloon-kit.jpg" />
-			</a>
-			<div class="hidden-xs hidden-sm">
-				<%= render 'map/regions' %>
-				<%= render 'map/authors' %>
-				<%= render 'map/new_maps' %>
-				<%= render :partial => 'statistics' %>
-			</div>
-		</div><!-- .col-md-3 -->
-		<div class="maps-list col-md-9">
-			<h2><%= @title ||= "Recent maps" %></h2>
-			<% odd = true %>
-			<div class="row">
-				<% @maps.each do |map| %>
-				<div class="map col-md-3 <%= 'odd' if odd %>">
-					<% if !map.private && map.warpables.length > 0 %>
-						<a href="/map/<%= map.id %>">
-							<img src="<%= map.warpables.first.image.url(:small) %>" />
-						</a>
-					<% end %>
-					<h3><a href="/map/<%= map.id %>"><%= map.name.capitalize %></a></h3>
-					<p>
-						<small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
-						<p class="description"><small>
-						    <%= truncate(markdown_to_html(map.description),:length =>200) %>
-						    <% if !map.description %><i>no description</i><% end %>
-						</small>
-					</p>
-					<p class="map map-meta">
-						<small>
-							<% if map.archived %><i>Archived</i> | <% end %> 
-							<% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
-							Updated <%= map.updated_at.to_s(:short) %> | 
-							<%= map.warpables.length %> images 
-						</small>
-					</p>
-				</div>
-				<% odd = !odd %>
-				<% end %>
-			</div>
-			<br style="clear:both;" />
-			<%= will_paginate @maps unless @unpaginated %>
-		</div><!-- .col-md-9 -->
-	</div><!-- .row -->
+  <div class="row">
+    <div class="links col-md-3">
+      <a class="btn btn-primary create-map" href="<%= new_map_url %>">
+        <span class="fa fa-pencil"></span> Create a map
+      </a>
+      <a class="btn btn-default create-map">
+        <span class="fa fa-pencil"></span> Create a map anonymously
+      </a>
+      <a href="http://store.publiclab.org/products/balloon-mapping-kit">
+        <img src="/images/balloon-kit.jpg" />
+      </a>
+      <div class="hidden-xs hidden-sm">
+        <%= render 'map/regions' %>
+        <%= render 'map/authors' %>
+        <%= render 'map/new_maps' %>
+        <%= render :partial => 'statistics' %>
+      </div>
+    </div><!-- .col-md-3 -->
+    <div class="maps-list col-md-9">
+      <h2><%= @title ||= "Recent maps" %></h2>
+      <% odd = true %>
+      <div class="row">
+        <% @maps.each_with_index do |map,i| %>
+        <% if i % 4 == 0 %></div><div class="row"><% end %>
+        <div class="map col-md-3 <%= 'odd' if odd %>">
+          <a href="/map/<%= map.id %>">
+            <% if !map.private && map.warpables.length > 0 %>
+              <img src="<%= map.warpables.first.image.url(:small) %>" />
+            <% else %>
+              <div style="width:100%;background:#eee;height:170px;"></div>
+            <% end %>
+          </a>
+          <h3><a href="/map/<%= map.id %>"><%= map.name.capitalize %></a></h3>
+          <p>
+            <small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
+            <p class="description"><small>
+                <%=raw truncate(markdown_to_html(map.description),:length =>200) %>
+                <% if !map.description %><i>no description</i><% end %>
+            </small>
+          </p>
+          <p class="map map-meta">
+            <small>
+              <% if map.archived %><i>Archived</i> | <% end %> 
+              <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+              Updated <%= map.updated_at.to_s(:short) %> | 
+              <%= map.warpables.length %> images 
+            </small>
+          </p>
+        </div>
+        <% odd = !odd %>
+        <% end %>
+      </div>
+      <br style="clear:both;" />
+      <%= will_paginate @maps unless @unpaginated %>
+    </div><!-- .col-md-9 -->
+  </div><!-- .row -->
 </div>

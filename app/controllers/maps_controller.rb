@@ -58,12 +58,7 @@ class MapsController < ApplicationController
 
   def update
     @map = Map.find params[:id]
-
-    # save lat, lon, location, description 
-    @map.description = params[:map][:description]
-    @map.location = params[:map][:location]
-    @map.lat = params[:map][:lat]
-    @map.lon = params[:map][:lon]
+    @map.update_attributes(params[:map])
 
     # save new tags
     if params[:tags]
@@ -73,11 +68,7 @@ class MapsController < ApplicationController
     end
 
     @map.save
-
     redirect_to :action => "show"
-  end
-
-  def destroy
   end
 
   # used by leaflet to fetch corner coords of each warpable

@@ -1,5 +1,7 @@
 class AnnotationController < ApplicationController
 
+  # Legacy controller which will be replaced with AnnotationsController once data migration and feature parity are ensured
+
   def embed
     @map = Map.find_by_name params[:id]
     render :layout => false

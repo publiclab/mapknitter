@@ -1,6 +1,0 @@
-<h3><%= @warpables.count %> images found. </h3>
-
-<% for image in @warpables %>
-<a href="<%= image.image.url %>"><img src="<%= image.image.url(:thumb) %>" /></a><br />
-<a href="<%= image.image.url %>"><%= image.image.url %></a><br /><br />
-<% end %>

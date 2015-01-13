@@ -72,9 +72,12 @@ Mapknitter::Application.routes.draw do
   get 'tms/:id/alt/:z/:x/:y.png' => 'utility#tms_alt'
   get 'tms/:id/' => 'utility#tms_info'
   get 'tms/:id/alt/' => 'utility#tms_info'
+
+  # once we have string-based ids, reorganize these around 'maps' and resourceful routing
   get 'maps' => 'maps#index'
   post 'maps' => 'maps#create' # legacy, will be replaced by resourceful route
   put 'map/:id' => 'maps#update' # legacy, will be replaced by resourceful route
+  get 'map/update/:id' => 'maps#update' # legacy
   get 'map/region/:id' => 'maps#region'
   get 'map/license/:id' => 'maps#license'
   get 'map/view/:id' => 'maps#view' # legacy
@@ -87,19 +90,17 @@ Mapknitter::Application.routes.draw do
   get 'maps/:id' => 'maps#show', defaults: { legacy: true } # legacy
   get 'map/:id' => 'maps#show', :as => 'map'
   get 'map/embed/:id' => 'annotation#embed'
-  get 'import/:name' => 'warper#import'
-
-  get 'authors' => 'users#authors'
-  get 'author/list' => 'author#list'
-  get 'author/emails' => 'author#emails'
-  get 'author/:id' => 'author#show'
-
-  post 'export/:action/:id' => 'export'
   post 'maps/export/:id' => 'maps#export'
   post 'maps/:id' => 'maps#export'
-  post 'warper/create/:id' => 'warper#create'
-  #post 'warper/update' => 'warper#update'
-  #post 'warper/delete/:id' => 'warper#delete'
+
+  get 'import/:name' => 'images#import' # this was for auto-adding images via URL
+  post 'export/:action/:id' => 'export'
+
+  # make these resourceful
+  post 'images/create/:id' => 'images#create' # used?
+  post 'images/update' => 'images#update'
+  post 'warper/update' => 'images#update' # legacy, delete
+  post 'images/delete/:id' => 'images#delete'
 
   # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.
@@ -113,7 +114,6 @@ Mapknitter::Application.routes.draw do
 
   get ':controller/:action'
   get ':controller/:action/:id'
-  #get ':controller.:format' # this doesn't work -- what's it for?
   get ':controller/:action.:format'
   get ':controller/:action/:id.:format'
 

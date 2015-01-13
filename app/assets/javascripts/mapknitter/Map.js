@@ -44,9 +44,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
                        ],
               locked: warpable.locked
           });
+
+          // this is being run on *all* images each deselect
+          // but it is going to be deprecated on move to v0.0.5+
+          // so maybe who cares
           img.onDeselect = function() {
             console.log('saving')
-            $.ajax('/warper/update',{
+            $.ajax('/images/update',{
               type: 'POST',
               data: {
                 warpable_id: warpable.id,

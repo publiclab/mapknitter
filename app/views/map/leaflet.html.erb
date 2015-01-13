@@ -84,7 +84,7 @@
       });
       img.mk_id = <%= warpable.id %>
       img.onDeselect = function() {
-        $.ajax('/warper/update',{
+        $.ajax('/images/update',{
           type: 'POST',
           data: {
             warpable_id: this.mk_id,

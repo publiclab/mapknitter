@@ -77,7 +77,7 @@
                   <%= yield :details %>
                 </div>
                 <div class="tab-pane" id="map-images-container">
-                  <%= yield :warpables unless @map.warpables.empty? %>
+                  <%= yield :images unless @map.warpables.empty? %>
                 </div>
                 <div class="tab-pane" id="map-editing-container">
                   <%= render :partial => "sidebar_annotations" %>
@@ -94,7 +94,7 @@
     </div><!-- .sidebar-wrap -->
   </div><!-- .sidebar -->
 
-  <%= render :partial => "/warpables/new" unless @map.warpables.empty? %>
+  <%= render :partial => "/images/new" unless @map.warpables.empty? %>
   <script>
     var map
     (function(){

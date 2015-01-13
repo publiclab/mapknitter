@@ -1,3 +1,4 @@
+// Legacy!
 var Knitter = {
   // start storing a layer_type and layer_url in Map model, use it to switch this:
   openlayers_on: false,
@@ -222,8 +223,10 @@ var Knitter = {
     new Ajax.Request('/map/update/'+Knitter.map_id,{
       method: 'get',
       parameters: {
-        lat: lat,
-        lon: lon,
+        map: {
+          lat: lat,
+          lon: lon
+        },
         zoom: zoom,
         tiles: layer,
         tile_url: Config.tile_url,
