@@ -1,58 +1,103 @@
 <% content_for :title do %>
-	<div class="sidebar-title new-map">
-		<h3>Create a new map</h3>
-		<p>Pan and zoom to locate your site, then give your map a title, location, and description.</p>			
-	</div>
+  <div class="sidebar-title new-map">
+    <h4>Create a new map</h4>
+    <p>Pan and zoom to locate your site, then give your map a title, location, and description.</p>      
+  </div>
 <% end %>
 
 <%= form_for @map, :html => { :class => "new-map" } do |f| %>
-	<div class="sidebar-content">
-		<div class="form-group">
-			<%= f.label :name, "Title", :class => "h4" %>	
-			<%= f.text_field :name, :class => "form-control" %>					
-		</div>
-		<p><small>Good map titles are short and communicate clearly the subject of the map.  For example: 
-			<ul class="map-title-examples">
-				<li>"Infragram map of goat brush clearing"</li>
-				<li>"Construction near BART"</li>
-			</ul>
-		</small></p>		
-		<hr/>
+  <div class="sidebar-content">
+    <div class="form-group">
+      <%= f.label :name, "Title" %>  
+      <%= f.text_field :name, :class => "form-control" %>          
+    </div>
+    <p><small>Good titles are short and indicate the subject of the map, e.g.: 
+      <ul class="map-title-examples">
+        <li>"Infragram map of goat brush clearing"</li>
+        <li>"Construction near BART"</li>
+      </ul>
+    </small></p>    
+    <hr/>
 
-		<table class="form-group">
-			<tbody>
-				<tr><td>
-			<%= f.label :location, "Location <small>Click search to zoom to a place</small>".html_safe %>
-				</td></tr>
-				<tr><td style="padding-right:6px;">
-					<%= f.text_field :location, :class => "form-control" %>
-				</td>
-				<td>
-				<a class="btn btn-primary"><i class="fa fa-search"></i></a>
-				</td></tr>
-			</tbody>
-		</table>
+    <div class="form-group">
+      <%= f.label :location, "Location <small>click on a location to zoom there</small>".html_safe %>
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <%= f.text_field :location, :class => "form-control" %>
+      </div>
+    </div>
 
-		<table class="form-group">
-			<tbody>
-				<tr><td style="padding-right:6px;">
-					<%= f.label :lat %>
-					<%= f.text_field :lat, :class => "form-control" %>
-				</td>
-				<td>
-					<%= f.label :lon %>
-					<%= f.text_field :lon, :class => "form-control" %>
-				</td></tr>
-			</tbody>
-		</table>
+    <table class="form-group">
+      <tbody>
+        <tr><td style="padding-right:6px;">
+          <%= f.label :latitude %>
+          <%= f.text_field :lat, :class => "form-control" %>
+        </td>
+        <td>
+          <%= f.label :longitude %>
+          <%= f.text_field :lon, :class => "form-control" %>
+        </td></tr>
+      </tbody>
+    </table>
 
-		<!-- Map description -->
-		<div class="form-group">
-			<%= f.label :description %>
-			<%= f.text_area :description, :placeholder => "Enter plain text or **Markdown** here.", :class => "form-control" %>
-		</div>
-		<p>Use the description to add links or explanatory images or videos to your map.</p>
+    <!-- Map description -->
+    <div class="form-group">
+      <%= f.label :description %>
+      <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control" %>
+    </div>
 
-		<%= f.submit "Create map", :class => "btn btn-primary" %>	
-	</div><!-- .new-map-form -->
+    <%= f.submit "Create map", :class => "btn btn-primary btn-lg" %>  
+  </div><!-- .new-map-form -->
 <% end %>
+
+<script>
+  var geocoder = new google.maps.Geocoder();
+
+  jQuery(document).ready(function($) {
+
+    $('#map_location').submit(function(e) {
+      e.preventDefault();
+    })
+
+    window.mapKnitter.getMap().on('drag',function(e) {
+      $("#map_lat").val(window.mapKnitter.getMap().getCenter().lat);
+      $("#map_lon").val(window.mapKnitter.getMap().getCenter().lat);
+    })
+
+    $("#map_location").autocomplete({
+      autoFocus: true,
+      //This bit uses the geocoder to fetch address values
+      source: function(request, response) {
+        geocoder.geocode( {'address': request.term }, function(results, status) {
+          response($.map(results, function(item) {
+            return {
+              label:  item.formatted_address,
+              value: item.formatted_address,
+              latitude: item.geometry.location.lat(),
+              longitude: item.geometry.location.lng(),
+              bounds: item.geometry.bounds
+            }
+          }));
+        })
+      },
+      //This bit is executed upon selection of an address
+      select: function(event, ui) {
+        var b = ui.item.bounds
+        $("#map_lat").val(ui.item.latitude);
+        $("#map_lon").val(ui.item.longitude);
+        if (b) {
+          window.mapKnitter.getMap().fitBounds([
+            [b.getNorthEast().lat(), b.getNorthEast().lng()],
+            [b.getSouthWest().lat(), b.getSouthWest().lng()]
+            ]);
+        } else {
+          window.mapKnitter.getMap().panTo([ui.item.latitude,
+                                        ui.item.longitude])
+          window.mapKnitter.getMap().setZoom(14)
+        }
+      }
+    });
+
+  })
+
+</script>

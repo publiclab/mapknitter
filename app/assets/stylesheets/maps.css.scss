@@ -1,7 +1,7 @@
 /*
  *= require seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css
-*/
-
+ *= require jquery-ui/themes/overcast/jquery-ui.min.css
+*/ 
 /* Variables */
 $sidebar-width: 30%;
 $sidebar-min-width: 400px;
@@ -85,7 +85,7 @@ html, body {
 		margin-top: $bootstrap-navbar-height;
 		padding-bottom: $sidebar-title-padding;
 		padding-top: $sidebar-title-padding;		
-		h3 { margin: 0 0 6px; }
+		h4 { margin: 3px 0 6px; }
 	}
 
 	.sidebar-content {
@@ -98,9 +98,7 @@ html, body {
 		left: 0;
 		bottom: 0;
 
-		@include sidebar-padding();
-
-		padding-bottom: $sidebar-padding;
+		padding: $sidebar-padding;
 	}
 
 	.sidebar-buttons {
@@ -198,3 +196,29 @@ html, body {
 .tab-pane { padding-top: 10px; }
 
 .public-lab-primary button { background-color: #f8e4e4; }
+
+/* autocomplete styling for jquery-ui widget */
+.ui-autocomplete {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:14px;
+  background-color: white;
+	background-image: none; 
+  width:300px;
+  position:absolute;
+  list-style-type: none;
+  margin-left: -6px;
+  padding-left: 0;
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  border:none;
+}
+.ui-autocomplete .ui-menu-item {
+  padding:6px 12px;
+
+}
+.ui-menu-item.ui-state-focus {
+  background:#ddd;
+  border:none;
+	background-image: none; 
+	color: #666;
+  font-weight:normal;
+}
