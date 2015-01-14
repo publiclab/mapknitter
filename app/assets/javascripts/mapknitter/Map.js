@@ -30,7 +30,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       $.each(warpables,function(i,warpable) {
         if (warpable.nodes.length > 0) {
           img = new L.DistortableImageOverlay(
-            warpable.src_medium,
+            warpable.srcmedium,
             { 
               latlng:  [ 
                 new L.latLng(warpable.nodes[0].lat,
@@ -42,35 +42,37 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 new L.latLng(warpable.nodes[2].lat,
                              warpable.nodes[2].lon)
                        ],
-              locked: warpable.locked
+              locked: true
           });
 
           // this is being run on *all* images each deselect
           // but it is going to be deprecated on move to v0.0.5+
           // so maybe who cares
           img.onDeselect = function() {
-            console.log('saving')
-            $.ajax('/images/update',{
-              type: 'POST',
-              data: {
-                warpable_id: warpable.id,
-                locked: this.locked,
-                points: 
-                  this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
-                  this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
-                  this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
-                  this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat,
-              },
-              beforeSend: function(e) {
-                $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
-              },
-              complete: function(e) {
-                $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
-              },
-              error: function(e) {
-                $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
-              }
-            })
+            if (!this.locked) {
+              console.log('saving')
+              $.ajax('/images/update',{
+                type: 'POST',
+                data: {
+                  warpable_id: warpable.id,
+                  locked: this.locked,
+                  points: 
+                    this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
+                    this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
+                    this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
+                    this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat,
+                },
+                beforeSend: function(e) {
+                  $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+                },
+                complete: function(e) {
+                  $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
+                },
+                error: function(e) {
+                  $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
+                }
+              })
+            }
           }
         }
       });

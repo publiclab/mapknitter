@@ -85,9 +85,8 @@ class MapsController < ApplicationController
     map.warpables.each do |warpable|
       warpables << warpable
       warpables.last[:nodes] = warpable.nodes_array
-      warpables.last[:src] = warpable.image.url
-      warpables.last[:src_medium] = warpable.image.url(:medium)
-      warpables.last[:src_thumb] = warpable.image.url(:thumb)
+      warpables.last.src = warpable.image.url
+      warpables.last.srcmedium = warpable.image.url(:medium)
     end
     render :json => warpables
   end

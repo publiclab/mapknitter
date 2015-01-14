@@ -1,6 +1,7 @@
 class Warpable < ActiveRecord::Base
  
   attr_accessible :image
+  attr_accessor :src, :srcmedium # for json generation
 
   # Paperclip
   has_attached_file :image,
@@ -19,7 +20,13 @@ class Warpable < ActiveRecord::Base
   belongs_to :map
   belongs_to :user
 
-  #Json formatting for file upload plugin
+  # overriding JSON formatting for Leaflet.DistortableImage
+  # this doesn't work:
+  def as_json(options = {})
+    super options.merge(methods: [:src, :srcmedium])
+  end
+
+  # JSON formatting for file upload plugin
   def fup_json
    {"name" => read_attribute(:image_filename),
     "size" => read_attribute(:image_size),
