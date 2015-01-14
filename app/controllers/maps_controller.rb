@@ -2,7 +2,7 @@ require 'open3'
 
 class MapsController < ApplicationController
   protect_from_forgery :except => [:export]
-  before_filter :require_login, :only => [:create, :new, :edit, :update, :destroy]
+  before_filter :require_login, :only => [:edit, :update, :destroy]
 
   layout 'knitter2'
 
@@ -12,11 +12,18 @@ class MapsController < ApplicationController
   end
 
   def new
-    @map = current_user.maps.create(:author => current_user.login)
+    @map = Map.new
+    @map.zoom = 12
   end
 
   def create # should try to catch lat=0 lon=0 maps and error
-    @map = current_user.maps.create(params[:map])
+    if logged_in?
+      @map = current_user.maps.create(params[:map])
+      @map.author = current_user.login # eventually deprecate
+    else
+      # ask recaptcha
+      @map = Map.create(params[:map])
+    end
     if @map.save
       redirect_to "/map/#{@map.id}"
     else

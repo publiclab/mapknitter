@@ -1,11 +1,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="links col-md-3">
-      <a class="btn btn-primary create-map" href="<%= new_map_url %>">
-        <span class="fa fa-pencil"></span> Create a map
-      </a>
-      <a class="btn btn-default create-map">
-        <span class="fa fa-pencil"></span> Create a map anonymously
+      <a class="btn btn-lg btn-primary create-map" href="<%= new_map_url %>">
+        <span class="fa fa-plus-circle"></span> Create a map
       </a>
       <a href="http://store.publiclab.org/products/balloon-mapping-kit">
         <img src="/images/balloon-kit.jpg" />
@@ -13,17 +10,22 @@
       <div class="hidden-xs hidden-sm">
         <%= render 'map/regions' %>
         <%= render 'map/authors' %>
-        <%= render 'map/new_maps' %>
         <%= render :partial => 'statistics' %>
       </div>
     </div><!-- .col-md-3 -->
     <div class="maps-list col-md-9">
-      <h2><%= @title ||= "Recent maps" %></h2>
-      <% odd = true %>
+
+      <div>
+        <h1>Make maps out of aerial images</h1>
+      </div>
+      <hr />
+
+      <h2><%= @title ||= "Featured" %> <small> | <a href="/recent">Recent maps</a></small></h2>
+
       <div class="row">
         <% @maps.each_with_index do |map,i| %>
         <% if i % 4 == 0 %></div><div class="row"><% end %>
-        <div class="map col-md-3 <%= 'odd' if odd %>">
+        <div class="map col-md-3">
           <a href="/map/<%= map.id %>">
             <% if !map.private && map.warpables.length > 0 %>
               <img src="<%= map.warpables.first.image.url(:small) %>" />
@@ -33,7 +35,14 @@
           </a>
           <h3><a href="/map/<%= map.id %>"><%= map.name.capitalize %></a></h3>
           <p>
-            <small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
+          <small>
+            <% if map.user %>
+              by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
+            <% else %>
+              anonymous
+            <% end %>
+            | <%= map.location %>
+          </small></p>
             <p class="description"><small>
                 <%=raw truncate(markdown_to_html(map.description),:length =>200) %>
                 <% if !map.description %><i>no description</i><% end %>
@@ -48,7 +57,6 @@
             </small>
           </p>
         </div>
-        <% odd = !odd %>
         <% end %>
       </div>
       <br style="clear:both;" />

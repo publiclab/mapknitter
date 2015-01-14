@@ -7,9 +7,12 @@
 
 <%= form_for @map, :html => { :class => "new-map" } do |f| %>
   <div class="sidebar-content">
+
+    <%=raw errors_for @map %>
+
     <div class="form-group">
       <%= f.label :name, "Title" %>  
-      <%= f.text_field :name, :class => "form-control" %>          
+      <%= f.text_field :name, :class => "form-control", :tabIndex => 1 %>          
     </div>
     <p><small>Good titles are short and indicate the subject of the map, e.g.: 
       <ul class="map-title-examples">
@@ -20,10 +23,10 @@
     <hr/>
 
     <div class="form-group">
-      <%= f.label :location, "Location <small>click on a location to zoom there</small>".html_safe %>
+      <%= f.label :location, "Location <small>begin typing to search by name</small>".html_safe %>
       <div class="input-group">
         <div class="input-group-addon"><i class="fa fa-search"></i></div>
-        <%= f.text_field :location, :class => "form-control" %>
+        <%= f.text_field :location, :class => "form-control", :tabIndex => 2 %>
       </div>
     </div>
 
@@ -43,10 +46,10 @@
     <!-- Map description -->
     <div class="form-group">
       <%= f.label :description %>
-      <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control" %>
+      <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control", :tabIndex => 3 %>
     </div>
 
-    <%= f.submit "Create map", :class => "btn btn-primary btn-lg" %>  
+    <%= f.submit "Create map", :class => "btn btn-primary btn-lg", :tabIndex => 4 %>  
   </div><!-- .new-map-form -->
 <% end %>
 

@@ -1,20 +1,31 @@
 require 'open3'
+
+class NotAtOriginValidator < ActiveModel::Validator
+  def validate(record)
+    if record.lat == 0 || record.lon == 0
+      record.errors[:base] << "Your location at 0,0 is unlikely."
+    end
+  end
+end
+
 class Map < ActiveRecord::Base
   attr_accessible :author, :name, :lat, :lon, :location, :description
   before_validation :update_name
   validates_presence_of :name,:author,:lat,:lon
   validates_uniqueness_of :name
-  validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
+  validates_presence_of :location
   validates_format_of   :name,
                         :with => /^[\w-]*$/,  
                         :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
                         :on => :create                  
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  validates_with NotAtOriginValidator
 
   has_many :exports
   has_many :tags
   has_many :comments
   has_many :annotations
+  belongs_to :user
 
   has_many :warpables do 
     def public_filenames
