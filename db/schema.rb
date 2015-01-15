@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141104184417) do
+ActiveRecord::Schema.define(:version => 20150111190150) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "map_id"
@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.boolean  "tms",          :default => false
     t.boolean  "jpg",          :default => false
     t.boolean  "geotiff",      :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.boolean  "zip",          :default => false,    :null => false
     t.text     "bands_string",                       :null => false
     t.string   "export_type",  :default => "normal", :null => false
@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.integer  "version",                                          :default => 1
     t.string   "password",                                         :default => ""
     t.text     "styles"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                :null => false
+    t.datetime "updated_at",                                                                :null => false
     t.text     "description"
     t.string   "author",                                           :default => "anonymous"
     t.decimal  "zoom",             :precision => 15, :scale => 10, :default => 2.0
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.string   "license",                                          :default => "copyright"
     t.integer  "user_id",                                          :default => 0
     t.boolean  "anon_annotatable",                                 :default => false
+    t.string   "url"
   end
 
   create_table "nodes", :force => true do |t|
@@ -82,8 +83,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.decimal  "lon",         :precision => 20, :scale => 10, :default => 0.0
     t.integer  "way_id",                                      :default => 0
     t.integer  "order",                                       :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
     t.integer  "map_id",                                      :default => 0
@@ -96,8 +97,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.string   "name"
     t.integer  "map_id"
     t.integer  "warpable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "tags", ["map_id"], :name => "index_tags_on_map_id"
@@ -128,8 +129,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.integer  "image_file_size"
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "map_id",             :default => 0
     t.string   "nodes",              :default => ""
     t.boolean  "locked",             :default => false, :null => false
@@ -145,8 +146,8 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.decimal  "lat2",        :precision => 20, :scale => 10, :default => 0.0
     t.decimal  "lon1",        :precision => 20, :scale => 10, :default => 0.0
     t.decimal  "lon2",        :precision => 20, :scale => 10, :default => 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name",                                        :default => ""
     t.string   "description",                                 :default => ""
     t.boolean  "complete",                                    :default => true
