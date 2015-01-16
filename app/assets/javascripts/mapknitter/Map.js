@@ -18,8 +18,31 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // deprecate this; we should not need global map var
     map = this._map
 
-    /* Startup the Leaflet.DistortableImage plugin; will change in >v0.0.5 of the plugin */
-    $L.initialize({img_dir: '/lib/leaflet-distortableimage/src/images/'})
+    saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
+    function() {},
+      'Save status',
+      map,
+      this
+    )
+
+    images = []
+    select = function(e){
+      for (var i in images) {
+        img = this
+        if (img._leaflet_id != images[i]._leaflet_id) {
+          /* Deselect (disable) other images */
+          images[i].editing.disable()
+          /* Ensure that other toolbars are removed */
+          if (images[i].editing.toolbar) {
+            map.removeLayer(images[i].editing.toolbar);
+          }
+        }
+      }
+      /* Ensure this is enabled */
+      this.editing.enable()
+      /* If it's locked, allow event to propagate on to map below */
+      if (this.editing._mode != "lock") e.stopPropagation()
+    }
 
 		/* Set up basemap and drawing toolbars. */
 		this.setupMap();
@@ -28,11 +51,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
 		this._warpablesUrl = options.warpablesUrl;
 		this.withWarpables(function(warpables){
       $.each(warpables,function(i,warpable) {
+        // only already-placed images:
         if (warpable.nodes.length > 0) {
-          img = new L.DistortableImageOverlay(
+
+          var img = new L.DistortableImageOverlay(
             warpable.srcmedium,
             { 
-              latlng:  [ 
+              corners:  [ 
                 new L.latLng(warpable.nodes[0].lat,
                              warpable.nodes[0].lon),
                 new L.latLng(warpable.nodes[1].lat,
@@ -42,25 +67,27 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 new L.latLng(warpable.nodes[2].lat,
                              warpable.nodes[2].lon)
                        ],
-              locked: true
-          });
+              mode: 'lock'
+          }).addTo(map);
+          images.push(img);
 
-          // this is being run on *all* images each deselect
-          // but it is going to be deprecated on move to v0.0.5+
-          // so maybe who cares
-          img.onDeselect = function() {
-            if (!this.locked) {
+          // refactor to use on/fire; this doesn't seem to work: 
+          // img.on('select', function(e){
+          L.DomEvent.on(img._image, 'mousedown', select, img);
+
+          img.on('deselect', function() {
+            if (this.editing._mode != 'lock') {
               console.log('saving')
               $.ajax('/images/update',{
                 type: 'POST',
                 data: {
                   warpable_id: warpable.id,
-                  locked: this.locked,
+                  locked: (this.editing._mode == 'lock'),
                   points: 
-                    this.markers[0]._latlng.lng+','+this.markers[0]._latlng.lat+':'+
-                    this.markers[1]._latlng.lng+','+this.markers[1]._latlng.lat+':'+
-                    this.markers[3]._latlng.lng+','+this.markers[3]._latlng.lat+':'+
-                    this.markers[2]._latlng.lng+','+this.markers[2]._latlng.lat,
+                    this._corners[0].lng+','+this._corners[0].lat+':'+
+                    this._corners[1].lng+','+this._corners[1].lat+':'+
+                    this._corners[3].lng+','+this._corners[3].lat+':'+
+                    this._corners[2].lng+','+this._corners[2].lat,
                 },
                 beforeSend: function(e) {
                   $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
@@ -73,30 +100,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 }
               })
             }
-          }
+          })
         }
       });
     });
 
-
-    $L.saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
-      function() {},
-      'Save status',
-      map,
-      this
-    ) 
- 
-    $L.highResBtn = L.easyButton('fa-delicious', 
-      $L.highres = function() {
-        $.each($L.images,function(i,img) {
-          img._image.src = img._image.src.split('_medium').join('')
-        })
-        $L.highResBtn._container.remove()
-      },
-      'Switch to high-res imagery',
-      map,
-      this
-    ) 
+    // hi res:
+    //img._image.src = img._image.src.split('_medium').join('')
 
 		/* Enable users to drag images from the sidebar onto the map. */
 		//this.enableDragAndDrop();
