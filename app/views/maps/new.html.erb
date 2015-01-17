@@ -49,6 +49,8 @@
       <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control", :tabIndex => 3 %>
     </div>
 
+    <% if !logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+
     <%= f.submit "Create map", :class => "btn btn-primary btn-lg", :tabIndex => 4 %>  
   </div><!-- .new-map-form -->
 <% end %>

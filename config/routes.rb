@@ -85,7 +85,8 @@ Mapknitter::Application.routes.draw do
   get 'maps/:id/edit' => 'maps#edit' # legacy, will be replaced by resourceful route
   get 'maps/:id/annotate' => 'maps#annotate'
   get 'maps/exports/:id' => 'maps#exports'
-  get 'maps/:id/warpables' => 'maps#warpables' # deprecate this in favor of resourceful route below; this is just to override maps/:id
+  get 'maps/:id/warpables' => 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
+  post 'maps/:map_id/warpables' => 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'export/progress/:id' => 'export#progress'
   get 'maps/:id' => 'maps#show', defaults: { legacy: true } # legacy
   get 'map/:id' => 'maps#show', :as => 'map'
@@ -96,11 +97,11 @@ Mapknitter::Application.routes.draw do
   get 'import/:name' => 'images#import' # this was for auto-adding images via URL
   post 'export/:action/:id' => 'export'
 
-  # make these resourceful
+  # make these resourceful after renaming warpables to images
   post 'images/create/:id' => 'images#create' # used?
   post 'images/update' => 'images#update'
-  post 'warper/update' => 'images#update' # legacy, delete
   post 'images/delete/:id' => 'images#delete'
+  delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
 
   # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.
@@ -110,8 +111,6 @@ Mapknitter::Application.routes.draw do
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
-
   get ':controller/:action'
   get ':controller/:action/:id'
   get ':controller/:action.:format'

@@ -13,21 +13,29 @@ class MapsController < ApplicationController
 
   def new
     @map = Map.new
-    @map.zoom = 12
   end
 
-  def create # should try to catch lat=0 lon=0 maps and error
+  def create
     if logged_in?
       @map = current_user.maps.create(params[:map])
       @map.author = current_user.login # eventually deprecate
+      if @map.save
+        redirect_to "/map/#{@map.id}"
+      else
+        render "new"
+      end
     else
-      # ask recaptcha
       @map = Map.create(params[:map])
-    end
-    if @map.save
-      redirect_to "/map/#{@map.id}"
-    else
-      render "new"
+      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
+        if @map.save
+          redirect_to "/map/#{@map.id}"
+        else
+          render "new"
+        end
+      else
+        @map.errors.add(:base, I18n.t(:wrong_captcha))
+        render "new"
+      end
     end
   end
 
@@ -79,7 +87,7 @@ class MapsController < ApplicationController
   end
 
   # used by leaflet to fetch corner coords of each warpable
-  def warpables
+  def images
     map = Map.find params[:id]
     warpables = []
     map.warpables.each do |warpable|

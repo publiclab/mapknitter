@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   end
 
   def owns_map?(resource)
-    resource.map.user_id.to_i == self.id
+    resource.respond_to?(:map) && resource.map.user_id.to_i == self.id
   end
 
   def can_delete?(resource)

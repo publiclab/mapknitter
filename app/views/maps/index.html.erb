@@ -1,9 +1,24 @@
 <div class="container-fluid">
   <div class="row">
     <div class="links col-md-3">
+      <% if logged_in? %>
       <a class="btn btn-lg btn-primary create-map" href="<%= new_map_url %>">
-        <span class="fa fa-plus-circle"></span> Create a map
+        <i class="fa fa-plus-circle"></i> Create a map
       </a>
+      <% else %>
+      <p><a href="/login">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()">create a map anonymously.</a></p>
+      <hr />
+      <div class="hidden-map-btn" style="display:none;">
+        <p>
+          Please consider <a href="/login">creating an account</a>; anonymous maps are intended for those with privacy concerns.<br />
+        </p>
+        <p>
+          <a class="btn btn-lg btn-primary create-map" href="<%= new_map_url %>">
+            <i class="fa fa-plus-circle"></i> Create a map
+          </a>
+        </p>
+      </div>
+      <% end %>
       <a href="http://store.publiclab.org/products/balloon-mapping-kit">
         <img src="/images/balloon-kit.jpg" />
       </a>
