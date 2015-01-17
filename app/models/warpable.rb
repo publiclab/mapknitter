@@ -46,6 +46,8 @@ class Warpable < ActiveRecord::Base
   after_save :save_dimensions
 
   # this has been modified to work with s3; 
+  # runs each time warpable is moved/distorted, to calculate
+  # resolution
   def save_dimensions
     #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # old version, stopped working...?
 puts self.image.url
@@ -57,6 +59,11 @@ puts self.image.url
     self.update_column(:height, geo.height)
     #Rails >= v4.0 only
     #self.update_columns(attributes)
+  end
+
+  # if has non-nil width, it's been placed.
+  def placed?
+    !self.width.nil?
   end
 
   ########################################################

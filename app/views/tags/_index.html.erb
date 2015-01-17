@@ -1,10 +1,10 @@
-<% form_for [@map, Tag.new], :html => { :method => "post" } do |m| %>
+<%= form_for [@map, Tag.new], :html => { :method => "post" } do |m| %>
 	<div class="form-group">
 		<span class="map-detail-label"></span>
 		<p><span id="tags">
 			<% @map.tags.each do |tag| %>
-				<span id="tag_<%= tag.id %>" class="label label-info">
-					<a href="/tag/<%= tag.name %>"><%= tag.name %></a>
+				<span id="tag_<%= tag.id %>" class="label label-default">
+					<a href="/tags/<%= tag.name %>"><%= tag.name %></a>
 					<% link_to([@map, tag], :method => "delete") do %>
 						<pan>&times;</span>
 					<% end %>
@@ -15,7 +15,7 @@
 		<label for="tags" class="sr-only">Enter tags</label>
 		<div class="input-group">
 			<span class="input-group-addon">
-				<span class="glyphicon glyphicon-tags"></span>
+				<i class="fa fa-tags"></i>
 			</span>
 			<input class="form-control" type="text" placeholder="Enter tags" name="tags" id="new-tags"></input>
 		</div>	

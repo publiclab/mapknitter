@@ -59,6 +59,10 @@ class Map < ActiveRecord::Base
     self.name = self.name.gsub(/\W/, '-').downcase
   end
 
+  def placed_warpables
+    self.warpables.where('width > 0')
+  end
+
   def private
     self.password != ""
   end
@@ -134,8 +138,8 @@ class Map < ActiveRecord::Base
     # determine optimal zoom level
     puts '> calculating scale'
     pxperms = []
-    self.warpables.each do |warpable|
-      pxperms << 100.00/warpable.cm_per_pixel unless warpable.width.nil?
+    self.placed_warpables.each do |warpable|
+      pxperms << 100.00/warpable.cm_per_pixel if warpable.placed?
     end
     average = (pxperms.inject {|sum, n| sum + n })/pxperms.length
     average
@@ -167,7 +171,7 @@ class Map < ActiveRecord::Base
       count = 0
       average = 0
       self.warpables.each do |warpable|
-        unless warpable.width.nil?
+        if warpable.nil?
           count += 1
           res = warpable.cm_per_pixel 
           scales << res unless res == nil
@@ -300,7 +304,7 @@ class Map < ActiveRecord::Base
     lowest_x=0
     lowest_y=0
     warpable_coords = []
-    warpables = self.warpables
+    warpables = self.placed_warpables
     current = 0
     warpables.each do |warpable|
      current += 1
@@ -325,7 +329,7 @@ class Map < ActiveRecord::Base
     minlon = nil
     maxlat = nil
     maxlon = nil
-    self.warpables.each do |warpable|
+    self.placed_warpables.each do |warpable|
       warpable.nodes_array.each do |n|
         minlat = n.lat if minlat == nil || n.lat < minlat
         minlon = n.lon if minlon == nil || n.lon < minlon
@@ -334,7 +338,8 @@ class Map < ActiveRecord::Base
       end
     end
     first = true
-    warpables = self.warpables.sort{|a,b|b.poly_area <=> a.poly_area}
+    # sort by area; this would be overridden by a provided order
+    warpables = self.placed_warpables.sort{|a,b|b.poly_area <=> a.poly_area}
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
       if first

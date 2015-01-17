@@ -55,14 +55,14 @@ Mapknitter::Application.routes.draw do
 
   # since rails 3.2, we use this to log in:
   get 'sessions/create' => 'sessions#create'
+  # believe this is unnecessary:
+  #get 'session' => 'sessions#create', :conditions => { :method => :get }
 
-  resources :users
+  resources :users, :sessions
 
-  get 'tag/create' => 'tag#create'
-  get 'tag/:id' => 'tag#show'
-
-  get 'session' => 'sessions#create', :conditions => { :method => :get }
-  resources :sessions
+  # redirect legacy route:
+  get 'tag/:id', to: redirect('/tags/%{id}')
+  get 'tags/:id' => 'tags#show'
 
   # Registered user pages:
   get 'profile' => 'users#profile', :id => 0

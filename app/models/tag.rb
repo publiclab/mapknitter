@@ -10,6 +10,6 @@ class Tag < ActiveRecord::Base
   validates_presence_of :map_id, :on => :create, :message => "can't be blank"
 
   def maps
-    Map.find(Tag.find_all_by_name(self.name).collect(&:map_id).uniq)
+    Map.where('id IN (?)',Tag.find_all_by_name(self.name).collect(&:map_id).uniq)
   end
 end
