@@ -13,8 +13,8 @@
 		<h3><%= @map.name %></h3>
 	</div>
 	<div class="map-author">
-		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a> | <a href="/maps/<%= @map.name %>">Legacy editor</a>
-	</div>	
+		by <a href="//publiclab.org/profile/<%= @map.author %>"><%= @map.author %></a> | <a href="/maps/<%= @map.slug %>">Legacy editor</a>
+	</div>
 <% end %>
 
 <% content_for :details do %>

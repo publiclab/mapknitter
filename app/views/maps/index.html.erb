@@ -24,14 +24,14 @@
         <% @maps.each_with_index do |map,i| %>
         <% if i % 4 == 0 %></div><div class="row"><% end %>
         <div class="map col-md-3 <%= 'odd' if odd %>">
-          <a href="/map/<%= map.id %>">
+          <a href="/map/<%= map.slug %>">
             <% if !map.private && map.warpables.length > 0 %>
               <img src="<%= map.warpables.first.image.url(:small) %>" />
             <% else %>
               <div style="width:100%;background:#eee;height:170px;"></div>
             <% end %>
           </a>
-          <h3><a href="/map/<%= map.id %>"><%= map.name.capitalize %></a></h3>
+          <h3><a href="/map/<%= map.slug %>"><%= map.name.capitalize %></a></h3>
           <p>
             <small>by <a href="/profile/<%= map.author %>"><%= map.author %></a> | <%= map.location %></small></p>
             <p class="description"><small>
@@ -41,10 +41,10 @@
           </p>
           <p class="map map-meta">
             <small>
-              <% if map.archived %><i>Archived</i> | <% end %> 
-              <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
-              Updated <%= map.updated_at.to_s(:short) %> | 
-              <%= map.warpables.length %> images 
+              <% if map.archived %><i>Archived</i> | <% end %>
+              <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.slug %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+              Updated <%= map.updated_at.to_s(:short) %> |
+              <%= map.warpables.length %> images
             </small>
           </p>
         </div>
