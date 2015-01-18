@@ -1,14 +1,17 @@
 require 'open3'
 class Map < ActiveRecord::Base
-  attr_accessible :author, :name, :lat, :lon, :location, :description
-  before_validation :update_name
-  validates_presence_of :name,:author,:lat,:lon
-  validates_uniqueness_of :name
+  extend FriendlyId
+  friendly_id :name, :use => [:slugged, :static]
+
+  attr_accessible :author, :name, :slug, :lat, :lon, :location, :description
+
+  validates_presence_of :name, :slug, :author, :lat, :lon
+  validates_uniqueness_of :slug
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
-  validates_format_of   :name,
-                        :with => /^[\w-]*$/,  
+  validates_format_of   :slug,
+                        :with => /^[\w-]*$/,
                         :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://cartagen.org/maps/your-map-name. You may use dashes and underscores.",
-                        :on => :create                  
+                        :on => :create
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
 
   has_many :exports
@@ -16,7 +19,7 @@ class Map < ActiveRecord::Base
   has_many :comments
   has_many :annotations
 
-  has_many :warpables do 
+  has_many :warpables do
     def public_filenames
       filenames = {}
       self.each do |warpable|
@@ -27,14 +30,12 @@ class Map < ActiveRecord::Base
           filenames[warpable.id][key] = warpable.public_filename(size)
         end
       end
-      filenames 
+      filenames
     end
   end
 
-  # impose URL-safe sanity on name
   def validate
     self.name != 'untitled'
-    self.name = self.name.gsub(' ','-').gsub('_','-').downcase
     self.lat >= -90 && self.lat <= 90 && self.lon >= -180 && self.lat <= 180
   end
 
@@ -43,17 +44,12 @@ class Map < ActiveRecord::Base
     self.password = Password::update(self.password) if self.password != ""
   end
 
-  # this might have been for a migration; grep for it
-  def update_name
-    self.name = self.name.gsub(/\W/, '-').downcase
-  end
-
   def private
     self.password != ""
   end
 
 	def anonymous?
-		self.author == "" || self.user_id == 0 
+		self.author == "" || self.user_id == 0
 	end
 
   def self.bbox(minlat,minlon,maxlat,maxlon)
@@ -117,7 +113,7 @@ class Map < ActiveRecord::Base
       end
     end
     warpables
-  end 
+  end
 
   def average_scale
     # determine optimal zoom level
@@ -158,7 +154,7 @@ class Map < ActiveRecord::Base
       self.warpables.each do |warpable|
         unless warpable.width.nil?
           count += 1
-          res = warpable.cm_per_pixel 
+          res = warpable.cm_per_pixel
           scales << res unless res == nil
         end
       end
@@ -175,7 +171,7 @@ class Map < ActiveRecord::Base
     hist = []
     self.warpables.each do |warpable|
       res = warpable.cm_per_pixel.to_i
-      hist[res] = 0 if hist[res] == nil 
+      hist[res] = 0 if hist[res] == nil
       hist[res] += 1
     end
     (0..hist.length-1).each do |bin|
@@ -191,7 +187,7 @@ class Map < ActiveRecord::Base
       res = warpable.cm_per_pixel
       if res != nil
         res = (warpable.cm_per_pixel/(0.001+binsize)).to_i
-        hist[res] = 0 if hist[res] == nil 
+        hist[res] = 0 if hist[res] == nil
         hist[res] += 1
       end
     end
@@ -215,8 +211,8 @@ class Map < ActiveRecord::Base
         export.geotiff = false
         export.zip = false
         export.jpg = false
-        export.save       
-     
+        export.save
+
         directory = "#{Rails.root}/public/warps/"+self.name+"/"
         stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
         puts stdout.readlines
@@ -224,24 +220,24 @@ class Map < ActiveRecord::Base
         stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.name}")
         puts stdout.readlines
         puts stderr.readlines
-      
+
         puts '> averaging scales'
         pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
-      
+
         puts '> distorting warpables'
         origin = self.distort_warpables(pxperm)
-        warpable_coords = origin.pop  
- 
+        warpable_coords = origin.pop
+
         export = self.export
         export.status = 'compositing'
         export.save
-      
+
         puts '> generating composite tiff'
         composite_location = self.generate_composite_tiff(warpable_coords,origin)
-      
+
         info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
         puts info
-      
+
         export = self.export
         if info[0] != ''
           export.geotiff = true
@@ -252,25 +248,25 @@ class Map < ActiveRecord::Base
           export.status = 'tiling'
           export.save
         end
-      
+
         puts '> generating tiles'
         export = self.export
         export.tms = true if self.generate_tiles
         export.status = 'zipping tiles'
         export.save
-    
+
         puts '> zipping tiles'
         export = self.export
         export.zip = true if self.zip_tiles
         export.status = 'creating jpg'
         export.save
-    
+
         puts '> generating jpg'
         export = self.export
         export.jpg = true if self.generate_jpg
         export.status = 'complete'
         export.save
-      
+
       rescue SystemCallError
         export = self.export
         export.status = 'failed'
@@ -337,7 +333,7 @@ class Map < ActiveRecord::Base
     end
     composite_location
   end
-  
+
   # generates a tileset at Rails.root.to_s/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
@@ -352,16 +348,16 @@ class Map < ActiveRecord::Base
     rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
     system(Gdal.ulimit+rmzip)
     zip = 'cd public/tms/ && zip -rq '+self.name+'.zip '+self.name+'/ && cd ../../'
-    #    puts zip 
+    #    puts zip
     #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+zip)
   end
- 
+
   def generate_jpg
     imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'.jpg'
     system(Gdal.ulimit+imageMagick)
   end
- 
+
   def after_create
     puts 'saving Map'
     if last = Map.find_by_name(self.name,:order => "version DESC")
@@ -371,7 +367,7 @@ class Map < ActiveRecord::Base
 
   def license_link
     if self.license == "cc-by"
-     "<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>" 
+     "<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>"
     elsif self.license == "publicdomain"
      "<a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public Domain</a>"
     end
@@ -394,9 +390,9 @@ class Map < ActiveRecord::Base
       tag = self.tags.create({
         :name => tagname,
         :user_id => user.id,
-        :map_id => self.id 
+        :map_id => self.id
       })
     end
   end
-  
+
 end
