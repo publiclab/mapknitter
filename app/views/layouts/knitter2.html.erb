@@ -43,7 +43,7 @@
             <div class="btn-group btn-group-justified sidebar-buttons">
               <!-- Upload images -->
               <div class="btn-group">
-                <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal">
+                <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal" onClick="$('#map-images-tab').tab('show')">
                   <span class="fa fa-upload"></span>
                 </button>
               </div>
@@ -53,12 +53,6 @@
                 <a onClick="$('#chat').toggle()" class="btn btn-default" title="Get help from other members of Public Lab">
                   <span class="fa fa-comment"></span>
                 </a>
-              </div>
-
-              <div id="chat" class="chat-popover" data-placement="bottom" style="display:none;">
-                <a style="margin-right:4px;" class="pull-right btn btn-small" href="http://chat.treehouse.su/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
-                <p class="popover-title">Public Lab chatroom</p>
-                <iframe width="400px" height="300px" src="http://chat.treehouse.su/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>"></iframe>
               </div>
 
               <!-- Write a research note on Public Lab -->
@@ -79,13 +73,16 @@
                 </ul>
               </div>
             </div>
+
             <div class="sidebar-tabs">
+
               <!-- Navigation tabs -->
               <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">Details</a></li>
-    <li><a href="#map-images-container" role="tab" data-toggle="tab">Images (<%= @map.warpables.length %>)</a></li>
-                <li><a href="#map-editing-container" role="tab" data-toggle="tab">Annotations</a></li>
-                <li><a href="#map-exports-container" role="tab" data-toggle="tab">Exports</a></li>
+                <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">About</a></li>
+    <li><a id="map-images-tab" href="#map-images-container" role="tab" data-toggle="tab">Images</a></li>
+                <li><a href="#map-editing-container" role="tab" data-toggle="tab">Annotate</a></li>
+                <li><a href="#map-exports-container" role="tab" data-toggle="tab">Export</a></li>
+                <li><a class="chat-btn" href="#chat" role="tab" data-toggle="tab">Chat</a></li>
               </ul>
 
               <!-- Tabbed panes -->
@@ -101,6 +98,11 @@
                 </div>
                 <div class="tab-pane" id="map-exports-container">
                   <%= render :partial => "sidebar_exports" %>
+                </div>
+                <div class="tab-pane" id="chat">
+                    <a style="margin-right:4px;" class="pull-right btn btn-small" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
+                    <p class="popover-title">Public Lab chatroom</p>
+                    <script>login = '<%= current_user.login if logged_in? %>'</script>
                 </div>
               </div>  
 

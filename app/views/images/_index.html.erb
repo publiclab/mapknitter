@@ -1,7 +1,4 @@
-<h4>Unplaced images</h4>
-<p>None</p>
-<hr />
-<h4>Placed images</h4>
+<h4>Images</h4>
 <table class="warpables-all table table-striped">
 	<tbody>
 		<% @map.warpables.each do |warpable| %>
@@ -15,6 +12,7 @@
 				<td>
 					<%= link_to(warpable.image_file_name, warpable.image.url) %>
 					<p><%= number_to_human_size warpable.image_file_size %></p>
+          <% unless warpable.placed? %><p><a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a></p><% end %>
 				</td>
 				<td>
 					<% if logged_in? && current_user.can_delete?(warpable) %>

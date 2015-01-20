@@ -14,4 +14,12 @@ jQuery(document).ready(function($) {
     $('#knitter-map-pane').toggleClass('fullscreen')
     window.mapKnitter._map._onResize()
   })
+
+  haschat = false
+  $('.chat-btn').click(function(){
+    if (!haschat) {
+      $('#chat').append('<iframe width="100%" height="300px" style="border:none;" src="https://webchat.oftc.net/?channels=publiclab&nick='+login+'"></iframe>')
+    }
+    haschat = true
+  })
 });

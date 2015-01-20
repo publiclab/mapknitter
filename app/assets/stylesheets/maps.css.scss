@@ -18,8 +18,7 @@ $subtle-grey: #e5e5e5;
 
 /* Mixins */
 @mixin sidebar-padding() {
-	padding-left: $sidebar-padding;
-	padding-right: $sidebar-padding;
+	padding-left: $sidebar-padding; padding-right: $sidebar-padding;
 }
 
 /* Global */

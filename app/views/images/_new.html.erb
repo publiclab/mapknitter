@@ -86,7 +86,8 @@
                   </td>
                   <td class="status">
                       Image uploaded.
-                      {%=file.name%}
+                        <p><a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-{%= file.id %}">Place image</a></p>
+                      {%= file.name %}
                   </td>
                   <td class="indicate" colspan="2">
                       <span class="label label-indicate" id="GPS_{%=file.id%}" style="display:none;">GPS</span>

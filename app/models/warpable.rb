@@ -21,7 +21,6 @@ class Warpable < ActiveRecord::Base
   belongs_to :user
 
   # overriding JSON formatting for Leaflet.DistortableImage
-  # this doesn't work:
   def as_json(options = {})
     super options.merge(methods: [:src, :srcmedium])
   end
@@ -50,7 +49,6 @@ class Warpable < ActiveRecord::Base
   # resolution
   def save_dimensions
     #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # old version, stopped working...?
-puts self.image.url
     geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
     #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.path)) # local version
 
@@ -63,7 +61,7 @@ puts self.image.url
 
   # if has non-nil width, it's been placed.
   def placed?
-    !self.width.nil?
+    !self.width.nil? && self.nodes != ''
   end
 
   ########################################################

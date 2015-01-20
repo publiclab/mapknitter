@@ -26,24 +26,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     )
 
     images = []
-    select = function(e){
-      for (var i in images) {
-        img = this
-        if (img._leaflet_id != images[i]._leaflet_id) {
-          /* Deselect (disable) other images */
-          images[i].editing.disable()
-          /* Ensure that other toolbars are removed */
-          if (images[i].editing.toolbar) {
-            map.removeLayer(images[i].editing.toolbar);
-          }
-        }
-      }
-      /* Ensure this is enabled */
-      this.editing.enable()
-      this.bringToFront()
-      /* If it's locked, allow event to propagate on to map below */
-      if (this.editing._mode != "lock") e.stopPropagation()
-    }
 
 		/* Set up basemap and drawing toolbars. */
 		this.setupMap();
@@ -71,37 +53,15 @@ MapKnitter.Map = MapKnitter.Class.extend({
               mode: 'lock'
           }).addTo(map);
           images.push(img);
+          img.warpable_id = warpable.id
 
-          // refactor to use on/fire; this doesn't seem to work: 
           // img.on('select', function(e){
-          L.DomEvent.on(img._image, 'mousedown', select, img);
-
-          img.on('deselect', function() {
-            if (this.editing._mode != 'lock') {
-              console.log('saving')
-              $.ajax('/images/update',{
-                type: 'POST',
-                data: {
-                  warpable_id: warpable.id,
-                  locked: (this.editing._mode == 'lock'),
-                  points: 
-                    this._corners[0].lng+','+this._corners[0].lat+':'+
-                    this._corners[1].lng+','+this._corners[1].lat+':'+
-                    this._corners[3].lng+','+this._corners[3].lat+':'+
-                    this._corners[2].lng+','+this._corners[2].lat,
-                },
-                beforeSend: function(e) {
-                  $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
-                },
-                complete: function(e) {
-                  $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
-                },
-                error: function(e) {
-                  $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
-                }
-              })
-            }
-          })
+          // refactor to use on/fire; but it doesn't seem to work
+          // without doing it like this: 
+          L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+          img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
         }
       });
     });
@@ -112,40 +72,91 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     // hi res:
     //img._image.src = img._image.src.split('_medium').join('')
-
-		/* Enable users to drag images from the sidebar onto the map. */
-		//this.enableDragAndDrop();
 	},
+
+  /* add a new, unplaced, but already uploaded image to the map */
+  addImage: function(url,id) {
+    var img = new L.DistortableImageOverlay(url);
+    images.push(img);
+    img.warpable_id = id
+    img.addTo(map);
+    L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+    img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+    L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
+  },
+
+  selectImage: function(e){
+    var img = this
+    // save state, watch for changes by tracking 
+    // stringified corner positions: 
+    img._corner_state = JSON.stringify(img._corners)
+    for (var i in images) {
+      if (img._leaflet_id != images[i]._leaflet_id) {
+        /* Deselect (disable) other images */
+        images[i].editing.disable()
+        /* Ensure that other toolbars are removed */
+        if (images[i].editing.toolbar) {
+          map.removeLayer(images[i].editing.toolbar);
+        }
+      }
+    }
+    /* Ensure this is enabled */
+    img.editing.enable.bind(img.editing)()
+    img.bringToFront()
+    /* If it's locked, allow event to propagate on to map below */
+    if (this.editing._mode != "lock") e.stopPropagation()
+  },
+
+  saveImageIfChanged: function() {
+    var img = this
+    // check if image state has changed at all before saving!
+    if (img._corner_state != JSON.stringify(img._corners)) {
+      window.mapKnitter.saveImage.bind(img)()
+    }
+  },
+
+  dblClickImage: function (e) { 
+    var img = this
+    window.mapKnitter.selectImage.bind(img)
+    img.editing._enableDragging()
+    img.editing.enable()
+    img.editing._toggleRotateDistort()
+    e.stopPropagation()
+  },
+
+  saveImage: function() {
+    //console.log('saving')
+    var img = this
+    // reset change state string:
+    img._corner_state = JSON.stringify(img._corners)
+    // send save request
+    $.ajax('/images/update',{
+      type: 'POST',
+      data: {
+        warpable_id: img.warpable_id,
+        locked: (img.editing._mode == 'lock'),
+        points: 
+          img._corners[0].lng+','+img._corners[0].lat+':'+
+          img._corners[1].lng+','+img._corners[1].lat+':'+
+          img._corners[3].lng+','+img._corners[3].lat+':'+
+          img._corners[2].lng+','+img._corners[2].lat,
+      },
+      beforeSend: function(e) {
+        $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+      },
+      complete: function(e) {
+        $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
+      },
+      error: function(e) {
+        $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
+      }
+    })
+  },
 
 	getMap: function() {
 		return this._map;
-	},
-
-	placeImage: function(event, ui) {
-		var that = this,
-			$img = jQuery(ui.helper),
-			url = $img.attr("src"),
-			id = $img.attr("data-warpable-id"),
-			imgPosition = $img.offset(),
-			upperLeft = L.point(imgPosition.left, imgPosition.top),
-			size = L.point($img.width(), $img.height()),
-			lowerRight = upperLeft.add(size);
-
-		/* Place low-resolution image on the map. */
-		var lowres = L.imageOverlay(url, [
-			this._map.containerPointToLatLng(upperLeft), 
-			this._map.containerPointToLatLng(lowerRight)
-		]).addTo(this._map);
-
-		/* Load the high-resolution version on top of the low-res version. */
-		this.withWarpable(id, "original", function(img) {
-			var url = jQuery(img).attr("src");
-			L.imageOverlay(url, [
-				that._map.containerPointToLatLng(upperLeft), 
-				that._map.containerPointToLatLng(lowerRight)
-			]).addTo(that._map);
-			that._map.removeLayer(lowres);
-		});
 	},
 
   /* Fetch JSON list of warpable images */
@@ -195,28 +206,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     map.addControl(layersControl);
 
 		L.control.zoom({ position: 'topright' }).addTo(map);
-	},
-
-  /* will be deprecated or integrated with Leaflet.DistortableImage code */
-	enableDragAndDrop: function() {
-		var that = this;
-
-		jQuery("#knitter-map-pane")
-			.droppable({ drop: this.placeImage.bind(this) });
-
-		var $selection = jQuery(".warpables-all tr img");
-
-		$selection.draggable({ revert: "invalid" });
-
-		$selection.each(function(index, warpable) {
-			var id = jQuery(warpable).attr("data-warpable-id");
-			that.withWarpable(id, "medium", function(img) {
-				jQuery(warpable).draggable("option", "helper", function() { return img; });
-			});
-		});
-	},
-
-	addMetadata: function() {
-
 	}
+
 });
