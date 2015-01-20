@@ -47,6 +47,8 @@ GEM
     daemon_controller (1.2.0)
     erubis (2.7.0)
     execjs (2.2.2)
+      activerecord (>= 3.0, < 4.0)
+    friendly_id (4.0.9)
     geokit (1.9.0)
       multi_json (>= 1.3.2)
     geokit-rails (1.1.4)
@@ -156,6 +158,7 @@ DEPENDENCIES
   RubyInline
   autoprefixer-rails
   aws-sdk (~> 1.5.7)
+  friendly_id
   geokit-rails (= 1.1.4)
   image_science (= 1.2.6)
   jshintrb

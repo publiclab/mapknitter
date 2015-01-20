@@ -20,7 +20,7 @@ class MapsController < ApplicationController
       @map = current_user.maps.create(params[:map])
       @map.author = current_user.login # eventually deprecate
       if @map.save
-        redirect_to "/map/#{@map.id}"
+        redirect_to "/map/#{@map.slug}"
       else
         render "new"
       end
@@ -28,7 +28,7 @@ class MapsController < ApplicationController
       @map = Map.create(params[:map])
       if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
         if @map.save
-          redirect_to "/map/#{@map.id}"
+          redirect_to "/map/#{@map.slug}"
         else
           render "new"
         end
@@ -40,22 +40,18 @@ class MapsController < ApplicationController
   end
 
   def view # legacy route, redirect later
-    @map = Map.find_by_name params[:id]
+    @map = Map.find params[:id]
     # legacy; later, just redirect this
     # redirect_to "/map/#{@map.id}", :status => :moved_permanently
     render :template => 'map/view', :layout => 'application'
   end
 
   def show
-    if params[:legacy] # remove; legacy
-      @map = Map.find_by_name params[:id]
-    else
-      @map = Map.find params[:id]
-    end
+    @map = Map.find params[:id]
     @map.zoom = 12
     # remove following lines once the new leaflet interface is integrated
     if params[:leaflet]
-      render :template => 'map/leaflet', :layout => false 
+      render :template => 'map/leaflet', :layout => false
     # remove following lines once legacy interface is deprecated
     elsif params[:legacy]
       render :template => 'map/show', :layout => 'knitter'

@@ -1,7 +1,7 @@
 <% content_for :title do %>
   <div class="sidebar-title new-map">
     <h4>Create a new map</h4>
-    <p>Pan and zoom to locate your site, then give your map a title, location, and description.</p>      
+    <p>Pan and zoom to locate your site, then give your map a title, location, and description.</p>
   </div>
 <% end %>
 
@@ -14,12 +14,17 @@
       <%= f.label :name, "Title" %>  
       <%= f.text_field :name, :class => "form-control", :tabIndex => 1 %>          
     </div>
-    <p><small>Good titles are short and indicate the subject of the map, e.g.: 
+
+    <div class="form-group">
+      <%= f.label :slug, "URL" %>
+      <%= f.text_field :slug, :class => "form-control" %>
+    </div>
+    <p><small>Good titles are short and indicate the subject of the map, e.g.:
       <ul class="map-title-examples">
         <li>"Infragram map of goat brush clearing"</li>
         <li>"Construction near BART"</li>
       </ul>
-    </small></p>    
+    </small></p>
     <hr/>
 
     <div class="form-group">
@@ -56,3 +61,15 @@
 <% end %>
 
 <script><%= render :partial => 'maps/geocoder.js' %></script>
+
+<script>
+  $(document).ready(function() {
+    $("#map_name,#map_slug").keyup(function() {
+      $("#map_slug").val(string_to_slug($(this).val()))
+    });
+  });
+
+  function string_to_slug(text){
+    return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-')
+  }
+</script>

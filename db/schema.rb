@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141104184417) do
+ActiveRecord::Schema.define(:version => 20150117041704) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "map_id"
@@ -73,7 +73,10 @@ ActiveRecord::Schema.define(:version => 20141104184417) do
     t.string   "license",                                          :default => "copyright"
     t.integer  "user_id",                                          :default => 0
     t.boolean  "anon_annotatable",                                 :default => false
+    t.string   "slug"
   end
+
+  add_index "maps", ["slug"], :name => "index_maps_on_slug", :unique => true
 
   create_table "nodes", :force => true do |t|
     t.string   "color",                                       :default => "red"

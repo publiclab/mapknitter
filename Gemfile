@@ -4,6 +4,7 @@ ruby "2.1.2"
 gem "rails", "~>3.2"
 
 gem "will_paginate", "3.0.7"
+gem "friendly_id"
 
 # dependencies
 group :dependencies do
@@ -14,7 +15,7 @@ group :dependencies do
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
   gem "oa-openid", "0.3.2"
   gem "ruby-openid", "~>2.5"
-  gem 'open_id_authentication'
+  gem "open_id_authentication"
   gem "RubyInline"
   gem "paperclip", "~>4.2.0"
 
@@ -32,7 +33,6 @@ group :dependencies do
   gem "sass"
   gem "autoprefixer-rails"
 
-  # gem "friendly_id", "3.3.3.0"
 end
 
 group :development do
