@@ -113,7 +113,7 @@
     </div><!-- .sidebar-wrap -->
   </div><!-- .sidebar -->
 
-  <%= render :partial => "/images/new" %>
+  <%= render :partial => "/images/new" unless params[:action] == 'new' %>
   <script>
     var map
     (function(){

@@ -17,7 +17,10 @@
 
     <div class="form-group">
       <%= f.label :slug, "URL" %>
-      <%= f.text_field :slug, :class => "form-control" %>
+      <div class="input-group">
+        <div class="input-group-addon">mapknitter.org/maps/</div>
+        <%= f.text_field :slug, :class => "form-control" %>
+      </div>
     </div>
     <p><small>Good titles are short and indicate the subject of the map, e.g.:
       <ul class="map-title-examples">
