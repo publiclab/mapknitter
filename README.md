@@ -52,7 +52,7 @@ Install a database, if necessary:
 
 Application-specific dependencies:
 
-`sudo apt-get install bundler curl gdal-bin imagemagick ruby-rmagick s3cmd install libfreeimage3 libfreeimage-dev ruby-dev librmagick-ruby libmagickcore-dev libmagickwand-dev python-gdal zip libopenssl-ruby libcurl4-openssl-dev libssl-dev libmysqlclient-dev`
+`sudo apt-get install bundler curl gdal-bin imagemagick ruby-rmagick s3cmd libfreeimage3 libfreeimage-dev ruby-dev librmagick-ruby libmagickcore-dev libmagickwand-dev python-gdal zip libopenssl-ruby libcurl4-openssl-dev libssl-dev libmysqlclient-dev`
 
 Install rvm for Ruby management (http://rvm.io)
 
