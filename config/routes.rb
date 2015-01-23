@@ -99,6 +99,7 @@ Mapknitter::Application.routes.draw do
 
   # make these resourceful after renaming warpables to images
   post 'images/create/:id' => 'images#create' # used?
+  post 'warper/update' => 'images#update' # legacy for cartagen.js
   post 'images/update' => 'images#update'
   post 'images/delete/:id' => 'images#delete'
   delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful

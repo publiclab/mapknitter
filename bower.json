@@ -22,8 +22,8 @@
     "sparklines":               "~1.0.0",
     "modalbox":                 "okonet/modalbox",
     "cartagen":                 "jywarren/cartagen",
+    "prototypejs-bower":        "plynchnlm/prototypejs-bower#1.7.2",
     "scriptaculous":            "http://script.aculo.us/dist/scriptaculous-js-1.9.0.zip",
-    "prototype":                "sstephenson/prototype#1.7.2",
     "junction":                 "theleagueof/junction"
   }
 }

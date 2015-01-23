@@ -35,6 +35,7 @@ Gemfile.lock
 vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
+public/assets
 public/lib
 node_modules
 todo.txt

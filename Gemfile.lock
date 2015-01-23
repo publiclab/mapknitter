@@ -148,6 +148,9 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.42)
+    uglifier (2.7.0)
+      execjs (>= 0.3.0)
+      json (>= 1.8.0)
     uuidtools (2.1.5)
     will_paginate (3.0.7)
 
@@ -177,4 +180,5 @@ DEPENDENCIES
   sprockets
   sqlite3
   therubyracer
+  uglifier
   will_paginate (= 3.0.7)

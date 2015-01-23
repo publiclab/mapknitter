@@ -32,6 +32,7 @@ group :dependencies do
   gem "sprockets"#, "2.12.1"
   gem "sass"
   gem "autoprefixer-rails"
+  gem "uglifier"
 
 end
 
