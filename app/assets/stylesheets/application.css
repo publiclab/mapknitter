@@ -12,6 +12,8 @@
  *= require bootstrap/dist/css/bootstrap.min.css
  *= require leaflet-draw/dist/leaflet.draw.css
  *= require leaflet-illustrate/dist/Leaflet.Illustrate.css
+ *= require leaflet-toolbar/dist/Leaflet.Toolbar.css
+ *= require leaflet-distortableimage/DistortableImage.css
 
  *= require style
  *= require maps

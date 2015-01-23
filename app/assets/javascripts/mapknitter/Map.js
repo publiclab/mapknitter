@@ -25,7 +25,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       this
     )
 
-    images = []
+    images = [], bounds = [];
 
 		/* Set up basemap and drawing toolbars. */
 		this.setupMap();
@@ -37,10 +37,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         // only already-placed images:
         if (warpable.nodes.length > 0) {
 
-          var img = new L.DistortableImageOverlay(
-            warpable.srcmedium,
-            { 
-              corners:  [ 
+          var corners = [ 
                 new L.latLng(warpable.nodes[0].lat,
                              warpable.nodes[0].lon),
                 new L.latLng(warpable.nodes[1].lat,
@@ -49,21 +46,30 @@ MapKnitter.Map = MapKnitter.Class.extend({
                              warpable.nodes[3].lon),
                 new L.latLng(warpable.nodes[2].lat,
                              warpable.nodes[2].lon)
-                       ],
+          ];
+
+          var img = new L.DistortableImageOverlay(
+            warpable.srcmedium,
+            { 
+              corners: corners,
               mode: 'lock'
           }).addTo(map);
+
+          bounds = bounds.concat(corners);
           images.push(img);
           img.warpable_id = warpable.id
 
           // img.on('select', function(e){
           // refactor to use on/fire; but it doesn't seem to work
           // without doing it like this: 
-          L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
-          img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+          L.DomEvent.on(img._image, 'mousedown', mapKnitter.selectImage, img);
+          img.on('deselect', mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'mouseup', mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'dblclick', mapKnitter.dblClickImage, img);
         }
       });
+
+      mapKnitter._map.fitBounds(bounds);
     });
 
     /* Deselect images if you click on the sidebar, 
@@ -80,10 +86,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
-    L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
-    img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
-    L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
-    L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+    L.DomEvent.on(img._image, 'mousedown', mapKnitter.selectImage, img);
+    img.on('deselect', mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'mouseup', mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'dblclick', mapKnitter.dblClickImage, img);
     L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
   },
 
@@ -113,13 +119,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var img = this
     // check if image state has changed at all before saving!
     if (img._corner_state != JSON.stringify(img._corners)) {
-      window.mapKnitter.saveImage.bind(img)()
+      mapKnitter.saveImage.bind(img)()
     }
   },
 
   dblClickImage: function (e) { 
     var img = this
-    window.mapKnitter.selectImage.bind(img)
+    mapKnitter.selectImage.bind(img)
     img.editing._enableDragging()
     img.editing.enable()
     img.editing._toggleRotateDistort()
