@@ -61,6 +61,10 @@ module Mapknitter
     config.assets.version = '1.0'
     config.assets.paths << Rails.root.join("public","lib")
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
+    config.assets.precompile += ['tags.js',
+	                         'uploads.js',
+	                         'knitter.js',
+                                 'maps.js']
 
   end
 end

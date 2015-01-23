@@ -11,8 +11,9 @@
   <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />  
   <meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
+  <link rel="stylesheet" href="/lib/fontawesome/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/lib/leaflet/dist/leaflet.css"/>
   <%= stylesheet_link_tag 'application' %>
-  <%= stylesheet_link_tag 'uploads' %>
   <%= javascript_include_tag 'application' %>
   <%= javascript_include_tag 'maps' %>
   <%= javascript_include_tag 'uploads' %>

@@ -33,16 +33,16 @@ class ImagesController < ApplicationController
     map.updated_at = Time.now
     map.save
     respond_to do |format|     
-      if @warpable.save
-        format.html {
-          render :json => [@warpable.fup_json].to_json,
-          :content_type => 'text/html'
-        }
-       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.image.url }
-      else
-       format.html { render :action => "new" }
-       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
-      end
+#      if @warpable.save
+#        format.html {
+#          render :json => [@warpable.fup_json].to_json,
+#          :content_type => 'text/html'
+#        }
+#       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.image.url }
+#      else
+#       format.html { render :action => "new" }
+#       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
+#      end
     end
   end
 
@@ -107,7 +107,7 @@ class ImagesController < ApplicationController
   def destroy
     @warpable = Warpable.find params[:id]
     if logged_in? && current_user.can_delete?(@warpable)
-      @warpable.destroy
+      #@warpable.destroy
       redirect_to @warpable.map
     else
       flash[:error] = "You must be logged in to delete images."
