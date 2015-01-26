@@ -4,6 +4,7 @@ ruby "2.1.2"
 gem "rails", "~>3.2"
 
 gem "will_paginate", "3.0.7"
+gem "will_paginate-bootstrap"
 gem "friendly_id"
 
 # dependencies

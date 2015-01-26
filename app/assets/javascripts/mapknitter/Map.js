@@ -75,6 +75,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Deselect images if you click on the sidebar, 
      * otherwise hotkeys still fire as you type. */
     $('.sidebar').click(function(){ $.each(images,function(i,img){ img.editing.disable() }) })
+    /* Deselect images if you click on the map. */
+    mapKnitter._map.on('click',function(){ $.each(images,function(i,img){ img.editing.disable() }) })
 
     // hi res:
     //img._image.src = img._image.src.split('_medium').join('')

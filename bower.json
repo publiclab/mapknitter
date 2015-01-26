@@ -17,7 +17,7 @@
     "leaflet-illustrate":       "manleyjster/Leaflet.Illustrate#0.0.2",
     "leaflet-distortableimage": "publiclab/Leaflet.DistortableImage#0.0.11",
     "leaflet-easybutton":       "CliffCloud/Leaflet.EasyButton",
-    "leaflet-toolbar":          "leaflet/Leaflet.Toolbar",
+    "leaflet-toolbar":          "Leaflet/Leaflet.Toolbar",
     "leaflet-providers":        "leaflet-extras/leaflet-providers#1.0.6",
     "sparklines":               "~1.0.0",
     "modalbox":                 "okonet/modalbox",
