@@ -20,6 +20,12 @@ Mapknitter::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
+  config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
+  config.assets.precompile += ['tags.js',
+                                 'uploads.js',
+                                 'knitter.js',
+                                 'maps.js']
+
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
 

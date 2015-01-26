@@ -15,16 +15,15 @@ MapKnitter.Map = MapKnitter.Class.extend({
       layers: [google]
     }).setView(this._latlng, this._zoom);
 
-    // deprecate this; we should not need global map var
+    // make globally accessible map namespace for knitter.js
     map = this._map
 
     saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
     function() {},
       'Save status',
-      map,
+      this._map,
       this
     )
-
     images = [], bounds = [];
 
 		/* Set up basemap and drawing toolbars. */
@@ -53,7 +52,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             { 
               corners: corners,
               mode: 'lock'
-          }).addTo(map);
+          }).addTo(window.mapKnitter._map);
 
           bounds = bounds.concat(corners);
           images.push(img);
@@ -62,21 +61,21 @@ MapKnitter.Map = MapKnitter.Class.extend({
           // img.on('select', function(e){
           // refactor to use on/fire; but it doesn't seem to work
           // without doing it like this: 
-          L.DomEvent.on(img._image, 'mousedown', mapKnitter.selectImage, img);
-          img.on('deselect', mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'mouseup', mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'dblclick', mapKnitter.dblClickImage, img);
+          L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+          img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
+          L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
         }
       });
 
-      mapKnitter._map.fitBounds(bounds);
+      window.mapKnitter._map.fitBounds(bounds);
     });
 
     /* Deselect images if you click on the sidebar, 
      * otherwise hotkeys still fire as you type. */
     $('.sidebar').click(function(){ $.each(images,function(i,img){ img.editing.disable() }) })
     /* Deselect images if you click on the map. */
-    mapKnitter._map.on('click',function(){ $.each(images,function(i,img){ img.editing.disable() }) })
+    //this._map.on('click',function(){ $.each(images,function(i,img){ img.editing.disable() }) })
 
     // hi res:
     //img._image.src = img._image.src.split('_medium').join('')
@@ -88,10 +87,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
-    L.DomEvent.on(img._image, 'mousedown', mapKnitter.selectImage, img);
-    img.on('deselect', mapKnitter.saveImageIfChanged, img)
-    L.DomEvent.on(img._image, 'mouseup', mapKnitter.saveImageIfChanged, img)
-    L.DomEvent.on(img._image, 'dblclick', mapKnitter.dblClickImage, img);
+    L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+    img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
+    L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
     L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
   },
 
@@ -121,13 +120,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var img = this
     // check if image state has changed at all before saving!
     if (img._corner_state != JSON.stringify(img._corners)) {
-      mapKnitter.saveImage.bind(img)()
+      window.mapKnitter.saveImage.bind(img)()
     }
   },
 
   dblClickImage: function (e) { 
     var img = this
-    mapKnitter.selectImage.bind(img)
+    window.mapKnitter.selectImage.bind(img)
     img.editing._enableDragging()
     img.editing.enable()
     img.editing._toggleRotateDistort()
@@ -211,7 +210,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     };
    
     var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
-    map.addControl(layersControl);
+    this._map.addControl(layersControl);
 
 		L.control.zoom({ position: 'topright' }).addTo(map);
 	}

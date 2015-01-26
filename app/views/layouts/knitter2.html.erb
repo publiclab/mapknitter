@@ -29,8 +29,7 @@
     <%= render :partial => 'layouts/header' %>
     <div class="sidebar-wrap">
       <div class="sidebar-inner-wrap">
-        <div class="sidebar-header"><%= yield :title %></div>
-        <% if @map.new_record? %>
+        <div class="sidebar-header"><%= yield :title %></div> <% if @map.new_record? %>
           <%= yield %>
         <% else %>
           <div class="sidebar-content-wrap">
@@ -117,7 +116,7 @@
         zoom:       <%= @map.zoom %>,
         warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
-    })();
+     })();
   </script>  
   <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
