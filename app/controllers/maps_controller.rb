@@ -49,11 +49,8 @@ class MapsController < ApplicationController
   def show
     @map = Map.find params[:id]
     @map.zoom = 12
-    # remove following lines once the new leaflet interface is integrated
-    if params[:leaflet]
-      render :template => 'map/leaflet', :layout => false
     # remove following lines once legacy interface is deprecated
-    elsif params[:legacy]
+    if params[:legacy]
       render :template => 'map/show', :layout => 'knitter'
     end
   end
