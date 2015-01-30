@@ -63,8 +63,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
           // without doing it like this: 
           L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
           img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
           L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+          L.DomEvent.on(img._image, 'load', function() {
+            var img = this
+            img.on('edit', window.mapKnitter.saveImageIfChanged, img);
+            L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
+            L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+          }, img);
         }
       });
 
@@ -89,9 +94,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img.addTo(map);
     L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
     img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
-    L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img)
     L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
     L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
+    L.DomEvent.on(img._image, 'load', function() {
+      var img = this
+      img.on('edit', window.mapKnitter.saveImageIfChanged, img);
+      L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
+      L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+    }, img.editing);
   },
 
   selectImage: function(e){
