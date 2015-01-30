@@ -48,7 +48,7 @@ class MapsController < ApplicationController
 
   def show
     @map = Map.find params[:id]
-    @map.zoom = 12
+    @map.zoom ||= 12
     # remove following lines once legacy interface is deprecated
     if params[:legacy]
       render :template => 'map/show', :layout => 'knitter'

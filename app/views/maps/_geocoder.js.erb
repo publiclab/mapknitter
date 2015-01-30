@@ -9,6 +9,7 @@ jQuery(document).ready(function($) {
   window.mapKnitter.getMap().on('drag',function(e) {
     $("#map_lat").val(window.mapKnitter.getMap().getCenter().lat);
     $("#map_lon").val(window.mapKnitter.getMap().getCenter().lng);
+    $("#map_zoom").val(window.mapKnitter.getMap().getZoom());
   })
 
   $("#map_location").autocomplete({
@@ -42,6 +43,7 @@ jQuery(document).ready(function($) {
                                       ui.item.longitude])
         window.mapKnitter.getMap().setZoom(14)
       }
+      $("#map_zoom").val(window.mapKnitter.getMap().getZoom());
     }
   });
 
