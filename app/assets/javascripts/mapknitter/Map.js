@@ -1,8 +1,8 @@
 MapKnitter.Map = MapKnitter.Class.extend({
 
-	initialize: function(options) {
-		this._zoom = options.zoom || 0;
-		this._latlng = L.latLng(options.latlng);
+  initialize: function(options) {
+    this._zoom = options.zoom || 0;
+    this._latlng = L.latLng(options.latlng);
 
     /* Initialize before map in order to add to layers; probably it can be done later too */
     var google = new L.Google("SATELLITE",{
@@ -10,7 +10,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       opacity:0.5
     });
 
-		this._map = L.map('knitter-map-pane', { 
+    this._map = L.map('knitter-map-pane', { 
       zoomControl: false,
       layers: [google]
     }).setView(this._latlng, this._zoom);
@@ -26,12 +26,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
     )
     images = [], bounds = [];
 
-		/* Set up basemap and drawing toolbars. */
-		this.setupMap();
+    /* Set up basemap and drawing toolbars. */
+    this.setupMap();
 
-		/* Load warpables data via AJAX request. */
-		this._warpablesUrl = options.warpablesUrl;
-		this.withWarpables(function(warpables){
+    /* Load warpables data via AJAX request. */
+    this._warpablesUrl = options.warpablesUrl;
+    this.withWarpables(function(warpables){
       $.each(warpables,function(i,warpable) {
         // only already-placed images:
         if (warpable.nodes.length > 0) {
@@ -79,7 +79,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     // hi res:
     //img._image.src = img._image.src.split('_medium').join('')
-	},
+  },
 
   /* add a new, unplaced, but already uploaded image to the map */
   addImage: function(url,id) {
@@ -162,35 +162,35 @@ MapKnitter.Map = MapKnitter.Class.extend({
     })
   },
 
-	getMap: function() {
-		return this._map;
-	},
+  getMap: function() {
+    return this._map;
+  },
 
   /* Fetch JSON list of warpable images */
-	withWarpables: function(callback) {
-		if (this._warpables) {
-			if (callback) { callback(this._warpables); }
-		} else {
-			jQuery.getJSON(this._warpablesUrl, function(warpablesData) {
-				this._warpables = warpablesData;
-				if (callback) { callback(this._warpables); }
-			});	
-		}
-	},
+  withWarpables: function(callback) {
+    if (this._warpables) {
+      if (callback) { callback(this._warpables); }
+    } else {
+      jQuery.getJSON(this._warpablesUrl, function(warpablesData) {
+        this._warpables = warpablesData;
+        if (callback) { callback(this._warpables); }
+      });  
+    }
+  },
 
   /* withWarpable(id, "medium", function(img) { ... }) */
-	withWarpable: function(id, size, callback) {
-		this.withWarpables(function(warpables) {
-			var url = warpables[id][size],
-				img = jQuery("<img/>").attr("src", url).attr("data-warpable-id", id);
-			callback(img);
-		});
-	},
+  withWarpable: function(id, size, callback) {
+    this.withWarpables(function(warpables) {
+      var url = warpables[id][size],
+        img = jQuery("<img/>").attr("src", url).attr("data-warpable-id", id);
+      callback(img);
+    });
+  },
 
-	setupMap: function() {
-		var map = this._map;
+  setupMap: function() {
+    var map = this._map;
 
-		//L.tileLayer.provider('Esri.WorldImagery').addTo(map);
+    //L.tileLayer.provider('Esri.WorldImagery').addTo(map);
     var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
       maxZoom: 24,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -198,8 +198,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
       id: 'examples.map-i86knfo3'
     })
-
-    //map.fitBounds(map._layers[1]._bounds)
 
     var baseMaps = {
         "OpenStreetMap": mapbox,
@@ -212,7 +210,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
     this._map.addControl(layersControl);
 
-		L.control.zoom({ position: 'topright' }).addTo(map);
-	}
+    L.control.zoom({ position: 'topright' }).addTo(map);
+  }
 
 });
