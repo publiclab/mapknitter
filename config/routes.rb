@@ -90,7 +90,7 @@ Mapknitter::Application.routes.draw do
   get 'export/progress/:id' => 'export#progress'
   get 'maps/:id' => 'maps#show'
   get 'map/:id' => 'maps#show', :as => 'map'
-  get 'map/embed/:id' => 'annotation#embed'
+  get 'embed/:id' => 'maps#embed'
   post 'maps/export/:id' => 'maps#export'
   post 'maps/:id' => 'maps#export'
 

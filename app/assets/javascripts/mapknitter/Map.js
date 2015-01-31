@@ -18,12 +18,15 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // make globally accessible map namespace for knitter.js
     map = this._map
 
-    saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
-    function() {},
-      'Save status',
-      this._map,
-      this
-    )
+    if (!options.readOnly) {
+      saveBtn = L.easyButton('fa-check-circle fa-green mk-save', 
+      function() {},
+        'Save status',
+        this._map,
+        this
+      )
+    }
+
     images = [], bounds = [];
 
     /* Set up basemap and drawing toolbars. */
@@ -58,18 +61,20 @@ MapKnitter.Map = MapKnitter.Class.extend({
           images.push(img);
           img.warpable_id = warpable.id
 
-          // img.on('select', function(e){
-          // refactor to use on/fire; but it doesn't seem to work
-          // without doing it like this: 
-          L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
-          img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
-          L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
-          L.DomEvent.on(img._image, 'load', function() {
-            var img = this
-            img.on('edit', window.mapKnitter.saveImageIfChanged, img);
-            L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
-            L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
-          }, img);
+          if (!options.readOnly) {
+            // img.on('select', function(e){
+            // refactor to use on/fire; but it doesn't seem to work
+            // without doing it like this: 
+            L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+            img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
+            L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+            L.DomEvent.on(img._image, 'load', function() {
+              var img = this
+              img.on('edit', window.mapKnitter.saveImageIfChanged, img);
+              L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
+              L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+            }, img);
+          }
         }
       });
 

@@ -22,9 +22,10 @@
   
 </head>
 <body>
-  <div id="knitter-map-pane">
-    <a class="sidebar-toggle"><i class="fa fa-chevron-left"></i></a>
+  <div id="knitter-map-pane"<% if @embed %> style="width:100%;max-width:none;"<% end %>>
   </div>
+  <% unless @embed %>
+  <a class="sidebar-toggle"><i class="fa fa-chevron-left"></i></a>
   <div class="sidebar">
     <%= render :partial => 'layouts/header' %>
     <div class="sidebar-wrap">
@@ -108,12 +109,15 @@
   </div><!-- .sidebar -->
 
   <%= render :partial => "/images/new" unless params[:action] == 'new' %>
+  <% end %>
+
   <script>
     var map
     (function(){
       window.mapKnitter = new MapKnitter.Map({
         latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
         zoom:       <%= @map.zoom %>,
+        readOnly:   <%= @embed == true %>,
         warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
      })();

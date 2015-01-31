@@ -39,13 +39,6 @@ class MapsController < ApplicationController
     end
   end
 
-  def view # legacy route, redirect later
-    @map = Map.find params[:id]
-    # legacy; later, just redirect this
-    # redirect_to "/map/#{@map.id}", :status => :moved_permanently
-    render :template => 'map/view', :layout => 'application'
-  end
-
   def show
     @map = Map.find params[:id]
     @map.zoom ||= 12
@@ -53,6 +46,13 @@ class MapsController < ApplicationController
     if params[:legacy]
       render :template => 'map/show', :layout => 'knitter'
     end
+  end
+
+  def embed
+    @map = Map.find params[:id]
+    @map.zoom ||= 12
+    @embed = true
+    render :template => 'maps/show'
   end
 
   def annotate
