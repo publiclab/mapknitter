@@ -5,11 +5,8 @@
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
-  var sidebarNav = $(".sidebar .navbar-nav.sidebar-only"),
-    navLinks = $(".sidebar .navbar-nav.fullscreen").find("li");
-
-  sidebarNav.find(".dropdown-menu").append(navLinks);
   $('.sidebar-toggle').click(function(e){
+    $('.sidebar').toggle()
     $('#knitter-map-pane').toggleClass('fullscreen')
     window.mapKnitter._map._onResize()
   })

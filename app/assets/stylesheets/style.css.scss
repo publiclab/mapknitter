@@ -36,7 +36,7 @@ label small {
   color:#888;
 }
 
-#header #brand {
+#header #brand, #header #brand-compact {
   font-family:"Junction Light", lucida grande,lucida sans console,sans-serif; 
   padding-top:19px;
   font-size:24px;
@@ -45,6 +45,25 @@ label small {
   font-size:16px;
   color:#888;
 }
+
+@media (max-width: 500px) {
+  #brand { display:none; }
+  #brand-compact { display:inline; }
+}
+@media (min-width: 500px) {
+  #brand-compact { display:none; }
+  #brand { display:inline; }
+}
+.navbar-custom-knitter {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-nav .open .dropdown-menu {
+    color:white;
+  }
+}
+
 #header, .sidebar-header {
   .nav > li > a { color: #e0e0e0; }
   .nav > li > a:hover { color: #fff }
@@ -54,15 +73,6 @@ label small {
 }
 #header .dropdown-menu {
   padding:8px;
-}
-
-@media (max-width: 340px) {
-  #brand { display:none; }
-  #brand-compact { display:inline; }
-}
-@media (min-width: 340px) {
-  #brand-compact { display:none; }
-  #brand { display:inline; }
 }
 
 a {

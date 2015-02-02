@@ -1,0 +1,39 @@
+<% if logged_in? %>
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %> <span class="caret"></span></a>
+    <ul class="dropdown-menu" role="menu" aria-labelled-by="logout-menu">
+      <li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
+      <li><a href="/logout">Log out</a></li>
+      <% if current_user.role == 'admin' %>
+        <li><a href="#">Admin</a></li>
+      <% end %>
+    </ul>
+  </li>
+<% else %>
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login-menu">Log In <span class="caret"></span></a>
+    <div class="dropdown-menu login-form" role="menu" aria-labelled-by="login-menu">
+      <form id="open_id_form" method="GET" action="/sessions/create">
+
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+        <%= hidden_field_tag :back_to, params[:back_to] -%>
+        <div class="form-group">
+          Log in using your Public Lab username, or <a href="//publiclab.org/signup">create a Public Lab account</a>.
+        </div>
+
+        <div class="form-group">
+          <%= text_field_tag 'open_id', @login, { :placeholder => "Username", :class => "form-control"} %>
+          <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
+          <label for="remember_me">
+            <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
+          </label>                                        
+        </div>
+
+        <div class="form-group">
+          <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+        </div>
+
+      </form>                          
+    </div>
+  </li>                
+<% end %>

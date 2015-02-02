@@ -1,69 +1,35 @@
 <div id="header" class="navbar navbar-inverse navbar-static-top">
     <div class="navbar-inner hidden-print" style="padding:0 10px;">
-      <span class="navbar-brand" id="brand"><a href="/">MapKnitter</a> <small class="fullscreen-only"> by <a href="http://publiclab.org">Public Lab</a></small></span>
-        <a class="navbar-brand" id="brand-compact" href="/">MK</a>
+      <span class="navbar-brand" id="brand"><a href="/">MapKnitter</a> <small class="fullscreen-only"> by <a href="//publiclab.org">Public Lab</a></small></span>
+      <a class="navbar-brand" id="brand-compact" href="/">MK</a>
 
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
 
-        <ul class="nav navbar-nav sidebar-navbar-nav sidebar-navbar-right">
-        <% if logged_in? %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %> <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu" aria-labelled-by="logout-menu">
-              <li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
-              <li><a href="/logout">Log out</a></li>
-              <% if current_user.role == 'admin' %>
-                <li><a href="#">Admin</a></li>
-              <% end %>
+        <ul class="nav navbar-nav navbar-right navbar-custom-knitter">
+          <li class="dropdown hidden-xs">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Resources <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+            <li><a href="//publiclab.org/wiki/mapknitter">Getting Started</a></li>
+            <li><a href="//publiclab.org/wiki/balloon-mapping">About Balloon Mapping</a></li>
+            <li><a href="//store.publiclab.org/products/balloon-mapping-kit">Balloon and Kite kits</a></li>   
             </ul>
           </li>
-        <% else %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login-menu">Log In <span class="caret"></span></a>
-            <div class="dropdown-menu login-form" role="menu" aria-labelled-by="login-menu">
-              <form id="open_id_form" method="GET" action="/sessions/create">
-
-                <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
-                <%= hidden_field_tag :back_to, params[:back_to] -%>
-                <div class="form-group">
-                  Log in using your Public Lab username, or <a href="http://publiclab.org/signup">create a Public Lab account</a>.
-                </div>
- 
-                <div class="form-group">
-                  <%= text_field_tag 'open_id', @login, { :placeholder => "Username", :class => "form-control"} %>
-                  <input type="hidden" name="return_to" value="<%= params[:return_to] %>" />
-                  <label for="remember_me">
-                    <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
-                  </label>                                        
-                </div>
- 
-                <div class="form-group">
-                  <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
-                </div>
-
-              </form>                          
-            </div>
-          </li>                
-        <% end %>
+          <%= render :partial => "layouts/login" %>
         </ul>
 
-        <ul class="nav navbar-nav sidebar-navbar-nav sidebar-only">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu"></ul>
-          </li>     
-        </ul>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="nav navbar-nav fullscreen">
             <li><a href="//publiclab.org/wiki/mapknitter">Getting Started</a></li>
             <li><a href="//publiclab.org/wiki/balloon-mapping">About Balloon Mapping</a></li>
             <li><a href="//store.publiclab.org/products/balloon-mapping-kit">Balloon and Kite kits</a></li>   
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <%= render :partial => "layouts/login" %>
           </ul>
         </div>
 
