@@ -1,0 +1,22 @@
+<form id="open_id_form" method="GET" action="/sessions/create">
+
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+  <%= hidden_field_tag :back_to, params[:back_to] || request.path -%>
+  <div class="form-group">
+    Log in using your Public Lab username, or <a href="//publiclab.org/signup">create a Public Lab account</a>.
+  </div>
+
+  <div class="form-group">
+    <%= text_field_tag 'open_id', @login, { :placeholder => "Username", :class => "form-control"} %>
+    <div class="checkbox">
+      <label for="remember_me">
+        <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
+      </label>                                        
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+  </div>
+
+</form>                          

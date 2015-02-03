@@ -6,15 +6,23 @@
         <i class="fa fa-plus-circle"></i> Create a map
       </a>
       <% else %>
-      <p><a href="/login">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()">create a map anonymously.</a></p>
+      <a class="btn btn-lg btn-default disabled create-map" href="#">
+        <i class="fa fa-plus-circle"></i> Create a map
+      </a>
+      <p><a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()">create a map anonymously.</a></p>
       <hr />
+
+      <div class="well mini-login" style="display:none;">
+        <%= render :partial => "layouts/login_form" %>
+      </div>
+
       <div class="hidden-map-btn" style="display:none;">
         <p>
-          Please consider <a href="/login">creating an account</a>; anonymous maps are intended for those with privacy concerns.<br />
+          Please consider <a href="#" onClick="$('.mini-login').toggle()">logging in</a>; anonymous maps are intended for those with privacy concerns and may lack some features.<br />
         </p>
         <p>
           <a class="btn btn-lg btn-primary create-map" href="<%= new_map_url %>">
-            <i class="fa fa-plus-circle"></i> Create a map
+            <i class="fa fa-plus-circle"></i> Create an anonymous map
           </a>
         </p>
       </div>
