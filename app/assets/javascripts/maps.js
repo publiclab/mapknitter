@@ -5,11 +5,21 @@
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
-  $('.sidebar-toggle').click(function(e){
+  window.toggle_sidebar = function(e){
     $('.sidebar').toggle()
     $('#knitter-map-pane').toggleClass('fullscreen')
+    /* trigger a resize event */
     window.mapKnitter._map._onResize()
-  })
+  }
+  window.toggle_sidebar_and_fit_bounds = function(e){
+    window.mapKnitter._map.once('resize',function(){
+      window.mapKnitter._map.fitBounds(bounds)
+    })
+    window.toggle_sidebar()
+  }
+
+
+  $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds)
 
   haschat = false
   $('.chat-btn').click(function(){

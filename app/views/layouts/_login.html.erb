@@ -5,7 +5,7 @@
       <li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
       <li><a href="/logout">Log out</a></li>
       <% if current_user.role == 'admin' %>
-        <li><a href="#">Admin</a></li>
+        <li><a href="#">Role: <b>Admin</b></a></li>
       <% end %>
     </ul>
   </li>

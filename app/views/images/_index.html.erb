@@ -1,33 +1,44 @@
 <h4>Images</h4>
 <table class="warpables-all table table-striped">
-	<tbody>
-		<% @map.warpables.each do |warpable| %>
-			<tr id="warpable-<%= warpable.id %>">
-				<td class="warpable">
-					<%= image_tag warpable.image.url(:thumb), 
-							:'data-warpable-id' => warpable.id,
-							:'data-map-id' => @map.id
-					%>
-				</td>
-				<td>
-					<%= link_to(warpable.image_file_name, warpable.image.url) %>
-					<p><%= number_to_human_size warpable.image_file_size %></p>
+  <tbody>
+    <% @map.warpables.each do |warpable| %>
+      <tr id="warpable-<%= warpable.id %>">
+        <td class="warpable">
+          <%= image_tag warpable.image.url(:thumb), 
+              :'data-warpable-id' => warpable.id,
+              :'data-map-id' => @map.id
+          %>
+        </td>
+        <td class="col-middle">
+          <%= link_to(warpable.image_file_name, warpable.image.url) %>
+          <p><%= number_to_human_size warpable.image_file_size %></p>
           <% unless warpable.placed? %><p><a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a></p><% end %>
-				</td>
-				<td>
-					<% if logged_in? && current_user.can_delete?(warpable) %>
-						<%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable], :method => "delete", :class => "btn btn-danger", :title => "Delete" %>
-					<% end %>
-					<% if warpable.nodes.length > 0 %>
-						<a id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-success"><i class='fa fa-crosshairs'></i></a>
-					<script>
-$('#locate-warpable-<%= warpable.id %>').click(function(){
-	window.mapKnitter._map.panTo([<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>])
-})
-					</script>
-					<% end %>
-				</td>
-			</tr>
-		<% end %>
-	</tbody>
+        </td>
+        <td>
+          <% if logged_in? && current_user.can_delete?(warpable) %>
+            <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable], :method => "delete", :class => "btn btn-danger", :title => "Delete" %>
+          <% end %>
+          <% if warpable.nodes.length > 0 %>
+            <a id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-success"><i class='fa fa-crosshairs'></i></a>
+            <script>
+              $('#locate-warpable-<%= warpable.id %>').click(function(){
+                var fitBounds = function() {
+                  window.mapKnitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
+                                                      new L.LatLng(<%= warpable.nodes_array.last.lat %>,<%= warpable.nodes_array.last.lon %>)]);
+                }
+
+                /* wait for map to load if we're on a small screen and it's been hidden */
+                if ($('body').width() < 400) {
+                  window.toggle_sidebar();
+                  window.mapKnitter._map.once('resize', fitBounds)
+                } else {
+                  fitBounds();
+                }
+              })
+            </script>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

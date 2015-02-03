@@ -4,7 +4,6 @@
 */ 
 /* Variables */
 $sidebar-width: 30%;
-$sidebar-width-narrow: 300px;
 $sidebar-min-width: 400px;
 $sidebar-padding: 15px;
 
@@ -44,7 +43,7 @@ html, body {
   max-width: none;
 }
 
-.sidebar-toggle {
+.sidebar-toggle-tab {
   position:absolute;
   z-index:99;
   right:0;
@@ -59,7 +58,6 @@ html, body {
 .sidebar {
   position: relative;
   float: left;
-  overflow: hidden;
   height: 100%;
   width: $sidebar-width;
   min-width: $sidebar-min-width;
@@ -86,10 +84,9 @@ html, body {
   #header #brand-compact { 
     display:inline;
   }
-  @media (max-width: 768px) {
-    #header #brand-compact { 
-      padding-top:15px;
-    }
+
+  .dropdown-menu {
+    z-index:999;
   }
 
   .sidebar-wrap { 
@@ -183,10 +180,18 @@ html, body {
   }
 }
 
-@media (max-width: 500px) {
+table .btn {
+  margin-bottom:3px;
+}
+
+@media (max-width: 400px) {
   .sidebar {
-    width: $sidebar-width-narrow;
-    min-width: $sidebar-width-narrow; 
+    width: 100%;
+    min-width: 100%;
+    overflow: scroll;
+  }
+  table .col-middle {
+    max-width:120px;
   }
 }
 
