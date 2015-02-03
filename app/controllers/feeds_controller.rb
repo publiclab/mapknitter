@@ -7,14 +7,6 @@ class FeedsController < ApplicationController
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
-  def plots
-    #(Warpable.all + Map.all).sort_by(&:created_at)
-    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => ["archived = false AND password = '' AND license = 'cc-by' AND author != 'anonymous'"],:joins => :exports, :group => "maps.id")
-    @maps = @maps+Map.find(:all,:order => "id DESC",:limit => 20, :conditions => ["archived = false AND password = '' AND license = 'publicdomain' AND author != 'anonymous'"],:joins => :exports, :group => "maps.id")
-    render :layout => false
-    response.headers["Content-Type"] = "application/xml; charset=utf-8"
-  end
-
   def license
     @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => params[:id]},:joins => :warpables, :group => "maps.id")
     render :layout => false
