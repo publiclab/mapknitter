@@ -226,6 +226,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this._map.addControl(layersControl);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.scale().addTo(map);
   }
 
 });
