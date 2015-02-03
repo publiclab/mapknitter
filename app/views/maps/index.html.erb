@@ -31,16 +31,15 @@
     <div class="maps-list col-md-9">
 
       <div>
-        <h1>Make maps from aerial photos <small><a>Learn how &raquo;</a></small></h1>
+        <h1>Make maps from aerial photos <small><a href="http://publiclab.org/wiki/mapknitter">Learn how &raquo;</a></small></h1>
       </div>
       <hr />
 
       <h2><%= @title ||= "Featured" %> <small> | <a href="/recent">Recent maps</a></small></h2>
 
-      <div class="row">
+      <div class="row map-list">
         <% @maps.each_with_index do |map,i| %>
-        <% if i % 4 == 0 %></div><div class="row"><% end %>
-        <div class="map col-md-3">
+        <div class="map col-md-3 col-xs-6">
           <a href="/map/<%= map.slug %>">
             <% if !map.private && map.warpables.length > 0 %>
               <img src="<%= map.warpables.first.image.url(:small) %>" />
@@ -49,8 +48,7 @@
             <% end %>
           </a>
           <h3><a href="/map/<%= map.slug %>"><%= map.name.capitalize %></a></h3>
-          <p>
-          <small>
+          <p><small>
             <% if map.user %>
               by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
             <% else %>
@@ -58,11 +56,6 @@
             <% end %>
             | <%= map.location %>
           </small></p>
-            <p class="description"><small>
-                <%=raw truncate(markdown_to_html(map.description),:length =>200) unless map.description.nil? %>
-                <% if !map.description %><i>no description</i><% end %>
-            </small>
-          </p>
           <p class="map map-meta">
             <small>
               <% if map.archived %><i>Archived</i> | <% end %>

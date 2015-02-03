@@ -27,6 +27,10 @@ html, body {
   height: 100%;
 }
 
+.map-list .map img {
+  max-height:300px;
+}
+
 /* Map pane */
 #knitter-map-pane {
   float: left;

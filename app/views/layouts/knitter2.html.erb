@@ -5,8 +5,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <%=raw csrf_meta_tags %>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>MapKnitter: <%= @map[:name] ? @map[:name] : "New map" %></title>
   <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />  
   <meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
