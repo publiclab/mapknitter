@@ -13,11 +13,10 @@ jQuery(document).ready(function($) {
   }
   window.toggle_sidebar_and_fit_bounds = function(e){
     window.mapKnitter._map.once('resize',function(){
-      window.mapKnitter._map.fitBounds(bounds)
+      if (bounds) window.mapKnitter._map.fitBounds(bounds)
     })
     window.toggle_sidebar()
   }
-
 
   $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds)
 
