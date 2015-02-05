@@ -134,7 +134,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   saveImageIfChanged: function() {
     var img = this
     // check if image state has changed at all before saving!
-    if (img._corner_state != JSON.stringify(img._corners)) {
+    if (img.editing._mode != "lock" && img._corner_state != JSON.stringify(img._corners)) {
       window.mapKnitter.saveImage.bind(img)()
     }
   },
