@@ -47,6 +47,12 @@ html, body {
   max-width: none;
 }
 
+/* fix for firefox partial image display bug 
+ * in css3 matrix distorted images */
+.leaflet-image-layer {
+  border:0px solid red;
+}
+
 .sidebar-toggle-tab {
   position:absolute;
   z-index:99;
