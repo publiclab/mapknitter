@@ -65,7 +65,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             // img.on('select', function(e){
             // refactor to use on/fire; but it doesn't seem to work
             // without doing it like this: 
-            L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+            L.DomEvent.on(img._image, 'click', window.mapKnitter.selectImage, img);
             img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
             L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
             L.DomEvent.on(img._image, 'load', function() {
@@ -110,6 +110,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   selectImage: function(e){
+console.log("selectImage")
     var img = this
     // save state, watch for changes by tracking 
     // stringified corner positions: 
