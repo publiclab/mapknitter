@@ -1,40 +1,40 @@
 <% content_for :title do %>
-	<div class="pull-right dropdown">
-		<a href="#" data-toggle="dropdown">
-			<span class="fa fa-cog"></span>
-		</a>
-		<ul class="dropdown-menu dropdown-menu-right" role="menu">
-			<% if logged_in? && current_user.can_delete?(@map) %>
-				<li><a>Delete Map</a></li>
-			<% end %>
-		</ul>
-	</div>
-	<div class="sidebar-title">
-		<h3><%= @map.name %></h3>
-	</div>
-	<div class="map-author">
+  <div class="pull-right dropdown">
+    <a href="#" data-toggle="dropdown">
+      <span class="fa fa-cog"></span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+      <% if logged_in? && current_user.can_delete?(@map) %>
+        <li><a>Delete Map</a></li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="sidebar-title">
+    <h3><%= @map.name %></h3>
+  </div>
+  <div class="map-author">
     <% if @map.user %>
       by <a href="//publiclab.org/profile/<%= @map.user.login %>"><%= @map.user.login %></a>
     <% else %>
       anonymous
     <% end %>
-		| <a href="/maps/<%= @map.slug %>?legacy=true">Legacy editor</a>
-	</div>	
+    | <a href="/maps/<%= @map.slug %>?legacy=true">Legacy editor</a>
+  </div>  
 <% end %>
 
 <% content_for :details do %>
-	<div>
-		<%=raw markdown_to_html(@map.description) %>
-	</div>
+  <div>
+    <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
+  </div>
 
-	<p>
-		<span class="map-detail-label">Location</span>
+  <p>
+    <span class="map-detail-label">Location</span>
     <a href="https://www.openstreetmap.org/#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>"><%= @map.location %></a>
-	</p>
+  </p>
 
-	<table>
-		<tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
-	</table>
+  <table>
+    <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+  </table>
 
   <% if logged_in? %>
     <hr />
@@ -51,23 +51,23 @@
 
   <div style="display:none;" id="map-edit-container">
     <%= render :partial => 'maps/edit' %>
-	</div>
+  </div>
 
   <hr />
   <div class="tags">
-		<%= render :partial => "tags/index" %>
-	</div>
+    <%= render :partial => "tags/index" %>
+  </div>
 
-	<hr />
+  <hr />
 
-	<div class="comments">
-		<%= render :partial => "comments/index" %>
-		<%= render :partial => "comments/new" %>
-	</div>
+  <div class="comments">
+    <%= render :partial => "comments/index" %>
+    <%= render :partial => "comments/new" %>
+  </div>
 
-	<%= javascript_include_tag 'tags' %>
+  <%= javascript_include_tag 'tags' %>
 <% end %>
 
 <% content_for :images do %>
-	<%= render :partial => "/images/index" %>
+  <%= render :partial => "/images/index" %>
 <% end %>
