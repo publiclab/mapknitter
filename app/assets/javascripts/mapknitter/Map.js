@@ -71,6 +71,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             L.DomEvent.on(img._image, 'load', function() {
               var img = this
               img.on('edit', window.mapKnitter.saveImageIfChanged, img);
+              img.on('delete', window.mapKnitter.deleteImage, img)
               L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
               L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
             }, img);
@@ -110,7 +111,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   selectImage: function(e){
-console.log("selectImage")
     var img = this
     // save state, watch for changes by tracking 
     // stringified corner positions: 
@@ -176,6 +176,30 @@ console.log("selectImage")
         $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
       }
     })
+  },
+
+  // /maps/newbie/warpables/42, but we'll try /warpables/42 
+  // as it should also be a valid restful route
+  deleteImage: function() {
+    var img = this
+    // this should only be possible by logged-in users
+    if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
+      $.ajax('/images/'+img.warpable_id,{
+        dataType: "json",
+        type: 'DELETE',
+        beforeSend: function(e) {
+          $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+        },
+        complete: function(e) {
+          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
+        },
+        error: function(e) {
+          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
+        }
+      })
+    } else {
+      // say it failed
+    }
   },
 
   getMap: function() {

@@ -107,6 +107,7 @@ Mapknitter::Application.routes.draw do
   post 'images/update' => 'images#update'
   post 'images/delete/:id' => 'images#delete'
   delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
+  delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
 
   # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.

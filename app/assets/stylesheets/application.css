@@ -12,7 +12,7 @@
  *= require bootstrap/dist/css/bootstrap.min.css
  *= require leaflet-draw/dist/leaflet.draw.css
  *= require leaflet-illustrate/dist/Leaflet.Illustrate.css
- *= require leaflet-toolbar/dist/Leaflet.Toolbar.css
+ *= require leaflet-toolbar/dist/leaflet.toolbar.css
  *= require leaflet-distortableimage/dist/leaflet.distortableimage.css
 
  *= require style

@@ -108,10 +108,13 @@ class ImagesController < ApplicationController
     @warpable = Warpable.find params[:id]
     if logged_in? && current_user.can_delete?(@warpable)
       #@warpable.destroy
-      redirect_to @warpable.map
+      respond_to do |format|
+        format.html { redirect_to @warpable.map } 
+        format.json { render :json => @warpable }
+      end
     else
       flash[:error] = "You must be logged in to delete images."
-      redirect_to "/login"      
+      redirect_to "/login"
     end
   end
   
