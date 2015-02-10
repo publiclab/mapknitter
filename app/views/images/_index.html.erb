@@ -22,17 +22,22 @@
             <a id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-success"><i class='fa fa-crosshairs'></i></a>
             <script>
               $('#locate-warpable-<%= warpable.id %>').click(function(){
-                var fitBounds = function() {
+                var center_and_bring_to_front = function() {
                   window.mapKnitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
                                                       new L.LatLng(<%= warpable.nodes_array[2].lat %>,<%= warpable.nodes_array[2].lon %>)]);
+                  $.each(images,function(i,img) {
+                    if (img.warpable_id == <%= warpable.id %>) {
+                      window.mapKnitter.selectImage.bind(img)()
+                    }
+                  })
                 }
 
                 /* wait for map to load if we're on a small screen and it's been hidden */
                 if ($('body').width() < 400) {
                   window.toggle_sidebar();
-                  window.mapKnitter._map.once('resize', fitBounds)
+                  window.mapKnitter._map.once('resize', center_and_bring_to_front)
                 } else {
-                  fitBounds();
+                  center_and_bring_to_front();
                 }
               })
             </script>
