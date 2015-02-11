@@ -155,7 +155,7 @@
         readOnly:   <%= @embed == true %>,
         warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
-      <% if @map.warpables.empty? %>
+      <% if @map.warpables.empty? && params[:action] == "show" %>
         $('.modal-welcome').modal()
       <% end %>
      })();

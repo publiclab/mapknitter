@@ -107,7 +107,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       img.on('edit', window.mapKnitter.saveImageIfChanged, img);
       L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
       L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
-    }, img.editing);
+    }, img);
   },
 
   selectImage: function(e){
