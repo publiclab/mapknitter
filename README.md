@@ -58,7 +58,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 `curl -L https://get.rvm.io | bash -s stable`
 
-# you may need to enable 'Run command as a login shell' in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+**Note:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+
+Then, use RVM to install versoin 2.1.2 of Ruby:
 
 `rvm install 2.1.2`
 
@@ -66,13 +68,13 @@ Install rvm for Ruby management (http://rvm.io)
 INSTALLATION
 ==========================
 
-You'll need Ruby 1.9.3-2.1.x and GDAL >=1.7.x (gdal.org), as well as ImageMagick
+You'll need at least Ruby v1.9.3 (v2.1.x preferred) and GDAL >=1.7.x (gdal.org), as well as ImageMagick (the latter for exporting, but not needed for much of development)
 
 1. Download source from https://github.com/publiclab/mapknitter
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example
 4. Copy and configure config/config.yml from config/config.yml.example
-5. Initialize database with "rake db:migrate"
+5. Initialize database with "rake db:setup"
 6. (Not necessary for basic development) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
 7. Start rails with "passenger start" from the Rails root and open http://localhost:3000 in a web browser.
 
