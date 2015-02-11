@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="links col-md-3">
+    <div class="col-md-3">
       <% if logged_in? %>
       <a class="btn btn-lg btn-primary create-map" href="<%= new_map_url %>">
         <i class="fa fa-plus-circle"></i> Create a map
@@ -27,6 +27,13 @@
         </p>
       </div>
       <% end %>
+
+      <div>
+        <br />
+        <%= render :partial => "maps/search" %>
+        <br />
+      </div>
+
       <a href="http://store.publiclab.org/products/balloon-mapping-kit">
         <img src="/images/balloon-kit.jpg" />
       </a>

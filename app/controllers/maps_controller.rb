@@ -124,4 +124,11 @@ class MapsController < ApplicationController
     render "maps/index", :layout => "application2"
   end
 
+  def search
+    params[:id] ||= params[:q]
+    @maps = Map.where('archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%").paginate(:page => params[:page], :per_page => 24)
+    @title = "Search results for '#{params[:id]}'"
+    render "maps/index", :layout => "application2"
+  end
+
 end
