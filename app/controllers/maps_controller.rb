@@ -17,22 +17,26 @@ class MapsController < ApplicationController
 
   def create
     if logged_in?
-      @map = current_user.maps.create(params[:map])
+      @map = current_user.maps.new(params[:map])
       @map.author = current_user.login # eventually deprecate
       if @map.save
-        redirect_to "/map/#{@map.slug}"
+        redirect_to "/maps/#{@map.slug}"
       else
         render "new"
       end
     else
-      @map = Map.create(params[:map])
+      @map = Map.new(params[:map])
       if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
+puts ">>>>>> passed recaptcha"
         if @map.save
-          redirect_to "/map/#{@map.slug}"
+puts ">>>>>> saved"
+          redirect_to "/maps/#{@map.slug}"
         else
+puts ">>>>>> didn't save"
           render "new"
         end
       else
+puts ">>>>>> recaptcha error"
         @map.errors.add(:base, I18n.t(:wrong_captcha))
         render "new"
       end

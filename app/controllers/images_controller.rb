@@ -28,21 +28,21 @@ class ImagesController < ApplicationController
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
-    @warpable.map_id = params[:map_id]
     map = Map.find(params[:map_id])
+    @warpable.map_id = map.id
     map.updated_at = Time.now
     map.save
     respond_to do |format|     
-#      if @warpable.save
-#        format.html {
-#          render :json => [@warpable.fup_json].to_json,
-#          :content_type => 'text/html'
-#        }
-#       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.image.url }
-#      else
-#       format.html { render :action => "new" }
-#       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
-#      end
+      if @warpable.save
+        format.html {
+          render :json => [@warpable.fup_json].to_json,
+          :content_type => 'text/html'
+        }
+       format.json { render :json => {:files => [@warpable.fup_json]}, :status => :created, :location => @warpable.image.url }
+      else
+       format.html { render :action => "new" }
+       format.json { render :json => {:files => [@warpable.fup_error_json]}, :layout => false}
+      end
     end
   end
 
