@@ -1,11 +1,17 @@
 development:
-  adapter: sqlite3
-  database: production.db
+  adapter: mysql2
+  username: 
+  password: 
+  database: mapknitter_development
 
 production:
-  adapter: sqlite3
-  database: production.db
+  adapter: mysql2
+  username: 
+  password: 
+  database: mapknitter_production
 
 test:
-  adapter: sqlite3
-  database: test.db
+  adapter: mysql2
+  username: 
+  password: 
+  database: mapknitter_test
