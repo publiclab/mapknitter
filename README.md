@@ -1,17 +1,15 @@
-MapKnitter
+##MapKnitter 2
 
-Use Public Lab's Map Knitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/wiki/balloon-mapping) and combine them into:
+Use Public Lab's MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/wiki/balloon-mapping) and combine them into:
 
 * web "slippy maps" like Google Maps
 * GeoTiff
 * TMS
 * high resolution JPEG
 
-Copyright 2010-2014 Public Lab & Jeffrey Warren
+Copyright 2010-2015 Public Lab & Jeffrey Warren
 
-==========================
-LICENSE
-==========================
+##License
 
 Map Knitter is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,33 +24,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
-==========================
-ABOUT
-==========================
-
-Use Public Lab's Map Knitter to upload your own aerial imagery and combine it into a GeoTiff and TMS/OpenLayers map.
-
-Read more about Map Knitter at: http://publiclab.org/wiki/plots-map-toolkit
-
-The Public Laboratory for Open Technology and Science (Public Lab) is a community which develops and applies open-source tools to environmental exploration and investigation. By democratizing inexpensive and accessible “Do-It-Yourself” techniques, Public Lab creates a collaborative network of practitioners who actively re-imagine the human relationship with the environment.
-
-The core Public Lab program is focused on “civic science” in which we research open source hardware and software tools and methods to generate knowledge and share data about community environmental health. Our goal is to increase the ability of underserved communities to identify, redress, remediate, and create awareness and accountability around environmental concerns. Public Lab achieves this by providing online and offline training, education and support, and by focusing on locally-relevant outcomes that emphasize human capacity and understanding.
-
-Join now at: http://publiclab.org
-
-==========================
-PREREQUISITES
-==========================
+##Prerequisites
 
 Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
 
-Install a database, if necessary:
+Install a database, if necessary. sqlite does not seem to work due to some table constraints.
 
 `sudo apt-get install mysql-server`
 
 Application-specific dependencies:
 
-`sudo apt-get install bundler curl gdal-bin imagemagick ruby-rmagick s3cmd libfreeimage3 libfreeimage-dev ruby-dev librmagick-ruby libmagickcore-dev libmagickwand-dev python-gdal zip libopenssl-ruby libcurl4-openssl-dev libssl-dev libmysqlclient-dev`
+`sudo apt-get install bundler libmysqlclient-dev`
+
+(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as ImageMagick, `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+
+`sudo apt-get install gdal-bin python-gdal imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev curl libcurl4-openssl-dev libssl-dev zip`
 
 Install rvm for Ruby management (http://rvm.io)
 
@@ -60,27 +46,37 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Note:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install versoin 2.1.2 of Ruby:
+Then, use RVM to install version 2.1.2 of Ruby:
 
 `rvm install 2.1.2`
 
-==========================
-INSTALLATION
-==========================
+You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
-You'll need at least Ruby v1.9.3 (v2.1.x preferred) and GDAL >=1.7.x (gdal.org), as well as ImageMagick (the latter for exporting, but not needed for much of development)
+`sudo apt-get install npm`
 
-1. Download source from https://github.com/publiclab/mapknitter
+However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+
+`sudo apt-get install nodejs-legacy`
+
+Once NPM is installed, you should be able to run:
+
+`sudo npm install -g bower`
+
+**Note:** at some points during this process, if you can't use a program you've just installed, try running `source ~/.profile` and/or logging out and logging back in or opening a new terminal window -- this can help properly set up the recently installed programs in your shell. 
+
+##Installation
+
+You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
+
+1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
-3. Copy and configure config/database.yml from config/database.yml.example
+3. Copy and configure config/database.yml from config/database.yml.example, using a new empty databse you've created
 4. Copy and configure config/config.yml from config/config.yml.example
 5. Initialize database with "rake db:setup"
-6. (Not necessary for basic development) Enter the ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example
+6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://google.com/recaptcha/admin
 7. Start rails with "passenger start" from the Rails root and open http://localhost:3000 in a web browser.
 
-==========================
-BUGS AND SUPPORT
-==========================
+##Bugs and support
 
 To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues 
 
@@ -88,8 +84,7 @@ For additional support, join the Public Lab website and mailing list at http://p
 
 For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
-==========================
-DEVELOPERS
+##DEVELOPERS
 ==========================
 
 Development is occurring at https://github.com/publiclab/mapknitter/; please fork and submit pull requests.
