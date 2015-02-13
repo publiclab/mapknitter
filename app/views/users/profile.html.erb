@@ -1,17 +1,14 @@
-<div id="main">
+<div class="container">
+
   <h2><%= @user.login %><% if @user.maps %> (<%= @maps.length %> maps)<% end %> | <small><%= @user.role %></small></h2>
 
-  <p><a href="http://publiclaboratory.org/people/<%= @user.login %>">Public Lab profile &raquo;</a></p>
+  <p><a href="//publiclab.org/profile/<%= @user.login %>">Public Lab profile &raquo;</a></p>
 
   <hr />
 
-  <%= render :partial => 'map/list' %>
-  
+  <% @maps.each do |map| %>
+    <%= render :partial => "maps/list", :locals => {:map => map} %>
+  <% end %>
+
 </div>
-<div id ="sidebar">
-<%= render :partial => 'map/search' %>
-<%= render :partial => "map/regions" %>
-<%= render :partial => "map/authors" %>
-<%= render :partial => "map/new_maps" %>
-<p>MapKnitter is <a href="https://github.com/publiclab/mapknitter">open source software</a>. <a href="https://github.com/publiclab/mapknitter/issues">Submit bugs here</a>. MapKnitter uses <a href="http://gdal.org">GDAL</a></p>
-</div>
+<hr />

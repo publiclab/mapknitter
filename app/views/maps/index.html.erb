@@ -58,37 +58,13 @@
       </div>
 
       <hr />
+      <div class="alert alert-success"><b>Welcome to the new MapKnitter 2.0!</b> <a href="http://publiclab.org/notes/warren/02-13-2015/announcing-mapknitter-2-0">Click here</a> to learn more about the new features, and get involved in development.</div>
 
       <h2><%= @title ||= "Featured" %> <small> | <a href="/recent">Recent maps</a></small></h2>
 
       <div class="row map-list">
         <% @maps.each_with_index do |map,i| %>
-        <div class="map col-md-3 col-xs-6">
-          <a href="/map/<%= map.slug %>">
-            <% if !map.private && map.warpables.length > 0 %>
-              <img src="<%= map.warpables.first.image.url(:small) %>" />
-            <% else %>
-              <div style="width:100%;background:#eee;height:170px;"></div>
-            <% end %>
-          </a>
-          <h3><a href="/map/<%= map.slug %>"><%= map.name.capitalize %></a></h3>
-          <p><small>
-            <% if map.user %>
-              by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
-            <% else %>
-              anonymous
-            <% end %>
-            | <%= map.location %>
-          </small></p>
-          <p class="map map-meta">
-            <small>
-              <% if map.archived %><i>Archived</i> | <% end %>
-              <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.slug %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
-              Updated <%= map.updated_at.to_s(:short) %> |
-              <%= map.warpables.length %> images
-            </small>
-          </p>
-        </div>
+        <%= render :partial => 'maps/list', :locals => {:map => map} %>
         <% end %>
       </div>
       <br style="clear:both;" />

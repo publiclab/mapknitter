@@ -7,24 +7,12 @@ class UsersController < ApplicationController
       redirect_to "/login"
     end
   end
-
-  def authors
-    @authors = Map.authors
-  end
   
   def profile
     params[:id] = current_user.login if logged_in? && params[:id] == 0
     @user = User.find_by_login(params[:id])
     @maps = Map.where(user_id: @user.id).paginate(:page => params[:page], :per_page => 24)
-  end
-
-  def dashboard
-    if logged_in?
-      @maps = Map.where(user_id: current_user.id).paginate(:page => params[:page], :per_page => 24)
-    else
-      flash[:error] = "You must be logged in to see your dashboard."
-      redirect_to "/login"
-    end
+    render :layout => 'application2'
   end
 
   # render new.rhtml

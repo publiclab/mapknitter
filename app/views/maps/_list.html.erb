@@ -1,0 +1,26 @@
+<div class="map col-md-3 col-xs-6">
+  <a href="/maps/<%= map.slug %>">
+    <% if !map.private && map.warpables.length > 0 %>
+      <img src="<%= map.warpables.first.image.url(:small) %>" />
+    <% else %>
+      <div style="width:100%;background:#eee;height:170px;"></div>
+    <% end %>
+  </a>
+  <h3><a href="/maps/<%= map.slug %>"><%= map.name.capitalize %></a></h3>
+  <p><small>
+    <% if map.user %>
+      by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
+    <% else %>
+      anonymous
+    <% end %>
+    | <%= map.location %>
+  </small></p>
+  <p class="map map-meta">
+    <small>
+      <% if map.archived %><i>Archived</i> | <% end %>
+      <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.slug %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+      Updated <%= map.updated_at.to_s(:short) %> |
+      <%= map.warpables.length %> images
+    </small>
+  </p>
+</div>

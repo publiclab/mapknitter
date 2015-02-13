@@ -107,7 +107,7 @@ class ImagesController < ApplicationController
   def destroy
     @warpable = Warpable.find params[:id]
     if logged_in? && current_user.can_delete?(@warpable)
-      #@warpable.destroy
+      @warpable.destroy
       respond_to do |format|
         format.html { redirect_to @warpable.map } 
         format.json { render :json => @warpable }

@@ -27,16 +27,12 @@ class MapsController < ApplicationController
     else
       @map = Map.new(params[:map])
       if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
-puts ">>>>>> passed recaptcha"
         if @map.save
-puts ">>>>>> saved"
           redirect_to "/maps/#{@map.slug}"
         else
-puts ">>>>>> didn't save"
           render "new"
         end
       else
-puts ">>>>>> recaptcha error"
         @map.errors.add(:base, I18n.t(:wrong_captcha))
         render "new"
       end
@@ -96,17 +92,17 @@ puts ">>>>>> recaptcha error"
     render :json => warpables
   end
 
-	# run the export
+  # run the export
   def export
     map = Map.find params[:id]
-    if logged_in?
+    if logged_in? || Rails.env.development? || verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
       render :text => map.run_export(current_user,params[:resolution].to_f)
-		else
-			render :text => 'You must be logged in to export, unless the map is anonymous.'
-  	end
+    else
+      render :text => 'You must be logged in to export, unless the map is anonymous.'
+    end
   end
 
-	# render list of exports
+  # render list of exports
   def exports
     @map = Map.find params[:id]
     render :partial => "maps/exports", :layout => false

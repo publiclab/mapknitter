@@ -171,12 +171,11 @@ class Map < ActiveRecord::Base
       scales = []
       count = 0
       average = 0
-      self.warpables.each do |warpable|
-        if warpable.nil?
-          count += 1
-          res = warpable.cm_per_pixel
-          scales << res unless res == nil
-        end
+      self.placed_warpables.each do |warpable|
+        count += 1
+        res = warpable.cm_per_pixel
+        res = 1 if res == 0 # let's not ever try to go for infinite resolution
+        scales << res unless res == nil
       end
       sum = (scales.inject {|sum, n| sum + n }) if scales
       average = sum/count if sum
@@ -218,84 +217,80 @@ class Map < ActiveRecord::Base
   end
 
   def run_export(user,resolution)
-    if Rails.env.development? || (verify_recaptcha(:model => self, :message => "ReCAPTCHA thinks you're not a human!") || logged_in?)
-      begin
-        unless export = self.export
-          export = Export.new({
-            :map_id => self.id
-	  })
-        end
-        export.user_id = user.id if user
-        export.status = 'starting'
-        export.tms = false
-        export.geotiff = false
-        export.zip = false
-        export.jpg = false
-        export.save
+    begin
+      unless export = self.export
+        export = Export.new({
+          :map_id => self.id
+        })
+      end
+      export.user_id = user.id if user
+      export.status = 'starting'
+      export.tms = false
+      export.geotiff = false
+      export.zip = false
+      export.jpg = false
+      export.save
 
-        directory = "#{Rails.root}/public/warps/"+self.name+"/"
-        stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
-        puts stdout.readlines
-        puts stderr.readlines
-        stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.name}")
-        puts stdout.readlines
-        puts stderr.readlines
+      directory = "#{Rails.root}/public/warps/"+self.name+"/"
+      stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
+      puts stdout.readlines
+      puts stderr.readlines
+      stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.name}")
+      puts stdout.readlines
+      puts stderr.readlines
 
-        puts '> averaging scales'
-        pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
+      puts '> averaging scales'
+      pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
 
-        puts '> distorting warpables'
-        origin = self.distort_warpables(pxperm)
-        warpable_coords = origin.pop
+      puts '> distorting warpables'
+      origin = self.distort_warpables(pxperm)
+      warpable_coords = origin.pop
 
-        export = self.export
-        export.status = 'compositing'
-        export.save
+      export = self.export
+      export.status = 'compositing'
+      export.save
 
-        puts '> generating composite tiff'
-        composite_location = self.generate_composite_tiff(warpable_coords,origin)
+      puts '> generating composite tiff'
+      composite_location = self.generate_composite_tiff(warpable_coords,origin)
 
-        info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
-        puts info
+      info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
+      puts info
 
-        export = self.export
-        if info[0] != ''
-          export.geotiff = true
-          export.size = info[0]
-          export.width = info[1]
-          export.height = info[2]
-          export.cm_per_pixel = 100.0000/pxperm
-          export.status = 'tiling'
-          export.save
-        end
-
-        puts '> generating tiles'
-        export = self.export
-        export.tms = true if self.generate_tiles
-        export.status = 'zipping tiles'
-        export.save
-
-        puts '> zipping tiles'
-        export = self.export
-        export.zip = true if self.zip_tiles
-        export.status = 'creating jpg'
-        export.save
-
-        puts '> generating jpg'
-        export = self.export
-        export.jpg = true if self.generate_jpg
-        export.status = 'complete'
-        export.save
-
-      rescue SystemCallError
-        export = self.export
-        export.status = 'failed'
+      export = self.export
+      if info[0] != ''
+        export.geotiff = true
+        export.size = info[0]
+        export.width = info[1]
+        export.height = info[2]
+        export.cm_per_pixel = 100.0000/pxperm
+        export.status = 'tiling'
         export.save
       end
-      return export.status
-    else
-      return "ReCAPTCHA failed"
+
+      puts '> generating tiles'
+      export = self.export
+      export.tms = true if self.generate_tiles
+      export.status = 'zipping tiles'
+      export.save
+
+      puts '> zipping tiles'
+      export = self.export
+      export.zip = true if self.zip_tiles
+      export.status = 'creating jpg'
+      export.save
+
+      puts '> generating jpg'
+      export = self.export
+      export.jpg = true if self.generate_jpg
+      export.status = 'complete'
+      export.save
+
+    rescue SystemCallError
+      export = self.export
+      export.status = 'failed'
+      export.save
     end
+    return export.status
   end
 
   # distort all warpables, returns upper left corner coords in x,y
