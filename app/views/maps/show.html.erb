@@ -41,11 +41,9 @@
     <p>
       <a onClick="$('#map-edit-container').toggle()" class="btn btn btn-default">Edit details</a> 
       <a onClick="$('.share-link').toggle()" class="btn btn btn-default"><i class="fa fa-code"></i> Embed code</a> 
-      <form style="display:none;" class="form-inline share-link"><span class="input-group">
-        <div class="input-group-addon"><i class="fa fa-share"></i></div>
-        <input type="text" class="form-control" value="http://mapknitter.org/embed/<%= @map.slug %>"/>
-      </span>
-      </form>
+      <div class="share-link" style="display:none;">
+        <%= render :partial => 'maps/share' %>
+      </div>
     </p>
   <% end %>
 

@@ -47,9 +47,15 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
+  <% if params[:annotations] # legacy %>
+    <%= render :partial => "map/annotations" %>
+  <% end %>
+
   <div id="knitter-map-pane"<% if @embed %> style="width:100%;max-width:none;"<% end %>>
+
   <% unless @embed %><a class="sidebar-toggle sidebar-toggle-tab"><i class="fa fa-chevron-left"></i></a><% end %>
   </div>
+
   <% unless @embed %>
   <div class="sidebar">
     <%= render :partial => 'layouts/header' %>

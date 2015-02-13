@@ -1,0 +1,13 @@
+<form class="form-inline share-link"><span class="input-group">
+  <p>
+  <textarea cols="50" id="embedcode" type="text" class="form-control"><iframe src="http://<%= request.host %>/embed/<%= @map.slug %>" style="border:none;"></iframe></textarea>
+  <script>
+    (function(){
+      $('#embedcode').click(function(){
+        $('#embedcode').select()
+      })
+    })()
+  </script>
+  </p>
+  </span>
+</form>

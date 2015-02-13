@@ -91,8 +91,6 @@ class AnnotationController < ApplicationController
         # be sure the annnotation is nearby the map... by .1 lat/lon
         note.author = map.author if !logged_in? && map && map.anon_annotatable
         note.save!
-        puts note
-        puts note.inspect
       end
       render :text => @poly.id
     else
