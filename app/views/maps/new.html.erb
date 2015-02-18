@@ -70,7 +70,7 @@
   </div><!-- .new-map-form -->
 <% end %>
 
-<script><%= render :partial => 'maps/geocoder.js' %></script>
+<script><%= render :partial => 'maps/geocoder', :formats => [:js] %></script>
 
 <script>
   $(document).ready(function() {
