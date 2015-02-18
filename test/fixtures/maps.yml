@@ -5,3 +5,14 @@
 #
 # two:
 #   column: value
+
+saugus:
+  name: Saugus Landfill Incinerator
+  slug: saugus-landfill-incinerator
+  lat: 42.43823313018592
+  lon: -70.9849190711975
+  description: A landfill in Saugus, MA.
+  created_at: Thu, 12 Feb 2015 16:33:51 UTC +00:00
+  license: publicdomain
+  user_id: 1
+  
