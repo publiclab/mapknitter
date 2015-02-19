@@ -14,7 +14,7 @@
           <p><%= number_to_human_size warpable.image_file_size %></p>
           <% unless warpable.placed? %><p><a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a></p><% end %>
         </td>
-        <td>
+        <td style="max-width:200px;">
           <% if logged_in? && current_user.can_delete?(warpable) %>
             <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable], :method => "delete", :class => "btn btn-danger", :title => "Delete" %>
           <% end %>
