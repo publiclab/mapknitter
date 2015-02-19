@@ -1,6 +1,7 @@
 <form action="/search" method='get' class="form-inline">
+  <div><label for="search-input">Search</label></div>
   <div class="form-group">
-    <input placeholder="search maps" class='form-control' type='text' name='q' value='<%= params[:id] if params[:action] == "search" %>'/>
+    <input placeholder="name or description" id="search-input" class='form-control' type='text' name='q' value='<%= params[:id] if params[:action] == "search" %>'/>
   </div>
   <button class="btn btn-default" type='submit'><i class="fa fa-search"></i></button>
 </form>
