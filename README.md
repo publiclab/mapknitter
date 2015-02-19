@@ -34,11 +34,11 @@ Install a database, if necessary. sqlite does not seem to work due to some table
 
 Application-specific dependencies:
 
-`sudo apt-get install bundler libmysqlclient-dev`
+`sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as ImageMagick, `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
-`sudo apt-get install gdal-bin python-gdal imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev curl libcurl4-openssl-dev libssl-dev zip`
+`sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
 Install rvm for Ruby management (http://rvm.io)
 
