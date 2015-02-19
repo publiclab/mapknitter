@@ -22,6 +22,7 @@ tmp/*
 tmp/**/*
 coverage*
 public/warpables/*
+public/images/*
 public/system/*
 public/warps/*
 public/tms/*

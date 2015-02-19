@@ -240,11 +240,15 @@ table .btn {
 
 #comments {
   .comment-header {
-    background-color: #f2f2f2;
-    padding: 10px;
+    font-size:13px;
+    padding: 7px 10px;
     border-radius: 5px;
-    border: 1px solid #d4d4d4;
-    margin-bottom: 5px;
+    border: 1px solid #eee;
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+  .comment-body {
+    padding-left:4px;
   }
 }
   
