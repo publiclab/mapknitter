@@ -3,13 +3,9 @@ class Warpable < ActiveRecord::Base
   attr_accessible :image
   attr_accessor :src, :srcmedium # for json generation
 
-  # Paperclip
+  # Paperclip; config and production/development specific configs
+  # in /config/initializers/paperclip.rb
   has_attached_file :image,
-    #:path => ":rails_root/public/warpables/:attachment/:id/:style/:filename",
-    #:url => "/system/:attachment/:id/:style/:filename",
-    :path => "warpables/:id/:custom_filename.:extension",
-    :storage => :s3, # also modify save_dimensions if you are not going to use s3
-    :s3_credentials => "config/amazon_s3.yml",
     :styles => {
       :medium=> "500x375",
       :small=> "240x180",
@@ -44,13 +40,14 @@ class Warpable < ActiveRecord::Base
 
   after_save :save_dimensions
 
-  # this has been modified to work with s3; 
-  # runs each time warpable is moved/distorted, to calculate
-  # resolution
+  # this runs each time warpable is moved/distorted, 
+  # to calculate resolution
   def save_dimensions
-    #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # old version, stopped working...?
-    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
-    #geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.path)) # local version
+    if Rails.env.production?
+      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
+    else
+      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # local filesystem version
+    end
 
     #Rails >= v3.1 only
     self.update_column(:width, geo.width)
@@ -154,7 +151,8 @@ class Warpable < ActiveRecord::Base
   def generate_perspectival_distort(pxperm,path)
     require 'net/http'
     
-    # believe everything in -working/ can be deleted; this is just so we can use the files locally outside of s3
+    # everything in -working/ can be deleted; 
+    # this is just so we can use the files locally outside of s3
     working_directory = self.working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
     local_location = working_directory+self.id.to_s+'-'+self.image_file_name.to_s
@@ -163,9 +161,9 @@ class Warpable < ActiveRecord::Base
     Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
     completed_local_location = directory+self.id.to_s+'.png'
 
-    # believe everything -masked.png can be deleted
+    # everything -masked.png can be deleted
     masked_local_location = directory+self.id.to_s+'-masked.png'
-    # believe everything -mask.png can be deleted
+    # everything -mask.png can be deleted
     mask_location = directory+self.id.to_s+'-mask.png'
     #completed_local_location = directory+self.id.to_s+'.tif'
     # know everything -unwarped can be deleted
@@ -194,6 +192,7 @@ class Warpable < ActiveRecord::Base
     x2 = pxperm*Cartagen.spherical_mercator_lon_to_x(eastmost,scale)
     # puts x1.to_s+','+y1.to_s+','+x2.to_s+','+y2.to_s
 
+    # should determine if it's stored in s3 or locally:
     if (self.image.url[0..3] == 'http')
       Net::HTTP.start('s3.amazonaws.com') { |http|
       #Net::HTTP.start('localhost') { |http|
