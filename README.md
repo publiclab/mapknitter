@@ -24,6 +24,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
+##Installation video
+
+For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
+
+http://youtu.be/iGYGpS8rZMY
+
 ##Prerequisites
 
 Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
@@ -72,7 +78,7 @@ You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty databse you've created
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3))
-5. Initialize database with `rake db:setup`
+5. Initialize database with `bundle exec rake db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://google.com/recaptcha/admin
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
