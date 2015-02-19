@@ -61,16 +61,16 @@ class Map < ActiveRecord::Base
   end
 
   def placed_warpables
-    self.warpables.where('width > 0')
+    self.warpables.where('width > 0 AND nodes <> ""')
   end
 
   def private
     self.password != ""
   end
 
-	def anonymous?
-		self.author == "" || self.user_id == 0
-	end
+  def anonymous?
+    self.author == "" || self.user_id == 0
+  end
 
   def self.bbox(minlat,minlon,maxlat,maxlon)
     Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
@@ -119,20 +119,6 @@ class Map < ActiveRecord::Base
     else
       return Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
     end
-  end
-
-  # Finds any warpables which have not been placed on the map manually, and deletes them.
-  # Also returns remaining valid warpables.
-  def flush_unplaced_warpables
-    more_than_one_unplaced = false
-    self.warpables.each do |warpable|
-      if (warpable.nodes == "" && warpable.created_at == warpable.updated_at)
- # delete warpables which have not been placed and are older than 1 hour:
-        warpable.delete if DateTime.now-5.minutes > warpable.created_at || more_than_one_unplaced
-        more_than_one_unplaced = true
-      end
-    end
-    warpables
   end
 
   def average_scale

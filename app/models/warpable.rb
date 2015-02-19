@@ -59,7 +59,7 @@ class Warpable < ActiveRecord::Base
     #self.update_columns(attributes)
   end
 
-  # if has non-nil width, it's been placed.
+  # if has non-nil width and has nodes, it's been placed.
   def placed?
     !self.width.nil? && self.nodes != ''
   end
