@@ -28,7 +28,7 @@ class TagsController < ApplicationController
     @tag = Tag.find_by_name params[:id]
     @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
     @title = "Maps tagged with '"+@tag.name+"'"
-    render :template => 'maps/index', :layout => 'application2'
+    render :template => 'maps/index'
   end
 
   def edit

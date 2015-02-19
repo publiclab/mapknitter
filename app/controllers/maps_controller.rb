@@ -8,7 +8,7 @@ class MapsController < ApplicationController
 
   def index
     @maps = Map.page(params[:page]).per_page(20).where(:archived => false,:password => '').order('updated_at DESC')
-    render :layout => 'application2'
+    render :layout => 'application'
   end
 
   def new
@@ -114,21 +114,21 @@ class MapsController < ApplicationController
     @title = "Maps in #{area}"
     ids = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).collect(&:id)
     @maps = Map.where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24)
-    render "maps/index", :layout => "application2"
+    render "maps/index", :layout => "application"
   end
 
   # list by license
   def license
     @title = "Maps licensed '#{params[:id]}'"
     @maps = Map.where(password: '',license: params[:id]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 24)
-    render "maps/index", :layout => "application2"
+    render "maps/index", :layout => "application"
   end
 
   def search
     params[:id] ||= params[:q]
     @maps = Map.where('archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%").paginate(:page => params[:page], :per_page => 24)
     @title = "Search results for '#{params[:id]}'"
-    render "maps/index", :layout => "application2"
+    render "maps/index", :layout => "application"
   end
 
 end

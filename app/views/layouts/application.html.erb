@@ -1,91 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>MapKnitter by Public Lab</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <title>MapKnitter</title>
+    <meta name="author" content="MapKnitter contributors"/>
+    <meta name="description" content="Make maps from aerial photos with Public Lab's free and open source web toolkit"/>
+    <meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
-    <script src="/lib/jquery/dist/jquery.min.js"></script> 
-    <script src="/lib/jquery-ui/jquery-ui.min.js"></script> 
-    <link href="/lib/bootstrap-css/css/bootstrap.css" rel="stylesheet">
-    <script src="/lib/bootstrap-css/js/bootstrap.js"></script>
-    <script src="/lib/sparklines/source/sparkline.js"></script>
-    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
-    <% if params[:controller] == "map" && params[:action] == "index" %>
-      <link href="/style-2.css" rel="stylesheet" /> 
-    <% else %>
-      <link href="/style.css" rel="stylesheet" /> 
-    <% end %>
-    <link href="/feeds/all" rel="alternate" type="application/rss+xml" title="Recent maps on MapKnitter.org" />
-    <script type="text/javascript">
-  
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-7636025-1']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-  
-    </script>
+    <link rel="stylesheet" href="/lib/fontawesome/css/font-awesome.min.css"/>
+    <%= stylesheet_link_tag 'application' %>
+    <%= javascript_include_tag 'application' %>
   </head>
   <body>
-  <div id="bodywrap">
-  <div id="header">
-    <% if params[:controller] == "map" && params[:action] == "index" || params[:controller] == "beta" && params[:action] == "index"%>
-      <h1><a href="/">MapKnitter</a> <small>by Public Lab</small></h1>
-    <% end %>
-    <div class="right">
-      <a href="http://publiclab.org/wiki/mapknitter">Intro</a> |
-      <a href="http://publiclab.org/wiki/balloon-mapping">Aerial photography</a> |
-      <a href="http://publiclab.org/wiki/mapknitter-help">Help</a> |
-      <a href="http://publiclab.org/archive">Map Archive</a>
+    <%= render 'layouts/header' %>
 
-      <% if logged_in? %>
-      || 
-      <a href="/dashboard">Dashboard</a> | 
-      <a href="/profile/<%= current_user.login %>"><%=h current_user.login %></a> | 
-      <%= link_to 'Logout', logout_path %>
-      <% else %>
-      || <%= link_to 'Log in', login_path %>
-      <% end %>
+    <%= yield; %>
 
-    </div>
-    <% unless params[:controller] == "map" && params[:action] == "index" || params[:controller] == "beta" && params[:action] == "index"%>
-      <a href="/" style="float:left;"><img src="/images/mapknitter-masked.png" /></a>
-    <% end %>
-      <br style="clear:both;" />
-  </div>
-
-  <div class="container-fluid">
-    <div class="alert error"><button type="button" class="close" data-dismiss="alert">×</button><b>Warning:</b> MapKnitter is undergoing major infrastructural upgrades; please report any issues you encounter <a href="https://github.com/publiclab/mapknitter/issues">on Github</a> or to <a href="web@publiclab.org">web@publiclab.org</a></div>
- 
-    <% if flash[:notice] %>
-    <div class="alert alert-success">
-      <%= flash[:notice] %>  
-    </div>
-    <% end %>
-    <% if flash[:error] %>
-    <div class="alert alert-error">
-      <%= flash[:error] %>  
-    </div>
-    <% end %>
-  </div>
-
-    <%= yield %>
-
-  <br style="clear:both;" />
-
-  </div>
-
-  <div id="footer">
-
-    <p>MapKnitter is <a href="http://github.com/publiclab/mapknitter">open source software</a> created and run by <a href="http://publiclab.org">Public Lab</a>. <a href="http://github.com/publiclab/mapknitter/issues">Submit bugs here</a>.</p>
-    <p>MapKnitter uses <a href="http://gdal.org">GDAL</a>, <a href="http://leafletjs.com">Leaflet</a>, <a href="http://openlayers.org">OpenLayers</a>, <a href="http://prototypejs.org">Prototype</a>, <a href="http://rubyonrails.org">Ruby on Rails</a>, <a href="http://imagemagick.org">ImageMagick</a>, and other open source software.</p>
-    <p>MapKnitter is hosted through a donation by <a href="http://rackspace.com">Rackspace</a>.</p> 
-
-  </div>
-</body>
+    <%= render 'layouts/footer' %>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      try {
+        var pageTracker = _gat._getTracker("UA-180781-29");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
 </html>

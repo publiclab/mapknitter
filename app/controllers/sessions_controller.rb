@@ -4,8 +4,6 @@ require 'uri'
 class SessionsController < ApplicationController
   #protect_from_forgery :except => [:create]
 
-  layout 'application2'
-
   @@openid_url_base  = "http://publiclab.org/people/"
   @@openid_url_suffix = "/identity"
 
