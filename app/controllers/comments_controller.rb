@@ -10,14 +10,18 @@ class CommentsController < ApplicationController
 
   def create
     if logged_in?
-      map = Map.find params[:map_id]
+      @map = Map.find params[:map_id]
 
-      if params[:comment][:body] != ""
-        map.comments.create(
-          :user_id => current_user.id,
-          :body => params[:comment][:body]
-        )
+      @comment = @map.comments.new(
+        :user_id => current_user.id,
+        :body => params[:comment][:body]
+      )
+      if @comment.save!
+        @map.comments.collect(&:user).uniq.each do |user|
+          CommentMailer.notify(user,@comment).deliver
+        end
       end
+      
       redirect_to "/maps/" + params[:map_id]         
     else
       flash[:error] = "You must be logged in to comment."
