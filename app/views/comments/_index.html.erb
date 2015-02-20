@@ -1,7 +1,7 @@
 <b><span id="comments-number"><%= @map.comments.length %></span> Comments</b>
 <div id="comments">
   <% @map.comments.each do |comment| %>
-    <div class="comment" data-comment-id="<%= comment.id %>">
+    <div id="c<%= comment.id %>" class="comment" data-comment-id="<%= comment.id %>">
       <div class="comment-header">
         <a href="//publiclab.org/profile/<%= comment.author %>"><%= comment.author %></a>
         commented <%= time_ago_in_words(comment.created_at) %> ago
