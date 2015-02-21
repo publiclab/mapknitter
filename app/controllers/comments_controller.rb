@@ -17,7 +17,9 @@ class CommentsController < ApplicationController
         :body => params[:comment][:body]
       )
       if @comment.save!
-        @map.comments.collect(&:user).uniq.each do |user|
+        users = @map.comments.collect(&:user)
+        users += [@map.user] unless @map.user.nil?
+        users.uniq.each do |user|
           unless user.id == current_user.id
             CommentMailer.notify(user,@comment).deliver
           end
