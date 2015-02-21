@@ -79,6 +79,18 @@ class MapsController < ApplicationController
     redirect_to :action => "show"
   end
 
+  def destroy
+    @map = Map.find params[:id]
+    if current_user.can_delete?(@map)
+      @map.delete! 
+      flash[:notice] = "Map deleted."
+      redirect_to "/"
+    else
+      flash[:error] = "Only admins or map owners may delete maps."
+      redirect_to "/maps/#{@map.slug}"
+    end
+  end
+
   # used by leaflet to fetch corner coords of each warpable
   def images
     map = Map.find params[:id]

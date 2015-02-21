@@ -38,6 +38,11 @@ class MapsControllerTest < ActionController::TestCase
     #assert_redirected_to 'maps/'+assigns['map'].slug
   end
 
+  test "should delete map" do
+    post(:destroy, id: 1)
+    assert_redirected_to '/'
+  end
+
   test "should get show" do
     get(:show, id: @map.id)
     assert_response :success
