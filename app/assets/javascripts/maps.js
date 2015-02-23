@@ -27,4 +27,45 @@ jQuery(document).ready(function($) {
     }
     haschat = true
   })
+
+  var edit_comment = function(event) {
+    var id = $(event.target).data("comment-id");
+ 
+    /* Hide comment body. */
+    $(".comment-body[data-comment-id=" + id + "]").toggle();
+ 
+    /* Show comment editing form. */
+    $(".comment-edit-form[data-comment-id=" + id + "]").toggle();
+  }
+  var delete_comment = function(event) {
+    var id = $(event.target).data("comment-id");
+ 
+    $(".comment[data-comment-id=" + id + "]").remove();
+    $("#comments-number").text(function(i, str) { return str - 1; }); 
+  }
+
+  /* Enable dynamic comment editing. */
+  $(".edit-comment-btn").click(edit_comment);
+
+  /* Remove comment from the page when it is deleted from the database via AJAX. */
+  $(".delete-comment-btn").click(delete_comment);
+
+  $("#new_comment").on("ajax:success", function(e, data, status, xhr) {
+    $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
+    $("#new_comment textarea").attr('disabled',false)
+    $("#new_comment textarea").val('')
+
+    $("#comments").append(xhr.responseText)
+    $('.comment:last').click(edit_comment).click(delete_comment)
+  }).on("ajax:error", function(e, xhr, status, error) {
+    $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
+    $("#new_comment textarea").attr('disabled',false)
+
+    $("#comments").append("<p class='alert alert-error'>There was an error.</p>")
+  })
+  $("#new_comment").on("ajax:beforeSend",function() {
+    $("#new_comment button.btn-primary").html("<i class='fa fa-spinner fa-spin'></i>").addClass('disabled')
+    $("#new_comment textarea").attr('disabled',true)
+  })
+
 });

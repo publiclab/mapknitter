@@ -49,7 +49,7 @@ hist = hist[0..100]
 grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
 
 # this is used for the resolution slider
-resolution = @map.average_cm_per_pixel.to_s[0..4]
+resolution = @map.average_cm_per_pixel.round(4)
 %>
 
     <p>Graph coming soon.</p><!-- Sparklines graph will go here -->

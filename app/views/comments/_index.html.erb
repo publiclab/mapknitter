@@ -1,34 +1,6 @@
 <b><span id="comments-number"><%= @map.comments.length %></span> Comments</b>
 <div id="comments">
   <% @map.comments.each do |comment| %>
-    <div id="c<%= comment.id %>" class="comment" data-comment-id="<%= comment.id %>">
-      <div class="comment-header">
-        <a href="//publiclab.org/profile/<%= comment.author %>"><%= comment.author %></a>
-        commented <%= time_ago_in_words(comment.created_at) %> ago
-
-        <% if current_user && current_user.can_edit?(comment) %>
-          <a class="btn btn-default btn-xs pull-right edit-comment-btn"><span class="fa fa-pencil" data-comment-id="<%= comment.id %>"></span></a>
-        <% end %>
-
-        <% if current_user && current_user.can_delete?(comment) %>
-          <% link_to(
-            [@map, comment], 
-            :method => "delete", 
-            :class => "btn btn-default btn-xs pull-right delete-comment-btn"
-          ) do %>
-
-            <span class="fa fa-trash" data-comment-id="<%= comment.id %>"></span>
-          <% end %>
-        <% end %>
-      </div><!-- .comment-header -->
-      <div class="comment-body" data-comment-id="<%= comment.id %>"><%=raw markdown_to_html(comment.body) %></div><!-- .comment-body -->
-      <div class="comment-edit-form" data-comment-id="<%= comment.id %>" style="display:none">
-        <%= form_for [@map, comment] do |f| %>
-          <%= f.text_area :body, :class => "form-control" %>
-          <%= f.submit "Publish", :class => "btn btn-primary" %>
-          <button class="btn btn-primary" onClick="$('.comment-edit-form').hide()">Cancel</button>
-        <% end %>
-      </div><!-- .comment-edit-form -->
-    </div><!-- .comment -->
+    <%= render :partial => "comments/comment", :locals => {:comment => comment } %>
   <% end %>
 </div>

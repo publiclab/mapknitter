@@ -30,7 +30,7 @@ class CommentsControllerTest < ActionController::TestCase
         body: "I'm gonna troll you!", 
         user_id: 1
     })
-    assert_redirected_to '/maps/'+@map.slug
+    assert_response :success
     assert_not_empty @map.comments
   end
 

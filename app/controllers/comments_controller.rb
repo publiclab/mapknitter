@@ -25,8 +25,14 @@ class CommentsController < ApplicationController
           end
         end
       end
-      
-      redirect_to "/maps/" + params[:map_id]         
+
+      respond_to do |format|
+        #format.html { redirect_to "/maps/" + params[:map_id] }
+        format.html   { render :partial => 'comments/comment', :locals => {:comment => @comment} }
+        #format.js   { render :partial => 'comments/comment', :locals => {:comment => @comment} }
+        format.json { render json: @comment, status: :created }
+      end
+     
     else
       flash[:error] = "You must be logged in to comment."
       redirect_to "/login?back_to=/maps/#{params[:map_id]}"
@@ -53,11 +59,10 @@ class CommentsController < ApplicationController
 
     if logged_in? && current_user.can_delete?(@comment)
       @comment.delete 
-      flash[:notice] = "Comment by " + @comment.author + " deleted."
-      redirect_to "show"
+      flash[:notice] = "Comment deleted."
     else
-      flash[:error] = "You must be logged in to delete comments."
-      redirect_to "/login"
+      flash[:error] = "You do not have permission to delete that comment."
     end
+    redirect_to "/maps/#{params[:map_id]}"
   end
 end
