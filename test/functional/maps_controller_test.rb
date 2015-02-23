@@ -35,11 +35,19 @@ class MapsControllerTest < ActionController::TestCase
     })
     assert_response :success
     # replace this with a rails-generated path:
-    #assert_redirected_to 'maps/'+assigns['map'].slug
+    #assert_redirected_to '/maps/'+assigns['map'].slug
   end
 
-  test "should delete map" do
-    post(:destroy, id: 1)
+  test "should not delete map if not owner" do
+    session[:user_id] = 3
+    post(:destroy, id: @map.id)
+    #assert_equal flash[:error], "Only admins or map owners may delete maps."
+    assert_redirected_to '/maps/'+@map.slug
+  end
+
+  test "should delete map if owner" do
+    session[:user_id] = 1
+    post(:destroy, id: @map.id)
     assert_redirected_to '/'
   end
 

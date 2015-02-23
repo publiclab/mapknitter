@@ -82,7 +82,7 @@ class MapsController < ApplicationController
   def destroy
     @map = Map.find params[:id]
     if current_user.can_delete?(@map)
-      @map.delete! 
+      @map.destroy
       flash[:notice] = "Map deleted."
       redirect_to "/"
     else

@@ -5,7 +5,7 @@
     </a>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
       <% if logged_in? && current_user.can_delete?(@map) %>
-        <li><a>Delete Map</a></li>
+        <li><%= link_to 'Delete', map_path(@map), method: :delete, data: { confirm: 'Are you sure? This cannot be undone.' } %></li>
       <% end %>
     </ul>
   </div>
