@@ -136,6 +136,12 @@ class MapsController < ApplicationController
     render "maps/index", :layout => "application"
   end
 
+  def featured
+    @title = "Featured maps"
+    @maps = Map.joins(:warpables).select("maps.*, count(maps.id) as image_count").group("warpables.map_id").order("image_count DESC").paginate(:page => params[:page], :per_page => 24)
+    render "maps/index", :layout => "application"
+  end
+
   def search
     params[:id] ||= params[:q]
     @maps = Map.where('archived = false AND (name LIKE ? OR location LIKE ? OR description LIKE ?)',"%"+params[:id]+"%", "%"+params[:id]+"%", "%"+params[:id]+"%").paginate(:page => params[:page], :per_page => 24)
