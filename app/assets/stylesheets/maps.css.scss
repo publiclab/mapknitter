@@ -49,6 +49,13 @@ html, body {
   height: 100%;
 }
 
+#knitter-map-pane.dragover {
+  border:10px solid white;
+  -moz-opacity: 0.9;
+  opacity:.9;
+  filter:alpha(opacity=90);
+}
+
 #knitter-map-pane.fullscreen {
   width: 100%;
   max-width: none;

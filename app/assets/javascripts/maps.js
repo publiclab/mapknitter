@@ -68,4 +68,16 @@ jQuery(document).ready(function($) {
     $("#new_comment textarea").attr('disabled',true)
   })
 
+  // display upload modal on drag-dropped image:
+  $('#knitter-map-pane').on('dragenter',function(){
+    $('#knitter-map-pane').addClass('dragover')
+  })
+  $('#knitter-map-pane').on('dragleave',function(){
+    $('#knitter-map-pane').removeClass('dragover')
+  })
+  $('#knitter-map-pane').on('drop',function(){
+    $('#uploadModal').modal('show')
+    $('#knitter-map-pane').removeClass('dragover')
+  })
+
 });
