@@ -1,27 +1,27 @@
-<h2>Users (<%= @users.length %>)</h2>
+<div class="container-fluid">
+  <h2>Authors (<%= @users.length %>)</h2>
 
-<% @users.each do |user| %>
-<div class="user">
-	<a href="/profile/<%= user.login %>"><%= user.login %></a> (<%= user.maps.length %> maps) - <%= time_ago_in_words(user.created_at) %> ago
+  <table class="table">
+    <tr>
+      <th>Username</th>
+      <th>Count</th>
+      <th>Joined</th>
+      <th>Last active</th>
+      <th>Comments</th>
+      <th>Role</th>
+    </tr>
+    <% @users.each do |user| %>
+    <tr>
+      <td><a href="/profile/<%= user.login %>"><%= user.login %></a></td>
+      <td><%= user.maps.length %> maps</td>
+      <td><%= user.created_at.to_s(:long) %></td>
+      <td><%= time_ago_in_words(user.last_action) %> ago</td>
+      <td><%= user.comments.length %></td>
+      <td><%= user.role %></td>
+    </tr>
+    <% end %>
+  </table>
+
+  <br style="clear:both;" />
+  <%= will_paginate @maps, renderer: BootstrapPagination::Rails unless @unpaginated %>
 </div>
-<% end %>
-
-<% if current_user.role == "admin" %>
-
-<h2>Assign maps</h2>
-
-<form action="/map/assign">
-
-<label for="id">MapKnitter user:</label>
-<input type="text" name="id"/>
-
-<br />
-<label for="id">Map author name:</label>
-<input type="text" name="author"/>
-
-<br />
-<input type="submit" value="Search"/>
-
-</form>
-
-<% end %>

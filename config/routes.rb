@@ -69,6 +69,8 @@ Mapknitter::Application.routes.draw do
   get 'profile/:id' => 'users#profile'
   get 'dashboard' => 'users#dashboard'
 
+  get 'authors' => 'users#index'
+
   get 'feeds/all' => 'feeds#all', :format => 'rss'
   get 'feeds/license/:id' => 'feeds#license', :format => 'rss'
   get 'feeds/author/:id' => 'feeds#author', :format => 'rss'

@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
     write_attribute :email, (value ? value.downcase : nil)
   end
 
+  def last_action
+    map = self.maps.order('updated_at DESC').limit(1).first.updated_at
+  end
+
   # Permissions for editing and deleting resources
 
   def owns?(resource)
