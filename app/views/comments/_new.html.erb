@@ -1,8 +1,12 @@
 <div class="form-group">
-  <%= form_for([@map, Comment.new], remote:true) do |f| %>
-    <%= f.label :body, "Leave a comment" %>
-    <%= f.text_area :body, :class => "form-control" %>
-
-    <button type="submit" class="btn btn-primary">Post comment</button>
+  <% if logged_in? %>
+    <%= form_for([@map, Comment.new], remote:true) do |f| %>
+      <%= f.label :body, "Leave a comment" %>
+      <%= f.text_area :body, :class => "form-control" %>
+ 
+      <button type="submit" class="btn btn-primary">Post comment</button>
+    <% end %>
+  <% else %>
+    <p>You must <a href="/login?back_to=/maps/<%= @map.slug %>">log in</a> to leave a comment.</p>
   <% end %>
 </div>

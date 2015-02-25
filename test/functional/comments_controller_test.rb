@@ -17,7 +17,7 @@ class CommentsControllerTest < ActionController::TestCase
       comment: {
         user_id: 1
     })
-    assert_redirected_to "/login?back_to=/maps/#{@map.slug}"
+    assert_response :success
     assert_empty @map.comments
   end
 

@@ -34,8 +34,8 @@ class CommentsController < ApplicationController
       end
      
     else
-      flash[:error] = "You must be logged in to comment."
-      redirect_to "/login?back_to=/maps/#{params[:map_id]}"
+      # we intercept this message in /app/assets/javascripts/maps.js
+      render :text => "Login required."
     end
   end
 

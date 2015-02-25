@@ -50,6 +50,7 @@ jQuery(document).ready(function($) {
   /* Remove comment from the page when it is deleted from the database via AJAX. */
   $(".delete-comment-btn").click(delete_comment);
 
+  /* on comment submission */
   $("#new_comment").on("ajax:success", function(e, data, status, xhr) {
     $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
     $("#new_comment textarea").attr('disabled',false)
@@ -58,11 +59,16 @@ jQuery(document).ready(function($) {
     $("#comments").append(xhr.responseText)
     $('.comment:last').click(edit_comment).click(delete_comment)
   }).on("ajax:error", function(e, xhr, status, error) {
-    $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
-    $("#new_comment textarea").attr('disabled',false)
-
-    $("#comments").append("<p class='alert alert-error'>There was an error.</p>")
+    if (xhr.responseText == "Login required.") {
+      window.location = "/login?back_to="+window.location
+    } else {
+      $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
+      $("#new_comment textarea").attr('disabled',false)
+ 
+      $("#comments").append("<p class='alert alert-error'>There was an error.</p>")
+    }
   })
+  /* just before comment submission */
   $("#new_comment").on("ajax:beforeSend",function() {
     $("#new_comment button.btn-primary").html("<i class='fa fa-spinner fa-spin'></i>").addClass('disabled')
     $("#new_comment textarea").attr('disabled',true)
