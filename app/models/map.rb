@@ -55,11 +55,6 @@ class Map < ActiveRecord::Base
     self.password = Password::update(self.password) if self.password != ""
   end
 
-  # this might have been for a migration; grep for it
-  def update_name
-    self.name = self.name.gsub(/\W/, '-').downcase
-  end
-
   def placed_warpables
     self.warpables.where('width > 0 AND nodes <> ""')
   end
@@ -217,11 +212,11 @@ class Map < ActiveRecord::Base
       export.jpg = false
       export.save
 
-      directory = "#{Rails.root}/public/warps/"+self.name+"/"
+      directory = "#{Rails.root}/public/warps/"+self.slug+"/"
       stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
       puts stdout.readlines
       puts stderr.readlines
-      stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.name}")
+      stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.slug}")
       puts stdout.readlines
       puts stderr.readlines
 
@@ -293,7 +288,7 @@ class Map < ActiveRecord::Base
      export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
      puts 'warping '+current.to_s+' of '+warpables.length.to_s
      export.save
-     my_warpable_coords = warpable.generate_perspectival_distort(scale,self.name)
+     my_warpable_coords = warpable.generate_perspectival_distort(scale,self.slug)
      puts '- '+my_warpable_coords.to_s
      warpable_coords << my_warpable_coords
      lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
@@ -304,8 +299,8 @@ class Map < ActiveRecord::Base
 
   # generate a tiff from all warpable images in this set
   def generate_composite_tiff(coords,origin)
-    directory = "public/warps/"+self.name+"/"
-    composite_location = directory+self.name+'-geo.tif'
+    directory = "public/warps/"+self.slug+"/"
+    composite_location = directory+self.slug+'-geo.tif'
     geotiffs = ''
     minlat = nil
     minlon = nil
@@ -325,10 +320,10 @@ class Map < ActiveRecord::Base
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
       if first
-        gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+        gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.slug+'-geo.tif'
         first = false
       else
-        gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+self.name+'-geo.tif'
+        gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+self.slug+'-geo.tif'
       end
       puts gdalwarp
       system(Gdal.ulimit+gdalwarp)
@@ -339,7 +334,7 @@ class Map < ActiveRecord::Base
   # generates a tileset at Rails.root.to_s/public/tms/<map_name>/
   def generate_tiles
     google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.name+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.name+"/"
+    gdal2tiles = 'gdal2tiles.py -k -t "'+self.slug+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.slug+"/"
 #    puts gdal2tiles
 #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+gdal2tiles)
@@ -347,22 +342,22 @@ class Map < ActiveRecord::Base
 
   # zips up tiles at Rails.root/public/tms/<map_name>.zip
   def zip_tiles
-    rmzip = 'cd public/tms/ && rm '+self.name+'.zip && cd ../../'
+    rmzip = 'cd public/tms/ && rm '+self.slug+'.zip && cd ../../'
     system(Gdal.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip -rq '+self.name+'.zip '+self.name+'/ && cd ../../'
+    zip = 'cd public/tms/ && zip -rq '+self.slug+'.zip '+self.slug+'/ && cd ../../'
     #    puts zip
     #    puts system('which gdal2tiles.py')
     system(Gdal.ulimit+zip)
   end
 
   def generate_jpg
-    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.name+'/'+self.name+'.jpg'
+    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'.jpg'
     system(Gdal.ulimit+imageMagick)
   end
 
   def after_create
     puts 'saving Map'
-    if last = Map.find_by_name(self.name,:order => "version DESC")
+    if last = Map.find_by_name(self.slug,:order => "version DESC")
       self.version = last.version + 1
     end
   end
