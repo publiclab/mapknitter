@@ -91,12 +91,12 @@ For additional support, join the Public Lab website and mailing list at http://p
 
 For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
-##DEVELOPERS
-==========================
+##Developers
 
-Development is occurring at https://github.com/publiclab/mapknitter/; please fork and submit pull requests.
+Help improve Public Lab software!
 
-If you're a developer, consider joining the Public Lab developer list, also at http://publiclab.org/lists 
-
-
+* Join the 'plots-dev@googlegroups.com' discussion list to get involved
+* Look for open issues at https://github.com/publiclab/plots2/issues
+* Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
+* Some devs hang out in http://publiclab.org/chat (irc webchat)
 
