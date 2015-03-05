@@ -133,6 +133,9 @@ Mapknitter::Application.routes.draw do
     resources :comments
     resources :warpables
     resources :annotations
+    member do
+      get :search
+    end
   end
 
 end
