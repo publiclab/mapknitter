@@ -96,7 +96,7 @@ For questions related to the use of this software and balloon or kite mapping, t
 Help improve Public Lab software!
 
 * Join the 'plots-dev@googlegroups.com' discussion list to get involved
-* Look for open issues at https://github.com/publiclab/plots2/issues
+* Look for open issues at https://github.com/publiclab/mapknitter/issues
 * Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
 
