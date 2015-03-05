@@ -1,8 +1,8 @@
 <div id="list">
 <h2>In-progress exports:</h2>
 <ul>
-	<% @exports.each do |export| %>
-	<li><b><%= Map.find(export.map_id).name %>:</b> <%= export.status %>, started <%= time_ago_in_words(export.updated_at) %> ago</li>
-	<% end %>
+  <% @exports.each do |export| %>
+  <li><b><%= Map.find(export.map_id).name %>:</b> <%= export.status %>, started <%= time_ago_in_words(export.updated_at) %> ago</li>
+  <% end %>
 </ul>
 </div>

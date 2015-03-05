@@ -1,17 +1,17 @@
 <% unless @export.nil? %>
   <% if @export.tms %>
   <p>
-    <% if @export.zip %><a target="_blank" href="/tms/<%= @map.name %>.zip">zipped TMS</a><% end %>
+    <% if @export.zip %><a target="_blank" href="/tms/<%= @map.slug %>.zip">zipped TMS</a><% end %>
     <br />
-    <a target="_blank" href="/tms/<%= @map.name %>/doc.kml">KML</a> (beta, may not work)<br />
-    <a target="_blank" href="http://maps.google.com/maps?q=http://cartagen.org/tms/<%= @map.name %>/doc.kml">Google Maps viewer</a> (beta, low res)<br />
+    <a target="_blank" href="/tms/<%= @map.slug %>/doc.kml">KML</a> (beta, may not work)<br />
+    <a target="_blank" href="http://maps.google.com/maps?q=http://cartagen.org/tms/<%= @map. %>/doc.kml">Google Maps viewer</a> (beta, low res)<br />
   </p>
   <% end %>
   <% if @export.geotiff %>
-  <p><a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)</p>
+  <p><a target="_blank" href="/warps/<%= @map.slug %>/<%= @map.slug %>-geo.tif">GeoTIFF</a> (<%= @export.cm_per_pixel %> cm/px, <%= number_to_human_size(@export.size) %>, <%= @export.width %> x <%= @export.height %> px)</p>
   <% end %>
   
   <% if @export.jpg %>
-  <p><a target="_blank" href="/warps/<%= @map.name %>/<%= @map.name %>.jpg">JPG</a> (for faster download and printing)</p>
+  <p><a target="_blank" href="/warps/<%= @map.slug %>/<%= @map.slug %>.jpg">JPG</a> (for faster download and printing)</p>
   <% end %>
 <% end %>
