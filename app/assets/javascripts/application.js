@@ -25,3 +25,4 @@
 //= require leaflet-easybutton/easy-button.js
 //= require leaflet-google/index.js
 //= require sparklines/source/sparkline.js
+//= require annotation.js

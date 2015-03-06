@@ -58,6 +58,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           }).addTo(window.mapKnitter._map);
 
           bounds = bounds.concat(corners);
+          window.mapKnitter._map.fitBounds(bounds);
           images.push(img);
           img.warpable_id = warpable.id
 
@@ -79,7 +80,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
       });
 
-      window.mapKnitter._map.fitBounds(bounds);
     });
 
     /* Deselect images if you click on the sidebar, 
@@ -107,7 +107,116 @@ MapKnitter.Map = MapKnitter.Class.extend({
       img.on('edit', window.mapKnitter.saveImageIfChanged, img);
       L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
       L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+
+      /* Try to auto-place with GPS exif tag metadata. */
+      if (!$("#allowAutoPlacement").attr("checked")) {
+        window.mapKnitter.geocodeImage(img);
+      }
+
     }, img);
+  },
+
+  /*
+    Adapting from: 
+    https://github.com/publiclab/mapknitter/blob/6e88c7725d3c013f402526289e806b8be4fcc23c/public/cartagen/cartagen.js#L9378
+  */
+  geocodeImage: function(img) {
+    EXIF.getData(img._image, function() {
+      var GPS = EXIF.getAllTags(img._image)
+ 
+      /* If the lat/lng is available. */
+      if (typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined'){
+
+        // sadly, encoded in [degrees,minutes,seconds] 
+        var lat = (GPS["GPSLatitude"][0]) + 
+                  (GPS["GPSLatitude"][1]/60) + 
+                  (GPS["GPSLatitude"][2]/3600);
+        var lng = (GPS["GPSLongitude"][0]) + 
+                  (GPS["GPSLongitude"][1]/60) + 
+                  (GPS["GPSLongitude"][2]/3600);
+
+        if (GPS["GPSLatitudeRef"] != "N")  lat = lat*-1
+        if (GPS["GPSLongitudeRef"] == "W") lng = lng*-1
+
+        img.geocoding = { lat: lat,
+                          lng: lng };
+
+        /* move the image to this newly discovered location */
+        var center = L.latLngBounds(img._corners).getCenter(),
+          latBy = img.geocoding.lat-center.lat,
+          lngBy = img.geocoding.lng-center.lng
+     
+        for (var i=0;i<4;i++) {
+          img._corners[i].lat += latBy;
+          img._corners[i].lng += lngBy;
+        }
+     
+        /* pan the map there too */
+        window.mapKnitter._map.fitBounds(L.latLngBounds(img._corners));
+
+        $('#uploadModal').hide();       
+        img._reset();
+      }
+
+      /* If there is altitude data; should separate this 
+       * from if there's rotation/heading data
+       */
+      if (typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined'){
+ 
+        /*
+        // Attempt to use GPS compass heading; will require 
+        // some trig to calc corner points, which you can find below:
+        //
+        // The angle to rotate the image in.
+        if (GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
+          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+        else if (GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
+          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+        else
+          console.log("No angle found");
+ 
+        // Attempt to use GPS altitude:
+        if (typeof GPS.GPSAltitude !== 'undefined' && 
+            typeof GPS.GPSAltitudeRef !== 'undefined' && 
+            typeof act_height!== 'undefined' && 
+            typeof act_width !== 'undefined') {
+          Altitude = (GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef) / 10;
+
+          // Convert altitude to zoom, for large altitude it is not a possible conversion as at any altitude it 
+          // is not possible for a camera to see a complete view of earth
+          // For small altitudes the following will work fine. It is still experimental and needs testing. 
+          // For correction based on altitude we need the original dimensions of the image. 
+          
+          // Some GPS data shows altitude as zero even though it is not, we need to account for errors or we will have infinity zoom.
+          if (Altitude >0)
+            Altitude_to_zoom = ( (act_height/Img_height) * (act_width/Img_width) ) / Altitude;           
+          else
+            Altitude_to_zoom = Map.zoom * 1.3;
+          
+          pixel_ratio = 2 * Altitude_to_zoom;
+          console.log("Zoom for image"+(Altitude_to_zoom))
+        } else {
+          pixel_ratio = 2 * (Map.zoom * 1.3);
+          console.log("Cannot use altitude data");
+          console.log("Zoom"+Map.zoom*1.3)
+        }
+
+        // Calculate the distance to move on map, Mapknitter uses Map.zoom = Zoom / 1.3.
+        var hh = (Img_height / 2) / pixel_ratio, wh=(Img_width / 2) / pixel_ratio; 
+
+        var points = Array(4);
+        var Cos = Math.cos(Angle);
+        var Sin = Math.sin(Angle);
+  
+        // Position and rotate the image mathematically.
+        points[0]= [ Cos * (-1*wh) - Sin * (-1*hh) + x, Sin * (-1*wh ) + Cos * (-1*hh) + y ];
+        points[1]= [ Cos * (wh)    - Sin * (-1*hh) + x, Sin * (wh)     + Cos * (-1*hh) + y ];
+        points[2]= [ Cos * (wh)    - Sin * (hh   ) + x, Sin * (wh)     + Cos * (hh)    + y ];
+        points[3]= [ Cos * (-1*wh) - Sin * (hh   ) + x, Sin * (-1*wh)  + Cos * (hh)    + y ];
+  
+        */
+      } 
+    }); 
   },
 
   selectImage: function(e){

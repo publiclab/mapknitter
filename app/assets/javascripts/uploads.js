@@ -10,123 +10,51 @@
 // need this so that jQuery draggable is attached to jQuery objects (for use in map views)
 //= require jquery-ui/jquery-ui.min.js
 
-//= require uploads-gps-exif
-
 function addUploadedImageToSidebar($upload) {
-    /* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
-    $upload.find(".indicate").remove();
-    $upload.find("td:last").remove();
+  /* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
+  $upload.find(".indicate").remove();
+  $upload.find("td:last").remove();
 
-    /* Add to sidebar. */
-    jQuery(".warpables-all tbody").append($upload);
-    // makeDraggable($upload.find("img"));
+  /* Add to sidebar. */
+  jQuery(".warpables-all tbody").append($upload);
+  // makeDraggable($upload.find("img"));
 }
 
 jQuery(document).ready(function($) {
 
-    $('#fileupload').fileupload({
-        paramName:  'uploaded_data',
-        autoUpload: 'true',
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 10000000 
-    });
-        
-    $('#fileupload').on('fileuploaddone', function (e, data) {
-        EXIF.getData(data.files[0], function() {
-            var GPS = EXIF.getGPSTags(this), 
-                checked = $("#allowAutoPlacement").attr("checked"),
-                autoPlacementAllowed = checked === "checked" ? false : true,
-                latLngDefined = typeof GPS.GPSLatitude !== 'undefined' && 
-                                typeof GPS.GPSLongitude !== 'undefined';
+  $('#fileupload').fileupload({
+    paramName:  'uploaded_data',
+    autoUpload: 'true',
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+    maxFileSize: 10000000 
+  });
 
-            if(latLngDefined) {
-                $("#GPS_" + data.result.files[0].id).css("display","");
-            }
+  $(document).bind('drop dragover', function (e) {
+    e.preventDefault();
+  });
 
-            if (typeof window.FileReader !== 'function') {
+  $("#fileupload").fileupload({
+    completed: function() {
+      var latestFile = $("#uploaded-images-list tr:last").clone();
 
-                //We cannot correct image based on altitude if the image dimensions are not known.
-                console.log("File API is not supported by this browser");
-
-                if(autoPlacementAllowed) {
-                    parent.Warper.new_image_GPS(
-                        data.result.files[0].url, 
-                        data.result.files[0].id, 
-                        GPS
-                    );
-                } else {
-                    parent.Warper.new_image(
-                        data.result.files[0].url,
-                        data.result.files[0].id,
-                        true
-                    );                     
-                }                
-            }
-
-            else {
-                var reader  = new FileReader();
-
-                reader.onload = function(e) {
-                    var image = new Image();
-
-                    image.onload = function() { placeImage(); };
-                    image.src = e.target.result;
-                };
-    
-                reader.readAsDataURL(data.files[0]);
-            }
-
-            function placeImage() {
-                var hasAltitude = typeof GPS.GPSAltitude !== "undefined" && 
-                                  typeof GPS.GPSAltitudeRef !== "undefined";
-
-                if(hasAltitude) {
-                    if(autoPlacementAllowed) {
-                        parent.Warper.new_image_GPS(
-                            data.result.files[0].url, 
-                            data.result.files[0].id, 
-                            GPS, 
-                            this.height, 
-                            this.width
-                        );
-                    } else {
-                        parent.Warper.new_image(
-                            data.result.files[0].url,
-                            data.result.files[0].id,
-                            true
-                        ); 
-                    }
-                }
-            }
-        }); 
-    });
-
-    $(document).bind('drop dragover', function (e) {
-        e.preventDefault();
-    });
-
-    $("#fileupload").fileupload({
-        completed: function() {
-            var latestFile = $("#uploaded-images-list tr:last").clone();
-
-            addUploadedImageToSidebar(latestFile);
-        }
-    });
+      addUploadedImageToSidebar(latestFile);
+    }
+  });
 });
 
 window.locale = {
-    "fileupload": {
-        "errors": {
-            "maxFileSize": "File is too big",
-            "minFileSize": "File is too small",
-            "acceptFileTypes": "Filetype not allowed",
-            "maxNumberOfFiles": "Max number of files exceeded",
-            "uploadedBytes": "Uploaded bytes exceed file size",
-            "emptyResult": "Empty file upload result"
-        },
-        "error": "Error",
-        "start": "Start",
-        "cancel": "Cancel",
-        "destroy": "Delete"
-    }
+  "fileupload": {
+    "errors": {
+      "maxFileSize": "File is too big",
+      "minFileSize": "File is too small",
+      "acceptFileTypes": "Filetype not allowed",
+      "maxNumberOfFiles": "Max number of files exceeded",
+      "uploadedBytes": "Uploaded bytes exceed file size",
+      "emptyResult": "Empty file upload result"
+    },
+    "error": "Error",
+    "start": "Start",
+    "cancel": "Cancel",
+    "destroy": "Delete"
+  }
 };

@@ -1,6 +1,6 @@
 {
   "name": "MapKnitter",
-  "version": "0.2.0",
+  "version": "2.0.2",
   "dependencies": {
     "fontawesome":              "~4.2.0",
     "bootstrap":                "~3.2.0",
@@ -11,6 +11,7 @@
     "openlayers":               "release-2.13.1",
     "blueimp-file-upload":      "blueimp/jQuery-File-Upload#~9.8.1",
     "blueimp-tmpl":             "2.5.4",
+    "exif-js":                  "~2.0.0",
     "leaflet":                  "0.7.3",
     "leaflet-google":           "https://raw.githubusercontent.com/shramov/leaflet-plugins/master/layer/tile/Google.js",
     "leaflet-draw":             "Leaflet/Leaflet.draw#0.2.3",

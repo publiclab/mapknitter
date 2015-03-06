@@ -12,7 +12,11 @@
         <td class="col-middle">
           <%= link_to(warpable.image_file_name, warpable.image.url) %>
           <p><%= number_to_human_size warpable.image_file_size %></p>
-          <% unless warpable.placed? %><p><a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a></p><% end %>
+          <p>
+            <% unless warpable.placed? %>
+              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a>
+            <% end %>
+          </p>
         </td>
         <td>
           <% if logged_in? && current_user.can_delete?(warpable) %>
