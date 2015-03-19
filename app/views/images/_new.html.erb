@@ -79,24 +79,32 @@
                 {% } else { %}
                   <td class="preview">
                     {% if (file.thumbnail_url) { %}
-                      <img src="{%=file.thumbnail_url%}">
+                      <img id="warpable-img-preview-{%= file.id %}" src="{%=file.thumbnail_url%}">
                     {% } %}
                   </td>
                   <td class="name">
                   </td>
                   <td class="status">
                       Image uploaded.
-                        <p><a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-{%= file.id %}">Place image</a></p>
+                        <p>
+                          <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-{%= file.id %}">Place</a>
+                          <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
+                        <a target="_blank" href="http://publiclab.org/wiki/mapknitter#GPS+Placement">Learn more</a>
+                      </p>
                       {%= file.name %}
-                  </td>
-                  <td class="indicate" colspan="2">
-                      <span class="label label-indicate" id="GPS_{%=file.id%}" style="display:none;">GPS</span>
+                      <script>
+                        $("#warpable-img-preview-"+{%= file.id %}).on('load', function() {
+                          window.mapKnitter.geocodeImageFromId("#warpable-img-preview-"+{%= file.id %},{%= file.id %}); 
+                        })
+                    {%# "</sc"+"ript>" %}
                   </td>
                   <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
                 {% } %}
               </tr>
             {% } %}
+
           </script>
+
         </div>
       </div>
       <div class="modal-footer">

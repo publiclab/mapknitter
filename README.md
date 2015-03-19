@@ -9,6 +9,22 @@ Use Public Lab's MapKnitter to upload your own aerial photographs (for example t
 
 Copyright 2010-2015 Public Lab & Jeffrey Warren
 
+##Architecture
+
+MapKnitter is broken into three major components:
+
+1. Map user interface
+2. Application
+3. Exporting system
+
+**Component 1** has been broken out into a new Leaflet plugin, called Leaflet.DistortableImage (https://github.com/publiclab/Leaflet.DistortableImage/) and allows for client-side, CSS3-based distortion of images over a Leaflet base map
+
+**Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts. 
+
+**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
+
+Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
+
 ##License
 
 Map Knitter is free software: you can redistribute it and/or modify

@@ -12,12 +12,12 @@
 
 function addUploadedImageToSidebar($upload) {
   /* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */
-  $upload.find(".indicate").remove();
-  $upload.find("td:last").remove();
+  //$upload.find(".indicate").remove();
+  //$upload.find("td:last").remove();
+  /* removing the above since we now want to be able to GPS-place them from within the modal */
 
   /* Add to sidebar. */
   jQuery(".warpables-all tbody").append($upload);
-  // makeDraggable($upload.find("img"));
 }
 
 jQuery(document).ready(function($) {

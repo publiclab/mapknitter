@@ -92,9 +92,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
     //img._image.src = img._image.src.split('_medium').join('')
   },
 
-  /* add a new, unplaced, but already uploaded image to the map */
-  addImage: function(url,id) {
+  /* Add a new, unplaced, but already uploaded image to the map.
+   * <lat> and <lng> are optional. */
+  addImage: function(url,id,lat,lng) {
+
     var img = new L.DistortableImageOverlay(url);
+    img.geocoding = { lat: lat,
+                      lng: lng };
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
@@ -108,21 +112,50 @@ MapKnitter.Map = MapKnitter.Class.extend({
       L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
       L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
 
-      /* Try to auto-place with GPS exif tag metadata. */
-      if (!$("#allowAutoPlacement").attr("checked")) {
-        window.mapKnitter.geocodeImage(img);
-      }
+      /* use geodata */
+      if (img.geocoding && img.geocoding.lat) {
+        /* move the image to this newly discovered location */
+        var center = L.latLngBounds(img._corners).getCenter(),
+          latBy = img.geocoding.lat-center.lat,
+          lngBy = img.geocoding.lng-center.lng
+     
+        for (var i=0;i<4;i++) {
+          img._corners[i].lat += latBy;
+          img._corners[i].lng += lngBy;
+        }
+     
+        /* pan the map there too */
+        window.mapKnitter._map.fitBounds(L.latLngBounds(img._corners));
 
+        img._reset();
+      }
     }, img);
   },
 
+  geocodeImageFromId: function(dom_id,id) {
+    window.mapKnitter.geocodeImage(
+      $(dom_id)[0],
+      function(lat,lng,id) {
+        /* Display button to place this image with GPS tags. */
+        $('.add-image-gps-'+id).attr('data-lat',lat);
+        $('.add-image-gps-'+id).attr('data-lng',lng);
+        $('.add-image-gps-'+id).show();
+      },
+      id
+    )
+  },
+
   /*
-    Adapting from: 
+   * Accepts an image element, and executes given function with 
+   * params as: function(lat,lng) {}
+   * Adapting from: 
     https://github.com/publiclab/mapknitter/blob/6e88c7725d3c013f402526289e806b8be4fcc23c/public/cartagen/cartagen.js#L9378
   */
-  geocodeImage: function(img) {
-    EXIF.getData(img._image, function() {
-      var GPS = EXIF.getAllTags(img._image)
+  geocodeImage: function(img,fn,id) {
+    console.log('pregeocode',img,id);
+    EXIF.getData(img, function() {
+      console.log('geocode',img,id);
+      var GPS = EXIF.getAllTags(img)
  
       /* If the lat/lng is available. */
       if (typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined'){
@@ -137,25 +170,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
         if (GPS["GPSLatitudeRef"] != "N")  lat = lat*-1
         if (GPS["GPSLongitudeRef"] == "W") lng = lng*-1
-
-        img.geocoding = { lat: lat,
-                          lng: lng };
-
-        /* move the image to this newly discovered location */
-        var center = L.latLngBounds(img._corners).getCenter(),
-          latBy = img.geocoding.lat-center.lat,
-          lngBy = img.geocoding.lng-center.lng
-     
-        for (var i=0;i<4;i++) {
-          img._corners[i].lat += latBy;
-          img._corners[i].lng += lngBy;
-        }
-     
-        /* pan the map there too */
-        window.mapKnitter._map.fitBounds(L.latLngBounds(img._corners));
-
-        $('#uploadModal').hide();       
-        img._reset();
       }
 
       /* If there is altitude data; should separate this 
@@ -215,7 +229,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
         points[3]= [ Cos * (-1*wh) - Sin * (hh   ) + x, Sin * (-1*wh)  + Cos * (hh)    + y ];
   
         */
+
       } 
+
+      /* only execute callback if lat (and by 
+       * implication lng) exists */
+      console.log(lat,lng,id);
+      if (lat) fn(lat,lng,id);
     }); 
   },
 

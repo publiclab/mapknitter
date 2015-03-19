@@ -6,7 +6,8 @@
         <td class="warpable">
           <%= image_tag warpable.image.url(:thumb), 
               :'data-warpable-id' => warpable.id,
-              :'data-map-id' => @map.id
+              :'data-map-id' => @map.id,
+              :'id' => "warpable-img-#{warpable.id}"
           %>
         </td>
         <td class="col-middle">
@@ -14,7 +15,14 @@
           <p><%= number_to_human_size warpable.image_file_size %></p>
           <p>
             <% unless warpable.placed? %>
-              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('.add-image-<%= warpable.id %>').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place image</a>
+              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place</a>
+              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>,$(this).attr('data-lat'),$(this).attr('data-lng'));$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-default add-image-gps-<%= warpable.id %>" style="display:none;">Auto-place with GPS</a> 
+              <!-- <a href="">Re-place</a>  -->
+              <script>
+                jQuery(document).ready(function($) {
+                  window.mapKnitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>);
+                })
+              </script>
             <% end %>
           </p>
         </td>
