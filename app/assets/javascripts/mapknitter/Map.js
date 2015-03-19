@@ -141,7 +141,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
         $('.add-image-gps-'+id).attr('data-lng',lng);
         $('.add-image-gps-'+id).show();
         $('.add-image-gps-'+id).on('click',function() {
-            console.log($(this).attr('data-lat'),
              $(this).attr('data-lng'));
           $('.add-image-'+id).hide();
           $('#uploadModal').modal('hide')
