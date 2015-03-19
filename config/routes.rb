@@ -89,7 +89,7 @@ Mapknitter::Application.routes.draw do
   get 'map/region/:id' => 'maps#region'
   get 'map/license/:id' => 'maps#license'
   get 'maps/featured' => 'maps#featured'
-  get 'map/view/:id' => 'maps#view' # legacy
+  get 'map/view/:id', to: redirect('/maps/%{id}') # legacy
   get 'maps/new' => 'maps#new' # legacy, will be replaced by resourceful route
   get 'maps/:id/edit' => 'maps#edit' # legacy, will be replaced by resourceful route
   get 'maps/:id/annotate' => 'maps#annotate'
