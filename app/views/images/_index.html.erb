@@ -16,11 +16,11 @@
           <p>
             <% unless warpable.placed? %>
               <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-default add-image-<%= warpable.id %>">Place</a>
-              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>,$(this).attr('data-lat'),$(this).attr('data-lng'));$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-default add-image-gps-<%= warpable.id %>" style="display:none;">Auto-place with GPS</a> 
+              <a class="btn btn-sm btn-default add-image-gps-<%= warpable.id %>" style="display:none;">Auto-place with GPS</a> 
               <!-- <a href="">Re-place</a>  -->
               <script>
                 jQuery(document).ready(function($) {
-                  window.mapKnitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>);
+                  window.mapKnitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>,'<%= warpable.image.url(:medium) %>');
                 })
               </script>
             <% end %>

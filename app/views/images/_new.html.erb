@@ -18,9 +18,6 @@
                 <span class="btn btn-success btn-file">
                   <i class="fa fa-plus-circle"></i> Select images <input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" />
                 </span>
-                <label style="display:inline;padding-left:6px;font-weight:normal;">
-                  <input type="checkbox" id="allowAutoPlacement" > Disable GPS placement
-                </label>
               </div>
             </div><!-- .row -->
 
@@ -88,13 +85,13 @@
                       Image uploaded.
                         <p>
                           <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-{%= file.id %}">Place</a>
-                          <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-default add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
+                          <a class="btn btn-sm btn-default add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
                         <a target="_blank" href="http://publiclab.org/wiki/mapknitter#GPS+Placement">Learn more</a>
                       </p>
                       {%= file.name %}
                       <script>
                         $("#warpable-img-preview-"+{%= file.id %}).on('load', function() {
-                          window.mapKnitter.geocodeImageFromId("#warpable-img-preview-"+{%= file.id %},{%= file.id %}); 
+                          window.mapKnitter.geocodeImageFromId("#warpable-img-preview-"+{%= file.id %},{%= file.id %},'{%= file.url %}'); 
                         })
                     {%# "</sc"+"ript>" %}
                   </td>

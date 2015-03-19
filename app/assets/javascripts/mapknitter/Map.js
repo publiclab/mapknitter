@@ -132,7 +132,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     }, img);
   },
 
-  geocodeImageFromId: function(dom_id,id) {
+  geocodeImageFromId: function(dom_id,id,url) {
     window.mapKnitter.geocodeImage(
       $(dom_id)[0],
       function(lat,lng,id) {
@@ -140,6 +140,21 @@ MapKnitter.Map = MapKnitter.Class.extend({
         $('.add-image-gps-'+id).attr('data-lat',lat);
         $('.add-image-gps-'+id).attr('data-lng',lng);
         $('.add-image-gps-'+id).show();
+        $('.add-image-gps-'+id).on('click',function() {
+            console.log($(this).attr('data-lat'),
+             $(this).attr('data-lng'));
+          $('.add-image-'+id).hide();
+          $('#uploadModal').modal('hide')
+          window.mapKnitter._map.setZoom(18);
+          window.mapKnitter._map.setView(
+            [$(this).attr('data-lat'),
+             $(this).attr('data-lng')]);
+          window.mapKnitter.addImage(url,
+                                     id,
+                                     $(this).attr('data-lat'),
+                                     $(this).attr('data-lng'));
+          $('#warpable-'+id+' a').hide()
+        })
       },
       id
     )
@@ -152,9 +167,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     https://github.com/publiclab/mapknitter/blob/6e88c7725d3c013f402526289e806b8be4fcc23c/public/cartagen/cartagen.js#L9378
   */
   geocodeImage: function(img,fn,id) {
-    console.log('pregeocode',img,id);
     EXIF.getData(img, function() {
-      console.log('geocode',img,id);
       var GPS = EXIF.getAllTags(img)
  
       /* If the lat/lng is available. */
@@ -234,7 +247,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       /* only execute callback if lat (and by 
        * implication lng) exists */
-      console.log(lat,lng,id);
       if (lat) fn(lat,lng,id);
     }); 
   },
