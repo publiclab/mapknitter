@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <% if !Rails.env.production? && !logged_in? && @map.anonymous? %>
+    <% if Rails.env.production? && !logged_in? && @map.anonymous? %>
     <div class="recaptcha"<% if @map.exporting? %> style="display:none;"<% end %>>
       <p><%= recaptcha_tags :display => {:theme => "white"} %></p>
       <p>Prove that you're a person, then click EXPORT to begin:</p>
