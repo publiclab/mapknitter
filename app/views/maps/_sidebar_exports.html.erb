@@ -113,51 +113,53 @@ var exporting, exportResolutionSlider
   })
 
   $('#begin-export').click(function() {
-    $('.progress').show()
-    $('.progress-bar').addClass('active')
-    $('.progress-bar').addClass('progress-bar-striped')
-    $('.progress-bar').removeClass('progress-bar-danger')
-    $('.progress-bar').removeClass('progress-bar-success')
-    if (exporting != true) { 
-      exporting = true
-      setInterval(exportProgress,5000)
-    }
-    $('#begin-export').hide()
-    $('.recaptcha').hide()
-    $('#cancel-export').show()
-    $('#export_progress').html("starting export") 
-    $('.map-exports').html('')
-    $.ajax({
-      url: '/maps/export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
-      method: 'POST',
-      data: {
-        <% if Rails.env.production? && !logged_in? && @map.anonymous? %>
-          recaptcha_response_field: Recaptcha.get_response(),
-          recaptcha_challenge_field: Recaptcha.get_challenge(),
-        <% end %>
-        resolution: exportResolutionSlider.getValue()
+    if (images.length < 30 || confirm('This map has over 30 images; this is a lot! Please read the tips on exporting maps listed below the Export button.')) {
+      $('.progress').show()
+      $('.progress-bar').addClass('active')
+      $('.progress-bar').addClass('progress-bar-striped')
+      $('.progress-bar').removeClass('progress-bar-danger')
+      $('.progress-bar').removeClass('progress-bar-success')
+      if (exporting != true) { 
+        exporting = true
+        setInterval(exportProgress,5000)
       }
-    }).done(function(data){
-      $('.progress-bar').addClass('progress-bar-success')
-      $('.progress-bar').removeClass('active')
-      $('.progress-bar').removeClass('progress-bar-striped')
-      $('#export_progress').html(data) 
-      $('#begin-export').show()
-      $('#begin-export').html('Re-run export')
-      $('.recaptcha').show()
-      $('#cancel-export').hide()
-      updateExports()
-    }).fail(function(data){
-      console.log(data)
-      $('.progress-bar').addClass('progress-bar-danger')
-      $('.progress-bar').removeClass('active')
-      $('.progress-bar').removeClass('progress-bar-striped')
-      $('#export_progress').html('There was an error.')
-      $('#begin-export').show()
-      $('.recaptcha').show()
-      $('#begin-export').html('Retry export')
-      $('#cancel-export').hide()
-    })
+      $('#begin-export').hide()
+      $('.recaptcha').hide()
+      $('#cancel-export').show()
+      $('#export_progress').html("starting export") 
+      $('.map-exports').html('')
+      $.ajax({
+        url: '/maps/export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+        method: 'POST',
+        data: {
+          <% if Rails.env.production? && !logged_in? && @map.anonymous? %>
+            recaptcha_response_field: Recaptcha.get_response(),
+            recaptcha_challenge_field: Recaptcha.get_challenge(),
+          <% end %>
+          resolution: exportResolutionSlider.getValue()
+        }
+      }).done(function(data){
+        $('.progress-bar').addClass('progress-bar-success')
+        $('.progress-bar').removeClass('active')
+        $('.progress-bar').removeClass('progress-bar-striped')
+        $('#export_progress').html(data) 
+        $('#begin-export').show()
+        $('#begin-export').html('Re-run export')
+        $('.recaptcha').show()
+        $('#cancel-export').hide()
+        updateExports()
+      }).fail(function(data){
+        console.log(data)
+        $('.progress-bar').addClass('progress-bar-danger')
+        $('.progress-bar').removeClass('active')
+        $('.progress-bar').removeClass('progress-bar-striped')
+        $('#export_progress').html('There was an error.')
+        $('#begin-export').show()
+        $('.recaptcha').show()
+        $('#begin-export').html('Retry export')
+        $('#cancel-export').hide()
+      })
+    }
   })
 })()
 </script>
