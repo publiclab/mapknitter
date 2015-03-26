@@ -29,50 +29,12 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 h1, h2, h3, h4 {
   font-family: 'Junction Light', lucida grande,lucida sans console,sans-serif;
   font-weight:normal;
+  color:#444;
 }
 
 label small {
   font-weight:normal;
   color:#888;
-}
-
-#header #brand, #header #brand-compact {
-  font-family:"Junction Light", lucida grande,lucida sans console,sans-serif; 
-  padding-top:19px;
-  font-size:24px;
-}
-#header #brand small {
-  font-size:16px;
-  color:#888;
-}
-
-@media (max-width: 500px) {
-  #brand { display:none; }
-  #brand-compact { display:inline; }
-}
-@media (min-width: 500px) {
-  #brand-compact { display:none; }
-  #brand { display:inline; }
-}
-.navbar-custom-knitter {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .navbar-nav .open .dropdown-menu {
-    color:white;
-  }
-}
-
-#header, .sidebar-header {
-  .nav > li > a { color: #e0e0e0; }
-  .nav > li > a:hover { color: #fff }
-  .navbar-brand { color: #fff; }
-  .navbar-brand strong { color: #c44; }
-  .navbar-right { padding-right: 20px; }
-}
-#header .dropdown-menu {
-  padding:8px;
 }
 
 a {
@@ -113,14 +75,18 @@ a:hover {
 
 .footer {
   clear: both;
-  margin: 20px 0 0 0;
-  padding: 20px 60px;
+  margin: 20px 0 20px 0;
+  padding: 20px 60px 40px;
 
   border-top: 1px solid #ddd;
   font-size: 14px;
   background:#eee;
   background-color: #f8f8f8;
   color:#333;
+
+  .col-md-4 {
+    padding-bottom:10px;
+  }
 }
 
 .btn.create-map {
