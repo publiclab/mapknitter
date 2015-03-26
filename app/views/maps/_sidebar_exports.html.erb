@@ -30,6 +30,9 @@
         <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
         <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
+      <p>
+        Having trouble? Taking too long? <a href="//publiclab.org/wiki/mapknitter-exporting">Click here</a> to learn more about exporting and get help.
+      </p>
     <% else %>
       <p>You must be <a href="/login">logged in</a> to run exports, except on anonymous maps.</p>
     <% end %>
@@ -39,24 +42,11 @@
   <div class="tab-pane" id="map-export-options-subtab">
     <p>Tweak your export resolution; too high a resolution may stall the export (if the resulting file is too big!), while too low a resolution causes lots of processing to resize the images.</p>
 
-<% 
-# stuff for Sparklines graph; messy, could tuck into model
-hist = @map.images_histogram 
-(0..100).each do |i|
- hist[i] = 0 if !hist[i]
-end
-hist = hist[0..100]
-grouphist = @map.grouped_images_histogram((hist.length/15).to_i+1)
-
-# this is used for the resolution slider
-resolution = @map.average_cm_per_pixel.round(4)
-%>
-
     <p>Graph coming soon.</p><!-- Sparklines graph will go here -->
 
-    <p><b>Resolution:</b> <span id="resolution-label"><%= resolution %></span> cm/px</p>
+    <p><b>Resolution:</b> <span id="resolution-label"><%= @resolution %></span> cm/px</p>
 
-    <p><input style="width:100%" id="export-resolution" data-slider-id='exResSlider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="<%= resolution %>"/></p>
+    <p><input style="width:100%" id="export-resolution" data-slider-id='exResSlider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="<%= @resolution %>"/></p>
 
   </div>
 </div>

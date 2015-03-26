@@ -42,6 +42,20 @@ class MapsController < ApplicationController
   def show
     @map = Map.find params[:id]
     @map.zoom ||= 12
+
+    # stuff for Sparklines resolution graph; 
+    # messy, could tuck into model
+    #hist = @map.images_histogram 
+    #(0..100).each do |i|
+    # hist[i] = 0 if !hist[i]
+    #end
+    #hist = hist[0..100]
+    #@images_histogram = @map.grouped_images_histogram((hist.length/15).to_i+1)
+
+    # this is used for the resolution slider
+    @resolution = @map.average_cm_per_pixel.round(4)
+    @resolution = 5 if @resolution < 5 # soft-set min res
+
     # remove following lines once legacy interface is deprecated
     if params[:legacy]
       render :template => 'map/show', :layout => 'knitter'
