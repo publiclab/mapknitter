@@ -24,10 +24,10 @@ class Map < ActiveRecord::Base
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   validates_with NotAtOriginValidator
 
-  has_many :exports
-  has_many :tags
-  has_many :comments
-  has_many :annotations
+  has_many :exports, :dependent => :destroy
+  has_many :tags, :dependent => :destroy
+  has_many :comments, :dependent => :destroy
+  has_many :annotations, :dependent => :destroy
   belongs_to :user
 
   has_many :warpables do

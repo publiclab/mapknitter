@@ -3,6 +3,8 @@ class ExportController < ApplicationController
 
   def index
     @exports = Export.where('status NOT IN (?)',['failed','complete','none']).order(:updated_at)
+    @day = Export.where(status:'complete').where('updated_at > (?)',(Time.now-1.day).to_s(:db)).length
+    @week = Export.where(status:'complete').where('updated_at > (?)',(Time.now-1.week).to_s(:db)).length
   end
 
   # override logger to suppress huge amounts of inane /export/progress logging

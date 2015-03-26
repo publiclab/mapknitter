@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h2><%= Export.export_count %> Currently exporting maps</h2>
+  <h2><%= Export.export_count %> map currently exporting</h2>
 
   <table class="table">
     <tr>
@@ -27,4 +27,11 @@
     </tr>
     <% end %>
   </table>
+
+  <hr />
+  <div style="color:#888;">
+    <p><%= @day %> successfully exported in the past day.</p>
+    <p><%= @week %> successfully exported in the past week.</p>
+  </div>
+
 </div>
