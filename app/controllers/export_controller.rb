@@ -1,6 +1,5 @@
 class ExportController < ApplicationController
   protect_from_forgery :except => [:formats]
-  before_filter :require_login, :only => [:cancel]
 
   # override logger to suppress huge amounts of inane /export/progress logging
   def logger
@@ -23,7 +22,7 @@ class ExportController < ApplicationController
 
   def cancel
     @map = Map.find params[:id] 
-    if @map.anonymous?
+    if @map.anonymous? || logged_in?
       export = @map.export
       export.status = 'none'
       export.save

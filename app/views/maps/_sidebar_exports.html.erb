@@ -15,16 +15,19 @@
 <div class="tab-content">
   <div class="tab-pane active" id="map-export-subtab">
   
-    <% if Rails.env.production? && !logged_in? %>
-      <div id="recaptcha-container"></div><br />
-      <div <% if @map.exporting? %>style="display:none;"<% end %> id="run_export">Prove that you're a person, then click EXPORT to begin: <br />
-    <% end %>
-
     <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
         <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
     </div>
+
+    <% if !Rails.env.production? && !logged_in? && @map.anonymous? %>
+    <div class="recaptcha"<% if @map.exporting? %> style="display:none;"<% end %>>
+      <p><%= recaptcha_tags :display => {:theme => "white"} %></p>
+      <p>Prove that you're a person, then click EXPORT to begin:</p>
+    </div>
+    <% end %>
+
     <% if logged_in? || @map.anonymous? %>
       <p>
         <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
@@ -34,7 +37,7 @@
         Having trouble? Taking too long? <a href="//publiclab.org/wiki/mapknitter-exporting">Click here</a> to learn more about exporting and get help.
       </p>
     <% else %>
-      <p>You must be <a href="/login">logged in</a> to run exports, except on anonymous maps.</p>
+      <p>You must be <a href="/login?back_to=/maps/<%= @map.slug %>">logged in</a> to run exports, except on anonymous maps.</p>
     <% end %>
     <% if @map.export %><p style="color:#888;"> Last export run <%= time_ago_in_words @map.export.updated_at %> ago<% if @map.export.user %> by <a href="//publiclab.org/profile/<%= @map.export.user.login %>"><%= @map.export.user.login %></a><% end %></p><% end %>
   </div>
@@ -97,11 +100,13 @@ var exporting, exportResolutionSlider
       }
     }).done(function(data){
       $('.progress-bar').removeClass('progress-bar-warning')
+      $('.progress-bar').removeClass('progress-bar-danger')
       $('.progress-bar').removeClass('active')
       $('.progress-bar').removeClass('progress-bar-striped')
       $('#begin-export').html('Re-run export')
       $('#begin-export').show()
       $('#cancel-export').hide()
+      $('.recaptcha').show()
       $('.progress').hide()
       updateExports()
     })
@@ -118,6 +123,7 @@ var exporting, exportResolutionSlider
       setInterval(exportProgress,5000)
     }
     $('#begin-export').hide()
+    $('.recaptcha').hide()
     $('#cancel-export').show()
     $('#export_progress').html("starting export") 
     $('.map-exports').html('')
@@ -125,7 +131,7 @@ var exporting, exportResolutionSlider
       url: '/maps/export/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
       method: 'POST',
       data: {
-        <% if Rails.env.production? && !logged_in? %>
+        <% if Rails.env.production? && !logged_in? && @map.anonymous? %>
           recaptcha_response_field: Recaptcha.get_response(),
           recaptcha_challenge_field: Recaptcha.get_challenge(),
         <% end %>
@@ -138,6 +144,7 @@ var exporting, exportResolutionSlider
       $('#export_progress').html(data) 
       $('#begin-export').show()
       $('#begin-export').html('Re-run export')
+      $('.recaptcha').show()
       $('#cancel-export').hide()
       updateExports()
     }).fail(function(data){
@@ -147,6 +154,7 @@ var exporting, exportResolutionSlider
       $('.progress-bar').removeClass('progress-bar-striped')
       $('#export_progress').html('There was an error.')
       $('#begin-export').show()
+      $('.recaptcha').show()
       $('#begin-export').html('Retry export')
       $('#cancel-export').hide()
     })

@@ -36,16 +36,16 @@
     <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
   </table>
 
-  <% if logged_in? %>
     <hr />
     <p>
+      <% if logged_in? %>
       <a onClick="$('#map-edit-container').toggle()" class="btn btn btn-default">Edit details</a> 
+      <% end %>
       <a onClick="$('.share-link').toggle()" class="btn btn btn-default"><i class="fa fa-code"></i> Embed code</a> 
       <div class="share-link" style="display:none;">
         <%= render :partial => 'maps/share' %>
       </div>
     </p>
-  <% end %>
 
   <div style="display:none;" id="map-edit-container">
     <%= render :partial => 'maps/edit' %>
