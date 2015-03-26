@@ -1,6 +1,10 @@
 class ExportController < ApplicationController
   protect_from_forgery :except => [:formats]
 
+  def index
+    @exports = Export.where('status NOT IN (?)',['failed','complete','none']).order(:updated_at)
+  end
+
   # override logger to suppress huge amounts of inane /export/progress logging
   def logger
     if params[:action] == 'progress'
@@ -26,7 +30,12 @@ class ExportController < ApplicationController
       export = @map.export
       export.status = 'none'
       export.save
-      render :text => 'cancelled'
+      if params[:exports]
+        flash[:notice] = "Export cancelled."
+        redirect_to "/exports"
+      else
+        render :text => 'cancelled'
+      end
     else
       render :text => 'You must be logged in to export, unless the map is anonymous.'
     end

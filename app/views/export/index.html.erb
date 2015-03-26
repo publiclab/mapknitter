@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <h2><%= Export.export_count %> Currently exporting maps</h2>
+
+  <table class="table">
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Started</th>
+      <th>Images</th>
+      <th>Resolution</th>
+      <th>Status</th>
+      <th>Tools</th>
+    </tr>
+    <% @exports.each do |export| %>
+    <tr>
+      <td><b><a href="/maps/<%= export.map.slug %>"><%= export.map.name %></a></b></td>
+      <td><a href="/profile/<%= export.map.author %>"><%= export.map.author %></a></td>
+      <td><%= time_ago_in_words(export.updated_at) %> ago</td>
+      <td><%= Warpable.select('id').where(map_id: export.map_id).length %></td>
+      <td><%= export.cm_per_pixel %> cm/px</td>
+      <td><%= export.status %></td>
+      <td>
+        <% if logged_in? && current_user.role == "admin" %>
+        <a class="btn btn-default" href="/export/cancel/<%= export.map_id %>?authenticity_token=<%= form_authenticity_token %>&exports=true">Cancel</a>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+</div>
