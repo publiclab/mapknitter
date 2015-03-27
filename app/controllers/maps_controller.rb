@@ -79,8 +79,13 @@ class MapsController < ApplicationController
   end
 
   def update
-    @map = Map.find params[:id]
-    @map.update_attributes(params[:map])
+    @map = Map.find    params[:id]
+    @map.name =        params[:map][:name]
+    @map.location =    params[:map][:location]
+    @map.lat =         params[:map][:lat]
+    @map.lon =         params[:map][:lon]
+    @map.description = params[:map][:description]
+    @map.license =     params[:map][:license] if @map.user_id == current_user.id
 
     # save new tags
     if params[:tags]

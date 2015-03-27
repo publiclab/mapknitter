@@ -31,17 +31,17 @@
     <%= f.text_area :description, :placeholder => "Add links or explanatory images or videos to your map here.", :class => "form-control" %>
   </div>
 
+  <% if logged_in? && @map.user_id == current_user.id %>
   <div class="form-group">
     <label for="license">License - <a target="_blank" href="http://publiclab.org/licenses">Learn more</a></label>
     <select class="form-control" id="map_license" tabindex="15" name="map[license]" type="text">
-      <% if logged_in? %>
       <option value="copyright"    <%= "selected" if @map.license == 'copyright' %>>None (copyright)</option>
-      <% end %>
       <option value="cc-by-sa"     <%= "selected" if @map.license == 'cc-by-sa' %>>CC-BY-SA</option>
       <option value="cc-by"        <%= "selected" if @map.license == 'cc-by' %>>CC-BY</option>
       <option value="publicdomain" <%= "selected" if @map.license == 'publicdomain' %>>Public Domain</option>
     </select>
   </div>
+  <% end %>
 
   <%= f.submit "Save", :class => "btn btn-primary btn-lg" %>
 <% end %>
