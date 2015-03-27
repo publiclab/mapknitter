@@ -1,6 +1,13 @@
 <div class="container">
 
-  <h2><%= @user.login %><% if @user.maps %> (<%= @maps.length %> maps)<% end %> | <small><%= @user.role %></small></h2>
+  <h2>
+    <%= @user.login %>
+    <% if @user.maps %> (<%= @maps.length %> maps)<% end %>
+    <small>
+    | <%= @user.role %>
+    | <a href="/feeds/author/<%= @user.login %>">RSS</a>
+    </small>
+  </h2>
 
   <p><a href="//publiclab.org/profile/<%= @user.login %>">Public Lab profile &raquo;</a></p>
 

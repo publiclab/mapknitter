@@ -1,8 +1,35 @@
 require 'test_helper'
 
 class FeedsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+
+  # called before every single test
+  def setup
+    @map = maps(:saugus)
+    @tag = tags(:nice)
+  end 
+
+  test "should get main feed (all)" do
+    get :all
+    assert_response :success
+    assert_not_nil :maps
   end
+
+  test "should get license feed" do
+    get :license, :id => "publicdomain"
+    assert_response :success
+    assert_not_nil :maps
+  end
+
+  test "should get author feed" do
+    get :author, :id => "quentin"
+    assert_response :success
+    assert_not_nil :maps
+  end
+
+  test "should get tag feed" do
+    get :tag, :id => "nice"
+    assert_response :success
+    assert_not_nil :maps
+  end
+
 end

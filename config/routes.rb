@@ -74,6 +74,7 @@ Mapknitter::Application.routes.draw do
   get 'feeds/all' => 'feeds#all', :format => 'rss'
   get 'feeds/license/:id' => 'feeds#license', :format => 'rss'
   get 'feeds/author/:id' => 'feeds#author', :format => 'rss'
+  get 'feeds/tag/:id' => 'feeds#tag', :format => 'rss'
 
   get 'tms/:id/alt/:z/:x/:y.png' => 'utility#tms_alt'
   get 'tms/:id/' => 'utility#tms_info'

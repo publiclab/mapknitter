@@ -9,19 +9,23 @@ class TagsController < ApplicationController
   end
 
   def create
-    # there is identical code in MapsController#update.
-    # TODO: DRY up this functionality.
-
     @map = Map.find params[:map_id]
 
-    # save new tags
-    if params[:tags]
-      params[:tags].gsub(' ', ',').split(',').each do |tagname|
-        @map.add_tag(tagname.strip, current_user)
+    if logged_in?
+      # there is identical code in MapsController#update.
+      # TODO: DRY up this functionality.
+ 
+      # save new tags
+      if params[:tags]
+        params[:tags].gsub(' ', ',').split(',').each do |tagname|
+          @map.add_tag(tagname.strip, current_user)
+        end
       end
+ 
+      redirect_to "/maps/" + @map.slug
+    else
+      redirect_to "/login?back_to=/maps/" + @map.slug
     end
-
-    redirect_to "/map/" + params[:map_id]
   end
 
   def show

@@ -14,9 +14,9 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
        xml.image       map.warpables.first.image.url(:small) if map.warpables.length > 0
        xml.pubDate     map.created_at.to_s(:rfc822)
        xml.category    "mapknitter"
-       xml.link        url_for :only_path => false, :controller => 'map', :action => 'view', :id => map.name
-       xml.description "<iframe width='500px' height='400px' border='0' src='http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/"+map.name+"/&lon="+map.lon.to_s+"&lat="+map.lat.to_s+"&zoom=17'></iframe><br />"+map.description.to_s+"<br />View map details: http://mapknitter.org/map/view/"+map.name
-       xml.guid        url_for :only_path => false, :controller => 'map', :action => 'view', :id => map.name
+       xml.link        "http://mapknitter.org/maps/"+map.slug
+       xml.description "<iframe src='http://localhost/embed/anonmap--6' style='border:none;'></iframe><p>"+map.description.to_s+"</p><p>View map details: http://mapknitter.org/maps/"+map.slug+"</p>"
+       xml.guid        "http://mapknitter.org/maps/"+map.slug
      end
    end
 

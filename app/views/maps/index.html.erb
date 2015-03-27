@@ -63,6 +63,9 @@
       <h2><%= @title ||= "Featured" %> <small> 
         | <a href="/recent">Recent maps</a>
         | <a href="/authors">Authors</a>
+        <% if params[:controller] == "tags" %>
+        | <a href="/feeds/tag/<%= params[:id] %>">RSS</a>
+        <% end %>
       </small></h2>
 
       <div class="row map-list">
