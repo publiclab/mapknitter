@@ -67,6 +67,9 @@
 
 @media (max-width: 768px) {
   #header {
+    .brand {
+      width:80%;
+    }
     .brand img {
       width:50%;
     }

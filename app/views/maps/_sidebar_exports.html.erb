@@ -34,7 +34,10 @@
         <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
       <p>
-        Having trouble? Taking too long? <a href="//publiclab.org/wiki/mapknitter-exporting">Click here</a> to learn more about exporting and get help.
+        Closing this window will not interrupt the export.
+      </p>
+      <p>
+        <i class="fa fa-question-circle"></i> Having trouble? Taking too long? <a href="//publiclab.org/wiki/mapknitter-exporting">Click here</a> to learn more about exporting and get help.
       </p>
     <% else %>
       <p>You must be <a href="/login?back_to=/maps/<%= @map.slug %>">logged in</a> to run exports, except on anonymous maps.</p>

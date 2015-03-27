@@ -9,7 +9,11 @@ class SessionsController < ApplicationController
 
   # render new.erb.html
   def new #login
-    @referer = params[:back_to]  
+    if logged_in?
+      redirect_to "/"
+    else
+      @referer = params[:back_to]  
+    end
   end
 
   def create #new
