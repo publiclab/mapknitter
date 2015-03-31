@@ -7,6 +7,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Initialize before map in order to add to layers; probably it can be done later too */
     var google = new L.Google("SATELLITE",{
       maxZoom: 24,
+      maxNativeZoom: 20,
       opacity:0.5
     });
 
