@@ -33,16 +33,24 @@
         <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
         <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
+
+      <% if ((@map.export.updated_at-DateTime.now)/1.hours).abs > 4 %>
+      <p class="alert alert-warning alert-toolong">
+        This export is taking a while; consider cancelling it and following the tips linked to below. 
+      </p>
+      <% else %>
       <p>
         Closing this window will not interrupt the export.
       </p>
+      <% end %>
+
       <p>
         <i class="fa fa-question-circle"></i> Having trouble? Taking too long? <a href="//publiclab.org/wiki/mapknitter-exporting">Click here</a> to learn more about exporting and get help.
       </p>
     <% else %>
       <p>You must be <a href="/login?back_to=/maps/<%= @map.slug %>">logged in</a> to run exports, except on anonymous maps.</p>
     <% end %>
-    <% if @map.export %><p style="color:#888;"> Last export run <%= time_ago_in_words @map.export.updated_at %> ago<% if @map.export.user %> by <a href="//publiclab.org/profile/<%= @map.export.user.login %>"><%= @map.export.user.login %></a><% end %></p><% end %>
+    <% if @map.export %><p style="color:#888;"> Export last run <%= time_ago_in_words @map.export.updated_at %> ago<% if @map.export.user %> by <a href="//publiclab.org/profile/<%= @map.export.user.login %>"><%= @map.export.user.login %></a><% end %></p><% end %>
   </div>
 
   <div class="tab-pane" id="map-export-options-subtab">
@@ -102,6 +110,7 @@ var exporting, exportResolutionSlider
         $('#export_progress').html('cancelling...') 
       }
     }).done(function(data){
+      $('.alert-toolong').hide()
       $('.progress-bar').removeClass('progress-bar-warning')
       $('.progress-bar').removeClass('progress-bar-danger')
       $('.progress-bar').removeClass('active')
@@ -117,6 +126,7 @@ var exporting, exportResolutionSlider
 
   $('#begin-export').click(function() {
     if (images.length < 30 || confirm('This map has over 30 images; this is a lot! Please read the tips on exporting maps listed below the Export button.')) {
+      $('.alert-toolong').hide()
       $('.progress').show()
       $('.progress-bar').addClass('active')
       $('.progress-bar').addClass('progress-bar-striped')
