@@ -34,7 +34,7 @@
         <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
 
-      <% if ((@map.export.updated_at-DateTime.now)/1.hours).abs > 4 %>
+      <% if @map.exporting? && ((@map.export.updated_at-DateTime.now)/1.hours).abs > 4 %>
       <p class="alert alert-warning alert-toolong">
         This export is taking a while; consider cancelling it and following the tips linked to below. 
       </p>
