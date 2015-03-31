@@ -50,7 +50,10 @@
     <% else %>
       <p>You must be <a href="/login?back_to=/maps/<%= @map.slug %>">logged in</a> to run exports, except on anonymous maps.</p>
     <% end %>
-    <% if @map.export %><p style="color:#888;"> Export last run <%= time_ago_in_words @map.export.updated_at %> ago<% if @map.export.user %> by <a href="//publiclab.org/profile/<%= @map.export.user.login %>"><%= @map.export.user.login %></a><% end %></p><% end %>
+    <p style="color:#888;">
+      <% if @map.export %>Export last run <%= time_ago_in_words @map.export.updated_at %> ago<% if @map.export.user %> by <a href="//publiclab.org/profile/<%= @map.export.user.login %>"><%= @map.export.user.login %></a>.<% end %><% end %>
+      <a href="/exports">View all running exports</a>
+    </p>
   </div>
 
   <div class="tab-pane" id="map-export-options-subtab">
