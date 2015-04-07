@@ -63,6 +63,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           images.push(img);
           img.warpable_id = warpable.id
 
+console.log('loading')
           if (!options.readOnly) {
             // img.on('select', function(e){
             // refactor to use on/fire; but it doesn't seem to work
@@ -70,8 +71,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
             L.DomEvent.on(img._image, 'click', window.mapKnitter.selectImage, img);
             img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
             L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
+console.log('loading')
             L.DomEvent.on(img._image, 'load', function() {
               var img = this
+console.log('loaded',img)
               img.on('edit', window.mapKnitter.saveImageIfChanged, img);
               img.on('delete', window.mapKnitter.deleteImage, img)
               L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
@@ -321,6 +324,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   // /maps/newbie/warpables/42, but we'll try /warpables/42 
   // as it should also be a valid restful route
   deleteImage: function() {
+console.log('delete')
     var img = this
     // this should only be possible by logged-in users
     if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
