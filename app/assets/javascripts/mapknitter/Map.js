@@ -72,20 +72,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
             L.DomEvent.on(img._image, 'load', function() {
               var img = this
-              img.on('edit', window.mapKnitter.saveImageIfChanged, img);
-              img.on('delete', window.mapKnitter.deleteImage, img)
-
-              // Override default delete to add a confirm()
-              img.on('toolbar:created', 
-                function() {
-                  this.editing.toolbar.options.actions[1].prototype.addHooks = function() {
-                      var map = this._map;
-                      this._overlay.fire('delete');
-                   }
-                 }, img)
-
-              L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
-              L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+              window.mapKnitter.setupToolbar(img)
             }, img);
           }
         }
@@ -101,6 +88,26 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     // hi res:
     //img._image.src = img._image.src.split('_medium').join('')
+  },
+
+  /* 
+   * Setup toolbar and events
+   */
+  setupToolbar: function(img) {
+    img.on('edit', window.mapKnitter.saveImageIfChanged, img);
+    img.on('delete', window.mapKnitter.deleteImage, img)
+
+    // Override default delete to add a confirm()
+    img.on('toolbar:created', 
+      function() {
+        this.editing.toolbar.options.actions[1].prototype.addHooks = function() {
+            var map = this._map;
+            this._overlay.fire('delete');
+         }
+     }, img)
+
+    L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
+    L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
   },
 
   /* Add a new, unplaced, but already uploaded image to the map.
@@ -119,9 +126,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
     L.DomEvent.on(img._image, 'load', function() {
       var img = this
-      img.on('edit', window.mapKnitter.saveImageIfChanged, img);
-      L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
-      L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
+      window.mapKnitter.setupToolbar(img)
 
       /* use geodata */
       if (img.geocoding && img.geocoding.lat) {
