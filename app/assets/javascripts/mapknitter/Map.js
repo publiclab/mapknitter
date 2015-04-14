@@ -3,6 +3,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   initialize: function(options) {
     this._zoom = options.zoom || 0;
     this._latlng = L.latLng(options.latlng);
+    this.logged_in = options.logged_in;
 
     /* Initialize before map in order to add to layers; probably it can be done later too */
     var google = new L.Google("SATELLITE",{
@@ -338,29 +339,31 @@ MapKnitter.Map = MapKnitter.Class.extend({
   deleteImage: function() {
     var img = this
     // this should only be possible by logged-in users
-    if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
-      $.ajax('/images/'+img.warpable_id,{
-        dataType: "json",
-        type: 'DELETE',
-        beforeSend: function(e) {
-          $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
-        },
-        complete: function(e) {
-          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
-          // disable interactivity:
-          img.editing._hideToolbar();
-          img.editing.disable();
-          // remove from Leaflet map:
-          map.removeLayer(img);
-          // remove from sidebar too:
-          $('#warpable-'+img.warpable_id).remove()
-        },
-        error: function(e) {
-          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
-        }
-      })
+    if (mapKnitter.logged_in) {
+      if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
+        $.ajax('/images/'+img.warpable_id,{
+          dataType: "json",
+          type: 'DELETE',
+          beforeSend: function(e) {
+            $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+          },
+          complete: function(e) {
+            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
+            // disable interactivity:
+            img.editing._hideToolbar();
+            img.editing.disable();
+            // remove from Leaflet map:
+            map.removeLayer(img);
+            // remove from sidebar too:
+            $('#warpable-'+img.warpable_id).remove()
+          },
+          error: function(e) {
+            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
+          }
+        })
+      }
     } else {
-      // say it failed
+      alert('You must be logged in to delete images.')
     }
   },
 

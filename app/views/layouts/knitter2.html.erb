@@ -162,6 +162,7 @@
         latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
         zoom:       <%= @map.zoom %>,
         readOnly:   <%= @embed == true %>,
+        logged_in:   <%= logged_in? == true %>,
         warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
       <% if @map.warpables.empty? && params[:action] == "show" %>
