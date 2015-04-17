@@ -24,6 +24,7 @@ Mapknitter::Application.configure do
   config.assets.precompile += ['tags.js',
                                  'uploads.js',
                                  'knitter.js',
+                                 'annotations.js',
                                  'maps.js']
 
   # Defaults to nil and saved in location specified by config.assets.prefix
