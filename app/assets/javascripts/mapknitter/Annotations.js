@@ -55,10 +55,16 @@ MapKnitter.Annotations.include({
         layer.getTextarea().focus();        
       }
 
-      /* Create new database record via AJAX request; see MapKnitter.Resources#create. */
-      this.create(layer, function(geojsonResponse) {
-        this.stampResource(layer, geojsonResponse.properties.id);
-      });
+      if (window.mapKnitter.logged_in || window.mapKnitter.anonymous) {
+
+        /* Create new database record via AJAX request; see MapKnitter.Resources#create. */
+        this.create(layer, function(geojsonResponse) {
+          this.stampResource(layer, geojsonResponse.properties.id);
+        });
+
+      } else {
+        alert('You must be logged in to save annotations on this map.')
+      }
     }, this);
 
     map.on('draw:edited', function(event) {
@@ -91,6 +97,7 @@ MapKnitter.Annotations.include({
           if (annotation.editing.enabled()) {
             annotation.edited = true;
           } else {
+console.log(annotation)
             this.update(annotation, function(data) { console.log(data); });        
           }
         }, this);

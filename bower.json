@@ -15,7 +15,7 @@
     "leaflet":                  "0.7.3",
     "leaflet-google":           "https://raw.githubusercontent.com/shramov/leaflet-plugins/master/layer/tile/Google.js",
     "leaflet-draw":             "Leaflet/Leaflet.draw#0.2.4",
-    "leaflet-illustrate":       "manleyjster/Leaflet.Illustrate#0.0.2",
+    "leaflet-illustrate":       "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",
     "leaflet-distortableimage": "publiclab/Leaflet.DistortableImage",
     "leaflet-easybutton":       "CliffCloud/Leaflet.EasyButton",
     "leaflet-toolbar":          "Leaflet/Leaflet.Toolbar",

@@ -19,8 +19,8 @@
  *= require header
  *= require maps
  *= require uploads
- *= require annotations
 
  *= require_self
+ *= require annotations
  * require_tree .
 */

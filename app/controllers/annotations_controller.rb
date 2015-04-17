@@ -18,8 +18,8 @@ class AnnotationsController < ApplicationController
           :coordinates => geojson[:geometry][:coordinates],
           :text => geojson[:properties][:textContent],
           :style => geojson[:properties][:style],
-          :user_id => current_user.id
         )
+        @annotation.user_id = current_user.id if logged_in?
         if @annotation.save
           redirect_to map_annotation_url(@map, @annotation)
         end
@@ -35,7 +35,7 @@ class AnnotationsController < ApplicationController
   def update
     @annotation = Annotation.find params[:id]
     geojson = params[:annotation]
-    if current_user.can_edit?(@annotation)
+    if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
       Annotation.update(@annotation.id,
         :coordinates => geojson[:geometry][:coordinates],
         :text => geojson[:properties][:textContent],

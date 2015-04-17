@@ -4,6 +4,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this._zoom = options.zoom || 0;
     this._latlng = L.latLng(options.latlng);
     this.logged_in = options.logged_in;
+    this.anonymous = options.anonymous;
 
     /* Initialize before map in order to add to layers; probably it can be done later too */
     var google = new L.Google("SATELLITE",{

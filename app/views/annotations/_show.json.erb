@@ -8,7 +8,7 @@
     "annotation_type": "<%= annotation.annotation_type %>",
     "id":     <%= annotation.id %>,
     "map_id": <%= annotation.map_id %>,
-    "style":  <%= annotation.style.to_json %>,
+    "style":  <%=raw annotation.style.to_json %>,
     "textContent":   "<%= annotation.text %>",
     "url":    "<%= url_for([@map, annotation]) %>"
   }
