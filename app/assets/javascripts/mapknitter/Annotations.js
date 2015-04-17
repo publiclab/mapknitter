@@ -97,7 +97,6 @@ MapKnitter.Annotations.include({
           if (annotation.editing.enabled()) {
             annotation.edited = true;
           } else {
-console.log(annotation)
             this.update(annotation, function(data) { console.log(data); });        
           }
         }, this);

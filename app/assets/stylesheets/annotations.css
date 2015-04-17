@@ -7,11 +7,15 @@
   background-position: -270px -1px;
 }
 
-.leaflet-illustrate-textbox textarea {
+.leaflet-illustrate-textbox {
   font-family: Junction Light;
   color: white;
-  font-size: 48px;
-  text-shadow: 1px 2px 20px rgba(0,0,0,0.5);
+  font-size: 36px;
+  text-shadow: 1px 2px 20px rgba(0,0,0,0.9);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
 }
 
 .leaflet-draw-toolbar a {
