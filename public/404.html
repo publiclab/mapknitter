@@ -22,7 +22,6 @@
   <div class="hidden-print container-fluid">
     <div class="navbar-header">
       <span class="navbar-brand" id="brand"><a href="/">MapKnitter</a> <small class="fullscreen-only"> by <a href="//publiclab.org">Public Lab</a></small></span>
-      <a class="navbar-brand" id="brand-compact" href="/">MK</a>
     </div>
 
   </div>
@@ -31,9 +30,43 @@
 
     <div class="container">
 
-    <h1>That page does not exist.</h1>
+      <h1>That page does not exist.</h1>
 
-    <p>Are you sure you've typed the right address?</p>
+      <p>Are you sure you've typed the right address?</p>
+ 
+      <hr />
+ 
+      <p>Please help us figure out what happened so we can fix it!</p>
+ 
+      <p>If possible, please describe:</p>
+ 
+      <ul> 
+        <li>what you did just before the problem occurred</li>
+        <li>your browser and browser version</li>
+        <li>your operating system</li>
+        <li>any web addresses needed to see the problem (such as the URL of this page)</li>
+        <li>your PublicLab.org username (if you have one)</li>
+      </ul> 
+ 
+      <p><a class="btn btn-primary" href="https://github.com/publiclab/mapknitter/issues/new">Report a bug on Github</a> or send an email to <a href="mailto:web@publiclab.org">web@publiclab.org</a> with the above information.</p>
+ 
+      <p>Thank you for helping to improve open source software!.</p>
+ 
+      <hr />
+
+      <h2>Ask for help in the Public Lab chatroom</h2>
+
+      <p>Community members and staff may be able to help you in real time.</p>
+
+      <script>
+        chatroom = function() {
+          $('#chat').append('<iframe width="100%" height="300px" style="border:none;" src="https://webchat.oftc.net/?channels=publiclab"></iframe>')
+        }
+      </script>
+
+      <p><a class="btn btn-primary" onClick="chatroom()">Open chatroom</a></p>
+ 
+      <div id="chat"></div>
 
     <p>Please <a href="https://github.com/publiclab/mapknitter/issues/new">report a bug on Github</a> or <a href="mailto:web@publiclab.org">email web@publiclab.org</a> and thoroughly describe what happened. Thank you for helping to improve open source software!.</p>
 
