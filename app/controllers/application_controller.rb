@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   def check_subdomain
     if request.subdomain.present?
-      redirect_to request.domain + request.port_string + request.fullpath
+      redirect_to 'http://' + request.domain + request.port_string + request.fullpath
     end
   end
 
