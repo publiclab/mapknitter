@@ -3,13 +3,13 @@ class FeedsController < ApplicationController
   def all
     #(Warpable.all + Map.all).sort_by(&:created_at)
     @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => ''},:joins => :warpables, :group => "maps.id")
-    render :layout => false, :template => "feeds/all.rss.builder"
+    render :layout => false, :template => "feeds/all"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
   def license
     @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => params[:id]},:joins => :warpables, :group => "maps.id")
-    render :layout => false, :template => "feeds/license.rss.builder"
+    render :layout => false, :template => "feeds/license"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
@@ -20,14 +20,14 @@ class FeedsController < ApplicationController
       images = images + map.warpables
     end
     @feed = (@maps + images).sort_by(&:created_at)
-    render :layout => false, :template => "feeds/author.rss.builder"
+    render :layout => false, :template => "feeds/author"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
   def tag
     @tag = Tag.find_by_name params[:id]
     @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
-    render :layout => false, :template => "feeds/tag.rss.builder"
+    render :layout => false, :template => "feeds/tag"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
