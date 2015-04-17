@@ -10,8 +10,9 @@
 .leaflet-illustrate-textbox {
   font-family: Junction Light;
   color: white;
-  font-size: 36px;
-  text-shadow: 1px 2px 20px rgba(0,0,0,0.9);
+  font-size: 24px;
+  padding: 5px;
+  text-shadow: 0 0 10px rgba(0,0,0,1),0 0 10px rgba(0,0,1,1);
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
