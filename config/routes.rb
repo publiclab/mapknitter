@@ -120,15 +120,6 @@ Mapknitter::Application.routes.draw do
   # just remember to delete public/index.html.
   root :to => 'maps#index'
 
-  # See how all your routes lay out with 'rake routes'
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  get ':controller/:action'
-  get ':controller/:action/:id'
-  get ':controller/:action.:format'
-  get ':controller/:action/:id.:format'
-
   # RESTful API
   resources :maps do
     resources :tags
@@ -139,5 +130,14 @@ Mapknitter::Application.routes.draw do
       get :search
     end
   end
+
+  # See how all your routes lay out with 'rake routes'
+
+  # This is a legacy wild controller route that's not recommended for RESTful applications.
+  # Note: This route will make all actions in every controller accessible via GET requests.
+  get ':controller/:action'
+  get ':controller/:action/:id'
+  get ':controller/:action.:format'
+  get ':controller/:action/:id.:format'
 
 end

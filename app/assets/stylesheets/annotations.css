@@ -6,3 +6,10 @@
 .leaflet-touch .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
   background-position: -270px -1px;
 }
+
+.leaflet-illustrate-textbox textarea {
+  font-family: Junction Light;
+  color: white;
+  font-size: 48px;
+  text-shadow: 1px 2px 20px rgba(0,0,0,0.5);
+}

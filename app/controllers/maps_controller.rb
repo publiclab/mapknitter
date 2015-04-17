@@ -72,6 +72,7 @@ class MapsController < ApplicationController
   def annotate
     @map = Map.find params[:id]
     @map.zoom = 12 # get rid of this; use setBounds or something
+    @annotations = true # loads annotations-specific assets
   end
 
   def edit
