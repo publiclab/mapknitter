@@ -114,11 +114,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
-  addImage: function(url,id,lat,lng) {
+  addImage: function(url,id,lat,lng,angle) {
 
     var img = new L.DistortableImageOverlay(url);
     img.geocoding = { lat: lat,
-                      lng: lng };
+                      lng: lng,
+                      angle: angle};
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
@@ -141,6 +142,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
           img._corners[i].lat += latBy;
           img._corners[i].lng += lngBy;
         }
+
+        img.editing._rotateBy(img.geocoding.angle);
+        img.fire('update');
      
         /* pan the map there too */
         window.mapKnitter._map.fitBounds(L.latLngBounds(img._corners));
@@ -148,28 +152,32 @@ MapKnitter.Map = MapKnitter.Class.extend({
         img._reset();
       }
     }, img);
+    return img;
   },
 
   geocodeImageFromId: function(dom_id,id,url) {
     window.mapKnitter.geocodeImage(
       $(dom_id)[0],
-      function(lat,lng,id) {
+      function(lat,lng,id,angle) {
         /* Display button to place this image with GPS tags. */
         $('.add-image-gps-'+id).attr('data-lat',lat);
         $('.add-image-gps-'+id).attr('data-lng',lng);
+        if (angle) $('.add-image-gps-'+id).attr('data-angle',angle);
         $('.add-image-gps-'+id).show();
         $('.add-image-gps-'+id).on('click',function() {
           $('.add-image-'+id).hide();
-          $('#uploadModal').modal('hide')
+          $('#uploadModal').modal('hide');
           window.mapKnitter._map.setZoom(18);
           window.mapKnitter._map.setView(
             [$(this).attr('data-lat'),
              $(this).attr('data-lng')]);
-          window.mapKnitter.addImage(url,
+          angle = $(this).attr('data-angle') || 0;
+          img = window.mapKnitter.addImage(url,
                                      id,
                                      $(this).attr('data-lat'),
-                                     $(this).attr('data-lng'));
-          $('#warpable-'+id+' a').hide()
+                                     $(this).attr('data-lng'),
+                                     angle);
+          $('#warpable-'+id+' a').hide();
         })
       },
       id
@@ -206,18 +214,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
        */
       if (typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined'){
  
-        /*
         // Attempt to use GPS compass heading; will require 
         // some trig to calc corner points, which you can find below:
         //
-        // The angle to rotate the image in.
-        if (GPS["GPSImgDirectionRef"] == "T") // "T" refers to "True north", so -90.
-          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+        // "T" refers to "True north", so -90.
+        if (GPS["GPSImgDirectionRef"] == "T")
+          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
         else if (GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
-          Angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
+          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
         else
           console.log("No angle found");
  
+        /*
         // Attempt to use GPS altitude:
         if (typeof GPS.GPSAltitude !== 'undefined' && 
             typeof GPS.GPSAltitudeRef !== 'undefined' && 
@@ -263,7 +271,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       /* only execute callback if lat (and by 
        * implication lng) exists */
-      if (lat) fn(lat,lng,id);
+      if (lat) fn(lat,lng,id,angle);
     }); 
   },
 
