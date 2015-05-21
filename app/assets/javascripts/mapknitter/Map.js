@@ -114,12 +114,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
-  addImage: function(url,id,lat,lng,angle) {
-
+  addImage: function(url,id,lat,lng,angle,altitude) {
     var img = new L.DistortableImageOverlay(url);
-    img.geocoding = { lat: lat,
-                      lng: lng,
-                      angle: angle};
+    img.geocoding = { lat:      lat,
+                      lng:      lng,
+                      altitude: altitude, 
+                      angle:    angle};
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
@@ -144,6 +144,42 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
 
         img.editing._rotateBy(img.geocoding.angle);
+        
+        /* Attempt to convert altitude to scale factor based on Leaflet zoom;
+         * for correction based on altitude we need the original dimensions of the image. 
+         * This may work only at sea level unless we factor in ground level. 
+         * We may also need to get camera field of view to get this even closer.
+         * We could also fall back to the scale of the last-placed image.
+         */
+        if (img.geocoding.altitude && img.geocoding.altitude != 0) { 
+          var width = img._image.width, height = img._image.height
+          //scale = ( (act_height/img_height) * (act_width/img_width) ) / img.geocoding.altitude;           
+          //img.editing._scaleBy(scale);
+
+          var elevator = new google.maps.ElevationService(), 
+              lat = mapKnitter._map.getCenter().lat, 
+              lng = mapKnitter._map.getCenter().lng;
+    
+          elevator.getElevationForLocations({'locations':[ {lat: lat, lng: lng} ]
+            },function(results, status) { 
+              console.log("Photo taken from " + img.geocoding.altitude + " meters above sea level"); 
+              console.log("Ground is " + results[0].elevation + " meters above sea level"); 
+              console.log("Photo taken from " + (img.geocoding.altitude-results[0].elevation) + " meters"); 
+              var a = img.geocoding.altitude-results[0].elevation,
+                  fov = 50,
+                  A = fov * (Math.PI/180),
+                  width = 2 * (a / Math.tan(A))
+                  currentWidth = (img._corners[2].distanceTo(img._corners[1]) + 
+                                  img._corners[1].distanceTo(img._corners[2])) / 2
+              
+              console.log("Photo should be " + width + " meters wide"); 
+              img.editing._scaleBy(width/currentWidth);
+              img.fire('update');
+
+            }
+          )
+        }
+
         img.fire('update');
      
         /* pan the map there too */
@@ -158,11 +194,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
   geocodeImageFromId: function(dom_id,id,url) {
     window.mapKnitter.geocodeImage(
       $(dom_id)[0],
-      function(lat,lng,id,angle) {
+      function(lat,lng,id,angle,altitude) {
         /* Display button to place this image with GPS tags. */
         $('.add-image-gps-'+id).attr('data-lat',lat);
         $('.add-image-gps-'+id).attr('data-lng',lng);
         if (angle) $('.add-image-gps-'+id).attr('data-angle',angle);
+        if (altitude) $('.add-image-gps-'+id).attr('data-altitude',altitude);
         $('.add-image-gps-'+id).show();
         $('.add-image-gps-'+id).on('click',function() {
           $('.add-image-'+id).hide();
@@ -171,12 +208,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
           window.mapKnitter._map.setView(
             [$(this).attr('data-lat'),
              $(this).attr('data-lng')]);
-          angle = $(this).attr('data-angle') || 0;
+          var angle = $(this).attr('data-angle') || 0;
+          var altitude = $(this).attr('data-altitude') || 0;
           img = window.mapKnitter.addImage(url,
                                      id,
                                      $(this).attr('data-lat'),
                                      $(this).attr('data-lng'),
-                                     angle);
+                                     angle,
+                                     altitude);
           $('#warpable-'+id+' a').hide();
         })
       },
@@ -209,69 +248,34 @@ MapKnitter.Map = MapKnitter.Class.extend({
         if (GPS["GPSLongitudeRef"] == "W") lng = lng*-1
       }
 
-      /* If there is altitude data; should separate this 
-       * from if there's rotation/heading data
-       */
+      // Attempt to use GPS compass heading; will require 
+      // some trig to calc corner points, which you can find below:
+
+      var angle = 0; 
+      // "T" refers to "True north", so -90.
+      if (GPS["GPSImgDirectionRef"] == "T")
+        angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90);
+      // "M" refers to "Magnetic north"
+      else if (GPS["GPSImgDirectionRef"] == "M")
+        angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90);
+      else
+        console.log("No compass data found");
+ 
+      /* If there is altitude data */
       if (typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined'){
- 
-        // Attempt to use GPS compass heading; will require 
-        // some trig to calc corner points, which you can find below:
-        //
-        // "T" refers to "True north", so -90.
-        if (GPS["GPSImgDirectionRef"] == "T")
-          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
-        else if (GPS["GPSImgDirectionRef"] == "M") // "M" refers to "Magnetic north", there might be a marginal difference not sure how much.
-          angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90) ;
-        else
-          console.log("No angle found");
- 
-        /*
         // Attempt to use GPS altitude:
+        // (may eventually need to find EXIF field of view for correction)
         if (typeof GPS.GPSAltitude !== 'undefined' && 
-            typeof GPS.GPSAltitudeRef !== 'undefined' && 
-            typeof act_height!== 'undefined' && 
-            typeof act_width !== 'undefined') {
-          Altitude = (GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef) / 10;
-
-          // Convert altitude to zoom, for large altitude it is not a possible conversion as at any altitude it 
-          // is not possible for a camera to see a complete view of earth
-          // For small altitudes the following will work fine. It is still experimental and needs testing. 
-          // For correction based on altitude we need the original dimensions of the image. 
-          
-          // Some GPS data shows altitude as zero even though it is not, we need to account for errors or we will have infinity zoom.
-          if (Altitude >0)
-            Altitude_to_zoom = ( (act_height/Img_height) * (act_width/Img_width) ) / Altitude;           
-          else
-            Altitude_to_zoom = Map.zoom * 1.3;
-          
-          pixel_ratio = 2 * Altitude_to_zoom;
-          console.log("Zoom for image"+(Altitude_to_zoom))
+            typeof GPS.GPSAltitudeRef !== 'undefined') {
+          altitude = (GPS.GPSAltitude["numerator"]/GPS.GPSAltitude["denominator"]+GPS.GPSAltitudeRef);
         } else {
-          pixel_ratio = 2 * (Map.zoom * 1.3);
-          console.log("Cannot use altitude data");
-          console.log("Zoom"+Map.zoom*1.3)
+          altitude = 0; // none
         }
-
-        // Calculate the distance to move on map, Mapknitter uses Map.zoom = Zoom / 1.3.
-        var hh = (Img_height / 2) / pixel_ratio, wh=(Img_width / 2) / pixel_ratio; 
-
-        var points = Array(4);
-        var Cos = Math.cos(Angle);
-        var Sin = Math.sin(Angle);
-  
-        // Position and rotate the image mathematically.
-        points[0]= [ Cos * (-1*wh) - Sin * (-1*hh) + x, Sin * (-1*wh ) + Cos * (-1*hh) + y ];
-        points[1]= [ Cos * (wh)    - Sin * (-1*hh) + x, Sin * (wh)     + Cos * (-1*hh) + y ];
-        points[2]= [ Cos * (wh)    - Sin * (hh   ) + x, Sin * (wh)     + Cos * (hh)    + y ];
-        points[3]= [ Cos * (-1*wh) - Sin * (hh   ) + x, Sin * (-1*wh)  + Cos * (hh)    + y ];
-  
-        */
-
       } 
 
       /* only execute callback if lat (and by 
        * implication lng) exists */
-      if (lat) fn(lat,lng,id,angle);
+      if (lat) fn(lat,lng,id,angle,altitude);
     }); 
   },
 
