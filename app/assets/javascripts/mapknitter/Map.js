@@ -6,6 +6,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
 
+    L.Icon.Default.imagePath = '/assets/leaflet/dist/images/';
+
     /* Initialize before map in order to add to layers; probably it can be done later too */
     var google = new L.Google("SATELLITE",{
       maxZoom: 24,
