@@ -262,6 +262,17 @@ MapKnitter.Map = MapKnitter.Class.extend({
         angle = (Math.PI / 180) * (GPS.GPSImgDirection["numerator"]/GPS.GPSImgDirection["denominator"] - 90);
       else
         console.log("No compass data found");
+
+      console.log("Orientation:",GPS["Orientation"]) 
+
+      /* If there is orientation data -- i.e. landscape/portrait etc */
+      if (GPS["Orientation"] == 6) { //CCW
+        angle += (Math.PI / 180) * -90
+      } else if (GPS["Orientation"] == 8) { //CW
+        angle += (Math.PI / 180) * 90
+      } else if (GPS["Orientation"] == 3) { //180
+        angle += (Math.PI / 180) * 180
+      }
  
       /* If there is altitude data */
       if (typeof GPS["GPSAltitude"] !== 'undefined' && typeof GPS["GPSAltitudeRef"] !== 'undefined'){
