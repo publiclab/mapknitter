@@ -1,6 +1,6 @@
 <form class="form-inline"><span class="input-group">
   <p>
-  <textarea cols="50" id="embedcode" type="text" class="form-control"><iframe src="http://<%= request.host %>/embed/<%= @map.slug %>" style="border:none;"></iframe></textarea>
+  <textarea cols="50" id="embedcode" type="text" class="form-control"><iframe src="http://<%= request.host %>/embed/<%= @map.slug %>" style="border:none;width:100%;height:400px;"></iframe></textarea>
   <script>
     (function(){
       $('#embedcode').click(function(){
