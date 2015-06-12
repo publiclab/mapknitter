@@ -13,6 +13,7 @@
     "blueimp-tmpl":             "2.5.4",
     "exif-js":                  "",
     "leaflet":                  "0.7.3",
+    "leaflet-omnivore":         "~0.3.2",
     "leaflet-google":           "https://raw.githubusercontent.com/shramov/leaflet-plugins/master/layer/tile/Google.js",
     "leaflet-draw":             "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-illustrate":       "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",

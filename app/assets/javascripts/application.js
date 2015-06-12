@@ -22,5 +22,6 @@
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-easybutton/easy-button.js
 //= require leaflet-google/index.js
+//= require leaflet-omnivore/leaflet-omnivore.min.js
 //= require sparklines/source/sparkline.js
 //= require annotations-legacy.js

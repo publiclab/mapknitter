@@ -418,6 +418,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
     });
   },
 
+  addKml: function() {
+    var url = prompt("Enter a KML URL");
+    var kml = omnivore.kml('/hood.kml')
+      .on('ready', function() { console.log(kml);
+        map.fitBounds(kml.getBounds());
+        $.each(kml._layers,function(i,marker) {
+          marker.bindPopup('<p><img width="100%;" src="'+marker.feature.properties.__imgUrl+'" /></p><p width="100%;">'+marker.feature.properties.__data+"</p>");
+        });
+      }).addTo(map);
+
+  },
+
   setupMap: function() {
     var map = this._map;
 
