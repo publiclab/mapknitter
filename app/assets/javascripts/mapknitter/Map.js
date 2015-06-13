@@ -420,7 +420,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   addKml: function() {
     var url = prompt("Enter a KML URL");
-    var kml = omnivore.kml('/hood.kml')
+    var kml = omnivore.kml(url)
       .on('ready', function() { console.log(kml);
         map.fitBounds(kml.getBounds());
         $.each(kml._layers,function(i,marker) {
