@@ -233,7 +233,7 @@ class Warpable < ActiveRecord::Base
       source_corners = source_corners = [[0,self.height],[0,0],[self.width,0],[self.width,self.height]]
     elsif rotation == 8
       puts 'rotated CW'
-      source_corners = [[self.height,0],[self.height,self.width],[0,self.width],[0,0]]
+      source_corners = [[self.width,0],[self.width,self.height],[0,self.height],[0,0]]
     elsif rotation == 3
       puts 'rotated 180 deg'
       source_corners = [[self.width,self.height],[0,self.height],[0,0],[self.width,0]]
