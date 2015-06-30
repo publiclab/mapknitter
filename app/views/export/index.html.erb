@@ -1,5 +1,15 @@
 <div class="container-fluid">
+
+  <iframe width="100%" height="300px" style="border:none;" src="https://webchat.oftc.net/?channels=publiclab<% if logged_in? %>&nick=<%= current_user.login %><% end %>"></iframe>
+
   <h2><%= Export.export_count %> maps currently exporting</h2>
+
+  <hr />
+  <div style="color:#888;">
+    <p><%= @day %> successfully exported in the past day.</p>
+    <p><%= @week %> successfully exported in the past week.</p>
+  </div>
+  <br />
 
   <table class="table">
     <tr>
@@ -27,11 +37,5 @@
     </tr>
     <% end %>
   </table>
-
-  <hr />
-  <div style="color:#888;">
-    <p><%= @day %> successfully exported in the past day.</p>
-    <p><%= @week %> successfully exported in the past week.</p>
-  </div>
 
 </div>
