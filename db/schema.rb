@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150117041704) do
+ActiveRecord::Schema.define(:version => 20150715162314) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "map_id"
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(:version => 20150117041704) do
     t.string   "tiles",                                            :default => "google",    :null => false
     t.string   "email",                                            :default => "",          :null => false
     t.boolean  "archived",                                         :default => false,       :null => false
-    t.text     "tile_url",                                                                  :null => false
-    t.text     "tile_layer",                                                                :null => false
+    t.text     "tile_url"
+    t.text     "tile_layer"
     t.string   "license",                                          :default => "copyright"
     t.integer  "user_id",                                          :default => 0
     t.boolean  "anon_annotatable",                                 :default => false
