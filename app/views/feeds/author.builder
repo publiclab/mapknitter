@@ -15,7 +15,7 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
        xml.pubDate     map.created_at.to_s(:rfc822)
        xml.category    "mapknitter"
        xml.link        "http://mapknitter.org/maps/"+map.slug
-       xml.description "<iframe src='http://mapknitter.org/embed/"+slug+"' style='border:none;'></iframe><p>"+map.description.to_s+"</p><p>View map details: http://mapknitter.org/maps/"+map.slug+"</p>"
+       xml.description "<iframe src='http://mapknitter.org/embed/"+map.slug+"' style='border:none;'></iframe><p>"+map.description.to_s+"</p><p>View map details: http://mapknitter.org/maps/"+map.slug+"</p>"
        xml.guid        "http://mapknitter.org/maps/"+map.slug
      end
    end
