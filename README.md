@@ -40,6 +40,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
+
+====
+
+##Simple installation with Cloud9
+
+1. If you have a GitHub account, visit https://c9.io and log in with the GitHub button.
+2. Fork this repository to your own GitHub account, creating a `yourname/mapknitter` project.
+3. Name your project, then (order important!) choose the **Ruby** template, THEN enter `yourname/mapknitter` in the "Clone from Git or Mercurial URL" field, and press **Create Workspace** 
+4. In the command line prompt at the bottom of the page, type `./install_cloud9.sh` and press enter.
+5. Enter your username when prompted, and it will launch itself.
+6. You're done! Go to the URL under the Preview menu! If you want to stop it, use `cmd-C`, start it, use the command: `sudo bundle exec rails s -p $PORT -b $IP`.
+
+====
+
+
 ##Installation video
 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
