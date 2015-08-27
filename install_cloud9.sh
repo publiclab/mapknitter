@@ -6,8 +6,7 @@ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev z
 mysql-ctl start
 bower install
 bundle install
-rake cloud9 username=$un
-rake db:setup
-rake db:migrate
-echo "Done! Now, click 'Run Project' at the top of the screen."
-
+bundle exec rake cloud9 username=$un
+bundle exec rake db:setup
+bundle exec rake db:migrate
+sudo bundle exec rails server -p $PORT -b $IP

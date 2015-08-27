@@ -7,4 +7,11 @@ task :cloud9 do
   File.open(outfile, 'w') do |out|
     out << File.open(infile).read.gsub(/<username>/, username)
   end  
+
+  infile = "config/config.yml.example"
+  outfile = "config/config.yml"
+
+  File.open(outfile, 'w') do |out|
+    out << File.open(infile).read
+  end
 end
