@@ -17,7 +17,7 @@
   <%= javascript_include_tag 'uploads' %>
   <% if @annotations %><%= javascript_include_tag 'annotations' %><% end %>
 
-  <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
+  <script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
   
 </head>
 <body>
@@ -81,7 +81,7 @@
 
               <!-- Write a research note on Public Lab -->
               <div class="btn-group">
-                <a target="_blank" class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22http://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttp://mapknitter.org/embed/<%= @map.slug %>">
+                <a target="_blank" class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>">
                   <span class="fa fa-file"></span> 
                   <span class="hidden-xs">Post</span>
                 </a>

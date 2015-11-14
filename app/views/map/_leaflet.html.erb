@@ -29,19 +29,19 @@
     
 <script src="/lib/leaflet/dist/leaflet.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="/lib/leaflet/dist/leaflet.css" type="text/css" media="screen" title="no title" charset="utf-8">
-<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
+<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script> 
 <script src="/lib/leaflet-google/index.js"></script>
 
 <script>
 
-  $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="http://mapknitter.org/annotation/embed/<%= @map.name %>"></iframe>')
-  $('#embedcode-annotations').val('<iframe style="border:none;" width="500" height="375" src="http://mapknitter.org/annotation/embed/<%= @map.name %>?annotations=true"></iframe>')
+  $('#embedcode').val('<iframe style="border:none;" width="500" height="375" src="https://mapknitter.org/annotation/embed/<%= @map.name %>"></iframe>')
+  $('#embedcode-annotations').val('<iframe style="border:none;" width="500" height="375" src="https://mapknitter.org/annotation/embed/<%= @map.name %>?annotations=true"></iframe>')
   var map
 
   (function() {
 
 	var tms = "/tms/<%= @map.name %>/{z}/{x}/{y}.png"
-	var background_tms = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+	var background_tms = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 	var minZoom = 12
 	var maxZoom = 22
 	var label = "Main"
@@ -50,7 +50,7 @@
 	var main = new L.TileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
 
         // add an OpenStreetMap tile layer
-        var osm = new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        var osm = new L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         })
 
