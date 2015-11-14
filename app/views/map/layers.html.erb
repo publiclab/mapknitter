@@ -25,6 +25,6 @@
 
 <% @map.nearby_maps(0.03).each do |map| %>
 	<% if !map.archived && !map.private && map.warpables.length > 0 %>
-<p><a href="javascript:void(0);" onClick="Knitter.start_openlayers('TMS','http://mapknitter.org/tms/<%= map.name %>/');Modalbox.hide();location.reload()"><%= map.name %></a> (by <a href="/author/<%= map.author %>"><%= map.author %></a>)</p>
+<p><a href="javascript:void(0);" onClick="Knitter.start_openlayers('TMS','https://mapknitter.org/tms/<%= map.name %>/');Modalbox.hide();location.reload()"><%= map.name %></a> (by <a href="/author/<%= map.author %>"><%= map.author %></a>)</p>
 	<% end %>
 <% end %>

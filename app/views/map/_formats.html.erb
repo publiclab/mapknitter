@@ -1,5 +1,5 @@
 <div class="btn-group">
-  <a class="btn btn-mini btn-inverse" href="http://publiclab.org/wiki/map-formats"><i class="icon-white icon-question-sign"></i>&nbsp;</a>
+  <a class="btn btn-mini btn-inverse" href="https://publiclab.org/wiki/map-formats"><i class="icon-white icon-question-sign"></i>&nbsp;</a>
 <% unless @export.nil? %>
 
 <% if @export.jpg %>
@@ -9,7 +9,7 @@
   <a class="btn btn-mini btn-success" href="/export/geotiff/<%= @map.name %>.tif">GeoTIFF</a>
 <% end %>
 <% if @export.tms || @export.export_type == "nrg" %>
-  <a class="btn btn-mini btn-warning" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
+  <a class="btn btn-mini btn-warning" target="_blank" href="https://archive.publiclab.org/leaflet/?tms=https://mapknitter.org/tms/<%= @map.name %>/&lat=<%= @map.lat %>&lon=<%= @map.lon %>">Web viewer</a>
   <a class="btn btn-mini btn-warning" target="_blank" href="/tms/<%= @map.name %>/openlayers.html">OpenLayers viewer</a>
   <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/">TMS</a>
   <a class="btn btn-mini btn-info" target="_blank" href="/tms/<%= @map.name %>/alt">OSM-TMS</a>

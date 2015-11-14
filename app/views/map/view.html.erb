@@ -9,11 +9,11 @@
 </style>
 <div style="height:300px;">
 <% if (@export && @export.tms) && nrg = @map.get_export('nrg') %>
-<iframe id="preview" src="http://archive.publiclab.org/leaflet/layers/?tms=http://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=http://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
+<iframe id="preview" src="https://archive.publiclab.org/leaflet/layers/?tms=https://mapknitter.org/tms/<%= @map.name %>/&label=<%= @map.name %>&lon=<%= @map.lon %>&lat=<%= @map.lat %>&zoom=<%= @map.zoom %>&layers=https://mapknitter.org/tms/<%= @map.name %>-nrg/*NRG infrared"></iframe>
 <% elsif @export && @export.tms %>
 <%= render :partial => "map/leaflet" %>
 <% else %>
-<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="http://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
+<p style="background:#fda;padding:8px;"><i>This map has not been exported yet. Upload &amp; place images &amp; <a href="https://publiclab.org/wiki/mapknitter">run an export</a> to see your aerial images overlaid on this map.</i></p>
 <%= render :partial => "map/leaflet" %>
 <% end %>
 </div>
@@ -35,7 +35,7 @@
   <% if @export %>
     <%= render :partial => "map/formats" %>
   <% else %>
-    <p><i>This map has not been exported yet. <a href="http://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
+    <p><i>This map has not been exported yet. <a href="https://publiclab.org/wiki/mapknitter">Run an export</a> to generate an embeddable and browseable preview.</i></p>
   <% end %>
 
   <% if @map.description %>
@@ -45,8 +45,8 @@
   <div>
     <a class="btn btn-primary" href="/maps/<%= @map.name %>">Edit this map</a>
     <% if @map.license == "publicdomain" || @map.license == "cc-by" %>
-      <a class="btn" href="http://openstreetmap.us/iD/release/#background=custom:http://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">Contribute to OpenStreetMap in iD</a>
-      <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=http://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>
+      <a class="btn" href="http://openstreetmap.us/iD/release/#background=custom:https://mapknitter.org/tms/<%= @map.name %>/alt/{z}/{x}/{y}.png&map=16.56/<%= @map.lon %>/<%= @map.lat %>">Contribute to OpenStreetMap in iD</a>
+      <a class="btn" href="http://www.openstreetmap.org/edit?lon=<%= @map.lon %>&lat=<%=@map.lat %>&zoom=17&tileurl=https://mapknitter.org/tms/<%= @map.name %>/alt/$z/$x/$y.png?origin=nw">or in Potlatch</a>
     <% end %>
   </div>
   <hr />
@@ -115,7 +115,7 @@
           <span class="geotiff_stats"><%= map.latest_export.cm_per_pixel %> cm/px, <%= number_to_human_size(map.latest_export.size) %>, <%= map.latest_export.width %> x <%= map.latest_export.height %> px</span>
         <% end %><br />
         <% if map.latest_export.tms %>
-          <a class="leaflet" target="_blank" href="http://archive.publiclaboratory.org/leaflet/?tms=http://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web viewer</a>
+          <a class="leaflet" target="_blank" href="https://archive.publiclab.org/leaflet/?tms=https://mapknitter.org/tms/<%= map.name %>/&lat=<%= map.lat %>&lon=<%= map.lon %>">Web viewer</a>
           <a class="tms" target="_blank" href="/tms/<%= map.name %>">TMS</a> <a class="tms-alt" href="/tms/<%= map.name %>/alt">OSM-style</a>
         <% end %>
         <% if map.latest_export.jpg %>
@@ -155,8 +155,8 @@
 
 <% if @export %>
 <div class="alert alert-warning">
-  <p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="http://publiclab.org/archive">the Public Lab Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
-  <p><a class="btn btn-primary" href="http://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
+  <p>Now that you've exported your map, consider open sourcing it and submitting it to <a href="https://publiclab.org/archive">the Public Lab Archive</a> -- a collection of open data by "counter-cartographers" and <a href="http://grassrootsmapping.org">grassroots mappers</a>. </p>
+  <p><a class="btn btn-primary" href="https://publiclab.org/wiki/publish-plots-archive">Click here to begin &raquo;</a></p>
 </div>
 <% end %>
 
@@ -168,13 +168,13 @@
 <p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
   <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a>
   To the extent possible under law,
-  <a rel="dct:publisher" href="http://publiclab.org">
+  <a rel="dct:publisher" href="https://publiclab.org">
     <span property="dct:title"><%= @map.author %></span></a>
   has waived all copyright and related or neighboring rights to
   "<span property="dct:title"><%= @map.name %></span>".
 <!--This work is published from:
 <span property="vcard:Country" datatype="dct:ISO3166"
-      content="US" about="http://publiclab.org">
+      content="US" about="https://publiclab.org">
   United States</span>.
 -->
 </p>
@@ -182,7 +182,7 @@
 <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a></p>
 <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 <% else %>
-&copy; <%= @map.created_at.to_s[0..3] %> (<a href="http://publiclab.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
+&copy; <%= @map.created_at.to_s[0..3] %> (<a href="https://publiclab.org/wiki/open-sourcing-mapknitter-data">Click here</a> to open source your map.)
 <% end %>
 </small></p>
 </div>

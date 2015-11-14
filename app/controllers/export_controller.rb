@@ -16,12 +16,12 @@ class ExportController < ApplicationController
     end
   end
 
-  # http://mapknitter.org/warps/yale-farm/yale-farm.jpg
+  # https://mapknitter.org/warps/yale-farm/yale-farm.jpg
   def jpg
     send_file 'public/warps/'+params[:id]+'/'+params[:id]+'.jpg'
   end
 
-  # http://mapknitter.org/warps/yale-farm/yale-farm-geo.tif
+  # https://mapknitter.org/warps/yale-farm/yale-farm-geo.tif
   def geotiff
     send_file 'public/warps/'+params[:id]+'/'+params[:id]+'-geo.tif'
   end

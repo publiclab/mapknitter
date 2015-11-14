@@ -6,6 +6,7 @@ class Warpable < ActiveRecord::Base
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
+    :s3_protocol => 'https',
     :styles => {
       :medium=> "500x375",
       :small=> "240x180",

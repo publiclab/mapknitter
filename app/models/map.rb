@@ -19,7 +19,7 @@ class Map < ActiveRecord::Base
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
   validates_format_of   :slug,
                         :with => /^[\w-]*$/,
-                        :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: http://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
+                        :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
                         :on => :create
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   validates_with NotAtOriginValidator
