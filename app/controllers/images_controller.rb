@@ -29,6 +29,7 @@ class ImagesController < ApplicationController
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
     map = Map.find(params[:map_id])
+    @warpable.history = ''
     @warpable.map_id = map.id
     map.updated_at = Time.now
     map.save
