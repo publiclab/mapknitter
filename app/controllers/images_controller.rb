@@ -25,6 +25,20 @@ class ImagesController < ApplicationController
     render :template => 'legacy/new', :layout => false
   end
 
+  # proxy, used if MapKnitter is being backed by Amazon S3 file storage, 
+  # to enable client-side distortion using webgl-distort, which requires same-origin
+  def fetch
+    if Rails.env.production?
+      if params[:url][0..42] == "https://s3.amazonaws.com/grassrootsmapping/"
+        url = URI.parse(params[:url])
+        result = Net::HTTP.get_response(url)
+        send_data result.body, :type => result.content_type, :disposition => 'inline'
+      end
+    else
+      redirect_to params[:url]
+    end
+  end
+
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
