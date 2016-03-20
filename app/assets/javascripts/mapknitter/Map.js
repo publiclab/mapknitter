@@ -44,6 +44,43 @@ MapKnitter.Map = MapKnitter.Class.extend({
         // only already-placed images:
         if (warpable.nodes.length > 0) {
 
+          var downloadEl = $('.img-download-' + warpable.id),
+              imgEl = $('#full-img-' + warpable.id);
+
+          downloadEl.click(function() { 
+
+            imgEl[0].onload = function() {
+
+              var height = imgEl.height(),
+                  width  = imgEl.width(),
+                  nw = map.latLngToContainerPoint(warpable.nodes[0]),
+                  ne = map.latLngToContainerPoint(warpable.nodes[1]),
+                  se = map.latLngToContainerPoint(warpable.nodes[2]),
+                  sw = map.latLngToContainerPoint(warpable.nodes[3]);
+ 
+              nw.x -= nw.x;
+              ne.x -= nw.x;
+              se.x -= nw.x;
+              sw.x -= nw.x;
+ 
+              nw.y -= nw.y;
+              ne.y -= nw.y;
+              se.y -= nw.y;
+              sw.y -= nw.y;
+ 
+              warpWebGl(
+                'full-img-' + warpable.id, 
+                [ 0, 0,        width, 0,    width, height, 0, height ], 
+                [ nw.x, nw.y,  ne.x,  ne.y, se.x,  se.y,   sw.x, sw.y ],
+                true // trigger download
+              ) 
+
+            }
+
+            imgEl[0].src = $('.img-download-' + warpable.id).attr('data-image');
+
+          });
+
           var corners = [ 
                 new L.latLng(warpable.nodes[0].lat,
                              warpable.nodes[0].lon),

@@ -27,6 +27,7 @@ class Warpable < ActiveRecord::Base
    {"name" => read_attribute(:image_filename),
     "size" => read_attribute(:image_size),
     "url" => self.image.url(:medium),
+    "original_url" => self.image.url(:original),
     "id" => self.read_attribute(:id),
     "thumbnail_url" => self.image.url(:thumb),
     "delete_url" => self.image.url,

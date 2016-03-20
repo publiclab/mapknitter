@@ -25,3 +25,5 @@
 //= require leaflet-omnivore/leaflet-omnivore.min.js
 //= require sparklines/source/sparkline.js
 //= require annotations-legacy.js
+//= require glfx-js/dist/glfx.js
+//= require webgl-distort/dist/webgl-distort.js
