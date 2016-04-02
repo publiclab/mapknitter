@@ -56,17 +56,21 @@ MapKnitter.Map = MapKnitter.Class.extend({
                   nw = map.latLngToContainerPoint(warpable.nodes[0]),
                   ne = map.latLngToContainerPoint(warpable.nodes[1]),
                   se = map.latLngToContainerPoint(warpable.nodes[2]),
-                  sw = map.latLngToContainerPoint(warpable.nodes[3]);
+                  sw = map.latLngToContainerPoint(warpable.nodes[3]),
+                  offsetX = nw.x,
+                  offsetY = nw.y,
+                  displayedWidth = $('#warpable-img-' + warpable.id).width(),
+                  ratio   = width / displayedWidth;
+
+              nw.x -= offsetX;
+              ne.x -= offsetX;
+              se.x -= offsetX;
+              sw.x -= offsetX;
  
-              nw.x -= nw.x;
-              ne.x -= nw.x;
-              se.x -= nw.x;
-              sw.x -= nw.x;
- 
-              nw.y -= nw.y;
-              ne.y -= nw.y;
-              se.y -= nw.y;
-              sw.y -= nw.y;
+              nw.y -= offsetY;
+              ne.y -= offsetY;
+              se.y -= offsetY;
+              sw.y -= offsetY;
  
               warpWebGl(
                 'full-img-' + warpable.id, 
