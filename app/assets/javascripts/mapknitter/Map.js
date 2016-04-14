@@ -49,6 +49,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           downloadEl.click(function() { 
 
+            downloadEl.html("<i class='fa fa-circle-o-notch fa-spin'></i>");
+
             imgEl[0].onload = function() {
 
               var height = imgEl.height(),
@@ -78,6 +80,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 [ nw.x, nw.y,  ne.x,  ne.y, se.x,  se.y,   sw.x, sw.y ],
                 true // trigger download
               ) 
+
+              downloadEl.html("<i class='fa fa-download'></i>");
 
             }
 
