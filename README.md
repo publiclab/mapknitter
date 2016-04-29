@@ -99,16 +99,6 @@ You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
-**Note:** If you are having problems exporting from the app, it may be that your Ruby version is not working well with ftools. In that case, remove the following lines in `warpable.rb`:
-
-    #require "ftools"
-    #File.copy(Rails.root.to_s+'/public'+self.image.to_s,local_location)
-
-And replace with:
-
-    require "fileutils"
-    FileUtils.cp(Rails.root.to_s+'/public'+self.image.to_s,local_location)
-
 ##Bugs and support
 
 To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues 
