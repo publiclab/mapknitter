@@ -205,8 +205,8 @@ class Warpable < ActiveRecord::Base
         }
       }
     else
-      require "ftools"
-      File.copy(Rails.root.to_s+'/public'+self.image.to_s,local_location)
+      require "fileutils"
+      FileUtils.cp(Rails.root.to_s+'/public'+self.image.to_s,local_location)
     end
 
     points = ""
