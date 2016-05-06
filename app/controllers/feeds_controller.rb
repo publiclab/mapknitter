@@ -7,6 +7,12 @@ class FeedsController < ApplicationController
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 
+  def clean
+    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => ''},:joins => :warpables, :group => "maps.id")
+    render :layout => false, :template => "feeds/clean"
+    response.headers["Content-Type"] = "application/xml; charset=utf-8"
+  end
+
   def license
     @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => params[:id]},:joins => :warpables, :group => "maps.id")
     render :layout => false, :template => "feeds/license"
