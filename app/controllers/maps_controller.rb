@@ -13,7 +13,7 @@ class MapsController < ApplicationController
 
   def map
     @maps = Map.where(archived: false, password: '')
-               .select(:author, :name, :lat, :lon, :slug, :archived, :password)
+               .select([:author, :name, :lat, :lon, :slug, :archived, :password])
     render layout: false
   end
 
