@@ -25,7 +25,7 @@
       var map = L.map('map').setView([15,0], 2);
       L.tileLayer("https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png").addTo(map)
       <% @maps.each do |map| %>
-        L.marker([<%= map.lat %>, <%= map.lon %>]).addTo(map).bindPopup("<a href='/maps/<%= map.slug %>'><%= map.name %></a> by <a href='/profile/<%= map.author.gsub('\n',' ') %>'></a>");
+        L.marker([<%= map.lat %>, <%= map.lon %>]).addTo(map).bindPopup("<a href='/maps/<%= map.slug %>'><%= map.name %></a><% if map.user %> by <a href='/profile/<%= map.user.login'><%= map.user.login %></a><% end %>");
       <% end %>
     </script>
 
