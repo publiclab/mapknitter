@@ -22,13 +22,16 @@
     <div style="width:100%;height:100%;" id="map"></div>
 
     <script>
-      var map = L.map('map').setView([15,0], 2);
-      L.tileLayer("https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png").addTo(map)
+      var map;
+      (function() {
+      map = L.map('map').setView([0,0], 4);
+      L.tileLayer("https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png").addTo(map);
       <% @maps.each do |map| %>
         <% if map.lat && map.lon %>
           L.marker([<%= map.lat %>, <%= map.lon %>]).addTo(map).bindPopup("<a href='/maps/<%= map.slug %>'><%= map.name.gsub(/\n/,'') %></a><% if map.user %> by <a href='/profile/<%= map.user.login %>'><%= map.user.login %></a><% end %>");
         <% end %>
       <% end %>
+      })();
     </script>
 
     <script>
