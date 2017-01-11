@@ -83,6 +83,7 @@ Mapknitter::Application.routes.draw do
   # once we have string-based ids, reorganize these around 'maps' and resourceful routing
   get 'maps' => 'maps#index'
   post 'maps' => 'maps#create' # legacy, will be replaced by resourceful route
+  put 'map/map' => 'maps#map'
   put 'map/:id' => 'maps#update' # legacy, will be replaced by resourceful route
   get 'search/:id' => 'maps#search'
   get 'search' => 'maps#search'
