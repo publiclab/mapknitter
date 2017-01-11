@@ -11,6 +11,12 @@ class MapsController < ApplicationController
     render :layout => 'application'
   end
 
+  def map
+    @maps = Map.where(archived: false, password: '')
+               .select(:author, :name, :lat, :lon, :slug, :archived, :password)
+    render layout: false
+  end
+
   def new
     @map = Map.new
   end
