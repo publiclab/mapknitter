@@ -8,7 +8,7 @@
     "jquery": "~1.11",
     "jquery-ui": "~1.11",
     "jquery-ujs": "~1.0.3",
-    "ol2": "release-2.13.1",
+    "ol2": "git+https://github.com/openlayers/ol2#release-2.13.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.8.1",
     "blueimp-tmpl": "2.5.4",
     "exif-js": "",
