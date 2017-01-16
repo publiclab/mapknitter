@@ -13,7 +13,7 @@ web:
   environment:
     - RAILS_ENV=production
   volumes:
-    - ./mapknitter/:/app
+    - ./:/app
   ports:
     - "127.0.0.1:3000:3000"
   links:
