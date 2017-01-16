@@ -2,7 +2,7 @@ development:
   adapter: mysql2
   username: 
   password: 
-  database: mapknitter_development
+  database: mapknitter
 
 production:
   adapter: mysql2

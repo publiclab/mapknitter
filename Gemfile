@@ -37,6 +37,10 @@ group :dependencies do
 
 end
 
+group :test do
+  gem 'test-unit'    
+end
+
 group :development do
   gem "jshintrb"
   gem "therubyracer"

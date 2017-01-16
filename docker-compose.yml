@@ -1,0 +1,20 @@
+db:
+  image: mysql:5.6
+  environment:
+    - MYSQL_DATABASE=mapknitter
+    - MYSQL_USER=mapknitter
+    - MYSQL_PASSWORD=mapknitter
+    - MYSQL_RANDOM_ROOT_PASSWORD=true
+  volumes:
+    - /srv/mapknitter_priv1/mk1_database:/var/lib/mysql
+web:
+  build: mapknitter
+  command: /bin/bash -c "sleep 5 && bundle exec rails s -p 3000 -b '0.0.0.0'"
+  environment:
+    - RAILS_ENV=production
+  volumes:
+    - ./mapknitter/:/app
+  ports:
+    - "127.0.0.1:3000:3000"
+  links:
+    - db
