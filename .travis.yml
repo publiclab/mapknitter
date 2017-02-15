@@ -8,6 +8,7 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - docker-compose build
   - docker-compose run web sleep 5
+  - docker-compose run web bash -c "bundle exec gem list"
   - docker-compose run web bash -c "bundle exec rake db:setup"
   - docker-compose run web bash -c "bundle exec rake db:migrate"
   - docker-compose run web bower install --allow-root
