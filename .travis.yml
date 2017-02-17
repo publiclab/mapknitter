@@ -4,6 +4,7 @@ services:
 
 install:
   - cp config/database.yml.example config/database.yml
+  - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
   - docker-compose build
   - docker-compose run web sleep 5
