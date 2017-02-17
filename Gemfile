@@ -12,6 +12,7 @@ gem "friendly_id"
 group :dependencies do
   gem "mysql", "2.9.1"
   gem "mysql2"
+  gem "activerecord-mysql2-adapter"
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"

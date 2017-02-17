@@ -25,6 +25,8 @@ GEM
       activesupport (= 3.2.22.5)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-mysql2-adapter (0.0.3)
+      mysql2
     activeresource (3.2.22.5)
       activemodel (= 3.2.22.5)
       activesupport (= 3.2.22.5)
@@ -158,6 +160,7 @@ PLATFORMS
 
 DEPENDENCIES
   RubyInline
+  activerecord-mysql2-adapter
   autoprefixer-rails
   aws-sdk (~> 1.5.7)
   friendly_id
@@ -184,9 +187,3 @@ DEPENDENCIES
   uglifier
   will_paginate (= 3.0.7)
   will_paginate-bootstrap
-
-RUBY VERSION
-   ruby 2.1.2p95
-
-BUNDLED WITH
-   1.13.7
