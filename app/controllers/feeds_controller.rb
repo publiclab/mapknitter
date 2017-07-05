@@ -5,7 +5,7 @@ class FeedsController < ApplicationController
     @maps = Map.find(:all, 
       :order => "id DESC",:limit => 20, 
       :conditions => {:archived => false, :password => ''},
-      :joins => :user, 
+      :joins => [:user, :warpables], 
       :group => "maps.id")
     render :layout => false, :template => "feeds/all"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
