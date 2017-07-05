@@ -13,6 +13,7 @@ production:
 
 test:
   adapter: mysql2
-  username: 
-  password: 
-  database: mapknitter_test
+  username: mapknitter
+  password: mapknitter
+  host: db
+  database: mapknitter
