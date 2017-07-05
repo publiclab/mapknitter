@@ -70,6 +70,21 @@ class MapsController < ApplicationController
     end
   end
 
+  def archive
+    @map = Map.find_by_name(params[:id])
+    if logged_in? && current_user.can_delete?(@map)
+      @map.archived = true
+      if @map.save
+        flash[:notice] = "Archived map."
+      else
+        flash[:error] = "Failed to archive map."
+      end
+    else
+      flash[:error] = "Only admins may archive maps."
+    end
+    redirect_to "/"
+  end
+
   def embed
     @map = Map.find params[:id]
     @map.zoom ||= 12
