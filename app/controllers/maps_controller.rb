@@ -34,7 +34,7 @@ class MapsController < ApplicationController
       end
     else
       @map = Map.new(params[:map])
-      if verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
+      if Rails.env != 'production' || verify_recaptcha(:model => @map, :message => "ReCAPTCHA thinks you're not human! Try again!")
         if @map.save
           redirect_to "/maps/#{@map.slug}"
         else
