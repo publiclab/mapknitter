@@ -18,7 +18,7 @@
   <p class="map map-meta">
     <small>
       <% if map.archived %><i>Archived</i> | <% end %>
-      <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.slug %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+      <% if logged_in? && current_user.can_delete?(map) %><a href="/map/archive/<%= map.slug %> %>">Archive/Spam</a> | <% end %>
       Updated <%= map.updated_at.to_s(:short) %> |
       <%= map.warpables.length %> images | <%= map.comments.length %> comments
     </small>
