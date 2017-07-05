@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class MapTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+ test "Check logged in" do
+   
   end
 end
