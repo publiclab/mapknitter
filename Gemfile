@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 ruby "2.1.2"
 gem "rails", "~>3.2"
+gem 'rake',  '~> 10.5.0'
 
 gem "will_paginate", "3.0.7"
 gem "will_paginate-bootstrap"
@@ -9,8 +10,7 @@ gem "friendly_id"
 
 # dependencies
 group :dependencies do
-  gem "mysql", "2.9.1"
-  gem "mysql2"
+  gem 'mysql2', '~> 0.3.20'
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
@@ -35,6 +35,10 @@ group :dependencies do
   gem "autoprefixer-rails"
   gem "uglifier"
 
+end
+
+group :test do
+  gem 'test-unit'    
 end
 
 group :development do

@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+install:
+  - cp config/database.yml.example config/database.yml
+  - cp config/config.yml.example config/config.yml
+  - cp db/schema.rb.example db/schema.rb
+  - docker-compose build
+  - docker-compose run web sleep 10
+  - docker-compose run web bash -c "rake db:setup"
+  - docker-compose run web bash -c "rake db:migrate"
+  - docker-compose run web bower install --allow-root
+
+script:
+  - docker-compose run web bash -c "rake test"

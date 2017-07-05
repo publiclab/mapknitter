@@ -71,7 +71,7 @@
       </select>
     </div>
 
-    <% if !logged_in? %><p><%= recaptcha_tags :display => {:theme => "white"} %></p><% end %>
+    <% if !logged_in? %><p><% if Rails.env == 'production' %><%= recaptcha_tags :display => {:theme => "white"} %><% end %></p><% end %>
 
     <%= f.submit "Create map", :class => "btn btn-primary btn-lg", :tabIndex => 4 %>  
 
