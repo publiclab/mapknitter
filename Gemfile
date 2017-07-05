@@ -10,8 +10,7 @@ gem "friendly_id"
 
 # dependencies
 group :dependencies do
-  gem "mysql", "2.9.1"
-  gem "mysql2"
+  gem 'mysql2', '~> 0.3.20'
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
