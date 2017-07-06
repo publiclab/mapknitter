@@ -88,6 +88,7 @@ Mapknitter::Application.routes.draw do
   get 'search/:id' => 'maps#search'
   get 'search' => 'maps#search'
   get 'map/update/:id' => 'maps#update' # legacy
+  get 'map/archive/:id' => 'maps#archive'
   get 'map/region/:id' => 'maps#region'
   get 'map/license/:id' => 'maps#license'
   get 'maps/featured' => 'maps#featured'
