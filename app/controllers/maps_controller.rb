@@ -71,7 +71,7 @@ class MapsController < ApplicationController
   end
 
   def archive
-    @map = Map.find_by_name(params[:id])
+    @map = Map.find_by_slug(params[:id])
     if logged_in? && current_user.can_delete?(@map)
       @map.archived = true
       if @map.save
