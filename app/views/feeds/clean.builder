@@ -13,8 +13,9 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
        xml.author      map.author
        xml.pubDate     map.created_at.to_s(:rfc822)
        xml.category    "mapknitter"
+       xml.image       map.warpables.first.image.url(:medium)
        xml.link        "https://mapknitter.org/maps/"+map.slug
-       xml.description map.description.to_s
+       xml.description map.description.to_s# + " " + map.warpables.first.image.url(:medium)
        xml.guid        "https://mapknitter.org/maps/"+map.slug
      end
    end
