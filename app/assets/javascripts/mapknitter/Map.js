@@ -484,12 +484,20 @@ MapKnitter.Map = MapKnitter.Class.extend({
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      id: 'examples.map-i86knfo3'
+      id: 'mapbox'
+    })
+
+    /* additional background layers */
+    var naip = L.tileLayer('http://cube.telascience.org/tilecache/tilecache.py/NAIP_ALL/{z}/{x}/{y}.png', {
+      maxZoom: 24,
+      attribution: 'Public domain imagery via <a href="http://www.apfo.usda.gov/FSA/apfoapp?area=home&subject=prog&topic=nai">NAIP</a>',
+      id: 'naip'
     })
 
     var baseMaps = {
+        "Google Satellite": google,
         "OpenStreetMap": mapbox,
-        "Google Satellite": google
+        "NAIP": naip
     };
     // eventually, annotations
     var overlayMaps = {
