@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_subdomain
-    if request.subdomain.present? && Rails.env != 'test'
+    if request.subdomain.present? && Rails.env == 'production'
       redirect_to 'http://' + request.domain + request.port_string + request.fullpath
     end
   end
