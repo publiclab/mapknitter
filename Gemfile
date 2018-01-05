@@ -13,7 +13,7 @@ group :dependencies do
   gem 'mysql2', '~> 0.3.20'
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
-  gem "recaptcha", "0.3.6", :require => "recaptcha/rails"
+  gem "recaptcha", :require => "recaptcha/rails"
   gem "oa-openid", "0.3.2"
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
