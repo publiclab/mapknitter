@@ -15,9 +15,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
       opacity:0.5
     });
 
-    this._map = L.map('knitter-map-pane', { 
+    this._map = new L.map('knitter-map-pane', { 
       zoomControl: false,
-      layers: [google]
     }).setView(this._latlng, this._zoom);
 
     // make globally accessible map namespace for knitter.js
@@ -487,9 +486,17 @@ MapKnitter.Map = MapKnitter.Class.extend({
       id: 'examples.map-i86knfo3'
     })
 
+    // https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
+    var googleMutant = L.gridLayer.googleMutant({
+      type: 'satellite', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+      maxZoom: 24,
+      maxNativeZoom: 20,
+      opacity:0.5
+    }).addTo(this._map);
+
     var baseMaps = {
         "OpenStreetMap": mapbox,
-        "Google Satellite": google
+        "Google Satellite": googleMutant
     };
     // eventually, annotations
     var overlayMaps = {
