@@ -1,4 +1,4 @@
-##MapKnitter 2
+## MapKnitter 2
 
 Use Public Lab's MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/wiki/balloon-mapping) and combine them into:
 
@@ -25,7 +25,7 @@ MapKnitter is broken into three major components:
 
 Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
-##License
+## License
 
 Map Knitter is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,13 +40,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
 
-##Installation video
+## Installation video
 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
 
 http://youtu.be/iGYGpS8rZMY
 
-##Prerequisites
+## Prerequisites
 
 Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
 
@@ -86,7 +86,7 @@ Once NPM is installed, you should be able to run:
 
 `sudo npm install -g bower`
 
-##Installation
+## Installation
 
 You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
 
@@ -99,7 +99,7 @@ You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
-##Bugs and support
+## Bugs and support
 
 To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues 
 
@@ -107,7 +107,7 @@ For additional support, join the Public Lab website and mailing list at http://p
 
 For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
-##Developers
+## Developers
 
 Help improve Public Lab software!
 
