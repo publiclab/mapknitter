@@ -1,6 +1,10 @@
 require "recaptcha/rails"
 
+class ActionView::Base 
+  include Recaptcha::ClientHelper 
+end 
+
 Recaptcha.configure do |config|
-	config.public_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-	config.private_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  config.site_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  config.secret_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 end
