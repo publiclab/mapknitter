@@ -84,7 +84,11 @@ class Map < ActiveRecord::Base
   end
 
   def self.authors(limit = 50)
-    Map.find(:all, :limit => limit, :group => "maps.author", :order => "id DESC", :conditions => ['password = "" AND archived = "false"']).collect(&:author)
+    Map.limit(limit)
+       .order("maps.id DESC")
+       .where('password = "" AND archived = "false"')
+       .collect(&:author)
+#       .group("maps.author")
   end
 
   def self.new_maps

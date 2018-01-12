@@ -43,10 +43,11 @@
     }
     </style>
     <script>
-      var geocoder = new google.maps.Geocoder();
+      var geocoder;
 
       $(document).ready(function() { 
-
+      
+        geocoder = new google.maps.Geocoder();
         $("#new_map_place").autocomplete({
           //This bit uses the geocoder to fetch address values
           source: function(request, response) {

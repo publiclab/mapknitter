@@ -7,7 +7,10 @@ class MapsController < ApplicationController
   layout 'knitter2'
 
   def index
-    @maps = Map.page(params[:page]).per_page(20).where(archived: false, password: '').order('updated_at DESC')
+    @maps = Map.page(params[:page])
+               .per_page(20)
+	       .where(archived: false, password: '')
+	       .order('updated_at DESC')
     render :layout => 'application'
   end
 

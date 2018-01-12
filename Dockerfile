@@ -4,7 +4,7 @@
 FROM ruby:2.1.2
 MAINTAINER Sebastian Silva "sebastian@fuentelibre.org"
 
-LABEL "This image deploys Mapknitter!"
+LABEL This image deploys Mapknitter!
 
 # Set correct environment variables.
 RUN mkdir -p /app
