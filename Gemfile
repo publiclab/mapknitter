@@ -18,7 +18,7 @@ group :dependencies do
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
   gem "RubyInline"
-  gem "paperclip", "~>4.2.0"
+  gem "paperclip", "~>4.2.2"
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
