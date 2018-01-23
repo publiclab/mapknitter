@@ -166,12 +166,12 @@ DEPENDENCIES
   mysql2 (~> 0.3.20)
   oa-openid (= 0.3.2)
   open_id_authentication
-  paperclip (~> 4.2.0)
+  paperclip (~> 4.2.2)
   passenger
   rails (~> 3.2)
   rake (~> 10.5.0)
   rdiscount (= 2.1.7.1)
-  recaptcha (= 4.6.3)
+  recaptcha
   right_aws
   ruby-openid (~> 2.5)
   sass
@@ -182,3 +182,9 @@ DEPENDENCIES
   uglifier
   will_paginate (= 3.0.7)
   will_paginate-bootstrap
+
+RUBY VERSION
+   ruby 2.1.2p95
+
+BUNDLED WITH
+   1.14.6
