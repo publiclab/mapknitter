@@ -172,7 +172,10 @@ class MapsController < ApplicationController
     @title = "Maps in #{area}"
     ids = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).collect(&:id)
     @maps = Map.where(password: '').where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24)
-    render "maps/index", :layout => "application"
+    respond_to do |format|
+      format.html { render "maps/index", :layout => "application" } 
+      format.json { render :json => @maps }
+    end
   end
 
   # list by license
