@@ -85,7 +85,7 @@ class MapsController < ApplicationController
     else
       flash[:error] = "Only admins may archive maps."
     end
-    redirect_to "/"
+    redirect_to '/?_=' + Time.now.to_i.to_s
   end
 
   def embed
