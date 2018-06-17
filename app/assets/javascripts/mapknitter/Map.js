@@ -169,7 +169,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     images.push(img);
     img.warpable_id = id
     img.addTo(map);
-    L.DomEvent.on(img._image, 'mousedown', window.mapKnitter.selectImage, img);
+    L.DomEvent.on(img._image, 'click', window.mapKnitter.selectImage, img);
     img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
     L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
     L.DomEvent.on(img._image, 'load', img.editing.enable, img.editing);
