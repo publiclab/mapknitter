@@ -1,13 +1,13 @@
 ## MapKnitter 2
 
-Use Public Lab's MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/wiki/balloon-mapping) and combine them into:
+Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
 * web "slippy maps" like Google Maps
 * GeoTiff
 * TMS
 * high resolution JPEG
 
-Copyright 2010-2015 Public Lab & Jeffrey Warren
+![demo](https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif)
 
 ## Architecture
 
