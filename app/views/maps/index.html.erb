@@ -1,3 +1,5 @@
+<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
+<%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
@@ -42,8 +44,9 @@
         <%= render :partial => 'maps/statistics' %>
       </div>
     </div><!-- .col-md-3 -->
-    <div class="maps-list col-md-9">
 
+    <div class="maps-list col-md-9">
+      <div id="mapknitter" style="height: 300px ; width: 98% ;"></div> 
       <div class="hero">
         <h1 style="margin-top:4px;">Make maps from aerial photos</h1>
         <p>
@@ -51,6 +54,7 @@
           <a class="btn btn-lg btn-success" onClick="$('#video-tutorial').toggle()"><i class="fa fa-video-camera"></i> Watch tutorial video</a>
           <a class="btn btn-lg btn-primary" href="https://publiclab.org/post?tags=mapknitter,aerial-imaging,aerial-photography,question:mapknitter,question:aerial-imaging,question:aerial-photography&template=question">Ask a question</a>
         </p>
+
       </div>
 
       <div style="display:none;" id="video-tutorial">
@@ -77,3 +81,18 @@
     </div><!-- .col-md-9 -->
   </div><!-- .row -->
 </div>
+
+<script>  
+    var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
+    var mapknitter = L.map('mapknitter' , {
+      maxBounds: bounds , 
+      maxBoundsViscosity: 0.75
+    }).setView([43, -83], 2);  
+    mapknitter.options.minZoom = 2 ;
+
+    L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+       }).addTo(mapknitter) ; 
+    L.layerGroup.mapKnitterLayer().addTo(mapknitter);
+    
+</script>
