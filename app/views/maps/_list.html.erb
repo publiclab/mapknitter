@@ -19,7 +19,7 @@
     <small>
       <% if map.archived %><i>Archived</i> | <% end %>
       <a rel="tooltip" title="Flag as spam." class="btn btn-sm btn-default" href="mailto:moderators@publiclab.org?subject=Reporting+spam+on+MapKnitter&body=Hi,+I+found+this+map+that+looks+like+spam+or+needs+to+be+moderated:++http://mapknitter.org/maps/<%= map.slug %><% if map.user %>+by+http://mapknitter.org/profile/<%= map.user.login %><% end %>+Thanks!">
-      <i class="far fa-flag"></i>
+      <i class="fa fa-flag"></i>
       </a>
       <% if logged_in? && current_user.can_delete?(map) %><a href="/map/archive/<%= map.slug %>">Archive/Spam</a> | <% end %>
       Updated <%= map.updated_at.to_s(:short) %> |
