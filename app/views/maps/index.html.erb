@@ -1,6 +1,8 @@
-<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
 <%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
+<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
+
 <div class="container-fluid">
+  <div id="mapknitter-unique" style="height: 300px ; width: 80% ; margin-left: 10% ; margin-bottom: 1%"></div> 
   <div class="row">
     <div class="col-md-3">
       <% if logged_in? %>
@@ -46,7 +48,6 @@
     </div><!-- .col-md-3 -->
 
     <div class="maps-list col-md-9">
-      <div id="mapknitter" style="height: 300px ; width: 80% ;"></div> 
       <br>
       <div class="hero">
         <h1 style="margin-top:4px;">Make maps from aerial photos</h1>
@@ -85,15 +86,13 @@
 
 <script>  
     var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
-    var mapknitter = L.map('mapknitter' , {
+    var Mapknitterunique = new L.map('mapknitter-unique' , {
       maxBounds: bounds , 
       maxBoundsViscosity: 0.75
-    }).setView([43, -83], 2);  
-    mapknitter.options.minZoom = 2 ;
+    }).setView([43, -83] , 2);  
+    Mapknitterunique.options.minZoom = 2 ;
 
-    L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-       }).addTo(mapknitter) ; 
-    L.layerGroup.mapKnitterLayer().addTo(mapknitter);
+    L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png').addTo(Mapknitterunique) ; 
+    L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
     
 </script>
