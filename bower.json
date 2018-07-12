@@ -29,7 +29,8 @@
     "glfx-js": "git+https://github.com/jywarren/glfx.js.git",
     "webgl-distort": "jywarren/webgl-distort",
     "image-sequencer": "git+https://github.com/publiclab/image-sequencer.git#~1.4.0",
-    "junction": "theleagueof/junction"
+    "junction": "theleagueof/junction",
+    "leaflet-environmental-layers": "*"
   },
   "resolutions": {
     "jquery": "^2.1.3"
