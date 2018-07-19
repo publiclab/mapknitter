@@ -30,7 +30,8 @@
     "webgl-distort": "jywarren/webgl-distort",
     "image-sequencer": "git+https://github.com/publiclab/image-sequencer.git#~1.4.0",
     "junction": "theleagueof/junction",
-    "leaflet-environmental-layers": "*"
+    "leaflet-environmental-layers": "*" ,
+    "leaflet-hash": "*" 
   },
   "resolutions": {
     "jquery": "^2.1.3"
