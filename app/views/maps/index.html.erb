@@ -107,7 +107,7 @@
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
     var Fractracker = L.layerGroup.fracTrackerLayer() ;
     var OdorReport = L.layerGroup.odorReportLayer() ;
-    var MapKnitter = L.layerGroup.mapKnitterLayer() ;
+    var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique) ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
 
     var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
