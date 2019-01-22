@@ -1,6 +1,6 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
  one:
-    map_id: 1
-    user_id: 1
-    bands_string: ''
+   map_id: 1
+   user_id: 1
+   bands_string: ''
