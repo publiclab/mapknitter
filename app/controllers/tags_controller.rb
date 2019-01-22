@@ -2,12 +2,6 @@ class TagsController < ApplicationController
 
   before_filter :require_login, :only => [:edit, :update, :destroy]
 
-  def index
-  end
-
-  def new
-  end
-
   def create
     @map = Map.find params[:map_id]
 
@@ -33,12 +27,6 @@ class TagsController < ApplicationController
     @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
     @title = "Maps tagged with '"+@tag.name+"'"
     render :template => 'maps/index'
-  end
-
-  def edit
-  end
-
-  def update
   end
 
   def destroy
