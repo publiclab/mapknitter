@@ -4,3 +4,16 @@
    map_id: 1
    user_id: 1
    bands_string: ''
+   cm_per_pixel: 10
+
+two:
+   map_id: 2
+   user_id: 1
+   bands_string: ''
+   cm_per_pixel: 5
+
+three:
+   map_id: 3
+   user_id: 2
+   bands_string: ''
+   cm_per_pixel: 3
