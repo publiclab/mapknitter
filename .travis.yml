@@ -14,3 +14,4 @@ install:
 
 script:
   - docker-compose run web bash -c "rake test"
+  - bundle exec danger
