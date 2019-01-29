@@ -9,6 +9,8 @@ class CommentTest < ActiveSupport::TestCase
       body: 'hello there!'
     })
     assert comment.save
+    comment = @map.comments.last
+    assert_equal 'hello there!', comment.body
     assert_equal User.find(1).login, comment.author
   end
 
