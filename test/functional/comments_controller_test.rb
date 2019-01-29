@@ -34,4 +34,10 @@ class CommentsControllerTest < ActionController::TestCase
     assert_not_empty @map.comments
   end
 
+  #test "update comment" do
+  #end
+
+  #test "destroy comment" do
+  #end
+
 end

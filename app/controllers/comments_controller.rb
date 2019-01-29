@@ -1,12 +1,4 @@
 class CommentsController < ApplicationController
-  def index
-  end
-
-  def show
-  end
-
-  def new
-  end
 
   def create
     if logged_in?
@@ -49,9 +41,6 @@ class CommentsController < ApplicationController
       flash[:error] = "You must be logged in to comment."
       redirect_to "/login"            
     end
-  end
-
-  def edit
   end
 
   def destroy
