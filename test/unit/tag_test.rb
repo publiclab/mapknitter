@@ -10,6 +10,7 @@ class TagTest < ActiveSupport::TestCase
     tag = Tag.find_by_name 'nice'
     assert_not_nil tag.name
     assert_not_nil tag.maps
+    assert_not_nil tag.maps.last.created_at
   end
 
 end
