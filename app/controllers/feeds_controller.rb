@@ -36,9 +36,13 @@ class FeedsController < ApplicationController
 
   def tag
     @tag = Tag.find_by_name params[:id]
-    @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
-    render :layout => false, :template => "feeds/tag"
-    response.headers["Content-Type"] = "application/xml; charset=utf-8"
+    if @tag
+      @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
+      render :layout => false, :template => "feeds/tag"
+      response.headers["Content-Type"] = "application/xml; charset=utf-8"
+    else
+      render text: "No maps with tag #{params[:id]}"
+    end
   end
 
 end
