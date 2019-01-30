@@ -8,6 +8,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.author
     assert_not_nil map.name
+    assert_not_nil map.created_at
     assert_not_nil map.slug
     assert_not_nil map.lat
     assert_not_nil map.lon
