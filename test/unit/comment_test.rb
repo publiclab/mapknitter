@@ -2,6 +2,18 @@ require 'test_helper'
 
 class CommentTest < ActiveSupport::TestCase
 
+  test "should comment" do
+    @map = maps(:saugus)
+    comment = @map.comments.new({ 
+      user_id: 1,
+      body: 'hello there!'
+    })
+    assert comment.save
+    comment = @map.comments.last
+    assert_equal 'hello there!', comment.body
+    assert_equal User.find(1).login, comment.author
+  end
+
   test "should not save blank comment" do
     @map = maps(:saugus)
     comment = @map.comments.new({ 
