@@ -1,7 +1,7 @@
 # Dockerfile # Mapknitter
 # https://github.com/publiclab/mapknitter/
 
-FROM ruby:2.6.1
+FROM ruby:2.4.4
 MAINTAINER Sebastian Silva "sebastian@fuentelibre.org"
 
 LABEL This image deploys Mapknitter!
