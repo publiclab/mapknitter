@@ -42,6 +42,9 @@ group :test do
 end
 
 group :development do
+  gem 'ci_reporter_test_unit'
+  gem 'coveralls', require: false
+  gem 'minitest-reporters', '~> 1.3.6'
   gem "jshintrb"
   gem "therubyracer"
 end
