@@ -11,7 +11,7 @@ RUN mkdir -p /app
 ENV HOME /root
 
 # Install dependencies
-RUN apt-get update -qq && apt-get install -y bundler default-libmysqlclient-dev ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip nodejs-legacy npm ##ALSO TRIED: ruby-pg
+RUN apt-get update -qq && apt-get install -y bundler default-libmysqlclient-dev ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip nodejs ##ALSO TRIED: ruby-pg
 RUN npm install -g bower
 
 # Install bundle of gems
