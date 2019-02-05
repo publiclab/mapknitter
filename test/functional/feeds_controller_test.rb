@@ -41,6 +41,7 @@ class FeedsControllerTest < ActionController::TestCase
   test "should get tag feed" do
     get :tag, :id => "nice"
     assert_response :success
+    assert_not_nil :tag
     assert_not_nil :maps
   end
 

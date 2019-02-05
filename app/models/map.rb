@@ -374,17 +374,6 @@ class Map < ActiveRecord::Base
     end
   end
 
-  def polygons(dist)
-    nodes = Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id != 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "way_order DESC")
-    Way.where('id IN (?)',nodes.collect(&:way_id).uniq)
-  end
-
-  def legacy_annotations(dist)
-    Node.find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ? AND way_id = 0 AND map_id != 0',self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 50, :order => "id DESC")
-  end
-
-  #--------------------
-
   def has_tag(tagname)
     Tag.find(:all, :conditions => { :map_id => self.id, :name => tagname }).length > 0
   end

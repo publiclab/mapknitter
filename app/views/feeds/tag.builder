@@ -12,7 +12,7 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
        xml.title       map.name
        xml.author      map.author
        xml.image       map.warpables.first.image.url(:small) if map.warpables.length > 0
-       xml.pubDate     map.created_at.to_s(:rfc822)
+       xml.pubDate     map.created_at.rfc822
        xml.category    "mapknitter"
        xml.link        "https://mapknitter.org/maps/"+map.slug
        xml.description "<iframe src='https://mapknitter.org/embed/"+map.slug+"' style='border:none;'></iframe><p>"+map.description.to_s+"</p><p>View map details: https://mapknitter.org/maps/"+map.slug+"</p>"
