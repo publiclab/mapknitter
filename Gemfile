@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 ruby "2.1.2"
-gem "rails", "~>3.2"
+gem "rails", "~>4.2"
 gem 'rake',  '~> 12.3.2'
 
 gem "will_paginate", "3.1.6"
