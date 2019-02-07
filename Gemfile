@@ -27,7 +27,7 @@ group :dependencies do
   gem 'right_aws'
 
   # compiling markdown to html
-  gem "rdiscount", "2.1.7.1"
+  gem "rdiscount", "2.2.0.1"
 
   # asset pipelining
   gem "sprockets"#, "2.12.1"
