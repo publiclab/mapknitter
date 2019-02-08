@@ -6,7 +6,6 @@ class WarpableTest < ActiveSupport::TestCase
     assert_not_nil w.as_json
     assert_not_nil w.fup_json
     assert_not_nil w.fup_error_json
-    assert_not_nil w.save_dimensions
     assert_not_nil w.placed?
     assert w.placed?
     assert !Warpable.new.placed?
@@ -29,6 +28,7 @@ class WarpableTest < ActiveSupport::TestCase
     system('touch public/warps/saugus-landfill-incinerator/folder')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
     w = warpables(:one)    
+    assert_not_nil w.save_dimensions
     assert_not_nil w.generate_perspectival_distort(10, w.map.slug)
     assert_not_nil w.delete_temp_files(w.map.slug)
     assert_not_nil w.working_directory(w.map.slug)
