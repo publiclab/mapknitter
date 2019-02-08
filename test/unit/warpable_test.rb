@@ -25,7 +25,7 @@ class WarpableTest < ActiveSupport::TestCase
   test "try export" do
     system('mkdir -p public/system/images/1/original')
     system('cp test/fixtures/demo.png public/system/images/1/original/')
-    system('mkdir public/warps/saugus-landfill-incinerator')
+    system('mkdir -p public/warps/saugus-landfill-incinerator')
     system('touch public/warps/saugus-landfill-incinerator/folder')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
     w = warpables(:one)    
