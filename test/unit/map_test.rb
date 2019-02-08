@@ -42,12 +42,26 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
 
-    # map.run_export(user,resolution)
+    assert_not_nil map.run_export(users(:quentin), map.average_cm_per_pixel)
+      # creates an Export and sets initial values
+      # depends on: map.average_scale
+      # runs self.distort_warpables(pxperm)
+      # runs self.generate_composite_tiff(warpable_coords,origin)
+      # runs `identify` and assigns some values (height, width) to Export
+      # runs export.tms = true if self.generate_tiles
+      # runs export.zip = true if self.zip_tiles
+      # runs export.jpg = true if self.generate_jpg
     # map.distort_warpables(scale)
+      # collects self.placed_warpables
+      # runs on each one: warpable.generate_perspectival_distort(scale,self.slug)
     # map.generate_composite_tiff(coords,origin)
+      # collects self.placed_warpables
+      # runs gdal_warp on the output of each, flattening onto a single geotiff
     # map.generate_tiles
+      # runs on composite tiff output: gdal2tiles = 'gdal2tiles.py -k -t "'+self.slug+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.slug+"/"
     # map.zip_tiles
     # map.generate_jpg
+      # runs convert on composite tiff
 
   end
 
