@@ -43,6 +43,15 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.average_cm_per_pixel
 
     assert_not_nil map.run_export(users(:quentin), map.average_cm_per_pixel)
+
+    # main issue will be that it creates and continuously updates an Export model. 
+    # we could shift this to a polling model, either on the client side (eliminating the Export model)
+    # ... or some other way to make it possible to do many of these tasks without needing ActiveRecord
+
+    # let's start at the bottom and factor this all out working upwards
+
+    # refactor so that we pass in as much in parameters as possible, reducing in-model cross-references
+
       # creates an Export and sets initial values
       # depends on: map.average_scale
       # runs self.distort_warpables(pxperm)

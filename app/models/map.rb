@@ -228,7 +228,8 @@ class Map < ActiveRecord::Base
       pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
 
       puts '> distorting warpables'
-      origin = self.distort_warpables(pxperm)
+    
+      origin = self.distort_warpables(pxperm, self.placed_warpables, self.latest_export)
       warpable_coords = origin.pop
 
       export = self.export
@@ -279,19 +280,20 @@ class Map < ActiveRecord::Base
   end
 
   # distort all warpables, returns upper left corner coords in x,y
-  def distort_warpables(scale)
-    export = self.latest_export
+  def distort_warpables(scale, warpables, export)
+
     puts '> generating geotiffs of each warpable in GDAL'
     lowest_x=0
     lowest_y=0
     warpable_coords = []
-    warpables = self.placed_warpables
     current = 0
     warpables.each do |warpable|
      current += 1
+
      export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
      puts 'warping '+current.to_s+' of '+warpables.length.to_s
      export.save
+
      my_warpable_coords = warpable.generate_perspectival_distort(scale,self.slug)
      puts '- '+my_warpable_coords.to_s
      warpable_coords << my_warpable_coords
