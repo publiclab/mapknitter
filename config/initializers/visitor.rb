@@ -9,7 +9,7 @@
 # So for compatability with 2.4 arel defined a visit_Integer method
 
 # Arel is now bundled in the Active Record gem, and maintained in the rails/rails repository. 
-# This code can be deleted on update to `activerecord >= 6.0`, which is available in Rails 6.0
+# This code can be deleted on update to `activerecord >= 6.0` (Rails 6)
 
 module Arel
   module Visitors

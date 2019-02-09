@@ -1,4 +1,17 @@
-# pulled from https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/numeric/time.rb
+# this is a customization created to bridge incompatabilities when upgrading Ruby 2.1.2
+# to 2.4.4 with Rails 3.2. 
+
+# explanation
+# There's a fundamental asymmetry in how operators work in Ruby - 
+# `1 * 1.second` dispatches -> * on Integer. 
+# `1.second * 1` dispatches -> * on Duration -> throws error 'Duration can't be coerced into Integer'
+
+# the source code for Rails 3.2 puts duration first: https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/numeric/time.rb
+
+# the solution: the order of multiplication has to be swtiched, and Duration put first. 
+
+# this code can be removed with ActiveSupport v.5.0.3: https://github.com/rails/rails/blob/v5.0.3/activesupport/lib/active_support/core_ext/numeric/time.rb
+# (Rails 5)
 
 class Numeric
   def days
@@ -17,7 +30,10 @@ class Numeric
   alias :fortnight :fortnights
 end
 
-# pulled from https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/integer/time.rb
+# source code: https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/integer/time.rb
+
+# fixed as of ActiveSupport v.4.1.2 https://github.com/rails/rails/blob/v4.1.12/activesupport/lib/active_support/core_ext/integer/time.rb
+# (Rails 4)
 
 class Integer
   def months
