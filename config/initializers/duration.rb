@@ -6,7 +6,7 @@
 # `1 * 1.second` dispatches -> * on Integer. 
 # `1.second * 1` dispatches -> * on Duration -> throws error 'Duration can't be coerced into Integer'
 
-# the source code for Rails 3.2 puts duration first: https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/numeric/time.rb
+# the source code for Rails 3.2 puts duration second: https://github.com/rails/rails/blob/v3.2.22.5/activesupport/lib/active_support/core_ext/numeric/time.rb
 
 # the solution: the order of multiplication has to be swtiched, and Duration put first. 
 
