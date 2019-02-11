@@ -87,7 +87,7 @@ GEM
       activesupport (>= 3.2.0)
       cocaine (~> 0.5.5)
       mime-types
-    passenger (5.1.1)
+    passenger (6.0.1)
       rack
       rake (>= 0.8.1)
     polyglot (0.3.5)
