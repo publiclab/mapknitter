@@ -14,7 +14,7 @@ one:
   nodes: "1,2,3,4"
   locked: false
   deleted: false
-  cm_per_pixel: 99.86133660017036> 
+  cm_per_pixel: 500
 
 two:
   id: 2

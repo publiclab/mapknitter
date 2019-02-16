@@ -141,6 +141,7 @@ class Warpable < ActiveRecord::Base
     self.uploaded_data = io
   end
 
+  # TODO: simplify/reduce # of parameters needed here:
   def generate_perspectival_distort(pxperm, path)
     Exporter.generate_perspectival_distort(pxperm, path, nodes_array, id, image_file_name, image, height, width)
   end

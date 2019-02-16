@@ -42,7 +42,8 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
 
-    assert_not_nil map.run_export(users(:quentin), map.average_cm_per_pixel)
+    resolution = 20
+    assert_not_nil map.run_export(users(:quentin), resolution)  #map.average_cm_per_pixel)
 
     # main issue will be that it creates and continuously updates an Export model. 
     # we could shift this to a polling model, either on the client side (eliminating the Export model)

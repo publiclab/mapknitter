@@ -1,12 +1,34 @@
 class Exporter
 
+  def self.ulimit
+    # use ulimit to restrict to 7200 CPU seconds and 5gb virtual memory, and 5gB file storage:
+    #"ulimit -t 7200 && ulimit -v 5000000 && ulimit -f 5000000 && "
+    "ulimit -t 14400 && ulimit -v 5000000 && ulimit -f 10000000 && nice -n 19 "
+  end
+
+  def self.get_working_directory(path)
+    "public/warps/" + path + "-working/"
+  end
+
+  def self.warps_directory(path)
+    "public/warps/" + path + "/"
+  end
+
+  def self.delete_temp_files(path)
+    system('rm -r ' + get_working_directory(path))
+    system('rm ' + warps_directory(path) + '*.png')
+  end
+
+  ########################
+  ## Run on each image:
+
   # pixels per meter = pxperm 
   def self.generate_perspectival_distort(pxperm, path, nodes_array, id, image_file_name, image, height, width)
     require 'net/http'
     
     # everything in -working/ can be deleted; 
     # this is just so we can use the files locally outside of s3
-    working_directory = self.get_working_directory(path)
+    working_directory = get_working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
     local_location = working_directory+id.to_s+'-'+image_file_name.to_s
 
@@ -148,7 +170,7 @@ class Exporter
     imageMagick += "+repage "
     imageMagick += completed_local_location
     puts imageMagick
-    system(Gdal.ulimit+imageMagick)
+    system(self.ulimit+imageMagick)
 
     # create a mask (later we can blur edges here)
     imageMagick2 = 'convert +antialias '
@@ -165,20 +187,20 @@ class Exporter
     #imageMagick2 += maskpoints + '" '
     #imageMagick2 += ' '+mask_location
     puts imageMagick2
-    system(Gdal.ulimit+imageMagick2)
+    system(self.ulimit+imageMagick2)
 
     imageMagick3 = 'composite '+mask_location+' '+completed_local_location+' -compose DstIn -alpha Set '+masked_local_location
     puts imageMagick3
-    system(Gdal.ulimit+imageMagick3)
+    system(self.ulimit+imageMagick3)
 
     gdal_translate = "gdal_translate -of GTiff -a_srs EPSG:4326 "+coordinates+'  -co "TILED=NO" '+masked_local_location+' '+geotiff_location
     puts gdal_translate
-    system(Gdal.ulimit+gdal_translate)
+    system(self.ulimit+gdal_translate)
  
     #gdalwarp = 'gdalwarp -srcnodata "255" -dstnodata 0 -cblend 30 -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     gdalwarp = 'gdalwarp -of GTiff -t_srs EPSG:4326 '+geotiff_location+' '+warped_geotiff_location
     puts gdalwarp
-    system(Gdal.ulimit+gdalwarp)
+    system(self.ulimit+gdalwarp)
 
     # deletions could happen here; do it in distinct method so we can run it independently
     delete_temp_files(path)
@@ -186,17 +208,163 @@ class Exporter
     [x1,y1]
   end
 
-  def get_working_directory(path)
-    "public/warps/" + path + "-working/"
+  ########################
+  ## Run on maps:
+
+  # distort all warpables, returns upper left corner coords in x,y
+  def self.distort_warpables(scale, warpables, export, slug)
+
+    puts '> generating geotiffs of each warpable in GDAL'
+    lowest_x=0
+    lowest_y=0
+    warpable_coords = []
+    current = 0
+    warpables.each do |warpable|
+     current += 1
+
+     ## TODO: refactor to generate static status file:
+     export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
+     puts 'warping '+current.to_s+' of '+warpables.length.to_s
+     export.save
+     ## 
+
+     my_warpable_coords = warpable.generate_perspectival_distort(scale,slug)
+     puts '- '+my_warpable_coords.to_s
+     warpable_coords << my_warpable_coords
+     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
+     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
+    end
+    [lowest_x,lowest_y,warpable_coords]
   end
 
-  def warps_directory(path)
-    "public/warps/" + path + "/"
+  # generate a tiff from all warpable images in this set
+  def self.generate_composite_tiff(coords, origin, placed_warpables, slug, ordered)
+    directory = "public/warps/"+slug+"/"
+    composite_location = directory+slug+'-geo.tif'
+    geotiffs = ''
+    minlat = nil
+    minlon = nil
+    maxlat = nil
+    maxlon = nil
+    placed_warpables.each do |warpable|
+      warpable.nodes_array.each do |n|
+        minlat = n.lat if minlat == nil || n.lat < minlat
+        minlon = n.lon if minlon == nil || n.lon < minlon
+        maxlat = n.lat if maxlat == nil || n.lat > maxlat
+        maxlon = n.lon if maxlon == nil || n.lon > maxlon
+      end
+    end
+    first = true
+    if ordered != true
+      # sort by area; this would be overridden by a provided order
+      warpables = placed_warpables.sort{|a,b|b.poly_area <=> a.poly_area}
+    end
+    warpables.each do |warpable|
+      geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
+      if first
+        gdalwarp = "gdalwarp -s_srs EPSG:3857 -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
+        first = false
+      else
+        gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
+      end
+      puts gdalwarp
+      system(self.ulimit+gdalwarp)
+    end
+    composite_location
   end
 
-  def delete_temp_files(path)
-    system('rm -r ' + working_directory(path))
-    system('rm ' + warps_directory(path) + '*.png')
+  # generates a tileset at root/public/tms/<slug>/
+  # root is something like https://mapknitter.org
+  def self.generate_tiles(key, slug, root)
+    key = "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ" if key == "" # ugh, let's clean this up!
+    key = key || "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
+    gdal2tiles = 'gdal2tiles.py -k --s_srs EPSG:3857 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    puts gdal2tiles
+    system(self.ulimit+gdal2tiles)
+  end
+
+  # zips up tiles at root/public/tms/<slug>.zip;
+  def self.zip_tiles(slug)
+    rmzip = 'cd public/tms/ && rm '+slug+'.zip && cd ../../'
+    system(self.ulimit+rmzip)
+    zip = 'cd public/tms/ && zip -rq '+slug+'.zip '+slug+'/ && cd ../../'
+    system(self.ulimit+zip)
+  end
+
+  # generates a tileset at root/public/tms/<slug>/
+  def self.generate_jpg(slug, root)
+    imageMagick = 'convert -background white -flatten '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/warps/'+slug+'/'+slug+'.jpg'
+    system(self.ulimit+imageMagick)
+  end
+
+  # runs the above map functions while maintaining a record of state in an Export model;
+  # we'll be replacing the export model state with a flat status file
+  def self.run_export(user,resolution,export,id,slug,root,average_scale,placed_warpables,key)
+    begin
+      export.user_id = user.id if user
+      export.status = 'starting'
+      export.tms = false
+      export.geotiff = false
+      export.zip = false
+      export.jpg = false
+      export.save
+
+      directory = "#{root}/public/warps/"+slug+"/"
+      stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
+      puts stdout.readlines
+      puts stderr.readlines
+      stdin, stdout, stderr = Open3.popen3("rm -r #{root}/public/tms/#{slug}")
+      puts stdout.readlines
+      puts stderr.readlines
+
+      puts '> averaging scales; resolution: ' + resolution.to_s
+      pxperm = 100/(resolution).to_f || average_scale # pixels per meter
+      puts '> scale: ' + pxperm.to_s + 'pxperm'
+
+      puts '> distorting warpables'
+    
+      origin = self.distort_warpables(pxperm, placed_warpables, export, slug)
+      warpable_coords = origin.pop
+
+      export.status = 'compositing'
+      export.save
+
+      puts '> generating composite tiff'
+      composite_location = self.generate_composite_tiff(warpable_coords,origin,placed_warpables,slug,false) # no ordering yet
+
+      info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
+      puts info
+
+      if info[0] != ''
+        export.geotiff = true
+        export.size = info[0]
+        export.width = info[1]
+        export.height = info[2]
+        export.cm_per_pixel = 100.0000/pxperm
+        export.status = 'tiling'
+        export.save
+      end
+
+      puts '> generating tiles'
+      export.tms = true if self.generate_tiles(key, slug, root)
+      export.status = 'zipping tiles'
+      export.save
+
+      puts '> zipping tiles'
+      export.zip = true if self.zip_tiles(slug)
+      export.status = 'creating jpg'
+      export.save
+
+      puts '> generating jpg'
+      export.jpg = true if self.generate_jpg(slug, root)
+      export.status = 'complete'
+      export.save
+
+    rescue SystemCallError
+      export.status = 'failed'
+      export.save
+    end
+    return export.status
   end
 
 end
