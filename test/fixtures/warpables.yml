@@ -16,3 +16,19 @@ one:
   deleted: false
   cm_per_pixel: 99.86133660017036> 
 
+two:
+  id: 2
+  parent_id: nil
+  image_content_type: "image/png"
+  image_file_name: "test.png"
+  thumbnail: nil
+  image_file_size: 574286
+  width: 756
+  height: 392
+  history: ''
+  map_id: 1
+  nodes: "1,2,3,4"
+  locked: false
+  deleted: false
+  cm_per_pixel: 99.86133660017036> 
+
