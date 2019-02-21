@@ -22,8 +22,8 @@ class MapsController < ApplicationController
 
   def map
     @maps = Map.where(archived: false, password: '')
-               .select([:author, :name, :lat, :lon, :slug, :archived, :password])
-               .joins(:warpables, :users)
+               .select('author, maps.name, lat, lon, slug, archived, password, users.login as user_login')
+               .joins(:warpables, :user)
                .group("maps.id")
     render layout: false
   end

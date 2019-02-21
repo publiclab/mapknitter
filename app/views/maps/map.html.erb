@@ -27,7 +27,7 @@
       L.tileLayer("https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png").addTo(map);
       <% @maps.each do |map| %>
         <% if map.lat && map.lon %>
-          L.marker([<%= map.lat %>, <%= map.lon %>]).addTo(map).bindPopup("<a href='/maps/<%= map.slug %>'><%= map.name.gsub(/\n/,'') %></a><% if map.user %> by <a href='/profile/<%= map.user.login %>'><%= map.user.login %></a><% end %>");
+          L.marker([<%= map.lat %>, <%= map.lon %>]).addTo(map).bindPopup("<a href='/maps/<%= map.slug %>'><%= map.name.gsub(/\n/,'') %></a><% if map.user_login %> by <a href='/profile/<%= map.user_login %>'><%= map.user_login %></a><% end %>");
         <% end %>
       <% end %>
       })();
