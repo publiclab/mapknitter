@@ -17,6 +17,11 @@ class MapsControllerTest < ActionController::TestCase
     assert_not_nil :maps
   end
 
+  test "should get map of maps" do
+    get :map
+    assert_response :success
+  end
+
   test "should get new" do
     get :new
     assert_response :success
