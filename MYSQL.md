@@ -12,8 +12,6 @@ $ bundle exec bundle install
 
 ```
 
-
-
 ## MacOS
 
 **Homebrew setup:** 
@@ -65,7 +63,11 @@ $ brew services start mysql@5.7
 $ brew services list
 
 # cmd to stop running
+<<<<<<< HEAD
 $ brew services stop mysql@5.7
+=======
+$ brew services stop mysql@5.7 (to stop running)
+>>>>>>> add a mysql setup file
 
 ```
 
