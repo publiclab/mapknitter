@@ -65,7 +65,7 @@ $ brew services start mysql@5.7
 $ brew services list
 
 # cmd to stop running
-$ brew services stop mysql@5.7 (to stop running)
+$ brew services stop mysql@5.7
 
 ```
 
