@@ -88,7 +88,7 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
+You'll need at least Ruby v1.9.3 (**v2.4.x** preferred)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
