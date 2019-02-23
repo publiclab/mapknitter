@@ -1,8 +1,8 @@
 # installation troubleshooting & instructions 
 
-## System agnostic 
+## System Agnostic 
 
-- bundler not installing **mysql2** gem?
+- bundler skipping over **mysql2** gem?
 
 ```Bash 
 
