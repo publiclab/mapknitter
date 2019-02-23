@@ -47,6 +47,6 @@ module ApplicationHelper
       out % [ Rack::Utils.escape_html(request_forgery_protection_token),
           Rack::Utils.escape_html(form_authenticity_token) ]
     end
-   end
+  end
 
 end
