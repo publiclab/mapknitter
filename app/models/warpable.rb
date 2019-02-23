@@ -148,11 +148,11 @@ class Warpable < ActiveRecord::Base
     # everything in -working/ can be deleted; 
     # this is just so we can use the files locally outside of s3
     working_directory = self.working_directory(path)
-    Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
+    Dir.mkdir(working_directory) unless (File.exist?(working_directory) && File.directory?(working_directory))
     local_location = working_directory+self.id.to_s+'-'+self.image_file_name.to_s
 
     directory = self.warps_directory(path)
-    Dir.mkdir(directory) unless (File.exists?(directory) && File.directory?(directory))
+    Dir.mkdir(directory) unless (File.exist?(directory) && File.directory?(directory))
     completed_local_location = directory+self.id.to_s+'.png'
 
     # everything -masked.png can be deleted
