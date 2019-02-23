@@ -1,5 +1,19 @@
 # installation troubleshooting & instructions 
 
+## System agnostic 
+
+- bundler not installing **mysql2** gem?
+
+```Bash 
+
+$ rm .bundle/config
+
+$ bundle exec bundle install
+
+```
+
+
+
 ## MacOS
 
 **Homebrew setup:** 
