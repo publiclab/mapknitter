@@ -9,7 +9,4 @@ Dir["#{task_dir}/**/*.rake"].each do |task_file|
   load task_file
 end
 
-# note for future upgrade: load_tasks is deprecated after rails 3.2
 Mapknitter::Application.load_tasks
-
-
