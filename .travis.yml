@@ -10,7 +10,7 @@ install:
   - docker-compose run web sleep 10
   - docker-compose run web bash -c "rake db:setup"
   - docker-compose run web bash -c "rake db:migrate"
-  - docker-compose run web bower install --allow-root
+  - docker-compose run web yarn --ignore-engines --ignore-scripts --modules-folder ./public/lib
 
 script:
   - docker-compose run web bash -c "rake test"

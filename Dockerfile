@@ -13,7 +13,8 @@ ENV HOME /root
 # Install dependencies
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update -qq && apt-get install -y bundler default-libmysqlclient-dev ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip nodejs ##ALSO TRIED: ruby-pg
-RUN npm install -g bower
+
+RUN npm install -g yarn
 
 # Install bundle of gems
 WORKDIR /tmp
@@ -24,4 +25,4 @@ RUN bundle install
 # Add the Rails app
 WORKDIR /app
 ADD . /app
-RUN bower install --allow-root
+RUN yarn --ignore-engines --ignore-scripts --modules-folder ./public/lib
