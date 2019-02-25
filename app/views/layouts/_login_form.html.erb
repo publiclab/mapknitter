@@ -1,22 +1,23 @@
-<form id="open_id_form" method="GET" action="/sessions/create">
-
+<form id="open_id_form" method="GET" action="/sessions/create" style="width:450px;">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
   <%= hidden_field_tag :back_to, params[:back_to] || request.path -%>
   <div class="form-group">
-    Log in using your Public Lab username, or <a href="//publiclab.org/signup">create a Public Lab account</a>.
+    <label style="display: block; text-align: center;">Log In using your Public Lab username</label>
+    <label style="display: block; text-align: center;">or</label>
+    <label style="display: block; text-align: center;">
+      create a
+      <a href="//publiclab.org/signup">Public Lab account</a>.
+    </label>
   </div>
-
-  <div class="form-group">
-    <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", :class => "form-control"} %>
-    <div class="checkbox">
-      <label for="remember_me">
-        <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
-      </label>                                        
-    </div>
+   <div class="form-group">
+      <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", tabindex: 1, class: 'form-control', id: 'username-login' } %>
   </div>
-
+  <div class="form-check">
+    <label>
+      <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
+    </label>
+  </div>
   <div class="form-group">
     <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
   </div>
-
-</form>                          
+</form>

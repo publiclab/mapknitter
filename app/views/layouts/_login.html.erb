@@ -1,6 +1,6 @@
 <% if logged_in? %>
-  <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %> <span class="caret"></span></a>
+  <li class="nav-item">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %></a>
     <ul class="dropdown-menu" role="menu" aria-labelled-by="logout-menu">
       <li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
       <li><a href="/logout">Log out</a></li>
@@ -10,8 +10,8 @@
     </ul>
   </li>
 <% else %>
-  <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login-menu">Log In <span class="caret"></span></a>
+  <li class="nav-item">
+    <a href="#" class="nav-link" data-toggle="dropdown" id="login-menu">Log In</a>
     <div class="dropdown-menu login-form" role="menu" aria-labelled-by="login-menu">
       <%= render :partial => "layouts/login_form" %>
     </div>
