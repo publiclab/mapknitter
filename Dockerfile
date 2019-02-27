@@ -50,5 +50,8 @@ RUN git config --global url."https://".insteadOf git://
 # Add the Rails app
 COPY . /app/
 WORKDIR /app
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+COPY start.sh /app/start.sh
 
-CMD [ "sh", "/app/start.sh" ]
+CMD [ "sh", "start.sh" ]
