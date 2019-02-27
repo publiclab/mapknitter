@@ -50,4 +50,4 @@ RUN git config --global url."https://".insteadOf git://
 COPY . /app/
 WORKDIR /app
 
-CMD [ "bash", "-l", "start.sh" ]
+CMD [ "sh", "start.sh" ]
