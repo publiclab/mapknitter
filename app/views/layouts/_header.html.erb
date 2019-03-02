@@ -1,36 +1,33 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">MapKnitter</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header-navbar-collapse" aria-controls="header-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="fa fa-white fa-bars"></span>
-  </button>
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">MapKnitter</a>
+    </div>
 
-  <div class="collapse navbar-collapse" id="header-navbar-collapse">
-    <ul class="nav navbar-nav navbar-left">
-      <form class="navbar-form navbar-left" id="nav_search_form" autocomplete="off">
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <form action="/search" method='get' class="navbar-form navbar-left" id="nav_search_form">
         <div class="input-group">
-          <input class="form-control mr-sm-2" style="min-width: 280px;" type="search" placeholder="Search maps">
+          <input class="form-control mr-sm-2" style="min-width: 280px;" type="text" id="search-input" name="q" value='<%= params[:id] if params[:action] == "search" %>' placeholder="Search maps"/>
           <span class="input-group-btn">
             <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
           </span>
         </div>
       </form>
-    </ul>
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 navbar-left">
-      <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/wiki/mapknitter">Getting Started</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/wiki/balloon-mapping">Baloon Mapping</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="//store.publiclab.org/products/balloon-mapping-kit">Aerial Mapping Kits</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/lists">Mailing Lists</a>
-      </li>
-    </ul>
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 navbar-right">
-      <%= render :partial => "layouts/login" %>
-    </ul>
+      <ul class="nav navbar-nav">
+        <li><a href="//publiclab.org/wiki/mapknitter" target="_blank">Getting Started</a></li>
+        <li><a href="//publiclab.org/wiki/balloon-mapping" target="_blank">Balloon Mapping</a></li>
+        <li><a href="//store.publiclab.org/products/balloon-mapping-kit" target="_blank">Aerial Mapping Kits</a></li>
+        <li><a href="//publiclab.org/lists" target="_blank">Mailing Lists</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <%= render :partial => "layouts/login" %>
+      </ul>
+    </div>
   </div>
 </nav>
