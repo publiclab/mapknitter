@@ -33,6 +33,8 @@
 //= require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
 //= require leaflet-environmental-layers/src/windRoseLayer.js
 //= require leaflet-easybutton/src/easy-button.js
+//= require leaflet-toolbar/dist/leaflet.toolbar.js
+//= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require sparklines/source/sparkline.js
 //= require glfx-js/dist/glfx.js
 //= require ion-rangeslider/js/ion.rangeSlider.js
