@@ -1,56 +1,33 @@
-<div id="header" class="navbar navbar-static-top">
-  <div class="hidden-print container-fluid">
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
     <div class="navbar-header">
-
-      <div class="brand">
-        <img class="cat fade" src="/images/mapknitter-cat.png" />
-        <a class="fullscreen" href="/"><img src="/images/mapknitter-yarn.png" /></a>
-        <a class="yarn" href="/"><img src="/images/yarn.png" /></a>
-        <span>by <a href="//publiclab.org">Public Lab</a></span>
-
-        <% if params[:cat] %>
-        <script>
-          (function(){
-            $('.brand').hover(function() {
-              $('.cat').toggleClass('in');
-            })
-          })()
-        </script>
-      <% end %>
-      </div>
-
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-
-      <ul class="nav navbar-nav navbar-right navbar-custom-knitter">
-        <li class="dropdown hidden-xs">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Resources <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="//publiclab.org/wiki/mapknitter">Getting Started</a></li>
-            <li><a href="//publiclab.org/wiki/balloon-mapping">About Balloon Mapping</a></li>
-            <li><a href="//store.publiclab.org/products/balloon-mapping-kit">Balloon and Kite kits</a></li>   
-            <li><a href="//publiclab.org/lists">Discussion lists</a></li>   
-          </ul>
-        </li>
-        <%= render :partial => "layouts/login" %>
-      </ul>
+      <a class="navbar-brand" href="/">MapKnitter</a>
     </div>
 
-
     <div class="collapse navbar-collapse" id="navbar-collapse">
-      <ul class="nav navbar-nav fullscreen">
-        <li><a href="//publiclab.org/wiki/mapknitter">Getting Started</a></li>
-        <li><a href="//publiclab.org/wiki/balloon-mapping">About Balloon Mapping</a></li>
-        <li><a href="//store.publiclab.org/products/balloon-mapping-kit">Balloon and Kite kits</a></li>   
+      <form action="/search" method='get' class="navbar-form navbar-left" id="nav_search_form">
+        <div class="input-group">
+          <input class="form-control mr-sm-2" style="min-width: 280px;" type="text" id="search-input" name="q" value='<%= params[:id] if params[:action] == "search" %>' placeholder="Search maps"/>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+          </span>
+        </div>
+      </form>
+      <ul class="nav navbar-nav">
+        <li><a href="//publiclab.org/wiki/mapknitter" target="_blank">Getting Started</a></li>
+        <li><a href="//publiclab.org/wiki/balloon-mapping" target="_blank">Balloon Mapping</a></li>
+        <li><a href="//store.publiclab.org/products/balloon-mapping-kit" target="_blank">Aerial Mapping Kits</a></li>
+        <li><a href="//publiclab.org/lists" target="_blank">Mailing Lists</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <%= render :partial => "layouts/login" %>
       </ul>
     </div>
-
   </div>
-</div>
+</nav>

@@ -16,8 +16,8 @@
  *= require leaflet-distortableimage/dist/leaflet.distortableimage.css
 
  *= require style
- *= require header
  *= require maps
+ *= require header
  *= require uploads
 
  *= require_self
