@@ -11,10 +11,11 @@ RUN mkdir -p /app
 ENV HOME /root
 
 # Install dependencies
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update -qq && apt-get install -y \
-  bundler libmysqlclient-dev ruby-rmagick libfreeimage3 \
-  libfreeimage-dev ruby-dev curl libcurl4-openssl-dev \
-  libssl-dev zip nodejs-legacy npm \
+  bundler ruby-rmagick libfreeimage3 \
+  libfreeimage-dev ruby-dev curl \
+  libssl-dev zip nodejs \
     build-essential \
     python-dev \
     python3-dev \
