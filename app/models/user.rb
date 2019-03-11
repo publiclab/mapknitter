@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   end
 
   def last_action
-    map = self.maps.order('updated_at DESC').limit(1).first.updated_at
+    self.maps.order('updated_at DESC').limit(1).first.updated_at
   end
 
   # Permissions for editing and deleting resources

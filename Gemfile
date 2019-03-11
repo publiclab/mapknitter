@@ -10,7 +10,7 @@ gem "friendly_id"
 
 # dependencies
 group :dependencies do
-  gem 'mysql2', '~> 0.3.20'
+  gem 'mysql2', '< 0.4'
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", :require => "recaptcha/rails"
@@ -31,7 +31,7 @@ group :dependencies do
 
   # asset pipelining
   gem "sprockets"#, "2.12.1"
-  gem "sass"
+  gem "sass", :require => 'sass'
   gem "autoprefixer-rails"
   gem "uglifier"
 
