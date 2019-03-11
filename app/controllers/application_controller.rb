@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
       unless logged_in?
         path_info = request.env['PATH_INFO']
         flash[:warning] = "You must be logged in to access this section"
-        redirect_to '/login?back_to=' + URI.encode(path_info) # halts request cycle
+        redirect_to '/login?back_to=' + path_info.to_param # halts request cycle
       end
     end
 

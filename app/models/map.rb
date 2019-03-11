@@ -163,8 +163,8 @@ class Map < ActiveRecord::Base
         res = 1 if res == 0 # let's not ever try to go for infinite resolution
         scales << res unless res == nil
       end
-      sum = (scales.inject {|sum, n| sum + n }) if scales
-      average = sum/count if sum
+      total_sum = (scales.inject {|sum, n| sum + n }) if scales
+      average = total_sum/count if total_sum
       average
     else
       0
@@ -384,7 +384,7 @@ class Map < ActiveRecord::Base
   def add_tag(tagname, user)
     tagname = tagname.downcase
     unless self.has_tag(tagname)
-      tag = self.tags.create({
+      self.tags.create({
         :name => tagname,
         :user_id => user.id,
         :map_id => self.id

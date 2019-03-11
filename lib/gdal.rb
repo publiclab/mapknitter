@@ -9,10 +9,11 @@ class Gdal
   end
  
   def self.raw(cmd,verbose)
+    # unused variable stdin review this function
     stdin, stdout, stderr = Open3.popen3(self.ulimit+cmd)
     if verbose
-	puts stderr.readlines
-	puts stdout.readlines
+      puts stderr.readlines
+      puts stdout.readlines
     end
   end
 

@@ -88,14 +88,14 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
+You'll need Ruby v2.4.4 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3))
 5. Initialize database with `bundle exec rake db:setup`
-6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://google.com/recaptcha/admin
+6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 

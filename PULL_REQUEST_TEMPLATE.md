@@ -1,3 +1,5 @@
+References \#0000 (\<=== Add issue number here)
+
 Make sure these boxes are checked before your pull request is ready to be reviewed and merged. Thanks!
 
 * [ ] tests pass -- `rake test`
