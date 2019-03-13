@@ -2,10 +2,10 @@
 
   <h2>
     <%= @user.login %>
-    <% if @user.maps %> (<%= @maps.length %> maps)<% end %>
+    <% if @user.maps %> (<%= @maps.count %> maps)<% end %>
     <small>
     | <%= @user.role %>
-    | <a href="/feeds/author/<%= @user.login %>">RSS</a>
+    | <a href="/feeds/author/<%= @user.login %>">RSS feed of maps</a>
     </small>
   </h2>
 
