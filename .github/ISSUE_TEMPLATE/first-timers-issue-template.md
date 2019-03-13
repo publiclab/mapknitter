@@ -1,3 +1,9 @@
+This issue is reserved for applicants to [Public Lab’s Providence code fellowship](https://publiclab.org/pvd). Please feel free to help applicants, but if you are looking for a first-timers-issue of your own and are not applying for the position, please see our coding Welcome Page at https://code.publiclab.org. 
+
+Applicants - upon completion (when your pull request is merged), please include the link to this issue in your application at https://publiclab.org/pvd.
+
+****
+
 Hi, this is a [first-timers-only issue](https://code.publiclab.org/#r=all). This means we've worked to make it more legible to folks who either **haven't contributed to our codebase before, or even folks who haven't contributed to open source before**. 
 
 If that's you, we're interested in helping you take the first step and can answer questions and help you out as you do. Note that we're especially interested in contributions from people from groups underrepresented in free and open source software!
