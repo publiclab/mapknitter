@@ -9,7 +9,4 @@ class UtilityController < ApplicationController
     redirect_to "/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{y}.png"
   end
 
-  def tms_info
-  end
-
 end
