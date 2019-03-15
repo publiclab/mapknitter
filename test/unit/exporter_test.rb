@@ -3,10 +3,6 @@ require 'test_helper'
 class ExporterTest < ActiveSupport::TestCase
   test "isolated exporter lib" do
 
-    puts ">>>>>>>>>>>>>>>>>>>>>>>"
-    puts system('gdal2tiles.py --version')
-    puts ">>>>>>>>>>>>>>>>>>>>>>>"
-
     # make a sample image
     system('mkdir -p public/system/images/1/original')
     system('cp test/fixtures/demo.png public/system/images/1/original/')
@@ -35,6 +31,8 @@ class ExporterTest < ActiveSupport::TestCase
     assert origin
     ordered = false
 
+    system('mkdir -p public/warps/saugus-landfill-incinerator')
+    system('mkdir -p public/tms/saugus-landfill-incinerator')
     # these params could be compressed - warpable coords is part of origin; are coords and origin required?
     assert Exporter.generate_composite_tiff(warpable_coords, origin, map.placed_warpables, map.slug, ordered)
     assert Exporter.generate_tiles('', map.slug, Rails.root.to_s)
@@ -47,9 +45,12 @@ class ExporterTest < ActiveSupport::TestCase
     # make a sample image
     system('mkdir -p public/system/images/2/original/')
     system('touch public/system/images/2/original/test.png')
-    system('mkdir -p public/warps/saugus-landfill-incinerator/')
+    system('mkdir -p public/warps/saugus-landfill-incinerator')
+    system('mkdir -p public/tms/saugus-landfill-incinerator')
     system('touch public/warps/saugus-landfill-incinerator/folder')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
+    system('mkdir -p public/warps/saugus-landfill-incinerator-working')
+    system('touch public/warps/saugus-landfill-incinerator/test.png')
     assert Exporter.delete_temp_files(w.map.slug)
   end
 end

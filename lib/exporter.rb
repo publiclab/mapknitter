@@ -286,9 +286,9 @@ class Exporter
   # zips up tiles at root/public/tms/<slug>.zip;
   def self.zip_tiles(slug)
     rmzip = 'cd public/tms/ && rm '+slug+'.zip && cd ../../'
-    system(self.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip -rq '+slug+'.zip '+slug+'/ && cd ../../'
-    system(self.ulimit+zip)
+    system(rmzip)
+    zip = 'cd public/tms/ && ' + self.ulimit + 'zip -rq '+slug+'.zip '+slug+'/ && cd ../../'
+    system(zip)
   end
 
   # generates a tileset at root/public/tms/<slug>/

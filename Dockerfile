@@ -1,9 +1,7 @@
 # Dockerfile # Mapknitter
 # https://github.com/publiclab/mapknitter/
 
-FROM ruby:2.4.4-stretch
-MAINTAINER Sebastian Silva "sebastian@fuentelibre.org"
-
+FROM debian:buster
 LABEL This image deploys Mapknitter!
 
 # Set correct environment variables.
@@ -11,66 +9,34 @@ RUN mkdir -p /app
 ENV HOME /root
 
 # Install dependencies
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update -qq && apt-get install -y \
   bundler ruby-rmagick libfreeimage3 \
-  libfreeimage-dev ruby-dev curl \
-  libssl-dev zip nodejs \
-    build-essential \
-    python-dev \
-    python3-dev \
-    python-numpy \
-    python3-numpy \
-    libspatialite-dev \
-    sqlite3 \
-    libpq-dev \
-    libcurl4-gnutls-dev \
-    libproj-dev \
-    libxml2-dev \
-    libgeos-dev \
-    libnetcdf-dev \
-    libpoppler-dev \
-    libspatialite-dev \
-    libhdf4-alt-dev \
-    libhdf5-serial-dev \
-    bash-completion \
-    cmake
+  libfreeimage-dev zip nodejs gdal-bin \
+  curl g++ gcc autoconf automake bison \
+  libc6-dev libffi-dev libgdbm-dev \
+  libncurses5-dev libsqlite3-dev libtool \
+  libyaml-dev make pkg-config sqlite3 \
+  zlib1g-dev libgmp-dev libreadline-dev libssl-dev \
+  procps libmariadb-dev-compat libmariadb-dev git python-gdal \
+  imagemagick
+
+# Ruby
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB && curl -sSL https://get.rvm.io | bash -s stable && usermod -a -G rvm root
+RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.4.4 && rvm use 2.4.4 --default"
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y npm
 RUN npm install -g bower
 
-# Install updated Gdal (taken from https://hub.docker.com/r/geographica/gdal2/dockerfile)
-ENV ROOTDIR /usr/local/
-ENV GDAL_VERSION 2.3.2
-ENV OPENJPEG_VERSION 2.3.0
-
-# Load assets
-WORKDIR $ROOTDIR/
-
-ADD http://download.osgeo.org/gdal/${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz $ROOTDIR/src/
-ADD https://github.com/uclouvain/openjpeg/archive/v${OPENJPEG_VERSION}.tar.gz $ROOTDIR/src/openjpeg-${OPENJPEG_VERSION}.tar.gz
-
-# Compile and install OpenJPEG
-RUN cd src && tar -xvf openjpeg-${OPENJPEG_VERSION}.tar.gz && cd openjpeg-${OPENJPEG_VERSION}/ \
-    && mkdir build && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$ROOTDIR \
-    && make && make install && make clean \
-    && cd $ROOTDIR && rm -Rf src/openjpeg*
-
-# Compile and install GDAL
-RUN cd src && tar -xvf gdal-${GDAL_VERSION}.tar.gz && cd gdal-${GDAL_VERSION} \
-    && ./configure --with-python --with-spatialite --with-pg --with-curl --with-openjpeg \
-    && make && make install && ldconfig \
-    && apt-get update -y \
-    && apt-get remove -y --purge build-essential \
-    && cd $ROOTDIR && cd src/gdal-${GDAL_VERSION}/swig/python \
-    && python3 setup.py build \
-    && python3 setup.py install \
-    && cd $ROOTDIR && rm -Rf src/gdal*
 
 # Install bundle of gems
+SHELL [ "/bin/bash", "-l", "-c" ]
 WORKDIR /tmp
 ADD Gemfile /tmp/Gemfile
 ADD Gemfile.lock /tmp/Gemfile.lock
 RUN bundle install
+
+# HOTFIX Workaround for mysql2 gem incompatibility with libmariadb-dev
+RUN sed -i "s/ LONG_PASSWORD |//g" /usr/local/rvm/gems/ruby-*/gems/mysql2-*/lib/mysql2/client.rb
 
 # Add the Rails app
 WORKDIR /app
