@@ -1,0 +1,1 @@
+sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev

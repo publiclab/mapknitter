@@ -202,164 +202,23 @@ class Map < ActiveRecord::Base
     hist
   end
 
-  def run_export(user,resolution)
-    begin
-      unless export = self.export
-        export = Export.new({
-          :map_id => self.id
-        })
-      end
-      export.user_id = user.id if user
-      export.status = 'starting'
-      export.tms = false
-      export.geotiff = false
-      export.zip = false
-      export.jpg = false
-      export.save
-
-      directory = "#{Rails.root}/public/warps/"+self.slug+"/"
-      stdin, stdout, stderr = Open3.popen3('rm -r '+directory.to_s)
-      puts stdout.readlines
-      puts stderr.readlines
-      stdin, stdout, stderr = Open3.popen3("rm -r #{Rails.root}/public/tms/#{self.slug}")
-      puts stdout.readlines
-      puts stderr.readlines
-
-      puts '> averaging scales'
-      pxperm = 100/(resolution).to_f || self.average_scale # pixels per meter
-
-      puts '> distorting warpables'
-    
-      origin = self.distort_warpables(pxperm, self.placed_warpables, self.latest_export)
-      warpable_coords = origin.pop
-
-      export = self.export
-      export.status = 'compositing'
-      export.save
-
-      puts '> generating composite tiff'
-      composite_location = self.generate_composite_tiff(warpable_coords,origin)
-
-      info = (`identify -quiet -format '%b,%w,%h' #{composite_location}`).split(',')
-      puts info
-
-      export = self.export
-      if info[0] != ''
-        export.geotiff = true
-        export.size = info[0]
-        export.width = info[1]
-        export.height = info[2]
-        export.cm_per_pixel = 100.0000/pxperm
-        export.status = 'tiling'
-        export.save
-      end
-
-      puts '> generating tiles'
-      export = self.export
-      export.tms = true if self.generate_tiles
-      export.status = 'zipping tiles'
-      export.save
-
-      puts '> zipping tiles'
-      export = self.export
-      export.zip = true if self.zip_tiles
-      export.status = 'creating jpg'
-      export.save
-
-      puts '> generating jpg'
-      export = self.export
-      export.jpg = true if self.generate_jpg
-      export.status = 'complete'
-      export.save
-
-    rescue SystemCallError
-      export = self.export
-      export.status = 'failed'
-      export.save
+  # we'll eventually replace this with a JavaScript call to initiate an external export process:
+  def run_export(user, resolution)
+    key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
+    unless export
+      export = Export.new({
+        :map_id => id
+      })
     end
-    return export.status
-  end
-
-  # distort all warpables, returns upper left corner coords in x,y
-  def distort_warpables(scale, warpables, export)
-
-    puts '> generating geotiffs of each warpable in GDAL'
-    lowest_x=0
-    lowest_y=0
-    warpable_coords = []
-    current = 0
-    warpables.each do |warpable|
-     current += 1
-
-     export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
-     puts 'warping '+current.to_s+' of '+warpables.length.to_s
-     export.save
-
-     my_warpable_coords = warpable.generate_perspectival_distort(scale,self.slug)
-     puts '- '+my_warpable_coords.to_s
-     warpable_coords << my_warpable_coords
-     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
-     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
-    end
-    [lowest_x,lowest_y,warpable_coords]
-  end
-
-  # generate a tiff from all warpable images in this set
-  def generate_composite_tiff(coords,origin)
-    directory = "public/warps/"+self.slug+"/"
-    composite_location = directory+self.slug+'-geo.tif'
-    geotiffs = ''
-    minlat = nil
-    minlon = nil
-    maxlat = nil
-    maxlon = nil
-    self.placed_warpables.each do |warpable|
-      warpable.nodes_array.each do |n|
-        minlat = n.lat if minlat == nil || n.lat < minlat
-        minlon = n.lon if minlon == nil || n.lon < minlon
-        maxlat = n.lat if maxlat == nil || n.lat > maxlat
-        maxlon = n.lon if maxlon == nil || n.lon > maxlon
-      end
-    end
-    first = true
-    # sort by area; this would be overridden by a provided order
-    warpables = self.placed_warpables.sort{|a,b|b.poly_area <=> a.poly_area}
-    warpables.each do |warpable|
-      geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
-      if first
-        gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+self.slug+'-geo.tif'
-        first = false
-      else
-        gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+self.slug+'-geo.tif'
-      end
-      puts gdalwarp
-      system(Gdal.ulimit+gdalwarp)
-    end
-    composite_location
-  end
-
-  # generates a tileset at Rails.root.to_s/public/tms/<map_name>/
-  def generate_tiles
-    google_api_key = APP_CONFIG["google_maps_api_key"]
-    gdal2tiles = 'gdal2tiles.py -k -t "'+self.slug+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.slug+"/"
-#    puts gdal2tiles
-#    puts system('which gdal2tiles.py')
-    system(Gdal.ulimit+gdal2tiles)
-  end
-
-  # zips up tiles at Rails.root/public/tms/<map_name>.zip
-  def zip_tiles
-    rmzip = 'cd public/tms/ && rm '+self.slug+'.zip && cd ../../'
-    system(Gdal.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip -rq '+self.slug+'.zip '+self.slug+'/ && cd ../../'
-    #    puts zip
-    #    puts system('which gdal2tiles.py')
-    system(Gdal.ulimit+zip)
-  end
-
-  def generate_jpg
-    imageMagick = 'convert -background white -flatten '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'.jpg'
-    system(Gdal.ulimit+imageMagick)
+    Exporter.run_export(user, 
+      resolution,
+      self.export,
+      self.id,
+      self.slug,
+      Rails.root.to_s,
+      self.average_scale,
+      self.placed_warpables,
+      key)
   end
 
   def after_create
