@@ -1,3 +1,5 @@
+export COMPOSE_HTTP_TIMEOUT=360
+
 build:
 	cp config/database.yml.example config/database.yml
 	cp db/schema.rb.example db/schema.rb
