@@ -70,9 +70,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.1.2 of Ruby:
+Then, use RVM to install version 2.4.4 of Ruby:
 
-`rvm install 2.1.2`
+`rvm install 2.4.4`
 
 You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
