@@ -21,6 +21,14 @@ class ExportControllerTest < ActionController::TestCase
 #    assert_response :success
 #  end
 
+  # arbitrary exports
+  test "export" do
+    ids = [Warpable.first, Warpable.last].join(',') # does it accept a string?
+    get :export, image_ids: ids, resolution: 20, slug: 'unique-slug' # but this could overwrite an existing map, unfortunately... 
+    # we should check uniqueness unless you're an admin
+    assert_response :success
+  end
+
   test "cancel fails if not logged in" do
     get :cancel, id: Map.first.id
     assert_response :success
