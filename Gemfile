@@ -4,7 +4,7 @@ ruby "2.4.4"
 gem "rails", "~>3.2"
 gem 'rake',  '~> 12.3.2'
 
-gem "will_paginate", "3.1.6"
+gem "will_paginate", "3.1.7"
 gem "will_paginate-bootstrap"
 gem "friendly_id"
 
