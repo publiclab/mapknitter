@@ -159,7 +159,7 @@ GEM
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     uuidtools (2.1.5)
-    will_paginate (3.1.6)
+    will_paginate (3.1.7)
     will_paginate-bootstrap (1.0.2)
       will_paginate (>= 3.0.3)
 
@@ -191,7 +191,7 @@ DEPENDENCIES
   test-unit
   therubyracer
   uglifier
-  will_paginate (= 3.1.6)
+  will_paginate (= 3.1.7)
   will_paginate-bootstrap
 
 RUBY VERSION
