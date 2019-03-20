@@ -13,7 +13,4 @@ cp config/database.yml.sqlite.example config/database.yml
 rake db:setup
 sudo apt-get install npm
 sudo npm install -g bower
-# assets
-cd app/assets
-# install static assets
 bower install
