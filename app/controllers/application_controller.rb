@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
 
-  before_filter :current_user, :check_subdomain
+  before_filter :current_user
   helper_method :logged_in?
 
   def current_user
@@ -19,12 +19,6 @@ class ApplicationController < ActionController::Base
       end
     else
       @user = nil
-    end
-  end
-
-  def check_subdomain
-    if request.subdomain.present? && Rails.env != 'test'
-      redirect_to 'http://' + request.domain + request.port_string + request.fullpath
     end
   end
 
