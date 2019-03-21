@@ -10,7 +10,7 @@
 		"leaflet-illustrate": "manleyjster/Leaflet.Illustrate#master",
 		"leaflet-image-distort": "manleyjster/ImageDistortLeaflet",
 
-		"bootstrap": "http://github.com/twbs/bootstrap/archive/v3.2.0.tar.gz",
+		"bootstrap": "https://github.com/twbs/bootstrap/archive/v4.3.1.zip",
 
 		"blueimp-file-upload": "9.7.0",
 		"blueimp-tmpl": "2.5.4",
