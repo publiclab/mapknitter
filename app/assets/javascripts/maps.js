@@ -2,7 +2,6 @@
 //= require knitter
 //= require exif-js/exif.js
 //= require mapknitter
-//= require seiyria-bootstrap-slider/dist/bootstrap-slider.min.js
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
