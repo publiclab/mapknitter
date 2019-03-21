@@ -68,8 +68,8 @@ class Map < ActiveRecord::Base
     self.author == "" || self.user_id == 0
   end
 
-  def self.bbox(minlat,minlon,maxlat,maxlon)
-    Map.find :all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',minlat,maxlat,minlon,maxlon]
+  def self.bbox(minlat, minlon, maxlat, maxlon)
+    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', minlat, maxlat, minlon, maxlon])
   end
 
   def exporting?
@@ -210,7 +210,7 @@ class Map < ActiveRecord::Base
         :map_id => id
       })
     end
-    Exporter.run_export(user, 
+    Exporter.run_export(user,
       resolution,
       self.export,
       self.id,
