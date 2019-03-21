@@ -44,4 +44,4 @@ COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
 COPY start.sh /app/start.sh
 
-CMD [ "sh", "start.sh" ]
+CMD [ "bash", "-l", "start.sh" ]
