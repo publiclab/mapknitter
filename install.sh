@@ -9,7 +9,7 @@ sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libf
 gem install bundler
 bundle _1.16.2_ install
 cp db/schema.rb.example db/schema.rb
-cp config/database.yml.sqlite.example config/database.yml
+cp config/database.yml.example config/database.yml
 rake db:setup
 sudo apt-get install npm
 sudo npm install -g bower
