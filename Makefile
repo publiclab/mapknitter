@@ -4,7 +4,7 @@ build:
 	cp config/database.yml.example config/database.yml
 	cp db/schema.rb.example db/schema.rb
 	docker-compose build
-	docker-compose run web bash -l -c "sleep 10 && rake db:setup && rake db:migrate && rake assets:precompile"
+	docker-compose run web bash -l -c "bundle install && sleep 10 && rake db:setup && rake db:migrate && rake assets:precompile"
 
 deploy-container:
 	docker-compose up -d
