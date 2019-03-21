@@ -7,7 +7,7 @@ sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libf
 # exporter-only:
 #sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
 gem install bundler
-bundle install
+bundle _1.16.2_ install
 cp db/schema.rb.example db/schema.rb
 cp config/database.yml.sqlite.example config/database.yml
 rake db:setup
