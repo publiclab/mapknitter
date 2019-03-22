@@ -12,14 +12,12 @@
       <% end %>
     </span></p>
 
-    <label for="tags" class="sr-only">Enter tags</label>
     <div class="input-group">
-      <span class="input-group-addon">
-        <i class="fa fa-tags"></i>
-      </span>
-      <input class="form-control" type="text" placeholder="Enter tags" name="tags" id="new-tags"></input>
-    </div>  
-  </div>
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary" type="button"><i class="fa fa-tags"></i></button>
+      </div>
+      <input type="text" class="form-control" placeholder="Enter tags" aria-label="tags" name="tags" id="new-tags">
+    </div>
 
   <script>
     //jQuery(document).ready(function($) {
