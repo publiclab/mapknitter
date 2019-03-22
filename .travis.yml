@@ -12,4 +12,4 @@ install:
   - docker-compose exec web bash -l -c "rake db:setup || rake db:migrate"
 
 script:
-  - docker-compose exec web rake test
+  - docker-compose exec web bash -l -c "rake test"
