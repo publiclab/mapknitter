@@ -13,4 +13,4 @@ install:
   - docker-compose run web bower install --allow-root
 
 script:
-  - docker-compose run web bash -l -c "rake test"
+  - docker-compose run web bash -l -c "CI=true TRAVIS=true rake test"

@@ -18,6 +18,7 @@ group :dependencies do
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
   gem "RubyInline"
+  gem "coveralls", required: false
   gem "paperclip", "~>4.2.2"
 
   # if you use amazon s3 for warpable image storage
