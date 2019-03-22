@@ -1,4 +1,5 @@
 ## MapKnitter 2
+[![Coverage Status](https://coveralls.io/repos/github/kaunair/mapknitter/badge.svg?branch=%28HEAD+detached+at+3dd0c43%29)](https://coveralls.io/github/kaunair/mapknitter?branch=%28HEAD+detached+at+3dd0c43%29)
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
