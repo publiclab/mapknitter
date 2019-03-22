@@ -1,2 +1,2 @@
 service_name: travis-ci
-repo_token: <%= ENV["REPO_TOKEN"] %>
+repo_token: ${REPO_TOKEN}
