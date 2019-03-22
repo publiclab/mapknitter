@@ -9,22 +9,6 @@ class ImagesController < ApplicationController
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
-  # legacy
-  def new
-    @map = Map.find params[:id]
-    @warpable = Warpable.new
-    respond_to do |format|
-     format.html { render :template => 'legacy/new', :layout => false } 
-     format.json { render :json => @warpable }
-    end
-  end
-
-  # legacy
-  def uploaded_confirmation
-    @warpable = Warpable.find params[:id]
-    render :template => 'legacy/new', :layout => false
-  end
-
   # proxy, used if MapKnitter is being backed by Amazon S3 file storage, 
   # to enable client-side distortion using webgl-distort, which requires same-origin
   def fetch
