@@ -10,4 +10,4 @@ deploy-container:
 	docker-compose up -d
 
 redeploy-container:
-	docker-compose up --force-create -d
+	docker-compose up --force-recreate -d
