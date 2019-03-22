@@ -75,34 +75,26 @@
           <div class="sidebar-content-wrap">
             <!-- Toolbar for uploading and viewing images and exporting the map. -->
             <div class="btn-group btn-group-justified sidebar-buttons">
-              <!-- Upload images -->
-              <div class="btn-group">
-                <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal" onClick="$('#map-images-tab').tab('show')">
-                  <span class="fa fa-upload"></span> 
-                  <span class="hidden-xs">Upload</span>
+              <div class="btn-group btn-group-md" role="group" aria-label="Map actions">
+                <!-- Upload images -->
+                <button type="button" title="Upload Images" class="btn btn-outline-secondary" onClick="$('#map-images-tab').tab('show')" data-toggle="modal" data-target="#uploadModal">
+                  Upload
                 </button>
-              </div>
-
-              <!-- Write a research note on Public Lab -->
-              <div class="btn-group">
-                <a target="_blank" class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>">
-                  <span class="fa fa-file"></span> 
-                  <span class="hidden-xs">Post</span>
-                </a>
-              </div>
-
-              <!-- Export map -->
-              <div class="dropdown btn-group">
-                <button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-                  <span class="fa fa-download"></span> 
-                  <span class="hidden-xs">Download</span>
-                  <span class="caret"></span>              
+                <!-- Write a research note on Public Lab -->
+                <button type="button" class="btn btn-outline-secondary">
+                  <a target="_blank" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>" class="text-muted">Post</a>
+                </button>
+                <!-- Export map -->
+                <button class="btn btn-outline-secondary" title="Export map" type="button" data-toggle="dropdown">
+                  Download
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right map-exports" role="menu">
                   <%= render :partial => 'maps/exports' %>
                 </ul>
+                </button>
               </div>
             </div>
+          </div>
 
             <div class="sidebar-tabs">
 
