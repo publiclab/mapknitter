@@ -11,3 +11,4 @@ deploy-container:
 
 redeploy-container:
 	docker-compose up --force-recreate -d
+	docker-compose run web bash -l -c "sleep 10 && rake db:migrate && rake assets:precompile"
