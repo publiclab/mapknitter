@@ -1,4 +1,5 @@
 export COMPOSE_HTTP_TIMEOUT=360
+export COMPOSE_PROJECT_NAME
 
 define wait_for_container
 	@while ! docker-compose logs web | grep "web server started"; do\
