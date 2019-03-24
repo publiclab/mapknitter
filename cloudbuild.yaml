@@ -4,3 +4,4 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['tag', 'mapknitter-dev:latest', 'gcr.io/public-lab/mapknitter-dev']
 images: ['gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
+timeout: 1200s
