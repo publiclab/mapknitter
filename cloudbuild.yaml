@@ -1,0 +1,5 @@
+steps:
+  - name: 'docker/compose:1.19.0'
+    args: ['up', '-d']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag', 'mapknitter-dev:latest', 'gcr.io/public-lab/mapknitter-dev']

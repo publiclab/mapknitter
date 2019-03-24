@@ -6,10 +6,13 @@ services:
     env_file:
       - mapknitter.env
     volumes:
-      - /srv/mapknitter_priv1/mk1_database:/var/lib/mysql
+      - ../mysql:/var/lib/mysql
   web:
     container_name: web
-    build: .
+    image: mapknitter-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.txt
     env_file:
       - mapknitter.env
     volumes:
