@@ -10,9 +10,12 @@ services:
       - ../dump:/docker-entrypoint-initdb.d
   web:
     container_name: web
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.txt
     ulimits:
       core: 0
+    image: mapknitter-dev
     env_file:
       - mapknitter.env
     volumes:
