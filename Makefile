@@ -10,6 +10,7 @@ endef
 build:
 	cp config/database.yml.example config/database.yml
 	cp config/config.yml.example config/config.yml
+	cp config/initializers/recaptcha.rb.example config/initializers/recaptcha.rb
 	cp db/schema.rb.example db/schema.rb
 	docker-compose build
 
