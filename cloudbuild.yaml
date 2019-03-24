@@ -1,4 +1,5 @@
 steps:
+<<<<<<< HEAD
 - name: 'docker/compose:1.19.0'
   args: ['up', '-d']
 - name: 'gcr.io/cloud-builders/docker'
@@ -12,3 +13,9 @@ steps:
 # Note that this build pushes this image.
 images: ['gcr.io/$PROJECT_ID/mapknitter-dev']
 timeout: 2200s
+=======
+  - name: 'docker/compose:1.19.0'
+    args: ['up', '-d']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag', 'mapknitter-dev:latest', 'gcr.io/public-lab/mapknitter-dev']
+>>>>>>> Changes to be able to build container in Google Cloud
