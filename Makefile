@@ -1,4 +1,5 @@
 export COMPOSE_HTTP_TIMEOUT=360
+export COMPOSE_PROJECT_NAME
 
 build:
 	cp config/database.yml.example config/database.yml
