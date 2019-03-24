@@ -3,5 +3,12 @@ steps:
   args: ['up', '-d']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['tag', 'mapknitter-dev:latest', 'gcr.io/public-lab/mapknitter-dev']
-images: ['gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
+# Push it to GCR.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/mapknitter-dev']
+# Deploy your Flex app from the image in GCR.
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/$PROJECT_ID/mapknitter-dev']
+# Note that this build pushes this image.
+images: ['gcr.io/$PROJECT_ID/mapknitter-dev']
 timeout: 1200s
