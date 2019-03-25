@@ -39,6 +39,7 @@ RUN bundle install
 RUN sed -i "s/ LONG_PASSWORD |//g" /usr/local/rvm/gems/ruby-*/gems/mysql2-*/lib/mysql2/client.rb
 
 # Add the Rails app
+ADD . /app
 WORKDIR /app
 COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
