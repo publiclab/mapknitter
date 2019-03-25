@@ -24,7 +24,7 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A170311380
 RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.4.4 && rvm use 2.4.4 --default"
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y npm
-RUN npm install -g bower
+RUN npm install -g yarn
 
 
 # Install bundle of gems
@@ -44,3 +44,4 @@ COPY Gemfile.lock /app/Gemfile.lock
 COPY start.sh /app/start.sh
 
 CMD [ "bash", "-l", "start.sh" ]
+

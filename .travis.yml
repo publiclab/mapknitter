@@ -10,6 +10,7 @@ install:
   - docker-compose exec web bash -l -c "sleep 10"
   - docker-compose exec web bash -l -c "bundle install"
   - docker-compose exec web bash -l -c "rake db:setup || rake db:migrate"
+  - docker-compose run web yarn --ignore-engines --ignore-scripts --modules-folder ./public/lib
 
 script:
   - sed -ri "s/REPO_TOKEN/$REPO_TOKEN/" .coveralls.yml
