@@ -144,6 +144,5 @@ $ mysql -u <username> -p
 ```
 
 
-
 ## Pending: please add instructions for your respective system 
 
