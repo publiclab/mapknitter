@@ -3,7 +3,6 @@
 # This image deploys Mapknitter!
 
 FROM debian:buster
-LABEL This image deploys Mapknitter!
 
 # Set correct environment variables.
 ENV HOME /root
