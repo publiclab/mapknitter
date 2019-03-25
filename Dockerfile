@@ -1,11 +1,10 @@
 # Dockerfile # Mapknitter
 # https://github.com/publiclab/mapknitter/
+# This image deploys Mapknitter!
 
 FROM debian:buster
-LABEL This image deploys Mapknitter!
 
 # Set correct environment variables.
-RUN mkdir -p /app
 ENV HOME /root
 
 # Install dependencies
@@ -40,5 +39,8 @@ RUN sed -i "s/ LONG_PASSWORD |//g" /usr/local/rvm/gems/ruby-*/gems/mysql2-*/lib/
 
 # Add the Rails app
 WORKDIR /app
-ADD . /app
-RUN bower install --allow-root
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+COPY start.sh /app/start.sh
+
+CMD [ "bash", "-l", "start.sh" ]
