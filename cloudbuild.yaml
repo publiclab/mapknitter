@@ -11,4 +11,4 @@ steps:
   args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/$PROJECT_ID/mapknitter-dev']
 # Note that this build pushes this image.
 images: ['gcr.io/$PROJECT_ID/mapknitter-dev']
-timeout: 1200s
+timeout: 2200s
