@@ -35,8 +35,6 @@
 //= require leaflet-easybutton/src/easy-button.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
-//= require leaflet-easybutton/src/easy-button.js
-//= require leaflet-google/index.js
 //= require sparklines/source/sparkline.js
 //= require glfx-js/dist/glfx.js
 //= require ion-rangeslider/js/ion.rangeSlider.js
