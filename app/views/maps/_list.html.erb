@@ -23,18 +23,20 @@
         <% if map.archived %>
           <i>Archived</i> |
         <% end %>
-        <% if logged_in? && current_user.can_delete?(map) %>
-          <a href="/map/archive/<%= map.slug %>" class="card-link">Archive/Spam</a>
-        <% end %>
       </small>
       <small>
         Updated <%= map.updated_at.to_s(:short) %>
-        <a href="mailto:moderators@publiclab.org?subject=Reporting+spam+on+MapKnitter&body=Hi,+I+found+this+map+that+looks+like+spam+or+needs+to+be+moderated:++http://mapknitter.org/maps/<%= map.slug %>
-        <% if map.user %>+by+http://mapknitter.org/profile/
-          <%= map.user.login %>
-        <% end %>+Thanks!" class="card-link">
-          Flag as Spam
-        </a>
+        <p>
+          <% if logged_in? && current_user.can_delete?(map) %>
+            <a href="/map/archive/<%= map.slug %>" class="card-link">Archive/Spam</a>
+          <% end %>
+          <a href="mailto:moderators@publiclab.org?subject=Reporting+spam+on+MapKnitter&body=Hi,+I+found+this+map+that+looks+like+spam+or+needs+to+be+moderated:++http://mapknitter.org/maps/<%= map.slug %>
+          <% if map.user %>+by+http://mapknitter.org/profile/
+            <%= map.user.login %>
+          <% end %>+Thanks!" class="card-link">
+            Flag as Spam
+          </a>
+        </p>
       </small>
     </p>
   </div>
