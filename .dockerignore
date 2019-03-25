@@ -23,10 +23,7 @@ public/system/*
 public/warps/*
 public/tms/*
 *.db
-config/database.yml
 config/amazon_s3.yml
-config/initializers/recaptcha.rb
-config/config.yml
 config/initializers/site_keys.rb
 vendor/bundle
 app/assets/bower_components
