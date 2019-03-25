@@ -18,8 +18,12 @@ class FeedsController < ApplicationController
   end
 
   def license
-    @maps = Map.find(:all,:order => "id DESC",:limit => 20, :conditions => {:archived => false, :password => '', :license => params[:id]},:joins => :warpables, :group => "maps.id")
-    render :layout => false, :template => "feeds/license"
+     @maps = Map.order(id: :desc)
+    .limit(20)
+    .where(archived: false, password: '', license: params[:id])
+    .joins(:warpables)
+    .group("maps.id")
+    render layout: false, template: "feeds/license"
     response.headers["Content-Type"] = "application/xml; charset=utf-8"
   end
 

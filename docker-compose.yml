@@ -1,20 +1,26 @@
-db:
-  image: mysql:5.7
-  environment:
-    - MYSQL_DATABASE=mapknitter
-    - MYSQL_USER=mapknitter
-    - MYSQL_PASSWORD=mapknitter
-    - MYSQL_RANDOM_ROOT_PASSWORD=true
-  volumes:
-    - ../mysql:/var/lib/mysql
-web:
-  build: .
-  command: ./start.sh
-  environment:
-    - RAILS_ENV=production
-  volumes:
-    - ./:/app
-  ports:
-    - "127.0.0.1:3000:3000"
-  links:
-    - db
+version: '3.3'
+services:
+  db:
+    container_name: db
+    image: mysql:5.7
+    env_file:
+      - mapknitter.env
+    volumes:
+      - ../mysql:/var/lib/mysql
+  web:
+    container_name: web
+    build: .
+    env_file:
+      - mapknitter.env
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - bower_cache:/app/public/lib
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+
+volumes:
+  bundle_cache:
+  bower_cache:
