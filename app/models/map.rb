@@ -87,8 +87,8 @@ class Map < ActiveRecord::Base
   def self.authors(limit = 50)
     Map.limit(limit)
        .order("maps.id DESC")
-       .where('password = "" AND archived = "false"')
-       .collect(&:author)
+       .where('password = "" AND archived = "false" AND author!="anonymous"')
+       .collect(&:author).uniq
 #       .group("maps.author")
   end
 
