@@ -13,4 +13,4 @@ install:
 
 script:
   - sed -ri "s/REPO_TOKEN/$REPO_TOKEN/" .coveralls.yml
-  - docker-compose run web bash -l -c "CI=true TRAVIS=true rake test:all"
+  - docker-compose exec web bash -l -c "CI=true TRAVIS=true rake test:all"
