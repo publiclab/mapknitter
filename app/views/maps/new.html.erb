@@ -1,4 +1,4 @@
-<% content_for :title do %>
+  <% content_for :title do %>
   <div class="sidebar-title new-map">
     <h4>Create a new map</h4>
     <p>Pan and zoom to locate your site, then give your map a title, location, and description.</p>
@@ -30,10 +30,9 @@
     </small></p>
     <hr/>
 
-    <div class="input-group">
+     <div class="form-group">
       <%= f.label :location, "Location <small>begin typing to search by name</small>".html_safe %>
-      <div class="input-group-prepend">
-        <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
+      <div class="input-group">
         <%= f.text_field :location, :class => "form-control", :tabIndex => 2 %>
       </div>
     </div>

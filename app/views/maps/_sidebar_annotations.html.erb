@@ -2,6 +2,10 @@
 A new annotation system is under development; for now, <a href="/embed/<%= @map.slug %>?annotations=true">click here</a> to add annotations using the old system.
 </p>
 
-<p>To try the new annotations system, the Beta annotation tool, <a href="/maps/<%= @map.slug %>/annotate">click here.</a></p>
+<p>To try the new annotations system, click here:</p>
 
-<p>To overlay a KML (temporarily only, for now!), <a href="#" onClick="mapKnitter.addKml()">click here.</a></p>
+<p><button type="button" class="btn btn-outline-info" href="/maps/<%= @map.slug %>/annotate">Beta annotation tool</button></p>
+
+<p>To overlay a KML (temporarily only, for now!), click here:</p>
+
+<p><button type="button" class="btn btn-outline-info" onClick="mapKnitter.addKml()">KML</button></p>

@@ -1,3 +1,23 @@
 body {
   padding-top: 70px;
 }
+
+.login-links {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
+}
+
+.login-links:visited {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
+}
+
+.login-links:hover {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
+}
+
+.login-links:active {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
+}

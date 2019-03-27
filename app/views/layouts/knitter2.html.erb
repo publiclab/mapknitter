@@ -87,17 +87,15 @@
                   <span class="hidden-xs">Post</span>
                 </a>
 
-              <!-- Export map -->
-              <div class="dropdown btn-group">
-                <button class="btn btn-outline-secondary dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-                  <span class="fa fa-download"></span> 
-                  <span class="hidden-xs">Download</span>
-                  <span class="caret"></span>              
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right map-exports" role="menu">
-                  <%= render :partial => 'maps/exports' %>
-                </ul>
-              </div>
+                <div class="btn-group" role="group">
+                  <button id="btnGroupDrop1" type="button" title="Export map" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-download"></span>
+                    Download
+                  </button>
+                  <div class="dropdown-menu map-exports" aria-labelledby="btnGroupDrop1" role="menu">
+                    <a class="dropdown-item" href="#"><%= render :partial => 'maps/exports' %></a>
+                  </div>
+                </div>
             </div>
 
             <div class="sidebar-tabs">
@@ -148,9 +146,11 @@
                   <p>
                     <% if logged_in? %>
                       <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
+                      <%= link_to 'Delete map', map_path(@map), method: :delete, class: "btn btn-outline-info btn-sm", data: { confirm: 'Are you sure? This cannot be undone.' } %>
                     <% end %>
                     <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
-                    <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button>
+                    <!-- this button does not lead to anywhere -->
+<!--                     <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button> -->
                     <button type="button" class="btn btn-outline-info btn-sm" rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))">Add ImageSequencer code</button> 
                     <div class="share-link" style="display:none;">
                       <%= render :partial => 'maps/share' %>
@@ -198,7 +198,7 @@
                   <%= render :partial => "sidebar_exports" %>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="chat">
-                  <a style="margin-right:4px;" class="pull-right btn btn-small" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
+                  <a style="margin-right:4px;" class="pull-right nav-link" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
                   <p class="popover-title">Public Lab chatroom</p>
                   <script>login = '<%= current_user.login if logged_in? %>'</script>
                 </div>
