@@ -1,18 +1,20 @@
 <% if logged_in? %>
-  <li class="nav-item">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logout-menu"><i class="fa fa-user"></i> <%= current_user.login %></a>
-    <ul class="dropdown-menu" role="menu" aria-labelled-by="logout-menu">
-      <li><a href="//publiclab.org/profile/<%= current_user.login %>">Profile</a></li>
-      <li><a href="/logout">Log out</a></li>
+  <li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="logout-menu" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-user"></i> <%= current_user.login %>
+    </a>
+    <div class="dropdown-menu login-form" aria-labelled-by="logout-menu">
+      <a href="//publiclab.org/profile/<%= current_user.login %>" class="dropdown-item">Profile</a>
+      <a href="/logout" class="dropdown-item">Log out</a>
       <% if current_user.role == 'admin' %>
-        <li><a href="#">Role: <b>Admin</b></a></li>
+        <a href="#">Role: <b>Admin</b></a>
       <% end %>
-    </ul>
+    </div>
   </li>
 <% else %>
-  <li class="nav-item">
-    <a href="#" class="nav-link" data-toggle="dropdown" id="login-menu">Log In</a>
-    <div class="dropdown-menu login-form" role="menu" aria-labelled-by="login-menu">
+  <li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown login-form" data-toggle="dropdown" id="login-menu" aria-haspopup="true" aria-expanded="false">Log In</a>
+    <div class="dropdown-menu" aria-labelled-by="login-menu">
       <%= render :partial => "layouts/login_form" %>
     </div>
   </li>

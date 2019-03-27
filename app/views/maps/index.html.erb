@@ -14,14 +14,16 @@
   <div class="row">
     <div class="col-3">
       <% if logged_in? %>
-      <a class="btn btn-lg btn-outline-secondary btn-block" href="<%= new_map_url %>">
+      <a class="btn btn-lg btn-outline-primary btn-block" href="<%= new_map_url %>">
         <i class="fa fa-plus-circle"></i> Create a map
       </a>
       <% else %>
       <p><a class="btn btn-lg btn-outline-secondary btn-block disabled" href="#">
         <i class="fa fa-plus-circle"></i> Create a map
       </a></p>
-      <p><a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()">create a map anonymously.</a></p>
+      <p>
+        <a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
+      </p>
       <hr />
 
       <div class="well mini-login" style="display:none;">
@@ -55,7 +57,7 @@
       </div>
     </div><!-- .col-md-3 -->
 
-    <div class="maps-list col-9">
+    <div class="maps-list col-md-9">
       <div class="hero">
         <h1 style="margin-top:4px;">Make maps from aerial photos</h1>
         <p>
@@ -78,9 +80,11 @@
         <% end %>
       </small></h2>
 
-      <% @maps.each_with_index do |map,i| %>
-        <%= render :partial => 'maps/list', :locals => {:map => map} %>
-      <% end %>
+      <div class="row map-list">
+        <% @maps.each_with_index do |map,i| %>
+          <%= render :partial => 'maps/list', :locals => {:map => map} %>
+        <% end %>
+      </div>
       <br style="clear:both;" />
       <%= will_paginate @maps, renderer: BootstrapPagination::Rails unless @unpaginated %> 
     </div><!-- .col-md-9 -->
