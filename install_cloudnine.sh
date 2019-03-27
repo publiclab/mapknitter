@@ -11,10 +11,11 @@ sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libf
 gem install bundler
 bundle _1.16.2_ install
 cp db/schema.rb.example db/schema.rb
-#cp config/database.yml.cloud9.example config/database.yml
+cp config/database.yml.cloud9.example config/database.yml
 cp config/config.yml.example config/config.yml
 sudo service mysql start
 mysql -u root -e 'create database mapknitter;'
+mysql -u root -e 'create database mapknittertest;'
 rake db:setup
 sudo apt-get install npm
 sudo npm install -g bower
