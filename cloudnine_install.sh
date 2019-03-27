@@ -1,3 +1,5 @@
+git checkout -b main
+git pull -f origin main
 rvm install ruby-2.4.4
 source $(rvm 2.4.4 do rvm env --path)
 rvm use ruby-2.4.4
@@ -17,3 +19,4 @@ rake db:setup
 sudo apt-get install npm
 sudo npm install -g bower
 bower install
+echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
