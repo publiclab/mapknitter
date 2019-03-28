@@ -30,8 +30,12 @@ html, body {
   margin-bottom:6px;
 }
 
-.card-img-top {
+.map-list .map img {
   max-height: 300px;
+}
+
+.map-list .map h3 {
+  overflow:hidden;
 }
 
 code {
