@@ -32,7 +32,7 @@ We provide an install script for Amazon's Cloud9 service, which provides standar
 To use it:
 
 1. Click `Create new workspace`
-2. Name your workspace and enter `publiclab/plots2` under `Clone from Git or Mercurial URL`
+2. Name your workspace and enter `https://github.com/USERNAME/mapknitter` (where `USERNAME` is your GitHub username) under `Clone from Git or Mercurial URL`
 3. Choose `Ruby` template
 4. Click `Create workspace`
 5. Once it loads, in the `bash` console at the bottom of the screen, type `chmod 777 install_cloudnine.sh && ./install_cloudnine.sh`
