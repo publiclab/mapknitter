@@ -17,7 +17,7 @@ services:
       - bundle_cache:/usr/local/bundle
       - bower_cache:/app/public/lib
     ports:
-      - 3000:3000
+      - $PORT:3000
     depends_on:
       - db
 
