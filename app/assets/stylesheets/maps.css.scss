@@ -33,8 +33,18 @@ html, body {
 .map-list .map img {
   max-height:300px;
 }
+
 .map-list .map h3 {
   overflow:hidden;
+}
+
+.map-list .map {
+  clear:none;
+  display: inline-block
+}
+
+.map-list div:nth-child(4n+1){
+  clear:left;
 }
 
 code {
