@@ -35,7 +35,7 @@ To use it:
 2. Name your workspace and enter `publiclab/plots2` under `Clone from Git or Mercurial URL`
 3. Choose `Ruby` template
 4. Click `Create workspace`
-5. Once it loads, in the `bash` console at the bottom of the screen, type `chmod 777 install.sh && ./install.sh`
+5. Once it loads, in the `bash` console at the bottom of the screen, type `chmod 777 install_cloudnine.sh && ./install_cloudnine.sh`
 6. Press `Control-x` when prompted for a message.
 7. Wait for the installation to run, and when it's complete, press the `Run` button at the top of the page.
 8. Open the URL which pops up to see MapKnitter booted up. Great work!
