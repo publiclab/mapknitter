@@ -105,8 +105,6 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(Mapknitterunique) ; 
 
-    var hash = new L.Hash(Mapknitterunique);    
-
     Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
     Mapknitterunique.on('fullscreenchange', function () {
       if (Mapknitterunique.isFullscreen()) {
@@ -208,5 +206,6 @@
          "windrose (zoom in)": windrose
     };
     L.control.layers(baseMaps,overlayMaps).addTo(Mapknitterunique);
+    var hash = new L.Hash(Mapknitterunique);
     
 </script>
