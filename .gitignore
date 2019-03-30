@@ -41,3 +41,4 @@ public/lib
 node_modules
 todo.txt
 .sass-cache
+.byebug_history

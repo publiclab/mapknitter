@@ -64,7 +64,7 @@ class SessionsController < ApplicationController
   def logout
     session[:user_id] = nil 
     flash[:success] = "You have successfully logged out."
-    redirect_to '/'
+    redirect_to '/' + '?_=' + Time.now.to_i.to_s
   end
 
   protected

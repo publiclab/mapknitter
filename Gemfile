@@ -43,6 +43,7 @@ group :test do
 end
 
 group :development do
+  gem "byebug"
   gem "jshintrb"
   gem "therubyracer"
 end
