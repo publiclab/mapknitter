@@ -135,7 +135,7 @@
                   <%= yield :details %>
                 </div>
                 <div class="tab-pane" id="map-images-container">
-                  <%= yield :images unless @map.warpables.empty? %>
+                  <%= yield :images %>
                 </div>
                 <div class="tab-pane" id="map-editing-container">
                   <%= render :partial => "sidebar_annotations" %>
