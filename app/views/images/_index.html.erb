@@ -1,4 +1,7 @@
 <h4>Images</h4>
+<% if @map.warpables.empty? %>
+  <p id="no-images">No images uploaded. </p>
+  <%end%>
 <table class="warpables-all table table-striped">
   <tbody>
     <% @map.warpables.each do |warpable| %>

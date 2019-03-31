@@ -18,6 +18,7 @@ function addUploadedImageToSidebar($upload) {
 
   /* Add to sidebar. */
   jQuery(".warpables-all tbody").append($upload);
+    $('#no-images').toggle();
 }
 
 jQuery(document).ready(function($) {
