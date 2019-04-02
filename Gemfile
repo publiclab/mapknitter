@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 ruby "2.4.4"
-gem "rails", "~>3.2"
+gem "rails", "~>5.1"
 gem 'rake',  '~> 12.3.2'
 
 gem "will_paginate", "3.1.7"
@@ -22,7 +22,7 @@ group :dependencies do
   gem "paperclip", "~>4.3.7"
 
   # if you use amazon s3 for warpable image storage
-  gem 'aws-sdk', '~> 1.5.7'
+  gem 'aws-sdk', '~> 3.0.1'
 
   # for rake image migration tasks
   gem 'right_aws'
