@@ -172,23 +172,7 @@
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="map-images-container">
-                  <% if @map.warpables.empty? %>
-                    <p>
-                      This map does not yet have any images. If you're new to MapKnitter, try <a target="_blank" href="/">watching the tutorial video on the front page</a> for a crash course in how to make a map. 
-                    </p>
-
-                    <p><img src="/images/drag-drop.png" /></p>
-
-                    <p>
-                      To begin, <b>simply drag images onto the map</b> or click the <code><i class="fa fa-upload"></i> <b>Upload</b></code> button in the left sidebar. 
-                    </p>
-                    <hr />
-                    <p>
-                      Where can you find aerial images? <a href="//publiclab.org/wiki/balloon-mapping">Take them yourself</a> with a camera on a balloon or kite, or out the window of an airplane.
-                    </p>
-                  <% else %>
-                    <%= yield :images %>
-                  <% end %>
+                  <%= yield :images unless @map.warpables.empty? %>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="map-editing-container">
                   <%= render :partial => "sidebar_annotations" %>
