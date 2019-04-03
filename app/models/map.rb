@@ -206,13 +206,14 @@ class Map < ActiveRecord::Base
   def run_export(user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
     unless export
-      export = Export.new({
+      new_export = Export.new({
         :map_id => id
       })
     end
+    puts "user: #{user.inspect}"
     Exporter.run_export(user,
       resolution,
-      self.export,
+      self.export || new_export,
       self.id,
       self.slug,
       Rails.root.to_s,

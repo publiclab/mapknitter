@@ -2,6 +2,7 @@ class ExportController < ApplicationController
   protect_from_forgery :except => [:formats]
 
   def index
+    debugger
     @exports = Export.where('status NOT IN (?)',['failed','complete','none'])
       .order('updated_at DESC')
     @day = Export.where(status:'complete')
@@ -66,4 +67,8 @@ class ExportController < ApplicationController
     render :text => output, :layout => false 
   end
 
+  def status
+    @export = Export.find(params[:id])
+    render json: @export.to_json
+  end
 end
