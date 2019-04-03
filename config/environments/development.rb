@@ -22,8 +22,6 @@ Mapknitter::Application.configure do
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
 
-  # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
@@ -34,8 +32,9 @@ Mapknitter::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true#false
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
   config.assets.logger = false
 
+  config.eager_load = false
 end
