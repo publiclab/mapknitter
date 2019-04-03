@@ -2,7 +2,6 @@ class ExportController < ApplicationController
   protect_from_forgery :except => [:formats]
 
   def index
-    debugger
     @exports = Export.where('status NOT IN (?)',['failed','complete','none'])
       .order('updated_at DESC')
     @day = Export.where(status:'complete')
