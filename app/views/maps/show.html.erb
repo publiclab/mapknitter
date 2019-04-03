@@ -1,13 +1,13 @@
 <% content_for :title do %>
   <div class="pull-right dropdown">
+      <% if logged_in? && current_user.can_delete?(@map) %>
     <a href="#" data-toggle="dropdown">
       <span class="fa fa-cog"></span>
     </a>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-      <% if logged_in? && current_user.can_delete?(@map) %>
         <li><%= link_to 'Delete', map_path(@map), method: :delete, data: { confirm: 'Are you sure? This cannot be undone.' } %></li>
-      <% end %>
     </ul>
+<% end %>
   </div>
   <div class="sidebar-title">
     <h3><%= @map.name %></h3>
