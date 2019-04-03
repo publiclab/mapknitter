@@ -54,4 +54,10 @@ class AnnotationsController < ApplicationController
   def find_map
     @map = Map.find params[:map_id]
   end
+
+  private
+
+  def annotation_params
+    params.require(:annotation).permit(:annotation_type, :coordinates, :text, :style)
+  end
 end

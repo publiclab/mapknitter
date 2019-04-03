@@ -214,7 +214,7 @@ DEPENDENCIES
   paperclip (~> 4.3.7)
   passenger
   popper_js (~> 1.11, >= 1.11.1)
-  rails (~> 4.2.0)
+  rails (~> 4.2.8)
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
   recaptcha

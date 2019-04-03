@@ -12,7 +12,6 @@ class Map < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
-  attr_accessible :author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license
   attr_accessor :image_urls
 
   validates_presence_of :name, :slug, :author, :lat, :lon

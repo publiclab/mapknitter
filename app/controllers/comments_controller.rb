@@ -4,9 +4,9 @@ class CommentsController < ApplicationController
       @map = Map.find params[:map_id]
 
       @comment = @map.comments.new(
-        user_id: current_user.id,
         body: params[:comment][:body]
       )
+      @comment.user_id = current_user.id
       if @comment.save!
         users = @map.comments.collect(&:user)
         users += [@map.user] unless @map.user.nil?
@@ -49,5 +49,11 @@ class CommentsController < ApplicationController
       flash[:error] = 'You do not have permission to delete that comment.'
     end
     redirect_to "/maps/#{params[:map_id]}"
+  end
+
+  private
+
+  def comment_params
+    params.require(:comment).permit(:body)
   end
 end

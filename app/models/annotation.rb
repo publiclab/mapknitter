@@ -2,7 +2,7 @@ class Annotation < ActiveRecord::Base
   belongs_to :map
   belongs_to :user
 
-  attr_accessible :annotation_type, :coordinates, :text, :style
+  #attr_accessible :annotation_type, :coordinates, :text, :style
 
   serialize :coordinates, Array
   serialize :style, Hash

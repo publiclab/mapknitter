@@ -1,5 +1,5 @@
 class Export < ActiveRecord::Base
-  attr_accessible :map_id, :status, :user_id
+  #attr_accessible :map_id, :status, :user_id
 
   belongs_to :map
   belongs_to :user

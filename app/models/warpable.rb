@@ -1,5 +1,6 @@
 class Warpable < ActiveRecord::Base
-  attr_accessible :image
+
+  # attr_accessible :image
   attr_accessor :src, :srcmedium # for json generation
 
   # Paperclip; config and production/development specific configs

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 ruby "2.4.6"
-gem "rails", "~>4.2.0"
+gem "rails", "~>4.2.8"
 gem 'rake',  '~> 12.3.2'
 gem 'skylight'
 
@@ -21,6 +21,7 @@ group :dependencies do
   gem "open_id_authentication"
   gem "RubyInline"
   gem "paperclip", "~>4.3.7"
+
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
