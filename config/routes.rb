@@ -124,7 +124,7 @@ Mapknitter::Application.routes.draw do
 
   # RESTful API
   resources :maps do
-    resources :tags
+    resources :tags,  only: [:create, :show, :destroy]
     resources :comments
     resources :warpables
     resources :annotations
