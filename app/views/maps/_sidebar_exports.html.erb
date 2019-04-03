@@ -25,6 +25,9 @@
   </li>
 </ul>
 
+<br>
+<button type="button" id='show_status'>Show Status</button>
+
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="map-export-subtab">
   
@@ -115,6 +118,26 @@ var exporting, exportResolutionSlider
     exporting = true
     setInterval(exportProgress,5000)
   <% end %>
+
+
+  $("#show_status").click(function () {
+    console.log("show status button clicked");
+    $.ajax({
+        type: "GET",
+        url: "/exports/1/status",
+        data: {
+            id: 1              
+        },
+        dataType: "json"
+    }).done(function (data) {
+        alert('Success');
+        console.log(data);
+        console.log("data['status']: " + data['status']);
+        $("#show_status").html(data['status']);
+    }).fail(function () {
+        alert("failed AJAX call");
+    });
+  });
 
   $('#cancel-export').click(function() {
     $.ajax({
