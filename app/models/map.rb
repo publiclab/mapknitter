@@ -209,8 +209,7 @@ class Map < ActiveRecord::Base
       new_export = Export.new({
         :map_id => id
       })
-    end
-    puts "user: #{user.inspect}"
+    end    
     Exporter.run_export(user,
       resolution,
       self.export || new_export,
