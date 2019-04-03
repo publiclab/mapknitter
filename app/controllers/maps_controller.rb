@@ -160,7 +160,6 @@ class MapsController < ApplicationController
   def export
     map = Map.find params[:id]
     if logged_in? || Rails.env.development? || verify_recaptcha(:model => map, :message => "ReCAPTCHA thinks you're not a human!")
-      puts "current_user: #{current_user.inspect}"
       render :text => map.run_export(current_user,params[:resolution].to_f)
     else
       render :text => 'You must be logged in to export, unless the map is anonymous.'
