@@ -1,14 +1,12 @@
 version: '3.3'
 services:
   db:
-    container_name: db
     image: mysql:5.7
     env_file:
       - mapknitter.env
     volumes:
       - ../mysql:/var/lib/mysql
   web:
-    container_name: web
     build: .
     env_file:
       - mapknitter.env
