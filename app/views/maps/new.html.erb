@@ -17,8 +17,8 @@
 
     <div class="form-group">
       <%= f.label :slug, "URL" %>
-      <div class="input-group">
-        <div class="input-group-addon">mapknitter.org/maps/</div>
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary" type="button">mapknitter.org/maps/</button>
         <%= f.text_field :slug, :class => "form-control" %>
       </div>
     </div>
@@ -51,7 +51,7 @@
       </tbody>
     </table>
 
-    <p class="visible-xs">
+    <p class="d-block d-sm-none">
       <a class="btn btn-default sidebar-toggle"><i class="fa fa-map-marker"></i> Choose location via map</a>
     </p>
 

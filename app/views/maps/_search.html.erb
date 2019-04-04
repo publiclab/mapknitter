@@ -1,7 +1,9 @@
-<form action="/search" method='get' class="form-inline">
-  <div><label for="search-input">Search</label></div>
-  <div class="form-group">
-    <input placeholder="name or description" id="search-input" class='form-control' type='text' name='q' value='<%= params[:id] if params[:action] == "search" %>'/>
+<h5>Looking for something on MapKnitter?</h5>
+<form action="/search" method='get' class="navbar-form navbar-left">
+  <div class="input-group">
+    <input class="form-control" id="search-input" style="min-width: 280px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
+    <span class="input-group-append">
+      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+    </span>
   </div>
-  <button class="btn btn-default" type='submit'><i class="fa fa-search"></i></button>
 </form>

@@ -13,9 +13,10 @@
 
   <hr />
 
-  <% @maps.each do |map| %>
-    <%= render :partial => "maps/list", :locals => {:map => map} %>
-  <% end %>
-
+  <div class="row map-list">
+    <% @maps.each_with_index do |map,i| %>
+      <%= render :partial => 'maps/list', :locals => {:map => map} %>
+    <% end %>
+  </div>
 </div>
 <hr />

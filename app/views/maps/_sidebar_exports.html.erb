@@ -8,7 +8,7 @@
   <img style="width:100%;" src="/images/download-btn.png" />
 </p>
 <p>
-  <a onClick="$('#exporting-info').toggle();">Learn more about exporting &raquo;</a>
+  <a href="#" onClick="$('#exporting-info').toggle();">Learn more about exporting &raquo;</a>
 </p>
 <div style="display:none;" id="exporting-info"> 
   <p>From this panel you can export this map in a variety of formats. If you've changed the map at all since last exporting, you can re-run the export, but be aware that this will <b>delete and replace previously exported files</b>, so download them first if you want them. All formats are generated sequentially, so if you're waiting for a JPG you will have to let all the other formats complete first.</p>
@@ -16,13 +16,17 @@
   <p><a href="//publiclab.org/wiki/mapknitter-exporting">Learn even more &raquo;</a></p>
 </div>
 
-<ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#map-export-subtab" role="tab" data-toggle="tab">Export</a></li>
-  <li><a href="#map-export-options-subtab" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Advanced options</a></li>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="#map-export-subtab" role="tab" data-toggle="tab">Export</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#map-export-options-subtab" role="tab" data-toggle="tab">Advanced option</a>
+  </li>
 </ul>
 
 <div class="tab-content">
-  <div class="tab-pane active" id="map-export-subtab">
+  <div role="tabpanel" class="tab-pane active" id="map-export-subtab">
   
     <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
