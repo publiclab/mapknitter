@@ -24,3 +24,10 @@ chris:
   remember_token_expires_at: 
   remember_token:            
 
+joshua:
+  id:                        4
+  login:                     joshua
+  email:                     joshua@example.com
+  created_at:                <%= 3.days.ago.to_s :db %>
+  remember_token_expires_at: 
+  remember_token:            
