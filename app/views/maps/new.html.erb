@@ -33,7 +33,7 @@
     <div class="form-group">
       <%= f.label :location, "Location <small>begin typing to search by name</small>".html_safe %>
       <div class="input-group">
-        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <div class="input-group-prepend"><button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button></div>
         <%= f.text_field :location, :class => "form-control", :tabIndex => 2 %>
       </div>
     </div>
@@ -52,7 +52,7 @@
     </table>
 
     <p class="d-block d-sm-none">
-      <a class="btn btn-default sidebar-toggle"><i class="fa fa-map-marker"></i> Choose location via map</a>
+      <a class="btn btn-outline-secondary sidebar-toggle"><i class="fa fa-map-marker"></i> Choose location via map</a>
     </p>
 
     <!-- Map description -->

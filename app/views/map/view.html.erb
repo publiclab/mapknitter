@@ -202,7 +202,7 @@
   </script>
 
 <div class='well'>
-  <h3>Edit map details<a class="pull-right btn" href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand <i class="caret"></i></a></h3>
+  <h3>Edit map details<a class="float-right btn" href="javascript:void(0);" onClick="$('#new_map').toggle()">Expand <i class="caret"></i></a></h3>
   <form style="display:none;" class='map' id="new_map" action="/map/update_map/<%= @map.name %>" method="get" accept-charset="utf-8">
 
     <input type='hidden' name='map[id]' value="<%= @map.id %>"/>
