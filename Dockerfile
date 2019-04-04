@@ -2,7 +2,7 @@
 # https://github.com/publiclab/mapknitter/
 # This image deploys Mapknitter!
 
-FROM ruby:2.4-stretch
+FROM ruby:2.4.6-stretch
 
 # Set correct environment variables.
 ENV HOME /root
