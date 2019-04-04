@@ -2,7 +2,7 @@
 # https://github.com/publiclab/mapknitter/
 # This image deploys Mapknitter!
 
-FROM debian:buster
+FROM debian:stretch
 
 # Set correct environment variables.
 ENV HOME /root
@@ -33,9 +33,6 @@ WORKDIR /tmp
 ADD Gemfile /tmp/Gemfile
 ADD Gemfile.lock /tmp/Gemfile.lock
 RUN bundle install
-
-# HOTFIX Workaround for mysql2 gem incompatibility with libmariadb-dev
-RUN sed -i "s/ LONG_PASSWORD |//g" /usr/local/rvm/gems/ruby-*/gems/mysql2-*/lib/mysql2/client.rb
 
 # Add the Rails app
 WORKDIR /app
