@@ -18,8 +18,8 @@
           <p><%= number_to_human_size warpable.image_file_size %></p>
           <p>
             <% unless warpable.placed? %>
-              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-xs btn-default add-image-<%= warpable.id %>">Place</a>
-              <a class="btn btn-xs btn-default add-image-gps-<%= warpable.id %>" style="display:none;">Place w/ GPS</a> 
+              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-outline-secondary add-image-<%= warpable.id %>">Place</a>
+              <a class="btn btn-sm btn-outline-secondary add-image-gps-<%= warpable.id %>" style="display:none;">Place w/ GPS</a>
               <!-- <a href="">Re-place</a>  -->
               <script>
                 jQuery(document).ready(function($) {
@@ -31,11 +31,16 @@
         </td>
         <td>
           <% if logged_in? && current_user.can_delete?(warpable) %>
-            <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable], :method => "delete", :class => "btn btn-xs btn-danger", :title => "Delete", :rel=> "tooltip" %>
+            <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable],
+                :method => "delete",
+                :confirm => "Are you sure? This cannot be undone.",
+                :class => "btn btn-sm btn-danger",
+                :title => "Delete",
+                :rel=> "tooltip" %>
           <% end %>
           <% if warpable.placed? %>
-            <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-xs btn-success"><i class='fa fa-crosshairs'></i></a>
-            <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" class="btn btn-xs btn-default img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"><i class="fa fa-download"></i></a> 
+            <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-sm btn-success"><i class='fa fa-crosshairs'></i></a>
+            <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" class="btn btn-sm btn-outline-secondary img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"><i class="fa fa-download"></i></a>
             <div class="full-image-container-<%= warpable.id %>" style="overflow:hidden;width:0;height:0;"><img id="full-img-<%= warpable.id %>" /></div>
             <script>
               $('#warpable-<%= warpable.id %> [rel=tooltip]').tooltip();

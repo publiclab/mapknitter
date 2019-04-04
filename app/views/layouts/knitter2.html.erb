@@ -74,21 +74,19 @@
         <% else %>
           <div class="sidebar-content-wrap">
             <!-- Toolbar for uploading and viewing images and exporting the map. -->
-            <div class="btn-group btn-group-justified sidebar-buttons">
+            <div class="btn-group sidebar-buttons" role="group">
               <!-- Upload images -->
                 <button class="btn btn-outline-secondary" title="Upload images" type="button" data-toggle="modal" data-target="#uploadModal" onClick="$('#map-images-tab').tab('show')">
-                  <span class="fa fa-upload"></span> 
-                  <span class="hidden-xs">Upload</span>
+                  <span class="d-none d-sm-block"><span class="fa fa-upload"></span> Upload</span>
                 </button>
 
               <!-- Write a research note on Public Lab -->
-                <a target="_blank" class="btn btn-outline-secondary" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>">
-                  <span class="fa fa-file"></span> 
-                  <span class="hidden-xs">Post</span>
+                <a target="_blank" class="btn btn-outline-secondary" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>" type="button">
+                  <span class="d-none d-sm-block"><span class="fa fa-file"></span> Post</span>
                 </a>
 
                 <div class="btn-group" role="group">
-                  <button id="btnGroupDrop1" type="button" title="Export map" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button id="btnGroupDrop1" type="button" title="Export map" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
                     <span class="fa fa-download"></span>
                     Download
                   </button>
@@ -181,7 +179,7 @@
                   <%= render :partial => "sidebar_exports" %>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="chat">
-                  <a style="margin-right:4px;" class="pull-right nav-link" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
+                  <a style="margin-right:4px;" class="float-right nav-link" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
                   <p class="popover-title">Public Lab chatroom</p>
                   <script>login = '<%= current_user.login if logged_in? %>'</script>
                 </div>
