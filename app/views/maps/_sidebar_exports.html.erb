@@ -44,7 +44,7 @@
     <% if logged_in? || @map.anonymous? %>
       <p>
         <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
-        <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
+        <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-outline-secondary"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
 
       <% if @map.exporting? && ((@map.export.updated_at-DateTime.now)/1.hours).abs > 4 %>
