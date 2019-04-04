@@ -10,14 +10,12 @@
     </label>
   </div>
    <div class="form-group">
-    <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", :class => "form-control"} %>
-    <div class="checkbox">
-      <label for="remember_me">
-        <%= check_box_tag 'remember_me', '1', @remember_me %> Remember me
-      </label>
-    </div>
+    <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", :tabindex => 1, :class => 'form-control', :id => 'username-login' } %>
   </div>
-  <div class="form-group">
-    <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
+  <div class="form-check">
+    <label>
+      <%= check_box_tag 'remember_me', '1', @remember_me, { :class => "form-check-input" } %> Remember me
+    </label>
   </div>
+  <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
 </form>
