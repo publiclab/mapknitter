@@ -6,6 +6,7 @@ services:
       - mapknitter.env
     volumes:
       - ../mysql:/var/lib/mysql
+      - ../dump:/docker-entrypoint-initdb.d
   web:
     build: .
     env_file:
