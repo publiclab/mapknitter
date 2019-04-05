@@ -2,6 +2,7 @@ export COMPOSE_HTTP_TIMEOUT=360
 
 build:
 	cp config/database.yml.example config/database.yml
+	cp config/amazon_s3.yml.example config/amazon_s3.yml
 	cp db/schema.rb.example db/schema.rb
 	docker-compose down --remove-orphans
 	docker-compose build
@@ -9,6 +10,7 @@ build:
 deploy-container:
 	docker-compose run --rm web bash -l -c "sleep 10 && bower install --allow-root && rake db:setup && rake db:migrate && rake assets:precompile"
 	docker-compose up -d
+	docker-compose exec -T web bash -l -c "sleep 10 && rake db:setup && rake db:migrate && rake assets:precompile"
 
 redeploy-container:
 	docker-compose up --force-recreate -d
