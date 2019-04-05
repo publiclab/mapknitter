@@ -13,9 +13,11 @@ build:
 	cp config/config.yml.example config/config.yml
 	cp config/initializers/recaptcha.rb.example config/initializers/recaptcha.rb
 	cp db/schema.rb.example db/schema.rb
+	docker-compose down --remove-orphans
 	docker-compose build
 
 deploy-container:
+	docker-compose run --rm web bash -l -c "sleep 10 && bower install --allow-root && rake db:setup && rake db:migrate && rake assets:precompile"
 	docker-compose up -d
 	$(call wait_for_container)
 
