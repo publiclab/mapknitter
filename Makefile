@@ -3,10 +3,11 @@ export COMPOSE_HTTP_TIMEOUT=360
 build:
 	cp config/database.yml.example config/database.yml
 	cp db/schema.rb.example db/schema.rb
+	docker-compose down --remove-orphans
 	docker-compose build
-	docker-compose run --rm web bash -l -c "sleep 10 && bower install --allow-root && rake db:setup && rake db:migrate && rake assets:precompile"
 
 deploy-container:
+	docker-compose run --rm web bash -l -c "sleep 10 && bower install --allow-root && rake db:setup && rake db:migrate && rake assets:precompile"
 	docker-compose up -d
 
 redeploy-container:
