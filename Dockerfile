@@ -7,6 +7,9 @@ FROM ruby:2.4.6-stretch
 # Set correct environment variables.
 ENV HOME /root
 
+RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
+RUN apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys BF26EE05EA6A68F0
+
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
   nodejs gdal-bin curl procps git imagemagick python-gdal zip
