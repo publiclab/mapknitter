@@ -7,7 +7,12 @@ FROM ruby:2.4.6-stretch
 # Set correct environment variables.
 ENV HOME /root
 
+# Backported GDAL
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
+
+# Obtain key
+RUN mkdir ~/.gnupg
+RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
 RUN apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys BF26EE05EA6A68F0
 
 # Install dependencies
