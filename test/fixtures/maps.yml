@@ -4,6 +4,7 @@ saugus:
   id: 1
   name: Saugus Landfill Incinerator
   slug: saugus-landfill-incinerator
+  location: MA
   lat: 42.43823313018592
   lon: -70.9849190711975
   description: A landfill in Saugus, MA.
@@ -11,3 +12,14 @@ saugus:
   license: publicdomain
   user_id: 1
   
+cubbon:
+  id: 2
+  name: Cubbon Park
+  slug: cubbon-park
+  location: India
+  lat: 12.976347
+  lon: 77.592928
+  description: A park in bangalore
+  created_at: <%= Time.now %>
+  license: publicdomain
+  user_id: 1

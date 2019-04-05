@@ -44,15 +44,15 @@
   <hr />
   <p>
     <% if logged_in? %>
-    <a onClick="$('#map-edit-container').toggle()" class="btn btn btn-default">Edit details</a> 
+      <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
     <% end %>
-    <a onClick="$('.share-link').toggle()" class="btn btn btn-default"><i class="fa fa-code"></i> Embed code</a> 
+    <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
+    <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button>
+    <button type="button" class="btn btn-outline-info btn-sm" rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))">Add ImageSequencer code</button> 
     <div class="share-link" style="display:none;">
       <%= render :partial => 'maps/share' %>
     </div>
-    <a rel="tooltip" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])" class="btn btn btn-default"><i class="fa fa-adjust"></i> NDVI (beta)</a> 
-    <a rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))" class="btn btn btn-default"><i class="fa fa-code"></i></a> 
-    <a href="https://publiclab.org/image-sequencer#NDVI">Learn more</a>
+    <a href="https://publiclab.org/image-sequencer#NDVI">Learn more about ImageSequencer code</a>
   </p>
 
   <div style="display:none;" id="map-edit-container">
