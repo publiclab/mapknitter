@@ -62,7 +62,7 @@ Application-specific dependencies:
 
 `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
-Install rvm for Ruby management (http://rvm.io)
+Install RVM for Ruby management (http://rvm.io)
 
 `curl -L https://get.rvm.io | bash -s stable`
 
@@ -70,9 +70,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.4.4 of Ruby:
+Then, use RVM to install version 2.4.6 of Ruby:
 
-`rvm install 2.4.4`
+`rvm install 2.4.6`
 
 You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
@@ -88,7 +88,7 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need Ruby v2.4.4 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
