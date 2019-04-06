@@ -67,7 +67,11 @@ class ExportController < ApplicationController
   end
 
   def status
-    @export = Export.find(params[:id])
-    render json: @export.to_json
+    map = Map.find(params[:id])
+    if export = map.export
+      render json: export.to_json
+    else      
+      render json: { status: 'export has not been run' }
+    end    
   end
 end
