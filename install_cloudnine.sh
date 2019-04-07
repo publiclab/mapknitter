@@ -17,7 +17,7 @@ sudo service mysql start
 mysql -u root -e 'create database mapknitter;'
 mysql -u root -e 'create database mapknittertest;'
 rake db:setup
-sudo apt-get install npm
+sudo apt-get -y install npm nodejs-legacy
 sudo npm install -g bower
 bower install
 echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
