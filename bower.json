@@ -31,7 +31,8 @@
     "image-sequencer": "git+https://github.com/publiclab/image-sequencer.git#~1.4.0",
     "junction": "theleagueof/junction",
     "leaflet-environmental-layers": "^1.1.2",
-    "leaflet-spin": "1.1.0"
+    "leaflet-spin": "1.1.0",
+    "leaflet-hash":"https://raw.githubusercontent.com/mlevans/leaflet-hash/master/leaflet-hash.js"
   },
   "resolutions": {
     "jquery": "^2.1.3",
