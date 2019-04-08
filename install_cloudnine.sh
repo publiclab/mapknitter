@@ -8,7 +8,8 @@ source $(rvm 2.4.6 do rvm env --path)
 rvm use ruby-2.4.6
 gem install rails -v 3.2.0
 sudo apt-get update
-sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev mysql-server npm nodejs-legacy
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev npm nodejs-legacy
 # exporter-only:
 #sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
 gem install bundler
