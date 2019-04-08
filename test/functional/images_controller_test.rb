@@ -60,10 +60,11 @@ class ImagesControllerTest < ActionController::TestCase
   end
 
   test 'should update an image' do
-    points = "-71.39,41.83:-71.39,41.83:-71.39, 41.83:-71.39,41.83"
-    put :update, warpable_id: @warp.id, locked: false, points: points
-    assert_response :success
+    session[:user_id] = 1
+    points = "-71.39,41.83:-71.39,41.83:-71.39,41.83:-71.39,41.83"
+    put :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
     assert_not_nil @warp.nodes
+    assert_equal "text/html", response.content_type
   end
 
   test 'correct user should destroy an image' do
