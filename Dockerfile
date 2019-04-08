@@ -13,7 +13,7 @@ RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > 
 # Obtain key
 RUN mkdir ~/.gnupg
 RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
-RUN apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys BF26EE05EA6A68F0
+RUN apt-key adv --keyserver fks.pgpkeys.eu --recv-keys BF26EE05EA6A68F0
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
