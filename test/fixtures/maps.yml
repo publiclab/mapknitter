@@ -11,7 +11,7 @@ saugus:
   created_at: <%= Time.now %>
   license: publicdomain
   user_id: 1
-  
+
 cubbon:
   id: 2
   name: Cubbon Park
@@ -23,3 +23,27 @@ cubbon:
   created_at: <%= Time.now %>
   license: publicdomain
   user_id: 1
+
+nairobi:
+  id: 3
+  name: Nairobi City
+  slug: nairobi-city
+  location: Kenya
+  lat: -1.2920659
+  lon: 36.8219462
+  description: Capital of Kenya
+  created_at: <% Time.now %>
+  license: publicdomain
+  user_id: 2
+
+village:
+  id: 4
+  name: Village Market
+  slug: village-market
+  location: Kenya
+  lat: -0.023559
+  lon: 37.90619300000003
+  description: A mall in Nairobi
+  created_at: <% Time.now %>
+  license: publicdomain
+  user_id: 2
