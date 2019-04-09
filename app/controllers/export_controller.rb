@@ -12,6 +12,29 @@ class ExportController < ApplicationController
       .count
   end
 
+  # export of arbitrary image collections
+  def export
+    if params[:key]
+      key = params[:key]
+    else
+      key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
+    end
+    unless export
+      export = Export.new({
+        :map_id => 0 # not tied to a map
+      })
+    end
+    Exporter.run_export(user, 
+      params[:resolution],
+      export,
+      0,
+      params[:slug],
+      Rails.root.to_s,
+      params[:resolution],
+      Warpable.find(params[:image_ids],
+      key)
+  end
+
   # override logger to suppress huge amounts of inane /export/progress logging
   def logger
     if params[:action] == 'progress'
