@@ -106,10 +106,12 @@ var exporting, exportResolutionSlider
   // 'complete', 'failed', ''
   exportProgress = function() {
     $.ajax({
-      url: '/export/status/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>'
+      url: '/export/status/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      dataType: "json"
     }).done(function(data) {
       $('.progress').show()
-      // console.log('data: ' + data)
+      console.log(data)
+      console.log('data: ' + data['status'])
       $('#export_progress').html(data['status'])
       // change progress indicator appearance accordingly
       // -- maybe have a handler which assigns prog indicator state based on status?
