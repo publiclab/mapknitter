@@ -37,12 +37,12 @@ class Warpable < ActiveRecord::Base
   def fup_error_json
    {"name" => read_attribute(:image_filename),
     "size" => read_attribute(:image_size),
-    "error" => self.errors["base"]}                      
+    "error" => self.errors["base"]}
   end
 
   after_save :save_dimensions
 
-  # this runs each time warpable is moved/distorted, 
+  # this runs each time warpable is moved/distorted,
   # to calculate resolution
   def save_dimensions
     if Rails.env.production?
