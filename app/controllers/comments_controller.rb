@@ -24,7 +24,7 @@ class CommentsController < ApplicationController
         #format.js   { render :partial => 'comments/comment', :locals => {:comment => @comment} }
         format.json { render json: @comment, status: :created }
       end
-     
+
     else
       # we intercept this message in /app/assets/javascripts/maps.js
       render :text => "Login required."
@@ -38,7 +38,7 @@ class CommentsController < ApplicationController
       redirect_to "/maps/" + params[:map_id]
     else
       flash[:error] = "You do not have permissions to update that comment."
-      redirect_to "/login"            
+      redirect_to "/login"
     end
   end
 
@@ -46,7 +46,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
 
     if logged_in? && current_user.can_delete?(@comment)
-      @comment.delete 
+      @comment.delete
       flash[:notice] = "Comment deleted."
     else
       flash[:error] = "You do not have permission to delete that comment."

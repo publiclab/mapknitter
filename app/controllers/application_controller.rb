@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?
 
   def current_user
-    user_id = session[:user_id] 
+    user_id = session[:user_id]
     if user_id
       begin
         @user = User.find(user_id)
@@ -45,5 +45,4 @@ class ApplicationController < ActionController::Base
         return false
       end
     end
-
 end

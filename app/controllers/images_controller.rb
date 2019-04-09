@@ -9,7 +9,7 @@ class ImagesController < ApplicationController
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
-  # proxy, used if MapKnitter is being backed by Amazon S3 file storage, 
+  # proxy, used if MapKnitter is being backed by Amazon S3 file storage,
   # to enable client-side distortion using webgl-distort, which requires same-origin
   def fetch
     if Rails.env.production?

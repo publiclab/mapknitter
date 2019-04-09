@@ -8,14 +8,14 @@ class TagsController < ApplicationController
     if logged_in?
       # there is identical code in MapsController#update.
       # TODO: DRY up this functionality.
- 
+
       # save new tags
       if params[:tags]
         params[:tags].gsub(' ', ',').split(',').each do |tagname|
           @map.add_tag(tagname.strip, current_user)
         end
       end
- 
+
       redirect_to "/maps/" + @map.slug
     else
       flash[:error] = "You must be logged in to add tags"
@@ -42,5 +42,4 @@ class TagsController < ApplicationController
       redirect_to "/login"
     end
   end
-
 end

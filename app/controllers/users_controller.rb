@@ -16,5 +16,4 @@ class UsersController < ApplicationController
       .paginate(:page => params[:page], :per_page => 24)
     render "users/index"
   end
-
 end
