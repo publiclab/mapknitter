@@ -1,8 +1,8 @@
 <h5>Looking for something on MapKnitter?</h5>
 <form action="/search" method='get' class="navbar-form navbar-left">
   <div class="input-group">
-    <input class="form-control" id="search-input" style="min-width: 280px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
-    <span class="input-group-append">
+    <input class="form-control" id="search-input" style="min-width: 280px; display: inline-block;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
+    <span style="display: inline-block;" class="input-group-append">
       <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
     </span>
   </div>
