@@ -18,6 +18,7 @@ class TagsController < ApplicationController
  
       redirect_to "/maps/" + @map.slug
     else
+      flash[:error] = "You must be logged in to add tags"
       redirect_to "/login?back_to=/maps/" + @map.slug
     end
   end

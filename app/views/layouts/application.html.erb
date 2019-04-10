@@ -17,15 +17,8 @@
   </head>
   <body>
     <%= render 'layouts/header' %>
-
-    <div class="container-fluid" id="alerts">
-      <% if flash[:notice] %><div class="alert alert-success"><button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button><%=raw flash[:notice] %></div><% end %>
-      <% if flash[:error] %><div class="alert alert-error"><button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button><%=raw flash[:error] %></div><% end %>
-      <% if flash[:warning] %><div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert"><i class="fa fa-close"></i></button><%=raw flash[:warning] %></div><% end %>
-    </div>
-
+    <%= render 'layouts/alerts' %>
     <%= yield; %>
-
     <%= render 'layouts/footer' %>
 
     <script>

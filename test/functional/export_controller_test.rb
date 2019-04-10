@@ -2,6 +2,13 @@ require 'test_helper'
 
 class ExportControllerTest < ActionController::TestCase
 
+  def setup
+    @map = maps(:saugus)
+  end
+
+  def teardown
+  end
+
   test "index" do
     get :index
     assert_response :success
@@ -10,47 +17,55 @@ class ExportControllerTest < ActionController::TestCase
     assert assigns[:week]
   end
 
-# we can't test these until we generate the files
-#  test "jpg" do
-#    get :jpg, id: Map.first.slug
-#    assert_response :success
-#  end
+  test "jpg" do
+    map = maps(:cubbon)
+    system('mkdir -p public/warps/cubbon-park')
+    system('cp test/fixtures/demo.png  public/warps/cubbon-park/cubbon-park.jpg')
 
-#  test "geotiff" do
-#    get :geotiff, id: Map.first.slug
-#    assert_response :success
-#  end
+    get :jpg, id: map.slug
+    assert_response :success
+    assert_includes '"image/jpeg', response.content_type
+  end
+
+  test "geotiff" do
+    map = maps(:cubbon)
+    system('mkdir -p public/warps/cubbon-park')
+    system('cp test/fixtures/demo.png public/warps/cubbon-park/cubbon-park-geo.tif')
+
+    get :geotiff, id: map.slug
+    assert_response :success
+    assert_includes '"image/tiff', response.content_type
+  end
 
   test "cancel fails if not logged in" do
-    get :cancel, id: Map.first.id
+    get :cancel, id: @map.id
     assert_response :success
     assert_equal "You must be logged in to export, unless the map is anonymous.", @response.body
     assert assigns[:map]
-    # this is not right, needs rewriting:
-    # assert_not_equal "canceled", Map.first.exports.last.status
+    assert_equal 'text/html', @response.content_type
+    assert flash.empty?
   end
 
-  test "cancel" do
+  test "cancels export" do
     session[:user_id] = 1
-    get :cancel, id: Map.first.id
+    get :cancel, id: @map.id
     assert_response :success
     assert_equal 'cancelled', @response.body
     assert assigns[:map]
-    # this is not right, needs rewriting:
-    # assert_equal "canceled", Map.first.exports.last.status
+  end
+
+  test "exports cancelled if present" do
+    session[:user_id] = 1
+    get :cancel, id: @map.id, exports: 'cess'
+    assert_response :redirect
+    assert flash.present?
+    assert_redirected_to '/exports'
   end
 
   test "progress" do
-    get :progress, id: Map.first.id
+    get :progress, id: @map.id
     assert_response :success
     assert_equal 'export not running', @response.body
-    #  if  export.status == 'complete'
-    #    output = 'complete'
-    #  elsif export.status == 'none'
-    #    output = 'export not running'
-    #  elsif export.status == 'failed'
-    #    output = 'export failed'
-    #    output = export.status
-    #  output = 'export has not been run'
+    assert_equal 'text/html', @response.content_type
   end
 end

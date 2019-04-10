@@ -33,8 +33,19 @@ html, body {
 .map-list .map img {
   max-height:300px;
 }
+
 .map-list .map h3 {
-  overflow:hidden;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+.map-list .map {
+  clear:none;
+  display: inline-block
+}
+
+.map-list div:nth-child(4n+1){
+  clear:left;
 }
 
 code {
@@ -240,7 +251,7 @@ table .btn {
   .comment-body {
     padding-left:4px;
   }
-  .btn-xs {
+  .btn-sm {
     margin-left:3px;
   }
 }

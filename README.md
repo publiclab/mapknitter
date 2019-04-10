@@ -1,5 +1,4 @@
-## MapKnitter 2
-[![Coverage Status](https://coveralls.io/repos/github/kaunair/mapknitter/badge.svg?branch=%28HEAD+detached+at+3dd0c43%29)](https://coveralls.io/github/kaunair/mapknitter?branch=%28HEAD+detached+at+3dd0c43%29)
+## MapKnitter 2 [![Coverage Status](https://coveralls.io/repos/github/publiclab/mapknitter/badge.svg?branch=%28HEAD+detached+at+FETCH_HEAD%29)](https://coveralls.io/github/publiclab/mapknitter?branch=%28HEAD+detached+at+FETCH_HEAD%29)
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
@@ -63,7 +62,7 @@ Application-specific dependencies:
 
 `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
-Install rvm for Ruby management (http://rvm.io)
+Install RVM for Ruby management (http://rvm.io)
 
 `curl -L https://get.rvm.io | bash -s stable`
 
@@ -71,9 +70,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.4.4 of Ruby:
+Then, use RVM to install version 2.4.6 of Ruby:
 
-`rvm install 2.4.4`
+`rvm install 2.4.6`
 
 You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
@@ -89,7 +88,7 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need Ruby v2.4.4 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
@@ -117,3 +116,6 @@ Help improve Public Lab software!
 * Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
 
+## Staging infrastructure and testing
+
+In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment.
