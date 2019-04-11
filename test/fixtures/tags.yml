@@ -1,14 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-# one:
-#   column: value
-#
-# two:
-#   column: value
-
 nice:
   name: nice
-  created_at: Thu, 12 Feb 2015 16:33:51 UTC +00:00
+  created_at: '2015-02-12 16:33:51'
   map_id: 1
   user_id: 1
   

@@ -1,4 +1,4 @@
-## MapKnitter 2
+## MapKnitter 2 [![Coverage Status](https://coveralls.io/repos/github/publiclab/mapknitter/badge.svg?branch=%28HEAD+detached+at+FETCH_HEAD%29)](https://coveralls.io/github/publiclab/mapknitter?branch=%28HEAD+detached+at+FETCH_HEAD%29)
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
@@ -62,7 +62,7 @@ Application-specific dependencies:
 
 `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
-Install rvm for Ruby management (http://rvm.io)
+Install RVM for Ruby management (http://rvm.io)
 
 `curl -L https://get.rvm.io | bash -s stable`
 
@@ -70,9 +70,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.1.2 of Ruby:
+Then, use RVM to install version 2.4.6 of Ruby:
 
-`rvm install 2.1.2`
+`rvm install 2.4.6`
 
 You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
@@ -88,14 +88,14 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need at least Ruby v1.9.3 (**v2.1.x** preferred)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
-3. Copy and configure config/database.yml from config/database.yml.example, using a new empty databse you've created
+3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3))
 5. Initialize database with `bundle exec rake db:setup`
-6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://google.com/recaptcha/admin
+6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
@@ -116,3 +116,6 @@ Help improve Public Lab software!
 * Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
 
+## Staging infrastructure and testing
+
+In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment.

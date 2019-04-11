@@ -1,16 +1,17 @@
 source "https://rubygems.org"
 
-ruby "2.1.2"
+ruby "2.4.6"
 gem "rails", "~>3.2"
-gem 'rake',  '~> 10.5.0'
+gem 'rake',  '~> 12.3.2'
 
-gem "will_paginate", "3.0.7"
+gem "will_paginate", "3.1.7"
 gem "will_paginate-bootstrap"
 gem "friendly_id"
+gem 'popper_js', '~> 1.11', '>= 1.11.1'
 
 # dependencies
 group :dependencies do
-  gem 'mysql2', '~> 0.3.20'
+  gem 'mysql2', '< 0.4'
   gem "geokit-rails", "1.1.4"
   gem "image_science", "1.2.6"
   gem "recaptcha", :require => "recaptcha/rails"
@@ -18,7 +19,8 @@ group :dependencies do
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
   gem "RubyInline"
-  gem "paperclip", "~>4.2.2"
+  gem "coveralls", require: false
+  gem "paperclip", "~>4.3.7"
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -27,11 +29,11 @@ group :dependencies do
   gem 'right_aws'
 
   # compiling markdown to html
-  gem "rdiscount", "2.1.7.1"
+  gem "rdiscount", "2.2.0.1"
 
   # asset pipelining
   gem "sprockets"#, "2.12.1"
-  gem "sass"
+  gem "sass", :require => 'sass'
   gem "autoprefixer-rails"
   gem "uglifier"
 
@@ -42,6 +44,7 @@ group :test do
 end
 
 group :development do
+  gem "byebug"
   gem "jshintrb"
   gem "therubyracer"
 end

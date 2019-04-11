@@ -2,9 +2,14 @@ class ExportController < ApplicationController
   protect_from_forgery :except => [:formats]
 
   def index
-    @exports = Export.where('status NOT IN (?)',['failed','complete','none']).order('updated_at DESC')
-    @day = Export.where(status:'complete').where('updated_at > (?)',(Time.now-1.day).to_s(:db)).length
-    @week = Export.where(status:'complete').where('updated_at > (?)',(Time.now-1.week).to_s(:db)).length
+    @exports = Export.where('status NOT IN (?)',['failed','complete','none'])
+      .order('updated_at DESC')
+    @day = Export.where(status:'complete')
+      .where('updated_at > (?)',(Time.now-1.day).to_s(:db))
+      .count
+    @week = Export.where(status:'complete')
+      .where('updated_at > (?)',(Time.now-1.week).to_s(:db))
+      .count
   end
 
   # override logger to suppress huge amounts of inane /export/progress logging

@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
 
-  before_filter :current_user, :check_subdomain
+  before_filter :current_user
   helper_method :logged_in?
 
   def current_user
@@ -22,19 +22,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def check_subdomain
-    if request.subdomain.present? && Rails.env != 'test'
-      redirect_to 'http://' + request.domain + request.port_string + request.fullpath
-    end
-  end
-
   private
 
     def require_login
       unless logged_in?
         path_info = request.env['PATH_INFO']
         flash[:warning] = "You must be logged in to access this section"
-        redirect_to '/login?back_to=' + URI.encode(path_info) # halts request cycle
+        redirect_to '/login?back_to=' + path_info.to_param # halts request cycle
       end
     end
 

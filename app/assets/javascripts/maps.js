@@ -1,3 +1,4 @@
+//= require popper
 //= require jquery-ui/jquery-ui.min.js
 //= require knitter
 //= require exif-js/exif.js
@@ -58,6 +59,7 @@ jQuery(document).ready(function($) {
     $("#new_comment textarea").val('')
 
     $("#comments").append(xhr.responseText)
+    $("#comments-number").text(function(i, str) { return (parseInt(str) + 1); });
     $('.comment:last').click(edit_comment).click(delete_comment)
   }).on("ajax:error", function(e, xhr, status, error) {
     if (xhr.responseText == "Login required.") {

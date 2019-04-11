@@ -13,7 +13,7 @@
         <% if map.archived %><i>Archived</i> | <% end %> 
         <a href="/map/view/<%= map.name %>">View</a> | 
         <% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
-        <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>">Archive/Spam</a> | <% end %>
+        <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>"><i class="fa fa-ban"></i></a> <% end %>
         Updated <%= map.updated_at.to_s(:short) %> | 
         <%= map.warpables.length %> images 
       </small></p>
@@ -23,4 +23,3 @@
   <br style="clear:both;" />
   <%= will_paginate @maps unless @unpaginated %>
 </div>
-

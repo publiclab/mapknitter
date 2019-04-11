@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="/lib/fontawesome/css/font-awesome.min.css"/>
   <link rel="stylesheet" href="/lib/leaflet/dist/leaflet.css"/>
+  <link rel="shortcut icon" href="/images/mapknitter-255.png" />
 
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application' %>
@@ -20,7 +21,7 @@
 
   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js' async defer></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlBXzYwdeaOMKZgx_UNBp2qBtdD0L_9g"></script>
-  <script src='//unpkg.com/leaflet.gridlayer.googlemutant@latest/Leaflet.GoogleMutant.js'></script>
+  <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@0.7.0/Leaflet.GoogleMutant.js'></script>
   <script src='/lib/image-sequencer/dist/image-sequencer.js'></script>
 
 </head>
@@ -30,8 +31,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h3 class="modal-title">Looks like this is a new map</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
           <p>
@@ -41,7 +42,7 @@
           <p><img src="/images/drag-drop.png" /></p>
 
           <p>
-            To begin, <b>simply drag images onto the map</b> or click the <code><i class="fa fa-upload"></i> <b>Upload</b></code> button in the left sidebar. 
+            To begin, <b>simply drag images onto the map</b> or click the <code><i class="fa fa-upload"></i> <b>Upload</b></code> button in the right sidebar. 
           </p>
           <hr />
           <p>
@@ -74,82 +75,116 @@
         <% else %>
           <div class="sidebar-content-wrap">
             <!-- Toolbar for uploading and viewing images and exporting the map. -->
-            <div class="btn-group btn-group-justified sidebar-buttons">
+            <div class="btn-group sidebar-buttons" role="group">
               <!-- Upload images -->
-              <div class="btn-group">
-                <button class="btn btn-default" title="Upload images" type"button" data-toggle="modal" data-target="#uploadModal" onClick="$('#map-images-tab').tab('show')">
-                  <span class="fa fa-upload"></span> 
-                  <span class="hidden-xs">Upload</span>
+                <button class="btn btn-outline-secondary" title="Upload images" type="button" data-toggle="modal" data-target="#uploadModal" onClick="$('#map-images-tab').tab('show')">
+                  <span class="d-none d-sm-block"><span class="fa fa-upload"></span> Upload</span>
                 </button>
-              </div>
 
               <!-- Write a research note on Public Lab -->
-              <div class="btn-group">
-                <a target="_blank" class="btn btn-default" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>">
-                  <span class="fa fa-file"></span> 
-                  <span class="hidden-xs">Post</span>
+                <a target="_blank" class="btn btn-outline-secondary" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>" type="button">
+                  <span class="d-none d-sm-block"><span class="fa fa-file"></span> Post</span>
                 </a>
-              </div>
 
-              <!-- Export map -->
-              <div class="dropdown btn-group">
-                <button class="btn btn-default dropdown-toggle" title="Export map" type="button"  data-toggle="dropdown">
-                  <span class="fa fa-download"></span> 
-                  <span class="hidden-xs">Download</span>
-                  <span class="caret"></span>              
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right map-exports" role="menu">
-                  <%= render :partial => 'maps/exports' %>
-                </ul>
-              </div>
+                <div class="btn-group" role="group">
+                  <button id="btnGroupDrop1" type="button" title="Export map" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
+                    <span class="fa fa-download"></span>
+                    Download
+                  </button>
+                  <div class="dropdown-menu map-exports" aria-labelledby="btnGroupDrop1" role="menu">
+                    <a class="dropdown-item" href="#"><%= render :partial => 'maps/exports' %></a>
+                  </div>
+                </div>
             </div>
 
             <div class="sidebar-tabs">
-
-              <!-- Navigation tabs -->
               <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#map-details-container" role="tab" data-toggle="tab">About</a></li>
-    <li><a id="map-images-tab" href="#map-images-container" role="tab" data-toggle="tab">
-                  <span class="hidden-xs">Images</span>
-                  <span class="visible-xs"><i class="fa fa-image"></i></span>
-                </a></li>
-                <li><a href="#map-editing-container" role="tab" data-toggle="tab">
-                  <span class="hidden-xs">Annotate</span>
-                  <span class="visible-xs"><i class="fa fa-map-marker"></i></span>
-                </a></li>
-                <li><a href="#map-exports-container" role="tab" data-toggle="tab">Export</a></li>
-                <li class="hidden-xs"><a class="chat-btn" href="#chat" role="tab" data-toggle="tab">Chat</a></li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#map-details-container" role="tab" data-toggle="tab" aria-selected="true">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#map-images-container" role="tab" data-toggle="tab">Images</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#map-editing-container" role="tab" data-toggle="tab">Annotate</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#map-exports-container" role="tab" data-toggle="tab">Export</a>
+                </li>
+                <li class="nav-item d-none d-sm-block">
+                  <a class="nav-link" href="#chat" role="tab" data-toggle="tab">Chat</a>
+                </li>
               </ul>
 
-              <!-- Tabbed panes -->
-              <div class="tab-content sidebar-content">
-                <div class="tab-pane active" id="map-details-container">
-
-                  <div class="visible-xs">
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="map-details-container">
+                   <div class="d-block d-sm-none">
                     <p style="text-align:center;">
                      <a class="btn btn-primary btn-lg sidebar-toggle">View map <i class="fa fa-chevron-circle-right"></i></a>
                     </p>
                     <hr />
                   </div>
+                  <div>
+                    <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
+                  </div>
+                  <p>
+                    <span class="map-detail-label">Location</span>
+                    <a href="https://www.openstreetmap.org/#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>"><%= @map.location %></a>
+                  </p>
+                  <table>
+                    <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+                  </table>
 
-                  <%= yield :details %>
+                  <p>
+                    <span class="map-detail-label">License (<a target="_blank" href="http://publiclab.org/licenses">Learn more</a>):</span>
+                    <a href="/maps/license/<%= @map.license %>"><%= @map.license %></a> 
+                  </p>
+
+                  <hr />
+                  <p>
+                    <% if logged_in? %>
+                      <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
+                      <%= link_to 'Delete map', map_path(@map), method: :delete, class: "btn btn-outline-info btn-sm", data: { confirm: 'Are you sure? This cannot be undone.' } %>
+                    <% end %>
+                    <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
+                    <!-- this button does not lead to anywhere -->
+<!--                     <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button> -->
+                    <button type="button" class="btn btn-outline-info btn-sm" rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))">Add ImageSequencer code</button> 
+                    <div class="share-link" style="display:none;">
+                      <%= render :partial => 'maps/share' %>
+                    </div>
+                    <a href="https://publiclab.org/image-sequencer#NDVI">Learn more about ImageSequencer code</a>
+                  </p>
+
+                  <div style="display:none;" id="map-edit-container">
+                    <%= render :partial => 'maps/edit' %>
+                  </div>
+                  <div class="tags">
+                    <%= render :partial => "tags/index" %>
+                  </div>
+                  <hr />
+                  <div class="comments">
+                    <%= render :partial => "comments/index" %>
+                    <hr />
+                    <%= render :partial => "comments/new" %>
+                  </div>
                 </div>
-                <div class="tab-pane" id="map-images-container">
-                  <%= yield :images unless @map.warpables.empty? %>
+                <div role="tabpanel" class="tab-pane fade" id="map-images-container">
+                  <%= yield :images %>
                 </div>
-                <div class="tab-pane" id="map-editing-container">
+                <div role="tabpanel" class="tab-pane fade" id="map-editing-container">
                   <%= render :partial => "sidebar_annotations" %>
                 </div>
-                <div class="tab-pane" id="map-exports-container">
+                <div role="tabpanel" class="tab-pane fade" id="map-exports-container">
                   <%= render :partial => "sidebar_exports" %>
                 </div>
-                <div class="tab-pane" id="chat">
-                    <a style="margin-right:4px;" class="pull-right btn btn-small" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
-                    <p class="popover-title">Public Lab chatroom</p>
-                    <script>login = '<%= current_user.login if logged_in? %>'</script>
+                <div role="tabpanel" class="tab-pane fade" id="chat">
+                  <a style="margin-right:4px;" class="float-right nav-link" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
+                  <p class="popover-title">Public Lab chatroom</p>
+                  <script>login = '<%= current_user.login if logged_in? %>'</script>
                 </div>
-              </div>  
-
+              </div>
             </div><!-- .sidebar-tabs -->
           </div><!-- .sidebar-content -->
         <% end %>
@@ -159,7 +194,7 @@
 
   <%= render :partial => "/images/new" unless params[:action] == 'new' %>
   <% end %>
-
+  
   <script>
     var map
     (function(){

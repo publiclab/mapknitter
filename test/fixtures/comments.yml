@@ -1,12 +1,21 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-# one:
-#   column: value
-#
-# two:
-#   column: value
-
 one:
-  body: I'll just leave a comment, why don't I. 
+  body: I'll just leave a comment, why don't I.
   user_id: 1
+  map_id: 1
+
+two:
+  body: Here's an awesome comment.
+  user_id: 2
+  map_id: 1
   
+three:
+  body: Testing controllers here.
+  user_id: 3
+  map_id: 1
+
+four:
+  body: Another one bites the dust
+  user_id: 4
+  map_id: 1

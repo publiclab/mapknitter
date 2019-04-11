@@ -1,5 +1,4 @@
 /*
- *= require seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css
  *= require jquery-ui/themes/overcast/jquery-ui.min.css
 */ 
 /* Variables */
@@ -34,8 +33,19 @@ html, body {
 .map-list .map img {
   max-height:300px;
 }
+
 .map-list .map h3 {
-  overflow:hidden;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+.map-list .map {
+  clear:none;
+  display: inline-block
+}
+
+.map-list div:nth-child(4n+1){
+  clear:left;
 }
 
 code {
@@ -96,27 +106,6 @@ code {
 
   h1, h2, h3, h4 { font-family: 'Junction Light'; }
 
-  .navbar { margin-bottom: -$bootstrap-navbar-height; }
-
-  #navbar-collapse {
-    clear: left;
-  }
-  /* Disable normal navbar collapse on map show page; it's running in the sidebar,
-   * so widths are not properly calculated. */
-  .navbar-toggle {
-    display: none !important;
-  }
-  .navbar-collapse {
-    display: none !important;
-  }
-  .navbar-custom-knitter {
-    display: table;
-  }
-  #brand { display:none; }
-  #header #brand-compact { 
-    display:inline;
-  }
-
   .dropdown-menu {
     z-index:999;
   }
@@ -134,9 +123,6 @@ code {
 
   .sidebar-header {
     @include sidebar-padding();
-    margin-top: $bootstrap-navbar-height;
-    padding-bottom: $sidebar-title-padding;
-    padding-top: $sidebar-title-padding;    
     h4 { margin: 3px 0 6px; }
   }
 
@@ -169,7 +155,7 @@ code {
   /* Styles for /maps/new */
   .new-map .sidebar-content {
     border-top: 1px solid $subtle-grey;
-    top: $sidebar-header-height + $bootstrap-navbar-height;
+    top: $sidebar-header-height - 80px + $bootstrap-navbar-height;
   }
 
   /* Ensure that horizontal nav elements are hidden in the sidebar (not enough room). */
@@ -265,7 +251,7 @@ table .btn {
   .comment-body {
     padding-left:4px;
   }
-  .btn-xs {
+  .btn-sm {
     margin-left:3px;
   }
 }

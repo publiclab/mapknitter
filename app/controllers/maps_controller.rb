@@ -22,8 +22,8 @@ class MapsController < ApplicationController
 
   def map
     @maps = Map.where(archived: false, password: '')
-               .select([:author, :name, :lat, :lon, :slug, :archived, :password])
-               .joins(:warpables, :users)
+               .select('author, maps.name, lat, lon, slug, archived, password, users.login as user_login')
+               .joins(:warpables, :user)
                .group("maps.id")
     render layout: false
   end
@@ -177,10 +177,13 @@ class MapsController < ApplicationController
     area = params[:id] || "this area"
     @title = "Maps in #{area}"
     ids = Map.bbox(params[:minlat],params[:minlon],params[:maxlat],params[:maxlon]).collect(&:id)
-    @maps = Map.where(password: '').where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24)
+    @maps = Map.where(password: '').where('id IN (?)',ids).paginate(:page => params[:page], :per_page => 24).except(:styles)
+    @maps.each do |map|
+      map.image_urls = map.warpables.map{ |warpable| warpable.image.url}
+    end
     respond_to do |format|
       format.html { render "maps/index", :layout => "application" } 
-      format.json { render :json => @maps }
+      format.json { render :json => @maps.to_json(methods: :image_urls) }
     end
   end
 

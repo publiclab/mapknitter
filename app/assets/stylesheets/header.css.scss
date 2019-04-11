@@ -1,130 +1,23 @@
-.navbar-custom-knitter {
-  display: none;
+body {
+  padding-top: 70px;
 }
 
-@media (min-width: 768px) {
-  .navbar-header {
-    width:50%;
-  }
+.login-links {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
 }
 
-#header, .sidebar-header {
-  .nav > li > a { color: #444; }
-  .nav > li > a:hover { color: #222; }
-  .navbar-right { padding-right: 20px; }
+.login-links:visited {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
 }
 
-#header {
-  background:#f8f8f8;
-  border-bottom:3px solid #eee;
-
-  .navbar-toggle {
-    border-color:#ccc;
-    .icon-bar {
-      background-color:#aaa;
-    }
-  }
-
-  .navbar-toggle:hover {
-    background-color:#eee;
-  }
-
-  .dropdown-menu {
-    padding:8px;
-  }
-
-  .brand {
-    float:left;
-    width:90%;
-  }
-
-  .brand .yarn {
-    display:none;
-  }
-
-  .brand img {
-    width:400px;
-    margin:20px 10px 15px;
-    float:left;
-  }
-
-  .brand span {
-    display:block;
-    float:left;
-    padding-top:65px;
-    font-size:20px;
-    font-family: 'Junction Light';
-  }
-
-  img.cat {
-    position:absolute;
-    top:20px;
-    left:3px;
-    width:80px;
-    pointer-events:none;
-  }
+.login-links:hover {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  #header {
-    .brand {
-      width:80%;
-    }
-    .brand img {
-      width:50%;
-    }
-    .cat {
-      display:none;
-    }
-  }
+.login-links:active {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
 }
-
-@media (max-width: 1252px) {
-  #header .brand span {
-    display:none;
-  }
-}
-
-.sidebar #header {
-  .navbar-header {
-
-    width:auto;
-
-    .navbar-nav {
-
-      padding-left:20px;
-
-      li {
-        padding-top:7px;
-      }
-
-    }
-  }
-
-  .cat {
-    display:none;
-  }
-
-  .brand {
-    float:left;
-    width:60px;
-  }
-
-  .brand .fullscreen {
-    display:none;
-  }
-
-  .brand .yarn {
-    display:block;
-  }
-
-  .brand img {
-    margin:10px;
-    width:70%;
-  }
-
-  .brand span {
-    display:none;
-  }
-}
-

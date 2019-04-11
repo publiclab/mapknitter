@@ -5,25 +5,9 @@ class ImagesController < ApplicationController
   rescue_from Errno::ETIMEDOUT, :with => :url_upload_not_found
   rescue_from OpenURI::HTTPError, :with => :url_upload_not_found
   rescue_from Timeout::Error, :with => :url_upload_not_found
-  protect_from_forgery :except => [:update,:delete]  
+  protect_from_forgery :except => [:update,:delete]
   #Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
-
-  # legacy
-  def new
-    @map = Map.find params[:id]
-    @warpable = Warpable.new
-    respond_to do |format|
-     format.html { render :template => 'legacy/new', :layout => false } 
-     format.json { render :json => @warpable }
-    end
-  end
-
-  # legacy
-  def uploaded_confirmation
-    @warpable = Warpable.find params[:id]
-    render :template => 'legacy/new', :layout => false
-  end
 
   # proxy, used if MapKnitter is being backed by Amazon S3 file storage, 
   # to enable client-side distortion using webgl-distort, which requires same-origin
@@ -47,7 +31,7 @@ class ImagesController < ApplicationController
     @warpable.map_id = map.id
     map.updated_at = Time.now
     map.save
-    respond_to do |format|     
+    respond_to do |format|
       if @warpable.save
         format.html {
           render :json => [@warpable.fup_json].to_json,
@@ -69,10 +53,10 @@ class ImagesController < ApplicationController
     @warpable.url = params[:url]
     map.updated_at = Time.now
     map.save
-    if @warpable.save 
+    if @warpable.save
       redirect_to "/maps/"+params[:name]
     else
-      flash[:notice] = "Sorry, the image failed to import." 
+      flash[:notice] = "Sorry, the image failed to import."
       redirect_to "/map/edit/"+params[:name]
     end
   end
@@ -82,7 +66,7 @@ class ImagesController < ApplicationController
     flash[:notice] = "Sorry, the URL you provided was not valid."
     redirect_to "/map/edit/"+params[:id]
   end
-  
+
   def show
     @image = Warpable.find params[:id]
     respond_to do |format|
@@ -90,10 +74,10 @@ class ImagesController < ApplicationController
       format.json { render :json => @image.map{|img| img.fup_json} }
     end
   end
-  
+
   def update
     @warpable = Warpable.find params[:warpable_id]
-    
+
     nodes = []
     author = @warpable.map.author
 
@@ -113,7 +97,7 @@ class ImagesController < ApplicationController
     end
 
     @warpable.nodes = nodes.collect(&:id).join(',')
-    @warpable.locked = params[:locked]    
+    @warpable.locked = params[:locked]
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
     @warpable.save
     render :text => 'success'
@@ -124,7 +108,7 @@ class ImagesController < ApplicationController
     if logged_in? && current_user.can_delete?(@warpable)
       @warpable.destroy
       respond_to do |format|
-        format.html { redirect_to @warpable.map } 
+        format.html { redirect_to @warpable.map }
         format.json { render :json => @warpable }
       end
     else
@@ -132,5 +116,4 @@ class ImagesController < ApplicationController
       redirect_to "/login"
     end
   end
-  
 end

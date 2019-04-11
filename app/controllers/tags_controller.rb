@@ -2,12 +2,6 @@ class TagsController < ApplicationController
 
   before_filter :require_login, :only => [:edit, :update, :destroy]
 
-  def index
-  end
-
-  def new
-  end
-
   def create
     @map = Map.find params[:map_id]
 
@@ -24,6 +18,7 @@ class TagsController < ApplicationController
  
       redirect_to "/maps/" + @map.slug
     else
+      flash[:error] = "You must be logged in to add tags"
       redirect_to "/login?back_to=/maps/" + @map.slug
     end
   end
@@ -33,12 +28,6 @@ class TagsController < ApplicationController
     @maps = @tag.maps.paginate(:page => params[:page], :per_page => 24)
     @title = "Maps tagged with '"+@tag.name+"'"
     render :template => 'maps/index'
-  end
-
-  def edit
-  end
-
-  def update
   end
 
   def destroy
