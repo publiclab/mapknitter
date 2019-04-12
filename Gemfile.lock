@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/publiclab/mapknitter-exporter
+  revision: e46886898d0c5b36863ce5a066b85c4c4a5cd0da
+  glob: *.gemspec
+  specs:
+    mapknitter-exporter (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -195,6 +202,7 @@ DEPENDENCIES
   geokit-rails (= 1.1.4)
   image_science (= 1.2.6)
   jshintrb
+  mapknitter-exporter!
   mysql2 (< 0.4)
   oa-openid (= 0.3.2)
   open_id_authentication
@@ -220,4 +228,4 @@ RUBY VERSION
    ruby 2.4.6p354
 
 BUNDLED WITH
-   1.17.1
+   1.17.3
