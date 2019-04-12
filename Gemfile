@@ -38,7 +38,7 @@ group :dependencies do
   gem "uglifier"
 
   # switch to main version once ready:
-  gem "mapknitter-exporter", git: 'https://github.com/publiclab/mapknitter-exporter', branch: 'add_cartagen', glob: '*.gemspec'
+  gem "mapknitter-exporter", git: 'https://github.com/publiclab/mapknitter-exporter', glob: '*.gemspec'
 end
 
 group :test do
