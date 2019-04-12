@@ -210,13 +210,12 @@ class Map < ActiveRecord::Base
         :map_id => id
       })
     end
-    Exporter.run_export(user,
+    MapKnitterExporter.run_export(
+      user.id,
       resolution,
       self.export,
-      self.id,
       self.slug,
       Rails.root.to_s,
-      self.average_scale,
       self.placed_warpables,
       key)
   end

@@ -37,6 +37,8 @@ group :dependencies do
   gem "autoprefixer-rails"
   gem "uglifier"
 
+  # switch to main version once ready:
+  gem "mapknitter-exporter", git: 'https://github.com/publiclab/mapknitter-exporter', branch: 'add_cartagen', glob: '*.gemspec'
 end
 
 group :test do

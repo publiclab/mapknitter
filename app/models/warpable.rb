@@ -1,3 +1,5 @@
+require "mapknitterExporter"
+
 class Warpable < ActiveRecord::Base
  
   attr_accessible :image
@@ -141,9 +143,8 @@ class Warpable < ActiveRecord::Base
     self.uploaded_data = io
   end
 
-  # TODO: simplify/reduce # of parameters needed here:
   def generate_perspectival_distort(pxperm, path)
-    Exporter.generate_perspectival_distort(pxperm, path, nodes_array, id, image_file_name, image, height, width)
+    MapKnitterExporter.generate_perspectival_distort(pxperm, path, nodes_array, image_file_name, image.url(:original), height, width, Rails.root)
   end
 
   def user_id
