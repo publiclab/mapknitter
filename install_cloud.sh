@@ -22,4 +22,3 @@ rake db:setup
 sudo npm install -g bower
 bower install
 echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
-
