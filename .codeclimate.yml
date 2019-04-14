@@ -1,0 +1,28 @@
+version: 2
+plugins: 
+  rubocop: 
+    enabled: true
+  brakeman: 
+    enabled: true
+  bundler-audit: 
+    enabled: true
+  duplication: 
+    enabled: true
+    config:
+      languages:
+        - ruby:
+        - javascript:
+  eslint: 
+    enabled: true
+  fixme: 
+    enabled: true
+  rubocop: 
+    enabled: true
+
+exclude_patterns:
+- config/
+- db/
+- vendor/
+- log/
+
+
