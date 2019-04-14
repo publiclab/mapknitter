@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # include OpenIdAuthentication # shouldn't be necessary!!
   # Prevent CSRF attacks by raising an exception.
@@ -14,7 +16,7 @@ class ApplicationController < ActionController::Base
     if user_id
       begin
         @user = User.find(user_id)
-      rescue
+      rescue StandardError
         @user = nil
       end
     else
@@ -27,7 +29,7 @@ class ApplicationController < ActionController::Base
   def require_login
     unless logged_in?
       path_info = request.env['PATH_INFO']
-      flash[:warning] = "You must be logged in to access this section"
+      flash[:warning] = 'You must be logged in to access this section'
       redirect_to '/login?back_to=' + path_info.to_param # halts request cycle
     end
   end
@@ -36,12 +38,12 @@ class ApplicationController < ActionController::Base
     user_id = session[:user_id]
 
     begin
-      if user_id and User.find(user_id)
+      if user_id && User.find(user_id)
         return true
       else
         return false
       end
-    rescue
+    rescue StandardError
       return false
     end
   end
