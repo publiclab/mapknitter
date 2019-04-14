@@ -10,7 +10,7 @@
     </label>
   </div>
    <div class="form-group">
-    <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", :tabindex => 1, :class => 'form-control', :id => 'username-login' } %>
+    <%= text_field_tag 'open_id', @login, { :placeholder => "Username (not email)", :tabindex => 1, :required => true, :class => 'form-control', :id => 'username-login' } %>
   </div>
   <div class="form-check">
     <label>
