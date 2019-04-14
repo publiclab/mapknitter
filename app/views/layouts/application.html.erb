@@ -22,26 +22,6 @@
     <%= render 'layouts/footer' %>
 
     <script>
-      $("input#search-input").on({
-        keydown: function(e) {
-          if (e.which === 32)
-            return false;
-        },
-        change: function() {
-          this.value = this.value.replace(/\s/g, "");
-        }
-      });
-
-     function checkInputLength(textbox) {
-        var x = textbox.value;
-        if(x.length <= 2 && x.length > 0){
-           textbox.setCustomValidity('Please keep typing to refine your search')
-        }
-        else{
-           textbox.setCustomValidity('')
-        }
-      }
-
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
