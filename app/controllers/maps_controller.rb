@@ -3,6 +3,7 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
   before_filter :require_login, only: %i[edit update destroy]
+  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy]
 
   layout 'knitter2'
 
@@ -21,10 +22,7 @@ class MapsController < ApplicationController
   end
 
   def map
-    @maps = Map.where(archived: false, password: '')
-               .select('author, maps.name, lat, lon, slug, archived, password, users.login as user_login')
-               .joins(:warpables, :user)
-               .group('maps.id')
+    @maps = Map.map
     render layout: false
   end
 
@@ -57,7 +55,6 @@ class MapsController < ApplicationController
   end
 
   def show
-    @map = Map.find params[:id]
     @map.zoom ||= 12
 
     # stuff for Sparklines resolution graph;
@@ -93,24 +90,19 @@ class MapsController < ApplicationController
   end
 
   def embed
-    @map = Map.find params[:id]
     @map.zoom ||= 12
     @embed = true
     render template: 'maps/show'
   end
 
   def annotate
-    @map = Map.find params[:id]
     @map.zoom = 12 # get rid of this; use setBounds or something
     @annotations = true # loads annotations-specific assets
   end
 
-  def edit
-    @map = Map.find params[:id]
-  end
+  def edit; end
 
   def update
-    @map = Map.find    params[:id]
     @map.name =        params[:map][:name]
     @map.location =    params[:map][:location]
     @map.lat =         params[:map][:lat]
@@ -130,7 +122,6 @@ class MapsController < ApplicationController
   end
 
   def destroy
-    @map = Map.find params[:id]
     if current_user.can_delete?(@map)
       @map.destroy
       flash[:notice] = 'Map deleted.'
@@ -143,9 +134,8 @@ class MapsController < ApplicationController
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    map = Map.find params[:id]
     warpables = []
-    map.warpables.each do |warpable|
+    @map.warpables.each do |warpable|
       warpables << warpable
       warpables.last[:nodes] = warpable.nodes_array
       warpables.last.src = warpable.image.url
@@ -156,9 +146,8 @@ class MapsController < ApplicationController
 
   # run the export
   def export
-    map = Map.find params[:id]
-    if logged_in? || Rails.env.development? || verify_recaptcha(model: map, message: "ReCAPTCHA thinks you're not a human!")
-      render text: map.run_export(current_user, params[:resolution].to_f)
+    if logged_in? || Rails.env.development? || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not a human!")
+      render text: @map.run_export(current_user, params[:resolution].to_f)
     else
       render text: 'You must be logged in to export, unless the map is anonymous.'
     end
@@ -166,7 +155,6 @@ class MapsController < ApplicationController
 
   # render list of exports
   def exports
-    @map = Map.find params[:id]
     render partial: 'maps/exports', layout: false
   end
 
@@ -217,5 +205,11 @@ class MapsController < ApplicationController
       format.html { render 'maps/index', layout: 'application' }
       format.json { render json: @maps }
     end
+  end
+
+  private
+
+  def find_map
+    @map = Map.find(params[:id])
   end
 end

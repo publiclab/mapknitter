@@ -250,4 +250,11 @@ class Map < ActiveRecord::Base
       })
     end
   end
+
+  def self.map
+    Map.where(archived: false, password: '')
+       .select('author, maps.name, lat, lon, slug, archived, password, users.login as user_login')
+       .joins(:warpables, :user)
+       .group('maps.id')
+  end
 end
