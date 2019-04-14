@@ -1,0 +1,18 @@
+development:
+  adapter: mysql2
+  username: root
+  password: 
+  database: mapknitter
+
+production:
+  adapter: mysql2
+  host: db
+  username: mapknitter
+  password: mapknitter
+  database: mapknitter
+
+test:
+  adapter: mysql2
+  username: root
+  password: 
+  database: mapknittertest
