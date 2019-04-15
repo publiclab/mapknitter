@@ -144,5 +144,58 @@ $ mysql -u <username> -p
 ```
 
 
+## Linux
+
+Installation: 
+
+```Bash
+
+# If you do not have mysql-server installed run
+$ sudo apt-get install mysql-server
+# Enter a password you can rem when prompted during installation for root
+
+```
+Configure mapknitter account: 
+
+```Bash
+$ mysql -u root -p
+# Enter the password you input during installation
+# Create a mapknitter user
+$ CREATE USER 'mapknitter' IDENTIFIED BY 'password';
+# Grant permissions to the new user
+$ GRANT ALL ON *.* TO 'mapknitter' WITH GRANT OPTION;
+
+```
+
+_If you get the error `Access denied for user 'root'@'localhost'" error"`_  
+
+Meaning maybe you forgot your root password or was not prompted when installing. 
+You might be having some dependencies of mysql in your machine. You need to remove all the dependencies and reinstall mysql a fresh. 
+Use the following commands to remove mysql and all its dependencies
+
+```Bash
+$ sudo -i
+$ service mysql stop
+$ killall -KILL mysql mysqld_safe mysqld
+$ apt-get --yes purge mysql-server mysql-client
+$ apt-get --yes autoremove --purge
+$ apt-get autoclean
+$ deluser --remove-home mysql
+$ delgroup mysql
+$ rm -rf /etc/apparmor.d/abstractions/mysql /etc/apparmor.d/cache/usr.sbin.mysqld /etc/mysql /var/lib/mysql /var/log/mysql* /var/log/upstart/mysql.log* /var/run/mysqld
+$ updatedb
+$ exit
+
+````
+After this repeat installation and configuration steps
+
+
+Add the username and passsword on the `config/database.yml` development:
+
+Note: _You can use MariaDB in development for as you database if you are more comfortable with it_
+
+
+
+
 ## Pending: please add instructions for your respective system 
 
