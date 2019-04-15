@@ -38,7 +38,8 @@ class AnnotationsController < ApplicationController
                         coordinates: geojson[:geometry][:coordinates],
                         text: geojson[:properties][:textContent],
                         style: geojson[:properties][:style])
-      render file: 'annotations/update.json.erb', content_type: 'application/json'
+      render file: 'annotations/update.json.erb',
+             content_type: 'application/json'
     end
   end
 

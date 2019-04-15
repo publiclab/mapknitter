@@ -23,6 +23,7 @@ class ImagesController < ApplicationController
     end
   end
 
+  # rubocop:disable LineLength
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
@@ -41,6 +42,7 @@ class ImagesController < ApplicationController
       end
     end
   end
+  # rubocop:enable LineLength
 
   # mapknitter.org/import/<map-name>/?url=http://myurl.com/image.jpg
   def import

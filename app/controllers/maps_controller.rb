@@ -1,3 +1,4 @@
+# rubocop:disable LineLength
 require 'open3'
 
 class MapsController < ApplicationController
@@ -213,3 +214,4 @@ class MapsController < ApplicationController
     @map = Map.find(params[:id])
   end
 end
+# rubocop:enable LineLength

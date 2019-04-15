@@ -18,9 +18,7 @@ class CommentsController < ApplicationController
       end
 
       respond_to do |format|
-        # format.html { redirect_to "/maps/" + params[:map_id] }
-        format.html   { render partial: 'comments/comment', locals: { comment: @comment } }
-        # format.js   { render :partial => 'comments/comment', :locals => {:comment => @comment} }
+        format.html { render partial: 'comments/comment', locals: { comment: @comment } }
         format.json { render json: @comment, status: :created }
       end
 

@@ -29,6 +29,7 @@ class TagsController < ApplicationController
     render template: 'maps/index'
   end
 
+  # rubocop:disable LineLength
   def destroy
     @tag = Tag.find(params[:id])
 
@@ -41,4 +42,5 @@ class TagsController < ApplicationController
       redirect_to '/login'
     end
   end
+  # rubocop:enable LineLength
 end
