@@ -103,14 +103,16 @@ var exporting, exportResolutionSlider
   // 'complete', 'failed', ''
   exportProgress = function() {
     $.ajax({
-      url: '/export/progress/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>'
+      url: '/export/status/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      dataType: "json"
     }).done(function(data) {
       $('.progress').show()
-      $('#export_progress').html(data)
+      $('#export_progress').html(data['status'])
       // change progress indicator appearance accordingly
       // -- maybe have a handler which assigns prog indicator state based on status?
     })
   }
+  
   <% if @map.exporting? %>
     exporting = true
     setInterval(exportProgress,5000)
