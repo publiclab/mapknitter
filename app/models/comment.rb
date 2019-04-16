@@ -10,5 +10,4 @@ class Comment < ActiveRecord::Base
   def author
     User.find(self.user_id).login
   end
-
 end
