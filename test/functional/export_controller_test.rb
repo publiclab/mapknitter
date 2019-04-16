@@ -17,18 +17,25 @@ class ExportControllerTest < ActionController::TestCase
     assert assigns[:week]
   end
 
-  #stored in public path which is git ignored
- # test "jpg" do
-   # get :jpg, id: @map.slug
-   # assert_response :success
-   # assert_includes '"image/jpeg', response.content_type
- # end
+  test "jpg" do
+    map = maps(:cubbon)
+    system('mkdir -p public/warps/cubbon-park')
+    system('cp test/fixtures/demo.png  public/warps/cubbon-park/cubbon-park.jpg')
 
- # test "geotiff" do
-   # get :geotiff, id: @map.slug
-   # assert_response :success
-   # assert_includes '"image/tiff', response.content_type
- # end
+    get :jpg, id: map.slug
+    assert_response :success
+    assert_includes '"image/jpeg', response.content_type
+  end
+
+  test "geotiff" do
+    map = maps(:cubbon)
+    system('mkdir -p public/warps/cubbon-park')
+    system('cp test/fixtures/demo.png public/warps/cubbon-park/cubbon-park-geo.tif')
+
+    get :geotiff, id: map.slug
+    assert_response :success
+    assert_includes '"image/tiff', response.content_type
+  end
 
   test "cancel fails if not logged in" do
     get :cancel, id: @map.id

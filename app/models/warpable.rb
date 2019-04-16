@@ -1,5 +1,4 @@
 class Warpable < ActiveRecord::Base
- 
   attr_accessible :image
   attr_accessor :src, :srcmedium # for json generation
 
@@ -37,12 +36,12 @@ class Warpable < ActiveRecord::Base
   def fup_error_json
    {"name" => read_attribute(:image_filename),
     "size" => read_attribute(:image_size),
-    "error" => self.errors["base"]}                      
+    "error" => self.errors["base"]}
   end
 
   after_save :save_dimensions
 
-  # this runs each time warpable is moved/distorted, 
+  # this runs each time warpable is moved/distorted,
   # to calculate resolution
   def save_dimensions
     if Rails.env.production?
@@ -79,7 +78,7 @@ class Warpable < ActiveRecord::Base
       end
       scale = 20037508.34
       # inefficient but workable, we don't use this that often:
- 
+
           nodey = Cartagen.spherical_mercator_lat_to_y(node.lat,scale)
           nodex = Cartagen.spherical_mercator_lon_to_x(node.lon,scale)
           lasty = Cartagen.spherical_mercator_lat_to_y(last.lat,scale)
@@ -91,7 +90,7 @@ class Warpable < ActiveRecord::Base
     (area/2).abs
   end
 
-  # crude measure based on image width, as resolution can vary 
+  # crude measure based on image width, as resolution can vary
   # across image if it's not flat on the earth
   def get_cm_per_pixel
     unless self.width.nil? || self.nodes == ''
@@ -153,16 +152,12 @@ class Warpable < ActiveRecord::Base
 
   private
 
-  # adjust filename behavior of Paperclip after migrating from attachment_fu 
+  # adjust filename behavior of Paperclip after migrating from attachment_fu
   Paperclip.interpolates :custom_filename do |attachment, style|
     if style == :original
       custom_filename = basename(attachment,style) # generate hash path here
     else
       custom_filename = "#{basename(attachment,style)}_#{style}" # generate hash path here
     end
-
   end
-
 end
-
-
