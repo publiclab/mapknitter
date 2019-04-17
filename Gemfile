@@ -40,7 +40,8 @@ group :dependencies do
 end
 
 group :test do
-  gem 'test-unit'    
+  gem 'test-unit'
+  gem "rubocop"
 end
 
 group :development do
