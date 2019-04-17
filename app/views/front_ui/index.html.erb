@@ -11,7 +11,7 @@
 </div>
 
 <!-- trending places -->
-<div class="card text-center card-without-border">
+<div class="card text-center card-without-border mb-3">
   <div class="card-body">
     <h5 class="card-title">MapKnitter is a free and open source software created and run by Public Lab</h5>
     <h6 class="card-subtitle mb-2 text-muted">Here are the cities trending right now</h6>
@@ -19,30 +19,40 @@
   </div>
 </div>
 
-<!-- featured maps -->
-<!-- <div class="card-deck mt-2">
-  <div class="card">
-    <img class="card-img-top" src="..." alt="Card image cap">
+</br>
+
+<!-- mapping kites -->
+<div class="card-deck mt-3 text-center mx-auto">
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      <h5 class="card-title">Balloon mapping</h5>
+      <p class="card-text text-muted">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
+      <a href="#" class="btn btn-outline-info">Get a kit</a>
     </div>
   </div>
-  <div class="card">
-    <img class="card-img-top" src="..." alt="Card image cap">
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('kite.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      <h5 class="card-title">Kite mapping</h5>
+      <p class="card-text text-muted">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
+      <a href="#" class="btn btn-outline-info">Get a kit</a>
     </div>
   </div>
-  <div class="card">
-    <img class="card-img-top" src="..." alt="Card image cap">
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('selfie-stick.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      <h5 class="card-title">Pole mapping</h5>
+      <p class="card-text text-muted">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
+      <a href="#" class="btn btn-outline-info">Get a kit</a>
     </div>
   </div>
-</div> -->
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('drone.png') %>" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Drone mapping</h5>
+      <p class="card-text text-muted">Getting cheaper, ~500-1500 ft high,  navigable and stable, versatile.</p>
+      <a href="#" class="btn btn-outline-info">Get a kit</a>
+    </div>
+  </div>
+</div>
