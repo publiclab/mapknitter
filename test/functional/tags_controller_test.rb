@@ -20,4 +20,21 @@ class TagsControllerTest < ActionController::TestCase
     assert_not_nil :maps, :tag
   end
 
+  test "should redirect to login when not logged in" do
+    post :create, map_id: @map.id, tags: "test,nice"
+    assert_redirected_to "/login?back_to=/maps/#{@map.slug}"
+    assert flash.present?
+  end
+
+  test 'should destroy a tag' do
+    session[:user_id] = 1
+    delete :destroy, id: @tag
+    assert flash[:notice].present?
+  end
+
+  test 'should redirect destroy when not logged in' do
+    delete :destroy, id: @tag
+    assert_response :redirect
+    assert flash.present?
+  end
 end

@@ -1,50 +1,23 @@
 body {
-  padding-top: 60px;
+  padding-top: 70px;
 }
 
-/* override Bootstrap 3 navbar collapse for medium screen sizes */
-@media (max-width: 1200px) {
-  .navbar-header {
-    float: none;
-  }
+.login-links {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
+}
 
-  .navbar-left,.navbar-right {
-    float: none !important;
-  }
+.login-links:visited {
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
+}
 
-  .navbar-toggle {
-    display: block;
-  }
+.login-links:hover {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
+}
 
-  .navbar-collapse {
-    border-top: 1px solid transparent;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-  }
-
-  .navbar-fixed-top {
-    top: 0;
-    border-width: 0 0 1px;
-  }
-
-  .navbar-collapse.collapse {
-    display: none !important;
-  }
-
-  .navbar-nav {
-    float: none !important;
-    margin-top: 7.5px;
-  }
-
-  .navbar-nav > li {
-    float: none;
-  }
-
-  .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  .collapse.in{
-    display:block !important;
-  }
+.login-links:active {
+  color: rgba(0,0,0,.7);
+  text-decoration: underline;
 }

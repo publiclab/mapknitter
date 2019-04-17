@@ -25,26 +25,28 @@ MapKnitter is broken into three major components:
 
 Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
-## License
+## Quick install
 
-Map Knitter is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://aws.amazon.com/cloud9/
 
-Map Knitter is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+To use it:
 
-You should have received a copy of the GNU General Public License
-along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
+1. Click `Create new workspace`
+2. Name your workspace and enter `https://github.com/USERNAME/mapknitter` (where `USERNAME` is your GitHub username) under `Clone from Git or Mercurial URL`
+3. Choose `Ruby` template
+4. Click `Create workspace`
+5. Once it loads, in the `bash` console at the bottom of the screen, type `source install_cloud.sh`
+6. Press `Control-x` when prompted for a message.
+7. Wait for the installation to run, and when it's complete, press the `Run` button at the top of the page.
+8. Open the URL which pops up to see MapKnitter booted up. Great work!
+
+If you have any trouble installing, we're sorry! **Please [click here](https://github.com/publiclab/mapknitter/issues/307) to get support.**
 
 ## Installation video
 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
 
-http://youtu.be/iGYGpS8rZMY
+http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
 ## Prerequisites
 
@@ -62,7 +64,7 @@ Application-specific dependencies:
 
 `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
-Install rvm for Ruby management (http://rvm.io)
+Install RVM for Ruby management (http://rvm.io)
 
 `curl -L https://get.rvm.io | bash -s stable`
 
@@ -70,9 +72,9 @@ Install rvm for Ruby management (http://rvm.io)
 
 **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.4.4 of Ruby:
+Then, use RVM to install version 2.4.6 of Ruby:
 
-`rvm install 2.4.4`
+`rvm install 2.4.6`
 
 You'll also need **bower** which is available through NPM. To install NPM, you can run:
 
@@ -88,7 +90,7 @@ Once NPM is installed, you should be able to run:
 
 ## Installation
 
-You'll need Ruby v2.4.4 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
@@ -116,3 +118,22 @@ Help improve Public Lab software!
 * Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
 
+## Staging infrastructure and testing
+
+In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment.
+****
+
+## License
+
+Map Knitter is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Map Knitter is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
