@@ -1,5 +1,5 @@
 body {
-  padding-top: 70px;
+  padding-top: 60px;
 }
 
 .login-links {
@@ -20,4 +20,19 @@ body {
 .login-links:active {
   color: rgba(0,0,0,.7);
   text-decoration: underline;
+}
+
+.login-form {
+  width: 200px;
+  padding-left: 20px;
+}
+
+.navbar-nav .nav-item {
+  margin-left: 10px;
+}
+
+@media(max-width: 992px) {
+  .navbar-nav .navbar-form {
+    margin-top: 10px;
+  }
 }

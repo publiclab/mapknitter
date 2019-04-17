@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="/">MapKnitter</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header-navbar-collapse" aria-controls="header-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,9 +8,9 @@
     <ul class="navbar-nav">
       <form action="/search" method='get' class="navbar-form navbar-left">
         <div class="input-group">
-          <input class="form-control" id="search-input" style="min-width: 280px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
+          <input class="form-control bg-light" id="search-input" style="min-width: 230px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
           <span class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+            <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
           </span>
         </div>
       </form>
