@@ -11,8 +11,6 @@ ENV HOME /root
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
 
 # Obtain key
-RUN mkdir ~/.gnupg
-RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
 RUN apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys BF26EE05EA6A68F0
 
 # Install dependencies
@@ -35,5 +33,12 @@ WORKDIR /app
 COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
 COPY start.sh /app/start.sh
+
+# Add default configs
+COPY config/database.yml.example /app/config/database.yml
+COPY config/config.yml.example /app/config/config.yml
+COPY config/initializers/recaptcha.rb.example /app/config/initializers/recaptcha.rb
+COPY config/amazon_s3.yml.example /app/config/amazon_s3.yml
+
 
 CMD [ "sh", "start.sh" ]
