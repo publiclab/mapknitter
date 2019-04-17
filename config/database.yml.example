@@ -6,10 +6,10 @@ development:
 
 production:
   adapter: mysql2
-  host: <%= ENV.fetch('DB_HOST') || 'db' %>
-  username: <%= ENV.fetch('DB_USER') || 'mapknitter' %>
-  password: <%= ENV.fetch('DB_PASS') || 'mapknitter' %>
-  database: <%= ENV.fetch('DB_NAME') || 'mapknitter' %>
+  host: <%= ENV['DB_HOST'] || 'db' %>
+  username: <%= ENV['DB_USER'] || 'mapknitter' %>
+  password: <%= ENV['DB_PASS'] || 'mapknitter' %>
+  database: <%= ENV['DB_NAME'] || 'mapknitter' %>
 
 test:
   adapter: mysql2
