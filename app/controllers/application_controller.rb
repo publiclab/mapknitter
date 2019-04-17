@@ -41,4 +41,11 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
+
+  def save_tags(map)
+    return unless params[:tags].present?
+    params[:tags].tr(' ', ',').split(',').each do |tagname|
+      map.add_tag(tagname.strip, current_user)
+    end
+  end
 end

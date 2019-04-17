@@ -102,13 +102,7 @@ class MapsController < ApplicationController
     @map.description = params[:map][:description]
     @map.license =     params[:map][:license] if @map.user_id == current_user.id
 
-    # save new tags
-    if params[:tags]
-      params[:tags].tr(' ', ',').split(',').each do |tagname|
-        @map.add_tag(tagname.strip, current_user)
-      end
-    end
-
+    save_tags(@map)
     @map.save
     redirect_to action: 'show'
   end
@@ -126,13 +120,13 @@ class MapsController < ApplicationController
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    warpables = @map.warpables
-    # @map.warpables.each do |warpable|
-    #   warpables << warpable
-    #   warpables.last[:nodes] = warpable.nodes_array
-    #   warpables.last.src = warpable.image.url
-    #   warpables.last.srcmedium = warpable.image.url(:medium)
-    # end
+    warpables = []
+    @map.warpables.each do |warpable|
+      warpables << warpable
+      warpables.last[:nodes] = warpable.nodes_array
+      warpables.last.src = warpable.image.url
+      warpables.last.srcmedium = warpable.image.url(:medium)
+    end
     render json: warpables
   end
 

@@ -27,8 +27,10 @@ class FeedsController < ApplicationController
                                    order: 'id DESC',
                                    conditions: { archived: false, password: '' },
                                    joins: :warpables, group: 'maps.id')
-    images = @maps.map(&:warpables)
-
+    images = []
+    @maps.each do |map|
+      images += map.warpables
+    end
     @feed = (@maps + images).sort_by(&:created_at)
     render layout: false, template: 'feeds/author'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
