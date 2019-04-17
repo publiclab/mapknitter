@@ -206,14 +206,15 @@ class Map < ActiveRecord::Base
   def run_export(user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
     unless export
-      export = Export.new({
+      new_export = Export.new({
         :map_id => id
       })
     end
     MapKnitterExporter.run_export(
       user.id,
       resolution,
-      self.export,
+      self.export || new_export,
+      self.id,
       self.slug,
       Rails.root.to_s,
       self.placed_warpables,
@@ -250,4 +251,11 @@ class Map < ActiveRecord::Base
     end
   end
 
+  def self.map
+    Map.where(archived: false, password: '')
+       .select('author, maps.name, lat, lon, slug, archived, password,
+               users.login as user_login')
+       .joins(:warpables, :user)
+       .group('maps.id')
+  end
 end

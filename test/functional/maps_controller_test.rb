@@ -210,4 +210,22 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?("Saugus Landfill Incinerator")
   end
+
+  test 'should annotate maps' do
+    get :annotate, id: @map.id
+    assert_response :success
+    assigns(:annotations) == true
+  end
+
+  test 'embed' do
+    get :embed, id: @map.id
+    assert_response :success
+    assert_template :show
+  end
+
+  test 'it returns the images' do
+    get :images, id: @map.id
+    assert_response :success
+    assert_equal 'application/json', response.content_type
+  end
 end
