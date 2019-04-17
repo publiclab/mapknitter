@@ -1,4 +1,6 @@
 class FeedsController < ApplicationController
+  before_filter :query, only: %i[clean license]
+
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)
     @maps = Map.find(:all, order: 'id DESC', limit: 20,
@@ -10,21 +12,12 @@ class FeedsController < ApplicationController
   end
 
   def clean
-    @maps = Map.order(id: :desc)
-               .limit(20)
-               .where(archived: false, password: '')
-               .joins(:warpables)
-               .group('maps.id')
     render layout: false, template: 'feeds/clean'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
   end
 
   def license
-    @maps = Map.order(id: :desc)
-               .limit(20)
-               .where(archived: false, password: '', license: params[:id])
-               .joins(:warpables)
-               .group('maps.id')
+    @maps = @maps.where(license: params[:id])
     render layout: false, template: 'feeds/license'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
   end
@@ -34,10 +27,8 @@ class FeedsController < ApplicationController
                                    order: 'id DESC',
                                    conditions: { archived: false, password: '' },
                                    joins: :warpables, group: 'maps.id')
-    images = []
-    @maps.each do |map|
-      images += map.warpables
-    end
+    images = @maps.map(&:warpables)
+
     @feed = (@maps + images).sort_by(&:created_at)
     render layout: false, template: 'feeds/author'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
@@ -45,12 +36,20 @@ class FeedsController < ApplicationController
 
   def tag
     @tag = Tag.find_by_name params[:id]
-    if @tag
-      @maps = @tag.maps.paginate(page: params[:page], per_page: 24)
-      render layout: false, template: 'feeds/tag'
-      response.headers['Content-Type'] = 'application/xml; charset=utf-8'
-    else
-      render text: "No maps with tag #{params[:id]}"
-    end
+    @maps = @tag.maps.paginate(page: params[:page], per_page: 24)
+    render layout: false, template: 'feeds/tag'
+    response.headers['Content-Type'] = 'application/xml; charset=utf-8'
+  rescue NoMethodError
+    render text: "No maps with tag #{params[:id]}"
+  end
+
+  private
+
+  def query
+    @maps = Map.order(id: :desc)
+               .limit(20)
+               .where(archived: false, password: '')
+               .joins(:warpables)
+               .group('maps.id')
   end
 end
