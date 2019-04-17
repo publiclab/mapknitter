@@ -41,6 +41,7 @@ end
 
 group :test do
   gem 'test-unit'    
+  gem "simplecov", require: false
 end
 
 group :development do

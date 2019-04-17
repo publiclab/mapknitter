@@ -208,6 +208,7 @@ DEPENDENCIES
   right_aws
   ruby-openid (~> 2.5)
   sass
+  simplecov
   sprockets
   sqlite3
   test-unit
