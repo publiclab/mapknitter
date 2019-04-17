@@ -25,6 +25,25 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
     font-style: normal;
 }
 
+#hero {
+  background-image: url('kite2.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.jumbotron-text {
+  text-shadow: 1px 1px 2px #080707;
+  color: white;
+}
+
+.alert-link {
+  text-shadow: none;
+}
+
+.card-without-border {
+  border: none;
+}
+
 .login-form {
   width: 200px;
   padding-left: 20px;
