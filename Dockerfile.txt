@@ -50,4 +50,11 @@ RUN git config --global url."https://".insteadOf git://
 COPY . /app/
 WORKDIR /app
 
+# Add default configs
+COPY config/database.yml.example /app/config/database.yml
+COPY config/config.yml.example /app/config/config.yml
+COPY config/initializers/recaptcha.rb.example /app/config/initializers/recaptcha.rb
+COPY config/amazon_s3.yml.example /app/config/amazon_s3.yml
+
+
 CMD [ "sh", "start.sh" ]
