@@ -191,7 +191,7 @@ label small {
 }
 
 .img-icon {
-  max-width: 150px;
+  max-width: 120px;
 }
 
 .btn.create-map {
@@ -219,4 +219,10 @@ label small {
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
+}
+
+@media(max-width: 360px) {
+  #get-started-button {
+    margin-bottom: 10px;
+  }
 }

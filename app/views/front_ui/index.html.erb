@@ -4,8 +4,8 @@
     <h1 class="display-4 jumbotron-text">MapKnitter</h1>
     <p class="lead jumbotron-text">Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
     <p class="lead">
-      <a class="btn btn-info btn-lg" href="#" role="button">Add your images</a>
-      <a class="btn btn-info btn-lg" href="#" role="button">Get a mapping kit</a>
+      <a class="btn btn-info btn-lg" id="get-started-button" href="#" role="button">Get Started</a>
+      <a class="btn btn-info btn-lg" href="#mapping-kits" role="button">Get a mapping kit</a>
     </p>
   </div>
 </div>
@@ -14,7 +14,7 @@
 <div class="card text-center card-without-border mb-3">
   <div class="card-body">
     <h5 class="card-title">MapKnitter is a free and open source software created and run by Public Lab</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Here are the cities trending right now</h6>
+    <h6 class="card-subtitle mb-2 text-muted">Here are the cities trending right now / Recommended for you</h6>
     <a href="#" class="alert-link">Add your own images</a>
   </div>
 </div>
@@ -22,7 +22,7 @@
 </br>
 
 <!-- mapping kites -->
-<div class="card-deck mt-3 text-center mx-auto">
+<div class="card-deck mt-3 text-center mx-auto" name="mapping-kits">
   <div class="card mapping-kits">
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
     <div class="card-body">
