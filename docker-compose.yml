@@ -2,8 +2,11 @@ version: '3.3'
 services:
   db:
     image: mysql:5.7
-    env_file:
-      - mapknitter.env
+    environment:
+      - MYSQL_DATABASE=mapknitter
+      - MYSQL_USER=mapknitter
+      - MYSQL_PASSWORD=mapknitter
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
     volumes:
       - ../mysql:/var/lib/mysql
       - ../dump:/docker-entrypoint-initdb.d
@@ -17,6 +20,12 @@ services:
     image: mapknitter-dev
     env_file:
       - mapknitter.env
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_NAME=${DB_NAME}
+      - DB_PASS=${DB_PASS}
+      - RAILS_ENV=${RAILS_ENV}
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
