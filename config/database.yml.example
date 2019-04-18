@@ -18,6 +18,7 @@ production:
   username: <%= ENV.fetch('DB_USER') || 'mapknitter' %>
   password: <%= ENV.fetch('DB_PASS') || 'mapknitter' %>
   database: <%= ENV.fetch('DB_NAME') || 'mapknitter' %>
+  socket: <%= ENV.fetch('DB_SOCKET') %>
 
 test:
   <<: *default
