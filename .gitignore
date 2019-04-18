@@ -20,7 +20,7 @@
 log/
 tmp/*
 tmp/**/*
-coverage*
+coverage/
 public/warpables/*
 public/system/*
 public/warps/*

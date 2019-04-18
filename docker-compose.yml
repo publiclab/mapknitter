@@ -13,6 +13,7 @@ services:
       - mapknitter.env
     volumes:
       - .:/app
+      - ./coverage_report:/app/coverage_report
       - bundle_cache:/usr/local/bundle
       - bower_cache:/app/public/lib
     ports:
