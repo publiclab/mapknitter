@@ -58,15 +58,6 @@ class MapsController < ApplicationController
   def show
     @map.zoom ||= 12
 
-    # stuff for Sparklines resolution graph;
-    # messy, could tuck into model
-    # hist = @map.images_histogram
-    # (0..100).each do |i|
-    # hist[i] = 0 if !hist[i]
-    # end
-    # hist = hist[0..100]
-    # @images_histogram = @map.grouped_images_histogram((hist.length/15).to_i+1)
-
     # this is used for the resolution slider
     @resolution = @map.average_cm_per_pixel.round(4)
     @resolution = 5 if @resolution < 5 # soft-set min res
@@ -135,13 +126,13 @@ class MapsController < ApplicationController
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    warpables = []
-    @map.warpables.each do |warpable|
-      warpables << warpable
-      warpables.last[:nodes] = warpable.nodes_array
-      warpables.last.src = warpable.image.url
-      warpables.last.srcmedium = warpable.image.url(:medium)
-    end
+    warpables = @map.warpables
+    # @map.warpables.each do |warpable|
+    #   warpables << warpable
+    #   warpables.last[:nodes] = warpable.nodes_array
+    #   warpables.last.src = warpable.image.url
+    #   warpables.last.srcmedium = warpable.image.url(:medium)
+    # end
     render json: warpables
   end
 
