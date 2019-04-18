@@ -19,7 +19,6 @@ group :dependencies do
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
   gem "RubyInline"
-  gem "coveralls", require: false
   gem "paperclip", "~>4.3.7"
 
   # if you use amazon s3 for warpable image storage
@@ -40,6 +39,8 @@ group :dependencies do
 end
 
 group :test do
+  gem 'simplecov', require: false
+  gem 'simplecov-cobertura', require: false
   gem 'test-unit'    
 end
 
