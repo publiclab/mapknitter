@@ -19,6 +19,7 @@ production:
   password: <%= ENV.fetch('DB_PASS') || 'mapknitter' %>
   database: <%= ENV.fetch('DB_NAME') || 'mapknitter' %>
   socket: <%= ENV.fetch('DB_SOCKET') %>
+  timeout: 5000
 
 test:
   <<: *default
