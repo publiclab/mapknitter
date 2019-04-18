@@ -1,20 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 
 require 'simplecov'
-require 'simplecov-cobertura'
-
-if ENV['CI'] == 'true'
-  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
-else
-  SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
-end
-
-SimpleCov.start 'rails' do
-  add_filter '/test/'
-  add_filter '/db/'
-  add_filter '/log/'
-  add_filter '/tmp/'
-end
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
