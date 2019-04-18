@@ -10,6 +10,7 @@ production:
   username: <%= ENV['DB_USER'] || 'mapknitter' %>
   password: <%= ENV['DB_PASS'] || 'mapknitter' %>
   database: <%= ENV['DB_NAME'] || 'mapknitter' %>
+  socket: <%= ENV['DB_SOCKET'] %>
 
 test:
   adapter: mysql2
