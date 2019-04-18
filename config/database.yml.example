@@ -11,6 +11,8 @@ production:
   password: <%= ENV['DB_PASS'] || 'mapknitter' %>
   database: <%= ENV['DB_NAME'] || 'mapknitter' %>
   socket: <%= ENV['DB_SOCKET'] %>
+  pool: 5
+  timeout: 5000
 
 test:
   adapter: mysql2
