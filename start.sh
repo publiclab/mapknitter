@@ -10,4 +10,6 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-bundle exec rails s -p 3000 -b '0.0.0.0'
+ENV
+
+bundle exec rails s -p $PORT -b '0.0.0.0'
