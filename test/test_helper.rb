@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] = "test"
 require 'simplecov'
 require 'simplecov-cobertura'
 
-if ENV["CI"] == 'true'
+if ENV['CI'] == 'true'
   SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 else
   SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
