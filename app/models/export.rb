@@ -10,7 +10,7 @@ class Export < ActiveRecord::Base
   end
 
   def self.average_cm_per_pixel
-    e = Export.find :all, :conditions => ['cm_per_pixel != "" AND cm_per_pixel < 500'] 
+    e = Export.find :all, :conditions => ['cm_per_pixel != "" AND cm_per_pixel < 500']
     sum = 0
     e.each do |export|
       sum += export.cm_per_pixel
@@ -59,5 +59,4 @@ class Export < ActiveRecord::Base
   def self.exporting
     Export.find :all, :conditions => ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now-24.hours).to_s(:db)]
   end
-
 end

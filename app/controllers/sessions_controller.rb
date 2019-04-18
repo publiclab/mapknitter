@@ -1,6 +1,6 @@
 require 'uri'
 
-# This controller handles the login/logout function of the site.  
+# This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
   #protect_from_forgery :except => [:create]
 
@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     if logged_in?
       redirect_to "/"
     else
-      @referer = params[:back_to]  
+      @referer = params[:back_to]
     end
   end
 
@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
       if openid_url.include? "http"
         url = openid_url
       end
-    else 
+    else
       url = @@openid_url_base + openid_url + @@openid_url_suffix
     end
     openid_authentication(url, back_to)
@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
   # this makes offline development possible; like on a plane! but do NOT leave it open on a production machine
   def local
     if APP_CONFIG["local"] == true && @current_user = User.find_by_login(params[:login])
-      successful_login '', nil 
+      successful_login '', nil
     else
       flash[:error] = "Forbidden"
       redirect_to "/"
@@ -53,8 +53,8 @@ class SessionsController < ApplicationController
     if id
       redirect_to '/sites/' + id.to_s + '/upload'
     else
-      if back_to 
-        redirect_to back_to 
+      if back_to
+        redirect_to back_to
       else
         redirect_to '/sites'
       end
@@ -62,9 +62,9 @@ class SessionsController < ApplicationController
   end
 
   def logout
-    session[:user_id] = nil 
+    session[:user_id] = nil
     flash[:success] = "You have successfully logged out."
-    redirect_to '/'
+    redirect_to '/' + '?_=' + Time.now.to_i.to_s
   end
 
   protected
@@ -79,18 +79,18 @@ class SessionsController < ApplicationController
           @user.login = registration['nickname']
           @user.email = registration['email']
           @user.identity_url = identity_url
-          begin 
+          begin
             @user.save!
           rescue ActiveRecord::RecordInvalid => invalid
             puts invalid
-            failed_login "User can not be associated to local account. Probably the account already exists with different capitalization!" 
+            failed_login "User can not be associated to local account. Probably the account already exists with different capitalization!"
             return
           end
         end
         nonce = params[:n]
-        if nonce 
+        if nonce
           tmp = Sitetmp.find_by nonce: nonce
-          if tmp 
+          if tmp
             data = tmp.attributes
             data.delete("nonce")
             site = Site.new(data)
@@ -102,7 +102,7 @@ class SessionsController < ApplicationController
         if site
           successful_login back_to, site.id
         else
-          successful_login back_to, nil 
+          successful_login back_to, nil
         end
       else
         failed_login result.message
@@ -110,5 +110,4 @@ class SessionsController < ApplicationController
       end
     end
   end
-
 end

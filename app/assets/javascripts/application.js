@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
+//= require popper
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
 

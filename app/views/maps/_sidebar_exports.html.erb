@@ -5,7 +5,10 @@
   If you only need one or two images, consider using the new <a href="https://publiclab.org/wiki/mapknitter-exporting-your-map#Per-image+exporting">per-image download</a> in the Images pane; to download a single full-resolution distorted image, click the <code><i class='fa fa-download'></i></code> button next to the image.
 </p>
 <p>
-  <a onClick="$('#exporting-info').toggle();">Learn more about exporting &raquo;</a>
+  <img style="width:100%;" src="/images/download-btn.png" />
+</p>
+<p>
+  <a href="#" onClick="$('#exporting-info').toggle();">Learn more about exporting &raquo;</a>
 </p>
 <div style="display:none;" id="exporting-info"> 
   <p>From this panel you can export this map in a variety of formats. If you've changed the map at all since last exporting, you can re-run the export, but be aware that this will <b>delete and replace previously exported files</b>, so download them first if you want them. All formats are generated sequentially, so if you're waiting for a JPG you will have to let all the other formats complete first.</p>
@@ -13,13 +16,17 @@
   <p><a href="//publiclab.org/wiki/mapknitter-exporting">Learn even more &raquo;</a></p>
 </div>
 
-<ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#map-export-subtab" role="tab" data-toggle="tab">Export</a></li>
-  <li><a href="#map-export-options-subtab" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Advanced options</a></li>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="#map-export-subtab" role="tab" data-toggle="tab">Export</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#map-export-options-subtab" role="tab" data-toggle="tab">Advanced option</a>
+  </li>
 </ul>
 
 <div class="tab-content">
-  <div class="tab-pane active" id="map-export-subtab">
+  <div role="tabpanel" class="tab-pane active" id="map-export-subtab">
   
     <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
@@ -37,7 +44,7 @@
     <% if logged_in? || @map.anonymous? %>
       <p>
         <button id="begin-export" class="btn btn-lg btn-primary"<% if @map.export && @map.exporting? %> style="display:none;"<% end %>>Start export</button>
-        <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-default"><i class="fa fa-remove"></i> Cancel export</button>
+        <button <% unless @map.export && @map.exporting? %>style="display:none;"<% end %> id="cancel-export" class="btn btn-lg btn-outline-secondary"><i class="fa fa-remove"></i> Cancel export</button>
       </p>
 
       <% if @map.exporting? && ((@map.export.updated_at-DateTime.now)/1.hours).abs > 4 %>
@@ -96,14 +103,16 @@ var exporting, exportResolutionSlider
   // 'complete', 'failed', ''
   exportProgress = function() {
     $.ajax({
-      url: '/export/progress/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>'
+      url: '/export/status/<%= @map.id %>?authenticity_token=<%= form_authenticity_token %>',
+      dataType: "json"
     }).done(function(data) {
       $('.progress').show()
-      $('#export_progress').html(data)
+      $('#export_progress').html(data['status'])
       // change progress indicator appearance accordingly
       // -- maybe have a handler which assigns prog indicator state based on status?
     })
   }
+  
   <% if @map.exporting? %>
     exporting = true
     setInterval(exportProgress,5000)

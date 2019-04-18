@@ -2,11 +2,11 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        <h4 class="modal-title">Upload Images</h4>
+        <label for="warpable">Drag images or click to choose a file from your computer (10mb max):</label>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
           &times;
         </button>
-        <h4 class="modal-title">Upload Images</h4>
-        <label for="warpable">Drag images or click to choose a file from your computer (10mb max):</label>
       </div>
       <div class="modal-body">
         <div>
@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col-lg-8">
                 <span class="btn btn-success btn-file">
-                  <i class="fa fa-plus-circle"></i> Select images <input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" multiple />
+                  <i class="fa fa-plus-circle"></i> Select images <input id="warpable_uploaded_data" name="warpable[uploaded_data]" type="file" accept="image/*" />
                 </span>
               </div>
             </div><!-- .row -->
@@ -84,9 +84,9 @@
                   <td class="status">
                       Image uploaded.
                         <p>
-                          <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-xs btn-default add-image-{%= file.id %}">Place</a>
-                          <a class="btn btn-xs btn-default add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
-                          <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" class="btn btn-xs btn-default img-download-{%= file.id %}" data-image="/images/fetch/?url={%= file.original_url %}"><i class="fa fa-download"></i></a> 
+                          <a onClick="window.mapKnitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-outline-secondary add-image-{%= file.id %}">Place</a>
+                          <a class="btn btn-sm btn-outline-secondary add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
+                          <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" class="btn btn-sm btn-outline-secondary img-download-{%= file.id %}" data-image="/images/fetch/?url={%= file.original_url %}"><i class="fa fa-download"></i></a>
                           <div class="full-image-container-{%= file.id %}" style="overflow:hidden;width:0;height:0;"><img id="full-img-{%= file.id %}" /></div>
                         <a target="_blank" href="http://publiclab.org/wiki/mapknitter#GPS+Placement">Learn more</a>
                       </p>
@@ -108,13 +108,13 @@
         </div>
       </div>
       <div class="modal-footer">
-        <center>
         <button class="btn btn-primary" type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          Continue
-        </button> to place the images on the map
-        </center>
+          Continue to place the images on the map
+        </button>
         <hr />
-        Where can you get images to upload?<br />Take them from an airplane window, or read about <a href="http://publiclab.org/wiki/balloon-mapping">Grassroots Mapping with Balloons and Kites</a>.
+        <p>
+          Where can you get images to upload?<br />Take them from an airplane window, or read about <a href="http://publiclab.org/wiki/Balloonslloons-mapping">Grassroots Mapping with Balloons and Kites</a>.
+        </p>
       </div>
     </div>
   </div>

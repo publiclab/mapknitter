@@ -1,0 +1,14 @@
+lorem:
+  id: 1
+  map_id: 1
+  user_id: 1
+  annotation_type: real
+  created_at: <%= Time.now %>
+
+ipsum:
+  id: 2
+  map_id: 1
+  user_id: 1
+  annotation_type: fake
+  created_at: <%= Time.now %>
+

@@ -1,29 +1,20 @@
-<%= form_for [@map, Tag.new], :html => { :method => "post" } do |m| %>
-  <div class="form-group">
-    <span class="map-detail-label"></span>
-    <p><span id="tags">
+<div class="form-group">
+  <%= form_for [@map, Tag.new], :html => { :method => "post" } do |m| %>
+    <p>
       <% @map.tags.each do |tag| %>
-        <span id="tag_<%= tag.id %>" class="label label-default">
-          <a href="/tags/<%= tag.name %>"><%= tag.name %></a>
-          <% link_to([@map, tag], :method => "delete") do %>
-            <pan>&times;</span>
+        <span id="tag_<%= tag.id %>" class="badge badge-light">
+          <a href="/tags/<%= tag.name %>" id="tag_<%= tag.id %>"><%= tag.name %></a>
+          <%= link_to([@map, tag], :method => "delete") do %>
+            <span>&times;</span>
           <% end %>
         </span>
       <% end %>
-    </span></p>
-
-    <label for="tags" class="sr-only">Enter tags</label>
+    </p>
     <div class="input-group">
-      <span class="input-group-addon">
-        <i class="fa fa-tags"></i>
-      </span>
-      <input class="form-control" type="text" placeholder="Enter tags" name="tags" id="new-tags"></input>
-    </div>  
-  </div>
-
-  <script>
-    //jQuery(document).ready(function($) {
-      //new MapKnitter.Tags({ tagInputId: 'new_tag' });
-    //});
-  </script>
-<% end %>
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary" type="button"><i class="fa fa-tags"></i></button>
+      </div>
+      <input type="text" class="form-control" placeholder="Enter tags" aria-label="tags" name="tags" id="new-tags">
+    </div>
+  <% end %>
+</div>

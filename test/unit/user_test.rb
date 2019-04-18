@@ -59,6 +59,14 @@ class UserTest < ActiveSupport::TestCase
 #    assert_not_nil users(:quentin).remember_token_expires_at
 #    assert users(:quentin).remember_token_expires_at.between?(before, after)
 #  end
+  test 'user simple query methods' do
+    user = users(:quentin)
+    map = maps(:saugus)
+    assert user.owns?(map)
+    assert user.can_delete?(map)
+    assert user.can_edit?(map)
+    assert_equal map.updated_at, user.last_action
+  end
 
 protected
   def create_user(options = {})

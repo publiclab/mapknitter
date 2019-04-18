@@ -7,7 +7,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil Map.authors
     assert_not_nil Map.new_maps
 
-    map = Map.first
+    map = maps(:saugus)
     assert_not_nil map.license_link
     assert_not_nil map.author
     assert_not_nil map.name
@@ -29,12 +29,17 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon
+    assert_equal Map.count, Map.new_maps.size
   end
 
   test "export functions" do
-    map = Map.first
+    map = maps(:saugus)
     assert_not_nil map.average_scale
+
+    placed = map.warpables(&:placed?)
     assert_not_nil map.placed_warpables
+    assert_equal placed, map.placed_warpables
+
     assert_not_nil map.best_cm_per_pixel
     assert_not_nil map.exporting?
     assert_not_nil map.export
@@ -42,7 +47,8 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
 
-    assert_not_nil map.run_export(users(:quentin), map.average_cm_per_pixel)
+    resolution = 20
+    assert_not_nil map.run_export(users(:quentin), resolution)  #map.average_cm_per_pixel)
 
     # main issue will be that it creates and continuously updates an Export model. 
     # we could shift this to a polling model, either on the client side (eliminating the Export model)
@@ -72,6 +78,22 @@ class MapTest < ActiveSupport::TestCase
     # map.generate_jpg
       # runs convert on composite tiff
 
+  end
+
+  test 'histograms' do
+    map = maps(:saugus)
+    hist = map.images_histogram
+    assert_not_nil hist
+    assert_not_nil map.grouped_images_histogram(3)
+    assert_equal hist.count/3, map.grouped_images_histogram(3).count
+
+  end
+
+  test 'nearby maps' do
+    map = maps(:nairobi)
+    near_maps = map.nearby_maps(5)
+    assert_not_nil near_maps
+    assert_includes near_maps, maps(:village)
   end
 
   test "tag basics" do
