@@ -20,7 +20,7 @@
 log/
 tmp/*
 tmp/**/*
-coverage*
+coverage/
 public/warpables/*
 public/system/*
 public/warps/*
@@ -42,3 +42,4 @@ node_modules
 todo.txt
 .sass-cache
 .byebug_history
+coverage_report/
