@@ -10,10 +10,9 @@ ENV HOME /root
 # Backported GDAL
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
 
-# Obtain key
-RUN mkdir ~/.gnupg
-RUN echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
-RUN apt-key adv --keyserver ipv4.pool.sks-keyservers.net --recv-keys BF26EE05EA6A68F0
+# We bring our own key to verify our packages
+COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
+RUN apt-key add /app/sysadmin.publiclab.key
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
