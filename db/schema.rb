@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150715162314) do
+ActiveRecord::Schema.define(:version => 20190420025012) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "map_id"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20150715162314) do
     t.text     "bands_string",                       :null => false
     t.string   "export_type",  :default => "normal", :null => false
     t.integer  "user_id",      :default => 0
+    t.string   "remote_url"
   end
 
   create_table "maps", :force => true do |t|
