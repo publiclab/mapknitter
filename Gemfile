@@ -59,3 +59,5 @@ group :passenger do
   # passenger server
   gem "passenger"
 end
+
+gem "httparty"
