@@ -60,4 +60,4 @@ group :passenger do
   gem "passenger"
 end
 
-gem "httparty"
+gem 'httparty'
