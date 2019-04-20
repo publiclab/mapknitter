@@ -70,7 +70,7 @@ class ExportController < ApplicationController
   def status
     map = Map.find(params[:id])
     if export = map.export
-      if export.export_url.present?  
+      if export.export_url.present?
         status_response = ExporterClient.new(export.export_url).status
         render json: status_response
       else
@@ -80,9 +80,9 @@ class ExportController < ApplicationController
       render json: { status: 'export has not been run' }
     end
   end
-  
+
   # for demoing remote url functionality during testing
   def external_url_test
     render json: Export.last.to_json
-  end  
+  end
 end
