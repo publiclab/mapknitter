@@ -70,7 +70,7 @@ class ExportController < ApplicationController
   def status
     map = Map.find(params[:id])
     if export = map.export
-      if export.remote_url.present?
+      if export.export_url.present?
         # make a req to the remote_url and return data
         # render json: export.to_json
       else

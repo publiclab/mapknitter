@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20190420025012) do
     t.text     "bands_string",                       :null => false
     t.string   "export_type",  :default => "normal", :null => false
     t.integer  "user_id",      :default => 0
-    t.string   "remote_url"
+    t.string   "export_url"
   end
 
   create_table "maps", :force => true do |t|
