@@ -11,7 +11,8 @@ ENV HOME /root
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
 
 # We bring our own key to verify our packages
-RUN apt-key add ./sysadmin.publiclab.key
+COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
+RUN apt-key add /app/sysadmin.publiclab.key
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
