@@ -4,7 +4,7 @@ require 'uri'
 class SessionsController < ApplicationController
   #protect_from_forgery :except => [:create]
 
-  @@openid_url_base  = "localhost:3000/people/"
+  @@openid_url_base  = "https://publiclab.org/people/"
   @@openid_url_suffix = "/identity"
 
   # render new.erb.html
