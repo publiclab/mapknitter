@@ -4,7 +4,7 @@ require 'uri'
 class SessionsController < ApplicationController
   #protect_from_forgery :except => [:create]
 
-  @@openid_url_base  = "https://publiclab.org/people/"
+  @@openid_url_base  = "localhost:3000/people/"
   @@openid_url_suffix = "/identity"
 
   # render new.erb.html
@@ -20,6 +20,7 @@ class SessionsController < ApplicationController
     back_to = params[:back_to]
     open_id = params[:open_id]
     openid_url = URI.decode(open_id)
+    #here it is localhost:3000/people/admin/identity for admin
     #possibly user is providing the whole URL
     if openid_url.include? "publiclab"
       if openid_url.include? "http"
@@ -71,7 +72,7 @@ class SessionsController < ApplicationController
 
   def openid_authentication(openid_url, back_to)
     #puts openid_url
-    authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
+    authenticate_with_open_id(openid_url, :required => [:nickname, :email, :fullname]) do |result, identity_url, registration|
       if result.successful?
         @user = User.find_by_identity_url(identity_url)
         if not @user
@@ -79,6 +80,8 @@ class SessionsController < ApplicationController
           @user.login = registration['nickname']
           @user.email = registration['email']
           @user.identity_url = identity_url
+          hash = registration['fullname'].split(':')
+          @user.role =  hash[1].split('=')[1]
           begin
             @user.save!
           rescue ActiveRecord::RecordInvalid => invalid
