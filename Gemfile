@@ -3,6 +3,7 @@ source "https://rubygems.org"
 ruby "2.4.6"
 gem "rails", "~>3.2"
 gem 'rake',  '~> 12.3.2'
+gem 'skylight'
 
 gem "will_paginate", "3.1.7"
 gem "will_paginate-bootstrap"
@@ -19,7 +20,6 @@ group :dependencies do
   gem "ruby-openid", "~>2.5"
   gem "open_id_authentication"
   gem "RubyInline"
-  gem "coveralls", require: false
   gem "paperclip", "~>4.3.7"
 
   # if you use amazon s3 for warpable image storage
@@ -40,6 +40,8 @@ group :dependencies do
 end
 
 group :test do
+  gem 'simplecov', require: false
+  gem 'simplecov-cobertura', require: false
   gem 'test-unit'    
 end
 
