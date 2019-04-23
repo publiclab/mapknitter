@@ -1,10 +1,8 @@
 require 'open-uri'
 class ImagesController < ApplicationController
-  # avoid raising exceptions for common errors (e.g. file not found)
-  rescue_from Errno::ENOENT, with: :url_upload_not_found
-  rescue_from Errno::ETIMEDOUT, with: :url_upload_not_found
-  rescue_from OpenURI::HTTPError, with: :url_upload_not_found
-  rescue_from Timeout::Error, with: :url_upload_not_found
+  rescue_from Errno::ENOENT, Errno::ETIMEDOUT,
+              OpenURI::HTTPError, Timeout::Error,
+              with: :url_upload_not_found
   protect_from_forgery except: %i[update delete]
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
@@ -24,6 +22,7 @@ class ImagesController < ApplicationController
   end
 
   # rubocop:disable LineLength
+  # assign attributes directly after rails update
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
@@ -60,7 +59,6 @@ class ImagesController < ApplicationController
     end
   end
 
-  # is this used?
   def url_upload_not_found
     flash[:notice] = 'Sorry, the URL you provided was not valid.'
     redirect_to '/map/edit/' + params[:id]
@@ -69,7 +67,7 @@ class ImagesController < ApplicationController
   def show
     @image = Warpable.find params[:id]
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.json { render json: @image.map(&:fup_json) }
     end
   end
