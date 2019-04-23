@@ -42,11 +42,14 @@ end
 group :test do
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
-  gem 'test-unit'    
+  gem 'test-unit'
+end
+
+group :development, :test do
+  gem "byebug"
 end
 
 group :development do
-  gem "byebug"
   gem "jshintrb"
   gem "therubyracer"
 end
