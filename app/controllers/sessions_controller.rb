@@ -92,14 +92,14 @@ class SessionsController < ApplicationController
           @user = User.new
           @user.login = registration['nickname']
           @user.email = registration['email']
-          @user.identity_url = "User can not be associated to local account. Probably the account already exists with different capitalization!"
+          @user.identity_url = identity_url
           hash = registration['fullname'].split(':')
           @user.role =  hash[1].split('=')[1]
           begin
             @user.save!
           rescue ActiveRecord::RecordInvalid => invalid
             puts invalid
-            failed_login identity_url
+            failed_login "User can not be associated to local account. Probably the account already exists with different capitalization!"
             return
           end
         end
