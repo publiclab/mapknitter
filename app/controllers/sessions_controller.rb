@@ -4,7 +4,7 @@ require 'uri'
 class SessionsController < ApplicationController
   #protect_from_forgery :except => [:create]
 
-  @@openid_url_base  = "localhost:3000/people/"
+  @@openid_url_base  = "https://publiclab.org/people/"
   @@openid_url_suffix = "/identity"
 
   # render new.erb.html
@@ -83,7 +83,7 @@ class SessionsController < ApplicationController
     authenticate_with_open_id(openid_url, :required => [:nickname, :email, :fullname]) do |result, identity_url, registration|
       dummy_identity_url = identity_url
       dummy_identity_url = dummy_identity_url.split('/')
-      if dummy_identity_url.include?("github") || dummy_identity_url.include?("google_oauth2") || dummy_identity_url.include?("facebook") || dummy_identity_url.include?("twitter")
+      if dummy_identity_url.include?('github') || dummy_identity_url.include?('google_oauth2') || dummy_identity_url.include?('facebook') || dummy_identity_url.include?('twitter')
         identity_url = dummy_identity_url[0..-2].join('/')
       end
       if result.successful?
