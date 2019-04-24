@@ -28,7 +28,7 @@
   </div>
 </div>
 </br>
-<div id="mapknitter-unique" class="mx-auto" style="height: 300px ; width: 100% ;"></div> 
+<div id="mapknitter-unique" class="mx-auto" style="height: 350px ; width: 100% ;"></div> 
 
 <!-- mapping kites -->
 <div class="card-deck mt-3 text-center mx-auto" id="mapping-kits">
@@ -67,10 +67,17 @@
 </div>
 
 <script>
-  // this can be the default, in case the user doesn't share the location
-  // var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375));
+  var Mapknitterunique = new L.Map('mapknitter-unique')
 
-  var Mapknitterunique = new L.map('mapknitter-unique').locate({setView: true, minZoom : 2, maxZoom: 12});
+  Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
+
+  Mapknitterunique.on('locationerror', function (locationEvent) {
+    Mapknitterunique.stopLocate()
+    var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375));
+    Mapknitterunique.options.maxBounds = bounds;
+    Mapknitterunique.options.maxBoundsViscosity = 0.75;
+    Mapknitterunique.setView([43, -83] , 2);
+  })
 
   var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -86,56 +93,7 @@
     }
   });
 
-  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique) ;
-
-  // var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
-  // var SkyTruth = L.layerGroup.skyTruthLayer() ;
-  // var Fractracker = L.layerGroup.fracTrackerLayer() ;
-  // var OdorReport = L.layerGroup.odorReportLayer() ;
-  // var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
-
-  // var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
-  //     maxZoom: 18,
-  //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-  // });
-  // var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-  //   maxZoom: 18,
-  //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-  // });
-  // var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-  //   maxZoom: 18,
-  //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-  // });
-  // var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
-  //   maxZoom: 18,
-  //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-  // });
-
-  // var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
-  // var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
-  // var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
-  // var JusticeMap_black = L.tileLayer.provider('JusticeMap.black') ;
-  // var JusticeMap_multi = L.tileLayer.provider('JusticeMap.multi') ;
-  // var JusticeMap_hispanic = L.tileLayer.provider('JusticeMap.hispanic') ;
-  // var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite') ;
-  // var JusticeMap_white = L.tileLayer.provider('JusticeMap.white') ;
-  // var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality') ;
-  
-  // var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5});
-  // var cloudscls = L.OWM.cloudsClassic({});
-  // var precipitation = L.OWM.precipitation({});
-  // var precipitationcls = L.OWM.precipitationClassic({});
-  // var rain = L.OWM.rain({});
-  // var raincls = L.OWM.rainClassic({});
-  // var snow = L.OWM.snow({});
-  // var pressure = L.OWM.pressure({});
-  // var pressurecntr = L.OWM.pressureContour({});
-  // var temp = L.OWM.temperature({});
-  // var wind = L.OWM.wind({});
-
-  // var city = L.OWM.current({intervall: 15, minZoom: 3});
-  // var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
-  // windrose.on('owmlayeradd', windroseAdded, windrose); 
+  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
 
   var baseMaps = {
     "Baselayer1": baselayer
@@ -174,5 +132,5 @@
     //    "Cities (zoom in)": city  , 
     //    "windrose (zoom in)": windrose
   };
-  L.control.layers(baseMaps, overlayMaps).addTo(Mapknitterunique);   
+  L.control.layers(baseMaps, overlayMaps).addTo(Mapknitterunique);
 </script>
