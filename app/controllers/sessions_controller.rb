@@ -2,7 +2,7 @@ require 'uri'
 
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
-  #protect_from_forgery :except => [:create]
+  # protect_from_forgery :except => [:create]
 
   @@openid_url_base  = "https://publiclab.org/people/"
   @@openid_url_suffix = "/identity"
@@ -24,16 +24,22 @@ class SessionsController < ApplicationController
     # possibly user is providing the whole URL
     if openid_url.include? "publiclab"
       if openid_url.include? "http"
+        # params[:subaction] contains the value of the provider
+        # provider implies ['github', 'google_oauth2', 'twitter', 'facebook']
         if params[:subaction]
+          # provider based authentication
           url = openid_url + "/" + params[:subaction]
         else
+          # form based authentication
           url = openid_url
         end
       end
     else
       if params[:subaction]
+        # provider based authentication
         url = @@openid_url_base + openid_url + @@openid_url_suffix + "/" + params[:subaction]
       else
+        # form based authentication
         url = @@openid_url_base + openid_url + @@openid_url_suffix
       end
     end
