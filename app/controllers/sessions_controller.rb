@@ -20,8 +20,8 @@ class SessionsController < ApplicationController
     back_to = params[:back_to]
     open_id = params[:open_id]
     openid_url = URI.decode(open_id)
-    #here it is localhost:3000/people/admin/identity for admin
-    #possibly user is providing the whole URL
+    # here it is localhost:3000/people/admin/identity for admin
+    # possibly user is providing the whole URL
     if openid_url.include? "publiclab"
       if openid_url.include? "http"
         url = openid_url
