@@ -81,20 +81,25 @@ class SessionsController < ApplicationController
   def openid_authentication(openid_url, back_to)
     #puts openid_url
     authenticate_with_open_id(openid_url, :required => [:nickname, :email, :fullname]) do |result, identity_url, registration|
+      dummy_identity_url = identity_url
+      dummy_identity_url = dummy_identity_url.split('/')
+      if dummy_identity_url.include?("github") || dummy_identity_url.include?("google_oauth2") || dummy_identity_url.include?("facebook") || dummy_identity_url.include?("twitter")
+        identity_url = dummy_identity_url[0..-2].join('/')
+      end
       if result.successful?
         @user = User.find_by_identity_url(identity_url)
         if not @user
           @user = User.new
           @user.login = registration['nickname']
           @user.email = registration['email']
-          @user.identity_url = identity_url
+          @user.identity_url = "User can not be associated to local account. Probably the account already exists with different capitalization!"
           hash = registration['fullname'].split(':')
           @user.role =  hash[1].split('=')[1]
           begin
             @user.save!
           rescue ActiveRecord::RecordInvalid => invalid
             puts invalid
-            failed_login "User can not be associated to local account. Probably the account already exists with different capitalization!"
+            failed_login identity_url
             return
           end
         end
