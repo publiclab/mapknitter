@@ -6,7 +6,7 @@ class FeedsControllerTest < ActionController::TestCase
   def setup
     @map = maps(:saugus)
     @tag = tags(:nice)
-  end 
+  end
 
   test "should get main feed (all)" do
     get :all
@@ -39,10 +39,16 @@ class FeedsControllerTest < ActionController::TestCase
   end
 
   test "should get tag feed" do
-    get :tag, :id => "nice"
+    get :tag, id: 'nice'
     assert_response :success
     assert_not_nil :tag
     assert_not_nil :maps
+    assert_template 'feeds/tag'
   end
 
+  test 'rescues if tag not present' do
+    get :tag, id: 'cess'
+    assert_equal 'text/html', @response.content_type
+    assert_equal 'No maps with tag cess', @response.body
+  end
 end

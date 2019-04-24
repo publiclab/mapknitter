@@ -11,6 +11,7 @@ saugus:
   created_at: <%= Time.now %>
   license: publicdomain
   user_id: 1
+  author: quentin
 
 cubbon:
   id: 2
@@ -23,6 +24,7 @@ cubbon:
   created_at: <%= Time.now %>
   license: publicdomain
   user_id: 1
+  author: aaron
 
 nairobi:
   id: 3
@@ -35,6 +37,7 @@ nairobi:
   created_at: <% Time.now %>
   license: publicdomain
   user_id: 2
+  author: aaron
 
 village:
   id: 4
@@ -47,3 +50,4 @@ village:
   created_at: <% Time.now %>
   license: publicdomain
   user_id: 2
+  author: aaron
