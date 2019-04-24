@@ -20,14 +20,22 @@ class SessionsController < ApplicationController
     back_to = params[:back_to]
     open_id = params[:open_id]
     openid_url = URI.decode(open_id)
-    # here it is localhost:3000/people/admin/identity for admin
-    # possibly user is providing the whole URL
+    #here it is localhost:3000/people/admin/identity for admin
+    #possibly user is providing the whole URL
     if openid_url.include? "publiclab"
       if openid_url.include? "http"
-        url = openid_url
+        if params[:subaction]
+          url = openid_url + "/" + params[:subaction]
+        else
+          url = openid_url
+        end
       end
     else
-      url = @@openid_url_base + openid_url + @@openid_url_suffix
+      if params[:subaction]
+        url = @@openid_url_base + openid_url + @@openid_url_suffix + "/" + params[:subaction]
+      else
+        url = @@openid_url_base + openid_url + @@openid_url_suffix
+      end
     end
     openid_authentication(url, back_to)
   end
