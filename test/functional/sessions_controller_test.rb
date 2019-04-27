@@ -30,6 +30,7 @@ class SessionsControllerTest < ActionController::TestCase
 
   test 'successful local login' do
     APP_CONFIG['local'] = true
+    system('cp config/config.yml.example   config/config.yml')
     get :local, login: 'quentin'
     assert_response :redirect
     assert flash[:success].present?

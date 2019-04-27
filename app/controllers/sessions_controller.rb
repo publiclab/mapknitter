@@ -7,8 +7,7 @@ class SessionsController < ApplicationController
   @@openid_url_base  = "https://publiclab.org/people/"
   @@openid_url_suffix = "/identity"
 
-  # render new.erb.html
-  def new #login
+  def new
     if logged_in?
       redirect_to "/"
     else
@@ -16,7 +15,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  def create #new
+  def create
     back_to = params[:back_to]
     open_id = params[:open_id]
     openid_url = URI.decode(open_id)
@@ -39,25 +38,6 @@ class SessionsController < ApplicationController
     else
       flash[:error] = "Forbidden"
       redirect_to "/"
-    end
-  end
-
-  def failed_login(message = "Authentication failed.")
-    flash[:danger] = message
-    redirect_to '/'
-  end
-
-  def successful_login(back_to, id)
-    session[:user_id] = @current_user.id
-    flash[:success] = "You have successfully logged in."
-    if id
-      redirect_to '/sites/' + id.to_s + '/upload'
-    else
-      if back_to
-        redirect_to back_to
-      else
-        redirect_to '/sites'
-      end
     end
   end
 
@@ -109,6 +89,27 @@ class SessionsController < ApplicationController
       else
         failed_login result.message
         return false
+      end
+    end
+  end
+
+  private
+
+  def failed_login(message = "Authentication failed.")
+    flash[:danger] = message
+    redirect_to '/'
+  end
+
+  def successful_login(back_to, id)
+    session[:user_id] = @current_user.id
+    flash[:success] = "You have successfully logged in."
+    if id
+      redirect_to '/sites/' + id.to_s + '/upload'
+    else
+      if back_to
+        redirect_to back_to
+      else
+        redirect_to '/sites'
       end
     end
   end
