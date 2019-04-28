@@ -23,5 +23,5 @@
   </table>
 
   <br style="clear:both;" />
-  <%= will_paginate @maps, renderer: BootstrapPagination::Rails unless @unpaginated %>
+  <%= will_paginate @maps, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>
