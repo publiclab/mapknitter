@@ -46,6 +46,7 @@ Mapknitter::Application.routes.draw do
   #     resources :products
   #   end
   get 'front-page' => 'front_ui#index'
+  get 'reverse-geocode' => 'front_ui#reverse_geocode'
   get 'about' => 'front_ui#about'
 
   # these are a mess:
