@@ -8,20 +8,17 @@
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
   window.toggle_sidebar = function(e){
+    var icon = $('.sidebar-toggle-icon')
+    
     $('.sidebar').toggle()
     $('#knitter-map-pane').toggleClass('fullscreen')
+    icon.toggleClass('fa-chevron-left')
+    icon.toggleClass('fa-chevron-right')
+    
     /* trigger a resize event */
     window.mapKnitter._map._onResize()
   }
   window.toggle_sidebar_and_fit_bounds = function(e){
-    if ($('#knitter-map-pane').attr('class') == "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"){
-      $('.sidebar-toggle-icon').addClass('fa-chevron-left')
-      $('.sidebar-toggle-icon').removeClass('fa-chevron-right')
-    }
-    else{
-      $('.sidebar-toggle-icon').addClass('fa-chevron-right')
-      $('.sidebar-toggle-icon').removeClass('fa-chevron-left')
-    }
     window.mapKnitter._map.once('resize',function(){
       if (bounds) window.mapKnitter._map.fitBounds(bounds)
     })
