@@ -18,7 +18,7 @@ class SessionsController < ApplicationController
 
   def create #new
     back_to = params[:back_to]
-    open_id = params[:open_id]
+    open_id = "x"
     openid_url = URI.decode(open_id)
     # here it is localhost:3000/people/admin/identity for admin
     # possibly user is providing the whole URL
@@ -92,6 +92,7 @@ class SessionsController < ApplicationController
       if dummy_identity_url.include?('github') || dummy_identity_url.include?('google_oauth2') || dummy_identity_url.include?('facebook') || dummy_identity_url.include?('twitter')
         identity_url = dummy_identity_url[0..-2].join('/')
       end
+      identity_url = identity_url.split('/')[0..-2].join('/') + '/' + registration['nickname']
       if result.successful?
         @user = User.find_by_identity_url(identity_url)
         if not @user
@@ -99,6 +100,7 @@ class SessionsController < ApplicationController
           @user.login = registration['nickname']
           @user.email = registration['email']
           @user.identity_url = identity_url
+
           hash = registration['fullname'].split(':')
           @user.role =  hash[1].split('=')[1]
           begin
