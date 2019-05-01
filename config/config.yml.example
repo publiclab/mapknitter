@@ -2,6 +2,7 @@ development:
   google_maps_api_key: "ABQIAAAANO6Yx8ihhesSqnPHx9a3RxTJQa0g3IQ9GZqIMmInSLzwtGDKaBQ91cMdUJWDReC9dY9YGCKrEorVnA"
 
 test:
+  google_maps_api_key: "ABQIAAAANO6Yx8ihhesSqnPHx9a3RxTJQa0g3IQ9GZqIMmInSLzwtGDKaBQ91cMdUJWDReC9dY9YGCKrEorVnA"
 
 production:
   google_maps_api_key: "ABQIAAAANO6Yx8ihhesSqnPHx9a3RxTJQa0g3IQ9GZqIMmInSLzwtGDKaBQ91cMdUJWDReC9dY9YGCKrEorVnA"
