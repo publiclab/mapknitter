@@ -2,7 +2,6 @@
 <%= stylesheet_link_tag "/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" %>
 <%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
 <%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/windRoseLayer.js') %>
-<%= javascript_include_tag('/lib/leaflet-hash/leaflet-hash.js') %>
 <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
@@ -24,9 +23,8 @@
 <!-- trending places -->
 <div class="card text-center card-without-border mb-3">
   <div class="card-body">
-    <h5 class="card-title">MapKnitter is a Community Atlas hosted by Public Lab</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Here are some places recommended for you</h6>
-    <div id="teste">@location</div>
+    <h3 class="card-title">MapKnitter is a Community Atlas hosted by Public Lab</h3>
+    <h5 class="card-subtitle mb-2 text-muted"><span data-js="city"></span></h5>
   </div>
 </div>
 </br>
@@ -83,7 +81,11 @@
       if (this.readyState == 4 && this.status == 200) {
         var myObj = JSON.parse(this.responseText);
         var city = myObj.features[3].place_name;
-         $.get( "/reverse-geocode.json", {'lat': lat, 'lon': lon, 'city': city }, function( data ) {});
+        var cit = document.querySelector('[data-js="city"]');
+        cit.innerHTML = "Showing results near " + city;
+        $.get( "/find_maps.json", {'lat': lat, 'lon': lon, 'dist': 10}, function( data ) {
+          console.log(data);
+        });
       }
     }; 
 

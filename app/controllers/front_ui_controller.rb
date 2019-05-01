@@ -1,12 +1,16 @@
 class FrontUiController < ApplicationController
   def index
+
   end
 
-  def reverse_geocode
+  def find_maps
+    dist = params[:dist].to_i
+    lat = params[:lat].to_f
+    lon = params[:lon].to_f
+    maps = Map.find(:all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',lat-dist,lat+dist,lon-dist,lon+dist], :limit => 20)
+
     respond_to do |format|
-      format.html
-      format.js
-      format.json { render json: params  }
+      format.json { render json: maps  }
     end
   end
 
