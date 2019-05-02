@@ -13,7 +13,7 @@ class Warpable < ActiveRecord::Base
       thumb: "100x100>"
     }
 
-  validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
+  validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif", 'image/tiff' ]
 
   belongs_to :map
   belongs_to :user

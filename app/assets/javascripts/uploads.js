@@ -4,8 +4,8 @@
 //= require blueimp-file-upload/js/jquery.fileupload-process
 //= require blueimp-file-upload/js/jquery.fileupload-ui
 
-// iframe-transport is ajax file upload support for IE, Uncomment if needed      
-// javascript_include_tag  (file_upload + "js/jquery.iframe-transport")      
+// iframe-transport is ajax file upload support for IE, Uncomment if needed
+// javascript_include_tag  (file_upload + "js/jquery.iframe-transport")
 
 // need this so that jQuery draggable is attached to jQuery objects (for use in map views)
 //= require jquery-ui/jquery-ui.min.js
@@ -26,8 +26,8 @@ jQuery(document).ready(function($) {
   $('#fileupload').fileupload({
     paramName:  'uploaded_data',
     autoUpload: 'true',
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-    maxFileSize: 10000000 
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tiff)$/i,
+    maxFileSize: 10000000
   });
 
   $(document).bind('drop dragover', function (e) {
