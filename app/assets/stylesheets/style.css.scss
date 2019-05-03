@@ -31,6 +31,9 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   background-size: cover;
 }
 
+.jumbotron {
+  margin-bottom: 1rem;
+}
 .jumbotron-text {
   text-shadow: 1px 1px 2px #080707;
   color: white;
@@ -263,6 +266,37 @@ label small {
   font-stretch: normal;
   line-height: 1.44;
   color: #a2aaad;
+}
+
+.blue-background {
+  background-color: #17a2b8;
+  width: 1000px;
+}
+
+.section-blue-background {
+  max-height: 100px;
+  background-color: #17a2b8;
+  margin: 20px 0;
+  color: white;
+}
+
+.section-blue-background a {
+  display: flex;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.17;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  padding: 30px 0 40px 0;
+  justify-content: center !important;
+}
+
+.section-blue-background a:hover {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 @media(max-width: 360px) {

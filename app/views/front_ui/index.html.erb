@@ -23,7 +23,7 @@
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px ; width: 100% ;"></div>
 
 <div class="section-header text-center">
-  <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab.</h2>
+  <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2>
   <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p>
 </div>
 
@@ -35,7 +35,6 @@
         <h4>Add your images</h4>
         <p class="item-description">Use your Public Lab account or create a map anonymously.</p>
         <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div>
-        <br>
       </div>
     </div>
   </div>
@@ -44,9 +43,8 @@
       <div>
         <img alt="log in" src="<%= asset_path('login.svg') %>" class="icon-landing">
         <h4>Share your work</h4>
-        <p class="item-description">Upload images, rotate, distort and stretch them onto a reference map, tags and share your location.</p>
+        <p class="item-description">Upload images, rotate and stretch them onto a reference map, add tags and your location.</p>
         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div>
-        <br>
       </div>
     </div>
   </div>
@@ -57,7 +55,6 @@
         <h4>Export your work</h4>
         <p class="item-description">Export your completed maps in GeoTiff, TMS/OpenLayers, and JPG formats.</p>
         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div>
-        <br>
       </div>
     </div>
   </div>
@@ -73,7 +70,11 @@
   </div>
 </div>
 
-<!-- featured mappers -->
+<div class="section-blue-background">
+  <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
+</div>
+
+<!-- featured mappers 
 <% if @mappers.any? %>
   <h4 class="text-center mt-3">Featured mappers</h5>
   <% @mappers.each do |author, maps| %>
@@ -92,6 +93,11 @@
     </div>
   <% end %>
 <% end %>
+-->
+
+<div class="section-header text-center">
+  <h2 class="section-title">Aerial Mapping kits</h2>
+</div>
 
 <!-- mapping kites -->
 <div class="card-deck mt-3 text-center mx-auto" id="mapping-kits">
