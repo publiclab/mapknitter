@@ -258,4 +258,11 @@ class Map < ActiveRecord::Base
        .joins(:warpables, :user)
        .group('maps.id')
   end
+
+  def self.nearby_authors(lat:, lon:, dist:)
+    Map.where(archived: false)
+       .where("author IS NOT NULL")
+       .find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',lat-dist,lat+dist,lon-dist,lon+dist], :limit => 10)
+       .group_by(&:author)
+  end
 end

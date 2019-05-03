@@ -14,7 +14,7 @@
     <h1 class="display-4 jumbotron-text">MapKnitter</h1>
     <p class="lead jumbotron-text">Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
     <p class="lead">
-      <a class="btn btn-info btn-lg" id="get-started-button" href="<%= new_map_url %>" role="button">Get Started</a>
+      <a class="btn btn-info btn-lg" id="get-started-button" href="<%= new_map_url %>" role="button">Add your images</a>
       <a class="btn btn-info btn-lg" href="#mapping-kits" role="button">Get a mapping kit</a>
     </p>
   </div>
@@ -28,7 +28,27 @@
   </div>
 </div>
 </br>
-<div id="mapknitter-unique" class="mx-auto" style="height: 350px ; width: 100% ;"></div> 
+<div id="mapknitter-unique" class="mx-auto" style="height: 450px ; width: 100% ;"></div>
+
+<!-- featured mappers -->
+<% if @mappers.any? %>
+  <h4 class="text-center mt-5">Featured mappers</h5>
+  <% @mappers.each do |author, maps| %>
+    <div class="card-deck mt-3 text-center mx-auto">
+      <div class="card">
+        <img class="card-img-top img-icon mx-auto" src="<%= asset_path('profile.png') %>" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title"><a href="/profile/<%= author %>">@<%= author %></a></h5>
+          <p class="card-text text-muted">
+            <%= maps.count %> maps shared
+            <br>
+            <%= maps.first.location %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
 
 <!-- mapping kites -->
 <div class="card-deck mt-3 text-center mx-auto" id="mapping-kits">
