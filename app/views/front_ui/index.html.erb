@@ -144,23 +144,49 @@
     var lat = locationEvent.latitude;
     var lon = locationEvent.longitude;
 
-    var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var myObj = JSON.parse(this.responseText);
-        var city = myObj.features[3].place_name;
-        var cit = document.querySelector('[data-js="city"]');
-        cit.innerHTML = "Showing results near " + city;
-        $.get( "/find_maps.json", {'lat': lat, 'lon': lon, 'dist': 10}, function( data ) {
-          console.log(data);
-        });
-      }
-    }; 
-
-    xmlhttp.open("GET", "https://api.mapbox.com/geocoding/v5/mapbox.places/" + lon + "," + lat + ".json?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA", true);
-    xmlhttp.send();
+    var URL = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + lon + "," + lat + ".json?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA";
+    getUserLocation(URL, "GET").then(mapsNearby(lat, lon), errorHandler);
   });
+
+  function getUserLocation(url, methodType){
+    var promiseObj = new Promise(function(resolve, reject){
+      var xhr = new XMLHttpRequest();
+      xhr.open(methodType, url, true);
+      xhr.send();
+      xhr.onreadystatechange = function(){
+        if (xhr.readyState === 4){
+          if (xhr.status === 200){
+            console.log("xhr done successfully");
+            var resp = xhr.responseText;
+            var respJson = JSON.parse(resp);
+            var city = respJson.features[3].place_name;
+            console.log(city);
+            resolve(respJson);
+          }
+          else {
+            reject(xhr.status);
+            console.log("xhr failed");
+          }
+        }
+        else {
+          console.log("xhr processing going on");
+        }
+      };
+      console.log("request sent succesfully");
+    });
+    return promiseObj;
+  };
+
+  function mapsNearby(lat, lon) {
+    console.log("chegou aqui")
+    $.get( "/find_maps.json", {'lat': lat, 'lon': lon, 'dist': 10}, function(data) {
+      console.log(data);
+    });
+  }
+
+  function errorHandler(statusCode){
+    console.log("failed with status", statusCode);
+  }
 
   Mapknitterunique.on('locationerror', function (locationEvent) {
     Mapknitterunique.stopLocate()
