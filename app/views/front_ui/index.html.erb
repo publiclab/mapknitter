@@ -20,19 +20,62 @@
   </div>
 </div>
 
-<!-- trending places -->
-<div class="card text-center card-without-border mb-3">
-  <div class="card-body">
-    <h3 class="card-title">MapKnitter is a Community Atlas hosted by Public Lab</h3>
-    <h5 class="card-subtitle mb-2 text-muted"><span data-js="city"></span></h5>
+<div id="mapknitter-unique" class="mx-auto" style="height: 450px ; width: 100% ;"></div>
+
+<div class="section-header text-center">
+  <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab.</h2>
+  <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p>
+</div>
+
+<div class="row pt-md-5 pb-md-5 mx-auto text-center">
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="images" src="<%= asset_path('images.svg') %>" class="icon-landing">
+        <h4>Add your images</h4>
+        <p class="item-description">Use your Public Lab account or create a map anonymously.</p>
+        <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="log in" src="<%= asset_path('login.svg') %>" class="icon-landing">
+        <h4>Share your work</h4>
+        <p class="item-description">Upload images, rotate, distort and stretch them onto a reference map, tags and share your location.</p>
+        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="export images" src="<%= asset_path('export.svg') %>" class="icon-landing">
+        <h4>Export your work</h4>
+        <p class="item-description">Export your completed maps in GeoTiff, TMS/OpenLayers, and JPG formats.</p>
+        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="ask questions" src="<%= asset_path('engage.svg') %>" class="icon-landing">
+        <h4>Engage with your community</h4>
+        <p class="item-description">Ask questions, add comments and see nearby people & groups.</p>
+        <div><a class="learn-more" href="https://publiclab.org/questions" target="_blank">Learn more</a></div>
+      </div>
+    </div>
   </div>
 </div>
-</br>
-<div id="mapknitter-unique" class="mx-auto" style="height: 450px ; width: 100% ;"></div>
 
 <!-- featured mappers -->
 <% if @mappers.any? %>
-  <h4 class="text-center mt-5">Featured mappers</h5>
+  <h4 class="text-center mt-3">Featured mappers</h5>
   <% @mappers.each do |author, maps| %>
     <div class="card-deck mt-3 text-center mx-auto">
       <div class="card">
@@ -56,7 +99,7 @@
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Balloon mapping</h5>
-      <p class="card-text text-muted">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
+      <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
       <a href="//store.publiclab.org/collections/mapping-kits/products/balloon-mapping-kit?variant=7028822724" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
   </div>
@@ -64,7 +107,7 @@
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('kite.png') %>" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Kite mapping</h5>
-      <p class="card-text text-muted">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
+      <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
       <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
   </div>
@@ -72,7 +115,7 @@
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('selfie-stick.png') %>" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Pole mapping</h5>
-      <p class="card-text text-muted">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
+      <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
       <a href="//store.publiclab.org/collections/mapping-kits/products/pole-mapping-kit?variant=1259641040" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
   </div>
@@ -80,7 +123,7 @@
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('drone.png') %>" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Drone mapping</h5>
-      <p class="card-text text-muted">Getting cheaper, ~500-1500 ft high,  navigable and stable, versatile.</p>
+      <p class="card-text item-description">Getting cheaper, ~500-1500 ft high,  navigable and stable, versatile.</p>
       <a href="#" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
   </div>

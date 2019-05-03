@@ -221,6 +221,50 @@ label small {
   border-color: #ebccd1;
 }
 
+.how-to-item {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.section-header {
+  margin: 30px 0;
+}
+
+.mapknitter-info {
+  font-size: 26px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.33;
+  letter-spacing: -0.2px;
+  text-align: center;
+  color: #a2aaad;
+}
+
+.learn-more {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.44;
+  letter-spacing: -0.2px;
+}
+
+.icon-landing {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.item-description {
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.44;
+  color: #a2aaad;
+}
+
 @media(max-width: 360px) {
   #get-started-button {
     margin-bottom: 10px;
