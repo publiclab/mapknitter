@@ -141,12 +141,45 @@
   Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
 
   Mapknitterunique.on('locationfound', function (locationEvent) {
-    var lat = locationEvent.latitude;
-    var lon = locationEvent.longitude;
+    getCoordinates(locationEvent);
+  });
+
+  Mapknitterunique.on('locationerror', function (locationEvent) {
+    setDefaultCoordinates(locationEvent);
+  });
+
+  // why this does not work?
+  // locateUser().then(getCoordinates, setDefaultCoordinates);
+
+  // function locateUser() {
+  //   var promiseObj = new Promise(function(resolve, reject){
+  //     Mapknitterunique.on('locationfound', function (locationEvent) {
+  //       resolve(locationEvent);
+  //     });
+  //     Mapknitterunique.on('locationerror', function (locationEvent) {
+  //       reject(locationEvent);
+  //     });
+  //   });
+  // }
+
+  function getCoordinates(location) {
+    var lat = location.latitude;
+    var lon = location.longitude;
 
     var URL = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + lon + "," + lat + ".json?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA";
     getUserLocation(URL, "GET").then(mapsNearby(lat, lon), errorHandler);
-  });
+  }
+
+  function setDefaultCoordinates() {
+    Mapknitterunique.stopLocate();
+    var bounds = new L.LatLngBounds(
+      new L.LatLng(84.67351257 , -172.96875),
+      new L.LatLng(-54.36775852 , 178.59375)
+    );
+    Mapknitterunique.options.maxBounds = bounds;
+    Mapknitterunique.options.maxBoundsViscosity = 0.75;
+    Mapknitterunique.setView([43, -83] , 3);
+  }
 
   function getUserLocation(url, methodType){
     var promiseObj = new Promise(function(resolve, reject){
@@ -187,14 +220,6 @@
   function errorHandler(statusCode){
     console.log("failed with status", statusCode);
   }
-
-  Mapknitterunique.on('locationerror', function (locationEvent) {
-    Mapknitterunique.stopLocate()
-    var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375));
-    Mapknitterunique.options.maxBounds = bounds;
-    Mapknitterunique.options.maxBoundsViscosity = 0.75;
-    Mapknitterunique.setView([43, -83] , 2);
-  });
 
   var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
