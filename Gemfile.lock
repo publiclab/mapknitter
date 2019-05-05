@@ -125,6 +125,7 @@ GEM
       activesupport (= 3.2.22.5)
       bundler (~> 1.0)
       railties (= 3.2.22.5)
+    rails-perftest (0.0.7)
     railties (3.2.22.5)
       actionpack (= 3.2.22.5)
       activesupport (= 3.2.22.5)
@@ -208,6 +209,7 @@ DEPENDENCIES
   popper_js (~> 1.11, >= 1.11.1)
   pry-rails
   rails (~> 3.2)
+  rails-perftest
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
   recaptcha
