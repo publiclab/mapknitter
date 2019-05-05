@@ -44,6 +44,7 @@ group :test do
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
   gem 'test-unit'
+  gem 'rails-perftest'
 end
 
 group :development, :test do
