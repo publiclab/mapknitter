@@ -21,6 +21,7 @@ group :dependencies do
   gem "open_id_authentication"
   gem "RubyInline"
   gem "paperclip", "~>4.3.7"
+  gem 'ruby-prof'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -43,8 +44,8 @@ group :test do
   gem "rubocop", '~> 0.52.0'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
-  gem 'test-unit'
   gem 'rails-perftest'
+  gem 'test-unit'
 end
 
 group :development, :test do
