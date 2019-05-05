@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
-ruby "2.4.6"
-gem "rails", "~>3.2"
+ruby '2.4.6'
+gem 'rails', '~>4.0'
 gem 'rake',  '~> 12.3.2'
 gem 'skylight'
 
@@ -42,9 +42,9 @@ end
 
 group :test do
   gem "rubocop", '~> 0.52.0'
+  gem 'rails-perftest'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
-  gem 'rails-perftest'
   gem 'test-unit'
 end
 
