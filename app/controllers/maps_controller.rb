@@ -32,7 +32,7 @@ class MapsController < ApplicationController
 
   def create
     if logged_in?
-      @map = current_user.maps.new(params[:map])
+      @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
       if @map.save
         redirect_to "/maps/#{@map.slug}"
@@ -199,5 +199,9 @@ class MapsController < ApplicationController
 
   def find_map
     @map = Map.find(params[:id])
+  end
+
+  def map_params
+    params.require(:map).permit(:author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license)
   end
 end
