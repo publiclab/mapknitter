@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   helper_method :sort_column, :sort_direction
-  
+
   def profile
     params[:id] = current_user.login if logged_in? && params[:id].zero?
     @user = User.find_by_login(params[:id])
@@ -19,12 +19,13 @@ class UsersController < ApplicationController
   end
 
   private
+
   def sort_column
-    params[:sort] || "maps_count"
+    params[:sort] || 'maps_count'
   end
-  
+
   def sort_direction
-    params[:direction] || "desc"
+    params[:direction] || 'desc'
   end
 
 end
