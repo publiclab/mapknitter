@@ -12,16 +12,15 @@ class Map < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
-  attr_accessible :author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license
   attr_accessor :image_urls
 
   validates_presence_of :name, :slug, :author, :lat, :lon
   validates_uniqueness_of :slug
   validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
-  validates_format_of   :slug,
-                        :with => /^[\w-]*$/,
-                        :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
-                        :on => :create
+  # validates_format_of   :slug,
+  #                       :with => /^[\w-]*$/,
+  #                       :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
+  #                       :on => :create
 #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   validates_with NotAtOriginValidator
 
@@ -96,7 +95,9 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
+    Map.where('password = "" AND archived = "false"')
+        .limit(12)
+        .order('created_at DESC')
   end
 
   def nodes
@@ -120,7 +121,9 @@ class Map < ActiveRecord::Base
     if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
       return []
     else
-      return Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
+      return Map.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
+                        self.id, self.lat-dist, self.lat+dist, self.lon-dist, self.lon+dist)
+                .limit(10)
     end
   end
 
@@ -214,14 +217,14 @@ class Map < ActiveRecord::Base
       })
     end    
     Exporter.run_export(user,
-      resolution,
-      self.export || new_export,
-      self.id,
-      self.slug,
-      Rails.root.to_s,
-      self.average_scale,
-      self.placed_warpables,
-      key)
+                        resolution,
+                        self.export || new_export,
+                        self.id,
+                        self.slug,
+                        Rails.root.to_s,
+                        self.average_scale,
+                        self.placed_warpables,
+                        key)
   end
 
   def after_create
@@ -233,14 +236,14 @@ class Map < ActiveRecord::Base
 
   def license_link
     if self.license == "cc-by"
-     "<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>"
+      "<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>"
     elsif self.license == "publicdomain"
-     "<a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public Domain</a>"
+      "<a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public Domain</a>"
     end
   end
 
   def has_tag(tagname)
-    Tag.find(:all, :conditions => { :map_id => self.id, :name => tagname }).length > 0
+    !Tag.where(map_id: self.id, name: tagname).empty?
   end
 
   def add_tag(tagname, user)

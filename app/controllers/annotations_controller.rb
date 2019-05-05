@@ -9,7 +9,7 @@ class AnnotationsController < ApplicationController
   end
 
   def create
-    geojson = params[:annotation]
+    geojson = annotation_params # params[:annotation]
 
     respond_to do |format|
       format.json {
@@ -32,7 +32,7 @@ class AnnotationsController < ApplicationController
 
   def update
     @annotation = Annotation.find params[:id]
-    geojson = params[:annotation]
+    geojson = annotation_params
     if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
       Annotation.update(@annotation.id,
                         coordinates: geojson[:geometry][:coordinates],
@@ -53,5 +53,12 @@ class AnnotationsController < ApplicationController
 
   def find_map
     @map = Map.find params[:map_id]
+  end
+
+  private
+
+  def annotation_params
+    params.require(:annotation).permit(:annotation_type,
+                                       :coordinates, :text, :style)
   end
 end

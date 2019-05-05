@@ -24,8 +24,8 @@ class ImagesController < ApplicationController
   # rubocop:disable LineLength
   # assign attributes directly after rails update
   def create
-    @warpable = Warpable.new
-    @warpable.image = params[:uploaded_data]
+    @warpable = Warpable.new(image_params)
+    # @warpable.image = params[:uploaded_data]
     map = Map.find(params[:map_id])
     @warpable.history = ''
     @warpable.map_id = map.id
@@ -110,5 +110,11 @@ class ImagesController < ApplicationController
       flash[:error] = 'You must be logged in to delete images.'
       redirect_to '/login'
     end
+  end
+
+  private
+
+  def image_params
+    params.require(:warpable).permit(:image)
   end
 end

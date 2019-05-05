@@ -3,10 +3,7 @@ class CommentsController < ApplicationController
     if logged_in?
       @map = Map.find params[:map_id]
 
-      @comment = @map.comments.new(
-        user_id: current_user.id,
-        body: params[:comment][:body]
-      )
+      @comment = @map.comments.new(comment_params, user_id: current_user.id)
       if @comment.save!
         users = @map.comments.collect(&:user)
         users += [@map.user] unless @map.user.nil?
@@ -31,7 +28,7 @@ class CommentsController < ApplicationController
   def update
     @comment = Comment.find params[:id]
     if logged_in? && current_user.can_edit?(@comment)
-      @comment.update_attribute(:body, params[:comment][:body])
+      @comment.update_attribute(comment_params)
       redirect_to '/maps/' + params[:map_id]
     else
       flash[:error] = 'You do not have permissions to update that comment.'
@@ -49,5 +46,11 @@ class CommentsController < ApplicationController
       flash[:error] = 'You do not have permission to delete that comment.'
     end
     redirect_to "/maps/#{params[:map_id]}"
+  end
+
+  private
+
+  def comment_params
+    params.require(:comment).permit(:body)
   end
 end

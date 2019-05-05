@@ -3,10 +3,11 @@ class FeedsController < ApplicationController
 
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)
-    @maps = Map.find(:all, order: 'id DESC', limit: 20,
-                           conditions: { archived: false, password: '' },
-                           joins: %i[user warpables],
-                           group: 'maps.id')
+    @maps = Map.where(archived: false, password: '')
+               .joins(%i[user warpables])
+               .group('maps.id')
+               .order('id DESC')
+               .limit(20)
     render layout: false, template: 'feeds/all'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
   end
@@ -23,10 +24,10 @@ class FeedsController < ApplicationController
   end
 
   def author
-    @maps = Map.find_all_by_author(params[:id],
-                                   order: 'id DESC',
-                                   conditions: { archived: false, password: '' },
-                                   joins: :warpables, group: 'maps.id')
+    @maps = Map.where(author: params[:id], archived: false, password: '')
+               .order('id DESC')
+               .joins(:warpables)
+               .group('maps.id')
     images = []
     @maps.each do |map|
       images += map.warpables
