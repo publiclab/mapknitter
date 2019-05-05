@@ -260,7 +260,7 @@ DEPENDENCIES
   simplecov
   simplecov-cobertura
   skylight
-  sprockets (= 2.12.1)
+  sprockets
   sqlite3
   test-unit
   therubyracer

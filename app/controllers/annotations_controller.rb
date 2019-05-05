@@ -9,7 +9,7 @@ class AnnotationsController < ApplicationController
   end
 
   def create
-    geojson = params[:annotation]
+    geojson = annotation_params # params[:annotation]
 
     respond_to do |format|
       format.json do
@@ -32,15 +32,16 @@ class AnnotationsController < ApplicationController
 
   def update
     @annotation = Annotation.find params[:id]
-    geojson = params[:annotation]
-    return if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
 
-    Annotation.update(@annotation.id,
-      coordinates: geojson[:geometry][:coordinates],
-      text: geojson[:properties][:textContent],
-      style: geojson[:properties][:style])
-    render file: 'annotations/update.json.erb',
-           content_type: 'application/json'
+    geojson = annotation_params
+    if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
+      Annotation.update(@annotation.id,
+                        coordinates: geojson[:geometry][:coordinates],
+                        text: geojson[:properties][:textContent],
+                        style: geojson[:properties][:style])
+      render file: 'annotations/update.json.erb',
+             content_type: 'application/json'
+    end
   end
 
   def destroy
@@ -53,5 +54,12 @@ class AnnotationsController < ApplicationController
 
   def find_map
     @map = Map.find params[:map_id]
+  end
+
+  private
+
+  def annotation_params
+    params.require(:annotation).permit(:annotation_type,
+                                       :coordinates, :text, :style)
   end
 end

@@ -27,4 +27,9 @@ class UsersController < ApplicationController
   def sort_direction
     params[:direction] || 'desc'
   end
+
+  def user_params
+    params.require(:user).permit(:login, :email, :name,
+                                 :password, :password_confirmation)
+  end
 end

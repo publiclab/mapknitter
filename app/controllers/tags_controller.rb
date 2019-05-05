@@ -32,4 +32,10 @@ class TagsController < ApplicationController
       redirect_to '/login'
     end
   end
+
+  private
+
+  def tag_params
+    params.require(:tag).permit(:name)
+  end
 end

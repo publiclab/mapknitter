@@ -85,4 +85,10 @@ class ExportController < ApplicationController
   def external_url_test
     render json: Export.last.to_json
   end
+
+  private
+
+  def export_params
+    params.require(:export).permit(:status, :export_url)
+  end
 end

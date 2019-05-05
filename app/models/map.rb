@@ -3,33 +3,23 @@ class Map < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: %i(slugged static)
 
-  attr_accessible :author, :name, :slug, :lat, :lon,
-    :location, :description, :zoom, :license
   attr_accessor :image_urls
 
-  validates :name, :slug, :author, :lat, :lon, presence: true
+  validates_presence_of :name, :slug, :author, :lat, :lon
+  validates_uniqueness_of :slug
+  validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
+  # validates_format_of   :slug,
+  #                       :with => /^[\w-]*$/,
+  #                       :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
+  #                       :on => :create
+#  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  validates_with NotAtOriginValidator
+    validates :lat, :lon, NotAtOrigin: true
 
-  validates :slug, format: {
-    with: /^[\w-]*$/,
-    message: "must only include permitted URL safe character types:
-              alphanumerics, dashes, and underscores. It will be in your map's
-              URL path (i.e., https://mapknitter.org/maps/your-map-name)."
-  }, uniqueness: true, on: :create
-
-  validates :location, presence: {
-    message: ' cannot be found.
-              Try entering a latitude and longitude if this problem persists.'
-  }
-  #  validates :tile_url, format { with:
-  #   /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.
-  #   [a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
-  # }
-  validates :lat, :lon, NotAtOrigin: true
-
-  has_many :exports, dependent: :destroy
-  has_many :tags, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :annotations, dependent: :destroy
+  has_many :exports, :dependent => :destroy
+  has_many :tags, :dependent => :destroy
+  has_many :comments, :dependent => :destroy
+  has_many :annotations, :dependent => :destroy
   belongs_to :user
 
   has_many :warpables 
@@ -272,7 +262,7 @@ class Map < ActiveRecord::Base
   end
 
   def has_tag(tagname)
-    !Tag.find(:all, conditions: { map_id: id, name: tagname }).empty?
+    !Tag.where(map_id: self.id, name: tagname).empty?
   end
 
   def add_tag(tagname, user)

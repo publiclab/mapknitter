@@ -33,7 +33,7 @@ group :dependencies do
   gem "rdiscount", "2.2.0.1"
 
   # asset pipelining
-  gem 'sprockets', '2.12.1'
+  gem "sprockets"#, "2.12.1"
   gem "sass", :require => 'sass'
   gem "autoprefixer-rails"
   gem "uglifier"

@@ -1,6 +1,4 @@
 class Export < ActiveRecord::Base
-  attr_accessible :map_id, :status, :user_id, :export_url
-
   belongs_to :map
   belongs_to :user
 
@@ -10,7 +8,7 @@ class Export < ActiveRecord::Base
   end
 
   def self.average_cm_per_pixel
-    e = Export.find :all, conditions: ['cm_per_pixel != "" AND cm_per_pixel < 500']
+    e = Export.where('cm_per_pixel != "" AND cm_per_pixel < 500')
     sum = 0
     e.each do |export|
       sum += export.cm_per_pixel
@@ -23,7 +21,8 @@ class Export < ActiveRecord::Base
   end
 
   def self.histogram_cm_per_pixel
-    e = Export.find :all, conditions: ['cm_per_pixel != "" AND cm_per_pixel < 500'], order: "cm_per_pixel DESC"
+    e = Export.where('cm_per_pixel != "" AND cm_per_pixel < 500')
+              .order('cm_per_pixel DESC')
     if !e.empty?
       hist = []
       (0..e.first.cm_per_pixel.to_i).each do |bin|
@@ -52,11 +51,13 @@ class Export < ActiveRecord::Base
   end
 
   def self.export_count
-    Export.count :all, conditions: ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now - 24.hours).to_s(:db)]
+    Export.where('status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',
+                 (DateTime.now-24.hours).to_s(:db)).count
   end
 
   # all exports currently running
   def self.exporting
-    Export.find :all, conditions: ['status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?', (DateTime.now - 24.hours).to_s(:db)]
+    Export.where('status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',
+                 (DateTime.now-24.hours).to_s(:db))
   end
 end
