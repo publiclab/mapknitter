@@ -149,6 +149,7 @@ GEM
     ruby-openid (2.7.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
+    ruby-prof (0.17.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -215,6 +216,7 @@ DEPENDENCIES
   recaptcha
   right_aws
   ruby-openid (~> 2.5)
+  ruby-prof
   sass
   simplecov
   simplecov-cobertura
