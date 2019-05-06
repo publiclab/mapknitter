@@ -190,7 +190,7 @@ class MapsControllerTest < ActionController::TestCase
     @map.reload
 
     assert_redirected_to '/?_=' + Time.now.to_i.to_s
-    assert_true @map.archived
+    assert @map.archived
   end
 
   test 'should not archive map without enough permissions' do
@@ -199,7 +199,7 @@ class MapsControllerTest < ActionController::TestCase
     @map.reload
 
     assert_redirected_to '/?_=' + Time.now.to_i.to_s
-    assert_false @map.archived
+    assert_not @map.archived
   end
 
   test 'should update map' do
