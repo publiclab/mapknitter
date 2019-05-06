@@ -22,7 +22,7 @@ class SessionsControllerTest < ActionController::TestCase
   test 'logs out a user' do
     session[:user_id] = 1
     get :logout
-    assert_equal nil, session[:user_id]
+    assert_nil session[:user_id]
     assert flash[:success].present?
     assert_equal 'You have successfully logged out.', flash[:success]
     assert_redirected_to "/?_=#{Time.now.to_i}"

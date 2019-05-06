@@ -5,7 +5,7 @@ class CommentsControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
-  end 
+  end
 
   # called after every single test
   def teardown
@@ -14,7 +14,7 @@ class CommentsControllerTest < ActionController::TestCase
   test "should not create comment if not logged in" do
     before_count = Comment.count
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         user_id: 1
@@ -28,7 +28,7 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Comment.count
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         body: "I'm gonna troll you!"
@@ -70,7 +70,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -88,7 +88,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -142,7 +142,7 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = @user.id
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         body: "I'm gonna troll you!"
@@ -156,7 +156,7 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = 3
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         body: "I'm gonna troll you!"
@@ -175,7 +175,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     session[:user_id] = @chris.id
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         body: "I'm gonna troll you!"
@@ -183,7 +183,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     session[:user_id] = @joshua.id
 
-    post(:create, 
+    post(:create,
       map_id: @map.slug,
       comment: {
         body: "Yeah we'll see!"
