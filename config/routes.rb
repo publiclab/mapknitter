@@ -47,6 +47,7 @@ Mapknitter::Application.routes.draw do
   #   end
 
   # these are a mess:
+  get 'external_url_test' => 'export#external_url_test'
   get 'local/:login' => 'sessions#local'
   get 'logout' => 'sessions#logout'
   get 'login' => 'sessions#new'
