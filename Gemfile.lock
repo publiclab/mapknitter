@@ -187,6 +187,7 @@ DEPENDENCIES
   byebug
   friendly_id
   geokit-rails (= 1.1.4)
+  httparty
   image_science (= 1.2.6)
   jshintrb
   mysql2 (< 0.4)
