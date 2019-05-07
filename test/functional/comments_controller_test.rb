@@ -2,6 +2,7 @@ require 'test_helper'
 
 class CommentsControllerTest < ActionController::TestCase
 
+  fixtures :all
   # called before every single test
   def setup
     @map = maps(:saugus)
@@ -28,11 +29,10 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Comment.count
 
-    post(:create,
-      map_id: @map.slug,
-      comment: {
+    post(:create, comment: {
+         map_id: @map.id,
         body: "I'm gonna troll you!"
-    })
+    } )
 
     assert_response :success
     assert_not_equal before_count, Comment.count
@@ -45,7 +45,6 @@ class CommentsControllerTest < ActionController::TestCase
 
     put(:update,
          id: @comment.id,
-         map_id: @map.slug,
          comment: {
            body: "I'm gonna troll you!"
          })
@@ -143,8 +142,8 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @user.id
 
     post(:create,
-      map_id: @map.slug,
       comment: {
+      map_id: @map.id,
         body: "I'm gonna troll you!"
     })
 
@@ -156,11 +155,11 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = 3
 
-    post(:create,
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create, comment: {
+      map_id: @map.id,
+      body: "I'm gonna troll you!"
+    }
+    )
 
     email = ActionMailer::Base.deliveries.last
 
@@ -176,16 +175,16 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @chris.id
 
     post(:create,
-      map_id: @map.slug,
       comment: {
+      map_id: @map.id,
         body: "I'm gonna troll you!"
     })
 
     session[:user_id] = @joshua.id
 
     post(:create,
-      map_id: @map.slug,
       comment: {
+      map_id: @map.id,
         body: "Yeah we'll see!"
     })
 
