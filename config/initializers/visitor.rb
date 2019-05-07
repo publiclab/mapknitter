@@ -11,18 +11,18 @@
 # Arel is now bundled in the Active Record gem, and maintained in the rails/rails repository. 
 # This code can be deleted on update to `activerecord >= 6.0` (Rails 6)
 
-# module Arel
-#   module Visitors
-#     class DepthFirst < Arel::Visitors::Visitor
-#       alias :visit_Integer :terminal
-#     end
+module Arel
+  module Visitors
+    class DepthFirst < Arel::Visitors::Visitor
+      alias :visit_Integer :terminal
+    end
 
-#     class Dot < Arel::Visitors::Visitor
-#       alias :visit_Integer :visit_String
-#     end
+    class Dot < Arel::Visitors::Visitor
+      alias :visit_Integer :visit_String
+    end
 
-#     class ToSql < Arel::Visitors::Visitor
-#       alias :visit_Integer :literal
-#     end
-#   end
-# end
+    class ToSql < Arel::Visitors::Reduce
+      alias :visit_Integer :literal
+    end
+  end
+end
