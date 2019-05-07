@@ -1,15 +1,15 @@
 class CommentsController < ApplicationController
   def create
     if logged_in?
-      @map = Map.find params[:map_id]
 
-      @comment = @map.comments.new(comment_params, user_id: current_user.id)
+      @comment = current_user.comments.new(comment_params)
+      @map = Map.find comment_params[:map_id]
       if @comment.save!
         users = @map.comments.collect(&:user)
         users += [@map.user] unless @map.user.nil?
         users.uniq.each do |user|
-          unless user.id == current_user.id
-            CommentMailer.notify(user, @comment).deliver
+          unless @map.user_id == current_user.id
+            CommentMailer.notify(user, @comment).deliver_now
           end
         end
       end
@@ -28,8 +28,8 @@ class CommentsController < ApplicationController
   def update
     @comment = Comment.find params[:id]
     if logged_in? && current_user.can_edit?(@comment)
-      @comment.update_attribute(comment_params)
-      redirect_to '/maps/' + params[:map_id]
+      @comment.update_attributes(comment_params)
+      redirect_to "/maps/#{@comment.map.slug}"
     else
       flash[:error] = 'You do not have permissions to update that comment.'
       redirect_to '/login'
@@ -51,6 +51,6 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body)
+    params.require(:comment).permit(:body, :map_id)
   end
 end

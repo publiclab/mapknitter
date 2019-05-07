@@ -226,8 +226,8 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should not update unless logged in' do
-    put :update, id: 2, map: { name: 'Street 5' }
-    assert_redirected_to '/login?back_to=/map/2'
+    put :update, id: 2, map: { name: 'Street 5'}
+    assert_redirected_to '/login?back_to=/maps/2'
   end
 
   test 'should display maps by region' do
