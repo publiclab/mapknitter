@@ -10,8 +10,8 @@ jQuery(document).ready(function($) {
   window.toggle_sidebar = function(e){
     var icon = $('.sidebar-toggle-icon')
     
-    $('.sidebar').toggle()
     $('#knitter-map-pane').toggleClass('fullscreen')
+    $('.sidebar .sidebar-wrap').toggleClass('fullscreen-only')
     icon.toggleClass('fa-chevron-left')
     icon.toggleClass('fa-chevron-right')
     
