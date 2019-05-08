@@ -2,16 +2,11 @@
   <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
   <%= hidden_field_tag :back_to, params[:back_to] || request.path -%>
   <div class="form-group">
-    <label style="display: block; text-align: center;">Log In using your Public Lab username</label>
-    <label style="display: block; text-align: center;">or</label>
-    <label style="display: block; text-align: center;">
-      create a
-      <a href="//publiclab.org/signup">Public Lab account</a>.
-    </label>
+    <label style="display: block; text-align: center;">Login/Signup with your Public Lab account.</label>
   </div>
   <div class="form-check">
     <label>
-      <%= check_box_tag 'remember_me', '1', @remember_me, { :class => "form-check-input" } %> Remember me
+      <%= check_box_tag 'remember_me', '1', @remember_me %>
     </label>
   </div>
   <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
