@@ -4,11 +4,7 @@
   <div class="form-group">
     <label style="display: block; text-align: center;">Login/Signup with your Public Lab account.</label>
   </div>
-  <div class="form-check">
-    <label>
-      <%= check_box_tag 'remember_me', '1', @remember_me %>
-    </label>
-  </div>
+
   <%= submit_tag 'Log in', {:class => "btn btn-primary btn-large"} %>
   <br />
   <%= button_tag submit: 'Github', name: "subaction", value: "github" do%>
