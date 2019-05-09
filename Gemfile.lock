@@ -81,6 +81,7 @@ GEM
       rake
     json (1.8.6)
     libv8 (3.16.14.19)
+    libxml-ruby (3.1.0)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -97,6 +98,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     mysql2 (0.3.21)
+    net-http-persistent (2.9.4)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     oa-core (0.3.2)
@@ -160,10 +162,17 @@ GEM
     rdiscount (2.2.0.1)
     recaptcha (4.14.0)
       json
+    redcarpet (3.4.0)
     ref (2.0.0)
-    right_aws (3.1.0)
-      right_http_connection (>= 1.2.5)
-    right_http_connection (1.5.0)
+    right_aws_api (0.3.5)
+      right_cloud_api_base (>= 0.2.6)
+    right_cloud_api_base (0.2.6)
+      json (>= 1.0.0)
+      libxml-ruby (>= 1.0.0)
+      net-http-persistent (~> 2.9)
+      redcarpet (>= 3.0.0)
+      ruby-hmac (>= 0.4.0)
+    ruby-hmac (0.4.0)
     ruby-openid (2.7.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
@@ -237,7 +246,7 @@ DEPENDENCIES
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
   recaptcha
-  right_aws
+  right_aws_api
   ruby-openid (~> 2.5)
   ruby-prof
   sass

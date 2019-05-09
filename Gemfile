@@ -21,13 +21,14 @@ group :dependencies do
   gem "open_id_authentication"
   gem "RubyInline"
   gem "paperclip", "~>4.3.7"
-  gem 'ruby-prof'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
 
   # for rake image migration tasks
-  gem 'right_aws'
+  # gem 'right_aws'
+  gem 'right_aws_api'
+
 
   # compiling markdown to html
   gem "rdiscount", "2.2.0.1"
@@ -41,6 +42,7 @@ group :dependencies do
 end
 
 group :test do
+  gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
