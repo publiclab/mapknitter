@@ -183,8 +183,10 @@ class MapsController < ApplicationController
 
   def search
     params[:id] ||= params[:q]
-    @maps = Map.select('archived, author created_at, description, id, lat, license, location, name, slug, tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
-               .where('archived = ? AND (name LIKE ? OR location LIKE ? OR description LIKE ?)', false, '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%')
+    @maps = Map.select('archived, author, created_at, description, id, lat, license, location, name, slug,
+                        tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
+               .where('archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
+                      false, '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%')
                .paginate(page: params[:page], per_page: 24)
     @title = "Search results for '#{params[:id]}'"
     respond_to do |format|
@@ -192,7 +194,7 @@ class MapsController < ApplicationController
       format.json { render json: @maps }
     end
   end
-
+  
   private
 
   def find_map
