@@ -1,5 +1,5 @@
 # see http://ramblingsonrails.com/how-to-migrate-a-rails-app-from-attachment_fu-to-paperclip
-require 'right_aws'
+require 'right_aws_api'
 
 namespace :utils do
   namespace :attachments do
