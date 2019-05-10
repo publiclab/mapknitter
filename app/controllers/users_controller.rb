@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def profile
-    params[:id] = current_user.login if logged_in? && params[:id].zero?
+    params[:id] = current_user.login if logged_in? && params[:id].empty?
     @user = User.find_by_login(params[:id])
     @maps = Map.where(user_id: @user.id)
                .paginate(page: params[:page], per_page: 24)
