@@ -10,4 +10,5 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-bundle exec /usr/local/bundle/bin/passenger start
+#bundle exec /usr/local/bundle/bin/passenger start
+bundle exec passenger start
