@@ -1,6 +1,6 @@
 class Tag < ActiveRecord::Base
 
-  belongs_to :map 
+  belongs_to :map
   belongs_to :user
 
   attr_accessible :name, :map_id, :user_id

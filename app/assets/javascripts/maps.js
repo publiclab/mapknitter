@@ -8,8 +8,13 @@
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
   window.toggle_sidebar = function(e){
+    var icon = $('.sidebar-toggle-icon')
+    
     $('.sidebar').toggle()
     $('#knitter-map-pane').toggleClass('fullscreen')
+    icon.toggleClass('fa-chevron-left')
+    icon.toggleClass('fa-chevron-right')
+    
     /* trigger a resize event */
     window.mapKnitter._map._onResize()
   }

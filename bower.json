@@ -17,7 +17,7 @@
     "leaflet-google": "https://gist.githubusercontent.com/jywarren/770e5018c7fea09e3044b1297bd99dc0/raw/6de6259a766f473559a10a29c4a5ccf23b2a0dea/Google.js",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-illustrate": "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",
-    "leaflet-distortableimage": "publiclab/Leaflet.DistortableImage#^0.2.0",
+    "leaflet-distortableimage": "publiclab/Leaflet.DistortableImage#^0.4.3",
     "leaflet-easybutton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "leaflet-toolbar": "Leaflet/Leaflet.Toolbar#~0.3.0",
     "leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
@@ -31,7 +31,8 @@
     "image-sequencer": "git+https://github.com/publiclab/image-sequencer.git#~1.4.0",
     "junction": "theleagueof/junction",
     "leaflet-environmental-layers": "^1.1.2",
-    "leaflet-spin": "1.1.0"
+    "leaflet-spin": "1.1.0",
+    "leaflet-fullhash": "git+https://github.com/sagarpreet-chadha/leaflet-fullHash.git"
   },
   "resolutions": {
     "jquery": "^2.1.3",
