@@ -360,7 +360,10 @@ class Exporter
       export.status = 'complete'
       export.save
 
-    rescue SystemCallError
+    rescue SystemCallError => e
+      puts "ERROR"
+      puts e.inspect
+      puts "END ERROR"
       export.status = 'failed'
       export.save
     end
