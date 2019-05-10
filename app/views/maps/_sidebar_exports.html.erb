@@ -29,7 +29,7 @@
   <div role="tabpanel" class="tab-pane active" id="map-export-subtab">
   
     <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
-      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
         <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
     </div>
@@ -76,20 +76,19 @@
 
     <p><b>Resolution:</b> <span id="resolution-label"><%= @resolution %></span> cm/px</p>
 
-    <p><input style="width:100%" id="export-resolution" data-slider-id='exResSlider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="<%= @resolution %>"/></p>
+    <p style="width:95%"><input id="export-resolution" type="text" /></p>
 
   </div>
 </div>
 <script>
 var exporting, exportResolutionSlider
 (function(){
-  exportResolutionSlider = new Slider('#export-resolution',{
+  exportResolutionSlider = $("#export-resolution").ionRangeSlider({
     min: 1,
-    formatter: function(value) {
-      return value + ' cm/px';
-    }
-  }).on('change',function() {
-    $('#resolution-label').html(exportResolutionSlider.getValue())
+    max: 100,
+    from: <%= @resolution %>,
+    postfix: " cm/px",
+    skin: "flat"
   });
 
   updateExports = function() {
@@ -167,7 +166,7 @@ var exporting, exportResolutionSlider
             recaptcha_response_field: Recaptcha.get_response(),
             recaptcha_challenge_field: Recaptcha.get_challenge(),
           <% end %>
-          resolution: exportResolutionSlider.getValue()
+          resolution: exportResolutionSlider.val()
         }
       }).done(function(data){
         $('.progress-bar').addClass('progress-bar-success')
