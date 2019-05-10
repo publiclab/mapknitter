@@ -10,4 +10,4 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-bundle exec rails s -p 3000 -b '0.0.0.0'
+bundle exec /usr/local/bundle/bin/passenger start
