@@ -2,7 +2,7 @@
 (function(){
   new Ajax.Updater('formats','/export/formats/<%= @map.id %>?type=normal&authenticity_token=<%= form_authenticity_token %>')
   new Ajax.PeriodicalUpdater('export_progress','/export/progress/<%= @map.id %>?type=normal', {method: 'get', frequency: 10})
-  Recaptcha.create(ENV['RECAPTCHA_KEY'], "recaptcha-container", {theme:"white"});
+  Recaptcha.create(<%= ENV['RECAPTCHA_KEY'] %>, "recaptcha-container", {theme:"white"});
 })()
 </script>
 
