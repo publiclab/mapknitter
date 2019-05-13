@@ -163,7 +163,7 @@ var exporting, exportResolutionSlider
         method: 'POST',
         data: {
           <% if Rails.env.production? && !logged_in? && @map.anonymous? %>
-            recaptcha_response_field: grecaptcha.getResponse(),
+            'g-recaptcha-response': grecaptcha.getResponse(),
           <% end %>
           resolution: exportResolutionSlider.val()
         }
