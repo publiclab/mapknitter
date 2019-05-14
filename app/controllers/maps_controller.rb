@@ -194,11 +194,11 @@ class MapsController < ApplicationController
       format.json { render json: @maps }
     end
   end
-  
+
   private
 
   def find_map
-    @map = Map.find(params[:id])
+    @map = Map.find_by( slug: params[:id])
   end
 
   def map_params
