@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  web:
+    container_name: mapknitter-test
+    build: .
+    network_mode: host
+    env_file:
+      - mapknitter.test.env
+    volumes:
+      - .:/app

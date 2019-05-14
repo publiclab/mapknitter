@@ -1,0 +1,5 @@
+test:
+  adapter: mysql2
+  database: mapknitter-test
+  username: root
+  host: localhost
