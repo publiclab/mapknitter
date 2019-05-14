@@ -122,6 +122,17 @@ Help improve Public Lab software!
 
 In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment. We also have a `stable` build at http://mapknitter-unstable.laboratoriopublico.org/ which builds off of our `main` branch. Any commits or PRs merged to the main branch will trigger the `stable` server to rebuild; you can monitor progress at https://jenkins.laboratoriopublico.org/
 
+## Logging in when running locally
+
+Because MapKnitter uses a remote OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password. If you create a file in `config/config.yml` with the following contents, you'll be able to log in locally at the path `http://localhost:3000/local/USERNAME` where `USERNAME` is any username:
+
+```
+development:
+  local:true
+```
+
+For this to work, there will have to be a user record first. You can create one by running `rails console` to open a rails console, then entering `u = User.create({login: 'harry', email: 'potter@hogwarts.com'})`
+
 ****
 
 ## License
