@@ -44,7 +44,7 @@ Mapknitter::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true#false
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
   config.assets.logger = false
 end
