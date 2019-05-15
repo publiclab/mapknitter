@@ -18,5 +18,6 @@
       <%= render :partial => 'maps/list', :locals => {:map => map} %>
     <% end %>
   </div>
+  <%= will_paginate @maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
 </div>
 <hr />
