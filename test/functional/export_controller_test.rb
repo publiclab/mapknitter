@@ -68,4 +68,7 @@ class ExportControllerTest < ActionController::TestCase
     assert_equal 'export not running', @response.body
     assert_equal 'text/html', @response.content_type
   end
+
+  test "should display export status" do
+  end
 end

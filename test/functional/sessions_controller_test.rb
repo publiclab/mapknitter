@@ -47,6 +47,9 @@ class SessionsControllerTest < ActionController::TestCase
     assert_nil session[:user_id]
     assert_redirected_to '/'
   end
+
+  test 'should create session' do
+  end
 #  def test_should_login_and_redirect
 #    post :create, :login => 'quentin', :password => 'monkey'
 #    assert session[:user_id]
