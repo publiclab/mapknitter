@@ -2,6 +2,8 @@ require 'test_helper'
 
 class MapsControllerTest < ActionController::TestCase
 
+  fixtures :all
+
   # called before every single test
   def setup
     @map = maps(:saugus)
@@ -161,7 +163,7 @@ class MapsControllerTest < ActionController::TestCase
   test "should not delete map if not owner" do
     session[:user_id] = 3
     before_count = Map.count
-    post(:destroy, id: @map.id)
+    post(:destroy, id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal flash[:error], "Only admins or map owners may delete maps."
@@ -171,7 +173,7 @@ class MapsControllerTest < ActionController::TestCase
   test "should delete map if owner" do
     session[:user_id] = 1
     before_count = Map.count
-    post(:destroy, id: @map.id)
+    post(:destroy, id: @map.slug)
 
     assert_redirected_to '/'
     assert_not_equal before_count, Map.count
@@ -179,7 +181,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get(:show, id: @map.id)
+    get(:show, id: @map.slug)
     assert_response :success
     assert_not_nil assigns(:map)
   end
@@ -205,7 +207,7 @@ class MapsControllerTest < ActionController::TestCase
   test "should update map" do
     session[:user_id] = 1
     put(:update,
-        id: 1,
+        id: @map.slug,
         map: {
           name: "Schrute farms",
           location: "USA",
@@ -216,7 +218,7 @@ class MapsControllerTest < ActionController::TestCase
         tags: "beets bears")
     @map.reload
 
-    assert_redirected_to "/maps/" + @map.id.to_s
+    assert_redirected_to "/maps/#{@map.slug}"
     assert_equal "Schrute farms", @map.name
     assert_equal 44, @map.lat
     assert_equal -74, @map.lon
@@ -239,19 +241,19 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should annotate maps' do
-    get :annotate, id: @map.id
+    get :annotate, id: @map.slug
     assert_response :success
     assigns(:annotations) == true
   end
 
   test 'embed' do
-    get :embed, id: @map.id
+    get :embed, id: @map.slug
     assert_response :success
     assert_template :show
   end
 
   test 'it returns the images' do
-    get :images, id: @map.id
+    get :images, id: @map.slug
     assert_response :success
     assert_equal 'application/json', response.content_type
   end
@@ -274,7 +276,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'returns the exports' do
-    get :exports, id: 1
+    get :exports, id: @map.slug
     assert_response :success
   end
 

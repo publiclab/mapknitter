@@ -6,11 +6,11 @@ class TagsControllerTest < ActionController::TestCase
   def setup
     @map = maps(:saugus)
     @tag = tags(:nice)
-  end 
+  end
 
   test "should create tag" do
     session[:user_id] = 1 # log in
-    post(:create, :map_id => @map.id, :tags => "test,nice")
+    post(:create, :map_id => @map.slug, :tags => "test,nice")
     assert_response :redirect
   end
 
@@ -21,7 +21,7 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test "should redirect to login when not logged in" do
-    post :create, map_id: @map.id, tags: "test,nice"
+    post :create, map_id: @map.slug, tags: "test,nice"
     assert_redirected_to "/login?back_to=/maps/#{@map.slug}"
     assert flash.present?
   end
