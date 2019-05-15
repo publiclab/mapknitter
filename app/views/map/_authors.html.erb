@@ -3,7 +3,7 @@
 
 <ul>
 <% for author in Map.authors(12) %>
-  <li><a href="/profile/<%= author %>"><%= author %></a></li>
+  <li><a href="/profile/<%= author %>"><%= author.capitalize %></a></li>
 <% end %>
 </ul>
 
