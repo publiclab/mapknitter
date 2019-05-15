@@ -32,6 +32,7 @@ html, body {
 }
 
 .map-list .map img {
+  overflow: hidden;
   max-height:300px;
 }
 
