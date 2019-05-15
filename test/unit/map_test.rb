@@ -48,7 +48,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
 
-    #use a map fixture with no warpables
+    # use a map fixture with no warpables
     village = maps(:village)
     assert_equal 0,  village.average_cm_per_pixel
 
@@ -112,6 +112,4 @@ class MapTest < ActiveSupport::TestCase
     assert map.add_tag('test', User.first)
     assert map.has_tag('test')
   end
-
-
 end

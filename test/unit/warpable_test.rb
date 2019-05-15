@@ -64,5 +64,4 @@ class WarpableTest < ActiveSupport::TestCase
     assert_not_nil @warp.user_id
     assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
   end
-
 end
