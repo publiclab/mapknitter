@@ -17,6 +17,16 @@ class AnnotationTest < ActiveSupport::TestCase
   end
 
   test 'geometry type' do
+    @annotation.annotation_type = 'Some random Geometry'
     assert_equal @annotation.geometry_type, 'Point'
+
+    @annotation.annotation_type = 'polyline'
+    assert_equal @annotation.geometry_type, 'LineString'
+
+    @annotation.annotation_type = 'polygon'
+    assert_equal @annotation.geometry_type, 'Polygon'
+
+    @annotation.annotation_type = 'rectangle'
+    assert_equal @annotation.geometry_type, 'Polygon'
   end
 end
