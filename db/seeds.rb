@@ -12,7 +12,7 @@ maps = []
     slug: Faker::Lorem.word
   )
   map.user =  (users.sample)
-  map.author = map.user.login
+  map.author = map.user
   map.save
   maps. << map
 end
