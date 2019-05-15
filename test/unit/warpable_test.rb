@@ -48,6 +48,9 @@ class WarpableTest < ActiveSupport::TestCase
 
     assert_not_nil @warp.user_id
     assert_equal @warp.map.user_id, @warp.user_id
+
+    Warpable.delete_all
+    assert_empty Warpable.histogram_cm_per_pixel
   end
 
   test "try export" do
@@ -61,4 +64,5 @@ class WarpableTest < ActiveSupport::TestCase
     assert_not_nil @warp.user_id
     assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
   end
+
 end

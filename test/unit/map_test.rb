@@ -29,6 +29,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon
+    assert_true Map.first.validate
     assert_equal Map.count, Map.new_maps.size
   end
 
@@ -46,6 +47,10 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.latest_export
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
+
+    #use a map fixture with no warpables
+    village = maps(:village)
+    assert_equal 0,  village.average_cm_per_pixel
 
     resolution = 20
     assert_not_nil map.run_export(users(:quentin), resolution)  #map.average_cm_per_pixel)
@@ -94,6 +99,11 @@ class MapTest < ActiveSupport::TestCase
     near_maps = map.nearby_maps(5)
     assert_not_nil near_maps
     assert_includes near_maps, maps(:village)
+
+    saugus = maps(:saugus)
+    saugus.lat = 0
+    assert_empty saugus.nearby_maps(100)
+
   end
 
   test "tag basics" do
@@ -102,5 +112,6 @@ class MapTest < ActiveSupport::TestCase
     assert map.add_tag('test', User.first)
     assert map.has_tag('test')
   end
+
 
 end

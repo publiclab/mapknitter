@@ -31,27 +31,14 @@ class Map < ActiveRecord::Base
   has_many :annotations, :dependent => :destroy
   belongs_to :user
 
-  has_many :warpables do
-    def public_filenames
-      filenames = {}
-      self.each do |warpable|
-        filenames[warpable.id] = {}
-        sizes = Array.new(Warpable::THUMBNAILS.keys).push(nil)
-        sizes.each do |size|
-          key = size != nil ? size : "original"
-          filenames[warpable.id][key] = warpable.public_filename(size)
-        end
-      end
-      filenames
-    end
-  end
+  has_many :warpables 
 
   def validate
     self.name != 'untitled'
     self.lat >= -90 && self.lat <= 90 && self.lon >= -180 && self.lat <= 180
   end
 
-  # Hash the password before saving the record
+  #Hash the password before saving the record
   def before_create
     self.password = Password::update(self.password) if self.password != ""
   end
