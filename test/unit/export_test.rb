@@ -9,6 +9,10 @@ class ExportTest < ActiveSupport::TestCase
     assert_not_nil Export.histogram_cm_per_pixel_in_tens
     assert_not_nil Export.export_count
     assert_not_nil Export.exporting
+
+    Export.delete_all
+    assert_empty Export.histogram_cm_per_pixel
+    assert_equal 0, Export.average_cm_per_pixel
   end
 
   test "export running" do
