@@ -77,7 +77,7 @@ class MapsController < ApplicationController
     else
       flash[:error] = 'Only admins may archive maps.'
     end
-    redirect_to '/?_=' + Time.now.to_i.to_s
+    redirect_to "/?_=#{Time.now.to_i.to_s}"
   end
 
   def embed
@@ -94,12 +94,13 @@ class MapsController < ApplicationController
   def edit; end
 
   def update
-    @map.name =        params[:map][:name]
-    @map.location =    params[:map][:location]
-    @map.lat =         params[:map][:lat]
-    @map.lon =         params[:map][:lon]
-    @map.description = params[:map][:description]
-    @map.license =     params[:map][:license] if @map.user_id == current_user.id
+    # @map.name =        params[:map][:name]
+    # @map.location =    params[:map][:location]
+    # @map.lat =         params[:map][:lat]
+    # @map.lon =         params[:map][:lon]
+    # @map.description = params[:map][:description]
+    # @map.license =     params[:map][:license] if @map.user_id == current_user.id
+  @map.update_attributes(map_params)
 
     save_tags(@map)
     @map.save
@@ -198,7 +199,7 @@ class MapsController < ApplicationController
   private
 
   def find_map
-    @map = Map.find_by( slug: params[:id])
+    @map = Map.find_by_slug params[:id]
   end
 
   def map_params
