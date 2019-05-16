@@ -56,6 +56,7 @@ class ImagesControllerTest < ActionController::TestCase
     points = "-71.39,41.83:-71.39,41.83:-71.39,41.83:-71.39,41.83"
     put :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
     assert_not_nil @warp.nodes
+    assert_equal 'success', response.body
     assert_equal "text/html", response.content_type
   end
 
@@ -72,4 +73,18 @@ class ImagesControllerTest < ActionController::TestCase
     assert_redirected_to '/login'
     assert_not_nil flash[:error]
   end
+
+  # Imports don't work. Relevent issue: https://github.com/publiclab/mapknitter/issues/614
+# test 'should import an image' do
+#   get :import, name: @map.name, url: 'https://edit.co.uk/uploads/2016/12/Image-2-Alternatives-to-stock-photography-Thinkstock.jpg'
+#   assert_response :redirect
+#   assert_redirected_to '/maps/' + @map.name
+# end
+
+# test 'should display error if import failed' do
+#   get :import, name: @map.name, url: 'fake url'
+#   assert_response :redirect
+#   assert_redirected_to '/map/edit/' + @map.name
+#   assert_not_nil flash[:notice]
+# end
 end
