@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ExportControllerTest < ActionController::TestCase
-
   def setup
     @map = maps(:saugus)
   end
@@ -70,24 +69,24 @@ class ExportControllerTest < ActionController::TestCase
   end
 
   test 'progress with no export' do
-   get :progress, id: 4
-   assert_response :success
-   assert_equal 'export has not been run', @response.body
+    get :progress, id: 4
+    assert_response :success
+    assert_equal 'export has not been run', @response.body
   end
 
   test 'progress completed' do
-   get :progress, id: 2
-   assert_response :success
-   assert_equal 'complete', @response.body
+    get :progress, id: 2
+    assert_response :success
+    assert_equal 'complete', @response.body
   end
 
   test 'progress failed' do
-   get :progress, id: 3
-   assert_response :success
-   assert_equal 'export failed', @response.body
+    get :progress, id: 3
+    assert_response :success
+    assert_equal 'export failed', @response.body
   end
 
-  #does not test the exporter client
+  # does not test the exporter client
   test "should display export status" do
     session[:user_id] = 1
     get :status, id: @map.id
@@ -98,6 +97,6 @@ class ExportControllerTest < ActionController::TestCase
     session[:user_id] = 1
     get :status, id: 4
     assert_response :success
-    #assert_equal { status: 'export has not been run' }.to_json, @response.body
+    # assert_equal { status: 'export has not been run' }.to_json, @response.body
   end
 end

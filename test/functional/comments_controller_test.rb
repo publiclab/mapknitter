@@ -1,11 +1,10 @@
 require 'test_helper'
 
 class CommentsControllerTest < ActionController::TestCase
-
   # called before every single test
   def setup
     @map = maps(:saugus)
-  end 
+  end
 
   # called after every single test
   def teardown
@@ -14,11 +13,11 @@ class CommentsControllerTest < ActionController::TestCase
   test "should not create comment if not logged in" do
     before_count = Comment.count
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        user_id: 1
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           user_id: 1
+         })
 
     assert_response :success
     assert_equal before_count, Comment.count
@@ -28,11 +27,11 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Comment.count
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           body: "I'm gonna troll you!"
+         })
 
     assert_response :success
     assert_not_equal before_count, Comment.count
@@ -44,13 +43,13 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 4
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        map_id: @map.slug,
+        comment: {
+          body: "I'm gonna troll you!"
+        })
 
-    #refresh the object
+    # refresh the object
     @comment.reload
 
     assert_redirected_to "/maps/" + @map.slug
@@ -62,15 +61,15 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        map_id: @map.slug,
+        comment: {
+          body: "I'm gonna troll you!"
+        })
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -80,15 +79,15 @@ class CommentsControllerTest < ActionController::TestCase
     @comment = comments(:one)
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        map_id: @map.slug,
+        comment: {
+          body: "I'm gonna troll you!"
+        })
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -101,8 +100,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_not_equal before_count, Comment.count
@@ -116,8 +114,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -130,8 +127,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -142,11 +138,11 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = @user.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           body: "I'm gonna troll you!"
+         })
 
     assert_response :success
     assert !ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
@@ -156,11 +152,11 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = 3
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           body: "I'm gonna troll you!"
+         })
 
     email = ActionMailer::Base.deliveries.last
 
@@ -175,19 +171,19 @@ class CommentsControllerTest < ActionController::TestCase
 
     session[:user_id] = @chris.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           body: "I'm gonna troll you!"
+         })
 
     session[:user_id] = @joshua.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "Yeah we'll see!"
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           body: "Yeah we'll see!"
+         })
 
     email = ActionMailer::Base.deliveries.last
 

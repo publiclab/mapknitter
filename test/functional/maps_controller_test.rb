@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MapsControllerTest < ActionController::TestCase
-
   # called before every single test
   def setup
     @map = maps(:saugus)
@@ -12,10 +11,10 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test "should display image url for maps by region" do
-    get :region , { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60, format: :json}
+    get :region, { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60, format: :json }
 
     image_urls = []
-    @map.warpables.each do | warpable|
+    @map.warpables.each do |warpable|
       image_urls.append(warpable.image.url)
     end
 
@@ -32,7 +31,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?("Saugus Landfill Incinerator")
     assert @maps.collect(&:name).include?("Cubbon Park")
-    assert @maps.collect{ |map| map.user.login}.include?("quentin")
+    assert @maps.collect { |map| map.user.login }.include?("quentin")
   end
 
   test "should not display archived maps" do
@@ -44,7 +43,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert !@maps.collect(&:name).include?("Saugus Landfill Incinerator")
     assert @maps.collect(&:name).include?("Cubbon Park")
-    assert @maps.collect{ |map| map.user.login}.include?("quentin")
+    assert @maps.collect { |map| map.user.login }.include?("quentin")
   end
 
   test "should get map of maps" do
@@ -90,16 +89,16 @@ class MapsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Map.count
     post(:create, map: {
-      name: "Coal terminal map", 
-      slug: "coal-terminal",
-      location: "London",
-      lat: 42.43823313018592,
-      lon: -70.9849190711975
-    })
+           name: "Coal terminal map",
+           slug: "coal-terminal",
+           location: "London",
+           lat: 42.43823313018592,
+           lon: -70.9849190711975
+         })
     @map = assigns(:map)
 
     assert_response 302
-    assert_redirected_to '/maps/'+@map.slug
+    assert_redirected_to '/maps/' + @map.slug
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?("Coal terminal map")
     assert_equal @map.user.login, "quentin"
@@ -108,15 +107,15 @@ class MapsControllerTest < ActionController::TestCase
   test "should create map if not logged in" do
     before_count = Map.count
     post(:create, map: {
-      name: "Coal terminal map",
-      slug: "coal-terminal",
-      location: "London",
-      lat: 42.43823313018592,
-      lon: -70.9849190711975
-    })
+           name: "Coal terminal map",
+           slug: "coal-terminal",
+           location: "London",
+           lat: 42.43823313018592,
+           lon: -70.9849190711975
+         })
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/'+@map.slug
+    assert_redirected_to '/maps/' + @map.slug
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?("Coal terminal map")
     assert_nil @map.user
@@ -136,7 +135,7 @@ class MapsControllerTest < ActionController::TestCase
     }
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/'+@map.slug
+    assert_redirected_to '/maps/' + @map.slug
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Yaya Center')
     assert_equal user, @map.user
@@ -147,9 +146,9 @@ class MapsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Map.count
     post(:create, map: {
-      name: "Coal terminal map",
-      slug: "coal-terminal"
-    })
+           name: "Coal terminal map",
+           slug: "coal-terminal"
+         })
     @map = assigns(:map)
 
     assert_response :success
@@ -226,12 +225,12 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should not update unless logged in' do
-    put :update, id: 2, map: { name: 'Street 5'}
+    put :update, id: 2, map: { name: 'Street 5' }
     assert_redirected_to '/login?back_to=/map/2'
   end
 
-  test "should display maps by region"do
-    get :region , { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60}
+  test "should display maps by region" do
+    get :region, { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60 }
     @maps = assigns(:maps)
 
     assert_response :success
