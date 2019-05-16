@@ -69,6 +69,35 @@ class ExportControllerTest < ActionController::TestCase
     assert_equal 'text/html', @response.content_type
   end
 
+  test 'progress with no export' do
+   get :progress, id: 4
+   assert_response :success
+   assert_equal 'export has not been run', @response.body
+  end
+
+  test 'progress completed' do
+   get :progress, id: 2
+   assert_response :success
+   assert_equal 'complete', @response.body
+  end
+
+  test 'progress failed' do
+   get :progress, id: 3
+   assert_response :success
+   assert_equal 'export failed', @response.body
+  end
+
+  #does not test the exporter client
   test "should display export status" do
+    session[:user_id] = 1
+    get :status, id: @map.id
+    assert_response :success
+  end
+
+  test "should display error if no export" do
+    session[:user_id] = 1
+    get :status, id: 4
+    assert_response :success
+    #assert_equal { status: 'export has not been run' }.to_json, @response.body
   end
 end
