@@ -43,7 +43,7 @@ class FeedsController < ApplicationController
     render layout: false, template: 'feeds/tag'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
   rescue NoMethodError
-    render text: "No maps with tag #{params[:id]}"
+    render plain: "No maps with tag #{params[:id]}"
   end
 
   private
