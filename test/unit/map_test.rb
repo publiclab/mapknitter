@@ -6,7 +6,6 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil Map.bbox(0,0,90,180)
     assert_not_nil Map.authors
     assert_not_nil Map.new_maps
-
     map = maps(:saugus)
     assert_not_nil map.license_link
     assert_not_nil map.author
@@ -25,7 +24,6 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.user
     assert_not_nil map.private
     assert_not_nil map.anonymous?
-
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon

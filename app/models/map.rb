@@ -38,7 +38,7 @@ class Map < ActiveRecord::Base
     self.lat >= -90 && self.lat <= 90 && self.lon >= -180 && self.lat <= 180
   end
 
-  #Hash the password before saving the record
+  # Hash the password before saving the record.
   def before_create
     self.password = Password::update(self.password) if self.password != ""
   end
