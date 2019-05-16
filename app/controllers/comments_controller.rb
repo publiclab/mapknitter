@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
 
     else
       # we intercept this message in /app/assets/javascripts/maps.js
-      render text: 'Login required.'
+      render plain: 'Login required.'
     end
   end
 

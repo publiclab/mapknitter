@@ -41,10 +41,10 @@ class ExportController < ApplicationController
         flash[:notice] = 'Export cancelled.'
         redirect_to '/exports'
       else
-        render text: 'cancelled'
+        render plain: 'cancelled'
       end
     else
-      render text: 'You must be logged in to export, unless the map is anonymous.'
+      render plain: 'You must be logged in to export, unless the map is anonymous.'
     end
   end
 
@@ -64,7 +64,7 @@ class ExportController < ApplicationController
     else
       output = 'export has not been run'
     end
-    render text: output, layout: false
+    render html: output, layout: false
   end
 
   def status

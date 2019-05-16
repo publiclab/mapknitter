@@ -61,7 +61,7 @@ class FeedsControllerTest < ActionController::TestCase
 
   test 'rescues if tag not present' do
     get :tag, id: 'cess'
-    assert_equal 'text/html', @response.content_type
+    assert_equal 'text/plain', @response.content_type
     assert_equal 'No maps with tag cess', @response.body
   end
 end
