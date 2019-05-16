@@ -1,4 +1,4 @@
-<div class="card mb-3 align-middle">
+<div class="card mt-2 align-middle" style="border: none;">
   <div class="row no-gutters">
     <div class="col-md-4">
       <img src="<%= asset_path('image.png') %>" class="card-img" alt="Aerial mapping tools">
@@ -6,11 +6,11 @@
     <div class="col-md-8">
       <div class="card-body">
         <h3 class="card-title">About MapKnitter</h3>
+        <hr>
         <p class="card-text">
         MapKnitter 2 is a <a class="alert-link" href="http://github.com/publiclab/mapknitter">free and open source software</a> created and run by <a class="alert-link" href="http://publiclab.org">Public Lab</a>.
         </p>
         <p class="card-text">MapKnitter is hosted through a donation of server space by <a class="alert-link" href="http://rackspace.com">Rackspace</a>.</p>
-        <hr>
         <h6>Sonme Open Source Softwares that we use:</h6>
         <ul>
           <li><a class="alert-link" href="http://gdal.org">GDAL</a></li>
@@ -22,6 +22,7 @@
           <li><a class="alert-link" href="https://www.flaticon.com/authors/roundicons" title="Roundicons">Roundicons</a> from <a class="alert-link" href="https://www.flaticon.com/" title="Flaticon">Flaticon</a>.
           </li>
         </ul>
+        <span class="mb-3"><%= render :partial => 'maps/statistics' %></span>
       </div>
     </div>
   </div>
