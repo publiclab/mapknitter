@@ -41,7 +41,7 @@ class ExportControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 'You must be logged in to export, unless the map is anonymous.', @response.body
     assert assigns[:map]
-    assert_equal 'text/html', @response.content_type
+    assert_equal 'text/plain', @response.content_type
     assert flash.empty?
   end
 
