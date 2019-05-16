@@ -14,11 +14,11 @@
         <% if current_user && current_user.can_delete?(comment) %>
           <%= link_to(
             [@map, comment],
-            :method => "delete",
+            method: "delete",
             #:remote => true,
-            :confirm => "Are you sure? This cannot be undone.",
-            :class => "btn btn-sm btn-outline-secondary float-right delete-comment-btn",
-            :id => "comment-delete-#{comment.id}"
+            data: { confirm: "Are you sure? This cannot be undone." },
+            class:  "btn btn-sm btn-outline-secondary float-right delete-comment-btn",
+            id: "comment-delete-#{comment.id}"
           ) do %>
 
             <span class="fa fa-trash" data-comment-id="<%= comment.id %>"></span>
