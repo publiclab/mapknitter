@@ -11,11 +11,10 @@ class AnnotationsControllerTest < ActionController::TestCase
   def teardown
   end
 
-  test "should create annotation if logged in " do
+  test 'should create annotation if logged in ' do
     before_count = @map.annotations.count
     session[:user_id] = 1
     post :create,
-         {
            format: :json,
            map_id: 1,
            annotation: {
@@ -25,7 +24,6 @@ class AnnotationsControllerTest < ActionController::TestCase
              },
              geometry: { coordinates: [10, 33] }
            }
-         }
 
     @map.reload
     assert_response 302
@@ -33,10 +31,9 @@ class AnnotationsControllerTest < ActionController::TestCase
     assert_redirected_to map_annotation_url(@map, @map.annotations.last)
   end
 
-  test "should create annotation if not logged in " do
+  test 'should create annotation if not logged in ' do
     before_count = @map.annotations.count
     post :create,
-         {
            format: :json,
            map_id: 1,
            annotation: {
@@ -46,7 +43,6 @@ class AnnotationsControllerTest < ActionController::TestCase
              },
              geometry: { coordinates: [10, 33] }
            }
-         }
 
     @map.reload
     assert_response 302
