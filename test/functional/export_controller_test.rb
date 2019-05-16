@@ -23,7 +23,7 @@ class ExportControllerTest < ActionController::TestCase
 
     get :jpg, id: map.slug
     assert_response :success
-    assert_includes ''image/jpeg', response.content_type
+    assert_includes 'image/jpeg', response.content_type
   end
 
   test 'geotiff' do
@@ -33,7 +33,7 @@ class ExportControllerTest < ActionController::TestCase
 
     get :geotiff, id: map.slug
     assert_response :success
-    assert_includes ''image/tiff', response.content_type
+    assert_includes 'image/tiff', response.content_type
   end
 
   test 'cancel fails if not logged in' do
