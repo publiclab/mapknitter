@@ -260,9 +260,19 @@ class Map < ActiveRecord::Base
   end
 
   def self.nearby_authors(lat:, lon:, dist:)
-    Map.where(archived: false)
-       .where("author IS NOT NULL")
-       .find(:all,:conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',lat-dist,lat+dist,lon-dist,lon+dist], :limit => 10)
-       .group_by(&:author)
+    maps = Map.where(archived: false)
+              .where("author IS NOT NULL AND password IS NOT NULL")
+    
+    author_counts = maps.group('author')
+                        .select('author, count(1) as maps_count')
+                        .order('maps_count DESC')
+
+    author_counts.map do |a| 
+      { author: a.author, count: a.maps_count }
+    end
+
+                 # TODO
+                 # .where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist)
+
   end
 end

@@ -48,6 +48,7 @@ Mapknitter::Application.routes.draw do
   get 'front-page' => 'front_ui#index'
   get 'find_maps' => 'front_ui#find_maps'
   get 'about' => 'front_ui#about'
+  get 'maps' => 'front_ui#maps'
 
   # these are a mess:
   get 'external_url_test' => 'export#external_url_test'
