@@ -40,6 +40,42 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   color: white;
 }
 
+.map-list .map-img {
+  max-height: 400px !important;
+}
+
+.map-list div:nth-child(4n+1){
+  clear: left;
+}
+
+.map-location {
+  color: rgb(118, 118, 118);
+  overflow-wrap: break-word;
+  height: 16px;
+  max-height: 16px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.map-title {
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4em;
+  color: rgb(72, 72, 72);
+}
+
+.map-details {
+  display: block;
+  text-decoration: none;
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2em;
+}
+
 .alert-link {
   text-shadow: none;
 }

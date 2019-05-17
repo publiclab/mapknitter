@@ -70,9 +70,15 @@
   </div>
 </div>
 
+<div class="section-header text-center">
+  <h2 class="section-title">MapKnitter around the world</h2>
+</div>
+<%= render :partial => 'maps', :locals => { :maps => @maps } %>
+
 <div class="section-blue-background">
   <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
 </div>
+
 
 <!-- featured mappers 
 <% if @mappers.any? %>
