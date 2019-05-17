@@ -1,4 +1,13 @@
 # Fake maps
+roles = ['basic', 'admin']
+
+5.times do
+  user = User.create(login: Faker::Internet.username,
+                     name: Faker::Name.name,
+                     email: Faker::Internet.email)
+  user.role = roles.sample
+end
+
 users = User.all
 p 'Now faking Maps....'
 maps = []
@@ -12,7 +21,7 @@ maps = []
     slug: Faker::Lorem.word
   )
   map.user =  (users.sample)
-  map.author = map.user
+  map.author = map.user.login
   map.save
   maps. << map
 end
