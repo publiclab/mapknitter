@@ -30,6 +30,7 @@ class TagsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     delete :destroy, id: @tag
     assert flash[:notice].present?
+    assert_redirected_to @tag.map
   end
 
   test 'should redirect destroy when not logged in' do

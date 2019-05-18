@@ -4,7 +4,7 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
   before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy]
+  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy archive]
 
   layout 'knitter2'
 
@@ -67,7 +67,6 @@ class MapsController < ApplicationController
   end
 
   def archive
-    @map = Map.find_by_slug(params[:id])
     if logged_in? && current_user.can_delete?(@map)
       @map.archived = true
       if @map.save
@@ -199,7 +198,7 @@ class MapsController < ApplicationController
   private
 
   def find_map
-    @map = Map.find_by_slug params[:id]
+    @map = Map.find_by(slug: params[:id])
   end
 
   def map_params
