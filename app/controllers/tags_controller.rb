@@ -2,8 +2,7 @@ class TagsController < ApplicationController
   before_filter :require_login, only: %i(edit update destroy)
 
   def create
-    @map = Map.find_by_slug params[:map_id]
-
+    @map = Map.find_by(slug: params[:map_id])
     if logged_in?
       save_tags(@map)
       redirect_to "/maps/#{@map.slug}"
