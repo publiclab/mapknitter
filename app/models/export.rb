@@ -40,7 +40,7 @@ class Export < ActiveRecord::Base
 
   def self.histogram_cm_per_pixel_in_tens
     e = Export.where('cm_per_pixel != "" AND cm_per_pixel < 500')
-      .order(cm_per_pixel: 'desc')
+      .order('cm_per_pixel desc')
     hist = []
     (0..(e.first.cm_per_pixel)/10.to_i).each do |bin|
       hist[bin] = 0
