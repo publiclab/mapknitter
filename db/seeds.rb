@@ -1,14 +1,22 @@
 # Fake maps
-roles = ['basic', 'admin']
+USERS = []
 
+# basic account
+USERS << User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'})
+
+# admin account 
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
+u_admin.role = 'admin'
+USERS.push(u_admin)
+
+# a few randomized basic accounts to have varied map authors
 5.times do
-  user = User.create(login: Faker::Internet.username,
+  user = User.create({login: Faker::Internet.username,
                      name: Faker::Name.name,
-                     email: Faker::Internet.email)
-  user.role = roles.sample
+                     email: Faker::Internet.email})
+  USERS.push(user)
 end
 
-users = User.all
 p 'Now faking Maps....'
 maps = []
 30.times do
@@ -20,7 +28,7 @@ maps = []
     description: Faker::Lorem.sentence,
     slug: Faker::Lorem.word
   )
-  map.user =  (users.sample)
+  map.user =  (USERS.sample)
   map.author = map.user.login
   map.save
   maps. << map
