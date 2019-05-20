@@ -55,7 +55,6 @@ class ImagesControllerTest < ActionController::TestCase
     points = "-71.39,41.83:-71.39,41.83:-71.39,41.83:-71.39,41.83"
     put :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
     assert_not_nil @warp.nodes
-    assert_equal 'success', response.body
     assert_equal "text/html", response.content_type
   end
 
