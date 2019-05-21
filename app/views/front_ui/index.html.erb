@@ -74,32 +74,13 @@
   <h2 class="section-title">MapKnitter around the world</h2>
 </div>
 <%= render :partial => 'maps', :locals => { :maps => @maps } %>
+<a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %>)></a>
+
+<%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
 
 <div class="section-blue-background">
   <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
 </div>
-
-
-<!-- featured mappers 
-<% if @mappers.any? %>
-  <h4 class="text-center mt-3">Featured mappers</h5>
-  <% @mappers.each do |author, maps| %>
-    <div class="card-deck mt-3 text-center mx-auto">
-      <div class="card">
-        <img class="card-img-top img-icon mx-auto" src="<%= asset_path('profile.png') %>" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title"><a href="/profile/<%= author %>">@<%= author %></a></h5>
-          <p class="card-text text-muted">
-            <%= maps.count %> maps shared
-            <br>
-            <%= maps.first.location %>
-          </p>
-        </div>
-      </div>
-    </div>
-  <% end %>
-<% end %>
--->
 
 <div class="section-header text-center">
   <h2 class="section-title">Aerial Mapping kits</h2>

@@ -1,6 +1,6 @@
-<div class="row map-list mx-auto">
-  <% maps.each do |map| %>
-    <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
+<div class="row map-list mx-auto mt-3">
+  <% @maps.each do |map| %>
+    <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 mt-2 ml-2">
       <div class="card card-without-border">
         <a href="/maps/<%= map.slug %>">
           <% if map.warpables.length > 0 %>

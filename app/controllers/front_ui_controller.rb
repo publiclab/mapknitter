@@ -1,10 +1,11 @@
 class FrontUiController < ApplicationController
   def index
-    @mappers = Map.nearby_authors(lat: 84.67351257, lon: -172.96875, dist: 50)
-    @maps = Map.new_maps
+    @mappers = Map.featured_authors
+    @maps = Map.new_maps.first(4)
   end
 
-  def maps
+  def all_maps
+    @maps = Map.new_maps
   end
 
   def find_maps

@@ -259,16 +259,13 @@ class Map < ActiveRecord::Base
        .group('maps.id')
   end
 
-  def self.nearby_authors(lat:, lon:, dist:)
-    maps = Map.where(archived: false)
-              .where("author IS NOT NULL AND password IS NOT NULL")
+  def self.featured_authors
+    maps = Map.where(archived: false).where('user_id != ?', 0)
     
-    author_counts = maps.group('author')
-                        .select('author, count(1) as maps_count')
-                        .order('maps_count DESC')
+    author_counts = maps.group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
 
     author_counts.map do |a| 
-      { author: a.author, count: a.maps_count }
+      { user: User.find(a.user_id), count: a.maps_count, location: User.find(a.user_id).maps.first.location }
     end
 
                  # TODO
