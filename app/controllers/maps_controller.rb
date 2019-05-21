@@ -4,7 +4,7 @@ class MapsController < ApplicationController
   protect_from_forgery except: :export
 
   before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy archive]
+  before_filter :find_map, only: %i[show annotate embed edit update images destroy archive]
 
   layout 'knitter2'
 
@@ -132,6 +132,7 @@ class MapsController < ApplicationController
 
   # run the export
   def export
+    @map = Map.find_by(id: params[:id])
     if logged_in? || Rails.env.development? || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not a human!")
       render plain: @map.run_export(current_user, params[:resolution].to_f)
     else
@@ -141,6 +142,7 @@ class MapsController < ApplicationController
 
   # render list of exports
   def exports
+    @map = Map.find_by(id: params[:id])
     render partial: 'maps/exports', layout: false
   end
 
