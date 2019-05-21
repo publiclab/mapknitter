@@ -95,7 +95,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
-4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for a [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
+4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
 5. Initialize database with `bundle exec rake db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
