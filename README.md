@@ -95,11 +95,34 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
-4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3))
+4. Copy and configure config/config.yml from config/config.yml.example (For now, this is only for a [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
 5. Initialize database with `bundle exec rake db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
+
+## Logging in when running locally
+
+Because MapKnitter uses a remote OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password:
+
+You can log in locally at the path `http://localhost:3000/local/USERNAME` where `USERNAME` is any username.
+
+For this to work:
+
+ - You will need to have copied and configured config/config.yml from config/config.yml.example
+
+ - The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/schema.rb) to make their corresponding paths available in development after installation:
+
+```Ruby
+# basic account path - http://localhost:3000/local/harry
+# created from:
+User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'})
+
+# admin account path - http://localhost:3000/local/albus
+# created from:
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
+u_admin.role = 'admin'
+```
 
 ## Bugs and support
 
@@ -121,17 +144,6 @@ Help improve Public Lab software!
 ## Staging infrastructure and testing
 
 In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment. We also have a `stable` build at http://mapknitter-unstable.laboratoriopublico.org/ which builds off of our `main` branch. Any commits or PRs merged to the main branch will trigger the `stable` server to rebuild; you can monitor progress at https://jenkins.laboratoriopublico.org/
-
-## Logging in when running locally
-
-Because MapKnitter uses a remote OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password. If you create a file in `config/config.yml` with the following contents, you'll be able to log in locally at the path `http://localhost:3000/local/USERNAME` where `USERNAME` is any username:
-
-```
-development:
-  local:true
-```
-
-For this to work, there will have to be a user record first. You can create one by running `rails console` to open a rails console, then entering `u = User.create({login: 'harry', email: 'potter@hogwarts.com'})`
 
 ****
 
