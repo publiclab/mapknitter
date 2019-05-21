@@ -276,7 +276,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'returns the exports' do
-    get :exports, id: @map.slug
+    get :exports, id: @map.id
     assert_response :success
   end
 

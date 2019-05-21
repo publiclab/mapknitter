@@ -32,7 +32,7 @@ class ExportController < ApplicationController
   end
 
   def cancel
-    @map = Map.find params[:id]
+    @map = Map.find_by(id: params[:id])
     if @map.anonymous? || logged_in?
       export = @map.export
       export.status = 'none'
@@ -49,7 +49,7 @@ class ExportController < ApplicationController
   end
 
   def progress
-    map = Map.find params[:id]
+    map = Map.find_by(id: params[:id])
     export = map.export
     if export.present?
       if  export.status == 'complete'
@@ -68,7 +68,7 @@ class ExportController < ApplicationController
   end
 
   def status
-    map = Map.find(params[:id])
+    map = Map.find_by(id: params[:id])
     if export = map.export
       if export.export_url.present?
         status_response = ExporterClient.new(export.export_url).status
