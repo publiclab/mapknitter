@@ -111,7 +111,7 @@ For this to work:
 
  - You will need to have copied and configured config/config.yml from config/config.yml.example
 
- - The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/schema.rb) to make their corresponding paths available in development after installation:
+ - The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/seeds.rb) to make their corresponding paths available in development after installation:
 
 ```Ruby
 # basic account path - http://localhost:3000/local/harry
