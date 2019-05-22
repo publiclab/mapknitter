@@ -49,16 +49,4 @@ class WarpableTest < ActiveSupport::TestCase
     assert_not_nil @warp.user_id
     assert_equal @warp.map.user_id, @warp.user_id
   end
-
-  test "try export" do
-    # make a sample image
-    system('mkdir -p public/system/images/1/original')
-    system('cp test/fixtures/demo.png public/system/images/1/original/')
-    system('mkdir -p public/warps/saugus-landfill-incinerator')
-    system('touch public/warps/saugus-landfill-incinerator/folder')
-    assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
-    assert_not_nil @warp.save_dimensions
-    assert_not_nil @warp.user_id
-    assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
-  end
 end
