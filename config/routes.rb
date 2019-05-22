@@ -46,7 +46,8 @@ Mapknitter::Application.routes.draw do
   #     resources :products
   #   end
   get 'front-page' => 'front_ui#index'
-  get 'find_maps' => 'front_ui#find_maps'
+  get 'mappers' => 'front_ui#nearby_mappers'
+  post "save_location" => 'front_ui#save_location'
   get 'about' => 'front_ui#about'
   get 'all_maps' => 'front_ui#all_maps'
 

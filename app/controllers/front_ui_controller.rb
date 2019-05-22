@@ -1,4 +1,6 @@
 class FrontUiController < ApplicationController
+  protect_from_forgery :except => [:save_location]
+
   def index
     @mappers = Map.featured_authors
     @maps = Map.new_maps.first(4)
@@ -8,15 +10,20 @@ class FrontUiController < ApplicationController
     @maps = Map.new_maps
   end
 
-  def find_maps
-    dist = params[:dist].to_i
+  def nearby_mappers
+    lat = session[:lat].to_f
+    lon = session[:lon].to_f
+    @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+    @all_mappers = Map.featured_authors
+  end
+
+  def save_location
     lat = params[:lat].to_f
     lon = params[:lon].to_f
-    maps = Map.find(:all, :conditions => ['lat > ? AND lat < ? AND lon > ? AND lon < ?',lat-dist,lat+dist,lon-dist,lon+dist], :limit => 20)
 
-    respond_to do |format|
-      format.json { render json: maps  }
-    end
+    session[:lat] = lat
+    session[:lon] = lon
+    render nothing: true
   end
 
   def about

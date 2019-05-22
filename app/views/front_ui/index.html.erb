@@ -76,7 +76,16 @@
 <%= render :partial => 'maps', :locals => { :maps => @maps } %>
 <a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %>)></a>
 
-<%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
+<% if @mappers.any? %>
+  <hr>
+  <div class="section-header text-center">
+    <h2 class="section-title">Featured Mappers</h2>
+  </div>
+  <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
+  <div class="section-header text-center">
+    <a href="/mappers" class="alert-link">See more people & maps</a>
+  </div>
+<% end %>
 
 <div class="section-blue-background">
   <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
@@ -135,20 +144,6 @@
     setDefaultCoordinates(locationEvent);
   });
 
-  // why this does not work?
-  // locateUser().then(getCoordinates, setDefaultCoordinates);
-
-  // function locateUser() {
-  //   var promiseObj = new Promise(function(resolve, reject){
-  //     Mapknitterunique.on('locationfound', function (locationEvent) {
-  //       resolve(locationEvent);
-  //     });
-  //     Mapknitterunique.on('locationerror', function (locationEvent) {
-  //       reject(locationEvent);
-  //     });
-  //   });
-  // }
-
   function getCoordinates(location) {
     var lat = location.latitude;
     var lon = location.longitude;
@@ -198,8 +193,7 @@
   };
 
   function mapsNearby(lat, lon) {
-    console.log("chegou aqui")
-    $.get( "/find_maps.json", {'lat': lat, 'lon': lon, 'dist': 10}, function(data) {
+    $.post( "/save_location.json", {'lat': lat, 'lon': lon}, function(data) {
       console.log(data);
     });
   }

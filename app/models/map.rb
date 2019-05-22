@@ -31,6 +31,9 @@ class Map < ActiveRecord::Base
   has_many :annotations, :dependent => :destroy
   belongs_to :user
 
+  scope :active, -> { where(archived: false) }
+  scope :has_user, -> { where('user_id != ?', 0) }
+
   has_many :warpables do
     def public_filenames
       filenames = {}
@@ -260,16 +263,21 @@ class Map < ActiveRecord::Base
   end
 
   def self.featured_authors
-    maps = Map.where(archived: false).where('user_id != ?', 0)
+    maps = Map.active.has_user
     
     author_counts = maps.group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
 
     author_counts.map do |a| 
       { user: User.find(a.user_id), count: a.maps_count, location: User.find(a.user_id).maps.first.location }
     end
+  end
 
-                 # TODO
-                 # .where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist)
-
+  def self.maps_nearby(lat:, lon:, dist:)
+    maps = Map.active.has_user
+    
+    author_counts = maps.where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist).group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
+    author_counts.map do |a| 
+      { user: User.find(a.user_id), count: a.maps_count, location: User.find(a.user_id).maps.first.location }
+    end
   end
 end
