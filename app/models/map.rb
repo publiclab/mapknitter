@@ -267,17 +267,13 @@ class Map < ActiveRecord::Base
     
     author_counts = maps.group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
 
-    author_counts.map do |a| 
-      { user: User.find(a.user_id), count: a.maps_count, location: User.find(a.user_id).maps.first.location }
+    author_counts.map do |a|
+      user = User.find(a.user_id)
+      { user: user, count: a.maps_count, location: user.maps.first.location }
     end
   end
 
   def self.maps_nearby(lat:, lon:, dist:)
-    maps = Map.active.has_user
-    
-    author_counts = maps.where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist).group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
-    author_counts.map do |a| 
-      { user: User.find(a.user_id), count: a.maps_count, location: User.find(a.user_id).maps.first.location }
-    end
+    maps = Map.active.where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist)
   end
 end

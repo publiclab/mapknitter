@@ -2,7 +2,7 @@ class FrontUiController < ApplicationController
   protect_from_forgery :except => [:save_location]
 
   def index
-    @mappers = Map.featured_authors
+    @mappers = Map.featured_authors.first(4)
     @maps = Map.new_maps.first(4)
   end
 
@@ -11,9 +11,14 @@ class FrontUiController < ApplicationController
   end
 
   def nearby_mappers
-    lat = session[:lat].to_f
-    lon = session[:lon].to_f
-    @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+    @nearby_maps = []
+
+    if current_location.present?
+      lat = session[:lat]
+      lon = session[:lon]
+      @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+    end
+
     @all_mappers = Map.featured_authors
   end
 

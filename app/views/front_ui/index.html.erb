@@ -6,7 +6,6 @@
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
-<%= javascript_include_tag('front_ui') %>
 
 <!-- jumbotron with background-image -->
 <div class="jumbotron jumbotron-fluid text-center" id="hero">
@@ -20,7 +19,7 @@
   </div>
 </div>
 
-<div id="mapknitter-unique" class="mx-auto" style="height: 450px ; width: 100% ;"></div>
+<div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
 
 <div class="section-header text-center">
   <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2>
@@ -108,7 +107,7 @@
   <div class="card mapping-kits">
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('kite.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Kite mapping</h5>
+      <h5 class="card-title">Kites</h5>
       <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
       <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
@@ -124,8 +123,8 @@
   <div class="card mapping-kits">
     <img class="card-img-top img-icon mx-auto" src="<%= asset_path('drone.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Drone mapping</h5>
-      <p class="card-text item-description">Getting cheaper, ~500-1500 ft high,  navigable and stable, versatile.</p>
+      <h5 class="card-title">Waterproof Mini Camera</h5>
+      <p class="card-text item-description">Lightweight, weighs ~59g, small and shock resistent.</p>
       <a href="#" class="btn btn-outline-info" target="_blank">Get a kit</a>
     </div>
   </div>
@@ -147,9 +146,7 @@
   function getCoordinates(location) {
     var lat = location.latitude;
     var lon = location.longitude;
-
-    var URL = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + lon + "," + lat + ".json?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA";
-    getUserLocation(URL, "GET").then(mapsNearby(lat, lon), errorHandler);
+    saveLocation(lat, lon);
   }
 
   function setDefaultCoordinates() {
@@ -163,43 +160,8 @@
     Mapknitterunique.setView([43, -83] , 3);
   }
 
-  function getUserLocation(url, methodType){
-    var promiseObj = new Promise(function(resolve, reject){
-      var xhr = new XMLHttpRequest();
-      xhr.open(methodType, url, true);
-      xhr.send();
-      xhr.onreadystatechange = function(){
-        if (xhr.readyState === 4){
-          if (xhr.status === 200){
-            console.log("xhr done successfully");
-            var resp = xhr.responseText;
-            var respJson = JSON.parse(resp);
-            var city = respJson.features[3].place_name;
-            console.log(city);
-            resolve(respJson);
-          }
-          else {
-            reject(xhr.status);
-            console.log("xhr failed");
-          }
-        }
-        else {
-          console.log("xhr processing going on");
-        }
-      };
-      console.log("request sent succesfully");
-    });
-    return promiseObj;
-  };
-
-  function mapsNearby(lat, lon) {
-    $.post( "/save_location.json", {'lat': lat, 'lon': lon}, function(data) {
-      console.log(data);
-    });
-  }
-
-  function errorHandler(statusCode){
-    console.log("failed with status", statusCode);
+  function saveLocation(lat, lon) {
+    $.post( "/save_location.json", {'lat': lat, 'lon': lon}, function(data) {});
   }
 
   var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
