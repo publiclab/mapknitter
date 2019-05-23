@@ -5,7 +5,7 @@ class ImagesController < ApplicationController
   rescue_from Errno::ETIMEDOUT, with: :url_upload_not_found
   rescue_from OpenURI::HTTPError, with: :url_upload_not_found
   rescue_from Timeout::Error, with: :url_upload_not_found
-  protect_from_forgery except: %i[update delete]
+  protect_from_forgery except: %i(update delete)
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
@@ -23,7 +23,6 @@ class ImagesController < ApplicationController
     end
   end
 
-  # rubocop:disable LineLength
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
@@ -42,7 +41,6 @@ class ImagesController < ApplicationController
       end
     end
   end
-  # rubocop:enable LineLength
 
   # mapknitter.org/import/<map-name>/?url=http://myurl.com/image.jpg
   def import

@@ -12,7 +12,7 @@ class AnnotationsController < ApplicationController
     geojson = params[:annotation]
 
     respond_to do |format|
-      format.json {
+      format.json do
         @annotation = @map.annotations.create(
           annotation_type: geojson[:properties][:annotation_type],
           coordinates: geojson[:geometry][:coordinates],
@@ -21,7 +21,7 @@ class AnnotationsController < ApplicationController
         )
         @annotation.user_id = current_user.id if logged_in?
         redirect_to map_annotation_url(@map, @annotation) if @annotation.save
-      }
+      end
     end
   end
 

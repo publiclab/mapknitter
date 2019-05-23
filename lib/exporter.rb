@@ -231,8 +231,8 @@ class Exporter
      my_warpable_coords = warpable.generate_perspectival_distort(scale,slug)
      puts '- '+my_warpable_coords.to_s
      warpable_coords << my_warpable_coords
-     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
-     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
+     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x.zero? )
+     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y.zero? )
     end
     [lowest_x,lowest_y,warpable_coords]
   end

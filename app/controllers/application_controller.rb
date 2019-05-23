@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     if user_id
       begin
         @user = User.find(user_id)
-      rescue
+      rescue StandardError
         @user = nil
       end
     else
@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
     begin
       user_id && User.find(user_id) ? true : false
-    rescue
+    rescue StandardError
       return false
     end
   end

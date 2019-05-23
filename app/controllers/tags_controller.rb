@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-  before_filter :require_login, only: %i[edit update destroy]
+  before_filter :require_login, only: %i(edit update destroy)
 
   def create
     @map = Map.find params[:map_id]
@@ -29,7 +29,6 @@ class TagsController < ApplicationController
     render template: 'maps/index'
   end
 
-  # rubocop:disable LineLength
   def destroy
     @tag = Tag.find(params[:id])
 
@@ -42,5 +41,4 @@ class TagsController < ApplicationController
       redirect_to '/login'
     end
   end
-  # rubocop:enable LineLength
 end

@@ -3,7 +3,7 @@ class FeedsController < ApplicationController
     # (Warpable.all + Map.all).sort_by(&:created_at)
     @maps = Map.find(:all, order: 'id DESC', limit: 20,
                            conditions: { archived: false, password: '' },
-                           joins: %i[user warpables],
+                           joins: %i(user warpables),
                            group: 'maps.id')
     render layout: false, template: 'feeds/all'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
