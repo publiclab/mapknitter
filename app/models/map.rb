@@ -265,7 +265,9 @@ class Map < ActiveRecord::Base
   def self.featured_authors
     maps = Map.active.has_user
     
-    author_counts = maps.group('author').select('user_id, author, count(1) as maps_count').order('maps_count DESC')
+    author_counts = maps.group('author')
+                        .select('user_id, author, count(1) as maps_count')
+                        .order('maps_count DESC')
 
     author_counts.map do |a|
       user = User.find(a.user_id)
@@ -274,6 +276,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.maps_nearby(lat:, lon:, dist:)
-    maps = Map.active.where('lat > ? AND lat < ? AND lon > ? AND lon < ?', lat-dist, lat+dist, lon-dist, lon+dist)
+    Map.active
+       .where('lat>? AND lat<? AND lon>? AND lon<?',lat-dist, lat+dist, lon-dist, lon+dist)
   end
 end

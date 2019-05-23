@@ -1,5 +1,6 @@
+# Shadow Controller for the new front page
 class FrontUiController < ApplicationController
-  protect_from_forgery :except => [:save_location]
+  protect_from_forgery except: :save_location
 
   def index
     @mappers = Map.featured_authors.first(4)
@@ -31,6 +32,5 @@ class FrontUiController < ApplicationController
     render nothing: true
   end
 
-  def about
-  end
+  def about; end
 end
