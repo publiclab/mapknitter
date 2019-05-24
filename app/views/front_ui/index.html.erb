@@ -1,0 +1,221 @@
+<%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
+<%= stylesheet_link_tag "/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" %>
+<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
+<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/windRoseLayer.js') %>
+<%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
+<%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
+<%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
+<%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
+
+<!-- jumbotron with background-image -->
+<div class="jumbotron jumbotron-fluid text-center" id="hero">
+  <div class="container">
+    <h1 class="display-4 jumbotron-text">MapKnitter</h1>
+    <p class="lead jumbotron-text">Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
+    <p class="lead">
+      <a class="btn btn-info btn-lg" id="get-started-button" href="<%= new_map_url %>" role="button">Add your images</a>
+      <a class="btn btn-info btn-lg" href="#mapping-kits" role="button">Get a mapping kit</a>
+    </p>
+  </div>
+</div>
+
+<div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
+
+<div class="section-header text-center">
+  <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2>
+  <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p>
+</div>
+
+<div class="row pt-md-5 pb-md-5 mx-auto text-center">
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="images" src="<%= asset_path('images.svg') %>" class="icon-landing">
+        <h4>Add your images</h4>
+        <p class="item-description">Use your Public Lab account or create a map anonymously.</p>
+        <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="log in" src="<%= asset_path('login.svg') %>" class="icon-landing">
+        <h4>Find what you need</h4>
+        <p class="item-description">Search by location or tags, or navigate through the map to see images near your location.</p>
+        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="export images" src="<%= asset_path('export.svg') %>" class="icon-landing">
+        <h4>Export your work</h4>
+        <p class="item-description">Upload images, rotate, export them, add tags and share where you are located.</p>
+        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3 col-xs-12">
+    <div class="how-to-item">
+      <div>
+        <img alt="ask questions" src="<%= asset_path('engage.svg') %>" class="icon-landing">
+        <h4>Engage with your community</h4>
+        <p class="item-description">Ask questions, add comments and see nearby people & groups.</p>
+        <div><a class="learn-more" href="https://publiclab.org/questions" target="_blank">Learn more</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-header text-center">
+  <h2 class="section-title">MapKnitter around the world</h2>
+</div>
+<%= render :partial => 'maps', :locals => { :maps => @maps } %>
+<a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %>)></a>
+
+<% if @mappers.any? %>
+  <hr>
+  <div class="section-header text-center">
+    <h2 class="section-title">Featured Mappers</h2>
+  </div>
+  <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
+  <div class="section-header text-center">
+    <a href="/mappers" class="alert-link">See more people & maps</a>
+  </div>
+<% end %>
+
+<div class="section-blue-background">
+  <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
+</div>
+
+<div class="section-header text-center">
+  <h2 class="section-title">Aerial Mapping kits</h2>
+</div>
+
+<!-- mapping kites -->
+<div class="card-deck mt-3 text-center mx-auto" id="mapping-kits">
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Balloon mapping</h5>
+      <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
+      <a href="//store.publiclab.org/collections/mapping-kits/products/balloon-mapping-kit?variant=7028822724" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    </div>
+  </div>
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('kite.png') %>" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Kites</h5>
+      <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
+      <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    </div>
+  </div>
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('selfie-stick.png') %>" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Pole mapping</h5>
+      <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
+      <a href="//store.publiclab.org/collections/mapping-kits/products/pole-mapping-kit?variant=1259641040" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    </div>
+  </div>
+  <div class="card mapping-kits">
+    <img class="card-img-top img-icon mx-auto" src="<%= asset_path('drone.png') %>" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Waterproof Mini Camera</h5>
+      <p class="card-text item-description">Lightweight, weighs ~59g, small and shock resistent.</p>
+      <a href="#" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  var Mapknitterunique = new L.Map('mapknitter-unique');
+
+  Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
+
+  Mapknitterunique.on('locationfound', function (locationEvent) {
+    getCoordinates(locationEvent);
+  });
+
+  Mapknitterunique.on('locationerror', function (locationEvent) {
+    setDefaultCoordinates(locationEvent);
+  });
+
+  function getCoordinates(location) {
+    var lat = location.latitude;
+    var lon = location.longitude;
+    saveLocation(lat, lon);
+  }
+
+  function setDefaultCoordinates() {
+    Mapknitterunique.stopLocate();
+    var bounds = new L.LatLngBounds(
+      new L.LatLng(84.67351257 , -172.96875),
+      new L.LatLng(-54.36775852 , 178.59375)
+    );
+    Mapknitterunique.options.maxBounds = bounds;
+    Mapknitterunique.options.maxBoundsViscosity = 0.75;
+    Mapknitterunique.setView([43, -83] , 3);
+  }
+
+  function saveLocation(lat, lon) {
+    $.post( "/save_location.json", {'lat': lat, 'lon': lon}, function(data) {});
+  }
+
+  var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(Mapknitterunique); 
+
+  Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
+  Mapknitterunique.on('fullscreenchange', function () {
+    if (Mapknitterunique.isFullscreen()) {
+      Mapknitterunique.options.minZoom = 3 ;
+     } 
+    else {
+      Mapknitterunique.options.minZoom = 1 ;
+    }
+  });
+
+  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
+
+  var baseMaps = {
+    "Baselayer1": baselayer
+  };
+  var overlayMaps = {
+    // "PurpleAirLayer-Markers": PurpleAirMarkerLayer ,
+    // "SkyTruth": SkyTruth , 
+    // "Fractracker" : Fractracker ,
+    // "ToxicRelease": ToxicRelease ,
+    // "OdorReport": OdorReport ,
+    "MapKnitter": MapKnitter ,
+    // "OpenInfraMap_Power": OpenInfraMap_Power ,
+    // "OpenInfraMap_Telecom": OpenInfraMap_Telecom ,
+    // "OpenInfraMap_Petroleum": OpenInfraMap_Petroleum ,
+    // "OpenInfraMap_Water": OpenInfraMap_Water ,
+    // "Justicemap_income": Justicemap_income,
+    // "JusticeMap_americanIndian": JusticeMap_americanIndian ,
+    // "JusticeMap_asian": JusticeMap_asian ,
+    // "JusticeMap_black": JusticeMap_black,
+    // "JusticeMap_multi": JusticeMap_multi ,
+    // "JusticeMap_hispanic": JusticeMap_hispanic ,
+    // "JusticeMap_nonWhite": JusticeMap_nonWhite,
+    // "JusticeMap_white": JusticeMap_white ,
+    // "JusticeMap_plurality": JusticeMap_plurality ,
+    //    "Clouds": clouds ,
+    //    "clouds (classic)": cloudscls ,
+    //    "precipitation": precipitation ,
+    //    "precipitation (classic)": precipitationcls , 
+    //    "rain": rain , 
+    //    "rain (classic)": raincls ,
+    //    "snow": snow , 
+    //    "pressure": pressure ,
+    //    "pressure contour (zoom in)": pressurecntr , 
+    //    "temp": temp , 
+    //    "wind": wind , 
+    //    "Cities (zoom in)": city  , 
+    //    "windrose (zoom in)": windrose
+  };
+  L.control.layers(baseMaps, overlayMaps).addTo(Mapknitterunique);
+</script>

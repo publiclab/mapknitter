@@ -45,6 +45,11 @@ Mapknitter::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  get 'front-page' => 'front_ui#index'
+  get 'mappers' => 'front_ui#nearby_mappers'
+  post "save_location" => 'front_ui#save_location'
+  get 'about' => 'front_ui#about'
+  get 'all_maps' => 'front_ui#all_maps'
 
   # these are a mess:
   get 'external_url_test' => 'export#external_url_test'

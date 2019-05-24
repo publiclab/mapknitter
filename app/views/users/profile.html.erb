@@ -1,23 +1,16 @@
-<div class="container">
+<div class="container-fluid mt-4">
 
-  <h2>
-    <%= @user.login %>
+  <h2 class="text-center">
+    <a href="/feeds/author/<%= @user.login %>"><%= @user.login %></a>
     <% if @user.maps %> (<%= @maps.length %> maps)<% end %>
     <small>
     | <%= @user.role %>
     | <a href="/feeds/author/<%= @user.login %>">RSS</a>
     </small>
   </h2>
+  <hr>
+  <%= render :partial => '/front_ui/maps', :locals => { :maps => @maps } %>
 
-  <p><a href="//publiclab.org/profile/<%= @user.login %>">Public Lab profile &raquo;</a></p>
-
-  <hr />
-
-  <div class="row map-list">
-    <% @maps.each_with_index do |map,i| %>
-      <%= render :partial => 'maps/list', :locals => {:map => map} %>
-    <% end %>
-  </div>
   <%= will_paginate @maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
 </div>
 <hr />
