@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 
   before_filter :current_user
-  helper_method :logged_in?
+  helper_method :logged_in?, :current_location
 
   def current_user
     user_id = session[:user_id]
@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def current_location
+    session[:lat].present? && session[:lon].present?
+  end
 
   def require_login
     unless logged_in?
