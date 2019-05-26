@@ -28,8 +28,6 @@ env:
 
 script:
   - docker-compose -f docker-compose.test.yml exec web bash -lc "$TASK"
-  - mkdir -p ./test/reports
-  - touch ./test/reports/TEST_.xml
   - bash <(curl -s https://codecov.io/bash)
 
 branches:
