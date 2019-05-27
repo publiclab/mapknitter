@@ -6,8 +6,8 @@ class SessionsController; def rescue_action(e) raise e end; end
 
 class SessionsControllerTest < ActionController::TestCase
 
-  fixtures :users
-
+  # fixtures :nodes
+  # fixtures :users
   test 'new when logged in' do
     session[:user_id] = 1
     get :new
@@ -29,8 +29,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'successful local login' do
-    APP_CONFIG['local'] = true
-    system('cp config/config.yml.example   config/config.yml')
+    system('cp config/config.yml.example config/config.yml')
     get :local, login: 'quentin'
     assert_response :redirect
     assert flash[:success].present?
@@ -40,13 +39,13 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'unsuccessful local login' do
-    APP_CONFIG['local'] = true
     get :local, login: 'cess'
     assert_response :redirect
     assert flash[:error].present?
     assert_nil session[:user_id]
     assert_redirected_to '/'
   end
+
 #  def test_should_login_and_redirect
 #    post :create, :login => 'quentin', :password => 'monkey'
 #    assert session[:user_id]

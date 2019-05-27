@@ -49,8 +49,8 @@ class SessionsController < ApplicationController
   # only on local installations, to bypass OpenID; add "local: true" to config/config.yml
   # this makes offline development possible; like on a plane! but do NOT leave it open on a production machine
   def local
-    if APP_CONFIG["local"] == true && @current_user = User.find_by_login(params[:login])
-      successful_login '', nil
+    if APP_CONFIG["local"] && @current_user = User.find_by_login(params[:login])
+      successful_login('', nil)
     else
       flash[:error] = "Forbidden"
       redirect_to "/"
