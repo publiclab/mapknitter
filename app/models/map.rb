@@ -95,6 +95,14 @@ class Map < ActiveRecord::Base
 #       .group("maps.author")
   end
 
+  def self.search(search, page)
+    Map.select('archived, author, created_at, description, id, lat, license, location, name, slug,
+                        tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
+        .where(['archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
+        false, "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"])
+        .paginate(page: page, per_page: 24)
+  end
+
   def self.new_maps
     self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
   end
