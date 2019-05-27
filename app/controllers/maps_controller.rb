@@ -182,12 +182,24 @@ class MapsController < ApplicationController
   end
 
   def search
-    @maps = Map.search(params[:id] ||= params[:q], params[:page])
-    @title = "Search results for '#{params[:id]}'"
+    params[:id] ||= params[:q]
+    data = params[:id]
+    query = params[:id].gsub(/\s+/, "")
+    @maps = Map.search(query, params[:page])
+    @title = "Search results for '#{query}'"
+
     respond_to do |format|
-      format.html { render 'maps/index', layout: 'application' }
-      format.json { render json: @maps }
+      if query.length < 3 && data.length - query.length >= 0
+        flash.now[:notice] = 'Query length less than 3 (white-space characters do not count towards length)'
+        # flash.now[:errors] = ['No.']
+        # format.html { redirect_to request.referrer }
+        format.html { render 'maps/index', layout: 'application' }
+      else
+        format.html { render 'maps/index', layout: 'application' }
+        format.json { render json: @maps }
+      end
     end
+    
   end
   
   private
