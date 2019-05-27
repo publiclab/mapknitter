@@ -96,8 +96,10 @@ class Map < ActiveRecord::Base
   end
 
   def self.search(q)
-    Map.where(['archived = "false" AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
-               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+   q = q.squeeze(" ")
+    Map.where('archived = "false"')
+       .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
+               q, q, q, q])
   end
 
   def self.featured
