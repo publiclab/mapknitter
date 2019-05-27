@@ -190,10 +190,9 @@ class MapsController < ApplicationController
 
     respond_to do |format|
       if query.length < 3 && data.length - query.length >= 0
-        flash.now[:notice] = 'Query length less than 3 (white-space characters do not count towards length)'
-        # flash.now[:errors] = ['No.']
-        # format.html { redirect_to request.referrer }
-        format.html { render 'maps/index', layout: 'application' }
+        flash[:errors] = 'Query length less than 3 (white-space characters do not count towards length)'
+        format.html { redirect_to request.referrer }
+        # format.html { render 'maps/index', layout: 'application' }
       else
         format.html { render 'maps/index', layout: 'application' }
         format.json { render json: @maps }
