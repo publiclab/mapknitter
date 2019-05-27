@@ -173,32 +173,27 @@ class MapsController < ApplicationController
 
   def featured
     @title = 'Featured maps'
-    @maps = Map.joins(:warpables)
-               .select('maps.*, count(maps.id) as image_count')
-               .group('warpables.map_id')
-               .order('image_count DESC')
-               .paginate(page: params[:page], per_page: 24)
+    @maps = Map.featured.paginate(page: params[:page], per_page: 24)
     render 'maps/index', layout: 'application'
   end
 
-  def search
-    params[:id] ||= params[:q]
-    data = params[:id]
-    query = params[:id].gsub(/\s+/, '')
-    @maps = Map.search(query, params[:page])
-    @title = "Search results for '#{query}'"
+  def search    
+    data = params[:q]
+    query = params[:q].gsub(/\s+/, '')
 
     respond_to do |format|
-      if query.length < 3 && data.length - query.length >= 0
-        flash[:errors] = 'Query length less than 3 (white-space characters do not count towards length)'
-        format.html { redirect_to request.referrer }
-        # format.html { render 'maps/index', layout: 'application' }
+      if query.length < 3
+        flash.now[:errors] = 'Invalid Query: character length is less than 3 (white-space does not count towards length)'
+         @title = 'Featured maps'
+         @maps = Map.featured.paginate(page: params[:page], per_page: 24)
+        format.html { render 'maps/index', layout: 'application' }
       else
+        @title = "Search results for '#{data}'"
+        @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
         format.html { render 'maps/index', layout: 'application' }
         format.json { render json: @maps }
       end
-    end
-    
+    end    
   end
   
   private

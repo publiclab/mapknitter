@@ -95,10 +95,16 @@ class Map < ActiveRecord::Base
 #       .group("maps.author")
   end
 
-  def self.search(search, page)
-    Map.where(['archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
-               false, "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"])
-       .paginate(page: page, per_page: 24)
+  def self.search(q)
+    Map.where(['archived = "false" AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
+               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+  end
+
+  def self.featured
+    Map.joins(:warpables)
+       .select('maps.*, count(maps.id) as image_count')
+       .group('warpables.map_id')
+       .order('image_count DESC')       
   end
 
   def self.new_maps
