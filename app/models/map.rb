@@ -88,17 +88,17 @@ class Map < ActiveRecord::Base
   end
 
   def self.authors(limit = 50)
-    Map.limit(limit)
+    Map.where(archived: false, password: '')
+       .limit(limit)
        .order("maps.id DESC")
-       .where('password = "" AND archived = "false"')
        .collect(&:author)
   end
 
   def self.search(q)
     q = q.squeeze(" ")
-    Map.where('archived = "false"')
+    Map.active
        .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
-               q, q, q, q])
+               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
   end
 
   def self.featured
