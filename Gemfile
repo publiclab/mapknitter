@@ -3,9 +3,10 @@ source "https://rubygems.org"
 ruby "2.4.6"
 gem "rails", "~>3.2"
 gem 'rake',  '~> 12.3.2'
+gem 'skylight'
 
 gem "will_paginate", "3.1.7"
-gem "will_paginate-bootstrap"
+gem 'will_paginate-bootstrap4'
 gem "friendly_id"
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
 
@@ -13,7 +14,7 @@ gem 'popper_js', '~> 1.11', '>= 1.11.1'
 group :dependencies do
   gem 'mysql2', '< 0.4'
   gem "geokit-rails", "1.1.4"
-  gem "image_science", "1.2.6"
+  gem 'image_science', '1.3.0'
   gem "recaptcha", :require => "recaptcha/rails"
   gem "oa-openid", "0.3.2"
   gem "ruby-openid", "~>2.5"
@@ -42,11 +43,16 @@ group :test do
   gem "rubocop"
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
-  gem 'test-unit'    
+  gem 'test-unit'
+end
+
+group :development, :test do
+  gem "byebug"
+  gem 'faker'
+  gem 'pry-rails'
 end
 
 group :development do
-  gem "byebug"
   gem "jshintrb"
   gem "therubyracer"
 end
@@ -60,3 +66,5 @@ group :passenger do
   # passenger server
   gem "passenger"
 end
+
+gem 'httparty'

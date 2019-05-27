@@ -46,4 +46,10 @@ module ApplicationHelper
       format(out, Rack::Utils.escape_html(request_forgery_protection_token), Rack::Utils.escape_html(form_authenticity_token))
     end
   end
+
+  def sortable(column, title = nil)
+    title ||= column.titleize
+    direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
+    link_to title, sort: column, direction: direction
+  end
 end

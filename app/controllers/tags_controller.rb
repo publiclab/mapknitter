@@ -5,16 +5,7 @@ class TagsController < ApplicationController
     @map = Map.find params[:map_id]
 
     if logged_in?
-      # there is identical code in MapsController#update.
-      # TODO: DRY up this functionality.
-
-      # save new tags
-      if params[:tags]
-        params[:tags].tr(' ', ',').split(',').each do |tagname|
-          @map.add_tag(tagname.strip, current_user)
-        end
-      end
-
+      save_tags(@map)
       redirect_to '/maps/' + @map.slug
     else
       flash[:error] = 'You must be logged in to add tags'
@@ -32,7 +23,7 @@ class TagsController < ApplicationController
   def destroy
     @tag = Tag.find(params[:id])
 
-    if logged_in? && (@tag.user_id.to_i == current_user.id || current_user.role == 'admin')
+    if logged_in? && current_user.can_delete?(@tag)
       @tag.delete
       flash[:notice] = 'Tag ' + @tag.name + ' deleted.'
       redirect_to @tag.map

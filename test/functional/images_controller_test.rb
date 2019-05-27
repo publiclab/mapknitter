@@ -44,14 +44,6 @@ class ImagesControllerTest < ActionController::TestCase
     assert_equal "text/html", response.content_type
   end
 
-  test 'should imports an image' do
-    #seems like we don't use this anymore
-    # url = "https://drive.google.com/file/d/1zbhTk4TNTqvpUw_UIAXeW9rRJZroNoLM/view"
-    # get :import, name: @map.name, url: url
-    # assert_response :success
-    # assert_redirected_to "/maps/#{@map.name}"
-  end
-
   test 'should show the image' do
     get :show, id: @warp.id, format: 'json'
      json_response = JSON.parse(response.body)

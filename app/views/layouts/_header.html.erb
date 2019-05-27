@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="/">MapKnitter</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#header-navbar-collapse" aria-controls="header-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,25 +8,25 @@
     <ul class="navbar-nav">
       <form action="/search" method='get' class="navbar-form navbar-left">
         <div class="input-group">
-          <input class="form-control" id="search-input" style="min-width: 280px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
+          <input class="form-control bg-light" id="search-input" style="min-width: 230px;" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
           <span class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+            <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
           </span>
         </div>
       </form>
     </ul>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/wiki/mapknitter" target="_blank">Getting Started</span></a>
+        <a class="nav-link" href="/about">About us</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/wiki/balloon-mapping" target="_blank">Baloon Mapping</a>
+        <a class="nav-link" href="//publiclab.org/mapknitter" target="_blank">Getting Started</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="//store.publiclab.org/products/balloon-mapping-kit" target="_blank">Aerial Mapping Kits</a>
+        <a class="nav-link" href="//publiclab.org/balloon-mapping" target="_blank">Balloon Mapping</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="//publiclab.org/lists" target="_blank">Mailing Lists</a>
+        <a class="nav-link" href="//store.publiclab.org/collections/mapping-kits" target="_blank">Aerial Mapping Kits</a>
       </li>
     </ul>
     <ul class="navbar-nav">

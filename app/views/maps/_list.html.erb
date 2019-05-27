@@ -1,7 +1,7 @@
 <div class="map col-md-3 col-xs-6">
   <a href="/maps/<%= map.slug %>">
     <% if map.warpables.length > 0 %>
-      <img src="<%= map.warpables.first.image.url(:small) %>" />
+      <img src="<%= map.warpables.first.image.url %>" />
     <% else %>
       <div style="width:100%;background:#eee;height:170px;"></div>
     <% end %>

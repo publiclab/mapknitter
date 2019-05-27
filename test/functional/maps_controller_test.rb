@@ -5,7 +5,7 @@ class MapsControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
-  end 
+  end
 
   # called after every single test
   def teardown
@@ -50,6 +50,7 @@ class MapsControllerTest < ActionController::TestCase
   test "should get map of maps" do
     get :map
     assert_response :success
+    assert_includes @response.body, @map.slug
   end
 
   test "should get new" do
@@ -107,7 +108,7 @@ class MapsControllerTest < ActionController::TestCase
   test "should create map if not logged in" do
     before_count = Map.count
     post(:create, map: {
-      name: "Coal terminal map", 
+      name: "Coal terminal map",
       slug: "coal-terminal",
       location: "London",
       lat: 42.43823313018592,
@@ -119,13 +120,34 @@ class MapsControllerTest < ActionController::TestCase
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?("Coal terminal map")
     assert_nil @map.user
+    assert_equal 'anonymous', @map.author
+  end
+
+  test 'assigns current user as map author if logged in' do
+    before_count = Map.count
+    user = users(:quentin)
+    session[:user_id] = user.id
+    post :create, map: {
+      name: 'Yaya Center',
+      slug: 'yaya-center',
+      location: 'Nairobi',
+      lat: -0.3030988,
+      lon: 36.080026
+    }
+    @map = assigns(:map)
+
+    assert_redirected_to '/maps/'+@map.slug
+    assert_not_equal before_count, Map.count
+    assert Map.all.collect(&:name).include?('Yaya Center')
+    assert_equal user, @map.user
+    assert_equal user.login, @map.author
   end
 
   test "should render new if map not created" do
     session[:user_id] = 1
     before_count = Map.count
     post(:create, map: {
-      name: "Coal terminal map", 
+      name: "Coal terminal map",
       slug: "coal-terminal"
     })
     @map = assigns(:map)
@@ -203,6 +225,11 @@ class MapsControllerTest < ActionController::TestCase
     assert @map.has_tag("bears")
   end
 
+  test 'should not update unless logged in' do
+    put :update, id: 2, map: { name: 'Street 5'}
+    assert_redirected_to '/login?back_to=/map/2'
+  end
+
   test "should display maps by region"do
     get :region , { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60}
     @maps = assigns(:maps)
@@ -227,5 +254,37 @@ class MapsControllerTest < ActionController::TestCase
     get :images, id: @map.id
     assert_response :success
     assert_equal 'application/json', response.content_type
+  end
+
+  def export_if_logged_in
+    Rails.stub(:env, ActiveSupport::StringInquirer.new('development')) do
+      session[:user_id] = 1
+      post :export, id: @map.id, resolution: 5
+      assert_response :success
+      assert_equal 'complete', @response.body
+    end
+  end
+
+  def export_anonmymous_map
+    Rails.stub(:env, ActiveSupport::StringInquirer.new('development')) do
+      map = maps(:cubbon)
+      post :export, id: map.id, resolution: 5
+      assert_response :success
+    end
+  end
+
+  test 'returns the exports' do
+    get :exports, id: 1
+    assert_response :success
+  end
+
+  test 'license' do
+    get :license
+    assert_response :success
+  end
+
+  test 'featured' do
+    get :featured
+    assert_response :success
   end
 end

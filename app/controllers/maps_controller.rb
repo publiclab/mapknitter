@@ -57,15 +57,6 @@ class MapsController < ApplicationController
   def show
     @map.zoom ||= 12
 
-    # stuff for Sparklines resolution graph;
-    # messy, could tuck into model
-    # hist = @map.images_histogram
-    # (0..100).each do |i|
-    # hist[i] = 0 if !hist[i]
-    # end
-    # hist = hist[0..100]
-    # @images_histogram = @map.grouped_images_histogram((hist.length/15).to_i+1)
-
     # this is used for the resolution slider
     @resolution = @map.average_cm_per_pixel.round(4)
     @resolution = 5 if @resolution < 5 # soft-set min res
@@ -110,13 +101,7 @@ class MapsController < ApplicationController
     @map.description = params[:map][:description]
     @map.license =     params[:map][:license] if @map.user_id == current_user.id
 
-    # save new tags
-    if params[:tags]
-      params[:tags].tr(' ', ',').split(',').each do |tagname|
-        @map.add_tag(tagname.strip, current_user)
-      end
-    end
-
+    save_tags(@map)
     @map.save
     redirect_to action: 'show'
   end
@@ -197,8 +182,10 @@ class MapsController < ApplicationController
 
   def search
     params[:id] ||= params[:q]
-    @maps = Map.select('archived, author created_at, description, id, lat, license, location, name, slug, tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
-               .where('archived = ? AND (name LIKE ? OR location LIKE ? OR description LIKE ?)', false, '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%')
+    @maps = Map.select('archived, author, created_at, description, id, lat, license, location, name, slug,
+                        tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
+               .where('archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
+                      false, '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%')
                .paginate(page: params[:page], per_page: 24)
     @title = "Search results for '#{params[:id]}'"
     respond_to do |format|
