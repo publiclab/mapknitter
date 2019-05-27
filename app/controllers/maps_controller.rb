@@ -183,9 +183,9 @@ class MapsController < ApplicationController
 
     respond_to do |format|
       if query.length < 3
-        flash.now[:errors] = 'Invalid Query: character length is less than 3 (white-space does not count towards length)'
-         @title = 'Featured maps'
-         @maps = Map.featured.paginate(page: params[:page], per_page: 24)
+        flash.now[:notice] = 'Invalid Query: non white-space character count is less than 3'
+        @title = 'Featured maps'
+        @maps = Map.featured.paginate(page: params[:page], per_page: 24)
         format.html { render 'maps/index', layout: 'application' }
       else
         @title = "Search results for '#{data}'"
