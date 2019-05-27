@@ -18,13 +18,11 @@
         <i class="fa fa-plus-circle"></i> Create a map
       </a>
       <% else %>
-      <p><a class="btn btn-lg btn-outline-secondary btn-block disabled" href="#">
-        <i class="fa fa-plus-circle"></i> Create a map
-      </a></p>
-      <p>
-        <a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
-      </p>
-      <hr />
+          <br>
+          <p>
+          <a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
+          </p>
+          <hr />
 
       <div class="well mini-login" style="display:none;">
         <%= render :partial => "layouts/login_form" %>
@@ -44,7 +42,7 @@
 
       <div>
         <br />
-        <%= render :partial => "maps/search" %>
+        <%= render :partial => "layouts/header" %>
         <br />
       </div>
 
@@ -80,13 +78,13 @@
         <% end %>
       </small></h2>
 
-      <div class="row map-list">
+      <div class="row row-eq-height map-list">
         <% @maps.each_with_index do |map,i| %>
           <%= render :partial => 'maps/list', :locals => {:map => map} %>
         <% end %>
       </div>
       <br style="clear:both;" />
-      <%= will_paginate @maps, renderer: BootstrapPagination::Rails unless @unpaginated %> 
+      <%= will_paginate @maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
     </div><!-- .col-md-9 -->
   </div><!-- .row -->
 </div>
@@ -104,8 +102,6 @@
      var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(Mapknitterunique) ; 
-
-    var hash = new L.Hash(Mapknitterunique);    
 
     Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
     Mapknitterunique.on('fullscreenchange', function () {
