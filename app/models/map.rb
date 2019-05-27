@@ -92,11 +92,10 @@ class Map < ActiveRecord::Base
        .order("maps.id DESC")
        .where('password = "" AND archived = "false"')
        .collect(&:author)
-#       .group("maps.author")
   end
 
   def self.search(q)
-   q = q.squeeze(" ")
+    q = q.squeeze(" ")
     Map.where('archived = "false"')
        .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
                q, q, q, q])
@@ -111,6 +110,32 @@ class Map < ActiveRecord::Base
 
   def self.new_maps
     self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
+  end
+
+  def self.map
+    Map.where(archived: false, password: '')
+       .select('author, maps.name, lat, lon, slug, archived, password,
+               users.login as user_login')
+       .joins(:warpables, :user)
+       .group('maps.id')
+  end
+
+  def self.featured_authors
+    maps = Map.active.has_user
+    
+    author_counts = maps.group('author')
+                        .select('user_id, author, count(1) as maps_count')
+                        .order('maps_count DESC')
+
+    author_counts.map do |a|
+      user = User.find(a.user_id)
+      { user: user, count: a.maps_count, location: user.maps.first.location }
+    end
+  end
+
+  def self.maps_nearby(lat:, lon:, dist:)
+    Map.active
+       .where('lat>? AND lat<? AND lon>? AND lon<?',lat-dist, lat+dist, lon-dist, lon+dist)
   end
 
   def nodes
@@ -268,29 +293,4 @@ class Map < ActiveRecord::Base
     end
   end
 
-  def self.map
-    Map.where(archived: false, password: '')
-       .select('author, maps.name, lat, lon, slug, archived, password,
-               users.login as user_login')
-       .joins(:warpables, :user)
-       .group('maps.id')
-  end
-
-  def self.featured_authors
-    maps = Map.active.has_user
-    
-    author_counts = maps.group('author')
-                        .select('user_id, author, count(1) as maps_count')
-                        .order('maps_count DESC')
-
-    author_counts.map do |a|
-      user = User.find(a.user_id)
-      { user: user, count: a.maps_count, location: user.maps.first.location }
-    end
-  end
-
-  def self.maps_nearby(lat:, lon:, dist:)
-    Map.active
-       .where('lat>? AND lat<? AND lon>? AND lon<?',lat-dist, lat+dist, lon-dist, lon+dist)
-  end
 end
