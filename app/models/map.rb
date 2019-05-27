@@ -98,7 +98,7 @@ class Map < ActiveRecord::Base
   def self.search(search, page)
     Map.where(['archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
                false, "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"])
-        .paginate(page: page, per_page: 24)
+       .paginate(page: page, per_page: 24)
   end
 
   def self.new_maps

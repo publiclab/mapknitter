@@ -184,7 +184,7 @@ class MapsController < ApplicationController
   def search
     params[:id] ||= params[:q]
     data = params[:id]
-    query = params[:id].gsub(/\s+/, "")
+    query = params[:id].gsub(/\s+/, '')
     @maps = Map.search(query, params[:page])
     @title = "Search results for '#{query}'"
 
