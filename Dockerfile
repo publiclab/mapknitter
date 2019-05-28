@@ -18,6 +18,9 @@ RUN apt-key add /app/sysadmin.publiclab.key
 RUN apt-get update -qq && apt-get install -y \
   nodejs gdal-bin curl procps git imagemagick python-gdal zip
 
+# Configure ImageMagick
+COPY ./nolimit.xml /etc/ImageMagick-6/policy.xml
+
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y npm
 RUN npm install -g bower
 
