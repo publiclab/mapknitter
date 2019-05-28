@@ -1,6 +1,5 @@
 class Map < ActiveRecord::Base
   include ActiveModel::Validations
-
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
@@ -116,8 +115,12 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    Map.find(:all, order: 'created_at DESC', limit: 12, 
-             conditions: ['password = "" AND archived = "false"'])
+    Map.find(
+      :all, 
+      order: 'created_at DESC', 
+      limit: 12, 
+      conditions: ['password = "" AND archived = "false"']
+    )
   end
 
   def self.map
