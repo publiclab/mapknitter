@@ -14,8 +14,8 @@ class Map < ActiveRecord::Base
   validates :slug, format: { 
     with: /^[\w-]*$/, 
     message: "must only include permitted URL safe character types: 
-              alphanumerics, dashes, and underscores. This will be part of your 
-              map's URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
+              alphanumerics, dashes, and underscores. It will be in your map's 
+              URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
   }, uniqueness: true, on: :create
  
   validates :location, presence: { 
@@ -78,7 +78,7 @@ class Map < ActiveRecord::Base
 
   def self.bbox(minlat, minlon, maxlat, maxlon)
     Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', 
-                minlat, maxlat, minlon, maxlon])
+               minlat, maxlat, minlon, maxlon])
   end
 
   def exporting?
@@ -105,7 +105,7 @@ class Map < ActiveRecord::Base
     Map.active
        .where(['author LIKE ? OR name LIKE ? 
                 OR location LIKE ? OR description LIKE ?',
-                "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
   end
 
   def self.featured
@@ -117,7 +117,7 @@ class Map < ActiveRecord::Base
 
   def self.new_maps
     Map.find(:all, order: 'created_at DESC', limit: 12, 
-              conditions: ['password = "" AND archived = "false"'])
+             conditions: ['password = "" AND archived = "false"'])
   end
 
   def self.map
@@ -144,7 +144,7 @@ class Map < ActiveRecord::Base
   def self.maps_nearby(lat:, lon:, dist:)
     Map.active
        .where(['lat>? AND lat<? AND lon>? AND lon<?',
-                lat-dist, lat+dist, lon-dist, lon+dist])
+               lat-dist, lat+dist, lon-dist, lon+dist])
   end
 
   def nodes
@@ -166,11 +166,12 @@ class Map < ActiveRecord::Base
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
     return [] if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
-    Map.find(:all, 
+    Map.find(
+      :all, 
       limit: 10,
       conditions: [
         'id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
-         self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist
+        self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist
       ]
     )
   end
@@ -208,7 +209,6 @@ class Map < ActiveRecord::Base
     if self.warpables.length > 0
       scales = []
       count = 0
-      average = 0
       self.placed_warpables.each do |warpable|
         count += 1
         res = warpable.cm_per_pixel
@@ -257,7 +257,7 @@ class Map < ActiveRecord::Base
   def run_export(user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
 
-    new_export = Export.new({ map_id: id }) unless export
+    new_export = Export.new(map_id: id) unless export
 
     Exporter.run_export(user,
       resolution,
