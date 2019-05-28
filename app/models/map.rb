@@ -1,24 +1,34 @@
 class Map < ActiveRecord::Base
   include ActiveModel::Validations
+
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
-  attr_accessible :author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license
+  attr_accessible :author, :name, :slug, :lat, :lon, 
+    :location, :description, :zoom, :license
+
   attr_accessor :image_urls
 
   validates :name, :slug, :author, :lat, :lon, presence: true
 
-  validates :slug, format: { with: /^[\w-]*$/, 
-    message: "must not include spaces and must be alphanumeric, as it'll be a part of your map's URL path (i.e., https://mapknitter.org/maps/your-map-name). Dashes and underscores are permitted." },
-    uniqueness: true,
-    on: :create
+  validates :slug, format: { 
+    with: /^[\w-]*$/, 
+    message: "must only include permitted URL safe character types: 
+              alphanumerics, dashes, and underscores. This will be part of your 
+              map's URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
+  }, uniqueness: true, on: :create
  
-  validates :location, 
-    presence: { message: ' cannot be found. Try entering a latitude and longitude if this problem persists.' }
+  validates :location, presence: { 
+    message: ' cannot be found. 
+              Try entering a latitude and longitude if this problem persists.'
+  }
   
-  #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  #  validates :tile_url, format { with:
+  #   /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.
+  #   [a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  # }
   
-  validates_with NotAtOriginValidator, fields: [:lat, :lon]
+  validates :lat, :lon, NotAtOrigin: true
 
   has_many :exports, :dependent => :destroy
   has_many :tags, :dependent => :destroy
@@ -67,7 +77,8 @@ class Map < ActiveRecord::Base
   end
 
   def self.bbox(minlat, minlon, maxlat, maxlon)
-    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', minlat, maxlat, minlon, maxlon])
+    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', 
+                minlat, maxlat, minlon, maxlon])
   end
 
   def exporting?
@@ -90,10 +101,15 @@ class Map < ActiveRecord::Base
   end
 
   def self.search(q)
-    q = q.squeeze(" ").strip
+    q = q.squeeze(' ').strip
     Map.active
-       .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
-               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+       .where([
+         'author LIKE ? 
+          OR name LIKE ? 
+          OR location LIKE ? 
+          OR description LIKE ?',
+          "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"
+       ])
   end
 
   def self.featured
@@ -104,7 +120,11 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
+    self.find(:all, 
+      order: 'created_at DESC', 
+      limit: 12, 
+      conditions: ['password = "" AND archived = "false"']
+    )
   end
 
   def self.map
@@ -284,5 +304,4 @@ class Map < ActiveRecord::Base
       })
     end
   end
-
 end
