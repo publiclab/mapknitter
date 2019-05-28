@@ -1,29 +1,24 @@
-require 'open3'
-
-class NotAtOriginValidator < ActiveModel::Validator
-  def validate(record)
-    if record.lat == 0 || record.lon == 0
-      record.errors[:base] << "Your location at 0,0 is unlikely."
-    end
-  end
-end
-
 class Map < ActiveRecord::Base
+  include ActiveModel::Validations
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
   attr_accessible :author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license
   attr_accessor :image_urls
 
-  validates_presence_of :name, :slug, :author, :lat, :lon
-  validates_uniqueness_of :slug
-  validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
-  validates_format_of   :slug,
-                        :with => /^[\w-]*$/,
-                        :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
-                        :on => :create
-#  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
-  validates_with NotAtOriginValidator
+  validates :name, :slug, :author, :lat, :lon, presence: true
+
+  validates :slug, format: { with: /^[\w-]*$/, 
+    message: "must not include spaces and must be alphanumeric, as it'll be a part of your map's URL path (i.e., https://mapknitter.org/maps/your-map-name). Dashes and underscores are permitted." },
+    uniqueness: true,
+    on: :create
+ 
+  validates :location, 
+    presence: { message: ' cannot be found. Try entering a latitude and longitude if this problem persists.' }
+  
+  #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  
+  validates_with NotAtOriginValidator, fields: [:lat, :lon]
 
   has_many :exports, :dependent => :destroy
   has_many :tags, :dependent => :destroy
@@ -95,7 +90,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.search(q)
-    q = q.squeeze(" ").strip!
+    q = q.squeeze(" ").strip
     Map.active
        .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
                "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
@@ -141,7 +136,7 @@ class Map < ActiveRecord::Base
   def nodes
     nodes = {}
     self.warpables.each do |warpable|
-      if warpable.nodes != ''
+      if warpable.nodes
         w_nodes = []
         warpable.nodes.split(',').each do |node|
           node_obj = Node.find(node)
@@ -156,11 +151,8 @@ class Map < ActiveRecord::Base
 
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
-    if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
-      return []
-    else
-      return Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
-    end
+    return [] if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
+    Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
   end
 
   def average_scale
