@@ -5,7 +5,7 @@ class Map < ActiveRecord::Base
   friendly_id :name, :use => [:slugged, :static]
 
   attr_accessible :author, :name, :slug, :lat, :lon, 
-    :location, :description, :zoom, :license
+                  :location, :description, :zoom, :license
 
   attr_accessor :image_urls
 
@@ -103,13 +103,9 @@ class Map < ActiveRecord::Base
   def self.search(q)
     q = q.squeeze(' ').strip
     Map.active
-       .where([
-         'author LIKE ? 
-          OR name LIKE ? 
-          OR location LIKE ? 
-          OR description LIKE ?',
-          "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"
-       ])
+       .where(['author LIKE ? OR name LIKE ? 
+                OR location LIKE ? OR description LIKE ?',
+                "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
   end
 
   def self.featured
@@ -120,11 +116,8 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    self.find(:all, 
-      order: 'created_at DESC', 
-      limit: 12, 
-      conditions: ['password = "" AND archived = "false"']
-    )
+    Map.find(:all, order: 'created_at DESC', limit: 12, 
+              conditions: ['password = "" AND archived = "false"'])
   end
 
   def self.map
@@ -150,7 +143,8 @@ class Map < ActiveRecord::Base
 
   def self.maps_nearby(lat:, lon:, dist:)
     Map.active
-       .where('lat>? AND lat<? AND lon>? AND lon<?',lat-dist, lat+dist, lon-dist, lon+dist)
+       .where(['lat>? AND lat<? AND lon>? AND lon<?',
+                lat-dist, lat+dist, lon-dist, lon+dist])
   end
 
   def nodes
@@ -172,7 +166,13 @@ class Map < ActiveRecord::Base
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
     return [] if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
-    Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
+    Map.find(:all, 
+      limit: 10,
+      conditions: [
+        'id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
+         self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist
+      ]
+    )
   end
 
   def average_scale
@@ -200,9 +200,7 @@ class Map < ActiveRecord::Base
       scores[i] += hist[i+3] if i < hist.length - 4
     end
     highest = 0
-    scores.each_with_index do |s,i|
-      highest = i if s > scores[highest]
-    end
+    scores.each_with_index { |s, i| highest = i if s > scores[highest] }
     highest
   end
 
@@ -218,8 +216,7 @@ class Map < ActiveRecord::Base
         scales << res unless res == nil
       end
       total_sum = (scales.inject {|sum, n| sum + n }) if scales
-      average = total_sum/count if total_sum
-      average
+      return total_sum/count if total_sum
     else
       0
     end
@@ -259,11 +256,9 @@ class Map < ActiveRecord::Base
   # we'll eventually replace this with a JavaScript call to initiate an external export process:
   def run_export(user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
-    unless export
-      new_export = Export.new({
-        :map_id => id
-      })
-    end    
+
+    new_export = Export.new({ map_id: id }) unless export
+
     Exporter.run_export(user,
       resolution,
       self.export || new_export,

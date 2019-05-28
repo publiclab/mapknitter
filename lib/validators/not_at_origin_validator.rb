@@ -2,11 +2,11 @@ require 'open3'
 
 # custom validator used in map.rb
 class NotAtOriginValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:base] << '0,0 is an unlikely locale.' if self.zeros?(record) 
+  def validate(rec)
+    rec.errors[:base] << '0,0 is an unlikely locale.' if nullIsland?(rec)
   end
 
-  def zeros?(record)
-    record.lat.zero? || record.lon.zero?
+  def nullIsland?(rec)
+    rec.lat.zero? || rec.lon.zero?
   end
 end
