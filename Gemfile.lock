@@ -131,6 +131,8 @@ GEM
       rake (>= 0.8.1)
     popper_js (1.14.5)
     powerpack (0.1.2)
+    protected_attributes (1.1.4)
+      activemodel (>= 4.0.1, < 5.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -264,6 +266,7 @@ DEPENDENCIES
   paperclip (~> 4.3.7)
   passenger
   popper_js (~> 1.11, >= 1.11.1)
+  protected_attributes
   pry-rails
   rails (= 4.2.11.1)
   rails-perftest

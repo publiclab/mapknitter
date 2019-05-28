@@ -9,6 +9,7 @@ gem "will_paginate", "3.1.7"
 gem 'will_paginate-bootstrap4'
 gem "friendly_id"
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
+gem 'protected_attributes'
 
 # dependencies
 group :dependencies do
