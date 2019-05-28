@@ -5,28 +5,25 @@ class Map < ActiveRecord::Base
 
   attr_accessible :author, :name, :slug, :lat, :lon, 
                   :location, :description, :zoom, :license
-
   attr_accessor :image_urls
 
   validates :name, :slug, :author, :lat, :lon, presence: true
-
+  
   validates :slug, format: { 
     with: /^[\w-]*$/, 
     message: "must only include permitted URL safe character types: 
               alphanumerics, dashes, and underscores. It will be in your map's 
               URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
   }, uniqueness: true, on: :create
- 
+  
   validates :location, presence: { 
     message: ' cannot be found. 
               Try entering a latitude and longitude if this problem persists.'
   }
-  
   #  validates :tile_url, format { with:
   #   /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.
   #   [a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   # }
-  
   validates :lat, :lon, NotAtOrigin: true
 
   has_many :exports, :dependent => :destroy
@@ -295,11 +292,7 @@ class Map < ActiveRecord::Base
   def add_tag(tagname, user)
     tagname = tagname.downcase
     unless self.has_tag(tagname)
-      self.tags.create({
-        :name => tagname,
-        :user_id => user.id,
-        :map_id => self.id
-      })
+      self.tags.create({ name: tagname, user_id: user.id, map_id: self.id })
     end
   end
 end
