@@ -95,7 +95,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.search(q)
-    q = q.squeeze(" ")
+    q = q.squeeze(" ").strip!
     Map.active
        .where(['author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
                "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
