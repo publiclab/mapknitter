@@ -292,7 +292,7 @@ class Map < ActiveRecord::Base
   def add_tag(tagname, user)
     tagname = tagname.downcase
     unless self.has_tag(tagname)
-      Map.tags.create(name: tagname, user_id: user.id, map_id: id)
+      self.tags.create(name: tagname, user_id: user.id, map_id: id)
     end
   end
 end
