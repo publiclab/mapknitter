@@ -11,9 +11,7 @@ module UsersHelper
   #
   #
   def if_authorized?(action, resource)
-    if authorized?(action, resource)
-      yield action, resource
-    end
+    yield(action, resource) if authorized?(action, resource)
   end
 
   #
