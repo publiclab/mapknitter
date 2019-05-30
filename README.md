@@ -140,6 +140,8 @@ Help improve Public Lab software!
 * Look for open issues at https://github.com/publiclab/mapknitter/issues
 * Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
+* Find lots of info on contributing at http://publiclab.org/wiki/developers
+* Join our gitter chat at https://gitter.im/publiclab/publiclab
 
 ## Staging infrastructure and testing
 
