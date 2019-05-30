@@ -102,6 +102,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var img = new L.DistortableImageOverlay(
             warpable.srcmedium,
             { 
+              keymapper: false,
               corners: corners,
               mode: 'lock'
           }).addTo(window.mapKnitter._map);
@@ -161,7 +162,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
   addImage: function(url,id,lat,lng,angle,altitude) {
-    var img = new L.DistortableImageOverlay(url);
+    var img = new L.DistortableImageOverlay(
+      url,
+      {
+        keymapper: false
+      }
+    );
     img.geocoding = { lat:      lat,
                       lng:      lng,
                       altitude: altitude, 
