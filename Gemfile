@@ -41,6 +41,7 @@ end
 
 group :test do
   gem "rubocop"
+  gem "rubocop-performance"
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
   gem 'test-unit'

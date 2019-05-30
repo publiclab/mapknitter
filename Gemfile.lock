@@ -158,6 +158,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.3.0)
+      rubocop (>= 0.68.0)
     ruby-openid (2.7.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
@@ -228,6 +230,7 @@ DEPENDENCIES
   recaptcha
   right_aws
   rubocop
+  rubocop-performance
   ruby-openid (~> 2.5)
   sass
   simplecov

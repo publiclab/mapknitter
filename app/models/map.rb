@@ -3,21 +3,21 @@ class Map < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: %i(slugged static)
 
-  attr_accessible :author, :name, :slug, :lat, :lon, 
+  attr_accessible :author, :name, :slug, :lat, :lon,
                   :location, :description, :zoom, :license
   attr_accessor :image_urls
 
   validates :name, :slug, :author, :lat, :lon, presence: true
-  
-  validates :slug, format: { 
-    with: /^[\w-]*$/, 
-    message: "must only include permitted URL safe character types: 
-              alphanumerics, dashes, and underscores. It will be in your map's 
-              URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
+
+  validates :slug, format: {
+    with: /^[\w-]*$/,
+    message: "must only include permitted URL safe character types:
+              alphanumerics, dashes, and underscores. It will be in your map's
+              URL path (i.e., https://mapknitter.org/maps/your-map-name)."
   }, uniqueness: true, on: :create
-  
-  validates :location, presence: { 
-    message: ' cannot be found. 
+
+  validates :location, presence: {
+    message: ' cannot be found.
               Try entering a latitude and longitude if this problem persists.'
   }
   #  validates :tile_url, format { with:
@@ -73,7 +73,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.bbox(minlat, minlon, maxlat, maxlon)
-    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', 
+    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
                minlat, maxlat, minlon, maxlon])
   end
 
@@ -99,7 +99,7 @@ class Map < ActiveRecord::Base
   def self.search(q)
     q = q.squeeze(' ').strip
     Map.active
-       .where(['author LIKE ? OR name LIKE ? 
+       .where(['author LIKE ? OR name LIKE ?
                 OR location LIKE ? OR description LIKE ?',
                "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
   end
@@ -108,14 +108,14 @@ class Map < ActiveRecord::Base
     Map.joins(:warpables)
        .select('maps.*, count(maps.id) as image_count')
        .group('warpables.map_id')
-       .order('image_count DESC')       
+       .order('image_count DESC')
   end
 
   def self.new_maps
     Map.find(
-      :all, 
-      order: 'created_at DESC', 
-      limit: 12, 
+      :all,
+      order: 'created_at DESC',
+      limit: 12,
       conditions: ['password = "" AND archived = "false"']
     )
   end
@@ -130,7 +130,7 @@ class Map < ActiveRecord::Base
 
   def self.featured_authors
     maps = Map.active.has_user
-    
+
     author_counts = maps.group('author')
                         .select('user_id, author, count(1) as maps_count')
                         .order('maps_count DESC')
@@ -144,12 +144,12 @@ class Map < ActiveRecord::Base
   def self.maps_nearby(lat:, lon:, dist:)
     Map.active
        .where(['lat>? AND lat<? AND lon>? AND lon<?',
-               lat-dist, lat+dist, lon-dist, lon+dist])
+               lat - dist, lat + dist, lon - dist, lon + dist])
   end
 
   def nodes
     nodes = {}
-    self.warpables.each do |warpable|
+    warpables.each do |warpable|
       if warpable.nodes
         w_nodes = []
         warpable.nodes.split(',').each do |node|
@@ -165,13 +165,14 @@ class Map < ActiveRecord::Base
 
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
-    return [] if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
+    return [] if lat.to_f == 0.0 || lon.to_f == 0.0
+
     Map.find(
-      :all, 
+      :all,
       limit: 10,
       conditions: [
         'id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
-        self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist
+        id, lat - dist, lat + dist, lon - dist, lon + dist
       ]
     )
   end
@@ -209,14 +210,14 @@ class Map < ActiveRecord::Base
     if !warpables.empty?
       scales = []
       count = 0
-      self.placed_warpables.each do |warpable|
+      placed_warpables.each do |warpable|
         count += 1
         res = warpable.cm_per_pixel
         res = 1 if res.zero? # let's not ever try to go for infinite resolution
         scales << res unless res.nil?
       end
-      total_sum = (scales.inject {|sum, n| sum + n }) if scales
-      return total_sum/count if total_sum
+      total_sum = (scales.inject { |sum, n| sum + n }) if scales
+      return total_sum / count if total_sum
     else
       0
     end
@@ -291,8 +292,8 @@ class Map < ActiveRecord::Base
 
   def add_tag(tagname, user)
     tagname = tagname.downcase
-    unless self.has_tag(tagname)
-      self.tags.create(name: tagname, user_id: user.id, map_id: id)
+    unless has_tag(tagname)
+      tags.create(name: tagname, user_id: user.id, map_id: id)
     end
   end
 end

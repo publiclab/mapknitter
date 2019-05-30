@@ -1,5 +1,8 @@
 # http://shopify.github.io/ruby-style-guide/rubocop.yml
 #
+
+require: rubocop-performance
+
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
   SupportedStyles:
@@ -1035,9 +1038,6 @@ Performance/FixedSize:
 Performance/FlatMap:
   EnabledForFlattenWithoutParams: false
 
-Performance/LstripRstrip:
-  Enabled: true
-
 Performance/RangeInclude:
   Enabled: true
 
@@ -1047,13 +1047,13 @@ Performance/RedundantBlockCall:
 Performance/RedundantMatch:
   Enabled: true
 
-Performance/RedundantSortBy:
+Style/RedundantSortBy:
   Enabled: true
 
 Performance/ReverseEach:
   Enabled: true
 
-Performance/Sample:
+Style/Sample:
   Enabled: true
 
 Performance/Size:

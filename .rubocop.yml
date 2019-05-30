@@ -48,10 +48,10 @@ Style/FrozenStringLiteralComment:
 Lint/ParenthesesAsGroupedExpression:
   Enabled: false
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   Enabled: false
 
-Lint/DefEndAlignment:
+Layout/DefEndAlignment:
   Enabled: false
 
 Lint/SafeNavigationChain:

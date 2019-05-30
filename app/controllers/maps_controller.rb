@@ -176,7 +176,7 @@ class MapsController < ApplicationController
     render 'maps/index', layout: 'application'
   end
 
-  def search    
+  def search
     data = params[:q]
     query = params[:q].gsub(/\s+/, '')
 
@@ -192,7 +192,7 @@ class MapsController < ApplicationController
         format.html { render 'maps/index', layout: 'application' }
         format.json { render json: @maps }
       end
-    end    
+    end
   end
 
   private
