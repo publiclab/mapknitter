@@ -4,8 +4,8 @@ require 'cgi'
 class SessionsController < ApplicationController
   # protect_from_forgery :except => [:create]
 
-  @@openid_url_base = "https://publiclab.org/people/"
-  @@openid_url_suffix = "/identity"
+  @openid_url_base = "https://publiclab.org/people/"
+  @openid_url_suffix = "/identity"
 
   def new
     if logged_in?
@@ -37,10 +37,10 @@ class SessionsController < ApplicationController
     else
       url = if params[:subaction]
               # provider based authentication
-              @@openid_url_base + openid_url + @@openid_url_suffix + "/" + params[:subaction]
+              @openid_url_base + openid_url + @openid_url_suffix + "/" + params[:subaction]
             else
               # form based authentication
-              @@openid_url_base + openid_url + @@openid_url_suffix
+              @openid_url_base + openid_url + @openid_url_suffix
             end
     end
     openid_authentication(url, back_to)

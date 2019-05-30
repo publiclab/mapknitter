@@ -136,7 +136,7 @@ class Warpable < ActiveRecord::Base
     nil if uri.blank?
 
     io = (begin
-            open(URI.parse(uri))
+            URI.parse(uri).open
           rescue StandardError
             nil
           end)
@@ -156,14 +156,12 @@ class Warpable < ActiveRecord::Base
     map.user_id
   end
 
-  private
-
   # adjust filename behavior of Paperclip after migrating from attachment_fu
   Paperclip.interpolates :custom_filename do |attachment, style|
-    custom_filename = if style == :original
-                        basename(attachment, style) # generate hash path here
-                      else
-                        "#{basename(attachment, style)}_#{style}" # generate hash path here
-                      end
+    if style == :original
+      basename(attachment, style) # generate hash path here
+    else
+      "#{basename(attachment, style)}_#{style}" # generate hash path here
+    end
   end
 end

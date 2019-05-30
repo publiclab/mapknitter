@@ -62,7 +62,7 @@ module UsersHelper
   #   link_to_login_with_IP :content_text => 'not signed in'
   #   # => <a href="/login" title="169.69.69.69">not signed in</a>
   #
-  def link_to_login_with_IP(content_text = nil, options = {})
+  def link_to_login_with_IP(content_text = nil, options = {}) # rubocop:disable Naming/MethodName
     ip_addr           = request.remote_ip
     content_text    ||= ip_addr
     options.reverse_merge! title: ip_addr

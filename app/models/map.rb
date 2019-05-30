@@ -51,8 +51,7 @@ class Map < ActiveRecord::Base
   end
 
   def validate
-    name != 'untitled'
-    lat >= -90 && lat <= 90 && lon >= -180 && lat <= 180
+    lat >= -90 && lat <= 90 && lon >= -180 && lat <= 180 if name != 'untitled'
   end
 
   # Hash the password before saving the record
@@ -96,12 +95,12 @@ class Map < ActiveRecord::Base
        .collect(&:author)
   end
 
-  def self.search(q)
-    q = q.squeeze(' ').strip
+  def self.search(query)
+    query = query.squeeze(' ').strip
     Map.active
        .where(['author LIKE ? OR name LIKE ?
                 OR location LIKE ? OR description LIKE ?',
-               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+               "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%"])
   end
 
   def self.featured
@@ -273,9 +272,9 @@ class Map < ActiveRecord::Base
 
   def after_create
     puts 'saving Map'
-    if last = Map.find_by_name(slug, order: "version DESC")
-      self.version = last.version + 1
-    end
+    return unless Map.find_by_name(slug, order: "version DESC")
+
+    self.version = last.version + 1
   end
 
   def license_link
@@ -292,8 +291,6 @@ class Map < ActiveRecord::Base
 
   def add_tag(tagname, user)
     tagname = tagname.downcase
-    unless has_tag(tagname)
-      tags.create(name: tagname, user_id: user.id, map_id: id)
-    end
+    tags.create(name: tagname, user_id: user.id, map_id: id) unless has_tag(tagname)
   end
 end

@@ -33,14 +33,14 @@ class AnnotationsController < ApplicationController
   def update
     @annotation = Annotation.find params[:id]
     geojson = params[:annotation]
-    if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
-      Annotation.update(@annotation.id,
-                        coordinates: geojson[:geometry][:coordinates],
-                        text: geojson[:properties][:textContent],
-                        style: geojson[:properties][:style])
-      render file: 'annotations/update.json.erb',
-             content_type: 'application/json'
-    end
+    return if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
+
+    Annotation.update(@annotation.id,
+                      coordinates: geojson[:geometry][:coordinates],
+                      text: geojson[:properties][:textContent],
+                      style: geojson[:properties][:style])
+    render file: 'annotations/update.json.erb',
+           content_type: 'application/json'
   end
 
   def destroy
