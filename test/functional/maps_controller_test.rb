@@ -24,7 +24,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_equal image_urls, json_response[0]['image_urls']
   end
 
-  test 'should get index' do
+  test 'should get maps index' do
     get :index
     @maps = assigns(:maps)
 

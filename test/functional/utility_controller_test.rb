@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class UtilityControllerTest < ActionController::TestCase
-  test 'tms_alt' do
+  test 'should translate tms format' do
     get(:tms_alt,
         id: 1,
         x: 10,

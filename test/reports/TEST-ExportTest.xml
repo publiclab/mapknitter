@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="ExportTest" filepath="/home/k/proj/mapknitter/test/unit/export_test.rb" skipped="0" failures="0" errors="0" tests="2" assertions="7" time="0.1806370220001554">
+    <testcase name="test_count_methods" lineno="4" classname="ExportTest" assertions="6" time="0.17920688500453252">
+    </testcase>
+    <testcase name="test_export_running" lineno="14" classname="ExportTest" assertions="1" time="0.0014301369956228882">
+    </testcase>
+  </testsuite>
+</testsuites>

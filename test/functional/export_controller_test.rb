@@ -8,7 +8,7 @@ class ExportControllerTest < ActionController::TestCase
   def teardown
   end
 
-  test 'index' do
+  test 'should display export index' do
     get :index
     assert_response :success
     assert assigns[:exports]
@@ -16,7 +16,7 @@ class ExportControllerTest < ActionController::TestCase
     assert assigns[:week]
   end
 
-  test 'jpg' do
+  test 'should create jpg after export' do
     map = maps(:cubbon)
     system('mkdir -p public/warps/cubbon-park')
     system('cp test/fixtures/demo.png  public/warps/cubbon-park/cubbon-park.jpg')
@@ -26,7 +26,7 @@ class ExportControllerTest < ActionController::TestCase
     assert_includes 'image/jpeg', response.content_type
   end
 
-  test 'geotiff' do
+  test 'should create geotiff after export' do
     map = maps(:cubbon)
     system('mkdir -p public/warps/cubbon-park')
     system('cp test/fixtures/demo.png public/warps/cubbon-park/cubbon-park-geo.tif')
@@ -61,26 +61,26 @@ class ExportControllerTest < ActionController::TestCase
     assert_redirected_to '/exports'
   end
 
-  test 'progress' do
+  test 'should display export progress' do
     get :progress, id: @map.id
     assert_response :success
     assert_equal 'export not running', @response.body
     assert_equal 'text/html', @response.content_type
   end
 
-  test 'progress with no export' do
+  test 'should display progress with no export' do
     get :progress, id: 4
     assert_response :success
     assert_equal 'export has not been run', @response.body
   end
 
-  test 'progress completed' do
+  test 'should display progress completed' do
     get :progress, id: 2
     assert_response :success
     assert_equal 'complete', @response.body
   end
 
-  test 'progress failed' do
+  test 'should display progress failed' do
     get :progress, id: 3
     assert_response :success
     assert_equal 'export failed', @response.body
