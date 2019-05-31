@@ -27,18 +27,41 @@ Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate
 
 ## Quick install
 
-We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://aws.amazon.com/cloud9/
+We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://c9.io/login
+
 
 To use it:
 
 1. Click `Create new workspace`
+
 2. Name your workspace and enter `https://github.com/USERNAME/mapknitter` (where `USERNAME` is your GitHub username) under `Clone from Git or Mercurial URL`
 3. Choose `Ruby` template
+
 4. Click `Create workspace`
-5. Once it loads, in the `bash` console at the bottom of the screen, type `source install_cloud.sh`
-6. Press `Control-x` when prompted for a message.
-7. Wait for the installation to run, and when it's complete, press the `Run` button at the top of the page.
-8. Open the URL which pops up to see MapKnitter booted up. Great work!
+
+5. Once it loads in the `bash` console at the bottom of the screen, pull in the latest main branch and run the installation file:
+
+```Bash
+$ git fetch --all
+
+$ git checkout remotes/origin/main
+
+$ git checkout -b main
+
+$ source install_cloud.sh
+```
+
+6. When you see a message that it's complete, run:
+```Bash
+# Using the `Run Project` button instead will not gaurantee the port is correct 
+$ rails s -b $IP -p $PORT
+```
+
+7. Open the URL which pops up to see MapKnitter booted up. Great work! 
+
+    - If you have trouble finding the popup window, the url path will be in the form of: `http://<workspacename>-<username>.c9users.io`, or just click on the `Preview` button next to `Run Project`
+
+
 
 If you have any trouble installing, we're sorry! **Please [click here](https://github.com/publiclab/mapknitter/issues/307) to get support.**
 
