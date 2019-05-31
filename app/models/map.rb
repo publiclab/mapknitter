@@ -1,35 +1,39 @@
-require 'open3'
-
-class NotAtOriginValidator < ActiveModel::Validator
-  def validate(record)
-    if record.lat == 0 || record.lon == 0
-      record.errors[:base] << "Your location at 0,0 is unlikely."
-    end
-  end
-end
-
 class Map < ActiveRecord::Base
+  include ActiveModel::Validations
   extend FriendlyId
   friendly_id :name, :use => [:slugged, :static]
 
-  attr_accessible :author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license
+  attr_accessible :author, :name, :slug, :lat, :lon, 
+                  :location, :description, :zoom, :license
   attr_accessor :image_urls
 
-  validates_presence_of :name, :slug, :author, :lat, :lon
-  validates_uniqueness_of :slug
-  validates_presence_of :location, :message => ' cannot be found. Try entering a latitude and longitude if this problem persists.'
-  validates_format_of   :slug,
-                        :with => /^[\w-]*$/,
-                        :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
-                        :on => :create
-#  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
-  validates_with NotAtOriginValidator
+  validates :name, :slug, :author, :lat, :lon, presence: true
+  
+  validates :slug, format: { 
+    with: /^[\w-]*$/, 
+    message: "must only include permitted URL safe character types: 
+              alphanumerics, dashes, and underscores. It will be in your map's 
+              URL path (i.e., https://mapknitter.org/maps/your-map-name)." 
+  }, uniqueness: true, on: :create
+  
+  validates :location, presence: { 
+    message: ' cannot be found. 
+              Try entering a latitude and longitude if this problem persists.'
+  }
+  #  validates :tile_url, format { with:
+  #   /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.
+  #   [a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  # }
+  validates :lat, :lon, NotAtOrigin: true
 
   has_many :exports, :dependent => :destroy
   has_many :tags, :dependent => :destroy
   has_many :comments, :dependent => :destroy
   has_many :annotations, :dependent => :destroy
   belongs_to :user
+
+  scope :active, -> { where(archived: false) }
+  scope :has_user, -> { where('user_id != ?', 0) }
 
   has_many :warpables do
     def public_filenames
@@ -69,7 +73,8 @@ class Map < ActiveRecord::Base
   end
 
   def self.bbox(minlat, minlon, maxlat, maxlon)
-    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', minlat, maxlat, minlon, maxlon])
+    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?', 
+               minlat, maxlat, minlon, maxlon])
   end
 
   def exporting?
@@ -85,21 +90,67 @@ class Map < ActiveRecord::Base
   end
 
   def self.authors(limit = 50)
-    Map.limit(limit)
+    Map.where(archived: false, password: '')
+       .limit(limit)
        .order("maps.id DESC")
-       .where('password = "" AND archived = "false"')
        .collect(&:author)
-#       .group("maps.author")
+  end
+
+  def self.search(q)
+    q = q.squeeze(' ').strip
+    Map.active
+       .where(['author LIKE ? OR name LIKE ? 
+                OR location LIKE ? OR description LIKE ?',
+               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%"])
+  end
+
+  def self.featured
+    Map.joins(:warpables)
+       .select('maps.*, count(maps.id) as image_count')
+       .group('warpables.map_id')
+       .order('image_count DESC')       
   end
 
   def self.new_maps
-    self.find(:all, :order => "created_at DESC", :limit => 12, :conditions => ['password = "" AND archived = "false"'])
+    Map.find(
+      :all, 
+      order: 'created_at DESC', 
+      limit: 12, 
+      conditions: ['password = "" AND archived = "false"']
+    )
+  end
+
+  def self.map
+    Map.where(archived: false, password: '')
+       .select('author, maps.name, lat, lon, slug, archived, password,
+               users.login as user_login')
+       .joins(:warpables, :user)
+       .group('maps.id')
+  end
+
+  def self.featured_authors
+    maps = Map.active.has_user
+    
+    author_counts = maps.group('author')
+                        .select('user_id, author, count(1) as maps_count')
+                        .order('maps_count DESC')
+
+    author_counts.map do |a|
+      user = User.find(a.user_id)
+      { user: user, count: a.maps_count, location: user.maps.first.location }
+    end
+  end
+
+  def self.maps_nearby(lat:, lon:, dist:)
+    Map.active
+       .where(['lat>? AND lat<? AND lon>? AND lon<?',
+               lat-dist, lat+dist, lon-dist, lon+dist])
   end
 
   def nodes
     nodes = {}
     self.warpables.each do |warpable|
-      if warpable.nodes != ''
+      if warpable.nodes
         w_nodes = []
         warpable.nodes.split(',').each do |node|
           node_obj = Node.find(node)
@@ -114,11 +165,15 @@ class Map < ActiveRecord::Base
 
   # find all other maps within <dist> degrees lat or lon
   def nearby_maps(dist)
-    if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
-      return []
-    else
-      return Map.find(:all,:conditions => ['id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist], :limit => 10)
-    end
+    return [] if self.lat.to_f == 0.0 || self.lon.to_f == 0.0
+    Map.find(
+      :all, 
+      limit: 10,
+      conditions: [
+        'id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
+        self.id,self.lat-dist,self.lat+dist,self.lon-dist,self.lon+dist
+      ]
+    )
   end
 
   def average_scale
@@ -146,9 +201,7 @@ class Map < ActiveRecord::Base
       scores[i] += hist[i+3] if i < hist.length - 4
     end
     highest = 0
-    scores.each_with_index do |s,i|
-      highest = i if s > scores[highest]
-    end
+    scores.each_with_index { |s, i| highest = i if s > scores[highest] }
     highest
   end
 
@@ -156,7 +209,6 @@ class Map < ActiveRecord::Base
     if self.warpables.length > 0
       scales = []
       count = 0
-      average = 0
       self.placed_warpables.each do |warpable|
         count += 1
         res = warpable.cm_per_pixel
@@ -164,8 +216,7 @@ class Map < ActiveRecord::Base
         scales << res unless res == nil
       end
       total_sum = (scales.inject {|sum, n| sum + n }) if scales
-      average = total_sum/count if total_sum
-      average
+      return total_sum/count if total_sum
     else
       0
     end
@@ -205,11 +256,9 @@ class Map < ActiveRecord::Base
   # we'll eventually replace this with a JavaScript call to initiate an external export process:
   def run_export(user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
-    unless export
-      new_export = Export.new({
-        :map_id => id
-      })
-    end    
+
+    new_export = Export.new(map_id: id) unless export
+
     Exporter.run_export(user,
       resolution,
       self.export || new_export,
@@ -243,19 +292,7 @@ class Map < ActiveRecord::Base
   def add_tag(tagname, user)
     tagname = tagname.downcase
     unless self.has_tag(tagname)
-      self.tags.create({
-        :name => tagname,
-        :user_id => user.id,
-        :map_id => self.id
-      })
+      self.tags.create(name: tagname, user_id: user.id, map_id: id)
     end
-  end
-
-  def self.map
-    Map.where(archived: false, password: '')
-       .select('author, maps.name, lat, lon, slug, archived, password,
-               users.login as user_login')
-       .joins(:warpables, :user)
-       .group('maps.id')
   end
 end
