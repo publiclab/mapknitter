@@ -101,6 +101,22 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
+### Running tests
+
+When you try to run tests in Mapknitter, you can the default Rake tasks, such as:
+
+`rake test:units`
+`rake test:functionals`
+`rake test:integration`
+
+or simply:
+
+`rake test`
+
+By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our task defined as:
+
+`rake test:all`
+
 ## Logging in when running locally
 
 Because MapKnitter uses a remote OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password:
