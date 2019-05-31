@@ -1,5 +1,10 @@
 Metrics/BlockLength:
   Max: 100
 Metrics/LineLength:
-  Max: 250
+  Max: 265
+Style/ConditionalAssignment:
+  enabled: false
+Style/IfUnlessModifier:
+  enabled: false
+
 
