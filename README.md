@@ -9,6 +9,22 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 
 ![demo](https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif)
 
+## Table of Contents
+1. [Architecture](#architecture)
+2. [Installation](#installation)
+	- [Quick Installation](#quick-installation)
+	- [Installation Video](#installation-video)
+	- [Prerequisites](#prerequisites)
+	- [Standard Installation](#standard-installation)
+3. [Logging in when running locally](#logging-in-when-running-locally)
+4. [Bugs and support](#bugs-and-support)
+5. [Developers](#developers)
+6. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
+7. [License](#license)
+
+
+****
+
 ## Architecture
 
 MapKnitter is broken into three major components:
@@ -25,7 +41,9 @@ MapKnitter is broken into three major components:
 
 Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
-## Quick install
+## Installation
+
+### Quick install
 
 We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://aws.amazon.com/cloud9/
 
@@ -42,13 +60,13 @@ To use it:
 
 If you have any trouble installing, we're sorry! **Please [click here](https://github.com/publiclab/mapknitter/issues/307) to get support.**
 
-## Installation video
+### Installation video
 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
 
 http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
-## Prerequisites
+### Prerequisites
 
 Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
 
@@ -88,7 +106,7 @@ Once NPM is installed, you should be able to run:
 
 `sudo npm install -g bower`
 
-## Installation
+### Standard Installation
 
 You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
