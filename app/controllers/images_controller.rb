@@ -25,7 +25,7 @@ class ImagesController < ApplicationController
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
-    map = Map.find(params[:map_id])
+    map = Map.find_by(slug: params[:map_id])
     @warpable.history = ''
     @warpable.map_id = map.id
     map.updated_at = Time.now
