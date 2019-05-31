@@ -5,7 +5,6 @@ require 'sessions_controller'
 class SessionsController; def rescue_action(e) raise e end; end
 
 class SessionsControllerTest < ActionController::TestCase
-
   test 'new when logged in' do
     session[:user_id] = 1
     get :new

@@ -8,8 +8,7 @@ class AnnotationsControllerTest < ActionController::TestCase
   end
 
   # called after every single test
-  def teardown
-  end
+  def teardown; end
 
   test 'should create annotation if logged in ' do
     before_count = @map.annotations.count
