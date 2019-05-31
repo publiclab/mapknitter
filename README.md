@@ -32,6 +32,8 @@ We provide an install script for Amazon's Cloud9 service, which provides standar
 
 To use it:
 
+### Installation (do this only once):
+
 1. Click `Create new workspace`
 
 2. Name your workspace and enter `https://github.com/USERNAME/mapknitter` (where `USERNAME` is your GitHub username) under `Clone from Git or Mercurial URL`
@@ -39,7 +41,7 @@ To use it:
 
 4. Click `Create workspace`
 
-5. Once it loads in the `bash` console at the bottom of the screen, pull in the latest main branch and run the installation file:
+5. Once it loads in the `bash` console at the bottom of the screen, pull in the latest `main` branch (note: AWS only lets us track `master` by default. Since we're deprecating in a month, quick workaround):
 
 ```Bash
 $ git fetch --all
@@ -48,16 +50,26 @@ $ git checkout remotes/origin/main
 
 $ git checkout -b main
 
+$ git remote add upstream https://github.com/publiclab/mapknitter.git 
+
+$ git pull upstream main
+
+```
+### Setup (run each time):
+
+### 
+6. Run the installation script 
+```Bash
 $ source install_cloud.sh
 ```
 
-6. When you see a message that it's complete, run:
+7. When you see it's complete, to run the server:
 ```Bash
 # Using the `Run Project` button instead will not gaurantee the port is correct 
 $ rails s -b $IP -p $PORT
 ```
 
-7. Open the URL which pops up to see MapKnitter booted up. Great work! 
+8. Open the URL which pops up to see MapKnitter booted up. Great work! 
 
     - If you have trouble finding the popup window, the url path will be in the form of: `http://<workspacename>-<username>.c9users.io`, or just click on the `Preview` button next to `Run Project`
 
