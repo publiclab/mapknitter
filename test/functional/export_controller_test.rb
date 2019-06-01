@@ -65,7 +65,7 @@ class ExportControllerTest < ActionController::TestCase
     get :progress, id: @map.id
     assert_response :success
     assert_equal 'export not running', @response.body
-    assert_equal 'text/html', @response.content_type
+    assert_equal 'text/plain', @response.content_type
   end
 
   test 'should display progress with no export' do
