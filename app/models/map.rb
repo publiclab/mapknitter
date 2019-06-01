@@ -4,7 +4,7 @@ class Map < ActiveRecord::Base
   friendly_id :name, use: %i(slugged static)
 
   attr_accessible :author, :name, :slug, :lat, :lon,
-                  :location, :description, :zoom, :license
+    :location, :description, :zoom, :license
   attr_accessor :image_urls
 
   validates :name, :slug, :author, :lat, :lon, presence: true
@@ -260,14 +260,14 @@ class Map < ActiveRecord::Base
     new_export = Export.new(map_id: id) unless export
 
     Exporter.run_export(user,
-                        resolution,
-                        export || new_export,
-                        id,
-                        slug,
-                        Rails.root.to_s,
-                        average_scale,
-                        placed_warpables,
-                        key)
+      resolution,
+      export || new_export,
+      id,
+      slug,
+      Rails.root.to_s,
+      average_scale,
+      placed_warpables,
+      key)
   end
 
   def after_create

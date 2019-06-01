@@ -40,8 +40,7 @@ group :dependencies do
 end
 
 group :test do
-  gem "rubocop"
-  gem "rubocop-performance"
+  gem "rubocop", '~> 0.52.0'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
   gem 'test-unit'

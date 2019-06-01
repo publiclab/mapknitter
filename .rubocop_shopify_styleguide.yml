@@ -1,8 +1,6 @@
 # http://shopify.github.io/ruby-style-guide/rubocop.yml
 #
 
-require: rubocop-performance
-
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
   SupportedStyles:
