@@ -3,12 +3,11 @@ class CommentsController < ApplicationController
     if logged_in?
 
       @comment = current_user.comments.new(comment_params)
-      @map = Map.find_by(slug: params[:map_id])
+      @map = @comment.map
       if @comment.save!
-        users = @map.comments.collect(&:user)
-        users += [@map.user] unless @map.user.nil?
-        users.uniq.each do |user|
-          unless @map.user_id == current_user.id
+        users = @map.comments.collect(&:user).uniq
+        users.each do |user|
+          unless user.id == @map.user_id && user.id == current_user.id
             CommentMailer.notify(user, @comment).deliver_now
           end
         end

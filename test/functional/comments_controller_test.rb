@@ -7,7 +7,6 @@ class CommentsControllerTest < ActionController::TestCase
     @map = maps(:saugus)
   end
 
-  # called after every single test
   def teardown
   end
 
@@ -146,7 +145,7 @@ class CommentsControllerTest < ActionController::TestCase
          })
 
     assert_response :success
-    assert !ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
+    assert_not ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
   end
 
   test "should send email to author if someone else comments" do

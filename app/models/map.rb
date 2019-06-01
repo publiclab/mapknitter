@@ -87,12 +87,9 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    Map.find(
-      :all,
-      order: 'created_at DESC',
-      limit: 12,
-      conditions: ['password = "" AND archived = "false"']
-    )
+    Map.where( ['password = "" AND archived = "false"'])
+      .order('created_at DESC')
+      .limit(12)
   end
 
   def self.map
@@ -142,14 +139,9 @@ class Map < ActiveRecord::Base
   def nearby_maps(dist)
     return [] if lat.to_f == 0.0 || lon.to_f == 0.0
 
-    Map.find(
-      :all,
-      limit: 10,
-      conditions: [
-        'id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
-        id, lat - dist, lat + dist, lon - dist, lon + dist
-      ]
-    )
+    Map.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
+              id, lat - dist, lat + dist, lon - dist, lon + dist)
+      .limit(10)
   end
 
   def average_scale
