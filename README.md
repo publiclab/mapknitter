@@ -39,6 +39,8 @@ MapKnitter is broken into three major components:
 
 **Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
 
+Component 3 is soon to be replaced with an external exporter service built in a small Sinatra app called [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem.
+
 Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
 ## Installation
