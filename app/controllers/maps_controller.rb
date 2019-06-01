@@ -1,10 +1,9 @@
-# rubocop:disable LineLength
 require 'open3'
 
 class MapsController < ApplicationController
   protect_from_forgery except: :export
-  before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy]
+  before_filter :require_login, only: %i(edit update destroy)
+  before_filter :find_map, only: %i(show annotate embed edit update images export exports destroy)
 
   layout 'knitter2'
 
@@ -177,7 +176,7 @@ class MapsController < ApplicationController
     render 'maps/index', layout: 'application'
   end
 
-  def search    
+  def search
     data = params[:q]
     query = params[:q].gsub(/\s+/, '')
 
@@ -193,13 +192,12 @@ class MapsController < ApplicationController
         format.html { render 'maps/index', layout: 'application' }
         format.json { render json: @maps }
       end
-    end    
+    end
   end
-  
+
   private
 
   def find_map
     @map = Map.find(params[:id])
   end
 end
-# rubocop:enable LineLength

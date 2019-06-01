@@ -1,11 +1,11 @@
 class FeedsController < ApplicationController
-  before_filter :query, only: %i[clean license]
+  before_filter :query, only: %i(clean license)
 
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)
     @maps = Map.find(:all, order: 'id DESC', limit: 20,
                            conditions: { archived: false, password: '' },
-                           joins: %i[user warpables],
+                           joins: %i(user warpables),
                            group: 'maps.id')
     render layout: false, template: 'feeds/all'
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
@@ -24,9 +24,9 @@ class FeedsController < ApplicationController
 
   def author
     @maps = Map.find_all_by_author(params[:id],
-                                   order: 'id DESC',
-                                   conditions: { archived: false, password: '' },
-                                   joins: :warpables, group: 'maps.id')
+      order: 'id DESC',
+      conditions: { archived: false, password: '' },
+      joins: :warpables, group: 'maps.id')
     images = []
     @maps.each do |map|
       images += map.warpables
