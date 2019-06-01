@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ExportTest < ActiveSupport::TestCase
-  test "count methods" do
+  test 'should count methods' do
     average = Export.all.map(&:cm_per_pixel).sum/Export.count
     assert_not_nil Export.average_cm_per_pixel
     assert_equal average, Export.average_cm_per_pixel
@@ -15,7 +15,7 @@ class ExportTest < ActiveSupport::TestCase
     assert_equal 0, Export.average_cm_per_pixel
   end
 
-  test "export running" do
+  test 'should export running' do
     assert !Export.last.running?
   end
 end

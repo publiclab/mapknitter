@@ -2,11 +2,15 @@ require 'test_helper'
 
 class MapTest < ActiveSupport::TestCase
 
-  test "basics" do
+  test 'should not have empty default attributes' do
     assert_not_nil Map.bbox(0,0,90,180)
     assert_not_nil Map.authors
     assert_not_nil Map.new_maps
+  end
+
+  test 'should create map' do
     map = maps(:saugus)
+
     assert_not_nil map.license_link
     assert_not_nil map.author
     assert_not_nil map.name
@@ -31,14 +35,14 @@ class MapTest < ActiveSupport::TestCase
     assert_equal Map.count, Map.new_maps.size
   end
 
-  test "export functions" do
+  test 'should export map related functions' do
     map = maps(:saugus)
     assert_not_nil map.average_scale
 
     placed = map.warpables(&:placed?)
+    
     assert_not_nil map.placed_warpables
     assert_equal placed, map.placed_warpables
-
     assert_not_nil map.best_cm_per_pixel
     assert_not_nil map.exporting?
     assert_not_nil map.export
@@ -83,29 +87,32 @@ class MapTest < ActiveSupport::TestCase
 
   end
 
-  test 'histograms' do
+  test 'should have histograms' do
     map = maps(:saugus)
     hist = map.images_histogram
+
     assert_not_nil hist
     assert_not_nil map.grouped_images_histogram(3)
     assert_equal hist.count/3, map.grouped_images_histogram(3).count
 
   end
 
-  test 'nearby maps' do
+  test 'should have nearby maps' do
     map = maps(:nairobi)
     near_maps = map.nearby_maps(5)
+
     assert_not_nil near_maps
     assert_includes near_maps, maps(:village)
 
     saugus = maps(:saugus)
     saugus.lat = 0
-    assert_empty saugus.nearby_maps(100)
 
+    assert_empty saugus.nearby_maps(100)
   end
 
-  test "tag basics" do
+  test 'should create tag basics in map' do
     map = Map.first
+
     assert !map.has_tag('test')
     assert map.add_tag('test', User.first)
     assert map.has_tag('test')

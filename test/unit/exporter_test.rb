@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ExporterTest < ActiveSupport::TestCase
-  test "isolated exporter lib" do
+  test 'should export warpable using isolated exporter lib' do
 
     # make a sample image
     system('mkdir -p public/system/images/1/original')
