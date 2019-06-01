@@ -2,6 +2,7 @@ version: 2
 plugins: 
   rubocop: 
     enabled: true
+    channel: rubocop-0-70
   brakeman: 
     enabled: true
   bundler-audit: 

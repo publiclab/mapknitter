@@ -2,7 +2,7 @@ class ExportController < ApplicationController
   protect_from_forgery except: :formats
 
   def index
-    @exports = Export.where('status NOT IN (?)', %w[failed complete none])
+    @exports = Export.where('status NOT IN (?)', %w(failed complete none))
                      .order('updated_at DESC')
     @day = Export.where(status: 'complete')
                  .where('updated_at > (?)', (Time.now - 1.day).to_s(:db))
@@ -51,19 +51,19 @@ class ExportController < ApplicationController
   def progress
     map = Map.find params[:id]
     export = map.export
-    if export.present?
-      if  export.status == 'complete'
-        output = 'complete'
-      elsif export.status == 'none'
-        output = 'export not running'
-      elsif export.status == 'failed'
-        output = 'export failed'
-      else
-        output = export.status
-      end
-    else
-      output = 'export has not been run'
-    end
+    output = if export.present?
+               if export.status == 'complete'
+                 'complete'
+               elsif export.status == 'none'
+                 'export not running'
+               elsif export.status == 'failed'
+                 'export failed'
+               else
+                 export.status
+                        end
+             else
+               'export has not been run'
+             end
     render text: output, layout: false
   end
 
