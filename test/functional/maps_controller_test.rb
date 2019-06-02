@@ -11,7 +11,8 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should display image url for maps by region' do
-    get :region, { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60, format: :json }
+    get :region,
+        { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60, format: :json }
 
     image_urls = []
     @map.warpables.each do |warpable|
