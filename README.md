@@ -9,6 +9,22 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 
 ![demo](https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif)
 
+## Table of Contents
+1. [Architecture](#architecture)
+2. [Installation](#installation)
+	- [Quick Installation](#quick-installation)
+	- [Installation Video](#installation-video)
+	- [Prerequisites](#prerequisites)
+	- [Standard Installation](#standard-installation)
+3. [Logging in when running locally](#logging-in-when-running-locally)
+4. [Bugs and support](#bugs-and-support)
+5. [Developers](#developers)
+6. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
+7. [License](#license)
+
+
+****
+
 ## Architecture
 
 MapKnitter is broken into three major components:
@@ -23,9 +39,13 @@ MapKnitter is broken into three major components:
 
 **Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
 
+Component 3 is soon to be replaced with an external exporter service built in a small Sinatra app called [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem.
+
 Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
-## Quick install
+## Installation
+
+### Quick install
 
 We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://aws.amazon.com/cloud9/
 
@@ -42,13 +62,13 @@ To use it:
 
 If you have any trouble installing, we're sorry! **Please [click here](https://github.com/publiclab/mapknitter/issues/307) to get support.**
 
-## Installation video
+### Installation video
 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
 
 http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
-## Prerequisites
+### Prerequisites
 
 Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
 
@@ -88,7 +108,7 @@ Once NPM is installed, you should be able to run:
 
 `sudo npm install -g bower`
 
-## Installation
+### Standard Installation
 
 You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
 
@@ -100,6 +120,22 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `bower install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
+
+### Running tests
+
+When you try to run tests in Mapknitter, you can the default Rake tasks, such as:
+
+`rake test:units`
+`rake test:functionals`
+`rake test:integration`
+
+or simply:
+
+`rake test`
+
+By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our task defined as:
+
+`rake test:all`
 
 ## Logging in when running locally
 
