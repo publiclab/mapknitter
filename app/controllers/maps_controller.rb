@@ -1,10 +1,9 @@
-# rubocop:disable LineLength
 require 'open3'
 
 class MapsController < ApplicationController
   protect_from_forgery except: :export
-  before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images export exports destroy]
+  before_filter :require_login, only: %i(edit update destroy)
+  before_filter :find_map, only: %i(show annotate embed edit update images export exports destroy)
 
   layout 'knitter2'
 
@@ -173,32 +172,32 @@ class MapsController < ApplicationController
 
   def featured
     @title = 'Featured maps'
-    @maps = Map.joins(:warpables)
-               .select('maps.*, count(maps.id) as image_count')
-               .group('warpables.map_id')
-               .order('image_count DESC')
-               .paginate(page: params[:page], per_page: 24)
+    @maps = Map.featured.paginate(page: params[:page], per_page: 24)
     render 'maps/index', layout: 'application'
   end
 
   def search
-    params[:id] ||= params[:q]
-    @maps = Map.select('archived, author, created_at, description, id, lat, license, location, name, slug,
-                        tile_layer, tile_url, tiles, updated_at, user_id, version, zoom')
-               .where('archived = ? AND (author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?)',
-                      false, '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%', '%' + params[:id] + '%')
-               .paginate(page: params[:page], per_page: 24)
-    @title = "Search results for '#{params[:id]}'"
+    data = params[:q]
+    query = params[:q].gsub(/\s+/, '')
+
     respond_to do |format|
-      format.html { render 'maps/index', layout: 'application' }
-      format.json { render json: @maps }
+      if query.length < 3
+        flash.now[:notice] = 'Invalid Query: non white-space character count is less than 3'
+        @title = 'Featured maps'
+        @maps = Map.featured.paginate(page: params[:page], per_page: 24)
+        format.html { render 'maps/index', layout: 'application' }
+      else
+        @title = "Search results for '#{data}'"
+        @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
+        format.html { render 'maps/index', layout: 'application' }
+        format.json { render json: @maps }
+      end
     end
   end
-  
+
   private
 
   def find_map
     @map = Map.find(params[:id])
   end
 end
-# rubocop:enable LineLength

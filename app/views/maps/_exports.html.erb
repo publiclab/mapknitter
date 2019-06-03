@@ -1,4 +1,4 @@
-<% if @map.exports.length == 0 || @map.exports.first.status == 'none' %>
+<% if @map.exports.length.zero? || @map.exports.first.status == 'none' %>
   <li class="dropdown-header">No export formats available</li>
 <% else %>
 <% if !@map.exports.first.jpg && !@map.exports.first.geotiff && !@map.exports.first.tms && !@map.exports.first.zip %>

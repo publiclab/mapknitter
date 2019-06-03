@@ -4,6 +4,7 @@ class WarpableTest < ActiveSupport::TestCase
 
   def setup
     @warp = warpables(:one)
+    @map = maps(:saugus)
   end
 
   test 'basic warpable attributes' do
@@ -55,13 +56,29 @@ class WarpableTest < ActiveSupport::TestCase
 
   test "try export" do
     # make a sample image
+    system('mkdir -p public/warps/saugus-landfill-incinerator-working')
     system('mkdir -p public/system/images/1/original')
     system('cp test/fixtures/demo.png public/system/images/1/original/')
     system('mkdir -p public/warps/saugus-landfill-incinerator')
     system('touch public/warps/saugus-landfill-incinerator/folder')
+    system('mkdir -p public/system/images/2/original/')
+    system('cp test/fixtures/demo.png public/system/images/2/original/test.png')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
+
+    origin = Exporter.distort_warpables(2,
+                                        @map.warpables,
+                                        @map.export,
+                                        @map.slug)
+
     assert_not_nil @warp.save_dimensions
     assert_not_nil @warp.user_id
+
+    Exporter.generate_composite_tiff(nil,
+                                     origin,
+                                     @map.placed_warpables,
+                                     @map.slug,
+                                     false)
+
     assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
   end
 end
