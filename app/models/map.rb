@@ -32,29 +32,15 @@ class Map < ActiveRecord::Base
   has_many :annotations, dependent: :destroy
   belongs_to :user
 
+  has_many :warpables 
   scope :active, -> { where(archived: false) }
   scope :has_user, -> { where('user_id != ?', 0) }
-
-  has_many :warpables do
-    def public_filenames
-      filenames = {}
-      each do |warpable|
-        filenames[warpable.id] = {}
-        sizes = Array.new(Warpable::THUMBNAILS.keys).push(nil)
-        sizes.each do |size|
-          key = !size.nil? ? size : "original"
-          filenames[warpable.id][key] = warpable.public_filename(size)
-        end
-      end
-      filenames
-    end
-  end
 
   def validate
     lat >= -90 && lat <= 90 && lon >= -180 && lat <= 180 if name != 'untitled'
   end
 
-  # Hash the password before saving the record
+  # Hash the password before saving the record.
   def before_create
     self.password = Password.update(password) if password != ""
   end
