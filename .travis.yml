@@ -24,6 +24,7 @@ env:
     - TASK="CI=true TRAVIS=true rake test:unit"
     - TASK="CI=true TRAVIS=true rake test:integration"
     - TASK="CI=true TRAVIS=true rake test:functional"
+    - TASK="CI=true TRAVIS=true bundle exec rubocop"
     - TASK="CI=true TRAVIS=true rake assets:precompile"
 
 script:
