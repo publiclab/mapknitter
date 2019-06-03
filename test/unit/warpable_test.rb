@@ -7,7 +7,7 @@ class WarpableTest < ActiveSupport::TestCase
     @map = maps(:saugus)
   end
 
-  test 'basic warpable attributes' do
+  test 'should have basic warpable attributes' do
     assert_equal "demo.png", @warp.image_file_name
     assert_equal "image/png", @warp.image_content_type
     assert_equal 392, @warp.height
@@ -19,7 +19,7 @@ class WarpableTest < ActiveSupport::TestCase
     assert_equal "1,2,3,4", @warp.nodes
   end
 
-  test "json format methods" do
+  test 'should output json format methods' do
     assert_not_nil @warp.as_json
     assert_equal Hash, @warp.as_json.class
     assert_equal @warp.attributes.size + 2, @warp.as_json.size
@@ -33,7 +33,7 @@ class WarpableTest < ActiveSupport::TestCase
     assert_equal 3, @warp.fup_error_json.size
   end
 
-  test 'warpable small methods' do
+  test 'should execute warpable small methods' do
     assert_not_nil @warp.placed?
     assert @warp.placed?
     assert_equal false, Warpable.new.placed?
@@ -54,7 +54,7 @@ class WarpableTest < ActiveSupport::TestCase
     assert_empty Warpable.histogram_cm_per_pixel
   end
 
-  test "try export" do
+  test 'should try export warpables' do
     # make a sample image
     system('mkdir -p public/warps/saugus-landfill-incinerator-working')
     system('mkdir -p public/system/images/1/original')

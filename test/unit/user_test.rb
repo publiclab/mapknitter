@@ -30,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
     )
   end
 
-  test 'user simple query methods' do
+  test 'should edit and delete map' do
     user = users(:quentin)
     map = maps(:saugus)
     assert user.owns?(map)
