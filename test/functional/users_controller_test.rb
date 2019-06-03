@@ -5,13 +5,12 @@ require 'users_controller'
 class UsersController; def rescue_action(e) raise e end; end
 
 class UsersControllerTest < ActionController::TestCase
-
   fixtures :users
 
   # called before every single test
   def setup
     @user = users(:quentin)
-  end 
+  end
 
   test "should get index" do
     get :index
@@ -24,5 +23,4 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil :user
   end
-
 end
