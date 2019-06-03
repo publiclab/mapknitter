@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class FeedsControllerTest < ActionController::TestCase
-
   # called before every single test
   def setup
     @map = maps(:saugus)

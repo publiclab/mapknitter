@@ -1,12 +1,11 @@
 require 'test_helper'
 
 class TagsControllerTest < ActionController::TestCase
-
   # called before every single test
   def setup
     @map = maps(:saugus)
     @tag = tags(:nice)
-  end 
+  end
 
   test "should create tag" do
     session[:user_id] = 1 # log in

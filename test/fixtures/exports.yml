@@ -6,14 +6,16 @@
    bands_string: ''
    cm_per_pixel: 10
 
-two:
+ two:
    map_id: 2
    user_id: 1
    bands_string: ''
    cm_per_pixel: 5
+   status: 'complete'
 
-three:
+ three:
    map_id: 3
    user_id: 2
    bands_string: ''
    cm_per_pixel: 3
+   status: 'failed'
