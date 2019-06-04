@@ -31,7 +31,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon
-    assert_true Map.first.validate
+    assert Map.first.validate
     assert_equal Map.count, Map.new_maps.size
   end
 
