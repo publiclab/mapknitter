@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-  before_filter :require_login, only: %i[edit update destroy]
+  before_filter :require_login, only: %i(edit update destroy)
 
   def create
     @map = Map.find params[:map_id]

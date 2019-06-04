@@ -27,5 +27,4 @@ class UsersController < ApplicationController
   def sort_direction
     params[:direction] || 'desc'
   end
-
 end
