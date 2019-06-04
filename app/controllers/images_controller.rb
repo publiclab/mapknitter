@@ -93,7 +93,7 @@ class ImagesController < ApplicationController
     @warpable.locked = params[:locked]
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
     @warpable.save
-    render plain: 'success'
+    render html: 'success'
   end
 
   def destroy
