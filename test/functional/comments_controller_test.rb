@@ -28,8 +28,8 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
@@ -44,8 +44,8 @@ class CommentsControllerTest < ActionController::TestCase
 
     put(:update,
         id: @comment.id,
-        map_id: @map.slug,
         comment: {
+          map_id: @map.id,
           body: "I'm gonna troll you!"
         })
 
@@ -139,8 +139,8 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @user.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+           map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
@@ -153,9 +153,9 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     post(:create,
-         map_id: @map.slug,
          comment: {
-           body: "I'm gonna troll you!"
+      map_id: @map.id,
+      body: "I'm gonna troll you!"
          })
 
     email = ActionMailer::Base.deliveries.last
@@ -172,16 +172,16 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @chris.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
     session[:user_id] = @joshua.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "Yeah we'll see!"
          })
 
