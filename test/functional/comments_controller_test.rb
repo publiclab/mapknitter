@@ -5,6 +5,8 @@ class CommentsControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
+    @emails = ActionMailer::Base.deliveries
+    @emails.clear
   end
 
   def teardown
@@ -145,7 +147,7 @@ class CommentsControllerTest < ActionController::TestCase
          })
 
     assert_response :success
-    assert_not ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
+    assert_not @emails.collect(&:to).include?([@user.email])
   end
 
   test "should send email to author if someone else comments" do
@@ -158,11 +160,9 @@ class CommentsControllerTest < ActionController::TestCase
       body: "I'm gonna troll you!"
          })
 
-    email = ActionMailer::Base.deliveries.last
-
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@user.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 
   test "should send email to all commenters on commenting" do
@@ -185,10 +185,8 @@ class CommentsControllerTest < ActionController::TestCase
            body: "Yeah we'll see!"
          })
 
-    email = ActionMailer::Base.deliveries.last
-
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@chris.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@chris.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 end
