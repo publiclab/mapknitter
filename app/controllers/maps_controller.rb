@@ -3,8 +3,8 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
 
-  before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images destroy archive]
+  before_filter :require_login, only: %i(edit update destroy)
+  before_filter :find_map, only: %i(show annotate embed edit update images destroy archive)
 
   layout 'knitter2'
 
@@ -77,7 +77,7 @@ class MapsController < ApplicationController
     else
       flash[:error] = 'Only admins may archive maps.'
     end
-    redirect_to "/?_=#{Time.now.to_i.to_s}"
+    redirect_to "/?_=#{Time.now.to_i}"
   end
 
   def embed
@@ -100,7 +100,7 @@ class MapsController < ApplicationController
     # @map.lon =         params[:map][:lon]
     # @map.description = params[:map][:description]
     # @map.license =     params[:map][:license] if @map.user_id == current_user.id
-  @map.update_attributes(map_params)
+    @map.update_attributes(map_params)
 
     save_tags(@map)
     @map.save

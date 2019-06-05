@@ -1,8 +1,8 @@
 require 'open-uri'
 class ImagesController < ApplicationController
   rescue_from Errno::ENOENT, Errno::ETIMEDOUT,
-    OpenURI::HTTPError, Timeout::Error,
-    with: :url_upload_not_found
+              OpenURI::HTTPError, Timeout::Error,
+              with: :url_upload_not_found
   protect_from_forgery except: %i(update delete)
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false

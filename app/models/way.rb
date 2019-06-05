@@ -1,5 +1,5 @@
 class Way < ActiveRecord::Base
-  has_many :nodes, :dependent => :destroy
+  has_many :nodes, dependent: :destroy
 
   def bbox=(bbox)
     # counting from left, counter-clockwise
