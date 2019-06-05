@@ -52,12 +52,12 @@ class Export < ActiveRecord::Base
 
   def self.export_count
     Export.where('status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',
-                 (DateTime.now-24.hours).to_s(:db)).count
+                 (DateTime.now - 24.hours).to_s(:db)).count
   end
 
   # all exports currently running
   def self.exporting
     Export.where('status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',
-                 (DateTime.now-24.hours).to_s(:db))
+                  (DateTime.now - 24.hours).to_s(:db))
   end
 end
