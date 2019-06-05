@@ -52,6 +52,8 @@ $ git checkout -b main
 
 $ git remote add upstream https://github.com/publiclab/mapknitter.git 
 
+git remote update
+
 $ git pull upstream main
 
 ```
