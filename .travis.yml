@@ -4,6 +4,7 @@ rvm:
 
 services:
   - mysql
+  - docker
 
 install:
   - cp config/database.yml.example config/database.yml
@@ -18,14 +19,15 @@ env:
     - CI=true
     - TRAVIS=true
   matrix:
-    - TASK="rake test:unit"
-    - TASK="rake test:integration"
-    - TASK="rake test:functional"
-    - TASK="rake assets:precompile"
-    - TASK="rubocop"
+    - TASK="bundle exec rake test:unit"
+    - TASK="bundle exec rake test:integration"
+    - TASK="bundle exec rake test:functional"
+    - TASK="RAILS_ENV=production bundle exec rake assets:precompile"
+    - TASK="bundle exec rubocop"
+    - TASK="docker build -t mapknitter ."
 
 script:
-  - bundle exec $TASK
+  - $TASK
 
 branches:
   only:
