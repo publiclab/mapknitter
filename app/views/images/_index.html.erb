@@ -3,8 +3,9 @@
   <p id="no-images">No images uploaded. </p>
   <%end%>
 <table class="warpables-all table table-striped">
-  <tbody>
-    <% @map.warpables.each do |warpable| %>
+  <tbody data-url = "<%= sort_images_path %>">
+    <% ary = @map.warpables.sort { |a, b| a.position <=> b.position } %>
+    <% ary.each do |warpable| %>
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
           <%= image_tag warpable.image.url(:thumb), 
@@ -70,3 +71,14 @@
     <% end %>
   </tbody>
 </table>
+<script>
+  $('tbody').sortable({
+    update: function(e,ui){
+      $.ajax({
+        url: $(this).data("url"),
+        type: "POST",
+        data: $(this).sortable('serialize'),
+      })
+    }
+  });
+</script>

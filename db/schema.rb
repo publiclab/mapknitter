@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190420025012) do
+ActiveRecord::Schema.define(:version => 20190607072028) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "map_id"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(:version => 20190420025012) do
     t.boolean  "deleted",            :default => false, :null => false
     t.text     "history",                               :null => false
     t.float    "cm_per_pixel",       :default => 0.0,   :null => false
+    t.integer  "position"
   end
 
   create_table "ways", :force => true do |t|

@@ -96,6 +96,18 @@ class ImagesController < ApplicationController
     render text: 'success'
   end
 
+  def sort
+    params[:warpable].each_with_index do |id, index|
+      Warpable.where(id: id).update_all(position: index + 1)
+    end
+    @warpable = Warpable.joins(:maps)
+                        .group('warpables.position')
+                        .order('position')
+    respond_to do |format|
+      format.json { head :no_content }
+    end
+  end
+
   def destroy
     @warpable = Warpable.find params[:id]
     if logged_in? && current_user.can_delete?(@warpable)
