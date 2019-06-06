@@ -26,9 +26,6 @@ env:
 
 script:
   - bundle exec $TASK
-  - >    
-    bundle exec rake test > /dev/null 2>&1 &&
-    bash <(curl -s https://codecov.io/bash)
 
 branches:
   only:
