@@ -18,16 +18,23 @@ env:
     - RAILS_ENV=test
     - CI=true
     - TRAVIS=true
-  matrix:
-    - TASK="bundle exec rake test:unit"
-    - TASK="bundle exec rake test:integration"
-    - TASK="bundle exec rake test:functional"
-    - TASK="RAILS_ENV=production bundle exec rake assets:precompile"
-    - TASK="bundle exec rubocop"
-    - TASK="docker build -t mapknitter ."
 
-script:
-  - $TASK
+jobs:
+  include:
+    - name: "Unit Tests"
+      script: bundle exec rake test:unit
+    - name: "Integration Tests"
+      script: bundle exec rake test:integration
+    - name: "Functional Tests"
+      script: bundle exec rake test:functional
+    - name: "Rubocop Linter"
+      script: bundle exec rubocop
+    - name: "Docker Builds"
+      script: docker build -t mapknitter .
+    - name: "Asset Precompilation"
+      env:
+        - RAILS_ENV=production
+      script: bundle exec rake assets:precompile
 
 branches:
   only:
