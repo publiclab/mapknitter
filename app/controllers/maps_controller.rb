@@ -94,12 +94,6 @@ class MapsController < ApplicationController
   def edit; end
 
   def update
-    # @map.name =        params[:map][:name]
-    # @map.location =    params[:map][:location]
-    # @map.lat =         params[:map][:lat]
-    # @map.lon =         params[:map][:lon]
-    # @map.description = params[:map][:description]
-    # @map.license =     params[:map][:license] if @map.user_id == current_user.id
     @map.update_attributes(map_params)
 
     save_tags(@map)
