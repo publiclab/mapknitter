@@ -12,7 +12,7 @@ class Map < ActiveRecord::Base
   #                       :with => /^[\w-]*$/,
   #                       :message => " must not include spaces and must be alphanumeric, as it'll be used in the URL of your map, like: https://mapknitter.org/maps/your-map-name. You may use dashes and underscores.",
   #                       :on => :create
-#  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+  #  validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   validates_with NotAtOriginValidator
   validates :lat, :lon, NotAtOrigin: true
 
@@ -22,7 +22,7 @@ class Map < ActiveRecord::Base
   has_many :annotations, dependent: :destroy
   belongs_to :user
 
-  has_many :warpables 
+  has_many :warpables
   scope :active, -> { where(archived: false) }
   scope :has_user, -> { where('user_id != ?', 0) }
 
@@ -87,7 +87,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.new_maps
-    Map.where( ['password = "" AND archived = "false"'])
+    Map.where(['password = "" AND archived = "false"'])
       .order('created_at DESC')
       .limit(12)
   end
@@ -140,7 +140,7 @@ class Map < ActiveRecord::Base
     return [] if lat.to_f == 0.0 || lon.to_f == 0.0
 
     Map.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
-               id, lat - dist, lat + dist, lon - dist, lon + dist)
+      id, lat - dist, lat + dist, lon - dist, lon + dist)
       .limit(10)
   end
 

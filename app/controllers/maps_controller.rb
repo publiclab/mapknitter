@@ -3,8 +3,8 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
 
-  before_filter :require_login, only: %i[edit update destroy]
-  before_filter :find_map, only: %i[show annotate embed edit update images destroy archive]
+  before_filter :require_login, only: %i(edit update destroy)
+  before_filter :find_map, only: %i(show annotate embed edit update images destroy archive)
 
   layout 'knitter2'
 
