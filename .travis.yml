@@ -21,6 +21,7 @@ env:
     - TASK="rake test:unit"
     - TASK="rake test:integration"
     - TASK="rake test:functional"
+    - TASK="rake assets:precompile"
 
 script:
   - bundle exec $TASK
@@ -32,4 +33,5 @@ branches:
   only:
     - main
     - unstable
+    - development
 
