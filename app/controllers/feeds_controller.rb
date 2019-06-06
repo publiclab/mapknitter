@@ -4,7 +4,7 @@ class FeedsController < ApplicationController
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)
     @maps = Map.where(archived: false, password: '')
-               .joins(%i[user warpables])
+               .joins(%i(user warpables))
                .group('maps.id')
                .order('id DESC')
                .limit(20)

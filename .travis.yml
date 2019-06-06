@@ -22,6 +22,7 @@ env:
     - TASK="rake test:integration"
     - TASK="rake test:functional"
     - TASK="rake assets:precompile"
+    - TASK="rubocop"
 
 script:
   - bundle exec $TASK
