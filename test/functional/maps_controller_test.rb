@@ -148,12 +148,13 @@ class MapsControllerTest < ActionController::TestCase
     skip 'images and warpable naming contradicts with rails naming convention'
     session[:user_id] = 1
     before_count = Map.count
-    post(:create, map: {
-           name: 'Coal terminal map',
-           slug: 'coal-terminal'
-         })
+    post(:new, map: {
+      name: 'Coal terminal map',
+      slug: 'coal-terminal'
+    })
     @map = assigns(:map)
 
+    assert_not @map.save
     assert_response :success
     assert_template :new
     assert_equal before_count, Map.count
