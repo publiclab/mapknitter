@@ -140,7 +140,7 @@ class Map < ActiveRecord::Base
     return [] if lat.to_f == 0.0 || lon.to_f == 0.0
 
     Map.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
-              id, lat - dist, lat + dist, lon - dist, lon + dist)
+      id, lat - dist, lat + dist, lon - dist, lon + dist)
       .limit(10)
   end
 

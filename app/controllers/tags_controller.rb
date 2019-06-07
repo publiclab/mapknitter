@@ -5,7 +5,7 @@ class TagsController < ApplicationController
     @map = Map.find_by(slug: params[:map_id])
     if logged_in?
       save_tags(@map)
-      redirect_to "/maps/#{@map.slug}"
+      redirect_to @map
     else
       flash[:error] = 'You must be logged in to add tags'
       redirect_to "/login?back_to=/maps/#{@map.slug}"
