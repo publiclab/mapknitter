@@ -148,7 +148,7 @@ class MapsControllerTest < ActionController::TestCase
     skip 'images and warpable naming contradicts with rails naming convention'
     session[:user_id] = 1
     before_count = Map.count
-    post(:new, map: {
+    post(:create, map: {
       name: 'Coal terminal map',
       slug: 'coal-terminal'
     })
