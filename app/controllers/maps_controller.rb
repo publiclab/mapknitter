@@ -36,7 +36,7 @@ class MapsController < ApplicationController
       @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
       if @map.save
-        redirect_to "/maps/#{@map.slug}"
+        redirect_to @map
       else
         render 'new'
       end
@@ -44,7 +44,7 @@ class MapsController < ApplicationController
       @map = Map.new(map_params)
       if Rails.env != 'production' || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
         if @map.save
-          redirect_to "/maps/#{@map.slug}"
+          redirect_to @map
         else
           render 'new'
         end
@@ -108,7 +108,7 @@ class MapsController < ApplicationController
       redirect_to '/'
     else
       flash[:error] = 'Only admins or map owners may delete maps.'
-      redirect_to "/maps/#{@map.slug}"
+      redirect_to @map
     end
   end
 
