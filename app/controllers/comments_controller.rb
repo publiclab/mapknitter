@@ -28,7 +28,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find params[:id]
     if logged_in? && current_user.can_edit?(@comment)
       @comment.update_attributes(comment_params)
-      redirect_to  @comment.map
+      redirect_to @comment.map
     else
       flash[:error] = 'You do not have permissions to update that comment.'
       redirect_to '/login'
@@ -44,7 +44,7 @@ class CommentsController < ApplicationController
     else
       flash[:error] = 'You do not have permission to delete that comment.'
     end
-    redirect_to  @comment.map
+    redirect_to @comment.map
   end
 
   private
