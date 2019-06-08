@@ -195,6 +195,7 @@ class Map < ActiveRecord::Base
     if !warpables.empty?
       scales = []
       count = 0
+      average = 0
       placed_warpables.each do |warpable|
         count += 1
         res = warpable.cm_per_pixel
@@ -202,7 +203,8 @@ class Map < ActiveRecord::Base
         scales << res unless res.nil?
       end
       total_sum = (scales.inject { |sum, n| sum + n }) if scales
-      return total_sum / count if total_sum
+      average = total_sum/count if total_sum
+      average
     else
       0
     end
