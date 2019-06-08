@@ -203,7 +203,7 @@ class Map < ActiveRecord::Base
         scales << res unless res.nil?
       end
       total_sum = (scales.inject { |sum, n| sum + n }) if scales
-      average = total_sum/count if total_sum
+      average = total_sum / count if total_sum
       average
     else
       0
