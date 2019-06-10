@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     if user_id
       begin
         @user = User.find(user_id)
-      rescue
+      rescue StandardError
         @user = nil
       end
     else
@@ -41,13 +41,14 @@ class ApplicationController < ActionController::Base
 
     begin
       user_id && User.find(user_id) ? true : false
-    rescue
+    rescue StandardError
       return false
     end
   end
 
   def save_tags(map)
     return unless params[:tags].present?
+
     params[:tags].tr(' ', ',').split(',').each do |tagname|
       map.add_tag(tagname.strip, current_user)
     end

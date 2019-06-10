@@ -1,9 +1,9 @@
 require 'open-uri'
 class ImagesController < ApplicationController
   rescue_from Errno::ENOENT, Errno::ETIMEDOUT,
-              OpenURI::HTTPError, Timeout::Error,
-              with: :url_upload_not_found
-  protect_from_forgery except: %i[update delete]
+    OpenURI::HTTPError, Timeout::Error,
+    with: :url_upload_not_found
+  protect_from_forgery except: %i(update delete)
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
 
@@ -21,7 +21,6 @@ class ImagesController < ApplicationController
     end
   end
 
-  # rubocop:disable LineLength
   # assign attributes directly after rails update
   def create
     @warpable = Warpable.new
@@ -41,7 +40,6 @@ class ImagesController < ApplicationController
       end
     end
   end
-  # rubocop:enable LineLength
 
   # mapknitter.org/import/<map-name>/?url=http://myurl.com/image.jpg
   def import

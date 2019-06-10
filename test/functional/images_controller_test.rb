@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ImagesControllerTest < ActionController::TestCase
-
   # called before every single test
   def setup
     @map = maps(:saugus)
@@ -34,7 +33,7 @@ class ImagesControllerTest < ActionController::TestCase
 
     post :create, map_id: @map.id, uploaded_data: @uploaded_data
     assert_response :success
-    assert_equal before_count+1, Warpable.count
+    assert_equal before_count + 1, Warpable.count
   end
 
   test 'should return correct status and type on create' do
@@ -46,9 +45,9 @@ class ImagesControllerTest < ActionController::TestCase
 
   test 'should show the image' do
     get :show, id: @warp.id, format: 'json'
-     json_response = JSON.parse(response.body)
-     assert_equal @warp.id, json_response["id"]
-     assert_response :success
+    json_response = JSON.parse(response.body)
+    assert_equal @warp.id, json_response["id"]
+    assert_response :success
   end
 
   test 'should update an image' do
@@ -72,4 +71,18 @@ class ImagesControllerTest < ActionController::TestCase
     assert_redirected_to '/login'
     assert_not_nil flash[:error]
   end
+
+  # Imports don't work. Relevent issue: https://github.com/publiclab/mapknitter/issues/614
+  # test 'should import an image' do
+  #   get :import, name: @map.name, url: 'https://edit.co.uk/uploads/2016/12/Image-2-Alternatives-to-stock-photography-Thinkstock.jpg'
+  #   assert_response :redirect
+  #   assert_redirected_to '/maps/' + @map.name
+  # end
+
+  # test 'should display error if import failed' do
+  #   get :import, name: @map.name, url: 'fake url'
+  #   assert_response :redirect
+  #   assert_redirected_to '/map/edit/' + @map.name
+  #   assert_not_nil flash[:notice]
+  # end
 end

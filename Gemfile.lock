@@ -32,6 +32,7 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     arel (3.0.3)
+    ast (2.4.0)
     autoprefixer-rails (9.5.1.1)
       execjs
     aws-sdk (1.5.8)
@@ -51,7 +52,7 @@ GEM
     execjs (2.7.0)
     faker (1.9.3)
       i18n (>= 0.7)
-    ffi (1.10.0)
+    ffi (1.11.1)
     friendly_id (4.0.10.1)
       activerecord (>= 3.0, < 4.0)
     geokit (1.13.1)
@@ -96,12 +97,16 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
+    parallel (1.17.0)
+    parser (2.6.3.0)
+      ast (~> 2.4.0)
     passenger (6.0.2)
       rack
       rake (>= 0.8.1)
     polyglot (0.3.5)
     popper_js (1.14.5)
     power_assert (1.1.4)
+    powerpack (0.1.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -132,6 +137,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
+    rainbow (3.0.0)
     rake (12.3.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
@@ -145,9 +151,17 @@ GEM
     right_aws (3.1.0)
       right_http_connection (>= 1.2.5)
     right_http_connection (1.5.0)
+    rubocop (0.52.1)
+      parallel (~> 1.10)
+      parser (>= 2.4.0.2, < 3.0)
+      powerpack (~> 0.1)
+      rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-openid (2.7.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
+    ruby-progressbar (1.10.1)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -181,6 +195,7 @@ GEM
     tzinfo (0.3.55)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
+    unicode-display_width (1.6.0)
     uuidtools (2.1.5)
     will_paginate (3.1.7)
     will_paginate-bootstrap4 (0.2.2)
@@ -212,6 +227,7 @@ DEPENDENCIES
   rdiscount (= 2.2.0.1)
   recaptcha
   right_aws
+  rubocop (~> 0.52.0)
   ruby-openid (~> 2.5)
   sass
   simplecov
@@ -229,4 +245,4 @@ RUBY VERSION
    ruby 2.4.6p354
 
 BUNDLED WITH
-   1.17.3
+   1.16.6
