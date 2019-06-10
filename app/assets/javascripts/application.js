@@ -14,6 +14,7 @@
 //= require popper
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
+//= require Google.js
 
 //= require bootstrap/dist/js/bootstrap.js
 

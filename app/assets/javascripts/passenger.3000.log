@@ -1,0 +1,28 @@
+[ N 2019-06-10 19:28:19.6157 31147/T1 age/Wat/WatchdogMain.cpp:1366 ]: Starting Passenger watchdog...
+[ N 2019-06-10 19:28:19.6339 31150/T1 age/Cor/CoreMain.cpp:1339 ]: Starting Passenger core...
+[ N 2019-06-10 19:28:19.6341 31150/T1 age/Cor/CoreMain.cpp:256 ]: Passenger core running in multi-application mode.
+[ N 2019-06-10 19:28:19.6458 31150/T1 age/Cor/CoreMain.cpp:1014 ]: Passenger core online, PID 31150
+2019/06/10 19:28:21 [error] 31170#0: *4 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "HEAD / HTTP/1.1", host: "0.0.0.0"
+[ N 2019-06-10 19:28:22.9322 31150/T5 age/Cor/SecurityUpdateChecker.h:519 ]: Security update check: no update found (next check in 24 hours)
+2019/06/10 19:28:35 [error] 31170#0: *5 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:44 [error] 31170#0: *5 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:44 [error] 31170#0: *5 open() "/home/k/proj/mapknitter/app/assets/javascripts/public/favicon.ico" failed (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:45 [error] 31170#0: *6 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:46 [error] 31170#0: *6 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:46 [error] 31170#0: *6 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:47 [error] 31170#0: *6 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+2019/06/10 19:28:47 [error] 31170#0: *6 "/home/k/proj/mapknitter/app/assets/javascripts/public/index.html" is not found (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "localhost:3000"
+
+[ N 2019-06-10 19:28:50.7491 31150/T9 age/Cor/CoreMain.cpp:671 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ N 2019-06-10 19:28:50.7491 31150/T1 age/Cor/CoreMain.cpp:1245 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ N 2019-06-10 19:28:50.7492 31150/T9 Ser/Server.h:902 ]: [ServerThr.1] Freed 0 spare client objects
+[ N 2019-06-10 19:28:50.7492 31150/T9 Ser/Server.h:558 ]: [ServerThr.1] Shutdown finished
+[ N 2019-06-10 19:28:50.7492 31150/Ta Ser/Server.h:902 ]: [ServerThr.2] Freed 0 spare client objects
+[ N 2019-06-10 19:28:50.7492 31150/Td Ser/Server.h:902 ]: [ServerThr.3] Freed 0 spare client objects
+[ N 2019-06-10 19:28:50.7493 31150/Ta Ser/Server.h:558 ]: [ServerThr.2] Shutdown finished
+[ N 2019-06-10 19:28:50.7493 31150/Td Ser/Server.h:558 ]: [ServerThr.3] Shutdown finished
+[ N 2019-06-10 19:28:50.7493 31150/Te Ser/Server.h:902 ]: [ServerThr.4] Freed 0 spare client objects
+[ N 2019-06-10 19:28:50.7493 31150/Te Ser/Server.h:558 ]: [ServerThr.4] Shutdown finished
+[ N 2019-06-10 19:28:50.7495 31150/Tg Ser/Server.h:902 ]: [ApiServer] Freed 0 spare client objects
+[ N 2019-06-10 19:28:50.7495 31150/Tg Ser/Server.h:558 ]: [ApiServer] Shutdown finished
+[ N 2019-06-10 19:28:51.8649 31150/T1 age/Cor/CoreMain.cpp:1324 ]: Passenger core shutdown finished
