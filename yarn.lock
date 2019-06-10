@@ -2,181 +2,6 @@
 # yarn lockfile v1
 
 
-"@bower_components/blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=2.1.1":
-  version "3.14.0"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/9f3deb2e710d39c72a988559609d9dc9a319de0b"
-
-"@bower_components/blueimp-file-upload@blueimp/jQuery-File-Upload#~9.8.1":
-  version "9.8.1"
-  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/80b9f7818563dc11b8979b69df30c65f49bc1203"
-
-"@bower_components/blueimp-load-image@blueimp/JavaScript-Load-Image#>=1.13.0":
-  version "2.22.0"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Load-Image/tar.gz/b2e6b29de05a882048e80bec0c1f1e94d65ca41a"
-
-"@bower_components/blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4":
-  version "2.5.4"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Templates/tar.gz/b75e882ec0e353ce2d8bfdb2ea755060d2012368"
-
-"@bower_components/bootstrap@twbs/bootstrap#^4.3.1":
-  version "4.3.1"
-  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/8fa0d3010112dca5dd6dd501173415856001ba8b"
-
-"@bower_components/cartagen@jywarren/cartagen#*":
-  version "0.0.0"
-  resolved "https://codeload.github.com/jywarren/cartagen/tar.gz/b348dd06e2d1a69936826e9ef4e6f9fa0ed4a060"
-
-"@bower_components/exif-js@jseidelin/exif-js#*":
-  version "2.3.0"
-  resolved "https://codeload.github.com/jseidelin/exif-js/tar.gz/a10f3d53f3f72defef4cad5a54a90ee308901fe6"
-
-"@bower_components/font-awesome@FortAwesome/Font-Awesome#^4.2.0":
-  version "4.7.0"
-  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a8386aae19e200ddb0f6845b5feeee5eb7013687"
-
-"@bower_components/fontawesome@FortAwesome/Font-Awesome#~4.2.0":
-  version "4.2.0"
-  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
-
-"@bower_components/glfx-js@jywarren/glfx.js#*":
-  version "0.0.1"
-  resolved "https://codeload.github.com/jywarren/glfx.js/tar.gz/07a117c2b7c75a8556d7338108c0976d110c11a2"
-
-"@bower_components/image-sequencer@publiclab/image-sequencer#~1.4.0":
-  version "1.4.1"
-  resolved "https://codeload.github.com/publiclab/image-sequencer/tar.gz/cbbfbff4bc14f494c423867cc4572b001c5c3c4d"
-  dependencies:
-    bootstrap "~3.2.0"
-    buffer "~5.0.2"
-    commander "^2.11.0"
-    data-uri-to-buffer "^2.0.0"
-    fisheyegl "^0.1.2"
-    font-awesome "~4.5.0"
-    get-pixels "~3.3.0"
-    imgareaselect "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
-    jquery "~2"
-    jsqr "^0.2.2"
-    lodash "^4.17.5"
-    ndarray-gaussian-filter "^1.0.0"
-    ora "^2.0.0"
-    pace "0.0.4"
-    readline-sync "^1.4.7"
-    save-pixels "~2.3.4"
-    urify "^2.1.0"
-
-"@bower_components/ion-rangeslider@ionDen/ion.rangeslider#~2.3.0":
-  version "2.3.0"
-  resolved "https://codeload.github.com/ionDen/ion.rangeslider/tar.gz/c98c10d3d360aa52e997bb8e4fd371c958f78e4b"
-  dependencies:
-    jquery ">=1.8"
-
-"@bower_components/jquery-ui@components/jqueryui#^1.12.1":
-  version "1.12.1"
-  resolved "https://codeload.github.com/components/jqueryui/tar.gz/44ecf3794cc56b65954cc19737234a3119d036cc"
-
-"@bower_components/jquery-ujs@rails/jquery-ujs#~1.0.3":
-  version "0.0.0"
-  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
-
-"@bower_components/jquery@jquery/jquery-dist#^2.1.3":
-  version "2.2.4"
-  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/c0185ab7c75aab88762c5aae780b9d83b80eda72"
-
-"@bower_components/junction@theleagueof/junction#*":
-  version "0.0.0"
-  resolved "https://codeload.github.com/theleagueof/junction/tar.gz/fb73260e86dd301b383cf6cc9ca8e726ef806535"
-
-"@bower_components/leaflet-dist@vperron/leaflet-dist#0.7.x":
-  version "0.0.0"
-  resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
-
-"@bower_components/leaflet-distortableimage@publiclab/Leaflet.DistortableImage#^0.4.3":
-  version "0.4.3"
-  resolved "https://codeload.github.com/publiclab/Leaflet.DistortableImage/tar.gz/cb1ed3875f9ad07942903a9daa778076ce5d7fd1"
-  dependencies:
-    grunt-cli "^1.2.0"
-
-"@bower_components/leaflet-draw@Leaflet/Leaflet.draw#0.2.4":
-  version "0.2.3"
-  resolved "https://codeload.github.com/Leaflet/Leaflet.draw/tar.gz/07b1448f4eba33982f662398988f0337ee55cc02"
-
-"@bower_components/leaflet-easybutton@CliffCloud/Leaflet.EasyButton#1.0.0":
-  version "0.0.0"
-  resolved "https://codeload.github.com/CliffCloud/Leaflet.EasyButton/tar.gz/b379d59515acc4e9761eb1c92ea2a6e6f8b3ab1b"
-
-"@bower_components/leaflet-environmental-layers@publiclab/leaflet-environmental-layers#^1.1.2":
-  version "1.1.2"
-  resolved "https://codeload.github.com/publiclab/leaflet-environmental-layers/tar.gz/611e3bbc6ee3d674256cab823d9ab2346b47eb09"
-  dependencies:
-    jquery "^3.3.1"
-    leaflet "^1.3.1"
-    leaflet-hash "0.2.1"
-    leaflet-heatmap "1.0.0"
-    leaflet-providers "^1.1.17"
-    leaflet-spin "1.1.0"
-
-"@bower_components/leaflet-fullhash@sagarpreet-chadha/leaflet-fullHash#*":
-  version "0.0.0"
-  resolved "https://codeload.github.com/sagarpreet-chadha/leaflet-fullHash/tar.gz/104a08c4bca0ddf943d24b21d270ee4082dd9654"
-
-"@bower_components/leaflet-illustrate@manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7":
-  version "0.0.2"
-  resolved "https://codeload.github.com/manleyjster/Leaflet.Illustrate/tar.gz/31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7"
-
-"@bower_components/leaflet-omnivore@mapbox/leaflet-omnivore#~0.3.2":
-  version "0.3.4"
-  resolved "https://codeload.github.com/mapbox/leaflet-omnivore/tar.gz/7c5885376671509b6dd30f6cd2c2508f39b2f7eb"
-  dependencies:
-    brfs "1.4.3"
-    corslite "0.0.7"
-    csv2geojson "~5.0.0"
-    polyline "0.2.0"
-    togeojson "0.13.0"
-    topojson "1.6.26"
-    wellknown "0.4.2"
-
-"@bower_components/leaflet-providers@leaflet-extras/leaflet-providers#1.0.6":
-  version "1.0.6"
-  resolved "https://codeload.github.com/leaflet-extras/leaflet-providers/tar.gz/620d7a433b74a47b93e6fa9bf6536a384b47d9da"
-
-"@bower_components/leaflet-spin@makinacorpus/Leaflet.Spin#1.1.0":
-  version "1.0.0"
-  resolved "https://codeload.github.com/makinacorpus/Leaflet.Spin/tar.gz/f7c86843d24e6a6a50f94a66d8881b370fb8218f"
-  dependencies:
-    spin.js "^2.3.1"
-
-"@bower_components/leaflet-toolbar@Leaflet/Leaflet.Toolbar#~0.3.0":
-  version "0.3.0"
-  resolved "https://codeload.github.com/Leaflet/Leaflet.Toolbar/tar.gz/fb935befa99d753bdd0deb0ce2cad20335783459"
-
-"@bower_components/leaflet@Leaflet/Leaflet#^1.0.0":
-  version "1.5.1"
-  resolved "https://codeload.github.com/Leaflet/Leaflet/tar.gz/2e3e0ffbe87f246eb76d86d2633ddd59b262830b"
-
-"@bower_components/modalbox@okonet/modalbox#*":
-  version "0.0.0"
-  resolved "https://codeload.github.com/okonet/modalbox/tar.gz/dab4d4f0b3244f7c3dff24424a850d3379bc7c9c"
-
-"@bower_components/ol2@openlayers/ol2#release-2.13.1":
-  version "0.0.0"
-  resolved "https://codeload.github.com/openlayers/ol2/tar.gz/f4a4090814f240414548e8eda55070d16f3d3901"
-
-"@bower_components/prototypejs-bower@plynchnlm/prototypejs-bower#1.7.2":
-  version "0.0.0"
-  resolved "https://codeload.github.com/plynchnlm/prototypejs-bower/tar.gz/e20cd010823fcd31499788188397d1770ca9abe0"
-
-"@bower_components/sparklines@mariusGundersen/sparkline#~1.0.0":
-  version "1.0.0"
-  resolved "https://codeload.github.com/mariusGundersen/sparkline/tar.gz/097a83f6bbb6b2d088eb125c4c848edef30ba252"
-
-"@bower_components/spin.js@fgnass/spin.js#^2.3.1":
-  version "2.3.2"
-  resolved "https://codeload.github.com/fgnass/spin.js/tar.gz/f0cc4b82358bee8bbb50f0fd90090bfe4d612da1"
-
-"@bower_components/webgl-distort@jywarren/webgl-distort#*":
-  version "0.0.1"
-  resolved "https://codeload.github.com/jywarren/webgl-distort/tar.gz/f8a86cb7c60b25a1728ffb532c8ec2db116821f7"
-
 "@types/node@^8.0.7":
   version "8.10.49"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.49.tgz#f331afc5efed0796798e5591d6e0ece636969b7b"
@@ -355,6 +180,26 @@ bit-twiddle@^1.0.0, bit-twiddle@^1.0.2:
   resolved "https://registry.yarnpkg.com/bit-twiddle/-/bit-twiddle-1.0.2.tgz#0c6c1fabe2b23d17173d9a61b7b7093eb9e1769e"
   integrity sha1-DGwfq+KyPRcXPZpht7cJPrnhdp4=
 
+blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=2.1.1:
+  version "3.14.0"
+  resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/9f3deb2e710d39c72a988559609d9dc9a319de0b"
+
+blueimp-file-upload@blueimp/jQuery-File-Upload#~9.8.1:
+  version "9.8.1"
+  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/80b9f7818563dc11b8979b69df30c65f49bc1203"
+
+blueimp-load-image@blueimp/JavaScript-Load-Image#>=1.13.0:
+  version "2.22.0"
+  resolved "https://codeload.github.com/blueimp/JavaScript-Load-Image/tar.gz/b2e6b29de05a882048e80bec0c1f1e94d65ca41a"
+
+blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4:
+  version "2.5.4"
+  resolved "https://codeload.github.com/blueimp/JavaScript-Templates/tar.gz/b75e882ec0e353ce2d8bfdb2ea755060d2012368"
+
+bootstrap@twbs/bootstrap#^4.3.1:
+  version "4.3.1"
+  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/8fa0d3010112dca5dd6dd501173415856001ba8b"
+
 bootstrap@~3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.2.0.tgz#a0726e7c12e79f4a2a504f8d1ee9f2850a83f637"
@@ -433,6 +278,10 @@ camelcase@^1.0.2:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-1.2.1.tgz#9bb5304d2e0b56698b2c758b08a3eaa9daa58a39"
   integrity sha1-m7UwTS4LVmmLLHWLCKPqqdqlijk=
+
+cartagen@jywarren/cartagen#*:
+  version "0.0.0"
+  resolved "https://codeload.github.com/jywarren/cartagen/tar.gz/b348dd06e2d1a69936826e9ef4e6f9fa0ed4a060"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -926,6 +775,10 @@ event-emitter@~0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
+exif-js@jseidelin/exif-js#*:
+  version "2.3.0"
+  resolved "https://codeload.github.com/jseidelin/exif-js/tar.gz/a10f3d53f3f72defef4cad5a54a90ee308901fe6"
+
 expand-brackets@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-2.1.4.tgz#b77735e315ce30f6b6eff0f83b04151a22449622"
@@ -1056,10 +909,18 @@ flagged-respawn@^1.0.0:
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-1.0.1.tgz#e7de6f1279ddd9ca9aac8a5971d618606b3aab41"
   integrity sha512-lNaHNVymajmk0OJMBn8fVUAU1BtDeKIqKoVhk4xAALB57aALg6b4W0MfJ/cUE0g9YBXy5XhSlPIpYIJ7HaY/3Q==
 
+font-awesome@FortAwesome/Font-Awesome#^4.2.0:
+  version "4.7.0"
+  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a8386aae19e200ddb0f6845b5feeee5eb7013687"
+
 font-awesome@~4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.5.0.tgz#1e9d7ccf7d63bdbe57000e18d5188cb2557e70f8"
   integrity sha1-Hp18z31jvb5XAA4Y1RiMslV+cPg=
+
+fontawesome@FortAwesome/Font-Awesome#~4.2.0:
+  version "4.2.0"
+  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
 
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
@@ -1159,6 +1020,10 @@ gif-encoder@~0.4.1:
   integrity sha1-iitP6MqJWkjjoLbLs0CgpqNXGJk=
   dependencies:
     readable-stream "~1.1.9"
+
+glfx-js@jywarren/glfx.js#*:
+  version "0.0.1"
+  resolved "https://codeload.github.com/jywarren/glfx.js/tar.gz/07a117c2b7c75a8556d7338108c0976d110c11a2"
 
 global-modules@^1.0.0:
   version "1.0.0"
@@ -1283,6 +1148,28 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
+image-sequencer@publiclab/image-sequencer#~1.4.0:
+  version "1.4.1"
+  resolved "https://codeload.github.com/publiclab/image-sequencer/tar.gz/cbbfbff4bc14f494c423867cc4572b001c5c3c4d"
+  dependencies:
+    bootstrap "~3.2.0"
+    buffer "~5.0.2"
+    commander "^2.11.0"
+    data-uri-to-buffer "^2.0.0"
+    fisheyegl "^0.1.2"
+    font-awesome "~4.5.0"
+    get-pixels "~3.3.0"
+    imgareaselect "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
+    jquery "~2"
+    jsqr "^0.2.2"
+    lodash "^4.17.5"
+    ndarray-gaussian-filter "^1.0.0"
+    ora "^2.0.0"
+    pace "0.0.4"
+    readline-sync "^1.4.7"
+    save-pixels "~2.3.4"
+    urify "^2.1.0"
+
 "imgareaselect@git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
   version "0.9.11-rc.1"
   resolved "git://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
@@ -1301,6 +1188,12 @@ interpret@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.1.0.tgz#7ed1b1410c6a0e0f78cf95d3b8440c63f78b8614"
   integrity sha1-ftGxQQxqDg94z5XTuEQMY/eLhhQ=
+
+ion-rangeslider@ionDen/ion.rangeslider#~2.3.0:
+  version "2.3.0"
+  resolved "https://codeload.github.com/ionDen/ion.rangeslider/tar.gz/c98c10d3d360aa52e997bb8e4fd371c958f78e4b"
+  dependencies:
+    jquery ">=1.8"
 
 iota-array@^1.0.0:
   version "1.0.0"
@@ -1470,10 +1363,22 @@ jpeg-js@^0.3.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.5.tgz#6fbd6cd0e49627c5a0341796c9e50c70a2aa3673"
   integrity sha512-hvaExqwmQDS8O9qnZAVDXGWU43Tbu1V0wMZmjROjT11jloSgGICZpscG+P6Nyi1BVAvyu2ARRx8qmEW30sxgdQ==
 
+jquery-ui@components/jqueryui#^1.12.1:
+  version "1.12.1"
+  resolved "https://codeload.github.com/components/jqueryui/tar.gz/44ecf3794cc56b65954cc19737234a3119d036cc"
+
+jquery-ujs@rails/jquery-ujs#~1.0.3:
+  version "0.0.0"
+  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
+
 jquery@>=1.8, jquery@^3.3.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
+
+jquery@jquery/jquery-dist#^2.1.3:
+  version "2.2.4"
+  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/c0185ab7c75aab88762c5aae780b9d83b80eda72"
 
 jquery@~2:
   version "2.2.4"
@@ -1515,6 +1420,10 @@ jsqr@^0.2.2:
   resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-0.2.2.tgz#8c1f0279fb7c94542aaa9e8aeb7c722d523ea092"
   integrity sha1-jB8Ceft8lFQqqp6K63xyLVI+oJI=
 
+junction@theleagueof/junction#*:
+  version "0.0.0"
+  resolved "https://codeload.github.com/theleagueof/junction/tar.gz/fb73260e86dd301b383cf6cc9ca8e726ef806535"
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -1544,6 +1453,39 @@ lazy-cache@^1.0.3:
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
   integrity sha1-odePw6UEdMuAhF07O24dpJpEbo4=
 
+leaflet-dist@vperron/leaflet-dist#0.7.x:
+  version "0.0.0"
+  resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
+
+leaflet-distortableimage@publiclab/Leaflet.DistortableImage#^0.4.3:
+  version "0.4.3"
+  resolved "https://codeload.github.com/publiclab/Leaflet.DistortableImage/tar.gz/cb1ed3875f9ad07942903a9daa778076ce5d7fd1"
+  dependencies:
+    grunt-cli "^1.2.0"
+
+leaflet-draw@Leaflet/Leaflet.draw#0.2.4:
+  version "0.2.3"
+  resolved "https://codeload.github.com/Leaflet/Leaflet.draw/tar.gz/07b1448f4eba33982f662398988f0337ee55cc02"
+
+leaflet-easybutton@CliffCloud/Leaflet.EasyButton#1.0.0:
+  version "0.0.0"
+  resolved "https://codeload.github.com/CliffCloud/Leaflet.EasyButton/tar.gz/b379d59515acc4e9761eb1c92ea2a6e6f8b3ab1b"
+
+leaflet-environmental-layers@publiclab/leaflet-environmental-layers#^1.1.2:
+  version "1.1.2"
+  resolved "https://codeload.github.com/publiclab/leaflet-environmental-layers/tar.gz/611e3bbc6ee3d674256cab823d9ab2346b47eb09"
+  dependencies:
+    jquery "^3.3.1"
+    leaflet "^1.3.1"
+    leaflet-hash "0.2.1"
+    leaflet-heatmap "1.0.0"
+    leaflet-providers "^1.1.17"
+    leaflet-spin "1.1.0"
+
+leaflet-fullhash@sagarpreet-chadha/leaflet-fullHash#*:
+  version "0.0.0"
+  resolved "https://codeload.github.com/sagarpreet-chadha/leaflet-fullHash/tar.gz/104a08c4bca0ddf943d24b21d270ee4082dd9654"
+
 leaflet-hash@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/leaflet-hash/-/leaflet-hash-0.2.1.tgz#c36c718347c5243033b57cb4baea26119d82c701"
@@ -1557,10 +1499,30 @@ leaflet-heatmap@1.0.0:
     heatmap.js "*"
     leaflet "*"
 
+leaflet-illustrate@manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7:
+  version "0.0.2"
+  resolved "https://codeload.github.com/manleyjster/Leaflet.Illustrate/tar.gz/31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7"
+
+leaflet-omnivore@mapbox/leaflet-omnivore#~0.3.2:
+  version "0.3.4"
+  resolved "https://codeload.github.com/mapbox/leaflet-omnivore/tar.gz/7c5885376671509b6dd30f6cd2c2508f39b2f7eb"
+  dependencies:
+    brfs "1.4.3"
+    corslite "0.0.7"
+    csv2geojson "~5.0.0"
+    polyline "0.2.0"
+    togeojson "0.13.0"
+    topojson "1.6.26"
+    wellknown "0.4.2"
+
 leaflet-providers@^1.1.17:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/leaflet-providers/-/leaflet-providers-1.7.0.tgz#b462d6abba832b2e9f1cef6ca0ab3bf76a7ca9a9"
   integrity sha512-7gXQnILnnIGuPy8TFaSP2aACsaxdT+y2sFae4rqbK8vX9ZwTJ9+5CI5DcBB+r867PdmdRlz5rjG99yvyLWOJYg==
+
+leaflet-providers@leaflet-extras/leaflet-providers#1.0.6:
+  version "1.0.6"
+  resolved "https://codeload.github.com/leaflet-extras/leaflet-providers/tar.gz/620d7a433b74a47b93e6fa9bf6536a384b47d9da"
 
 leaflet-spin@1.1.0:
   version "1.1.0"
@@ -1569,10 +1531,19 @@ leaflet-spin@1.1.0:
   dependencies:
     spin.js "^2.3.1"
 
-leaflet@*, leaflet@^1.3.1:
+leaflet-spin@makinacorpus/Leaflet.Spin#1.1.0:
+  version "1.0.0"
+  resolved "https://codeload.github.com/makinacorpus/Leaflet.Spin/tar.gz/f7c86843d24e6a6a50f94a66d8881b370fb8218f"
+  dependencies:
+    spin.js "^2.3.1"
+
+leaflet-toolbar@Leaflet/Leaflet.Toolbar#~0.3.0:
+  version "0.3.0"
+  resolved "https://codeload.github.com/Leaflet/Leaflet.Toolbar/tar.gz/fb935befa99d753bdd0deb0ce2cad20335783459"
+
+leaflet@*, leaflet@Leaflet/Leaflet#^1.0.0, leaflet@^1.3.1:
   version "1.5.1"
-  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.5.1.tgz#9afb9d963d66c870066b1342e7a06f92840f46bf"
-  integrity sha512-ekM9KAeG99tYisNBg0IzEywAlp0hYI5XRipsqRXyRTeuU8jcuntilpp+eFf5gaE0xubc9RuSNIVtByEKwqFV0w==
+  resolved "https://codeload.github.com/Leaflet/Leaflet/tar.gz/2e3e0ffbe87f246eb76d86d2633ddd59b262830b"
 
 levn@~0.3.0:
   version "0.3.0"
@@ -1714,6 +1685,10 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
+
+modalbox@okonet/modalbox#*:
+  version "0.0.0"
+  resolved "https://codeload.github.com/okonet/modalbox/tar.gz/dab4d4f0b3244f7c3dff24424a850d3379bc7c9c"
 
 ms@2.0.0:
   version "2.0.0"
@@ -1873,6 +1848,10 @@ object.pick@^1.2.0, object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
+ol2@openlayers/ol2#release-2.13.1:
+  version "0.0.0"
+  resolved "https://codeload.github.com/openlayers/ol2/tar.gz/f4a4090814f240414548e8eda55070d16f3d3901"
+
 omggif@^1.0.5:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.9.tgz#dcb7024dacd50c52b4d303f04802c91c057c765f"
@@ -2031,6 +2010,10 @@ process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
   integrity sha512-MtEC1TqN0EU5nephaJ4rAtThHtC86dNN9qCuEhtshvpVBkAW5ZO7BASN9REnF9eoXGcRub+pFuKEpOHE+HbEMw==
+
+prototypejs-bower@plynchnlm/prototypejs-bower#1.7.2:
+  version "0.0.0"
+  resolved "https://codeload.github.com/plynchnlm/prototypejs-bower/tar.gz/e20cd010823fcd31499788188397d1770ca9abe0"
 
 psl@^1.1.24:
   version "1.1.32"
@@ -2369,10 +2352,18 @@ source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
+sparklines@mariusGundersen/sparkline#~1.0.0:
+  version "1.0.0"
+  resolved "https://codeload.github.com/mariusGundersen/sparkline/tar.gz/097a83f6bbb6b2d088eb125c4c848edef30ba252"
+
 spin.js@^2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/spin.js/-/spin.js-2.3.2.tgz#6caa56d520673450fd5cfbc6971e6d0772c37a1a"
   integrity sha1-bKpW1SBnNFD9XPvGlx5tB3LDeho=
+
+spin.js@fgnass/spin.js#^2.3.1:
+  version "2.3.2"
+  resolved "https://codeload.github.com/fgnass/spin.js/tar.gz/f0cc4b82358bee8bbb50f0fd90090bfe4d612da1"
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
@@ -2717,6 +2708,10 @@ wcwidth@^1.0.1:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+webgl-distort@jywarren/webgl-distort#*:
+  version "0.0.1"
+  resolved "https://codeload.github.com/jywarren/webgl-distort/tar.gz/f8a86cb7c60b25a1728ffb532c8ec2db116821f7"
 
 wellknown@0.4.2:
   version "0.4.2"
