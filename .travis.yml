@@ -16,12 +16,8 @@ install:
 env:
   global:
     - RAILS_ENV=test
-  matrix:
-    - TASK="CI=true TRAVIS=true rake test:unit"
-    - TASK="CI=true TRAVIS=true rake test:integration"
-    - TASK="CI=true TRAVIS=true rake test:functional"
-    - TASK="CI=true TRAVIS=true rake assets:precompile"
-    - TASK="CI=true TRAVIS=true bundle exec rubocop"
+    - CI=true
+    - TRAVIS=true
 
 jobs:
   include:
