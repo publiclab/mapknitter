@@ -5,9 +5,6 @@
   "repository": "https://github.com/publiclab/mapknitter",
   "author": "Kaustubh Nair <kaustubh.nair108@gmail.com>",
   "license": "MIT",
-  "files": [
-    "https://gist.githubusercontent.com/jywarren/770e5018c7fea09e3044b1297bd99dc0/raw/6de6259a766f473559a10a29c4a5ccf23b2a0dea/Google.js"
-  ],
   "dependencies": {
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.8.1",
