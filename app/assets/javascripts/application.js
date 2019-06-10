@@ -14,7 +14,6 @@
 //= require popper
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
-//= require Google.js
 
 //= require bootstrap/dist/js/bootstrap.js
 
@@ -23,6 +22,7 @@
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-easybutton/src/easy-button.js
+//= require Google.js
 //= require sparklines/source/sparkline.js
 //= require annotations-legacy.js
 //= require glfx-js/dist/glfx.js
