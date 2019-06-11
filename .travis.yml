@@ -10,7 +10,8 @@ install:
   - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
-  - bundle install
+  - ./lib/exporter-deps.sh > /dev/null 2>&1
+  - bundle install && yarn install
   - bundle exec rake db:setup || bundle exec rake db:migrate
 
 env:
@@ -31,10 +32,11 @@ jobs:
       script: bundle exec rubocop
     - name: "Docker Builds"
       script: docker build -t mapknitter .
-    - name: "Asset Precompilation"
-      env:
-        - RAILS_ENV=production
-      script: bundle exec rake assets:precompile
+    # Configure this option after full yarn setup
+    # - name: "Asset Precompilation"
+    #   env:
+    #     - RAILS_ENV=production
+    #   script: bundle exec rake assets:precompile
 
 branches:
   only:

@@ -277,7 +277,7 @@ class Exporter
   # root is something like https://mapknitter.org
   def self.generate_tiles(key, slug, root)
     key = "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ" if key.blank?
-    gdal2tiles = 'gdal2tiles.py -k --s_srs EPSG:3857 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    gdal2tiles = 'gdal2tiles.py -k --s_srs EPSG:4326 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
     puts gdal2tiles
     system(self.ulimit+gdal2tiles)
   end

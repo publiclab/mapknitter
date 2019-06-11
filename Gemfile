@@ -30,22 +30,22 @@ group :dependencies do
   # gem 'right_aws'
   gem 'right_aws_api'
 
-
   # compiling markdown to html
   gem "rdiscount", "2.2.0.1"
 
   # asset pipelining
   gem 'bootstrap-sass'
+  gem 'sassc-rails'
   gem 'jquery-rails'
-  gem "sprockets"#, "2.12.1"
+  gem "sprockets"
+  gem "sprockets-rails"
   gem "sass", :require => 'sass'
   gem "autoprefixer-rails"
   gem "uglifier"
-
 end
 
 group :test do
-  gem "rubocop", '~> 0.52.0'
+  gem 'rubocop', '~> 0.52.0'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false
