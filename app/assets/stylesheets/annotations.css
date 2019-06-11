@@ -20,8 +20,8 @@
 }
 
 .leaflet-draw-toolbar a {
-  background-image: url('/assets/leaflet-illustrate/dist/images/spritesheet.png'); !important
+  background-image: url('/assets/leaflet-illustrate/dist/images/spritesheet.png') !important;
 }
 .leaflet-retina .leaflet-draw-toolbar a {
-  background-image: url('/assets/leaflet-draw/dist/images/spritesheet-2x.png'); !important
+  background-image: url('/assets/leaflet-draw/dist/images/spritesheet-2x.png') !important;
 }

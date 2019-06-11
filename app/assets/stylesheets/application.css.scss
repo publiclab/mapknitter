@@ -15,12 +15,11 @@
  *= require leaflet-toolbar/dist/leaflet.toolbar.css
  *= require leaflet-distortableimage/dist/leaflet.distortableimage.css
 
- *= require style
- *= require maps
- *= require header
- *= require uploads
-
- *= require_self
- *= require annotations
- * require_tree .
-*/
+ */
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
+ @import "style";
+ @import "maps";
+ @import "header";
+ @import "uploads";
+ @import "annotations";
