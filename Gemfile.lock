@@ -188,7 +188,7 @@ GEM
       net-http-persistent (~> 2.9)
       redcarpet (>= 3.0.0)
       ruby-hmac (>= 0.4.0)
-    rubocop (0.64.0)
+    rubocop (0.52.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
