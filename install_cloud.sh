@@ -19,6 +19,6 @@ cp config/database.yml.cloud9.example config/database.yml
 cp config/config.yml.example config/config.yml
 sudo service mysql start
 rake db:setup
-sudo npm install -g bower
-bower install
+sudo npm install -g yarn
+yarn install
 echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
