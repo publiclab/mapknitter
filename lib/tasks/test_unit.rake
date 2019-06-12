@@ -1,3 +1,4 @@
+require 'rake/testtask'
 # ==================== #
 
 # HOW TO RUN # 
