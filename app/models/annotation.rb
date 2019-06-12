@@ -1,4 +1,4 @@
-class Annotation < ActiveRecord::Base
+class Annotation < ApplicationRecord
   include ActiveModel::MassAssignmentSecurity
   belongs_to :map
   belongs_to :user

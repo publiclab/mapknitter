@@ -1,4 +1,4 @@
-class Map < ActiveRecord::Base
+class Map < ApplicationRecord
   include ActiveModel::Validations
   extend FriendlyId
   friendly_id :name, use: %i(slugged static)
