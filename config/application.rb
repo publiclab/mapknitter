@@ -27,6 +27,9 @@ module Mapknitter
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
+     # Initialize configuration defaults for originally generated Rails version.
+     config.load_defaults 5.0
+
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 

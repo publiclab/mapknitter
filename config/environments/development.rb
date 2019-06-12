@@ -47,4 +47,14 @@ Mapknitter::Application.configure do
   config.serve_static_files = true
 
   config.assets.logger = false
+   # Suppress logger output for asset requests.
+  config.assets.quiet = true
+
+# Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
+
+  config.action_mailer.perform_caching = false
+
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
 end
