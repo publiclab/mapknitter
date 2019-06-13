@@ -1,4 +1,4 @@
-## MapKnitter 2 [![codecov](https://codecov.io/gh/publiclab/mapknitter/branch/main/graph/badge.svg)](https://codecov.io/gh/publiclab/mapknitter) [![View performance data on Skylight](https://badges.skylight.io/typical/ArYnJAb3VUC9.svg?token=DJ-zenCIFAootUAeQ8BkTiTkMBXkNpNc-PXTLA4dqDU)](https://www.skylight.io/app/applications/ArYnJAb3VUC9)
+## MapKnitter [![codecov](https://codecov.io/gh/publiclab/mapknitter/branch/main/graph/badge.svg)](https://codecov.io/gh/publiclab/mapknitter) [![View performance data on Skylight](https://badges.skylight.io/typical/ArYnJAb3VUC9.svg?token=DJ-zenCIFAootUAeQ8BkTiTkMBXkNpNc-PXTLA4dqDU)](https://www.skylight.io/app/applications/ArYnJAb3VUC9)
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
@@ -123,7 +123,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 
 ### Running tests
 
-When you try to run tests in Mapknitter, you can the default Rake tasks, such as:
+When you try to run tests in MapKnitter, you can the default Rake tasks, such as:
 
 `rake test:units`
 `rake test:functionals`
@@ -187,12 +187,12 @@ In addition automatic testing with Travis CI - we have a branch (`unstable`) is 
 
 ## License
 
-Map Knitter is free software: you can redistribute it and/or modify
+MapKnitter is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Map Knitter is distributed in the hope that it will be useful,
+MapKnitter is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
