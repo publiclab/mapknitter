@@ -20,9 +20,8 @@ install:
   - if [ $RAILS_ENV == 'production' ]; then
       bundle exec rake db:create; 
     else
-      bundle exec rake db:setup;
+      bundle exec rake db:setup || bundle exec rake db:migrate;
     fi
-  - bundle exec rake db:migrate
 
 env:
   global:
