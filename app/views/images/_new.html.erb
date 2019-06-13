@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
         <div>
-          <%= form_for [@map, Warpable.new], :html => { :multipart => true, :id => "fileupload" } do |f| %>
+            <%= form_for [@map, Warpable.new],  :html => { :multipart => true, :id => "fileupload" } do |f| %>
             <input id="warpable_map_id" name="map_id" type="hidden" value="<%= @map_id %>" />
 
             <div class="row">

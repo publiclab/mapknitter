@@ -32,11 +32,12 @@
         <td>
           <% if logged_in? && current_user.can_delete?(warpable) %>
             <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable],
-                :method => "delete",
-                :confirm => "Are you sure? This cannot be undone.",
-                :class => "btn btn-sm btn-danger",
-                :title => "Delete",
-                :rel=> "tooltip" %>
+                method: "delete",
+                class: "btn btn-sm btn-danger",
+                title: "Delete",
+                rel: "tooltip",
+                data: { confirm: "Are you sure? This cannot be undone." }
+            %>
           <% end %>
           <% if warpable.placed? %>
             <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-sm btn-success"><i class='fa fa-crosshairs'></i></a>

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
-ruby "2.4.6"
-gem "rails", "~>3.2"
+ruby '2.4.6'
+gem 'rails', '4.2.11.1'
 gem 'rake',  '~> 12.3.2'
 gem 'skylight'
 
@@ -9,6 +9,7 @@ gem "will_paginate", "3.1.7"
 gem 'will_paginate-bootstrap4'
 gem "friendly_id"
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
+gem 'protected_attributes'
 
 # dependencies
 group :dependencies do
@@ -26,7 +27,9 @@ group :dependencies do
   gem 'aws-sdk', '~> 1.5.7'
 
   # for rake image migration tasks
-  gem 'right_aws'
+  # gem 'right_aws'
+  gem 'right_aws_api'
+
 
   # compiling markdown to html
   gem "rdiscount", "2.2.0.1"
@@ -40,10 +43,13 @@ group :dependencies do
 end
 
 group :test do
-  gem "rubocop", '~> 0.52.0'
+  gem "rubocop", '~> 0.64.0'
+  gem 'ruby-prof'
+  gem 'rails-perftest'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
-  gem 'test-unit'
+  gem 'minitest'
+  gem 'minitest-reporters'
 end
 
 group :development, :test do
@@ -55,6 +61,7 @@ end
 group :development do
   gem "jshintrb"
   gem "therubyracer"
+  gem 'web-console', '~> 2.0'
 end
 
 group :sqlite do

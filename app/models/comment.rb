@@ -1,6 +1,4 @@
 class Comment < ActiveRecord::Base
-  attr_accessible :user_id, :body
-
   belongs_to :map
   belongs_to :user
 

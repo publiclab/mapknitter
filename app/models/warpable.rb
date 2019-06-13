@@ -1,4 +1,5 @@
 class Warpable < ActiveRecord::Base
+  include ActiveModel::MassAssignmentSecurity
   attr_accessible :image
   attr_accessor :src, :srcmedium # for json generation
 
@@ -109,7 +110,8 @@ class Warpable < ActiveRecord::Base
   end
 
   def self.histogram_cm_per_pixel
-    w = Warpable.find :all, conditions: ['cm_per_pixel != 0 AND cm_per_pixel < 500'], order: "cm_per_pixel DESC"
+    w = Warpable.where('cm_per_pixel != 0 AND cm_per_pixel < 500')
+                .order('cm_per_pixel DESC')
     if !w.empty?
       hist = []
       (0..w.first.cm_per_pixel.to_i).each do |bin|

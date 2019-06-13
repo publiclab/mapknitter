@@ -32,7 +32,7 @@ class ExportController < ApplicationController
   end
 
   def cancel
-    @map = Map.find params[:id]
+    @map = Map.find_by(id: params[:id])
     if @map.anonymous? || logged_in?
       export = @map.export
       export.status = 'none'
@@ -41,15 +41,15 @@ class ExportController < ApplicationController
         flash[:notice] = 'Export cancelled.'
         redirect_to '/exports'
       else
-        render text: 'cancelled'
+        render plain: 'cancelled'
       end
     else
-      render text: 'You must be logged in to export, unless the map is anonymous.'
+      render plain: 'You must be logged in to export, unless the map is anonymous.'
     end
   end
 
   def progress
-    map = Map.find params[:id]
+    map = Map.find_by(id: params[:id])
     export = map.export
     output = if export.present?
                if export.status == 'complete'
@@ -64,11 +64,11 @@ class ExportController < ApplicationController
              else
                'export has not been run'
              end
-    render text: output, layout: false
+    render plain: output, layout: false
   end
 
   def status
-    map = Map.find(params[:id])
+    map = Map.find_by(id: params[:id])
     if export = map.export
       if export.export_url.present?
         status_response = ExporterClient.new(export.export_url).status
@@ -84,5 +84,11 @@ class ExportController < ApplicationController
   # for demoing remote url functionality during testing
   def external_url_test
     render json: Export.last.to_json
+  end
+
+  private
+
+  def export_params
+    params.require(:export).permit(:status, :export_url)
   end
 end

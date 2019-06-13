@@ -21,7 +21,7 @@ module Arel
       alias :visit_Integer :visit_String
     end
 
-    class ToSql < Arel::Visitors::Visitor
+    class ToSql < Arel::Visitors::Reduce
       alias :visit_Integer :literal
     end
   end
