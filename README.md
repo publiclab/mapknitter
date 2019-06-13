@@ -36,7 +36,7 @@ MapKnitter is broken into three major components:
 2. Application
 3. Exporting system
 
-**Component 1** has been broken out into a new Leaflet plugin, [Leaflet.DistortableImage] (https://github.com/publiclab/Leaflet.DistortableImage/), which allows for client-side, CSS3-based distortion of images over a Leaflet base map
+**Component 1** has been broken out into a new Leaflet plugin, [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage/), which allows for client-side, CSS3-based distortion of images over a Leaflet base map
 
 **Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts. 
 
@@ -126,7 +126,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 
 ### Running tests
 
-When you try to run tests in MapKnitter, you can the default Rake tasks, such as:
+When you try to run tests in MapKnitter, you can run the default Rake tasks, such as:
 
 `rake test:units`
 `rake test:functionals`
@@ -136,7 +136,7 @@ or simply:
 
 `rake test`
 
-By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our task defined as:
+By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our custom defined task:
 
 `rake test:all`
 
@@ -197,8 +197,8 @@ the Free Software Foundation, either version 3 of the License, or
 
 MapKnitter is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Map Knitter.  If not, see <http://www.gnu.org/licenses/>.
+along with MapKnitter. If not, see <http://www.gnu.org/licenses/>.
