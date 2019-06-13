@@ -36,15 +36,15 @@ MapKnitter is broken into three major components:
 2. Application
 3. Exporting system
 
-**Component 1** has been broken out into a new Leaflet plugin, called Leaflet.DistortableImage (https://github.com/publiclab/Leaflet.DistortableImage/) and allows for client-side, CSS3-based distortion of images over a Leaflet base map
+**Component 1** has been broken out into a new Leaflet plugin, [Leaflet.DistortableImage] (https://github.com/publiclab/Leaflet.DistortableImage/), which allows for client-side, CSS3-based distortion of images over a Leaflet base map
 
 **Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts. 
 
-**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
+**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick, which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
 
 Component 3 is soon to be replaced with an external exporter service built in a small Sinatra app called [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem.
 
-Another moving part is the new-ish Annotations 2.0 which uses Leaflet.Illustrate (https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
+Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrate](https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
 
 ## Installation
 
