@@ -297,7 +297,7 @@ DEPENDENCIES
   passenger
   popper_js (~> 1.11, >= 1.11.1)
   pry-rails (~> 0.3.9)
-  rails (~> 5.0)
+  rails (~> 5.2.3)
   rails-perftest
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)

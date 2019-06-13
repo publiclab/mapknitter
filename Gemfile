@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.4.6'
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.2.3'
 gem 'rake',  '~> 12.3.2'
 gem 'skylight', '~> 4.0.2'
 
