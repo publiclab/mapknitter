@@ -1,4 +1,4 @@
-class AddWarperData < ActiveRecord::Migration
+class AddWarperData < ActiveRecord::Migration[5.2]
   def self.up
     add_column :warpables, :nodes, :string, :default => ''
   end

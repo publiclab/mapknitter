@@ -1,4 +1,4 @@
-class ChangeOpenidIdentityUrls < ActiveRecord::Migration
+class ChangeOpenidIdentityUrls < ActiveRecord::Migration[5.2]
   def up
 
     users = User.find :all

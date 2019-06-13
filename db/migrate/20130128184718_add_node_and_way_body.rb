@@ -1,4 +1,4 @@
-class AddNodeAndWayBody < ActiveRecord::Migration
+class AddNodeAndWayBody < ActiveRecord::Migration[5.2]
   def self.up
     add_column :nodes, :body, :text
     add_column :ways, :body, :text
