@@ -1,35 +1,47 @@
-sudo: required
-
-language: generic
+language: ruby
+rvm:
+  - 2.4.6
 
 services:
+  - mysql
   - docker
 
+cache:
+  bundler: true
+  directories:
+   - public/lib/
+
 install:
-  - cp config/database.yml.test.example config/database.yml
+  - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
-  - docker-compose -f docker-compose.test.yml up -d --build
-  - >
-    while (! docker logs mapknitter-test | grep "Phusion Passenger Standalone web server started") > /dev/null 2>&1; do
-      echo "Waiting for start script to finish...";
-      sleep 20;
-    done; echo "Done!"
-  - docker-compose -f docker-compose.test.yml exec web bash -lc "rake db:setup || rake db:migrate"
+  - ./lib/exporter-deps.sh > /dev/null 2>&1
+  - bundle install && yarn install
+  - bundle exec rake db:setup || bundle exec rake db:migrate
 
 env:
   global:
     - RAILS_ENV=test
-  matrix:
-    - TASK="CI=true TRAVIS=true rake test:unit"
-    - TASK="CI=true TRAVIS=true rake test:integration"
-    - TASK="CI=true TRAVIS=true rake test:functional"
-    - TASK="CI=true TRAVIS=true rake assets:precompile"
-    - TASK="CI=true TRAVIS=true bundle exec rubocop
+    - CI=true
+    - TRAVIS=true
 
-script:
-  - docker-compose -f docker-compose.test.yml exec web bash -lc "$TASK"
-  - bash <(curl -s https://codecov.io/bash)
+jobs:
+  include:
+    - name: "Unit Tests"
+      script: bundle exec rake test:unit
+    - name: "Integration Tests"
+      script: bundle exec rake test:integration
+    - name: "Functional Tests"
+      script: bundle exec rake test:functional
+    - name: "Rubocop Linter"
+      script: bundle exec rubocop
+    - name: "Docker Builds"
+      script: docker build -t mapknitter .
+    # Configure this option after full yarn setup
+    # - name: "Asset Precompilation"
+    #   env:
+    #     - RAILS_ENV=production
+    #   script: bundle exec rake assets:precompile
 
 branches:
   only:

@@ -19,7 +19,7 @@ class ExporterTest < ActiveSupport::TestCase
     assert Exporter.get_working_directory(w.map.slug)
     assert Exporter.warps_directory(w.map.slug)
 
-    map = Map.first
+    map = maps(:saugus)
 
     # get rid of existing geotiff
     system('rm -r public/warps/saugus-landfill-incinerator/1-geo.tif')
