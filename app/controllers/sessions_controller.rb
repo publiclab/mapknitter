@@ -4,9 +4,6 @@ require 'cgi'
 class SessionsController < ApplicationController
   # protect_from_forgery :except => [:create]
 
-  @openid_url_base = "https://publiclab.org/people/"
-  @openid_url_suffix = "/identity"
-
   def new
     if logged_in?
       redirect_to "/"
@@ -16,6 +13,8 @@ class SessionsController < ApplicationController
   end
 
   def create
+    @openid_url_base = "https://publiclab.org/people/"
+    @openid_url_suffix = "/identity"
     back_to = params[:back_to]
     # we pass a temp username; on line 75 it'll be overwritten by the real one in PublicLab.org's response:
     open_id = "x"
