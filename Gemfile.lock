@@ -57,6 +57,8 @@ GEM
       uuidtools (~> 2.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
+    bootsnap (1.4.4)
+      msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
@@ -118,6 +120,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    msgpack (1.2.10)
     multi_json (1.13.1)
     multi_xml (0.6.0)
     mysql2 (0.5.2)
@@ -279,6 +282,7 @@ DEPENDENCIES
   RubyInline (~> 3.12.4)
   autoprefixer-rails (~> 9.5.1.1)
   aws-sdk (~> 1.5.7)
+  bootsnap (~> 1.4.4)
   bootstrap-sass
   byebug (~> 11.0.1)
   faker (~> 1.9.3)

@@ -21,6 +21,7 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip'
+  gem 'bootsnap', '~> 1.4.4'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
