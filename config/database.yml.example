@@ -10,8 +10,8 @@ development:
 
 production:
   <<: *default
-  username: mapknitter
-  password: mapknitter
+  username: root
+  password: 
   database: mapknitter
 
 test:
