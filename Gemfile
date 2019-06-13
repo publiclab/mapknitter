@@ -22,6 +22,7 @@ group :dependencies do
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip'
   gem 'bootsnap', '~> 1.4.4'
+  gem 'listen', '~> 3.1.5'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
