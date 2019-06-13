@@ -29,13 +29,16 @@ group :dependencies do
   # gem 'right_aws'
   gem 'right_aws_api', '~> 0.3.5'
 
-
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
   # asset pipelining
+  gem 'bootstrap-sass'
+  gem 'sassc-rails'
+  gem 'jquery-rails'
   gem 'sprockets', '3.7.2'
-  gem 'sass', :require => 'sass'
+  gem "sprockets-rails"
+  gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 9.5.1.1'
   gem 'uglifier', '~> 4.1.20'
 
@@ -43,12 +46,12 @@ end
 
 group :test do
   gem 'rubocop', '~> 0.52.0'
-  gem 'ruby-prof', '~> 0.18.0'
-  gem 'rails-perftest', '~> 0.0.7'
-  gem 'simplecov',  '~> 0.16.1', require: false
-  gem 'simplecov-cobertura', '~> 1.3.1', require: false
-  gem 'minitest', '~> 5.11.3'
-  gem 'minitest-reporters', '~> 1.3.6'
+  gem 'ruby-prof'
+  gem 'rails-perftest'
+  gem 'simplecov', require: false
+  gem 'simplecov-cobertura', require: false
+  gem 'minitest'
+  gem 'minitest-reporters'
 end
 
 group :development, :test do

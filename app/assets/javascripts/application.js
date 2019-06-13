@@ -11,7 +11,9 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
-//= require popper
+//= require_tree .
+//= require jquery
+//= require jquery-ujs
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
 
