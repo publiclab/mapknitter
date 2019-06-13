@@ -17,9 +17,12 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle install && yarn install
-  - if [ $RAILS_ENV != 'production' ]; then
-    bundle exec rake db:setup || bundle exec rake db:migrate ;
+  - if [ $RAILS_ENV == 'production' ]; then
+      bundle exec rake db:create; 
+    else
+      bundle exec rake db:setup;
     fi
+  - bundle exec rake db:migrate
 
 env:
   global:
