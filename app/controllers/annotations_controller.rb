@@ -40,7 +40,7 @@ class AnnotationsController < ApplicationController
       text: geojson[:properties][:textContent],
       style: geojson[:properties][:style])
     render file: 'annotations/update.json.erb',
-           content_type: 'application/json'
+      content_type: 'application/json'
   end
 
   def destroy

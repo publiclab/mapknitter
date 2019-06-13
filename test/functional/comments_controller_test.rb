@@ -1,12 +1,14 @@
 require 'test_helper'
 
 class CommentsControllerTest < ActionController::TestCase
+
   # called before every single test
   def setup
     @map = maps(:saugus)
+    @emails = ActionMailer::Base.deliveries
+    @emails.clear
   end
 
-  # called after every single test
   def teardown
   end
 
@@ -28,8 +30,8 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
@@ -44,8 +46,8 @@ class CommentsControllerTest < ActionController::TestCase
 
     put(:update,
         id: @comment.id,
-        map_id: @map.slug,
         comment: {
+          map_id: @map.id,
           body: "I'm gonna troll you!"
         })
 
@@ -139,13 +141,13 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @user.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+           map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
     assert_response :success
-    assert !ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
+    assert_not @emails.collect(&:to).include?([@user.email])
   end
 
   test "should send email to author if someone else comments" do
@@ -153,16 +155,14 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     post(:create,
-         map_id: @map.slug,
          comment: {
-           body: "I'm gonna troll you!"
+      map_id: @map.id,
+      body: "I'm gonna troll you!"
          })
 
-    email = ActionMailer::Base.deliveries.last
-
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@user.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 
   test "should send email to all commenters on commenting" do
@@ -172,23 +172,21 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @chris.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "I'm gonna troll you!"
          })
 
     session[:user_id] = @joshua.id
 
     post(:create,
-         map_id: @map.slug,
          comment: {
+         map_id: @map.id,
            body: "Yeah we'll see!"
          })
 
-    email = ActionMailer::Base.deliveries.last
-
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@chris.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@chris.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 end

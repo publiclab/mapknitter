@@ -31,13 +31,13 @@ class ImagesControllerTest < ActionController::TestCase
   test 'create uploads an image' do
     before_count = Warpable.count
 
-    post :create, map_id: @map.id, uploaded_data: @uploaded_data
+    post :create, map_id: @map.slug, uploaded_data: @uploaded_data
     assert_response :success
     assert_equal before_count + 1, Warpable.count
   end
 
   test 'should return correct status and type on create' do
-    post :create, map_id: @map.id, uploaded_data: @uploaded_data
+    post :create, map_id: @map.slug, uploaded_data: @uploaded_data
 
     assert_equal 200, response.status
     assert_equal "text/html", response.content_type
@@ -53,7 +53,7 @@ class ImagesControllerTest < ActionController::TestCase
   test 'should update an image' do
     session[:user_id] = 1
     points = "-71.39,41.83:-71.39,41.83:-71.39,41.83:-71.39,41.83"
-    put :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
+    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
     assert_not_nil @warp.nodes
     assert_equal "text/html", response.content_type
   end

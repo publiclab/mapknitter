@@ -25,7 +25,7 @@ class ImagesController < ApplicationController
   def create
     @warpable = Warpable.new
     @warpable.image = params[:uploaded_data]
-    map = Map.find(params[:map_id])
+    map = Map.find_by(slug: params[:map_id])
     @warpable.history = ''
     @warpable.map_id = map.id
     map.updated_at = Time.now
@@ -93,7 +93,7 @@ class ImagesController < ApplicationController
     @warpable.locked = params[:locked]
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
     @warpable.save
-    render text: 'success'
+    render html: 'success'
   end
 
   def destroy
