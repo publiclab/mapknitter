@@ -1,12 +1,13 @@
 default: &default
   encoding: utf8
   adapter: mysql2
+  host: 127.0.0.1
 
 development:
   <<: *default
   username: 
   password: 
-  database: mapknitter-dev
+  database: mapknitter_dev
 
 production:
   <<: *default
@@ -16,5 +17,6 @@ production:
 
 test:
   <<: *default
-  username: root
-  database: mapknitter-test
+  username:
+  password:
+  database: mapknitter_test
