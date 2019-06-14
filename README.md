@@ -73,43 +73,62 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
 ### Prerequisites
 
-Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
+Prerequisite instructions are for an Ubuntu/Debian system, and may vary for MacOS / Linux. 
 
-Install a database, if necessary. sqlite does not seem to work due to some table constraints.
 
-`sudo apt-get install mysql-server`
+#1 **MySQL**
 
-Application-specific dependencies:
+_MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead_
 
-`sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+   - Install a database, if necessary. sqlite does not seem to work due to some table constraints:
 
-`sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
+  
+      - `sudo apt-get install mysql-server`
 
-Install RVM for Ruby management (http://rvm.io)
 
-`curl -L https://get.rvm.io | bash -s stable`
+- Application-specific dependencies:
 
-**Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+    - `sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-**Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+- (optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
-Then, use RVM to install version 2.4.6 of Ruby:
+   -  `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
 
-`rvm install 2.4.6`
+<br>
 
-You'll also need **bower** which is available through NPM. To install NPM, you can run:
+#2 **Ruby Version Manager** - **RVM / Rbenv**
 
-`sudo apt-get install npm`
+This is for RVM, but the alternative Rbenv also works (instructions not listed here). Don't install RVM if you already have Rbenv!
 
-However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
 
-`sudo apt-get install nodejs-legacy`
+- Install RVM for Ruby management (http://rvm.io)
 
-Once NPM is installed, you should be able to run:
+  - `curl -L https://get.rvm.io | bash -s stable`
 
-`sudo npm install -g yarn`
+- **Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+
+- **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+
+- Then, use RVM to install version 2.4.6 of Ruby:
+
+  - `rvm install 2.4.6`
+
+<br>
+
+#3 **Package manager - Npm and Yarn** 
+
+- You'll also need **yarn** which is available through NPM. To install npm, you can run:
+
+  - `sudo apt-get install npm`
+
+- However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+
+  - `sudo apt-get install nodejs-legacy`
+
+- Once NPM is installed, you should be able to run:
+
+  - `sudo npm install -g yarn`
 
 ### Standard Installation
 

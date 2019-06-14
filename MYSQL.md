@@ -1,43 +1,41 @@
-# installation troubleshooting & instructions 
+# MySQL Installation Troubleshooting & Instructions 
 
 ## System Agnostic 
-
-- bundler skipping over **mysql2** gem?
+1) bundler skipping over **mysql2** gem?
 
 ```Bash 
-
 $ rm .bundle/config
 
 $ bundle exec bundle install
-
 ```
 
+2) If you ever see this error, **do not update to this gem**. Please notify us and we will walk you through possible solutions.
 
+<blockquote>
+Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
+</blockquote>
+
+3. ensure you have a `database.yml` set up for `adapter: mysql2`
+
+    - Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 ## MacOS
 
-**Homebrew setup:** 
+### Homebrew setup:
 
 (Note: An alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
 
-Dependencies: 
+**Dependencies:**
 
-- `cmake`
+- `$ brew install cmake`
 
-- `openssl`
 
-```Bash
+- `$ brew install openssl`
 
-$ brew install cmake
 
-$ brew install openssl
-
-```
-
-Installation:
+**Installation:**
 
 ```Bash
-
 #make sure you don't have any other versions of mysql installed
 $ brew list
 
@@ -51,10 +49,9 @@ $ brew install mysql@5.7
 $ brew link mysql@5.7 --force
 ```
 
-Test Usage:
+**Test Usage:**
 
 ```Bash
-
 # install brew services 
 $ brew tap homebrew/services
 
@@ -69,7 +66,7 @@ $ brew services stop mysql@5.7
 
 ```
 
-Update Permissions
+**Update Permissions**
 
 ```Bash
 # check for right permissions to the PIDs
@@ -83,7 +80,7 @@ $ ls -laF /usr/local/var/mysql/
 
 ```
 
-Account Setup
+**Account Setup**
 
 ```Bash
 # secure your account
@@ -96,12 +93,11 @@ $ mysql -u <username> -p <password>
 
 ```
 
-Permission issues above?
+**Permission issues above?**
 
 (Note: These commands also fix the error - `Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`)
 
 ```Bash
-
 $ mysql.server stop
 
 #unset the temporary directory
@@ -115,7 +111,6 @@ $ mysqld -initialize --verbose --user=$(whoami) --basedir="$(brew --prefix mysql
 
 #restart mysql
 $ mysql.server restart
-
 
 $ mysql -u root
 
@@ -133,14 +128,12 @@ mysql> exit
 
 ```
 
-Reconfirm Access
+**Reconfirm Access**
 
 Whenever you want to access the mysql db locally, you need to run this login first. It might be useful to alias this in your bash profile.
 
 ```Bash
-
 $ mysql -u <username> -p
-
 ```
 
 
@@ -155,7 +148,7 @@ $ sudo apt-get install mysql-server
 # Enter a password you can rem when prompted during installation for root
 
 ```
-Configure mapknitter account: 
+Configure MapKnitter account: 
 
 ```Bash
 $ mysql -u root -p
