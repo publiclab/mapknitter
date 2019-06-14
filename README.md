@@ -119,6 +119,8 @@ Then, use RVM to install version 2.4.6 of Ruby:
 rvm install 2.4.6
   ```
 
+==================
+
 #3 **Package manager - Npm and Yarn** 
 
 You'll also need **yarn** which is available through NPM. To install npm, you can run:
