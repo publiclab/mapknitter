@@ -73,8 +73,7 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
 ### Prerequisites
 
-Prerequisite instructions are for an Ubuntu/Debian system, and may vary for MacOS / Linux. 
-
+Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
 
 #1 **MySQL**
 
