@@ -76,59 +76,67 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 Prerequisite instructions are for an Ubuntu/Debian system, and may vary for MacOS / Linux. 
 
 
-1) **MySQL**
+#1 **MySQL**
 
 MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead
 
+Install a database, if necessary. sqlite does not seem to work due to some table constraints:
 
-   - Install a database, if necessary. sqlite does not seem to work due to some table constraints:
-
-  
-      - `sudo apt-get install mysql-server`
-
-
-- Application-specific dependencies:
-
-    - `sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
-
-- (optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
-
-   -  `sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip`
-
-<br>
-
-2) **Ruby Version Manager** - **RVM / Rbenv**
-
-This is for RVM, but the alternative Rbenv also works (instructions not listed here). Don't install RVM if you already have Rbenv!
+```Bash
+sudo apt-get install mysql-server
+```
 
 
-- Install RVM for Ruby management (http://rvm.io)
+Application-specific dependencies:
 
-  - `curl -L https://get.rvm.io | bash -s stable`
+`sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-- **Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
-- **Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+  ```Bash
+  sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
+  ```
 
-- Then, use RVM to install version 2.4.6 of Ruby:
+==================
 
-  - `rvm install 2.4.6`
 
-<br>
+#2 **Ruby version manager** - **RVM / Rbenv**
+
+This is for RVM, but the alternative, Rbenv, also works (instructions not listed here). Don't install RVM if you already have Rbenv!
+
+Install RVM for Ruby management (http://rvm.io)
+
+```Bash
+curl -L https://get.rvm.io | bash -s stable
+```
+
+**Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+
+**Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+
+Then, use RVM to install version 2.4.6 of Ruby:
+  ```Bash
+rvm install 2.4.6
+  ```
 
 #3 **Package manager - Npm and Yarn** 
 
-- You'll also need **yarn** which is available through NPM. To install npm, you can run:
+You'll also need **yarn** which is available through NPM. To install npm, you can run:
+  ```Bash
+  sudo apt-get install npm
+  ```
 
-  - `sudo apt-get install npm`
+However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+  ```Bash
+  sudo apt-get install nodejs-legacy
+  ```
 
-- However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+Once NPM is installed, you should be able to run:
+```Bash
+sudo npm install -g yarn
+```
 
-  - `sudo apt-get install nodejs-legacy`
-
-- Once NPM is installed, you should be able to run:
-
-  - `sudo npm install -g yarn`
+  ==================
 
 ### Standard Installation
 
