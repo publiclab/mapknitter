@@ -73,11 +73,11 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
 ### Prerequisites
 
-Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc
+Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
 
 #1 **MySQL**
 
-MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead
+MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
 
 Install a database, if necessary. sqlite does not seem to work due to some table constraints:
 
