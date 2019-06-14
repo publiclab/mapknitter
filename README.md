@@ -76,9 +76,9 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 Prerequisite instructions are for an Ubuntu/Debian system, and may vary for MacOS / Linux. 
 
 
-#1 **MySQL**
+1) **MySQL**
 
-_MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead_
+MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead
 
 
    - Install a database, if necessary. sqlite does not seem to work due to some table constraints:
@@ -97,7 +97,7 @@ _MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead_
 
 <br>
 
-#2 **Ruby Version Manager** - **RVM / Rbenv**
+2) **Ruby Version Manager** - **RVM / Rbenv**
 
 This is for RVM, but the alternative Rbenv also works (instructions not listed here). Don't install RVM if you already have Rbenv!
 
