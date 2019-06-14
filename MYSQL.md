@@ -1,23 +1,7 @@
-# MySQL Installation Troubleshooting & Instructions 
+# MySQL Installation
 
-## System Agnostic 
-1) bundler skipping over **mysql2** gem?
+## Instructions
 
-```Bash 
-$ rm .bundle/config
-
-$ bundle exec bundle install
-```
-
-2) If you ever see this error, **do not update to this gem**. Please notify us and we will walk you through possible solutions.
-
-<blockquote>
-Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
-</blockquote>
-
-3. ensure you have a `database.yml` set up for `adapter: mysql2`
-
-    - Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 ## MacOS
 
@@ -66,7 +50,7 @@ $ brew services stop mysql@5.7
 
 ```
 
-**Update Permissions**
+**Update Permissions:**
 
 ```Bash
 # check for right permissions to the PIDs
@@ -80,7 +64,7 @@ $ ls -laF /usr/local/var/mysql/
 
 ```
 
-**Account Setup**
+**Account Setup:**
 
 ```Bash
 # secure your account
@@ -139,7 +123,7 @@ $ mysql -u <username> -p
 
 ## Linux
 
-Installation: 
+**Installation:**
 
 ```Bash
 
@@ -148,7 +132,7 @@ $ sudo apt-get install mysql-server
 # Enter a password you can rem when prompted during installation for root
 
 ```
-Configure MapKnitter account: 
+**Configure MapKnitter account:**
 
 ```Bash
 $ mysql -u root -p
@@ -186,8 +170,36 @@ Add the username and passsword on the `config/database.yml` development:
 
 Note: _You can use MariaDB in development for as you database if you are more comfortable with it_
 
+## Troubleshooting
+
+### MySQL build / setup
+
+1. Ensure you have the lateset version of `xcode` installed (MacOS only)
+
+2. check your mySQL verion to make sure it matches the one specified in the instructions: `$ mysql --version`
+
+3) Reference section on this page "permission issues above?" for handling this error:
+
+    <blockquote>
+    Cannot connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+    </blockquote>
+
+### mysql2 gem
+
+1.  ensure you have a `database.yml` set up for `adapter: mysql2`
+
+    -   Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 
+5.  If you ever see this error, **do not update to this gem**. Look online or ask PL for help!
+    <blockquote>
+    Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
+    </blockquote>
 
-## Pending: please add instructions for your respective system 
+6. Bundler skipping over **mysql2** gem?
 
+    ``` Bash
+    $ rm .bundle/config
+
+    $ bundle exec bundle install
+    ```
