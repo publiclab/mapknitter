@@ -175,7 +175,7 @@ Note: _You can use MariaDB in development for as you database if you are more co
 
 1. Ensure you have the lateset version of `xcode` installed (MacOS only)
 
-2. check your mySQL verion to make sure it matches the one specified in the instructions: `$ mysql --version`
+2. Check your MySQL verion to make sure it matches the one specified in the instructions: `$ mysql --version`
 
 3) Reference section on this page "permission issues above?" for handling this error:
 
@@ -185,17 +185,17 @@ Note: _You can use MariaDB in development for as you database if you are more co
 
 ### mysql2 gem
 
-1.  ensure you have a `database.yml` set up for `adapter: mysql2`
+1. Ensure you have a `database.yml` set up for `adapter: mysql2`
 
     -   Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 
-5.  If you ever see this error, **do not update to this gem**. Look online or ask PL for help!
+2. If you ever see this error, **do not update to this gem**. Look online or ask PL for help!
     <blockquote>
     Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
     </blockquote>
 
-6. Bundler skipping over **mysql2** gem?
+3. Bundler skipping over **mysql2** gem?
 
     ``` Bash
     $ rm .bundle/config
