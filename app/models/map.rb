@@ -22,7 +22,7 @@ class Map < ActiveRecord::Base
   has_many :annotations, dependent: :destroy
   belongs_to :user
 
-  has_many :warpables 
+  has_many :warpables
   scope :active, -> { where(archived: false) }
   scope :has_user, -> { where('user_id != ?', 0) }
 
