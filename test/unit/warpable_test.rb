@@ -63,6 +63,7 @@ class WarpableTest < ActiveSupport::TestCase
     system('touch public/warps/saugus-landfill-incinerator/folder')
     system('mkdir -p public/system/images/2/original/')
     system('cp test/fixtures/demo.png public/system/images/2/original/test.png')
+    system('cp test/fixtures/demo.png public/warps/saugus-landfill-incinerator/1-geo.tif')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
 
     origin = Exporter.distort_warpables(2,
