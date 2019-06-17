@@ -918,9 +918,10 @@ font-awesome@~4.5.0:
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.5.0.tgz#1e9d7ccf7d63bdbe57000e18d5188cb2557e70f8"
   integrity sha1-Hp18z31jvb5XAA4Y1RiMslV+cPg=
 
-fontawesome@FortAwesome/Font-Awesome#~4.2.0:
-  version "4.2.0"
-  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
+fontawesome@FortAwesome/Font-Awesome#~5.9.0:
+  version "0.0.0"
+  uid ba907eaec40fab01d410c3023a5572b2cb46cea6
+  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/ba907eaec40fab01d410c3023a5572b2cb46cea6"
 
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
