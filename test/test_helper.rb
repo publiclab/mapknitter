@@ -1,12 +1,12 @@
-ENV["RAILS_ENV"] = "test"
 
 require 'simplecov'
-
+require 'simplecov-cobertura'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/reporters'
 MiniTest::Reporters.use! [MiniTest::Reporters::ProgressReporter.new,
                           MiniTest::Reporters::JUnitReporter.new]
+ENV["RAILS_ENV"] = "test"
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.

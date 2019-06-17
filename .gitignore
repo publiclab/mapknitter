@@ -44,3 +44,5 @@ todo.txt
 .byebug_history
 coverage_report/
 test/reports/
+yarn-error.log
+
