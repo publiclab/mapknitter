@@ -2,8 +2,9 @@ require 'open3'
 
 class MapsController < ApplicationController
   protect_from_forgery except: :export
+
   before_filter :require_login, only: %i(edit update destroy)
-  before_filter :find_map, only: %i(show annotate embed edit update images export exports destroy)
+  before_filter :find_map, only: %i(show annotate embed edit update images destroy archive)
 
   layout 'knitter2'
 
@@ -32,18 +33,18 @@ class MapsController < ApplicationController
 
   def create
     if logged_in?
-      @map = current_user.maps.new(params[:map])
+      @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
       if @map.save
-        redirect_to "/maps/#{@map.slug}"
+        redirect_to @map
       else
         render 'new'
       end
     else
-      @map = Map.new(params[:map])
+      @map = Map.new(map_params)
       if Rails.env != 'production' || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
         if @map.save
-          redirect_to "/maps/#{@map.slug}"
+          redirect_to @map
         else
           render 'new'
         end
@@ -66,7 +67,6 @@ class MapsController < ApplicationController
   end
 
   def archive
-    @map = Map.find_by_slug(params[:id])
     if logged_in? && current_user.can_delete?(@map)
       @map.archived = true
       if @map.save
@@ -77,7 +77,7 @@ class MapsController < ApplicationController
     else
       flash[:error] = 'Only admins may archive maps.'
     end
-    redirect_to '/?_=' + Time.now.to_i.to_s
+    redirect_to "/?_=#{Time.now.to_i}"
   end
 
   def embed
@@ -94,12 +94,7 @@ class MapsController < ApplicationController
   def edit; end
 
   def update
-    @map.name =        params[:map][:name]
-    @map.location =    params[:map][:location]
-    @map.lat =         params[:map][:lat]
-    @map.lon =         params[:map][:lon]
-    @map.description = params[:map][:description]
-    @map.license =     params[:map][:license] if @map.user_id == current_user.id
+    @map.update_attributes(map_params)
 
     save_tags(@map)
     @map.save
@@ -113,7 +108,7 @@ class MapsController < ApplicationController
       redirect_to '/'
     else
       flash[:error] = 'Only admins or map owners may delete maps.'
-      redirect_to "/maps/#{@map.slug}"
+      redirect_to @map
     end
   end
 
@@ -131,15 +126,17 @@ class MapsController < ApplicationController
 
   # run the export
   def export
+    @map = Map.find_by(id: params[:id])
     if logged_in? || Rails.env.development? || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not a human!")
-      render text: @map.run_export(current_user, params[:resolution].to_f)
+      render plain: @map.run_export(current_user, params[:resolution].to_f)
     else
-      render text: 'You must be logged in to export, unless the map is anonymous.'
+      render plain: 'You must be logged in to export, unless the map is anonymous.'
     end
   end
 
   # render list of exports
   def exports
+    @map = Map.find_by(id: params[:id])
     render partial: 'maps/exports', layout: false
   end
 
@@ -198,6 +195,10 @@ class MapsController < ApplicationController
   private
 
   def find_map
-    @map = Map.find(params[:id])
+    @map = Map.find_by(slug: params[:id])
+  end
+
+  def map_params
+    params.require(:map).permit(:author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license)
   end
 end

@@ -6,7 +6,7 @@ source ~/.rvm/scripts/rvm
 rvm install ruby-2.4.6
 source $(rvm 2.4.6 do rvm env --path)
 rvm use ruby-2.4.6
-gem install rails -v 3.2.0
+gem install rails -v 4.2.11.1
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 sudo apt-get -y install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev npm nodejs-legacy
@@ -19,6 +19,6 @@ cp config/database.yml.cloud9.example config/database.yml
 cp config/config.yml.example config/config.yml
 sudo service mysql start
 rake db:setup
-sudo npm install -g bower
-bower install
+sudo npm install -g yarn
+yarn install
 echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"

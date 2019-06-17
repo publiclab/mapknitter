@@ -1,23 +1,23 @@
 version: 2
-plugins: 
-  rubocop: 
+plugins:
+  rubocop:
     enabled: true
     channel: rubocop-0-70
-  brakeman: 
+  brakeman:
     enabled: true
-  bundler-audit: 
+  bundler-audit:
     enabled: true
-  duplication: 
+  duplication:
     enabled: true
     config:
       languages:
         - ruby:
         - javascript:
-  eslint: 
+  eslint:
     enabled: true
-  fixme: 
+  fixme:
     enabled: true
-  rubocop: 
+  rubocop:
     enabled: true
 
 exclude_patterns:
@@ -25,5 +25,6 @@ exclude_patterns:
 - db/
 - vendor/
 - log/
+- bin/
 
 
