@@ -1367,11 +1367,14 @@ jquery-ui@components/jqueryui#^1.12.1:
   version "1.12.1"
   resolved "https://codeload.github.com/components/jqueryui/tar.gz/44ecf3794cc56b65954cc19737234a3119d036cc"
 
-jquery-ujs@rails/jquery-ujs#~1.0.3:
-  version "0.0.0"
-  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
+jquery-ujs@rails/jquery-ujs#~1.2.2:
+  version "1.2.2"
+  uid a4da3b4909b2ca081de3c6f99064403623bfe1fb
+  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/a4da3b4909b2ca081de3c6f99064403623bfe1fb"
+  dependencies:
+    jquery ">=1.8.0"
 
-jquery@>=1.8, jquery@^3.3.1:
+jquery@>=1.8, jquery@>=1.8.0, jquery@^3.3.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
