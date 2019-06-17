@@ -18,7 +18,7 @@
     "glfx-js": "jywarren/glfx.js#*",
     "image-sequencer": "publiclab/image-sequencer#~1.4.0",
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.0",
-    "jquery": "jquery/jquery-dist#^2.1.3",
+    "jquery": "jquery/jquery-dist#^3.4.1",
     "jquery-ui": "components/jqueryui#^1.12.1",
     "jquery-ujs": "rails/jquery-ujs#~1.0.3",
     "junction": "theleagueof/junction#*",
