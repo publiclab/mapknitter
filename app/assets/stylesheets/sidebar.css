@@ -1,0 +1,36 @@
+.image-order{
+	display: inline-block;
+	float: right;
+	margin-right: 32px;
+	margin-bottom: 10px;
+}
+.sidebar-heading{
+	display: inline-block;
+}
+.image-order-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+.image-order {
+  position: relative;
+  display: inline-block;
+}
+.image-order-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.image-order-content a {
+  color: black;
+  padding: 7px 10px;
+  text-decoration: none;
+  display: block;
+}
+.image-order-content a:hover {background-color: white;}
+.image-order:hover .image-order-content {display: block;}
