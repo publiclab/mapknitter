@@ -11,15 +11,15 @@
 
 # or, alternatively, 
 
-# This can also be removed if DEFAULT NULL is removed from all columns;
-# Read more at https://github.com/publiclab/mapknitter/pull/323
+  # # This can also be removed if DEFAULT NULL is removed from all columns;
+  # # Read more at https://github.com/publiclab/mapknitter/pull/323
 
 class ActiveRecord::ConnectionAdapters::ColumnDefinition
 
-  if ActiveRecord::Base.connection.adapter_name != 'sqlite3' && ActiveRecord::Base.connection.adapter_name != 'SQLite'
-    def sql_type
-      type.to_sym == :primary_key ? 'int(11) auto_increment PRIMARY KEY' : base.type_to_sql(type.to_sym, limit, precision, scale) rescue type
-    end 
-  end 
+  #   if ActiveRecord::Base.connection.adapter_name != 'sqlite3' && ActiveRecord::Base.connection.adapter_name != 'SQLite'
+  #     def sql_type
+  #       type.to_sym == :primary_key ? 'int(11) auto_increment PRIMARY KEY' : base.type_to_sql(type.to_sym, limit, precision, scale) rescue type
+  #     end 
+  #   end 
 
 end
