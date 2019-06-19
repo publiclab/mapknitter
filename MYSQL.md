@@ -98,7 +98,7 @@ $ mysql -u <username> -p <password>
 
 Permission issues above?
 
-(Note: these commands also fix the error `Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`)
+(Note: These commands also fix the error - `Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`)
 
 ```Bash
 
