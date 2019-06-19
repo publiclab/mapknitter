@@ -16,5 +16,7 @@ production:
 
 test:
   <<: *default
-  username: root
-  database: mapknitter-test
+  username: mapknitter
+  password: mapknitter
+  host: db
+  database: mapknitter
