@@ -1,6 +1,6 @@
-class Export < ActiveRecord::Base
-  belongs_to :map
-  belongs_to :user
+class Export < ApplicationRecord
+  belongs_to :map, optional: true
+  belongs_to :user, optional: true
 
   # currently exporting?
   def running?

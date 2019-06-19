@@ -15,8 +15,8 @@ class Warpable < ApplicationRecord
 
   validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
 
-  belongs_to :map
-  belongs_to :user
+  belongs_to :map, optional: true
+  belongs_to :user, optional: true
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})

@@ -1,7 +1,7 @@
 class Annotation < ApplicationRecord
   include ActiveModel::MassAssignmentSecurity
-  belongs_to :map
-  belongs_to :user
+  belongs_to :map, optional: true
+  belongs_to :user,optional: true
 
   attr_accessible :annotation_type, :coordinates, :text, :style
 
