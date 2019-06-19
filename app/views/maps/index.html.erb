@@ -20,12 +20,12 @@
       <% else %>
           <br>
           <p>
-          <a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
+          <a href="#" data-toggle="modal" data-target="#loginModal" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
           </p>
           <hr />
 
       <div class="well mini-login" style="display:none;">
-        <%= render :partial => "layouts/login_form" %>
+        <%= render partial: "layouts/login_modal" %>
       </div>
 
       <div class="hidden-map-btn" style="display:none;">
@@ -124,6 +124,9 @@
 </div>
 
 <script>
+  $(function(){
+    $("#loginModal").appendTo("body");
+  });
     var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
     var Mapknitterunique = new L.map('mapknitter-unique' , {
       maxBounds: bounds , 

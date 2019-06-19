@@ -2,31 +2,44 @@
   <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
   <%= hidden_field_tag :back_to, params[:back_to] || request.path -%>
   <div class="form-group">
-    <label style="display: block; text-align: center;">Login/Signup with your Public Lab account.</label>
+    <label style="display: block; text-align: center;">Log In via Publiclab.org</label>
   </div>
 
-  <p><%= submit_tag 'Log in via PublicLab.org', {:class => "btn btn-primary btn-large"} %></p>
-  <p>Or use one of these accounts:</p>
-  <p>
+  <p style="text-align: center;"><%= button_tag submit: 'Log in via PublicLab.org' do %>
+    <span class="btn btn-default" style="background-color: #ededee;">
+      <img src="https://i.publiclab.org/system/images/photos/000/000/354/medium/Boots-ground-02.png" style="width: 30px; height: 30px;">
+    </span>
+    <% end %>
+  </p>
+  <p style="text-align: center;">Or use one of these accounts:</p>
+  <p style="text-align: center;">
     <%= button_tag submit: 'Github', name: "subaction", value: "github" do %>
-    <span class="btn btn-default" style="margin-left:2px;background-color: #333;">
+    <span class="btn btn-default" style="background-color: #333;">
       <i class="fab fa-github fa-fw" style="font-size:20px;color:white;"></i>
     </span>
     <% end %>
     <%= button_tag 'Google', name: "subaction", value: "google_oauth2" do %>
-    <span class="btn btn-outline-light" style="margin-right:2px;background-color: #d34836;">
+    <span class="btn btn-default" style="background-color: #d34836;">
       <i class="fab fa-google fa-fw" style="font-size:20px;color:white;"></i>
     </span>
     <% end %>
     <%= button_tag submit: 'Twitter', name: "subaction", value: "twitter" do %>
-      <span class="btn btn-outline-light" style="margin-left:2px;background-color: #1da1f2;">
-        <i class="fab fa-twitter fa-fw" style="font-size:20px;color:white;margin-left:2px;"></i>
+      <span class="btn btn-default" style="background-color: #1da1f2;">
+        <i class="fab fa-twitter fa-fw" style="font-size:20px;color:white;"></i>
       </span>
     <% end %>
     <%= button_tag 'Facebook', name: "subaction", value: "facebook" do%>
-      <span class="btn btn-outline-light" style="margin-left:2px;background-color: #3b5998">
+      <span class="btn btn-default" style="background-color: #3b5998">
         <i class="fab fa-facebook fa-fw" style="font-size:20px;color:white;"></i>
       </span>
     <% end %>
   </p>
 </form>
+<style>
+ #open_id_form button{
+  width: 70px;
+  background-color: #ffffff;
+  border: none;
+  margin-right: 0.25rem;
+  }
+</style>
