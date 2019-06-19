@@ -22,7 +22,8 @@ group :dependencies do
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip'
   gem 'bootsnap', '~> 1.4.4'
-  gem 'listen', '~> 3.1.5'
+  gem 'turbolinks', '~> 5'
+  gem 'mini_magick', '~> 4.8'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -50,6 +51,7 @@ group :test do
   gem 'rubocop', '~> 0.52.0'
   gem 'ruby-prof'
   gem 'rails-perftest'
+  gem 'rails-controller-testing'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
   gem 'minitest'
@@ -57,20 +59,23 @@ group :test do
 end
 
 group :development, :test do
-  gem 'byebug', '~> 11.0.1'
+  gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 1.9.3'
   gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
   gem 'jshintrb', '~> 0.3.0'
-  gem 'therubyracer', '~> 0.12.3'
+  gem 'mini_racer', platforms: :ruby
+  gem 'listen', '~> 3.1.5'
   gem 'web-console', '~> 2.0'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :sqlite do
   # if you decide to use sqlite3 as the database
-  gem 'sqlite3'
+  # gem 'sqlite3'
 end
 
 group :passenger do
