@@ -106,7 +106,7 @@ However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as
 
 Once NPM is installed, you should be able to run:
 
-`sudo npm install -g bower`
+`sudo npm install -g yarn`
 
 ### Standard Installation
 
@@ -118,7 +118,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
 5. Initialize database with `bundle exec rake db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
-7. Install static assets (like external javascript libraries, fonts) with `bower install` 
+7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
 ### Running tests
