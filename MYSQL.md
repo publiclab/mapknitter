@@ -167,9 +167,9 @@ $ GRANT ALL ON *.* TO 'mapknitter' WITH GRANT OPTION;
 
 ```
 
-_If you get the error `Access denied for user 'root'@'localhost'" error"`_  , maybe you forgot your root password or was not prompted when installing. 
+_If you get the error `Access denied for user 'root'@'localhost'" error"`_ 
 
-You might be having some dependencies of mysql in your machine. You need to remove all the dependencies and reinstall mysql a fresh. 
+Meaning maybe you forgot your root password or was not prompted when installing. You might be having some dependencies of mysql in your machine. You need to remove all the dependencies and reinstall mysql a fresh. 
 Use the following commands to remove mysql and all its dependencies
 
 ```Bash
