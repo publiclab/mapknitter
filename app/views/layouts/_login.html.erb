@@ -15,21 +15,8 @@
   <li class="nav-item dropdown">
     <a href="#" class="nav-link dropdown login-form" data-toggle="modal" data-target="#loginModal">Log In</a>
 
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Log In</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <%= render :partial => "layouts/login_form" %>
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render partial: "layouts/login_modal" %>
+    
   </li>
 <% end %>
 <script>
