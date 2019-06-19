@@ -18,5 +18,4 @@ test:
   <<: *default
   username: mapknitter
   password: mapknitter
-  host: db
   database: mapknitter
