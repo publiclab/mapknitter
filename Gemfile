@@ -75,7 +75,7 @@ end
 
 group :sqlite do
   # if you decide to use sqlite3 as the database
-  # gem 'sqlite3'
+  gem 'sqlite3'
 end
 
 group :passenger do
