@@ -18,7 +18,7 @@ $ bundle exec bundle install
 
 **Homebrew setup:** 
 
-(Note: alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
+(Note: An alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
 
 Dependencies: 
 
@@ -98,7 +98,7 @@ $ mysql -u <username> -p <password>
 
 Permission issues above?
 
-(note these commands also fix the error: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2))
+(Note: these commands also fix the error `Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`)
 
 ```Bash
 
@@ -135,7 +135,7 @@ mysql> exit
 
 Reconfirm Access
 
-(whenever want to access the mysql db locally, need to run this login first - suggest aliasing in bash profile)
+Whenever you want to access the mysql db locally, you need to run this login first. It might be useful to alias this in your bash profile.
 
 ```Bash
 
@@ -167,9 +167,8 @@ $ GRANT ALL ON *.* TO 'mapknitter' WITH GRANT OPTION;
 
 ```
 
-_If you get the error `Access denied for user 'root'@'localhost'" error"`_  
+_If you get the error `Access denied for user 'root'@'localhost'" error"`_  , maybe you forgot your root password or was not prompted when installing. 
 
-Meaning maybe you forgot your root password or was not prompted when installing. 
 You might be having some dependencies of mysql in your machine. You need to remove all the dependencies and reinstall mysql a fresh. 
 Use the following commands to remove mysql and all its dependencies
 
