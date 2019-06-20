@@ -21,7 +21,7 @@ class ExportControllerTest < ActionController::TestCase
     system('mkdir -p public/warps/cubbon-park')
     system('cp test/fixtures/demo.png  public/warps/cubbon-park/cubbon-park.jpg')
 
-    get :jpg, id: map.slug
+    get :jpg, params: { id: map.slug}
     assert_response :success
     assert_includes 'image/jpeg', response.content_type
   end
@@ -31,13 +31,13 @@ class ExportControllerTest < ActionController::TestCase
     system('mkdir -p public/warps/cubbon-park')
     system('cp test/fixtures/demo.png public/warps/cubbon-park/cubbon-park-geo.tif')
 
-    get :geotiff, id: map.slug
+    get :geotiff, params: { id: map.slug}
     assert_response :success
     assert_includes 'image/tiff', response.content_type
   end
 
   test 'should not cancel if not logged in' do
-    get :cancel, id: @map.id
+    get :cancel, params: { id: @map.id}
     assert_response :success
     assert_equal 'You must be logged in to export, unless the map is anonymous.', @response.body
     assert assigns[:map]
@@ -47,7 +47,7 @@ class ExportControllerTest < ActionController::TestCase
 
   test 'should cancel export' do
     session[:user_id] = 1
-    get :cancel, id: @map.id
+    get :cancel, params: { id: @map.id}
     assert_response :success
     assert_equal 'cancelled', @response.body
     assert assigns[:map]
@@ -55,33 +55,33 @@ class ExportControllerTest < ActionController::TestCase
 
   test 'should redirect after cancelling' do
     session[:user_id] = 1
-    get :cancel, id: @map.id, exports: 'cess'
+    get :cancel, params: { id: @map.id, exports: 'cess'}
     assert_response :redirect
     assert flash.present?
     assert_redirected_to '/exports'
   end
 
   test 'should display export progress' do
-    get :progress, id: @map.id
+    get :progress, params: { id: @map.id}
     assert_response :success
     assert_equal 'export not running', @response.body
     assert_equal 'text/plain', @response.content_type
   end
 
   test 'should display progress with no export' do
-    get :progress, id: 4
+    get :progress, params: { id: 4}
     assert_response :success
     assert_equal 'export has not been run', @response.body
   end
 
   test 'should display progress completed' do
-    get :progress, id: 2
+    get :progress, params: { id: 2}
     assert_response :success
     assert_equal 'complete', @response.body
   end
 
   test 'should display progress failed' do
-    get :progress, id: 3
+    get :progress, params: { id: 3}
     assert_response :success
     assert_equal 'export failed', @response.body
   end
@@ -89,13 +89,13 @@ class ExportControllerTest < ActionController::TestCase
   # does not test the exporter client
   test 'should display export status' do
     session[:user_id] = 1
-    get :status, id: @map.id
+    get :status, params: { id: @map.id}
     assert_response :success
   end
 
   test 'should display error if no export' do
     session[:user_id] = 1
-    get :status, id: 4
+    get :status, params: { id: 4}
     assert_response :success
     # assert_equal { status: 'export has not been run' }.to_json, @response.body
   end

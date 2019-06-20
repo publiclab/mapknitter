@@ -1,4 +1,7 @@
 class Annotation < ApplicationRecord
+
+  # FIXME - We should start using strong parameters here in favor of this below
+  # include ActiveModel::MassAssignmentSecurity
   belongs_to :map
   belongs_to :user
 
