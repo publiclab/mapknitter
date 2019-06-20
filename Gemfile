@@ -45,7 +45,7 @@ group :dependencies do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.52.0'
+  gem 'rubocop', '~> 0.71.0'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false
