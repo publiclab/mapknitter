@@ -1,8 +1,8 @@
 require 'json'
 
 class AnnotationsController < ApplicationController
-  # before_filter :require_user, :except => [ :index, :show ]
-  before_filter :find_map
+  # before_action :require_user, :except => [ :index, :show ]
+  before_action :find_map
 
   def index
     render file: 'annotations/index.json.erb', content_type: 'application/json'

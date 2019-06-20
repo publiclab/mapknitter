@@ -65,7 +65,7 @@ end
 group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'therubyracer', '~> 0.12.3'
-  gem 'web-console', '~> 2.0'
+  gem 'web-console'
 end
 
 group :sqlite do
