@@ -20,7 +20,7 @@ class Map < ApplicationRecord
   has_many :tags, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :annotations, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
 
   has_many :warpables
   scope :active, -> { where(archived: false) }
@@ -177,6 +177,7 @@ class Map < ApplicationRecord
     if !warpables.empty?
       scales = []
       count = 0
+      average = 0
       placed_warpables.each do |warpable|
         count += 1
         res = warpable.cm_per_pixel
@@ -184,7 +185,8 @@ class Map < ApplicationRecord
         scales << res unless res.nil?
       end
       total_sum = (scales.inject { |sum, n| sum + n }) if scales
-      return total_sum / count if total_sum
+      average = total_sum / count if total_sum
+      average
     else
       0
     end

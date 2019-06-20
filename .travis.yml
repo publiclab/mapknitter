@@ -17,11 +17,12 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle install && yarn install
-  - mysql -e "CREATE DATABASE mapknitter; CREATE DATABASE mapknitter_test;"
+  - mysql -e "CREATE DATABASE mapknitter_dev; CREATE DATABASE mapknitter_test;"
+  - rails db:create
   - if [ $RAILS_ENV == 'production' ]; then
-      bundle exec rake db:schema:load;
+      bundle exec rails db:schema:load;
     else
-      bundle exec rake db:setup || bundle exec rake db:migrate;
+      bundle exec rails db:setup || bundle exec rails db:migrate;
     fi
 
 env:
@@ -30,14 +31,17 @@ env:
     - CI=true
     - TRAVIS=true
 
+# FIXME - Later change 'test/unit' and 'test/funcional' folders 
+# to 'test/unit' and 'test/funcional', respectively
+
 jobs:
   include:
     - name: "Unit Tests"
-      script: bundle exec rake test:unit
+      script: bundle exec rails test:unit
     - name: "Integration Tests"
-      script: bundle exec rake test:integration
+      script: bundle exec rails test:integration
     - name: "Functional Tests"
-      script: bundle exec rake test:functional
+      script: bundle exec rails test:functional
     - name: "Rubocop Linter"
       script: bundle exec rubocop
     - name: "Docker Builds"
@@ -45,7 +49,7 @@ jobs:
     - name: "Asset Precompilation"
       env:
         - RAILS_ENV=production
-      script: bundle exec rake assets:precompile
+      script: bundle exec rails assets:precompile
 
 branches:
   only:
