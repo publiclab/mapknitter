@@ -1,6 +1,5 @@
 class Warpable < ApplicationRecord
-  include ActiveModel::MassAssignmentSecurity
-  attr_accessible :image
+  attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
   # Paperclip; config and production/development specific configs
