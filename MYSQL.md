@@ -1,43 +1,24 @@
-# installation troubleshooting & instructions 
+# MySQL Installation
 
-## System Agnostic 
-
-- bundler skipping over **mysql2** gem?
-
-```Bash 
-
-$ rm .bundle/config
-
-$ bundle exec bundle install
-
-```
-
-
+## Instructions
 
 ## MacOS
 
-**Homebrew setup:** 
+### Homebrew setup:
 
-(Note: An alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
+(Note: The alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
 
-Dependencies: 
+**Dependencies:**
 
-- `cmake`
+- `$ brew install cmake`
 
-- `openssl`
 
-```Bash
+- `$ brew install openssl`
 
-$ brew install cmake
 
-$ brew install openssl
-
-```
-
-Installation:
+**Installation:**
 
 ```Bash
-
 #make sure you don't have any other versions of mysql installed
 $ brew list
 
@@ -51,10 +32,9 @@ $ brew install mysql@5.7
 $ brew link mysql@5.7 --force
 ```
 
-Test Usage:
+**Test Usage:**
 
 ```Bash
-
 # install brew services 
 $ brew tap homebrew/services
 
@@ -69,7 +49,7 @@ $ brew services stop mysql@5.7
 
 ```
 
-Update Permissions
+**Update Permissions:**
 
 ```Bash
 # check for right permissions to the PIDs
@@ -83,7 +63,7 @@ $ ls -laF /usr/local/var/mysql/
 
 ```
 
-Account Setup
+**Account Setup:**
 
 ```Bash
 # secure your account
@@ -96,12 +76,11 @@ $ mysql -u <username> -p <password>
 
 ```
 
-Permission issues above?
+**Permission issues above?**
 
 (Note: These commands also fix the error - `Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)`)
 
 ```Bash
-
 $ mysql.server stop
 
 #unset the temporary directory
@@ -115,7 +94,6 @@ $ mysqld -initialize --verbose --user=$(whoami) --basedir="$(brew --prefix mysql
 
 #restart mysql
 $ mysql.server restart
-
 
 $ mysql -u root
 
@@ -133,20 +111,18 @@ mysql> exit
 
 ```
 
-Reconfirm Access
+**Reconfirm Access**
 
 Whenever you want to access the mysql db locally, you need to run this login first. It might be useful to alias this in your bash profile.
 
 ```Bash
-
 $ mysql -u <username> -p
-
 ```
 
 
 ## Linux
 
-Installation: 
+**Installation:**
 
 ```Bash
 
@@ -155,7 +131,7 @@ $ sudo apt-get install mysql-server
 # Enter a password you can rem when prompted during installation for root
 
 ```
-Configure mapknitter account: 
+**Configure MapKnitter account:**
 
 ```Bash
 $ mysql -u root -p
@@ -193,8 +169,36 @@ Add the username and passsword on the `config/database.yml` development:
 
 Note: _You can use MariaDB in development for as you database if you are more comfortable with it_
 
+## Troubleshooting
+
+### MySQL build / setup
+
+1. Ensure you have the lateset version of `xcode` installed (MacOS only)
+
+2. Check your MySQL verion to make sure it matches the one specified in the instructions: `$ mysql --version`
+
+3) Reference section on this page "permission issues above?" for handling this error:
+
+    <blockquote>
+    Cannot connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+    </blockquote>
+
+### mysql2 gem
+
+1. Ensure you have a `database.yml` set up for `adapter: mysql2`
+
+    -   Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 
+2. If you ever see this error, **do not update to this gem**. Look online or ask PL for help!
+    <blockquote>
+    Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
+    </blockquote>
 
-## Pending: please add instructions for your respective system 
+3. Bundler skipping over **mysql2** gem?
 
+    ``` Bash
+    $ rm .bundle/config
+
+    $ bundle exec bundle install
+    ```
