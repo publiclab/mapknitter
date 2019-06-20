@@ -50,6 +50,7 @@ group :test do
   gem 'rubocop', '~> 0.52.0'
   gem 'ruby-prof'
   gem 'rails-perftest'
+  gem 'rails-controller-testing'
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
   gem 'minitest'
