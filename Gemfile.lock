@@ -338,7 +338,7 @@ DEPENDENCIES
   mysql2 (< 0.6)
   oa-openid (= 0.3.2)
   open_id_authentication
-  paperclip
+  paperclip (~> 6.1.0)
   passenger
   popper_js (~> 1.11, >= 1.11.1)
   pry-rails (~> 0.3.9)

@@ -20,7 +20,7 @@ group :dependencies do
   gem 'ruby-openid', '~>2.5'
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
-  gem 'paperclip'
+  gem 'paperclip', '~> 6.1.0'
   gem 'bootsnap', '~> 1.4.4'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
