@@ -66,7 +66,6 @@ end
 
 group :development do
   gem 'jshintrb', '~> 0.3.0'
-  gem 'therubyracer', '~> 0.12.3'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.1.5'
   gem 'web-console', '~> 2.0'
