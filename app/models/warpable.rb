@@ -1,6 +1,5 @@
 class Warpable < ApplicationRecord
-
-  # FIXME - We should start using strong parameters here in favor of this below
+  # FIXME: - We should start using strong parameters here in favor of this below
   # include ActiveModel::MassAssignmentSecurity
   # attr_accessible :image
 

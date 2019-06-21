@@ -1,9 +1,8 @@
 class Annotation < ApplicationRecord
-  
-  # FIXME - We should start using strong parameters here in favor of this below  
+  # FIXME: - We should start using strong parameters here in favor of this below
   # include ActiveModel::MassAssignmentSecurity
   belongs_to :map, optional: true
-  belongs_to :user,optional: true
+  belongs_to :user, optional: true
 
   attr_accessor :annotation_type, :coordinates, :text, :style
 
