@@ -9,17 +9,26 @@
 
 <!-- jumbotron with background-image -->
 <div class="jumbotron jumbotron-fluid text-center" id="hero">
-  <div class="container">
-    <h1 class="display-4 jumbotron-text">MapKnitter</h1>
-    <p class="lead jumbotron-text">Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
-    <p class="lead">
-      <a class="btn btn-info btn-lg" id="get-started-button" href="<%= new_map_url %>" role="button">Add your images</a>
-      <a class="btn btn-info btn-lg" href="#mapping-kits" role="button">Get a mapping kit</a>
-    </p>
-  </div>
+    <div class="container">
+        <div class="text-block">
+            <br><br><h1>MapKnitter</h1>
+            <p> A Community Atlas hosted by <a href="publiclag.org">PublicLab</a></p>
+            <p>Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
+            <%# <p class="lead"> %>
+            <p>
+            <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
+                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:20px;color:white;"></i>
+            </a>
+            <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
+                Add your images <i class="fa fa-plus fa-fw" style="font-size:15px;color:white;"></i>
+            </a>
+            </p>
+        </div>
+    </div>
 </div>
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
+<p>See nearby: <u>Rio</u> <u>Guangzho</u> <u>Barcelona</u> <u>Oakland</u></p>
 
 <div class="section-header text-center">
   <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2>
@@ -85,6 +94,87 @@
     <a href="/mappers" class="alert-link">See more people & maps</a>
   </div>
 <% end %>
+
+
+    <div class="row text-center" id="info">
+        <div class="col-md-4 col-sm-5 offset-1">
+            <i class="fa fa-spinner"  style="color:gray;"></i>
+            <h3>Make your own map </h3>
+            <p>Use a kite, balloon, pole or drone to take an aerial photo and tell your own visual story of the place </p>
+            <p>
+            <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
+                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:15px;color:white;"></i>
+            </a> &nbsp;  &nbsp;
+            <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
+                Add your images <i class="fa fa-plus fa-fw" style="font-size:15px;color:white;"></i>
+            </a>
+            </p>
+
+        </div>
+        <div class="col-md-5 col-sm-5 offset-1">
+            <i class="fa fa-industry"  style="color:gray;"></i>
+            <h3>Environmental data<br> near here </h3>
+            <p>A range of groups publish environmental data here. Read more or share your own map data </p>
+            <hr>
+            <div class="text-left">
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:blue;"></i>
+                <%= link_to 'Frac Tracker', 'https://www.fractracker.org', target: :_blank %>  &emsp; &emsp; Oil and gas infrastructure
+                </p>
+                <hr>
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:yellow;"></i>
+                <%= link_to 'JusticeMap', 'https://www.justicemap.org/', target: :_blank%> &emsp; &emsp;  Race, ethnicity & demographic data
+                </p>
+                <hr>
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:purple;"></i>
+                <%= link_to 'OdorLog.com', '#' , target: :_blank%> &emsp;  Community reports of odors
+                </p>
+                <hr>
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:red;"></i>
+                <%= link_to 'OpenAQ Air', 'https://openaq.org', target: :_blank%> &emsp; &emsp; Quality data from various sources
+                </p>
+                <hr>
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:green;"></i>
+                <%= link_to 'Toxic Release', 'https://www.epa.gov/toxics-release-inventory-tri-program', target: :blank %> &emsp; &nbsp; Inventory US gov't collected data from polluting industry
+                </p>
+                <hr>
+                <p>
+                <span class="fa-stack fa-2x">
+                    <i class="far fa-square fa-stack-2x"></i>
+                    <i class="fas fa-times fa-stack-1x"></i>
+                </span>
+                <i class="fa fa-circle" style="font-size:20px;color:#20B2AA;"></i>
+                <%= link_to 'SkyTruth Alerts', 'https://alerts.skytruth.org/', target: :blank%> &emsp; &nbsp; Recent state-level reports of pollution
+                </p>
+
+            </div>
+        </div>
+    </div>
+
 
 <div class="section-blue-background">
   <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
