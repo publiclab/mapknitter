@@ -1,5 +1,9 @@
 <div>
 <h4 class="sidebar-heading">Images</h4>
+<div class="grid-list">
+  <button class="list-view" onClick="list()"><i class="fa fa-bars"></i></button>
+  <button class="grid-view" onClick="grid()"><i class="fa fa-th"></i></button>
+</div>
 <div class="image-order">
   <button type="button" class="btn btn-outline-secondary">Sort Images</button>
   <div class="image-order-content">
@@ -9,9 +13,10 @@
   </div>
 </div>
 </div>
+
 <% if @map.warpables.empty? %>
   <p id="no-images">No images uploaded. </p>
-  <%end%>
+<%end%>
 <table class="warpables-all table table-striped">
   <tbody>
     <% sort_param = params[:sort] %>
@@ -124,3 +129,18 @@
     <% end %>
   </tbody>
 </table>
+<script>
+  function grid(){
+    $('tr').css('display','inline-block');
+    $('tr').css('background-color','none');
+    $('td').css('display','none');
+    $('.warpable').css('display','inline-block');
+    $('.warpable').css('padding','0.75rem 0.5rem')
+  }
+  function list(){
+    $('tr').css('display','block');
+    $('td').css('display','inline-block');
+    $('.warpable').css('display','inline-block');
+    $('.warpable').css('padding-right','3rem')
+  }
+</script>
