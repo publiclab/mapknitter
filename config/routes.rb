@@ -52,7 +52,7 @@ Mapknitter::Application.routes.draw do
   get 'map/:id', to: redirect('/maps/%{id}')
   get 'embed/:id', to: 'maps#embed'
   post 'maps/:map_id/warpables', to: 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
-  post 'maps/export/:id', to: 'maps#export'
+  get 'maps/export', to: 'maps#export'
   post 'maps/:id', to: 'maps#export'
 
   get 'import/:name', to: 'images#import' # this was for auto-adding images via URL

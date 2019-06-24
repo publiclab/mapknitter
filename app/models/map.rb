@@ -234,9 +234,9 @@ class Map < ApplicationRecord
   end
 
   # we'll eventually replace this with a JavaScript call to initiate an external export process:
-  def run_export(user, resolution)
+  def run_export(warpable_ids, user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
-
+    warpables = Warpable.find(warpable_ids) || placed_warpables
     new_export = Export.new(map_id: id) unless export
 
     Exporter.run_export(user,
@@ -246,7 +246,7 @@ class Map < ApplicationRecord
                         slug,
                         Rails.root.to_s,
                         average_scale,
-                        placed_warpables,
+                        warpables,
                         key)
   end
 
