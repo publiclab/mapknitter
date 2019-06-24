@@ -2,12 +2,15 @@ require 'test_helper'
 
 class MapTest < ActiveSupport::TestCase
 
-  test "basics" do
+  test 'should not have empty default attributes' do
     assert_not_nil Map.bbox(0,0,90,180)
     assert_not_nil Map.authors
     assert_not_nil Map.new_maps
+  end
 
+  test 'should create map' do
     map = maps(:saugus)
+
     assert_not_nil map.license_link
     assert_not_nil map.author
     assert_not_nil map.name
@@ -25,27 +28,31 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.user
     assert_not_nil map.private
     assert_not_nil map.anonymous?
-
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon
+    assert Map.first.validate
     assert_equal Map.count, Map.new_maps.size
   end
 
-  test "export functions" do
+  test 'should export map related functions' do
     map = maps(:saugus)
     assert_not_nil map.average_scale
 
     placed = map.warpables(&:placed?)
+    
     assert_not_nil map.placed_warpables
     assert_equal placed, map.placed_warpables
-
     assert_not_nil map.best_cm_per_pixel
     assert_not_nil map.exporting?
     assert_not_nil map.export
     assert_not_nil map.latest_export
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
+
+    # use a map fixture with no warpables
+    village = maps(:village)
+    assert_equal 0,  village.average_cm_per_pixel
 
     resolution = 20
     assert_not_nil map.run_export(users(:quentin), resolution)  #map.average_cm_per_pixel)
@@ -80,27 +87,34 @@ class MapTest < ActiveSupport::TestCase
 
   end
 
-  test 'histograms' do
+  test 'should have histograms' do
     map = maps(:saugus)
     hist = map.images_histogram
+
     assert_not_nil hist
     assert_not_nil map.grouped_images_histogram(3)
     assert_equal hist.count/3, map.grouped_images_histogram(3).count
 
   end
 
-  test 'nearby maps' do
+  test 'should have nearby maps' do
     map = maps(:nairobi)
     near_maps = map.nearby_maps(5)
+
     assert_not_nil near_maps
     assert_includes near_maps, maps(:village)
+
+    saugus = maps(:saugus)
+    saugus.lat = 0
+
+    assert_empty saugus.nearby_maps(100)
   end
 
-  test "tag basics" do
+  test 'should create tag basics in map' do
     map = Map.first
+
     assert !map.has_tag('test')
     assert map.add_tag('test', User.first)
     assert map.has_tag('test')
   end
-
 end

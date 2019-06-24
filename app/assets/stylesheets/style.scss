@@ -1,0 +1,347 @@
+/* 
+Junction is provided under the OFL and is available at http://www.theleagueofmoveabletype.com/junction or https://github.com/theleagueof/junction 
+It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
+*/
+
+@font-face {
+    font-family: 'Junction Regular';
+    src: url('junction/webfonts/junction-regular.eot');
+    src: url('junction/webfonts/junction-regular.eot?#iefix') format('embedded-opentype'),
+         url('junction/webfonts/junction-regular.woff') format('woff'),
+         url('junction/webfonts/junction-regular.ttf') format('truetype'),
+         url('junction/webfonts/junction-regular.svg#junction') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Junction Light';
+    src: url('junction/webfonts/junction-light.eot');
+    src: url('junction/webfonts/junction-light.eot?#iefix') format('embedded-opentype'),
+          url('junction/webfonts/junction-light.woff') format('woff'),
+          url('junction/webfonts/junction-light.ttf') format('truetype'),
+          url('junction/webfonts/junction-light.svg#junction') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#hero {
+  background-image: url('kite2.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.jumbotron {
+  margin-bottom: 1rem;
+}
+
+.jumbotron-text {
+  text-shadow: 1px 1px 2px #080707;
+  color: white;
+}
+
+.map-list .map-img {
+  max-height: 400px !important;
+}
+
+.map-list div:nth-child(4n+1){
+  clear: left;
+}
+
+.map-location {
+  color: rgb(118, 118, 118);
+  overflow-wrap: break-word;
+  height: 16px;
+  max-height: 16px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.map-title {
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4em;
+  color: rgb(72, 72, 72);
+}
+
+.map-details {
+  display: block;
+  text-decoration: none;
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2em;
+}
+
+.alert-link {
+  text-shadow: none;
+}
+
+.card-without-border {
+  border: none;
+}
+
+/* Application-wide styles */
+h1, h2, h3, h4 {
+  font-family: 'Junction Light', lucida grande,lucida sans console,sans-serif;
+  font-weight:normal;
+  color:#444;
+}
+
+a {
+  outline: 0;
+}
+
+label small {
+  font-weight:normal;
+  color:#888;
+}
+
+.container-fluid .row img {
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.link-thumbnail {
+  position: relative;
+  width: 100%;
+}
+
+.links {
+  .btn {
+    margin-bottom: 20px;
+  }
+  a .title {
+    font-family: 'Junction Regular';
+    color: #000;
+    position: absolute;
+    bottom: 19px;
+    background-color: rgba(256, 256, 256, 0.8);
+    width: 100%;
+    height: 30px;
+    text-align: right;
+    padding: 5px;
+    font-size: 1.15em;
+  }
+}
+
+.footer {
+  margin: 20px;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+  background:#f6f9fc;
+}
+
+.footer .footer-link {
+  color: #8898aa;
+}
+
+.footer .footer-link:hover {
+  text-decoration: none;
+  color: #32325d;
+}
+
+.footer .footer-title {
+  font-weight: 600;
+  font-weight: bolder;
+  letter-spacing: .025em;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.rounded-social-buttons {
+  text-align: center;
+}
+
+.rounded-social-buttons .social-button {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  width: 3.125rem;
+  height: 3.125rem;
+  border: 0.125rem solid transparent;
+  padding: 0;
+  text-decoration: none;
+  text-align: center;
+  color: #fefefe;
+  font-size: 1.5625rem;
+  font-weight: normal;
+  line-height: 2em;
+  border-radius: 1.6875rem;
+  transition: all 0.5s ease;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.rounded-social-buttons .social-button.facebook {
+  background: #3b5998;
+}
+
+.rounded-social-buttons .social-button.facebook:before {
+  font-family: "FontAwesome";
+  content: "";
+}
+
+.rounded-social-buttons .social-button.facebook:hover {
+  opacity: 0.7;
+}
+
+.rounded-social-buttons .social-button.twitter {
+  background: #55acee;
+}
+
+.rounded-social-buttons .social-button.twitter:before {
+  font-family: "FontAwesome";
+  content: "";
+}
+
+.rounded-social-buttons .social-button.twitter:hover {
+  opacity: 0.7;
+}
+
+.rounded-social-buttons .social-button.youtube {
+  background: #bb0000;
+}
+
+.rounded-social-buttons .social-button.youtube:before {
+  font-family: "FontAwesome";
+  content: "";
+}
+
+.rounded-social-buttons .social-button.youtube:hover {
+  opacity: 0.7;
+}
+
+.rounded-social-buttons .social-button.instagram {
+  background: #125688;
+}
+
+.rounded-social-buttons .social-button.instagram:before {
+  font-family: "FontAwesome";
+  content: "";
+}
+
+.rounded-social-buttons .social-button.instagram:hover {
+  opacity: 0.7;
+}
+
+.mapping-kits {
+  border: none;
+}
+
+.img-icon {
+  max-width: 120px;
+}
+
+.btn.create-map {
+  width: 100%;
+}
+
+.maps-list {
+  h2 { margin-top: 0; }
+}
+
+.sidebar-only {
+  display: none;
+}
+
+.login-form {
+  width: 200px;
+  padding: 10px;
+  label {
+    margin-top: 5px;
+    font-weight: normal;
+  }
+}
+
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.how-to-item {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.section-header {
+  margin: 30px 0;
+}
+
+.mapknitter-info {
+  font-size: 26px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.33;
+  letter-spacing: -0.2px;
+  text-align: center;
+  color: #a2aaad;
+}
+
+.learn-more {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.44;
+  letter-spacing: -0.2px;
+}
+
+.icon-landing {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.item-description {
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.44;
+  color: #a2aaad;
+}
+
+.blue-background {
+  background-color: #17a2b8;
+  width: 1000px;
+}
+
+.section-blue-background {
+  max-height: 100px;
+  background-color: #17a2b8;
+  margin: 20px 0;
+  color: white;
+}
+
+.section-blue-background a {
+  display: flex;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.17;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  padding: 30px 0 40px 0;
+  justify-content: center !important;
+}
+
+.section-blue-background a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+@media(max-width: 360px) {
+  #get-started-button {
+    margin-bottom: 10px;
+  }
+}

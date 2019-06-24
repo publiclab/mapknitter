@@ -231,8 +231,8 @@ class Exporter
      my_warpable_coords = warpable.generate_perspectival_distort(scale,slug)
      puts '- '+my_warpable_coords.to_s
      warpable_coords << my_warpable_coords
-     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
-     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
+     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x.zero? )
+     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y.zero? )
     end
     [lowest_x,lowest_y,warpable_coords]
   end
@@ -276,9 +276,8 @@ class Exporter
   # generates a tileset at root/public/tms/<slug>/
   # root is something like https://mapknitter.org
   def self.generate_tiles(key, slug, root)
-    key = "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ" if key == "" # ugh, let's clean this up!
-    key = key || "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
-    gdal2tiles = 'gdal2tiles.py -k --s_srs EPSG:3857 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    key = "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ" if key.blank?
+    gdal2tiles = 'gdal2tiles.py -k --s_srs EPSG:4326 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
     puts gdal2tiles
     system(self.ulimit+gdal2tiles)
   end

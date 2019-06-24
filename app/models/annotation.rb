@@ -1,4 +1,5 @@
 class Annotation < ActiveRecord::Base
+  include ActiveModel::MassAssignmentSecurity
   belongs_to :map
   belongs_to :user
 
@@ -8,21 +9,21 @@ class Annotation < ActiveRecord::Base
   serialize :style, Hash
 
   def author
-    User.find(self.user_id).login
+    User.find(user_id).login
   end
 
   def geometry_type
-    case self.annotation_type
-    when 'polyline' then
-      geometry_type = 'LineString'
-    when 'polygon' then
-      geometry_type = 'Polygon'
-    when 'rectangle' then
-      geometry_type = 'Polygon'
-    else
-      geometry_type = 'Point'
-    end
+    geometry_type = case annotation_type
+                    when 'polyline' then
+                      'LineString'
+                    when 'polygon' then
+                      'Polygon'
+                    when 'rectangle' then
+                      'Polygon'
+                    else
+                      'Point'
+                    end
 
-    return geometry_type
+    geometry_type
   end
 end

@@ -1,18 +1,14 @@
 class CommentsController < ApplicationController
   def create
     if logged_in?
-      @map = Map.find params[:map_id]
 
-      @comment = @map.comments.new(
-        user_id: current_user.id,
-        body: params[:comment][:body]
-      )
+      @comment = current_user.comments.new(comment_params)
+      @map = @comment.map
       if @comment.save!
-        users = @map.comments.collect(&:user)
-        users += [@map.user] unless @map.user.nil?
-        users.uniq.each do |user|
-          unless user.id == current_user.id
-            CommentMailer.notify(user, @comment).deliver
+        users = @map.comments.collect(&:user).uniq
+        users.each do |user|
+          unless user.id == @map.user_id && user.id == current_user.id
+            CommentMailer.notify(user, @comment).deliver_now
           end
         end
       end
@@ -24,15 +20,15 @@ class CommentsController < ApplicationController
 
     else
       # we intercept this message in /app/assets/javascripts/maps.js
-      render text: 'Login required.'
+      render plain: 'Login required.'
     end
   end
 
   def update
     @comment = Comment.find params[:id]
     if logged_in? && current_user.can_edit?(@comment)
-      @comment.update_attribute(:body, params[:comment][:body])
-      redirect_to '/maps/' + params[:map_id]
+      @comment.update_attributes(comment_params)
+      redirect_to @comment.map
     else
       flash[:error] = 'You do not have permissions to update that comment.'
       redirect_to '/login'
@@ -48,6 +44,12 @@ class CommentsController < ApplicationController
     else
       flash[:error] = 'You do not have permission to delete that comment.'
     end
-    redirect_to "/maps/#{params[:map_id]}"
+    redirect_to @comment.map
+  end
+
+  private
+
+  def comment_params
+    params.require(:comment).permit(:body, :map_id, :user_id)
   end
 end

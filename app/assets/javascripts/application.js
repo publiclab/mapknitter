@@ -11,7 +11,8 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
-//= require popper
+//= require jquery
+//= require jquery-ujs
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
 
@@ -22,8 +23,8 @@
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-easybutton/src/easy-button.js
-//= require leaflet-google/index.js
 //= require sparklines/source/sparkline.js
 //= require annotations-legacy.js
 //= require glfx-js/dist/glfx.js
 //= require webgl-distort/dist/webgl-distort.js
+//= require_tree .

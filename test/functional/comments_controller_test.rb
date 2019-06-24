@@ -5,20 +5,21 @@ class CommentsControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
-  end 
+    @emails = ActionMailer::Base.deliveries
+    @emails.clear
+  end
 
-  # called after every single test
   def teardown
   end
 
   test "should not create comment if not logged in" do
     before_count = Comment.count
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        user_id: 1
-    })
+    post(:create,
+         map_id: @map.slug,
+         comment: {
+           user_id: 1
+         })
 
     assert_response :success
     assert_equal before_count, Comment.count
@@ -28,11 +29,11 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     before_count = Comment.count
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         comment: {
+         map_id: @map.id,
+           body: "I'm gonna troll you!"
+         })
 
     assert_response :success
     assert_not_equal before_count, Comment.count
@@ -44,13 +45,13 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 4
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        comment: {
+          map_id: @map.id,
+          body: "I'm gonna troll you!"
+        })
 
-    #refresh the object
+    # refresh the object
     @comment.reload
 
     assert_redirected_to "/maps/" + @map.slug
@@ -62,15 +63,15 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        map_id: @map.slug,
+        comment: {
+          body: "I'm gonna troll you!"
+        })
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -80,15 +81,15 @@ class CommentsControllerTest < ActionController::TestCase
     @comment = comments(:one)
 
     put(:update,
-         id: @comment.id,
-         map_id: @map.slug,
-         comment: {
-           body: "I'm gonna troll you!"
-         })
+        id: @comment.id,
+        map_id: @map.slug,
+        comment: {
+          body: "I'm gonna troll you!"
+        })
 
     @comment.reload
 
-    assert_redirected_to "/login"            
+    assert_redirected_to "/login"
     assert_not_equal "I'm gonna troll you!", @comment.body
     assert_equal "I'll just leave a comment, why don't I.", @comment.body
     assert_equal "You do not have permissions to update that comment.", flash[:error]
@@ -101,8 +102,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_not_equal before_count, Comment.count
@@ -116,8 +116,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -130,8 +129,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     delete(:destroy,
            id: @comment.id,
-           map_id: @map.slug
-          )
+           map_id: @map.slug)
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -142,31 +140,29 @@ class CommentsControllerTest < ActionController::TestCase
     @user = users(:quentin)
     session[:user_id] = @user.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         comment: {
+           map_id: @map.id,
+           body: "I'm gonna troll you!"
+         })
 
     assert_response :success
-    assert !ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
+    assert_not @emails.collect(&:to).include?([@user.email])
   end
 
   test "should send email to author if someone else comments" do
     @user = users(:quentin)
     session[:user_id] = 3
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
-
-    email = ActionMailer::Base.deliveries.last
+    post(:create,
+         comment: {
+      map_id: @map.id,
+      body: "I'm gonna troll you!"
+         })
 
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@user.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@user.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 
   test "should send email to all commenters on commenting" do
@@ -175,24 +171,22 @@ class CommentsControllerTest < ActionController::TestCase
 
     session[:user_id] = @chris.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "I'm gonna troll you!"
-    })
+    post(:create,
+         comment: {
+         map_id: @map.id,
+           body: "I'm gonna troll you!"
+         })
 
     session[:user_id] = @joshua.id
 
-    post(:create, 
-      map_id: @map.slug,
-      comment: {
-        body: "Yeah we'll see!"
-    })
-
-    email = ActionMailer::Base.deliveries.last
+    post(:create,
+         comment: {
+         map_id: @map.id,
+           body: "Yeah we'll see!"
+         })
 
     assert_response :success
-    assert ActionMailer::Base.deliveries.collect(&:to).include?([@chris.email])
-    assert ActionMailer::Base.deliveries.collect(&:subject).include?("New comment on '#{@map.name}'")
+    assert @emails.collect(&:to).include?([@chris.email])
+    assert @emails.collect(&:subject).include?("New comment on '#{@map.name}'")
   end
 end

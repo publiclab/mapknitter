@@ -1,3 +1,12 @@
+one:
+  id: 3
+  map_id: 1
+  user_id: 1
+  annotation_type: polygon
+  coordinates: [12,77]
+  text: This is an annotation
+  created_at: <%= Time.now %>
+
 lorem:
   id: 1
   map_id: 1

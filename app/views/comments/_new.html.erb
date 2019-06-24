@@ -1,9 +1,10 @@
 <div class="form-group">
   <% if logged_in? %>
-    <%= form_for([@map, Comment.new], remote:true) do |f| %>
+    <%= form_for([@map, Comment.new], remote: true) do |f| %>
+        <%= f.hidden_field :map_id, value: @map.id %>
       <%= f.label :body, "Leave a comment" %>
       <%= f.text_area :body, :class => "form-control" %>
- 
+
       <button type="submit" class="btn btn-primary">Post comment</button>
     <% end %>
   <% else %>

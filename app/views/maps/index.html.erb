@@ -20,12 +20,12 @@
       <% else %>
           <br>
           <p>
-          <a href="#" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
+          <a href="#" data-toggle="modal" data-target="#loginModal" onClick="$('.mini-login').toggle()">Log in</a> to create a map, or if you have privacy concerns, you may <a onClick="$('.hidden-map-btn').show()" href="#">create a map anonymously.</a>
           </p>
           <hr />
 
       <div class="well mini-login" style="display:none;">
-        <%= render :partial => "layouts/login_form" %>
+        <%= render partial: "layouts/login_modal" %>
       </div>
 
       <div class="hidden-map-btn" style="display:none;">
@@ -42,7 +42,7 @@
 
       <div>
         <br />
-        <%= render :partial => "maps/search" %>
+        <%= render :partial => "layouts/header" %>
         <br />
       </div>
 
@@ -69,27 +69,64 @@
       <div style="display:none;" id="video-tutorial">
         <iframe width="100%" height="450" src="https://www.youtube.com/embed/0h6MBH6f2js?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
       </div>
-
-      <hr />
-      <h2><%= @title ||= "Featured" %> <small> 
-        | <a href="/authors">Authors</a>
+      <ul class="nav nav-tabs" role="tablist" style="border-bottom: none; margin-bottom: 20px;">
+        <li class="nav-item">
+          <a class="nav-link active" id="show-featured-images" data-toggle="tab" href="#featured-images" role="tab" aria-selected="true"><%= @title ||= "Featured" %></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="show-anonymous-images" data-toggle="tab" href="#anonymous-images" role="tab" aria-selected="false">Anonymous</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="show-all-images" data-toggle="tab" href="#all-images" role="tab" aria-selected="false">All</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/authors" role="tab" aria-selected="false">Author</a>
+        </li>
         <% if params[:controller] == "tags" %>
-        | <a href="/feeds/tag/<%= params[:id] %>">RSS</a>
+        <li class="nav-item">
+          <a class="nav-link" role="tab" href="/feeds/tag/<%= params[:id] %>" aria-selected="false">RSS</a>
+        </li>
         <% end %>
-      </small></h2>
+      </ul>
 
-      <div class="row row-eq-height map-list">
-        <% @maps.each_with_index do |map,i| %>
-          <%= render :partial => 'maps/list', :locals => {:map => map} %>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="featured-images" role="tabpanel">
+        <div class="row row-eq-height map-list">
+          <% @maps.each_with_index do |map,i| %>
+              <% if map.author != "anonymous" %>
+            <%= render :partial => 'maps/list', :locals => {:map => map} %>
+          <% end %>
         <% end %>
       </div>
+      </div>
+      <div class="tab-pane fade"  id="all-images" role="tabpanel">
+        <div class="row row-eq-height map-list">
+           <% @maps.each_with_index do |map,i| %>
+            <%= render :partial => 'maps/list', :locals => {:map => map} %>
+          <% end %>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="anonymous-images" role="tabpanel">
+        <div class="row row-eq-height map-list">
+        <% @maps.each_with_index do |map,i| %>
+          <% if map.author == "anonymous" %>
+            <%= render :partial => 'maps/list', :locals => {:map => map} %>
+          <% end %>
+        <% end %>
+      </div>
+      </div>
+    </div>
+
       <br style="clear:both;" />
       <%= will_paginate @maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
     </div><!-- .col-md-9 -->
   </div><!-- .row -->
 </div>
 
-<script>  
+<script>
+  $(function(){
+    $("#loginModal").appendTo("body");
+  });
     var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
     var Mapknitterunique = new L.map('mapknitter-unique' , {
       maxBounds: bounds , 
