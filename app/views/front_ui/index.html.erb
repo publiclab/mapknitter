@@ -31,128 +31,117 @@
 <%# <p>See nearby: <u>Rio</u> <u>Guangzho</u> <u>Barcelona</u> <u>Oakland</u></p> %>
 <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %>
 
-<div class="section-header text-center">
-  <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2>
-  <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p>
-</div>
+<%# <div class="section-header text-center"> %>
+<%#   <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2> %>
+<%#   <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p> %>
+<%# </div> %>
 
-<div class="row pt-md-5 pb-md-5 mx-auto text-center">
-  <div class="col-md-6 col-lg-3 col-xs-12">
-    <div class="how-to-item">
-      <div>
-        <img alt="images" src="<%= asset_path('images.svg') %>" class="icon-landing">
-        <h4>Add your images</h4>
-        <p class="item-description">Use your Public Lab account or create a map anonymously.</p>
-        <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-3 col-xs-12">
-    <div class="how-to-item">
-      <div>
-        <img alt="log in" src="<%= asset_path('login.svg') %>" class="icon-landing">
-        <h4>Find what you need</h4>
-        <p class="item-description">Search by location or tags, or navigate through the map to see images near your location.</p>
-        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-3 col-xs-12">
-    <div class="how-to-item">
-      <div>
-        <img alt="export images" src="<%= asset_path('export.svg') %>" class="icon-landing">
-        <h4>Export your work</h4>
-        <p class="item-description">Upload images, rotate, export them, add tags and share where you are located.</p>
-        <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-3 col-xs-12">
-    <div class="how-to-item">
-      <div>
-        <img alt="ask questions" src="<%= asset_path('engage.svg') %>" class="icon-landing">
-        <h4>Engage with your community</h4>
-        <p class="item-description">Ask questions, add comments and see nearby people & groups.</p>
-        <div><a class="learn-more" href="https://publiclab.org/questions" target="_blank">Learn more</a></div>
-      </div>
-    </div>
-  </div>
-</div>
+<%# <div class="row pt-md-5 pb-md-5 mx-auto text-center"> %>
+<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
+<%#     <div class="how-to-item"> %>
+<%#       <div> %>
+<%#         <img alt="images" src="<%= asset_path('images.svg') %1>" class="icon-landing"> %>
+<%#         <h4>Add your images</h4> %>
+<%#         <p class="item-description">Use your Public Lab account or create a map anonymously.</p> %>
+<%#         <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div> %>
+<%#       </div> %>
+<%#     </div> %>
+<%#   </div> %>
+<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
+<%#     <div class="how-to-item"> %>
+<%#       <div> %>
+<%#         <img alt="log in" src="<%= asset_path('login.svg') %1>" class="icon-landing"> %>
+<%#         <h4>Find what you need</h4> %>
+<%#         <p class="item-description">Search by location or tags, or navigate through the map to see images near your location.</p> %>
+<%#         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div> %>
+<%#       </div> %>
+<%#     </div> %>
+<%#   </div> %>
+<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
+<%#     <div class="how-to-item"> %>
+<%#       <div> %>
+<%#         <img alt="export images" src="<%= asset_path('export.svg') %1>" class="icon-landing"> %>
+<%#         <h4>Export your work</h4> %>
+<%#         <p class="item-description">Upload images, rotate, export them, add tags and share where you are located.</p> %>
+<%#         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div> %>
+<%#       </div> %>
+<%#     </div> %>
+<%#   </div> %>
+<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
+<%#     <div class="how-to-item"> %>
+<%#       <div> %>
+<%#         <img alt="ask questions" src="<%= asset_path('engage.svg') %1>" class="icon-landing"> %>
+<%#         <h4>Engage with your community</h4> %>
+<%#         <p class="item-description">Ask questions, add comments and see nearby people & groups.</p> %>
+<%#         <div><a class="learn-more" href="https://publiclab.org/questions" target="_blank">Learn more</a></div> %>
+<%#       </div> %>
+<%#     </div> %>
+<%#   </div> %>
+<%# </div> %>
 
-<div class="section-header text-center">
-  <h2 class="section-title">MapKnitter around the world</h2>
-</div>
-<%= render :partial => 'maps', :locals => { :maps => @maps } %>
-<a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %>)></a>
+<%# <div class="section-header text-center"> %>
+<%#   <h2 class="section-title">MapKnitter around the world</h2> %>
+<%# </div> %>
+<%# <%= render :partial => 'maps', :locals => { :maps => @maps } %1> %>
+<%# <a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %1>)></a> %>
 
 <% if @mappers.any? %>
-  <hr>
+  <%# <hr> %>
   <div class="section-header text-center">
     <h2 class="section-title">Featured Mappers</h2>
   </div>
   <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
   <div class="section-header text-center">
-    <a href="/mappers" class="alert-link">See more people & maps</a>
+      <a href="/mappers" class="alert-link"><u>More nearby people & maps <i class="fa fa-angle-double-right"></i></u></a>
   </div>
 <% end %>
+<br>
 
 
-
-<div class="section-blue-background">
-  <a class="btn btn-link text-center" href="<%= new_map_url %>" role="button">Add your images</a>
-</div>
+<%# <div class="section-blue-background"> %>
+<%#   <a class="btn btn-link text-center" href="<%= new_map_url %1>" role="button">Add your images</a> %>
+<%# </div> %>
 
 <div class="section-header text-center">
   <h2 class="section-title">Aerial Mapping kits</h2>
 </div>
 
 <!-- mapping kites -->
-<div class="card-deck mb-3 img-icon text-center mx-auto" id="mapping-kits">
-  <div class="card mapping-kits">
-    <img class="card-img-top  mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Balloon mapping</h5>
-      <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
-      <a href="//store.publiclab.org/collections/mapping-kits/products/balloon-mapping-kit?variant=7028822724" class="btn btn-outline-info" target="_blank">Get a kit</a>
+<div class="card-deck mb-4  text-center mx-auto" id="mapping-kits">
+    <div class="card mapping-kits">
+        <img class="card-img-top mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Balloon mapping</h5>
+            <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
+            <a href="//store.publiclab.org/collections/mapping-kits/products/balloon-mapping-kit?variant=7028822724" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
+        </div>
     </div>
-  </div>
-  <div class="card mapping-kits">
-    <img class="card-img-top mx-auto" src="<%= asset_path('kite.png') %>" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Kites</h5>
-      <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
-      <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    <div class="card mapping-kits">
+        <img class="card-img-top mx-auto" src="<%= asset_path('kite1.png') %>" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Kites</h5>
+            <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
+            <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
+        </div>
     </div>
-  </div>
-  <div class="card mapping-kits">
-    <img class="card-img-top  mx-auto" src="<%= asset_path('selfie-stick.png') %>" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Pole mapping</h5>
-      <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
-      <a href="//store.publiclab.org/collections/mapping-kits/products/pole-mapping-kit?variant=1259641040" class="btn btn-outline-info" target="_blank">Get a kit</a>
+    <div class="card mapping-kits">
+        <img class="card-img-top  mx-auto" src="<%= asset_path('selfie.png') %>" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Pole mapping</h5>
+            <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
+            <a href="//store.publiclab.org/collections/mapping-kits/products/pole-mapping-kit?variant=1259641040" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
+        </div>
     </div>
-  </div>
-  <div class="card mapping-kits">
-    <img class="card-img-top mx-auto" src="<%= asset_path('drone.png') %>" alt="Card image cap">
+</div>
+<div class="mapping-kits text-center">
+    <img class="card-img-top mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Waterproof Mini Camera</h5>
-      <p class="card-text item-description">Lightweight, weighs ~59g, small and shock resistent.</p>
-      <a href="#" class="btn btn-outline-info" target="_blank">Get a kit</a>
+        <h5 class="card-title">Raspberry Pi Camera</h5>
+        <p class="card-text item-description"> Lightweight battery pack, easy to use, connects to to your laptop/phone,<br> great for streaming video, photos, and motion triggered capture</p>
+        <a href="https://store.publiclab.org/collections/mapping-kits/products/waterproof-mini-camera" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
     </div>
-  </div>
 </div>
 
-<%# <div class="row text-center"> %>
-<%#     <div class="col-md-4"> %>
-<%#     <img src="<%= asset_path('balloon.png') %1>" alt="Card image cap"> %>
-<%#     </div> %>
-<%#     <div class="col-md-4"> %>
-<%#     <img src="<%= asset_path('kite.png') %1>" alt="Card image cap"> %>
-<%#     </div> %>
-<%#     <div class="col-md-4"> %>
-<%#     <img src="<%= asset_path('selfie-stick.png') %1>" alt="Card image cap"> %>
-<%#     </div> %>
-<%# </div> %>
 
 <script>
   var Mapknitterunique = new L.Map('mapknitter-unique');
