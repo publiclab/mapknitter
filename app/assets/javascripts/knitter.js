@@ -62,17 +62,17 @@ var Knitter = {
   },
   init_openlayers: function(format) {
     if (format == 'WMS') {
-             map = new OpenLayers.Map('map', { controls: [], 
+             map = new OpenLayers.Map('map', { controls: [],
         projection: spher_merc,
          displayProjection: spher_merc,
-               maxExtent: new OpenLayers.Bounds(-180,-90,180,90),  
+               maxExtent: new OpenLayers.Bounds(-180,-90,180,90),
       });
     } else {
-             map = new OpenLayers.Map('map', { controls: [], 
+             map = new OpenLayers.Map('map', { controls: [],
           tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
         units: "m",
         projection: latlon,
-        //numZoomLevels: 22, 
+        //numZoomLevels: 22,
           displayProjection: spher_merc,
                maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
         //maxResolution: 156543.0339
@@ -90,11 +90,11 @@ var Knitter = {
     // http://viewer.nationalmap.gov/example/services.html
     Config.tiles = true
     Config.tile_type = layer
-    Zoom.interval = 6 
+    Zoom.interval = 6
     if (layer == 'google') {
       var gsat = new OpenLayers.Layer.Google("Google Satellite", {
-        type: google.maps.MapTypeId.SATELLITE, 
-        sphericalMercator: true, 
+        type: google.maps.MapTypeId.SATELLITE,
+        sphericalMercator: true,
         numZoomLevels: 23,
         maxZoomLevel: 23
       } );
@@ -115,26 +115,26 @@ var Knitter = {
         [ "http://a.tile.mapbox.com/","http://b.tile.mapbox.com/",
           "http://c.tile.mapbox.com/","http://d.tile.mapbox.com/" ],
         { 'layername': 'mapbox.mapbox-streets', 'type':'jpg',
-          'buffer': 0, 'transitionEffect':'resize', 
+          'buffer': 0, 'transitionEffect':'resize',
           attribution: 'rendered by <a href="http://mapbox.com">MapBox</a>, from <a href="http://www.openstreetmap.org/">OpenStreetMap data</a>'} );
       map.addLayer(mapbox)
     } else if (layer == 'osm') {
       var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
             "http://tile.openstreetmap.org/",
-            { type: 'png', 
+            { type: 'png',
         numZoomLevels: 23,
         maxZoomLevel: 23,
-        getURL: osm_getTileURL, 
-        displayOutsideMaxExtent: true, 
+        getURL: osm_getTileURL,
+        displayOutsideMaxExtent: true,
         attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
-        } 
+        }
       );
       map.addLayer(osm)
     } else if (layer == 'bing') {
       var apiKey = "AhYrUtF-jMIlTiblfgB_spQXBgc3u1_4h1mrgm_vEmyrnHLbA8v8452MolECULTX"
       //Only in later versions of OpenLayers: //var bingsat = new OpenLayers.Layer.Bing("Aerial", {type: "Aerial", apiKey:apiKey, sphericalMercator:true});
       var bingsat = new OpenLayers.Layer.VirtualEarth("Virtual Earth Aerial",  {
-        'type': VEMapStyle.Aerial, 
+        'type': VEMapStyle.Aerial,
         numZoomLevels: 23,
         maxZoomLevel: 23,
         'sphericalMercator': true
@@ -143,13 +143,13 @@ var Knitter = {
     } else if (layer == 'yahoo') {
       var yahoosat = new OpenLayers.Layer.Yahoo("Yahoo Satellite", {type: YAHOO_MAP_SAT, sphericalMercator: true, numZoomLevels: 23});
       map.addLayer(yahoosat)
-// you can try
-// http://hypercube.telascience.org/tilecache/tilecache.py/1.0.0/NAIP_ALL/
+/*you can try
+  http://hypercube.telascience.org/tilecache/tilecache.py/1.0.0/NAIP_ALL/
 
-// but you might get better performance from newworld which switches
-// between bmng/landsat/naip based on zoom level
+  but you might get better performance from newworld which switches
+  between bmng/landsat/naip based on zoom level
 
-// http://hypercube.telascience.org/tilecache/tilecache.py/1.0.0/NewWorld_google
+  http://hypercube.telascience.org/tilecache/tilecache.py/1.0.0/NewWorld_google */
     } else if (layer == 'TMS') {
       Config.tile_url = tile_url || Config.tile_url
              var tms = new OpenLayers.Layer.TMS( "OpenLayers TMS", Config.tile_url,
@@ -161,10 +161,10 @@ var Knitter = {
                 //maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
           //tileOrigin: new OpenLayers.LonLat(0,0).transform(latlon,spher_merc),
           numZoomLevels: 23,
-          serviceVersion: '.', 
-          layername: '.', 
-          type: 'png', 
-          alpha: true, 
+          serviceVersion: '.',
+          layername: '.',
+          type: 'png',
+          alpha: true,
           isBaseLayer: true});
              map.addLayer(tms);
     } else if (layer == 'WMS') {
@@ -191,7 +191,7 @@ var Knitter = {
     var bounds = new OpenLayers.Bounds();
     bounds.extend(new OpenLayers.LonLat(lon1,lat1))//.transform(spher_merc,latlon))
     bounds.extend(new OpenLayers.LonLat(lon2,lat2))//.transform(spher_merc,latlon))
-    //if (warpables.length = 0) 
+    //if (warpables.length = 0)
     map.zoomToExtent( bounds )
     //console.log(lat1,lon1,lat2,lon2)
     //console.log(bounds)
@@ -199,7 +199,7 @@ var Knitter = {
 
     //scalebar = new OpenLayers.Control.ScaleBar();
     //map.addControl(scalebar);
-      
+
     if (Config.tile_switcher) {
       var switcherControl = new OpenLayers.Control.LayerSwitcher()
       map.addControl(switcherControl);
@@ -209,7 +209,7 @@ var Knitter = {
     Glop.observe('glop:draw', Knitter.openLayersDraw)
     //Knitter.update_map(Map.lat,Map.lon,Map.zoom,layer)
     setTimeout(Knitter.update_map_to_center,1000)
-    
+
   },
 
   update_map_to_center: function() {
@@ -325,7 +325,7 @@ var Knitter = {
   },
 
   find_map_center: function() {
-    if (warpables.length > 0) { 
+    if (warpables.length > 0) {
       var latsum = 0, lonsum = 0, latcount = 0, loncount = 0
       var maxlat = 0,maxlon = 0,minlat = 0,minlon = 0
       warpables.each(function(warpable){
@@ -337,10 +337,10 @@ var Knitter = {
             if (maxlat == 0) maxlat = lat
             if (minlon == 0) minlon = lon
             if (minlat == 0) minlat = lat
-            if (lon > maxlon) maxlon = lon 
-            if (lat > maxlat) maxlat = lat 
-            if (lon < minlon) minlon = lon 
-            if (lat < minlat) minlat = lat 
+            if (lon > maxlon) maxlon = lon
+            if (lat > maxlat) maxlat = lat
+            if (lon < minlon) minlon = lon
+            if (lat < minlat) minlat = lat
                      lonsum += lon
                      latsum += lat
             loncount += 1
@@ -360,7 +360,7 @@ var Knitter = {
       }
     } else { return false }
   },
-  
+
   center_on_warpables: function() {
     loc = Knitter.find_map_center()
     if (loc) Cartagen.go_to(loc.lat,loc.lon,loc.zoom)
@@ -408,7 +408,7 @@ function osm_getTileURL(bounds) {
   var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
   var z = this.map.getZoom();
   var limit = Math.pow(2, z);
-  
+
   if (y < 0 || y >= limit) {
       return "http://www.maptiler.org/img/none.png";
   } else {
@@ -416,4 +416,3 @@ function osm_getTileURL(bounds) {
       return this.url + z + "/" + x + "/" + y + "." + this.type;
   }
 }
-
