@@ -2,9 +2,8 @@
   <% mappers.each do |author, count| %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
       <div class="card card-without-border img-icon">
-        <img class="card-img-top rounded-image mx-auto" src="<%= asset_path('user.png') %>" alt="Profile picture">
+       <%= image_tag(profile_image(author[:user]), class: "card-img-top mx-auto") %>
         <div class="card-body text-center" style="margin-left: -18px !important;">
-            <%# <img class="card-img-top map-img" src="<%= map.warpables.first.image.url(:small) %1>" alt="<%= map.name %1>"> %>
           <h5 class="card-title"><a href="/profile/<%= author[:user].login %>">@<%= author[:user].login %></a></h5>
           <p class="card-text text-muted">
             <%= author[:count]%> maps near <%= author[:location] %>
@@ -15,4 +14,3 @@
     </div>
   <% end %>
 </div>
-          <%# <%= author[:user].maps.first.warpables.first.image_file_name %1> %>
