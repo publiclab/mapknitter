@@ -8,6 +8,7 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
    xml.description "Recently posted maps at MapKnitter.org, a Public Lab open source research initiative"
 
    @maps.each do |map|
+     map.body = "<p><img src='" map.warpables.first.image.url(:medium) "' alt='" map.name"'/></p>"
      xml.item do
        xml.title       map.name
        xml.author      map.author
