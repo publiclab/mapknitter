@@ -164,17 +164,16 @@ label small {
 
 .mapping-kits {
   border: none;
-    img {
-        width: 100px;
 }
+
+.img-draw {
+  width: 100px;
 }
 
 .img-icon {
-    img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-    }
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 
 .btn.create-map {
