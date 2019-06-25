@@ -15,5 +15,4 @@ test:
   adapter: mysql2
   username: mapknitter
   password: mapknitter
-  host: db
   database: mapknitter
