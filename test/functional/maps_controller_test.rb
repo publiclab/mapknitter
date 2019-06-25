@@ -39,7 +39,7 @@ class MapsControllerTest < ActionController::TestCase
 
   test 'should not display archived maps' do
     session[:user_id] = 1
-    get(:archive, id: @map.slug)
+    get(:archive, params: { id: @map.slug } )
     get :index
     @maps = assigns(:maps)
 
