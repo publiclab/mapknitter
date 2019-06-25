@@ -6,8 +6,9 @@ class ImagesControllerTest < ActionController::TestCase
     @map = maps(:saugus)
     @warp = warpables(:one)
 
-    @file ||= File.open(File.expand_path(Rails.root + 'test/fixtures/demo.png', __FILE__))
-    @uploaded_data = Rack::Test::UploadedFile.new(tempfile: @file, filename: File.basename(@file), type: "image/png")
+    file_location = Rails.root + 'test/fixtures/demo.png'
+    @file ||= File.open(File.expand_path(file_location,  __FILE__))
+    @uploaded_data = Rack::Test::UploadedFile.new(file_location, File.basename(@file), "image/png")
   end
 
   def teardown
