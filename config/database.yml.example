@@ -11,7 +11,10 @@ development:
   database: mapknitter_dev
 
 production:
-  <<: *default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: db
   username: root
   password:
   database: mapknitter
