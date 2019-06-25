@@ -7,8 +7,7 @@ class ImagesControllerTest < ActionController::TestCase
     @warp = warpables(:one)
 
     file_location = Rails.root + 'test/fixtures/demo.png'
-    @file ||= File.open(File.expand_path(file_location,  __FILE__))
-    @uploaded_data = Rack::Test::UploadedFile.new(file_location, File.basename(@file), "image/png")
+    @uploaded_data = Rack::Test::UploadedFile.new(file_location.to_s, 'demo.png', "image/png")
   end
 
   def teardown
