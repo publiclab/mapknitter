@@ -28,62 +28,7 @@
 </div>
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
-<%# <p>See nearby: <u>Rio</u> <u>Guangzho</u> <u>Barcelona</u> <u>Oakland</u></p> %>
 <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %>
-
-<%# <div class="section-header text-center"> %>
-<%#   <h2 class="section-title">MapKnitter is a Community Atlas by Public Lab</h2> %>
-<%#   <p class="mapknitter-info">It is a free and open source tool for combining and positioning images in geographic space into a composite image map.</p> %>
-<%# </div> %>
-
-<%# <div class="row pt-md-5 pb-md-5 mx-auto text-center"> %>
-<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
-<%#     <div class="how-to-item"> %>
-<%#       <div> %>
-<%#         <img alt="images" src="<%= asset_path('images.svg') %1>" class="icon-landing"> %>
-<%#         <h4>Add your images</h4> %>
-<%#         <p class="item-description">Use your Public Lab account or create a map anonymously.</p> %>
-<%#         <div><a class="learn-more" href="https://publiclab.org/signup" target="_blank">Learn more</a></div> %>
-<%#       </div> %>
-<%#     </div> %>
-<%#   </div> %>
-<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
-<%#     <div class="how-to-item"> %>
-<%#       <div> %>
-<%#         <img alt="log in" src="<%= asset_path('login.svg') %1>" class="icon-landing"> %>
-<%#         <h4>Find what you need</h4> %>
-<%#         <p class="item-description">Search by location or tags, or navigate through the map to see images near your location.</p> %>
-<%#         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter" target="_blank">Learn more</a></div> %>
-<%#       </div> %>
-<%#     </div> %>
-<%#   </div> %>
-<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
-<%#     <div class="how-to-item"> %>
-<%#       <div> %>
-<%#         <img alt="export images" src="<%= asset_path('export.svg') %1>" class="icon-landing"> %>
-<%#         <h4>Export your work</h4> %>
-<%#         <p class="item-description">Upload images, rotate, export them, add tags and share where you are located.</p> %>
-<%#         <div><a class="learn-more" href="https://publiclab.org/wiki/mapknitter-exporting-your-map" target="_blank">Learn more</a></div> %>
-<%#       </div> %>
-<%#     </div> %>
-<%#   </div> %>
-<%#   <div class="col-md-6 col-lg-3 col-xs-12"> %>
-<%#     <div class="how-to-item"> %>
-<%#       <div> %>
-<%#         <img alt="ask questions" src="<%= asset_path('engage.svg') %1>" class="icon-landing"> %>
-<%#         <h4>Engage with your community</h4> %>
-<%#         <p class="item-description">Ask questions, add comments and see nearby people & groups.</p> %>
-<%#         <div><a class="learn-more" href="https://publiclab.org/questions" target="_blank">Learn more</a></div> %>
-<%#       </div> %>
-<%#     </div> %>
-<%#   </div> %>
-<%# </div> %>
-
-<%# <div class="section-header text-center"> %>
-<%#   <h2 class="section-title">MapKnitter around the world</h2> %>
-<%# </div> %>
-<%# <%= render :partial => 'maps', :locals => { :maps => @maps } %1> %>
-<%# <a href="/all_maps" class="alert-link" style="margin-left: 35px;">Show all (<%= @maps.count %1>)></a> %>
 
 <% if @mappers.any? %>
   <%# <hr> %>
@@ -97,10 +42,6 @@
 <% end %>
 <br>
 
-
-<%# <div class="section-blue-background"> %>
-<%#   <a class="btn btn-link text-center" href="<%= new_map_url %1>" role="button">Add your images</a> %>
-<%# </div> %>
 
 <div class="section-header text-center">
   <h2 class="section-title">Aerial Mapping kits</h2>
