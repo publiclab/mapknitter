@@ -1,5 +1,7 @@
+require 'simplecov-json'
+
 if ENV['CI'] == 'true'
-  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+  SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
 else
   SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
 end

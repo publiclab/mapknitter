@@ -1,66 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="MapsControllerTest" filepath="/home/k/proj/mapknitter/test/functional/maps_controller_test.rb" skipped="0" failures="0" errors="1" tests="26" assertions="78" time="3.00662421900779">
-    <testcase name="test_embed" lineno="249" classname="MapsControllerTest" assertions="2" time="2.2494869669899344">
-    </testcase>
-    <testcase name="test_should_annotate_maps" lineno="243" classname="MapsControllerTest" assertions="1" time="0.06807511499209795">
-    </testcase>
-    <testcase name="test_should_not_update_unless_logged_in" lineno="230" classname="MapsControllerTest" assertions="2" time="0.0039022870041662827">
-    </testcase>
-    <testcase name="test_should_get_map_of_maps" lineno="52" classname="MapsControllerTest" assertions="3" time="0.009347153987619095">
-    </testcase>
-    <testcase name="test_featured" lineno="288" classname="MapsControllerTest" assertions="1" time="0.035135833008098416">
-    </testcase>
-    <testcase name="test_should_get_index" lineno="30" classname="MapsControllerTest" assertions="4" time="0.024817559999064542">
-    </testcase>
-    <testcase name="test_should_search_for_maps_by_description" lineno="82" classname="MapsControllerTest" assertions="3" time="0.020067279998329468">
-    </testcase>
-    <testcase name="test_should_not_delete_map_if_not_owner" lineno="163" classname="MapsControllerTest" assertions="4" time="0.008421691993135028">
-    </testcase>
-    <testcase name="test_should_not_display_archived_maps" lineno="40" classname="MapsControllerTest" assertions="4" time="0.040099802004988305">
-    </testcase>
-    <testcase name="test_should_display_image_url_for_maps_by_region" lineno="16" classname="MapsControllerTest" assertions="2" time="0.010083747009048238">
-    </testcase>
-    <testcase name="test_should_update_map" lineno="207" classname="MapsControllerTest" assertions="8" time="0.03921118000289425">
-    </testcase>
-    <testcase name="test_should_create_map_if_logged_in" lineno="91" classname="MapsControllerTest" assertions="6" time="0.1147474500030512">
-    </testcase>
-    <testcase name="test_should_get_show" lineno="183" classname="MapsControllerTest" assertions="2" time="0.06256500899326056">
-    </testcase>
-    <testcase name="test_it_returns_the_images" lineno="255" classname="MapsControllerTest" assertions="2" time="0.018422578999889083">
-    </testcase>
-    <testcase name="test_should_search_for_maps_by_location" lineno="73" classname="MapsControllerTest" assertions="3" time="0.04014417600410525">
-    </testcase>
-    <testcase name="test_should_create_map_if_not_logged_in" lineno="110" classname="MapsControllerTest" assertions="6" time="0.023595759994350374">
-    </testcase>
-    <testcase name="test_should_delete_map_if_owner" lineno="173" classname="MapsControllerTest" assertions="4" time="0.04676445900986437">
-    </testcase>
-    <testcase name="test_should_render_new_if_map_not_created" lineno="148" classname="MapsControllerTest" assertions="0" time="0.031077706007636152">
-    <error type="test_should_render_new_if_map_not_created" message="ActionView::Template::Error: No route matches {:action=&gt;&quot;index&quot;, :controller=&gt;&quot;warpables&quot;, :map_id=&gt;nil} missing required keys: [:map_id]...">
-Failure:
-test_should_render_new_if_map_not_created(Minitest::Result) [/home/k/.rvm/gems/ruby-2.4.6/gems/actionpack-4.2.11.1/lib/action_dispatch/routing/route_set.rb:234]:
-ActionView::Template::Error: No route matches {:action=&gt;"index", :controller=&gt;"warpables", :map_id=&gt;nil} missing required keys: [:map_id]
-    app/views/images/_new.html.erb:13:in `_app_views_images__new_html_erb___582794143336601479_47432368697160'
-    app/views/layouts/knitter2.html.erb:195:in `_app_views_layouts_knitter__html_erb__1554220659803257588_47432335059940'
-    app/controllers/maps_controller.rb:41:in `create'
-    test/functional/maps_controller_test.rb:151:in `block in &lt;class:MapsControllerTest&gt;'
-    </error>
-    </testcase>
-    <testcase name="test_assigns_current_user_as_map_author_if_logged_in" lineno="128" classname="MapsControllerTest" assertions="6" time="0.026720677997218445">
-    </testcase>
-    <testcase name="test_should_not_archive_map_without_enough_permissions" lineno="198" classname="MapsControllerTest" assertions="3" time="0.013543893001042306">
-    </testcase>
-    <testcase name="test_should_get_new" lineno="58" classname="MapsControllerTest" assertions="2" time="0.01243473100475967">
-    </testcase>
-    <testcase name="test_returns_the_exports" lineno="278" classname="MapsControllerTest" assertions="1" time="0.006508196005597711">
-    </testcase>
-    <testcase name="test_license" lineno="283" classname="MapsControllerTest" assertions="1" time="0.019753675995161757">
-    </testcase>
-    <testcase name="test_should_archive_map" lineno="189" classname="MapsControllerTest" assertions="3" time="0.01554052100982517">
-    </testcase>
-    <testcase name="test_should_display_maps_by_region" lineno="235" classname="MapsControllerTest" assertions="2" time="0.028362469995045103">
-    </testcase>
-    <testcase name="test_should_search_for_maps_by_name" lineno="64" classname="MapsControllerTest" assertions="3" time="0.03779429799760692">
+  <testsuite name="MapsControllerTest" filepath="/home/k/proj/mapknitter/test/functional/maps_controller_test.rb" skipped="0" failures="0" errors="0" tests="1" assertions="3" time="0.019082437000179198">
+    <testcase name="test_should_not_archive_map_without_enough_permissions" lineno="198" classname="MapsControllerTest" assertions="3" time="0.019082437000179198">
     </testcase>
   </testsuite>
 </testsuites>
