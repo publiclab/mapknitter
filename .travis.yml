@@ -27,8 +27,7 @@ env:
 
 jobs:
   include:
-    - stage: test
-      name: "Unit Tests"
+    - name: "Unit Tests"
       script: bundle exec rake test:unit
     - name: "Integration Tests"
       script: bundle exec rake test:integration
@@ -38,9 +37,6 @@ jobs:
       script: bundle exec rubocop
     - name: "Docker Builds"
       script: docker build -t mapknitter .
-    - stage: report
-      name: "Test coverage"
-      script: bash <(curl -s https://codecov.io/bash)
     # Configure this option after full yarn setup
     # - name: "Asset Precompilation"
     #   env:
