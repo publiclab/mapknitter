@@ -1,20 +1,26 @@
 default: &default
   encoding: utf8
   adapter: mysql2
+  host: 127.0.0.1
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  username: 
-  password: 
-  database: mapknitter-dev
+  username:
+  password:
+  database: mapknitter_dev
 
 production:
-  <<: *default
-  username: mapknitter
-  password: mapknitter
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: db
+  username: root
+  password:
   database: mapknitter
 
 test:
   <<: *default
-  username: root
-  database: mapknitter-test
+  username:
+  password:
+  database: mapknitter_test
