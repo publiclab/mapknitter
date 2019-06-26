@@ -49,7 +49,7 @@ group :test do
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false
-  gem 'simplecov-json', require: false
+  gem 'simplecov-cobertura', require: false
   gem 'minitest'
   gem 'minitest-reporters'
 end

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="MapsControllerTest" filepath="/home/k/proj/mapknitter/test/functional/maps_controller_test.rb" skipped="0" failures="0" errors="0" tests="1" assertions="3" time="0.019082437000179198">
-    <testcase name="test_should_not_archive_map_without_enough_permissions" lineno="198" classname="MapsControllerTest" assertions="3" time="0.019082437000179198">
-    </testcase>
-  </testsuite>
-</testsuites>
