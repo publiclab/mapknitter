@@ -1,3 +1,5 @@
+require 'simplecov-cobertura'
+
 if ENV['CI'] == 'true'
   SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 else
