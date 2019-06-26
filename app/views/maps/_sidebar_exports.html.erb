@@ -50,7 +50,7 @@
       <%end%>
       <% @map.warpables.each do |warpable| %>
         <div style="display: inline-grid;" id="warpable-<%= warpable.id %>">
-        <p class="warpable export-warpable" onClick = "exp()" style="margin-right: 20px;">
+        <p class="warpable export-warpable" style="margin-right: 20px;">
           <%= image_tag warpable.image.url(:thumb),
               :'data-warpable-id' => warpable.id,
               :'data-map-id' => @map.id,
@@ -107,20 +107,26 @@
   </div>
 </div>
 <script>
-var exp = 0;
-function exp() {
-    var warpable_id = $('.export-warpable').children('img').attr("data-warpable-id");
-    if(exp==0){
-      $('.export-warpable').css('border', "solid 2px red");
-      $('.export-warpable').parent().addClass('export-image');
-      exp = 1;
+var exp1 = 0;
+// //var arr = [];
+// var b = $('.export-warpable').length;
+//     console.log(b);
+//     var k = [0, 0, 0];
+//     console.log(k);
+$('.export-warpable').click(function() {
+    var warpable_id = $(this).children('img').attr("data-warpable-id");
+    console.log(warpable_id);
+    if(exp1==0){
+      $(this).css('border', "solid 2px red");
+      $(this).parent().addClass('export-image');
+      exp1 = 1;
     }
     else{
-      $('.export-warpable').css('border', "none");
-      $('.export-warpable').parent().removeClass('export-image');
-      exp = 0;
+      $(this).css('border', "none");
+      $(this).parent().removeClass('export-image');
+      exp1 = 0;
     }
-};
+});
 function check_export(){
   if($('.export-image').length > 0){
     $('#begin-export').attr('disabled',false).attr('title','Start Export');
@@ -192,11 +198,13 @@ var exporting, exportResolutionSlider
 
   $('#begin-export').click(function() {
     var arr = []
-    if ($('div.export-image').length) {
-      var warpable_id = $('.export-warpable').children('img').attr("data-warpable-id");
+    //var a = $('.export-image').length;
+    //console.log(a);
+    $('.export-image').each(function(i,obj){
+      var warpable_id = $(this).children('p').children('img').attr("data-warpable-id");
       arr.push(warpable_id);
-      //console.log(arr);
-    }
+    })
+    //console.log(arr);
     //var arr = [101,102,103]
     if (1 || confirm('This map has over 30 images; this is a lot! Please read the tips on exporting maps listed below the Export button.')) {
       $('.alert-toolong').hide()
