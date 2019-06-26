@@ -37,11 +37,10 @@ jobs:
       script: bundle exec rubocop
     - name: "Docker Builds"
       script: docker build -t mapknitter .
-    # Configure this option after full yarn setup
-    # - name: "Asset Precompilation"
-    #   env:
-    #     - RAILS_ENV=production
-    #   script: bundle exec rake assets:precompile
+    - name: "Asset Precompilation"
+      env:
+        - RAILS_ENV=production
+      script: bundle exec rake assets:precompile
 
 branches:
   only:
