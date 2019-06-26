@@ -43,7 +43,7 @@ jobs:
     #     - RAILS_ENV=production
     #   script: bundle exec rake assets:precompile
 
-after_success:
+script:
   - bash <(curl -s https://codecov.io/bash)
 
 branches:
