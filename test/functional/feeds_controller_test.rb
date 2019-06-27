@@ -19,6 +19,8 @@ class FeedsControllerTest < ActionController::TestCase
     get :all
     assert_response :success
     assert_not_nil :maps
+    assert_equal 'application/xml', @response.content_type
+    assert_template 'feeds/all'
   end
 
   test 'get clean' do
@@ -32,6 +34,8 @@ class FeedsControllerTest < ActionController::TestCase
     get :all, params: { moderators: 'true'}
     assert_response :success
     assert_not_nil :maps
+    assert_equal 'application/xml', @response.content_type
+    assert_template 'feeds/all'
   end
 
   test "should get license feed" do

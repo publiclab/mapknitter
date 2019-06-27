@@ -18,7 +18,6 @@ install:
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle install && yarn install
   - mysql -e "CREATE DATABASE mapknitter_dev; CREATE DATABASE mapknitter_test;"
-  - rails db:create
   - if [ $RAILS_ENV == 'production' ]; then
       bundle exec rails db:schema:load;
     else
