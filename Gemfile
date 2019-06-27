@@ -49,6 +49,7 @@ end
 
 group :test do
   gem 'rubocop', '~> 0.70.0'
+  gem 'rubocop-performance'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'rails-controller-testing'
