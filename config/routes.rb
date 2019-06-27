@@ -1,76 +1,82 @@
 Mapknitter::Application.routes.draw do
 
-  root :to => 'maps#index'
+  root to: 'maps#index'
 
-  get 'front-page' => 'front_ui#index'
-  get 'mappers' => 'front_ui#nearby_mappers'
-  post "save_location" => 'front_ui#save_location'
-  get 'about' => 'front_ui#about'
-  get 'all_maps' => 'front_ui#all_maps'
+  get 'front-page', to: 'front_ui#index'
+  get 'mappers', to: 'front_ui#nearby_mappers'
+  post 'save_location', to: 'front_ui#save_location'
+  get 'about', to: 'front_ui#about'
+  get 'all_maps', to: 'front_ui#all_maps'
 
-  get 'external_url_test' => 'export#external_url_test'
-  get 'local/:login' => 'sessions#local'
-  get 'logout' => 'sessions#logout'
-  get 'login' => 'sessions#new'
-  get 'register' => 'users#create'
-  get 'signup' => 'users#new'
+  get 'external_url_test', to: 'export#external_url_test'
+  get 'local/:login', to: 'sessions#local'
+  get 'logout', to: 'sessions#logout'
+  get 'login', to: 'sessions#new'
+  get 'register', to: 'users#create'
+  get 'signup', to: 'users#new'
 
   # since rails 3.2, we use this to log in:
-  get 'sessions/create' => 'sessions#create'
+  get 'sessions/create', to: 'sessions#create'
 
   resources :users, :sessions, :maps
 
   # redirect legacy route:
   get 'tag/:id', to: redirect('/tags/%{id}')
-  get 'tags/:id' => 'tags#show'
+  get 'tags/:id', to: 'tags#show'
 
   # Registered user pages:
-  get 'profile' => 'users#profile', :id => 0
-  get 'profile/:id' => 'users#profile'
-  get 'dashboard' => 'users#dashboard'
+  get 'profile', to: 'users#profile', id: 0
+  get 'profile/:id', to: 'users#profile'
+  get 'dashboard', to: 'users#dashboard'
 
-  get 'authors' => 'users#index'
+  get 'authors', to: 'users#index'
 
-  get 'feeds/all' => 'feeds#all', :format => 'rss'
-  get 'feeds/license/:id' => 'feeds#license', :format => 'rss'
-  get 'feeds/author/:id' => 'feeds#author', :format => 'rss'
-  get 'feeds/tag/:id' => 'feeds#tag', :format => 'rss'
+  get 'feeds/all', to: 'feeds#all', format: 'rss'
+  get 'feeds/license/:id', to: 'feeds#license', format: 'rss'
+  get 'feeds/author/:id', to: 'feeds#author', format: 'rss'
+  get 'feeds/tag/:id', to: 'feeds#tag', format: 'rss'
 
-  get 'tms/:id/alt/:z/:x/:y.png' => 'utility#tms_alt'
-  get 'tms/:id/' => 'utility#tms_info'
-  get 'tms/:id/alt/' => 'utility#tms_info'
+  get 'tms/:id/alt/:z/:x/:y.png', to: 'utility#tms_alt'
+  get 'tms/:id/', to: 'utility#tms_info'
+  get 'tms/:id/alt/', to: 'utility#tms_info'
 
   # once we have string-based ids, reorganize these around 'maps' and resourceful routing
-  get 'map/map' => 'maps#map'
-  get 'search/:id' => 'maps#search'
-  get 'search' => 'maps#search'
-  get 'map/archive/:id' => 'maps#archive'
-  get 'map/region/:id' => 'maps#region'
-  get 'map/license/:id' => 'maps#license'
-  get 'maps/featured' => 'maps#featured'
+  get 'map/map', to: 'maps#map'
+  get 'search/:id', to: 'maps#search'
+  get 'search', to: 'maps#search'
+  get 'map/archive/:id', to: 'maps#archive'
+  get 'map/region/:id', to: 'maps#region'
+  get 'map/license/:id', to: 'maps#license'
+  get 'maps/featured', to: 'maps#featured'
   get 'map/view/:id', to: redirect('/maps/%{id}') # legacy
-  get 'maps/:id/annotate' => 'maps#annotate'
-  get 'maps/exports/:id' => 'maps#exports'
-  get 'maps/:id/warpables' => 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
-  post 'maps/:map_id/warpables' => 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
-  get 'export/progress/:id' => 'export#progress'
-  get 'export/status/:id' => 'export#status'
-  get 'exports' => 'export#index'
+  get 'maps/:id/annotate', to: 'maps#annotate'
+  get 'maps/exports/:id', to: 'maps#exports'
+  get 'maps/:id/warpables', to: 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
+  post 'maps/:map_id/warpables', to: 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
+  get 'export/progress/:id', to: 'export#progress'
+  get 'export/status/:id', to: 'export#status'
+  get 'exports', to: 'export#index'
   get 'map/:id', to: redirect('/maps/%{id}')
-  get 'embed/:id' => 'maps#embed'
-  post 'maps/export/:id' => 'maps#export'
-  post 'maps/:id' => 'maps#export'
+  get 'embed/:id', to: 'maps#embed'
+  post 'maps/export/:id', to: 'maps#export'
+  post 'maps/:id', to: 'maps#export'
 
-  get 'import/:name' => 'images#import' # this was for auto-adding images via URL
-  post 'export/:action/:id' => 'export'
+  get 'import/:name', to: 'images#import' # this was for auto-adding images via URL
+
+  namespace 'export' do
+    %w(index logger jpg geotiff cancel 
+    progress status external_url_test).each do |action|
+      post action + "/:id", action: action
+    end
+  end
 
   # make these resourceful after renaming warpables to images
-  post 'images/create/:id' => 'images#create' # used?
-  post 'warper/update' => 'images#update' # legacy for cartagen.js
-  post 'images/update' => 'images#update'
-  post 'images/delete/:id' => 'images#delete'
-  delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
-  delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
+  post 'images/create/:id', to: 'images#create' # used?
+  post 'warper/update', to: 'images#update' # legacy for cartagen.js
+  post 'images/update', to: 'images#update'
+  post 'images/delete/:id', to: 'images#delete'
+  delete 'maps/:map_id/warpables/:id', to: 'images#destroy' #legacy, will be resourceful
+  delete 'images/:id', to: 'images#destroy' #legacy, will be resourceful
 
   # RESTful API
   resources :maps do
@@ -83,13 +89,6 @@ Mapknitter::Application.routes.draw do
     end
   end
 
-  # See how all your routes lay out with 'rake routes'
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  get ':controller/:action'
-  get ':controller/:action/:id'
-  get ':controller/:action.:format'
-  get ':controller/:action/:id.:format'
+  # See how all your routes lay out with 'rails routes'
 
 end
