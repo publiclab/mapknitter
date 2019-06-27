@@ -29,7 +29,7 @@ class FeedsControllerTest < ActionController::TestCase
   end
 
   test "should get clean feed with moderators links" do
-    get :all, params: { :moderators => 'true'}
+    get :all, params: { moderators: 'true'}
     assert_response :success
     assert_not_nil :maps
   end

@@ -31,10 +31,11 @@ Mapknitter::Application.routes.draw do
 
   get 'authors', to: 'users#index'
 
-  get 'feeds/all', to: 'feeds#all', format: 'rss'
-  get 'feeds/license/:id', to: 'feeds#license', format: 'rss'
-  get 'feeds/author/:id', to: 'feeds#author', format: 'rss'
-  get 'feeds/tag/:id', to: 'feeds#tag', format: 'rss'
+  resources :feeds
+  get 'feeds/all', to: 'feeds#all', format: 'rss', as: 'all'
+  get 'feeds/license/:id', to: 'feeds#license', format: 'rss', as: 'license'
+  get 'feeds/author/:id', to: 'feeds#author', format: 'rss', as: 'author'
+  get 'feeds/tag/:id', to: 'feeds#tag', format: 'rss', as: 'tag'
 
   get 'tms/:id/alt/:z/:x/:y.png', to: 'utility#tms_alt'
   get 'tms/:id/', to: 'utility#tms_info'
