@@ -30,14 +30,18 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
+}
     .text-block {
-        height: 350px;
-        width: 500px;
+        margin-bottom: 5px;
+        padding-top:30px;
+        padding-bottom:50px;
         background-color: white;
         display: inline-block;
-        // font-family: Verdana; //Nunito; // 'Ubuntu', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+        .btn {
+            width: 45%;
+            font-size: 1em;
+        }
     }
-}
 
 .jumbotron {
   margin-bottom: 1rem;
@@ -45,7 +49,6 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 
 .jumbotron-text {
   text-shadow: 1px 1px 2px #080707;
-  // color: white;
 }
 
 .map-list .map-img {
@@ -232,11 +235,6 @@ label small {
   letter-spacing: -0.2px;
 }
 
-.icon-landing {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-}
 
 .item-description {
   font-size: 18px;
@@ -247,42 +245,6 @@ label small {
   color: #a2aaad;
 }
 
-.blue-background {
-  background-color: #17a2b8;
-  width: 1000px;
-}
-
-.section-blue-background {
-  max-height: 100px;
-  background-color: #17a2b8;
-  margin: 20px 0;
-  color: white;
-}
-
-.section-blue-background a {
-  display: flex;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 500;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.17;
-  letter-spacing: -0.5px;
-  color: #ffffff;
-  padding: 30px 0 40px 0;
-  justify-content: center !important;
-}
-
-.section-blue-background a:hover {
-  color: #ffffff;
-  text-decoration: none;
-}
-
-@media(max-width: 360px) {
-  #get-started-button {
-    margin-bottom: 10px;
-  }
-}
 
 #info {
     .fa-stack {
