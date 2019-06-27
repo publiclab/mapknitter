@@ -48,7 +48,7 @@ group :dependencies do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.52.0'
+  gem 'rubocop', '~> 0.70.0'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'rails-controller-testing'
