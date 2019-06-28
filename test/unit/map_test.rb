@@ -27,7 +27,7 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.comments
     assert_not_nil map.user
     assert_not_nil map.private
-    assert_not_nil map.anonymous?
+    assert_not map.anonymous?
     assert_not_nil map.images_histogram
     assert_not_nil map.grouped_images_histogram(10)
     assert_not_nil map.nearby_maps(100) # in degrees lat/lon
@@ -116,5 +116,12 @@ class MapTest < ActiveSupport::TestCase
     assert !map.has_tag('test')
     assert map.add_tag('test', User.first)
     assert map.has_tag('test')
+  end
+
+  test 'anonymous' do
+    map = Map.create(name: 'Nakuru', lat: '-0.3030988', lon: '36.080026', location: 'Kenya' )
+
+    assert_includes(Map.anonymous, map)
+    assert map.anonymous?
   end
 end
