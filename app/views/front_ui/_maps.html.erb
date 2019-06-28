@@ -1,30 +1,32 @@
 <div class="row map-list mx-auto">
-  <% maps.each do |map| %>
-    <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
-      <div class="card card-without-border">
-        <a href="/maps/<%= map.slug %>">
-          <% if map.warpables.length > 0 %>
-            <img class="card-img-top map-img" src="<%= map.warpables.first.image.url(:small) %>" alt="<%= map.name %>">
-          <% else %>
-            <img class="card-img-top" src="<%= asset_path('image.png') %>" alt="Map without image" style="max-height: 400px !important;">
-          <% end %>
-        </a>
-        <div class="card-body" style="margin-left: -18px !important;">
-          <span class="mx-auto map-location"><%= truncate(map.location, :length => 32, separator: ' ') %></span>
-          <h4><a href="/maps/<%= map.slug %>" class="map-title"><%= map.name %></a></h4>
-          <p class="map-details">
-            <% if map.user %>
-              by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
-            <% else %>
-              by anonymous
-            <% end %>
-          </p>
-          <div class="row mb-2">
-            <div class="col-4 map-details" style="margin-top: 9px !important;"><i class="far fa-image"> <%= pluralize(map.warpables.length, "image") %></i></div>
-            <div class="col-8 map-details" style="margin-top: 8px !important;"><i class="far fa-comment"> <%= pluralize(map.comments.length, "comment") %> </i></div>
-          </div>
+    <% maps.each do |map| %>
+        <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
+            <div class="card card-without-border">
+                <a href="/maps/<%= map.slug %>">
+                    <% if map.warpables.length > 0 %>
+                        <img class="card-img-top map-img" src="<%= map.warpables.first.image.url  %>" alt="<%= map.name %>">
+                    <% else %>
+                        <img class="card-img-top" src="<%= asset_path('image.png') %>" alt="Map without image" style="max-height: 400px !important;">
+                    <% end %>
+                </a>
+                <div class="card-body" style="margin-left: -18px !important;">
+                    <span class="mx-auto map-location"><%= truncate(map.location, :length => 32, separator: ' ') %></span>
+                    <h4><a href="/maps/<%= map.slug %>" class="map-title"><%= map.name %></a></h4>
+                    <p class="map-details">
+                    <% if map.user %>
+                        by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
+                    <% else %>
+                        by anonymous
+                    <% end %>
+                    </p>
+                    <div class="row mb-2">
+                        <div class="col-4 map-details" style="margin-top: 9px !important;"><i class="far fa-image"> <%= pluralize(map.warpables.length, "image") %></i></div>
+                        <div class="col-8 map-details" style="margin-top: 8px !important;"><i class="far fa-comment"> <%= pluralize(map.comments.length, "comment") %> </i></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  <% end %>
+    <% end %>
 </div>
+<br style="clear:both;" />
+<%= will_paginate maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>

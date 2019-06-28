@@ -4,6 +4,7 @@ Mapknitter::Application.routes.draw do
 
   get 'front-page' => 'front_ui#index'
   get 'mappers' => 'front_ui#nearby_mappers'
+  get 'gallery' => 'front_ui#gallery'
   post "save_location" => 'front_ui#save_location'
   get 'about' => 'front_ui#about'
   get 'all_maps' => 'front_ui#all_maps'

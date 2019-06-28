@@ -18,6 +18,8 @@ class FrontUiController < ApplicationController
       lat = session[:lat]
       lon = session[:lon]
       @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+                        .page(params[:page])
+                        .per_page(12)
     end
 
     @all_mappers = Map.featured_authors
@@ -33,4 +35,13 @@ class FrontUiController < ApplicationController
   end
 
   def about; end
+
+  def gallery
+    @maps = Map.page(params[:page])
+               .per_page(20)
+               .where(archived: false, password: '')
+               .order('updated_at DESC')
+               .group('maps.id')
+    @authors = Map.featured_authors
+  end
 end
