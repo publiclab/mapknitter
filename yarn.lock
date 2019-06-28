@@ -1503,10 +1503,10 @@ leaflet-environmental-layers@publiclab/leaflet-environmental-layers#^1.1.2:
     leaflet-providers "^1.1.17"
     leaflet-spin "1.1.0"
 
-leaflet-fullhash@sagarpreet-chadha/leaflet-fullHash#*:
-  version "0.0.0"
-  uid "104a08c4bca0ddf943d24b21d270ee4082dd9654"
-  resolved "https://codeload.github.com/sagarpreet-chadha/leaflet-fullHash/tar.gz/104a08c4bca0ddf943d24b21d270ee4082dd9654"
+leaflet-fullhash@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/leaflet-fullhash/-/leaflet-fullhash-1.0.0.tgz#230a1562a96cd49b4b1dc944b65a8b3d06cfdbaa"
+  integrity sha512-InZkMX4MZ3ytw119tdEA5LIg8GwV6XDDvovunn4PHQrtPLxPSjpV6FiiuHNocdwHWcNkRelvofo3RGOCx3toBQ==
 
 leaflet-hash@0.2.1:
   version "0.2.1"
