@@ -7,17 +7,17 @@ services:
   - docker
 
 cache:
-  bundler: true
   directories:
-   - public/lib/
+   - $PWD/public/lib/
+   - $PWD/vendor/bundle
 
 install:
   - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
-  - bundle install && yarn install
-  - mysql -e "CREATE DATABASE mapknitter_test;"
+  - bundle install --path vendor/bundle && yarn install
+  - mysql -e "CREATE DATABASE mapknitter_test; CREATE DATABASE mapknitter;"
   - if [ $RAILS_ENV == 'production' ]; then
       bundle exec rails db:schema:load;
     else
