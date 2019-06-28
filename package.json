@@ -28,7 +28,7 @@
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-easybutton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "leaflet-environmental-layers": "publiclab/leaflet-environmental-layers#^1.1.2",
-    "leaflet-fullhash": "sagarpreet-chadha/leaflet-fullHash#*",
+    "leaflet-fullhash": "^1.0.0",
     "leaflet-illustrate": "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",
     "leaflet-omnivore": "mapbox/leaflet-omnivore#~0.3.2",
     "leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
