@@ -7,6 +7,7 @@ class FrontUiController < ApplicationController
   def index
     @mappers = Map.featured_authors.first(4)
     @maps = Map.new_maps.first(4)
+    @unpaginated = true
   end
 
   def all_maps
@@ -20,11 +21,11 @@ class FrontUiController < ApplicationController
       lat = session[:lat]
       lon = session[:lon]
       @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
-                        .page(params[:page])
+                        .page(params[:maps])
                         .per_page(12)
     end
 
-    @all_mappers = Map.featured_authors.paginate(page: params[:page], per_page: 12)
+    @all_mappers = Map.featured_authors.paginate(page: params[:mappers], per_page: 12)
   end
 
   def save_location
@@ -39,11 +40,11 @@ class FrontUiController < ApplicationController
   def about; end
 
   def gallery
-    @maps = Map.page(params[:page])
+    @maps = Map.page(params[:maps])
                .per_page(20)
                .where(archived: false, password: '')
                .order('updated_at DESC')
                .group('maps.id')
-    @authors = Map.featured_authors.paginate(page: params[:page], per_page: 20)
+    @authors = Map.featured_authors.paginate(page: params[:mappers], per_page: 20)
   end
 end
