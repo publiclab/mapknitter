@@ -41,7 +41,7 @@ GEM
     ansi (1.5.0)
     arel (6.0.4)
     ast (2.4.0)
-    autoprefixer-rails (9.5.1.1)
+    autoprefixer-rails (9.6.0)
       execjs
     aws-sdk (1.5.8)
       httparty (~> 0.7)
