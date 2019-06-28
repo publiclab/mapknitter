@@ -39,6 +39,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal map.updated_at, user.last_action
   end
 
+  test 'warpables through maps relationship' do
+    user = users(:quentin)
+    map_images = user.maps.map(&:warpables)
+
+    assert_equal Warpable::ActiveRecord_Associations_CollectionProxy, user.warpables.class
+    assert_equal map_images.flatten, user.warpables
+  end
+
   # def test_should_authenticate_user
   #   assert_equal users(:quentin), User.authenticate('quentin', 'monkey')
   # end
