@@ -1,4 +1,5 @@
 language: ruby
+
 rvm:
   - 2.4.6
 
@@ -9,15 +10,15 @@ services:
 cache:
   directories:
    - $PWD/public/lib/
-   - $PWD/vendor/bundle
+   - $PWD/vendor/.bundle/
 
 install:
   - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
-  - bundle install --path vendor/bundle && yarn install
-  - mysql -e "CREATE DATABASE mapknitter_test; CREATE DATABASE mapknitter;"
+  - bundle install --path vendor/.bundle/ && yarn install
+  - mysql -e "CREATE DATABASE mapknitter_test;"
   - if [ $RAILS_ENV == 'production' ]; then
       bundle exec rails db:schema:load;
     else
