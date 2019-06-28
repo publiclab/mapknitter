@@ -7,18 +7,23 @@
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
 
-<script>
-.lead-text {
-  padding: 10px;
+<style>
+#hero {
+  margin-bottom: 0;
 }
-</script>
+.lead-text {
+  padding: 30px 10px 10px;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+</style>
 
 <!-- jumbotron with background-image -->
 <div class="container-fluid jumbotron text-center" id="hero">
     <div class="row">
-        <div class= "col-md-4 offset-md-4 text-block lead-text">
+        <div class= "text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
-            <p>A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></p>
+            <p><i>A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
             <p>Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
             <p>
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
@@ -34,7 +39,13 @@
 </div>
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
-<%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %>
+
+<p style="padding:5px;">
+  <!-- Places around the world, using list of places in JS below 
+  <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> &nbsp;
+<a href="?"></a>
+  -->
+</p>
 
 <% if @mappers.any? %>
     <div class="section-header text-center">
@@ -77,12 +88,16 @@
     </div>
 </div>
 
+<br><br><br>
+
 <div class="mapping-kits card-deck mb-6  text-center mx-auto">
-    <img class="card-img-top img-draw mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">Raspberry Pi Camera</h5>
-        <p class="card-text item-description"> Lightweight battery pack, easy to use, connects to to your laptop/phone,<br> great for streaming video, photos, and motion triggered capture</p>
-        <a href="https://store.publiclab.org/collections/mapping-kits/products/waterproof-mini-camera" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
+    <div class="card mapping-kits">
+      <img class="card-img-top img-draw mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
+      <div class="card-body">
+          <h5 class="card-title">Raspberry Pi Camera</h5>
+          <p class="card-text item-description"> Lightweight battery pack, easy to use, connects to to your laptop/phone,<br> great for streaming video, photos, and motion triggered capture</p>
+          <a href="https://store.publiclab.org/collections/mapping-kits/products/waterproof-mini-camera" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
+      </div>
     </div>
     <div class="card mapping-kits">
         <img class="card-img-top img-draw  mx-auto" src="<%= asset_path('selfie.png') %>" alt="Card image cap">
@@ -94,22 +109,47 @@
     </div>
 </div>
 
-<br>
+<br><br><br>
+
 <div class="container-fluid text-center">
     <div class="row">
         <div class="col-md-6">
-            <h3> Balloon Mapping Activities </h3>
-            <iframe style="border:none;" width="90%" height="650px" src="//publiclab.org/embed/grid/activity:balloon-mapping"></iframe>
+            <h3>Balloon Mapping Activities </h3>
+            <br />
+            <iframe style="border:none;" width="90%" height="350px" src="//publiclab.org/embed/grid/activity:balloon-mapping"></iframe>
         </div>
         <div class="col-md-6">
-            <h3> Balloon Mapping Questions </h3>
-            <iframe style="border:none;" width="90%" height="650px" src="//publiclab.org/embed/grid/question:balloon-mapping"></iframe>
+            <h3>Balloon Mapping Questions </h3>
+            <br />
+            <iframe style="border:none;" width="90%" height="350px" src="//publiclab.org/embed/grid/question:balloon-mapping"></iframe>
         </div>
     </div>
 </div>
 
+<br><br><br>
+
 <script>
   var Mapknitterunique = new L.Map('mapknitter-unique');
+
+  var defaultLoc;
+  var places = [
+    { name: 'Louisiana',   zoom: 8,  lat: 29.884,   lng: -90.172 },
+    { name: 'Puerto Rico', zoom: 7,  lat: 18.315,   lng: -66.797 },
+    { name: 'Mexico City', zoom: 6,  lat: 20.120,   lng: -99.005 },
+    { name: 'Lima',        zoom: 10, lat: -11.9995, lng: -77.0285 },
+    { name: 'Nairobi',     zoom: 12, lat: -1.2500,  lng: 36.8291 },
+    { name: 'Jakarta',     zoom: 10, lat: -6.1847,  lng: 106.9015 },
+    { name: 'Korea',       zoom: 6,  lat: 36.189,   lng: 128.309 },
+    { name: 'Bangalore',   zoom: 10, lat: 13.0034,  lng: 77.5768 },
+    { name: 'Milan',       zoom: 9,  lat: 45.4311,  lng: 9.3339 }
+  ];
+  function randomizeVals() {
+    defaultLoc = places[parseInt(Math.random() * places.length)];
+  }
+  randomizeVals();
+  defaultLoc.lat = defaultLoc.lat || <%= params[:lat] || 'false' %>;
+  defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
+  defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
 
   Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
 
@@ -130,12 +170,12 @@
   function setDefaultCoordinates() {
     Mapknitterunique.stopLocate();
     var bounds = new L.LatLngBounds(
-      new L.LatLng(84.67351257 , -172.96875),
-      new L.LatLng(-54.36775852 , 178.59375)
+      new L.LatLng(defaultLoc.lat-1, defaultLoc.lng-1),
+      new L.LatLng(defaultLoc.lat+1 , defaultLoc.lng+1)
     );
     Mapknitterunique.options.maxBounds = bounds;
     Mapknitterunique.options.maxBoundsViscosity = 0.75;
-    Mapknitterunique.setView([43, -83] , 3);
+    Mapknitterunique.setView([defaultLoc.lat,defaultLoc.lng], defaultLoc.zoom);
   }
 
   function saveLocation(lat, lon) {
@@ -143,6 +183,7 @@
   }
 
   var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+  //var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/mapbox.streets/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(Mapknitterunique); 
 
