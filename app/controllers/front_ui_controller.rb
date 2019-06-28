@@ -1,4 +1,6 @@
 # Shadow Controller for the new front page
+require 'will_paginate/array'
+
 class FrontUiController < ApplicationController
   protect_from_forgery except: :save_location
 
@@ -22,7 +24,7 @@ class FrontUiController < ApplicationController
                         .per_page(12)
     end
 
-    @all_mappers = Map.featured_authors
+    @all_mappers = Map.featured_authors.paginate(page: params[:page], per_page: 12)
   end
 
   def save_location
@@ -42,6 +44,6 @@ class FrontUiController < ApplicationController
                .where(archived: false, password: '')
                .order('updated_at DESC')
                .group('maps.id')
-    @authors = Map.featured_authors
+    @authors = Map.featured_authors.paginate(page: params[:page], per_page: 20)
   end
 end
