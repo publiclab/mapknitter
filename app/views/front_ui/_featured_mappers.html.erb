@@ -2,7 +2,7 @@
   <% mappers.each do |author, count| %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
       <div class="card card-without-border">
-        <img class="card-img-top img-icon rounded-circle mx-auto" src="<%= asset_path('user.png') %>" alt="Profile picture">
+       <%= image_tag(profile_image(author[:user]), class: "img-icon card-img-top mx-auto") %>
         <div class="card-body text-center" style="margin-left: -18px !important;">
           <h5 class="card-title"><a href="/profile/<%= author[:user].login %>">@<%= author[:user].login %></a></h5>
           <p class="card-text text-muted">
@@ -14,3 +14,5 @@
     </div>
   <% end %>
 </div>
+<br style="clear:both;" />
+<%= will_paginate mappers, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
