@@ -17,7 +17,7 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle install && yarn install
-  - mysql -e "CREATE DATABASE mapknitter_dev; CREATE DATABASE mapknitter_test;"
+  - mysql -e "CREATE DATABASE mapknitter_test;"
   - if [ $RAILS_ENV == 'production' ]; then
       bundle exec rails db:schema:load;
     else
@@ -48,7 +48,9 @@ jobs:
     - name: "Asset Precompilation"
       env:
         - RAILS_ENV=production
-      script: bundle exec rails assets:precompile
+      script:
+        - mysql -e "CREATE DATABASE mapknitter;"
+        - bundle exec rails assets:precompile
 
 branches:
   only:

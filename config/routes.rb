@@ -4,9 +4,10 @@ Mapknitter::Application.routes.draw do
 
   get 'front-page', to: 'front_ui#index'
   get 'mappers', to: 'front_ui#nearby_mappers'
-  post 'save_location', to: 'front_ui#save_location'
   get 'about', to: 'front_ui#about'
   get 'all_maps', to: 'front_ui#all_maps'
+
+  post 'save_location', to: 'front_ui#save_location'
 
   get 'external_url_test', to: 'export#external_url_test'
   get 'local/:login', to: 'sessions#local'
@@ -18,11 +19,10 @@ Mapknitter::Application.routes.draw do
   # since rails 3.2, we use this to log in:
   get 'sessions/create', to: 'sessions#create'
 
-  resources :users, :sessions, :maps
+  resources :users, :sessions, :maps, :images, :comments, :tags
 
   # redirect legacy route:
   get 'tag/:id', to: redirect('/tags/%{id}')
-  get 'tags/:id', to: 'tags#show'
 
   # Registered user pages:
   get 'profile', to: 'users#profile', id: 0
@@ -31,38 +31,51 @@ Mapknitter::Application.routes.draw do
 
   get 'authors', to: 'users#index'
 
-  get 'feeds/all', to: 'feeds#all', format: 'rss'
-  get 'feeds/clean', to: 'feeds#clean', format: 'rss'
-  get 'feeds/license/:id', to: 'feeds#license', format: 'rss'
-  get 'feeds/author/:id', to: 'feeds#author', format: 'rss'
-  get 'feeds/tag/:id', to: 'feeds#tag', format: 'rss'
+  get 'images/:url', to: 'images#fetch'
 
   get 'tms/:id/alt/:z/:x/:y.png', to: 'utility#tms_alt'
   get 'tms/:id/', to: 'utility#tms_info'
   get 'tms/:id/alt/', to: 'utility#tms_info'
 
   # once we have string-based ids, reorganize these around 'maps' and resourceful routing
-  get 'map/map', to: 'maps#map'
   get 'search/:id', to: 'maps#search'
   get 'search', to: 'maps#search'
-  get 'map/archive/:id', to: 'maps#archive'
-  get 'map/region/:id', to: 'maps#region'
-  get 'map/license/:id', to: 'maps#license'
-  get 'maps/featured', to: 'maps#featured'
-  get 'map/view/:id', to: redirect('/maps/%{id}') # legacy
-  get 'maps/:id/annotate', to: 'maps#annotate'
-  get 'maps/exports/:id', to: 'maps#exports'
   get 'maps/:id/warpables', to: 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
-  post 'maps/:map_id/warpables', to: 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
+  get 'maps/view/:id', to: redirect('/maps/%{id}') # legacy
   get 'export/progress/:id', to: 'export#progress'
   get 'export/status/:id', to: 'export#status'
   get 'exports', to: 'export#index'
   get 'map/:id', to: redirect('/maps/%{id}')
   get 'embed/:id', to: 'maps#embed'
+  post 'maps/:map_id/warpables', to: 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   post 'maps/export/:id', to: 'maps#export'
   post 'maps/:id', to: 'maps#export'
 
   get 'import/:name', to: 'images#import' # this was for auto-adding images via URL
+
+  namespace 'feeds' do
+    %w(all clean).each do |action|
+      get action, action: action, format: 'rss'
+    end
+
+    %w(license author tag).each do |action|
+      get action + "/:id", action: action, format: 'rss'
+    end
+  end
+
+  namespace 'maps' do
+    %w(map featured region license).each do |action|
+      get action, action: action
+    end
+
+    %w(archive exports).each do |action|
+      get action + "/:id", action: action
+    end
+
+    %w(annotate warpables).each do |action|
+      get "/:id/" + action, action: action
+    end
+  end
 
   namespace 'export' do
     %w(index logger jpg geotiff cancel 
@@ -72,10 +85,7 @@ Mapknitter::Application.routes.draw do
   end
 
   # make these resourceful after renaming warpables to images
-  post 'images/create/:id', to: 'images#create' # used?
   post 'warper/update', to: 'images#update' # legacy for cartagen.js
-  post 'images/update', to: 'images#update'
-  post 'images/delete/:id', to: 'images#delete'
   delete 'maps/:map_id/warpables/:id', to: 'images#destroy' #legacy, will be resourceful
   delete 'images/:id', to: 'images#destroy' #legacy, will be resourceful
 
