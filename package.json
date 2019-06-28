@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
-    "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.8.1",
+    "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
     "blueimp-tmpl": "blueimp/JavaScript-Templates#2.5.4",
     "bootstrap": "twbs/bootstrap#^4.3.1",
