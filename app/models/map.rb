@@ -47,6 +47,10 @@ class Map < ActiveRecord::Base
     author == "" || user_id.zero?
   end
 
+  def self.anonymous
+    Map.where(user_id: 0)
+  end
+
   def self.bbox(minlat, minlon, maxlat, maxlon)
     Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
                minlat, maxlat, minlon, maxlon])

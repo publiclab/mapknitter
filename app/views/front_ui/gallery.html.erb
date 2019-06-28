@@ -1,0 +1,40 @@
+<div class="section-header mt-4" id="all-maps" >
+    <h2 class="section-title text-center">Maps Gallery</h2>
+    <br> <br>
+    <ul class="nav nav-pills nav-tabs justify-content-center" >
+        <li class="nav-item">
+            <a class="nav-link active"  data-toggle="tab" href="#featured" role="tab" aria-selected="true"><%= @title ||= "Featured" %></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#anonymous" role="tab" aria-selected="false">Anonymous</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#all" role="tab" aria-selected="false">All</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#authors" role="tab" aria-selected="false">Authors</a>
+        </li>
+        <% if params[:controller] == "tags" %>
+            <li class="nav-item">
+                <a class="nav-link" role="tab" href="/feeds/tag/<%= params[:id] %>" aria-selected="false">RSS</a>
+            </li>
+        <% end %>
+    </ul>
+    <br>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="featured" role="tabpanel">
+            <%= render :partial => 'maps', :locals => { :maps => featured(@maps) } %>
+        </div>
+        <div class="tab-pane fade"  id="all" role="tabpanel">
+            <%= render :partial => 'maps', :locals => { :maps => @maps } %>
+        </div>
+        <div class="tab-pane fade" id="anonymous" role="tabpanel">
+            <%= render :partial => 'maps', :locals => { :maps => anonymous(@maps) } %>
+        </div>
+        <div class="tab-pane fade" id="authors" role="tabpanel">
+            <%= render :partial => 'featured_mappers', :locals => { :mappers => @authors } %>
+        </div>
+    </div>
+
+</div>
