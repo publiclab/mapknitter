@@ -14,3 +14,5 @@
     </div>
   <% end %>
 </div>
+<br style="clear:both;" />
+<%= will_paginate mappers, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
