@@ -41,7 +41,7 @@ GEM
     ansi (1.5.0)
     arel (6.0.4)
     ast (2.4.0)
-    autoprefixer-rails (9.5.1.1)
+    autoprefixer-rails (9.6.0)
       execjs
     aws-sdk (1.5.8)
       httparty (~> 0.7)
@@ -66,8 +66,8 @@ GEM
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     debug_inspector (0.0.3)
-    docile (1.3.1)
-    equatable (0.6.0)
+    docile (1.3.2)
+    equatable (0.6.1)
     erubis (2.7.0)
     execjs (2.7.0)
     faker (1.9.4)
@@ -195,7 +195,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rdiscount (2.2.0.1)
-    recaptcha (4.14.0)
+    recaptcha (5.0.0)
       json
     redcarpet (3.4.0)
     ref (2.0.0)
@@ -275,8 +275,8 @@ GEM
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.0)
-    url (0.3.2)
     unicode_utils (1.4.0)
+    url (0.3.2)
     uuidtools (2.1.5)
     web-console (2.3.0)
       activemodel (>= 4.0)
@@ -340,4 +340,4 @@ RUBY VERSION
    ruby 2.4.6p354
 
 BUNDLED WITH
-   2.0.1
+   1.17.3
