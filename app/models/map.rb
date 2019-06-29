@@ -105,15 +105,17 @@ class Map < ActiveRecord::Base
   end
 
   def self.featured_authors
-    maps = Map.active.has_user
+    Rails.cache.fetch("mapper", expires_in: 12.hours) do
+      maps = Map.active.has_user
 
-    author_counts = maps.select('user_id, author, count(1) as maps_count')
-                        .group('author')
-                        .order('maps_count DESC')
+      author_counts = maps.select('user_id, author, count(1) as maps_count')
+                          .group('author')
+                          .order('maps_count DESC')
 
-    author_counts.map do |a|
-      user = User.find(a.user_id)
-      { user: user, count: a.maps_count, location: user.maps.first.location }
+      author_counts.map do |a|
+        user = User.find(a.user_id)
+        { user: user, count: a.maps_count, location: user.maps.first.location }
+      end
     end
   end
 

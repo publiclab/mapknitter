@@ -5,7 +5,7 @@ class FrontUiController < ApplicationController
   protect_from_forgery except: :save_location
 
   def index
-    @mappers = Map.featured_authors.first(4)
+    @mappers = Map.featured_authors.sample(4)
     @maps = Map.new_maps.first(4)
     @unpaginated = true
   end
