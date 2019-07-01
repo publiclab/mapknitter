@@ -150,9 +150,6 @@
 <br><br><br>
 
 <script>
-  var Mapknitterunique = new L.Map('mapknitter-unique');
-  var hash = new L.Hash(Mapknitterunique);
-
   var defaultLoc;
   var places = [
     { name: 'Louisiana',   zoom: 8,  lat: 29.884,   lng: -90.172 },
@@ -199,6 +196,9 @@
   defaultLoc.lat = defaultLoc.lat || <%= params[:lat] || 'false' %>;
   defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
+
+  var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
+  var hash = new L.Hash(Mapknitterunique);
 
   Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
 
