@@ -1,6 +1,6 @@
 module FrontUiHelper
   def profile_image(author)
-    img = author.warpables&.last&.image&.url
+    img = author&.warpables&.last&.image&.url
     img ||= "/images/yarn.png"
   end
 
