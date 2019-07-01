@@ -6,15 +6,33 @@
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
+<%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %>
 
 <style>
 #hero {
   margin-bottom: 0;
 }
+.activities p {
+  color: #aaa;
+  width: 80%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20%;
+}
 .lead-text {
   padding: 30px 10px 10px;
   border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+.featured-places a {
+  padding: 8px 12px;
+}
+.featured-places {
+  text-align: center;
+  padding-bottom: 20px;
+  width: 100%;
+  overflow: scroll;
+  position: absolute;
 }
 </style>
 
@@ -23,8 +41,8 @@
     <div class="row">
         <div class= "text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
-            <p><i>A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
-            <p>Use a kite, balloon, pole, or drone to take an aerial photo and tell your own visual story of the place. <a href="/about" class="alert-link">Learn more</a></p>
+            <p><i style="color:#aaa;">A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
+            <p>Use a kite, balloon, or pole to take an aerial photo and tell your own visual story of a place. <a href="/about" class="alert-link">Learn more</a></p>
             <p>
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
                 Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
@@ -40,12 +58,13 @@
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
 
-<p style="padding:5px;">
-  <!-- Places around the world, using list of places in JS below 
-  <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> &nbsp;
-<a href="?"></a>
-  -->
-</p>
+<div style="padding:5px;">
+  <div class="featured-places">
+    <!-- <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> -->
+  </div>
+</div>
+
+<br style="clear:both;" />
 
 <% if @mappers.any? %>
     <div class="section-header text-center">
@@ -53,12 +72,14 @@
     </div>
     <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
 <% end %>
+
+<br style="clear:both;" />
+
 <div class="section-header text-center">
     <% if session[:lat].present?  %>
-        <a href="/mappers" class="alert-link">More nearby people & maps <i class="fa fa-angle-double-right"> </i></a>
-    <% else %>
-        <a href="/gallery" class="alert-link">View all maps <i class="fa fa-angle-double-right"></i></a>
+      <a href="/mappers" class="alert-link">Nearby people & maps</i></a>
     <% end %>
+    &nbsp; | &nbsp; <a href="/gallery" class="alert-link">All maps</a>
     <hr style="max-width: 300px;">
 </div>
 <br>
@@ -111,16 +132,28 @@
 
 <br><br><br>
 
-<div class="container-fluid text-center">
+<div class="container-fluid text-center activities">
+    <div class="row">
+        <div class="col-md-12">
+          <h3>How it works</h3>
+          <p>Upload images and stretch them to create a mosaic of aerial photos, then save them as a map. See the Activities below for more!</p>
+          <p><img src="https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif" /></p>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+
+<div class="container-fluid text-center activities">
     <div class="row">
         <div class="col-md-6">
-            <h3>Balloon Mapping Activities </h3>
-            <br />
+            <h3>Activities </h3>
+            <p>The Public Lab community has shared a wide range of guides on aerial mapping.</p>
             <iframe style="border:none;" width="90%" height="350px" src="//publiclab.org/embed/grid/activity:balloon-mapping"></iframe>
         </div>
         <div class="col-md-6">
-            <h3>Balloon Mapping Questions </h3>
-            <br />
+            <h3>Questions </h3>
+            <p>Our peer-support community has asked and answered all kinds of questions about aerial mapping. Browse or dig deeper <a href="https://publiclab.org/balloon-mapping">on PublicLab.org</a>.</p>
             <iframe style="border:none;" width="90%" height="350px" src="//publiclab.org/embed/grid/question:balloon-mapping"></iframe>
         </div>
     </div>
@@ -129,8 +162,6 @@
 <br><br><br>
 
 <script>
-  var Mapknitterunique = new L.Map('mapknitter-unique');
-
   var defaultLoc;
   var places = [
     { name: 'Louisiana',   zoom: 8,  lat: 29.884,   lng: -90.172 },
@@ -147,9 +178,39 @@
     defaultLoc = places[parseInt(Math.random() * places.length)];
   }
   randomizeVals();
+  function displayFeaturedPlaces() {
+    shuffleArray(places);
+    places.forEach(function(place, i) {
+      // use "mapknitter.org#8/29.884/-90.172/" style easyHash links
+      var locHash = '#' + place.zoom + '/' + place.lat + '/' + place.lng + '/';
+      $('.featured-places').append('<a class="place-' + i + '" href="javascript:void(0);">' + place.name + '</a>');
+      $('.featured-places .place-' + i).click(function click() {
+        var loc = hash.parseHash(locHash).center;
+        Mapknitterunique.flyTo(loc)
+      });
+    });
+  }
+  displayFeaturedPlaces();
+
+  /**
+   * Randomize array element order in-place.
+   * Using Durstenfeld shuffle algorithm.
+   */
+  function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  }
+
   defaultLoc.lat = defaultLoc.lat || <%= params[:lat] || 'false' %>;
   defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
+
+  var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
+  var hash = new L.Hash(Mapknitterunique);
 
   Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
 
@@ -182,9 +243,9 @@
     $.post( "/save_location.json", {'lat': lat, 'lon': lon}, function(data) {});
   }
 
-  //var baselayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=', {
-  var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-  //var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/mapbox.streets/{z}/{x}/{y}.png', {
+
+  var token = "pk.eyJ1Ijoianl3YXJyZW4iLCJhIjoiVzVZcGg3NCJ9.BJ6ArUPuTs1JT9Ssu3K8ig";
+  var baselayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=' + token, {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(Mapknitterunique); 
 
