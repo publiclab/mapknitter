@@ -172,10 +172,14 @@
   randomizeVals();
   function displayFeaturedPlaces() {
     shuffleArray(places);
-    places.forEach(function(place) {
-      // use "mapknitter.org#8/29.884/-90.172" style easyHash links
-      var locHash = place.zoom + '/' + place.lat + '/' + place.lng + '/';
-      $('.featured-places').append('<a href="#' + locHash + '">' + place.name + '</a>');
+    places.forEach(function(place, i) {
+      // use "mapknitter.org#8/29.884/-90.172/" style easyHash links
+      var locHash = '#' + place.zoom + '/' + place.lat + '/' + place.lng + '/';
+      $('.featured-places').append('<a class="place-' + i + '" href="javascript:void(0);">' + place.name + '</a>');
+      $('.featured-places .place-' + i).click(function click() {
+        var loc = hash.parseHash(locHash).center;
+        Mapknitterunique.flyTo(loc)
+      });
     });
   }
   displayFeaturedPlaces();
