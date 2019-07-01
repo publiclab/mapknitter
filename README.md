@@ -58,19 +58,21 @@ To use it:
 1. Create a personal account.
 2. Click `Create new workspace`.
 3. Select a new workspace with a Rails stack.
-4. Under the `Projects` section,
+4. Under the `Commands` section, check off the box for the `run` command.
+5. Under the `Projects` section,
 add the URL of your forked version of mapknitter (`https://github.com/USERNAME/mapknitter.git`).
-5. Hit create.
-6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory. 
-7. Run the installation script. The initial installation may take a bit.
+6. Hit create.
+7. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory. 
+8. Run the installation script. The initial installation may take a bit.
 ```Bash
 $ source install_cloud.sh 
 ```
-8. When you see it's complete, to run the server:
+9. When you see it's complete, run the server:
 ```Bash 
-$ source start.sh
+$ rails server -b 0.0.0.0
 ```
-9. Open the URL which pops up to see MapKnitter booted up. Great work!
+10. Hit the Play button located in the top menu bar.
+11. Open the Codenvy URL provided in the console to see MapKnitter booted up. Great work!
 
 ### Installation video
 
