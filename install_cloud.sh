@@ -19,6 +19,8 @@ cp config/database.yml.cloud9.example config/database.yml
 cp config/config.yml.example config/config.yml
 sudo service mysql start
 rake db:setup
-sudo npm install -g yarn
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo apt-get update && sudo apt-get install yarn
 yarn install
-echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
+echo "Done! Run the application with 'source start.sh'"

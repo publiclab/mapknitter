@@ -51,20 +51,25 @@ Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrat
 
 ### Quick install
 
-We provide an install script for Amazon's Cloud9 service, which provides standard Linux virtual machines with a web-based editor: https://aws.amazon.com/cloud9/
+We provide an install script for Codenvy's cloud service, which provides a developer workspace server that allows anyone to contribute to a project without installing software: https://Codenvy.io.
 
 To use it:
 
-1. Click `Create new workspace`
-2. Name your workspace and enter `https://github.com/USERNAME/mapknitter` (where `USERNAME` is your GitHub username) under `Clone from Git or Mercurial URL`
-3. Choose `Ruby` template
-4. Click `Create workspace`
-5. Once it loads, in the `bash` console at the bottom of the screen, type `source install_cloud.sh`
-6. Press `Control-x` when prompted for a message.
-7. Wait for the installation to run, and when it's complete, press the `Run` button at the top of the page.
-8. Open the URL which pops up to see MapKnitter booted up. Great work!
-
-If you have any trouble installing, we're sorry! **Please [click here](https://github.com/publiclab/mapknitter/issues/307) to get support.**
+1. Create a personal account.
+2. Click `Create new workspace`.
+3. Select a new workspace with a blank stack.
+4. Add the URL of your forked version of mapknitter under the `projects` section (`https://github.com/USERNAME/mapknitter`).
+5. Hit create.
+6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory. 
+7. Run the installation script. The initial installation may take a bit.
+```Bash
+$ source install_cloud.sh 
+```
+8. When you see it's complete, to run the server:
+```Bash 
+$ source start.sh
+```
+9. Open the URL which pops up to see MapKnitter booted up. Great work!
 
 ### Installation video
 
