@@ -18,7 +18,11 @@ cp db/schema.rb.example db/schema.rb
 cp config/database.yml.cloud9.example config/database.yml
 cp config/config.yml.example config/config.yml
 sudo service mysql start
+bin/rake db:migrate RAILS_ENV=development
 rake db:setup
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo apt-get update && sudo apt-get install yarn
 sudo npm install -g yarn
-yarn install
-echo "Done! Run the application with 'rails s -b \$IP -p \$PORT'"
+sudo yarn install
+echo "Done! Run the application with 'rails server -b 0.0.0.0'"
