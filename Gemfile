@@ -3,6 +3,7 @@ source "https://rubygems.org"
 ruby '2.4.6'
 gem 'rails', '4.2.11.1'
 gem 'rake',  '~> 12.3.2'
+gem 'tzinfo-data'
 gem 'skylight'
 
 gem "will_paginate", "3.1.7"
