@@ -77,10 +77,9 @@
 
 <div class="section-header text-center">
     <% if session[:lat].present?  %>
-        <a href="/mappers" class="alert-link">More nearby people & maps <i class="fa fa-angle-double-right"> </i></a>
-    <% else %>
-        <a href="/gallery" class="alert-link">View all maps <i class="fa fa-angle-double-right"></i></a>
+      <a href="/mappers" class="alert-link">Nearby people & maps</i></a>
     <% end %>
+    &nbsp; | &nbsp; <a href="/gallery" class="alert-link">All maps</a>
     <hr style="max-width: 300px;">
 </div>
 <br>
