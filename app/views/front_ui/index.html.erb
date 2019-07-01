@@ -6,6 +6,7 @@
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
+<%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %>
 
 <style>
 #hero {
@@ -15,6 +16,9 @@
   padding: 30px 10px 10px;
   border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+.featured-places {
+  padding: 4px 12px;
 }
 </style>
 
@@ -40,12 +44,12 @@
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
 
-<p style="padding:5px;">
-  <!-- Places around the world, using list of places in JS below 
+<div style="padding:5px;">
   <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> &nbsp;
-<a href="?"></a>
-  -->
-</p>
+
+  <div class="featured-places">
+  </div>
+</div>
 
 <% if @mappers.any? %>
     <div class="section-header text-center">
@@ -147,6 +151,14 @@
     defaultLoc = places[parseInt(Math.random() * places.length)];
   }
   randomizeVals();
+  function displayFeaturedPlaces() {
+    places.forEach(function(place) {
+      // use "mapknitter.org#8/29.884/-90.172" style easyHash links
+      var locParams = place.zoom + '/' + place.lat + '/' + place.lng;
+      $('.featured-places').insert('<a href="#"></a>');
+    
+    });
+  }
   defaultLoc.lat = defaultLoc.lat || <%= params[:lat] || 'false' %>;
   defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
