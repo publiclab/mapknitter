@@ -5,9 +5,12 @@ class FrontUiController < ApplicationController
   protect_from_forgery except: :save_location
 
   def index
-    @mappers = Map.featured_authors.first(4)
     @maps = Map.new_maps.first(4)
     @unpaginated = true
+    # TODO: these could use optimization but are better than prev:
+    tag = Tag.where(name: 'featured').first # note that this is not a join table but the .maps method still works
+    @mappers = User.find(tag.maps.collect(&:user_id)) if tag
+    @mappers ||= []
   end
 
   def all_maps
