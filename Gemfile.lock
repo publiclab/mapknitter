@@ -268,6 +268,8 @@ GEM
     tty-which (0.4.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2019.1)
+      tzinfo (>= 1.0.0)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.0)
@@ -325,6 +327,7 @@ DEPENDENCIES
   sprockets-rails
   sqlite3
   therubyracer
+  tzinfo-data
   uglifier
   web-console (~> 3.3)
   will_paginate (= 3.1.7)

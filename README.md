@@ -57,8 +57,9 @@ To use it:
 
 1. Create a personal account.
 2. Click `Create new workspace`.
-3. Select a new workspace with a blank stack.
-4. Add the URL of your forked version of mapknitter under the `projects` section (`https://github.com/USERNAME/mapknitter`).
+3. Select a new workspace with a Rails stack.
+4. Under the `Projects` section,
+add the URL of your forked version of mapknitter (`https://github.com/USERNAME/mapknitter.git`).
 5. Hit create.
 6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory. 
 7. Run the installation script. The initial installation may take a bit.
