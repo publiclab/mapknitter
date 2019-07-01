@@ -2364,9 +2364,10 @@ source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-sparklines@mariusGundersen/sparkline#~1.0.0:
-  version "1.0.0"
-  resolved "https://codeload.github.com/mariusGundersen/sparkline/tar.gz/097a83f6bbb6b2d088eb125c4c848edef30ba252"
+sparklines@mariusGundersen/sparkline#~1.2.0:
+  version "1.2.0"
+  uid ce62ca07d3b72a82eae1e51c60bcd07a1e631d41
+  resolved "https://codeload.github.com/mariusGundersen/sparkline/tar.gz/ce62ca07d3b72a82eae1e51c60bcd07a1e631d41"
 
 spin.js@^2.3.1:
   version "2.3.2"
