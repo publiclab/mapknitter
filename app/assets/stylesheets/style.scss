@@ -246,15 +246,22 @@ label small {
         font-size: 0.7em;
         color: gray
     }
-    .fa {
-        font-size: 6em;
-        padding-bottom: 20px;
-    }
 }
+
+.fa-industry, .fa-globe, .fa-binoculars{
+    font-size: 6em;
+    padding-bottom: 20px;
+    color: gray;
+}
+
 #all-maps {
     img {
         display: block;
         width: 200px;
         height: 200px;
     }
+}
+
+#light-blue {
+    background-color: lightblue;
 }
