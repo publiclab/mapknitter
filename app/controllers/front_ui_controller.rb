@@ -9,7 +9,7 @@ class FrontUiController < ApplicationController
     @unpaginated = true
     # TODO: these could use optimization but are better than prev:
     tag = Tag.where(name: 'featured').first # note that this is not a join table but the .maps method still works
-    @mappers = User.where(user_id: tag.maps.collect(&:user_id)) if tag
+    @mappers = User.where(id: tag.maps.collect(&:user_id)) if tag
     @mappers ||= []
   end
 
