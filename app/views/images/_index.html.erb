@@ -1,10 +1,28 @@
-<h4>Images</h4>
+<div>
+<h4 class="sidebar-heading">Images</h4>
+<div class="image-order">
+  <button type="button" class="btn btn-outline-secondary">Order Images</button>
+  <div class="image-order-content">
+    <a href="?sort=name">Name</a>
+    <a href="?sort=size">Size</a>
+    <a href="?sort=recent">Recent</a>
+  </div>
+</div>
+</div>
 <% if @map.warpables.empty? %>
   <p id="no-images">No images uploaded. </p>
   <%end%>
 <table class="warpables-all table table-striped">
   <tbody>
-    <% @map.warpables.each do |warpable| %>
+    <% sort_param = params[:sort] %>
+    <% if sort_param == 'name' %>
+      <% ary = @map.warpables.sort { |a, b| a.image_file_name <=> b.image_file_name } %>
+    <% elsif sort_param == 'size' %>
+      <% ary = @map.warpables.sort { |a, b| a.image_file_size <=> b.image_file_size } %>
+    <% else %>
+      <% ary = @map.warpables.sort { |a, b| b.created_at <=> a.created_at } %>
+    <% end %>
+    <% ary.each do |warpable| %>
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
           <%= image_tag warpable.image.url(:thumb), 
@@ -55,7 +73,6 @@
                     }
                   })
                 }
-
                 /* wait for map to load if we're on a small screen and it's been hidden */
                 if ($('body').width() < 400) {
                   window.toggle_sidebar();

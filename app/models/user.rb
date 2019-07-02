@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :tags
   has_many :comments
   has_many :exports
+  has_many :warpables, through: :maps
 
   validates_presence_of     :login
   validates_length_of       :login, within: 3..40

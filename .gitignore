@@ -32,7 +32,6 @@ config/amazon_s3.yml
 config/initializers/recaptcha.rb
 config/config.yml
 config/initializers/site_keys.rb
-Gemfile.lock
 vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
@@ -43,6 +42,6 @@ todo.txt
 .sass-cache
 .byebug_history
 coverage_report/
-test/reports/
+test/reports/*
 yarn-error.log
 
