@@ -31,7 +31,7 @@
         </td>
         <td>
           <% if logged_in? && current_user.can_delete?(warpable) %>
-            <%= link_to "<i class='fa fa-remove'></i>".html_safe, [@map, warpable],
+            <%= link_to "<i class='fas fa-times'></i>".html_safe, [@map, warpable],
                 method: "delete",
                 class: "btn btn-sm btn-danger",
                 title: "Delete",
