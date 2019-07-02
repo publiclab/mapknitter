@@ -134,7 +134,7 @@
 &nbsp; <a href="/maps/<%= @map.slug %>">&laquo; Back to map</a> &nbsp; 
   <% if logged_in? || @map.anon_annotatable %>
     <a class="btn btn-sm btn-success"  data-toggle="modal" data-target="#pointmodal"><i class="fa fa-comment"></i> Add annotation</a>
-    <a class="btn btn-sm btn-success" data-toggle="modal" href="#polymodal"><i class="fa fa-pencil"></i> Add poly</a>
+    <a class="btn btn-sm btn-success" data-toggle="modal" href="#polymodal"><i class="fas fa-pencil-alt"></i> Add poly</a>
   <% end %>
   <a class="btn btn-sm btn-primary" data-toggle="modal" href="#sharemodal"><i class="fa fa-share"></i> Share</a>
   <a class="btn btn-sm btn-success" href="javascript:void()" onClick="$A.toggle_fullscreen()"><i class="fa fa-fullscreen"></i> Fullscreen</a>
