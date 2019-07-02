@@ -47,6 +47,10 @@ class Map < ActiveRecord::Base
     author == "" || user_id.zero?
   end
 
+  def self.anonymous
+    Map.where(user_id: 0)
+  end
+
   def self.bbox(minlat, minlon, maxlat, maxlon)
     Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
                minlat, maxlat, minlon, maxlon])
@@ -103,8 +107,8 @@ class Map < ActiveRecord::Base
   def self.featured_authors
     maps = Map.active.has_user
 
-    author_counts = maps.group('author')
-                        .select('user_id, author, count(1) as maps_count')
+    author_counts = maps.select('user_id, author, count(1) as maps_count')
+                        .group('author')
                         .order('maps_count DESC')
 
     author_counts.map do |a|

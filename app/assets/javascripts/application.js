@@ -29,3 +29,4 @@
 //= require annotations-legacy.js
 //= require glfx-js/dist/glfx.js
 //= require webgl-distort/dist/webgl-distort.js
+//= require_tree .

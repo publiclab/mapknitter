@@ -3,6 +3,7 @@ source "https://rubygems.org"
 ruby '2.4.6'
 gem 'rails', '4.2.11.1'
 gem 'rake',  '~> 12.3.2'
+gem 'tzinfo-data'
 gem 'skylight'
 
 gem "will_paginate", "3.1.7"
@@ -49,7 +50,7 @@ group :test do
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false
-  gem 'simplecov-cobertura', require: false
+  gem 'codecov', require: false
   gem 'minitest'
   gem 'minitest-reporters'
 end
@@ -63,7 +64,7 @@ end
 group :development do
   gem "jshintrb"
   gem "therubyracer"
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 3.3'
 end
 
 group :sqlite do

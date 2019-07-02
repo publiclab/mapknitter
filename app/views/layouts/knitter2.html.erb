@@ -82,7 +82,7 @@
                 </button>
 
               <!-- Write a research note on Public Lab -->
-                <a target="_blank" class="btn btn-outline-secondary" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>" type="button">
+                <a target="_blank" class="btn btn-outline-secondary" title="Post a research note on Public Lab" href="//publiclab.org/post?title=MapKnitter map of <%= @map.name %>&tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,mapknitter&body=%3Cimg src=%22<%= @map.warpables.first&.image&.url(:medium) %>%22%3E%3C/img%3E%3Ciframe%20src=%22https://mapknitter.org/embed/<%= @map.slug %>%22%20style=%22border:none%22%20width=%22100%25%22%20height=%22400px%22%3E%3C/iframe%3E%3Cbr /%3E%3Cbr /%3E<%= @map.description %>%3Cbr /%3Ehttps://mapknitter.org/embed/<%= @map.slug %>" type="button">
                   <span class="d-none d-sm-block"><span class="fa fa-file"></span> Post</span>
                 </a>
 
@@ -112,7 +112,7 @@
                   <a class="nav-link" href="#map-exports-container" role="tab" data-toggle="tab">Export</a>
                 </li>
                 <li class="nav-item d-none d-sm-block">
-                  <a class="nav-link" href="#chat" role="tab" data-toggle="tab">Chat</a>
+                  <a class="nav-link" target="_blank" href="https://publiclab.org/chat" role="tab" style="border: none;">Chat</a>
                 </li>
               </ul>
 
@@ -178,11 +178,6 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="map-exports-container">
                   <%= render :partial => "sidebar_exports" %>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="chat">
-                  <a style="margin-right:4px;" class="float-right nav-link" href="https://webchat.oftc.net/?channels=publiclab<% if current_user %>&nick=<%= current_user.login %><% end %>" target="_blank">pop out</a>
-                  <p class="popover-title">Public Lab chatroom</p>
-                  <script>login = '<%= current_user.login if logged_in? %>'</script>
                 </div>
               </div>
             </div><!-- .sidebar-tabs -->
