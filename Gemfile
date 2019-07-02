@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 ruby '2.4.6'
 gem 'rails', '~> 5.2.3'
 gem 'rake',  '~> 12.3.2'
-gem 'skylight', '~> 4.0.2'
+gem 'tzinfo-data'
+gem 'skylight'
 
 gem 'will_paginate', '3.1.7'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
@@ -54,7 +55,7 @@ group :test do
   gem 'rails-perftest'
   gem 'rails-controller-testing'
   gem 'simplecov', require: false
-  gem 'simplecov-cobertura', require: false
+  gem 'codecov', require: false
   gem 'minitest'
   gem 'minitest-reporters'
 end
@@ -69,7 +70,7 @@ group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.1.5'
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 3.3'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end

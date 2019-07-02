@@ -55,8 +55,7 @@ GEM
       json (~> 1.4)
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
-    binding_of_caller (0.8.0)
-      debug_inspector (>= 0.0.1)
+    bindex (0.7.0)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
@@ -65,12 +64,15 @@ GEM
     builder (3.2.3)
     byebug (11.0.1)
     climate_control (0.2.0)
+    codecov (0.1.14)
+      json
+      simplecov
+      url
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
-    debug_inspector (0.0.3)
     docile (1.3.2)
-    equatable (0.6.0)
+    equatable (0.6.1)
     erubi (1.8.0)
     execjs (2.7.0)
     faker (1.9.4)
@@ -252,16 +254,14 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    simplecov (0.16.1)
+    simplecov (0.17.0)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-cobertura (1.3.1)
-      simplecov (~> 0.8)
     simplecov-html (0.10.2)
-    skylight (4.0.2)
-      skylight-core (= 4.0.2)
-    skylight-core (4.0.2)
+    skylight (4.1.2)
+      skylight-core (= 4.1.2)
+    skylight-core (4.1.2)
       activesupport (>= 4.2.0)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
@@ -298,16 +298,19 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2019.1)
+      tzinfo (>= 1.0.0)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.0)
     unicode_utils (1.4.0)
+    url (0.3.2)
     uuidtools (2.1.5)
-    web-console (2.3.0)
-      activemodel (>= 4.0)
-      binding_of_caller (>= 0.7.2)
-      railties (>= 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
+    web-console (3.7.0)
+      actionview (>= 5.0)
+      activemodel (>= 5.0)
+      bindex (>= 0.4.0)
+      railties (>= 5.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -325,6 +328,7 @@ DEPENDENCIES
   bootsnap (~> 1.4.4)
   bootstrap-sass
   byebug (~> 11.0.1)
+  codecov
   faker (~> 1.9.3)
   friendly_id
   geokit-rails (= 1.1.4)
@@ -358,16 +362,16 @@ DEPENDENCIES
   sass
   sassc-rails
   simplecov
-  simplecov-cobertura
-  skylight (~> 4.0.2)
+  skylight
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (= 3.7.2)
   sprockets-rails
   sqlite3
   turbolinks (~> 5)
+  tzinfo-data
   uglifier (~> 4.1.20)
-  web-console (~> 2.0)
+  web-console (~> 3.3)
   will_paginate (= 3.1.7)
   will_paginate-bootstrap4 (~> 0.2.2)
 

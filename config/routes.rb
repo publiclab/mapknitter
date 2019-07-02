@@ -1,11 +1,13 @@
 Mapknitter::Application.routes.draw do
 
-  root to: 'maps#index'
+  root to: 'front_ui#index'
 
   get 'front-page', to: 'front_ui#index'
   get 'mappers', to: 'front_ui#nearby_mappers'
   get 'about', to: 'front_ui#about'
+  post 'save_location' => 'front_ui#save_location'
   get 'all_maps', to: 'front_ui#all_maps'
+  get 'legacy' => 'maps#index' # remove once new front page is stable
 
   post 'save_location', to: 'front_ui#save_location'
 

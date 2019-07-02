@@ -13,9 +13,14 @@
   </li>
 <% else %>
   <li class="nav-item dropdown">
-    <a href="#" class="nav-link dropdown login-form" data-toggle="dropdown" id="login-menu" aria-haspopup="true" aria-expanded="false">Log In</a>
-    <div class="dropdown-menu" aria-labelled-by="login-menu">
-      <%= render :partial => "layouts/login_form" %>
-    </div>
+    <a href="#" class="nav-link dropdown login-form" data-toggle="modal" data-target="#loginModal">Log In</a>
+
+    <%= render partial: "layouts/login_modal" %>
+    
   </li>
 <% end %>
+<script>
+$(function(){
+  $("#loginModal").appendTo("body");
+});
+</script>
