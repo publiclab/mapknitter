@@ -8,7 +8,7 @@
 
       <div class="col-6">
         <% if current_user && current_user.can_edit?(comment) %>
-          <a class="btn btn-sm btn-outline-secondary float-right edit-comment-btn"><span class="fa fa-pencil" data-comment-id="<%= comment.id %>"></span></a>
+          <a class="btn btn-sm btn-outline-secondary float-right edit-comment-btn"><span class="fas fa-pencil-alt" data-comment-id="<%= comment.id %>"></span></a>
         <% end %>
 
         <% if current_user && current_user.can_delete?(comment) %>
