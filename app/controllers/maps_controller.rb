@@ -114,14 +114,7 @@ class MapsController < ApplicationController
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    warpables = []
-    @map.warpables.each do |warpable|
-      warpables << warpable
-      warpables.last[:nodes] = warpable.nodes_array
-      warpables.last.src = warpable.image.url
-      warpables.last.srcmedium = warpable.image.url(:medium)
-    end
-    render json: warpables
+    render json: @map.warpables
   end
 
   # run the export
@@ -179,14 +172,16 @@ class MapsController < ApplicationController
 
     respond_to do |format|
       if query.length < 3
-        flash.now[:notice] = 'Invalid Query: non white-space character count is less than 3'
+        flash.now[:info] = 'Invalid Query: non white-space character count is less than 3'
         @title = 'Featured maps'
         @maps = Map.featured.paginate(page: params[:page], per_page: 24)
-        format.html { render 'maps/index', layout: 'application' }
+        @authors = User.where(login: Map.featured.collect(&:author))
+                                     .paginate(page: params[:mappers], per_page: 20)
+        format.html { render 'front_ui/gallery', layout: 'application' }
       else
         @title = "Search results for '#{data}'"
         @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
-        format.html { render 'maps/index', layout: 'application' }
+        format.html { render 'front_ui/gallery', layout: 'application' }
         format.json { render json: @maps }
       end
     end

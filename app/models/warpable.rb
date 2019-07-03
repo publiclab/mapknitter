@@ -23,7 +23,11 @@ class Warpable < ApplicationRecord
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})
-    super options.merge(methods: %i(src srcmedium))
+    json = super options
+    json[:src] = image.url
+    json[:srcmedium] = image.url(:medium)
+    json[:nodes] = nodes_array
+    json
   end
 
   # JSON formatting for file upload plugin
