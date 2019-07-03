@@ -6,6 +6,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
 
+    var mapknitter = this;
+
     L.Icon.Default.imagePath = '/assets/leaflet/dist/images/';
 
     /* Initialize before map in order to add to layers; probably it can be done later too */
@@ -103,12 +105,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
             warpable.srcmedium,
             {
               keymapper: false,
-              actions: this.imgActionArray(),
+              actions: mapknitter.imgActionArray(),
               corners: corners,
               mode: 'lock'
             }).addTo(map);
 
-          var exportA = this.customExportAction();
+          var exportA = mapknitter.customExportAction();
 
           var imgGroup = L.distortableCollection({
             actions: [exportA]
@@ -126,7 +128,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             L.DomEvent.on(img._image, 'click', window.mapKnitter.selectImage, img);
             img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
             L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
-            L.DomEvent.on(imgGroup, 'layeradd', this.setupEvents, this);
+            L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, this);
             L.DomEvent.on(img._image, 'load', function () {  /* never hitting this?? */
               var img = this;
               window.mapKnitter.setupToolbar(img)
@@ -435,7 +437,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
   selectImage: function (e) {
     var img = this;
     // var img = e.layer;
-    console.log("Hi");
     // save state, watch for changes by tracking 
     // stringified corner positions: 
     img._corner_state = JSON.stringify(img._corners)
@@ -469,7 +470,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     window.mapKnitter.selectImage.bind(img)
     img.editing._enableDragging()
     img.editing.enable()
-    img.editing._toggleRotateDistort()
+    img.editing._toggleRotateScale()
     e.stopPropagation()
   },
 
