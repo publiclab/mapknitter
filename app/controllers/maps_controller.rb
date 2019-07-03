@@ -114,14 +114,7 @@ class MapsController < ApplicationController
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    warpables = []
-    @map.warpables.each do |warpable|
-      warpables << warpable
-      warpables.last[:nodes] = warpable.nodes_array
-      warpables.last.src = warpable.image.url
-      warpables.last.srcmedium = warpable.image.url(:medium)
-    end
-    render json: warpables
+    render json: @map.warpables
   end
 
   # run the export
