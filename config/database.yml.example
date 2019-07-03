@@ -14,7 +14,7 @@ production:
   adapter: mysql2
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: db
+  host: <%= ENV.fetch("MYSQL_HOST") { '127.0.0.1' } %>
   username: mapknitter
   password: mapknitter
   database: mapknitter
