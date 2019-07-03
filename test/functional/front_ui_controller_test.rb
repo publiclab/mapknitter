@@ -23,4 +23,15 @@ class FrontUiControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'front_ui/gallery'
   end
+
+  test 'nearby mappers' do
+    session[:lat] = -1.2920
+    session[:lon] = 36.8219
+
+    get :nearby_mappers
+    assert_response :success
+    assert assigns(:nearby_maps)
+    assert assigns(:nearby_mappers)
+    assert_template 'front_ui/nearby_mappers'
+  end
 end
