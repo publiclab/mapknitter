@@ -91,7 +91,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'query should be at least 3 chars long' do
-    get :search, q: 'ce'
+    get :search, params: { q: 'ce' }
     msg = 'Invalid Query: non white-space character count is less than 3'
 
     assert_response :success
