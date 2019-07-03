@@ -2,11 +2,9 @@ require 'test_helper'
 
 class FrontUiControllerTest < ActionController::TestCase
 
-  # called before every single test
   def setup
   end
 
-  # called after every single test
   def teardown
   end
 
@@ -15,5 +13,14 @@ class FrontUiControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:mappers)
     assert assigns(:maps)
+  end
+
+  test 'gallery page' do
+    get :gallery
+
+    assert assigns(:maps)
+    assert assigns(:authors)
+    assert_response :success
+    assert_template 'front_ui/gallery'
   end
 end
