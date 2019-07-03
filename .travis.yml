@@ -34,17 +34,14 @@ env:
     - CI=true
     - TRAVIS=true
 
-# FIXME - Later change 'test/unit' and 'test/funcional' folders 
-# to 'test/unit' and 'test/funcional', respectively
-
 jobs:
   include:
-    - name: "Unit Tests"
-      script: bundle exec rails test:unit
+    - name: "Models Tests"
+      script: bundle exec rails test:models
     - name: "Integration Tests"
       script: bundle exec rails test:integration
-    - name: "Functional Tests"
-      script: bundle exec rails test:functional
+    - name: "Controllers Tests"
+      script: bundle exec rails test:controllers
     - name: "Rubocop Linter"
       script: bundle exec rubocop
     - name: "Docker Builds"
