@@ -1,4 +1,4 @@
-class CreateWarpables < ActiveRecord::Migration
+class CreateWarpables < ActiveRecord::Migration[5.2]
   def self.up
     create_table :warpables do |t|
       t.column :parent_id,  :integer

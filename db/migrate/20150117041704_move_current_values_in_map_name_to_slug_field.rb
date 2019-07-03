@@ -1,4 +1,4 @@
-class MoveCurrentValuesInMapNameToSlugField < ActiveRecord::Migration
+class MoveCurrentValuesInMapNameToSlugField < ActiveRecord::Migration[5.2]
   def up
   	execute "UPDATE maps m SET m.slug = m.name"
   end

@@ -8,9 +8,11 @@ class FrontUiController < ApplicationController
     @maps = Map.new_maps.first(4)
     @unpaginated = true
     # TODO: these could use optimization but are better than prev:
-    tag = Tag.where(name: 'featured').first # note that this is not a join table but the .maps method still works
-    @mappers = User.where(login: tag.maps.collect(&:author)) if tag
-    @mappers ||= []
+    @mappers = if Tag.where(name: 'featured').first
+                 User.where(login: tag.maps.collect(&:author))
+               else
+                 []
+               end
   end
 
   def all_maps

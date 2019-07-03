@@ -1,4 +1,4 @@
-class Map < ActiveRecord::Base
+class Map < ApplicationRecord
   include ActiveModel::Validations
   extend FriendlyId
   friendly_id :name, use: %i(slugged static)
@@ -20,7 +20,7 @@ class Map < ActiveRecord::Base
   has_many :tags, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :annotations, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
 
   has_many :warpables
   scope :active, -> { where(archived: false) }

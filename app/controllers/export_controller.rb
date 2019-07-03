@@ -17,7 +17,7 @@ class ExportController < ApplicationController
     if params[:action] == 'progress'
       nil
     else
-      RAILS_DEFAULT_LOGGER
+      Rails.logger
     end
   end
 

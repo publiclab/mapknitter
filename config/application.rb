@@ -1,5 +1,4 @@
-require File.expand_path('../boot', __FILE__)
-
+require_relative 'boot'
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -27,6 +26,9 @@ module Mapknitter
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
+     # Initialize configuration defaults for originally generated Rails version.
+     config.load_defaults 5.2
+
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
@@ -38,9 +40,6 @@ module Mapknitter
     # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
     # parameters by using an attr_accessible or attr_protected declaration.
     # config.active_record.whitelist_attributes = true
-
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     # Enable the asset pipeline
     config.assets.enabled = true

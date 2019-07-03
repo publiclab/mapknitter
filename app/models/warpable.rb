@@ -1,6 +1,9 @@
-class Warpable < ActiveRecord::Base
-  include ActiveModel::MassAssignmentSecurity
-  attr_accessible :image
+class Warpable < ApplicationRecord
+  # FIXME: - We should start using strong parameters here in favor of this below
+  # include ActiveModel::MassAssignmentSecurity
+  # attr_accessible :image
+
+  attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
   # Paperclip; config and production/development specific configs
@@ -15,8 +18,8 @@ class Warpable < ActiveRecord::Base
 
   validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
 
-  belongs_to :map
-  belongs_to :user
+  belongs_to :map, optional: true
+  belongs_to :user, optional: true
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})

@@ -16,10 +16,10 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     post(:create,
-         map_id: @map.slug,
+         params: { map_id: @map.slug,
          comment: {
            user_id: 1
-         })
+         }})
 
     assert_response :success
     assert_equal before_count, Comment.count
@@ -30,10 +30,10 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     post(:create,
-         comment: {
+         params: { comment: {
          map_id: @map.id,
            body: "I'm gonna troll you!"
-         })
+         }})
 
     assert_response :success
     assert_not_equal before_count, Comment.count
@@ -45,11 +45,11 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 4
 
     put(:update,
-        id: @comment.id,
+        params: { id: @comment.id,
         comment: {
           map_id: @map.id,
           body: "I'm gonna troll you!"
-        })
+        }})
 
     # refresh the object
     @comment.reload
@@ -63,11 +63,11 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     put(:update,
-        id: @comment.id,
+        params: { id: @comment.id,
         map_id: @map.slug,
         comment: {
           body: "I'm gonna troll you!"
-        })
+        }})
 
     @comment.reload
 
@@ -81,11 +81,11 @@ class CommentsControllerTest < ActionController::TestCase
     @comment = comments(:one)
 
     put(:update,
-        id: @comment.id,
+        params: { id: @comment.id,
         map_id: @map.slug,
         comment: {
           body: "I'm gonna troll you!"
-        })
+        }})
 
     @comment.reload
 
@@ -101,8 +101,8 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     delete(:destroy,
-           id: @comment.id,
-           map_id: @map.slug)
+           params: { id: @comment.id,
+           map_id: @map.slug})
 
     assert_redirected_to "/maps/" + @map.slug
     assert_not_equal before_count, Comment.count
@@ -115,8 +115,8 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     delete(:destroy,
-           id: @comment.id,
-           map_id: @map.slug)
+           params: { id: @comment.id,
+           map_id: @map.slug})
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -128,8 +128,8 @@ class CommentsControllerTest < ActionController::TestCase
     before_count = Comment.count
 
     delete(:destroy,
-           id: @comment.id,
-           map_id: @map.slug)
+           params: { id: @comment.id,
+           map_id: @map.slug})
 
     assert_redirected_to "/maps/" + @map.slug
     assert_equal before_count, Comment.count
@@ -141,10 +141,10 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @user.id
 
     post(:create,
-         comment: {
+         params: { comment: {
            map_id: @map.id,
            body: "I'm gonna troll you!"
-         })
+         }})
 
     assert_response :success
     assert_not @emails.collect(&:to).include?([@user.email])
@@ -155,10 +155,10 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = 3
 
     post(:create,
-         comment: {
+         params: { comment: {
       map_id: @map.id,
       body: "I'm gonna troll you!"
-         })
+         }})
 
     assert_response :success
     assert @emails.collect(&:to).include?([@user.email])
@@ -172,18 +172,18 @@ class CommentsControllerTest < ActionController::TestCase
     session[:user_id] = @chris.id
 
     post(:create,
-         comment: {
+         params: { comment: {
          map_id: @map.id,
            body: "I'm gonna troll you!"
-         })
+         }})
 
     session[:user_id] = @joshua.id
 
     post(:create,
-         comment: {
+         params: { comment: {
          map_id: @map.id,
            body: "Yeah we'll see!"
-         })
+         }})
 
     assert_response :success
     assert @emails.collect(&:to).include?([@chris.email])

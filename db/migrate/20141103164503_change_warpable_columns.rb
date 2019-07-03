@@ -1,4 +1,4 @@
-class ChangeWarpableColumns < ActiveRecord::Migration
+class ChangeWarpableColumns < ActiveRecord::Migration[5.2]
   def up
     rename_column(:warpables, :filename, :image_file_name)
     rename_column(:warpables, :content_type, :image_content_type)

@@ -1,4 +1,4 @@
-class AddUserRoleDefault < ActiveRecord::Migration
+class AddUserRoleDefault < ActiveRecord::Migration[5.2]
   def self.up
     change_column_default(:users, :role, "basic")
   end
