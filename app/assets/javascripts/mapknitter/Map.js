@@ -210,7 +210,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
 
 
-        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI });
+        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100)});
       }
     });
 
