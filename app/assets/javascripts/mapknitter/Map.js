@@ -175,7 +175,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           data = JSON.parse(data);
           console.log("in updateui: " + data);
           if (data.status == 'complete') clearInterval(exportInterval);
-          if (data.status == 'complete' && data.jpg !== null) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
+          if (data.status == 'complete' && data.jpg.match('.jpg')) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
         }
 
         var addUrlToModel = function addUrlToModel(data) {
