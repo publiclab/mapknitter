@@ -191,6 +191,12 @@ label small {
   display: none;
 }
 
+#near_maps{
+    img {
+        height: 300px;
+        width: 400px;
+    }
+}
 .login-form {
   width: 200px;
   padding: 10px;
