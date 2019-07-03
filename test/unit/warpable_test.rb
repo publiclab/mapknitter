@@ -22,7 +22,7 @@ class WarpableTest < ActiveSupport::TestCase
   test 'should output json format methods' do
     assert_not_nil @warp.as_json
     assert_equal Hash, @warp.as_json.class
-    assert_equal @warp.attributes.size + 2, @warp.as_json.size
+    assert_equal @warp.attributes.size + 3, @warp.as_json.size
 
     assert_not_nil @warp.fup_json
     assert_equal Hash, @warp.fup_json.class
