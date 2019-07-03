@@ -57,6 +57,7 @@ Mapknitter::Application.routes.draw do
   post 'maps/:map_id/warpables' => 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'export/progress/:id' => 'export#progress'
   get 'export/status/:id' => 'export#status'
+  post 'export' => 'export#create'
   get 'exports' => 'export#index'
   get 'map/:id', to: redirect('/maps/%{id}')
   get 'embed/:id' => 'maps#embed'
