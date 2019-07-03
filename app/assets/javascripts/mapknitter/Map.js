@@ -38,6 +38,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
+    var exportA = mapknitter.customExportAction();
+
+    var imgGroup = L.distortableCollection({
+      actions: [exportA]
+    }).addTo(map);
+
     /* Load warpables data via AJAX request. */
     this._warpablesUrl = options.warpablesUrl;
     this.withWarpables(function (warpables) {
@@ -110,11 +116,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
               mode: 'lock'
             }).addTo(map);
 
-          var exportA = mapknitter.customExportAction();
-
-          var imgGroup = L.distortableCollection({
-            actions: [exportA]
-          }).addTo(window.mapKnitter._map);
+          imgGroup.addLayer(img);
 
           bounds = bounds.concat(corners);
           window.mapKnitter._map.fitBounds(bounds);
@@ -177,7 +179,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           console.log("statusUrl: " + statusUrl);
 
           // repeatedly fetch the status.json
-          var updateInterval = function () {
+          var updateInterval = function updateInterval() {
             setInterval(function intervalUpdater() {
               $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
                 type: "GET",
@@ -198,7 +200,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
             type: 'POST',
             data: { status_url: statusUrl }
           }).done(function (data) {
-            console.log('success!!' + data);
+            console.log('success!! ' + data);
             updateInterval();
           });
         }
@@ -212,7 +214,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   setupEvents: function (e) {
-    console.log("get");
     var img = e.layer;
 
     L.DomEvent.on(img._image, 'mouseup', window.mapKnitter.saveImageIfChanged, img);
