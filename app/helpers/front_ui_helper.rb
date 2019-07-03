@@ -1,7 +1,6 @@
 module FrontUiHelper
   def profile_image(author)
-    img = author&.warpables&.last&.image&.url
-    img ||= "/images/yarn.png"
+    author&.warpables&.last&.image&.url || "/images/yarn.png"
   end
 
   def anonymous(maps)

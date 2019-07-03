@@ -2,12 +2,10 @@ require 'test_helper'
 
 class MapsControllerTest < ActionController::TestCase
 
-  # called before every single test
   def setup
     @map = maps(:saugus)
   end
 
-  # called after every single test
   def teardown
   end
 
@@ -67,6 +65,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert !@maps.collect(&:name).include?('Cubbon Park')
+    assert_template 'front_ui/gallery'
   end
 
   test 'should search for maps by location' do
@@ -74,17 +73,31 @@ class MapsControllerTest < ActionController::TestCase
     @maps = assigns(:maps)
 
     assert_response :success
+    assert_equal "Search results for 'India'", assigns(:title)
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
+    assert_template 'front_ui/gallery'
   end
 
   test 'should search for maps by description' do
     get :search, q: 'a park'
     @maps = assigns(:maps)
 
-    assert_response :success
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
+    assert_response :success
+    assert_template 'front_ui/gallery'
+  end
+
+  test 'query should be at least 3 chars long' do
+    get :search, q: 'ce'
+    msg = 'Invalid Query: non white-space character count is less than 3'
+
+    assert_response :success
+    assert flash.present?
+    assert_not_nil assigns(:authors)
+    assert_equal msg, flash[:info]
+    assert_template 'front_ui/gallery'
   end
 
   test 'should create map if logged in' do
