@@ -169,9 +169,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       addHooks: function () {
         var group = this._overlay;
+        var exportInterval;
 
         var updateUI = function updateUI(data) {
           console.log("in updateui: " + data);
+          if (data.jpg !== 'null') alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
+          if (data.status == 'complete') clearInterval(exportInterval);
         }
 
         var addUrlToModel = function addUrlToModel(data) {
@@ -180,8 +183,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           // repeatedly fetch the status.json
           var updateInterval = function updateInterval() {
-            setInterval(function intervalUpdater() {
-console.log(statusUrl + "?" + Date.now());
+            exportInterval = setInterval(function intervalUpdater() {
               $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
                 type: "GET",
                 crossDomain: true
