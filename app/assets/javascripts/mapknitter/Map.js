@@ -172,6 +172,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         var exportInterval;
 
         var updateUI = function updateUI(data) {
+          data = JSON.parse(data);
           console.log("in updateui: " + data);
           if (data.jpg !== 'null') alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
           if (data.status == 'complete') clearInterval(exportInterval);
