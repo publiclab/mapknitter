@@ -170,17 +170,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
       addHooks: function () {
         var group = this._overlay;
 
-        var updateUI = function (data) {
+        var updateUI = function updateUI(data) {
           console.log("in updateui: " + data);
         }
 
-        var addUrlToModel = function (data) {
+        var addUrlToModel = function addUrlToModel(data) {
           var statusUrl = "//export.mapknitter.org" + data;
           console.log("statusUrl: " + statusUrl);
 
           // repeatedly fetch the status.json
           var updateInterval = function updateInterval() {
             setInterval(function intervalUpdater() {
+console.log(statusUrl + "?" + Date.now());
               $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
                 type: "GET",
                 crossDomain: true
