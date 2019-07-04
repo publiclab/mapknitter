@@ -50,7 +50,11 @@
       <%end%>
       <% @map.warpables.each do |warpable| %>
         <div style="display: inline-grid;" id="warpable-<%= warpable.id %>">
-        <p class="warpable export-warpable" style="margin-right: 20px;">
+          <% if warpable.placed? %>
+            <p class="warpable export-warpable" style="margin-right: 20px;">
+          <% else %>
+            <p class="warpable" rel="tooltip" title="This image has not yet been placed on the map." style="margin-right: 20px; opacity: 0.5; cursor: not-allowed;">
+          <% end %>
           <%= image_tag warpable.image.url(:thumb),
               :'data-warpable-id' => warpable.id,
               :'data-map-id' => @map.id,
