@@ -2,6 +2,8 @@ Mapknitter::Application.routes.draw do
 
   root to: 'front_ui#index'
 
+  mount ActionCable.server => '/cable'
+
   get 'front-page', to: 'front_ui#index'
   get 'mappers', to: 'front_ui#nearby_mappers'
   get 'about', to: 'front_ui#about'
