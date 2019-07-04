@@ -25,16 +25,8 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y
 RUN npm install -g yarn
 
 # Install bundle of gems
-SHELL [ "/bin/bash", "-l", "-c" ]
-WORKDIR /tmp
-ADD Gemfile /tmp/Gemfile
-ADD Gemfile.lock /tmp/Gemfile.lock
-RUN bundle install
-
 # Add the Rails app
+COPY . /app/
 WORKDIR /app
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-COPY start.sh /app/start.sh
 
-CMD [ "bash", "-l", "start.sh" ]
+CMD [ "sh", "/app/start.sh" ]
