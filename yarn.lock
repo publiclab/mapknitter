@@ -1478,14 +1478,6 @@ lazy-cache@^1.0.3:
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
   integrity sha1-odePw6UEdMuAhF07O24dpJpEbo4=
 
-"leaflet-blurred-location@git://github.com/publiclab/leaflet-blurred-location#main":
-  version "1.3.0"
-  resolved "git://github.com/publiclab/leaflet-blurred-location#1bff37cb96518bd87192277b14c290cba3c138ba"
-  dependencies:
-    haversine-distance "^1.1.4"
-    jquery "^3.2.1"
-    leaflet "^1.3.3"
-
 "leaflet-blurred-location@git://github.com/publiclab/leaflet-blurred-location.git#main":
   version "1.3.0"
   resolved "git://github.com/publiclab/leaflet-blurred-location.git#1bff37cb96518bd87192277b14c290cba3c138ba"
@@ -1511,9 +1503,9 @@ leaflet-draw@Leaflet/Leaflet.draw#0.2.4:
   resolved "https://codeload.github.com/Leaflet/Leaflet.draw/tar.gz/07b1448f4eba33982f662398988f0337ee55cc02"
 
 leaflet-environmental-layers@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/leaflet-environmental-layers/-/leaflet-environmental-layers-1.3.4.tgz#e55ad9c8a99b9d56326a7edaf08fc01df2857994"
-  integrity sha512-HX8VhEYoiuxAWbXM7bgwAc944Qy42S3Y/25FbjWRu2uaUeKVzevTdfeCMQc72Y7baaueprHODHCmdx/2Lq62mw==
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/leaflet-environmental-layers/-/leaflet-environmental-layers-1.3.5.tgz#67b3948f655b2262b059b3c9cfdbabb2cc8ce5a6"
+  integrity sha512-aX+B1FkDb/J1z/celWuVqQY2HLjgrtM1pERYXBmiR28RaFKeRQk5eUpZS6vkep+ZpTS+6e3wLB3ZqOWA+bLybQ==
   dependencies:
     jquery "^3.3.1"
     leaflet "^1.3.1"
