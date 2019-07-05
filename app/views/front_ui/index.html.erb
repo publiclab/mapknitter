@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
 <%= stylesheet_link_tag "/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" %>
 <%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
-<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/windRoseLayer.js') %>
+<%= javascript_include_tag('/lib/leaflet-environmental-layers/src/windRoseLayer.js') %>
 <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
@@ -135,14 +135,21 @@
     </div>
 </div>
 
-<br><br><br>
+<div class="section-header text-center">
+    <h2 class="section-title">How it works</h2>
+</div>
 
 <div class="container-fluid text-center activities">
     <div class="row">
-        <div class="col-md-12">
-          <h3>How it works</h3>
+        <div class="col-md-6">
+          <h4 class="section-title">Take aerial photos</h4>
+          <p>Use a kite, balloon, or pole to take aerial photos - using a camera on a timer.  Or take photos out the window of an airplane.</p>
+          <p><a href="https://publiclab.org/balloon-mapping"><img src="https://publiclab.org/system/images/photos/000/020/851/original/stormwater.jpg" /></a></p>
+        </div>
+        <div class="col-md-6">
+          <h4 class="section-title">Combine them into a map</h4>
           <p>Upload images and stretch them to create a mosaic of aerial photos, then save them as a map. See the Activities below for more!</p>
-          <p><img src="https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif" /></p>
+          <p><a href="https://publiclab.org/notes/warren/04-06-2017/stitching-images-into-maps-with-mapknitter"><img src="https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif" /></a></p>
         </div>
     </div>
 </div>
@@ -183,19 +190,6 @@
     defaultLoc = places[parseInt(Math.random() * places.length)];
   }
   randomizeVals();
-  function displayFeaturedPlaces() {
-    shuffleArray(places);
-    places.forEach(function(place, i) {
-      // use "mapknitter.org#8/29.884/-90.172/" style easyHash links
-      var locHash = '#' + place.zoom + '/' + place.lat + '/' + place.lng + '/';
-      $('.featured-places').append('<a class="place-' + i + '" href="javascript:void(0);">' + place.name + '</a>');
-      $('.featured-places .place-' + i).click(function click() {
-        var loc = hash.parseHash(locHash).center;
-        Mapknitterunique.flyTo(loc)
-      });
-    });
-  }
-  displayFeaturedPlaces();
 
   /**
    * Randomize array element order in-place.
@@ -216,6 +210,22 @@
 
   var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
   var hash = new L.Hash(Mapknitterunique);
+
+  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
+
+  function displayFeaturedPlaces() {
+    shuffleArray(places);
+    places.forEach(function(place, i) {
+      // use "mapknitter.org#8/29.884/-90.172/" style easyHash links
+      var locHash = '#' + place.zoom + '/' + place.lat + '/' + place.lng + '/';
+      $('.featured-places').append('<a class="place-' + i + '" href="javascript:void(0);">' + place.name + '</a>');
+      $('.featured-places .place-' + i).click(function click() {
+        var loc = hash.parseHash(locHash);
+        Mapknitterunique.flyTo(loc.center, loc.zoom)
+      });
+    });
+  }
+  displayFeaturedPlaces();
 
   Mapknitterunique.locate({setView: true, minZoom : 2, maxZoom: 12});
 
@@ -264,7 +274,6 @@
     }
   });
 
-  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
 
   var baseMaps = {
     "Baselayer1": baselayer
