@@ -31,8 +31,19 @@ body {
   margin-left: 10px;
 }
 
+.navbar-nav:hover .login-form{
+  display:block;
+  margin-top: 0;
+}
+
 @media(max-width: 992px) {
   .navbar-nav .navbar-form {
     margin-top: 10px;
   }
+
+  .navbar-nav:hover .login-form,
+  .navbar-nav:hover .login-form{
+  display:block;
+  margin-top: 0;
+}
 }
