@@ -34,6 +34,11 @@
   overflow: scroll;
   position: absolute;
 }
+@media(max-width: 780px) {
+  .before-featured-map {
+    margin-bottom: 50px;
+  }
+}
 </style>
 
 <!-- jumbotron with background-image -->
@@ -64,7 +69,7 @@
   </div>
 </div>
 
-<br style="clear:both;" />
+<br class="before-featured-map" style="clear:both;" />
 
 <% if @mappers.any? %>
     <div class="section-header text-center">
