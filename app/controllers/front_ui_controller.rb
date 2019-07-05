@@ -43,11 +43,11 @@ class FrontUiController < ApplicationController
   end
 
   def view_map
-    # @map = Map.find_by(slug: params[:id])
-    @map= Map.last
+    @map = Map.find_by(slug: params[:id])
     @map.zoom ||= 12
-    @embed = true
-    # render template: 'maps/show'
+    @mappers = User.where(login: Map.featured.collect(&:author))
+                                    .sample(4)
+    @unpaginated = true
   end
 
   def about; end

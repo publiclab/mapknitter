@@ -11,12 +11,27 @@
 
 <div class="container-fluid">
   <div id="mapknitter-unique" style="height: 300px ; width: 100% ;  margin-bottom: 1%; z-index: 5;"></div>
-  <br><br> <br>
+  
+  <div class="text-center lead-text">
+  <p class="text-muted"> a Community Atlas of </p>
+  <h2>Nairobi </h2>
+  </div>
+  <br> <br>
   <div class="row text-center" id="info">
       <div class="col-md-4 col-sm-5 offset-1">
           <i class="fas fa-globe"  style="color:gray;"></i>
           <h3>Make your own map </h3>
           <p>Use a kite, balloon, pole or drone to take an aerial photo and tell your own visual story of the place </p>
+          <br> <br>
+          <p>
+            <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
+                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
+            </a>
+            <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
+                Add your images <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+            </a>
+            </p>
+
                </div>
       <div class="col-md-4 col-sm-5 offset-1">
           <i class="fa fa-industry"  style="color:gray;"></i>
@@ -83,25 +98,28 @@
   <br><br>
       </div>
   </div>
-  <div class="container-fluid" id ="light-blue">
-    <div class="section-header text-center">
-        <h2 class="section-title">Featured Mappers</h2>
+</div>
+
+<div class="container-fluid" id ="light-blue">
+    <br>
+    <div class="section-header mt-4" id="all-maps" >
+        <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
     </div>
-    <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
-  </div>
+</div>
+
   <div class="container-fluid">
-      <div class="row text-center" id="info">
+      <div class="row text-center lead-text" id="info">
           <div class="col-md-4 col-sm-5 offset-1">
-              <span class="fa-stack" style="vertical-align: bottom; color:gray; font-size:4em;">
+              <span class="fa-stack" style="vertical-align: bottom; color:gray; font-size:3em;">
                   <i class="far fa-comment-alt fa-stack-2x" ></i>
-                  <i class="fas fa-question fa-question fa-stack-1x" style="font-size:0.7em;" ></i>
+                  <i class="fas fa-question fa-question fa-stack-1x" style="font-size:0.6em;" ></i>
               </span>
               <br><br>
               <h3>Ask a question</h3>
               <br>
               <p> Get help from others and share ideas with the PublicLab Community</p>
-  <br>
-              <p> <%= link_to "Ask a question", '#', class: "btn btn-lg btn-primary" %></p>
+              <br>
+              <p> <%= link_to "Ask a question", 'https://publiclab.org/questions/new', target: 'blank', class: "btn btn-lg btn-primary" %></p>
           </div>
           <div class="col-md-4 col-sm-5 offset-1">
               <i class="fas fa-binoculars"></i>
@@ -109,7 +127,7 @@
               <h3>Projects/ Requests for observations</h3>
               <br>
               <p> Community observations and moitoring are a key source of environmental data. Help add to one of the [projects] here. Read more or post your oen call for input</p>
-              <p> <%= link_to "Post an Observation", '#', class: "btn btn-outline-secondary btn-lg" %></p>
+              <p> <%= link_to "Post an Observation", 'https://publiclab.org/post', target: 'blank', class: "btn btn-outline-secondary btn-lg" %></p>
 
           </div>
       </div>
