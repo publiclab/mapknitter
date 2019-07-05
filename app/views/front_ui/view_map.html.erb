@@ -9,9 +9,12 @@
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
 
-<div class="container-fluid">
-<div id="mapknitter-unique" class="mx-auto" style="height: 400px; width: 100%;"></div>
-  
+<div id="mapknitter-unique" style="height: 400px; width: 100%;  margin-bottom: 1%; z-index: 5;"> </div>
+<button class=  "btn btn-primary" style= "position: absolute; top: 380px;left: 10px; padding: 10px; z-index: 40;" >
+<i class="fas fa-pencil-alt"> </i> Edit this map
+</button>
+    <div class="container-fluid">
+    <%# <%= link_to 'Edit this map', '#', class: 'btn btn-primary', id: 'edit-map' %1> %>
   <div class="text-center lead-text">
   <p class="text-muted"> a Community Atlas of </p>
   <h2><%= @map.location %> </h2>
