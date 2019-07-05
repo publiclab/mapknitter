@@ -184,7 +184,7 @@ After this repeat installation and configuration steps
 
 Add the username and passsword on the `config/database.yml` development:
 
-Note: _You can use MariaDB in development for as you database if you are more comfortable with it_
+Note: _You can use MariaDB in development as your database if you are more comfortable with it_
 
 ## Troubleshooting
 

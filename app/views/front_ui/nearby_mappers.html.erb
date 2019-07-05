@@ -1,13 +1,13 @@
 <% if @nearby_maps.any? %>
-  <div class="section-header mt-4">
-    <h2 class="section-title text-center">Maps near you</h2>
-    <hr style="max-width: 300px;">
-	<%= render :partial => 'maps', :locals => { :maps => @nearby_maps } %>
-  </div>
+    <div class="section-header mt-4" id="near_maps">
+        <h2 class="section-title text-center">Maps near you</h2>
+        <hr style="max-width: 300px;">
+        <%= render :partial => 'maps', :locals => { :maps => @nearby_maps } %>
+    </div>
 <% end %>
 
 <div class="section-header text-center mt-4">
-  <h2 class="section-title">Featured Mappers</h2>
-  <hr style="max-width: 300px;">
+    <h2 class="section-title">Featured Mappers</h2>
+    <hr style="max-width: 300px;">
 </div>
-<%= render :partial => 'featured_mappers', :locals => { :mappers => @all_mappers } %>
+<%= render :partial => 'featured_mappers', :locals => { :mappers => @nearby_mappers } %>

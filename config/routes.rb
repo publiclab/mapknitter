@@ -1,9 +1,11 @@
 Mapknitter::Application.routes.draw do
 
-  root :to => 'maps#index'
+  root :to => 'front_ui#index'
 
+  get 'legacy' => 'maps#index' # remove once new front page is stable
   get 'front-page' => 'front_ui#index'
   get 'mappers' => 'front_ui#nearby_mappers'
+  get 'gallery' => 'front_ui#gallery'
   post "save_location" => 'front_ui#save_location'
   get 'about' => 'front_ui#about'
   get 'all_maps' => 'front_ui#all_maps'
@@ -55,6 +57,7 @@ Mapknitter::Application.routes.draw do
   post 'maps/:map_id/warpables' => 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'export/progress/:id' => 'export#progress'
   get 'export/status/:id' => 'export#status'
+  post 'export' => 'export#create'
   get 'exports' => 'export#index'
   get 'map/:id', to: redirect('/maps/%{id}')
   get 'embed/:id' => 'maps#embed'
