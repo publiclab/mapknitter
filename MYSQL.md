@@ -1,4 +1,21 @@
+<<<<<<< Updated upstream
 # MySQL Installation
+=======
+# installation troubleshooting & instructions 
+
+## System Agnostic 
+
+- bundler skipping over **mysql2** gem?
+
+```Bash 
+
+$ ç
+
+$ bundle exec bundle install
+
+```
+
+>>>>>>> Stashed changes
 
 ## Instructions
 

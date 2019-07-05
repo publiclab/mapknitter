@@ -22,6 +22,7 @@ Mapknitter::Application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
+<<<<<<< Updated upstream
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
@@ -38,6 +39,14 @@ Mapknitter::Application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+=======
+  # Raise exception on mass assignment protection for Active Record models
+  
+
+  # Log the query plan for queries taking more than this (works
+  # with SQLite, MySQL, and PostgreSQL)
+
+>>>>>>> Stashed changes
 
   # Do not compress assets
   config.assets.compress = false

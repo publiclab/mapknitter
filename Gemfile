@@ -29,6 +29,10 @@ group :dependencies do
   # for rake image migration tasks
   # gem 'right_aws'
   gem 'right_aws_api'
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
   # compiling markdown to html
   gem "rdiscount", "2.2.0.1"
@@ -45,7 +49,11 @@ group :dependencies do
 end
 
 group :test do
+<<<<<<< Updated upstream
   gem 'rubocop', '~> 0.52.0'
+=======
+  gem "rubocop", '~> 0.64.0'
+>>>>>>> Stashed changes
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'simplecov', require: false

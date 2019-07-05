@@ -32,8 +32,13 @@ Mapknitter::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+<<<<<<< Updated upstream
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
+=======
+  # Raise exception on mass assignment protection for Active Record models
+
+>>>>>>> Stashed changes
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr

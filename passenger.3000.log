@@ -1,0 +1,368 @@
+[ N 2019-05-30 23:20:02.1624 54766/T1 age/Wat/WatchdogMain.cpp:1366 ]: Starting Passenger watchdog...
+[ N 2019-05-30 23:20:02.1906 54768/T1 age/Cor/CoreMain.cpp:1339 ]: Starting Passenger core...
+[ N 2019-05-30 23:20:02.1907 54768/T1 age/Cor/CoreMain.cpp:256 ]: Passenger core running in multi-application mode.
+[ N 2019-05-30 23:20:02.2172 54768/T1 age/Cor/CoreMain.cpp:1014 ]: Passenger core online, PID 54768
+[ N 2019-05-30 23:20:04.7492 54768/T5 age/Cor/SecurityUpdateChecker.h:519 ]: Security update check: no update found (next check in 24 hours)
+App 54793 output: DEPRECATION WARNING: Support for Rails versions before 4.2 is deprecated and will be removed from skylight 2.0. (called from require at /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81)
+App 54793 output: Error: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/mysql2-0.3.21/lib/mysql2.rb:31:in `<top (required)>'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `require'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `block (2 levels) in require'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `each'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `block in require'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `each'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `require'
+App 54793 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler.rb:114:in `require'
+App 54793 output:     /Users/olga/Documents/GitHub/mapknitter/config/application.rb:7:in `<top (required)>'
+App 54793 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `require'
+App 54793 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `<top (required)>'
+App 54793 output:     config.ru:3:in `require'
+App 54793 output:     config.ru:3:in `block in <main>'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `instance_eval'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `initialize'
+App 54793 output:     config.ru:1:in `new'
+App 54793 output:     config.ru:1:in `<main>'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `eval'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `preload_app'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:189:in `block in <module:App>'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/ruby_supportlib/phusion_passenger/loader_shared_helpers.rb:380:in `run_block_and_record_step_progress'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:188:in `<module:App>'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+App 54793 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+[ E 2019-05-30 23:20:05.1133 54768/Tz age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+  Error ID: e4e91d34
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-l7n092.html
+
+[ E 2019-05-30 23:20:05.1226 54768/T8 age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 1-1] Cannot checkout session because a spawning error occurred. The identifier of the error is e4e91d34. Please see earlier logs for details about the error.
+
+[ N 2019-05-30 23:21:40.5989 54768/T8 age/Cor/CoreMain.cpp:671 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ N 2019-05-30 23:21:40.5989 54768/T1 age/Cor/CoreMain.cpp:1245 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ N 2019-05-30 23:21:40.5990 54768/T8 Ser/Server.h:901 ]: [ServerThr.1] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/To Ser/Server.h:901 ]: [ServerThr.9] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Tf Ser/Server.h:901 ]: [ServerThr.4] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Ts Ser/Server.h:901 ]: [ServerThr.11] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5992 54768/Tf Ser/Server.h:558 ]: [ServerThr.4] Shutdown finished
+[ N 2019-05-30 23:21:40.5991 54768/Tq Ser/Server.h:901 ]: [ServerThr.10] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Tu Ser/Server.h:901 ]: [ServerThr.12] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/T8 Ser/Server.h:558 ]: [ServerThr.1] Shutdown finished
+[ N 2019-05-30 23:21:40.5993 54768/Tu Ser/Server.h:558 ]: [ServerThr.12] Shutdown finished
+[ N 2019-05-30 23:21:40.5993 54768/Tw Ser/Server.h:901 ]: [ApiServer] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Tc Ser/Server.h:901 ]: [ServerThr.3] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Tk Ser/Server.h:901 ]: [ServerThr.7] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5994 54768/Tw Ser/Server.h:558 ]: [ApiServer] Shutdown finished
+[ N 2019-05-30 23:21:40.5995 54768/Tk Ser/Server.h:558 ]: [ServerThr.7] Shutdown finished
+[ N 2019-05-30 23:21:40.5991 54768/Ti Ser/Server.h:901 ]: [ServerThr.6] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Ta Ser/Server.h:901 ]: [ServerThr.2] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5991 54768/Tm Ser/Server.h:901 ]: [ServerThr.8] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5992 54768/Ts Ser/Server.h:558 ]: [ServerThr.11] Shutdown finished
+[ N 2019-05-30 23:21:40.5993 54768/Tq Ser/Server.h:558 ]: [ServerThr.10] Shutdown finished
+[ N 2019-05-30 23:21:40.5996 54768/Tm Ser/Server.h:558 ]: [ServerThr.8] Shutdown finished
+[ N 2019-05-30 23:21:40.5991 54768/Th Ser/Server.h:901 ]: [ServerThr.5] Freed 0 spare client objects
+[ N 2019-05-30 23:21:40.5996 54768/Ta Ser/Server.h:558 ]: [ServerThr.2] Shutdown finished
+[ N 2019-05-30 23:21:40.5995 54768/Ti Ser/Server.h:558 ]: [ServerThr.6] Shutdown finished
+[ N 2019-05-30 23:21:40.5994 54768/Tc Ser/Server.h:558 ]: [ServerThr.3] Shutdown finished
+[ N 2019-05-30 23:21:40.5991 54768/To Ser/Server.h:558 ]: [ServerThr.9] Shutdown finished
+[ N 2019-05-30 23:21:40.5997 54768/Th Ser/Server.h:558 ]: [ServerThr.5] Shutdown finished
+[ N 2019-05-30 23:21:41.2324 54768/T1 age/Cor/CoreMain.cpp:1324 ]: Passenger core shutdown finished
+[ N 2019-05-30 23:21:45.8998 54844/T1 age/Wat/WatchdogMain.cpp:1366 ]: Starting Passenger watchdog...
+[ N 2019-05-30 23:21:45.9272 54846/T1 age/Cor/CoreMain.cpp:1339 ]: Starting Passenger core...
+[ N 2019-05-30 23:21:45.9274 54846/T1 age/Cor/CoreMain.cpp:256 ]: Passenger core running in multi-application mode.
+[ N 2019-05-30 23:21:45.9538 54846/T1 age/Cor/CoreMain.cpp:1014 ]: Passenger core online, PID 54846
+[ N 2019-05-30 23:21:48.3882 54846/T5 age/Cor/SecurityUpdateChecker.h:519 ]: Security update check: no update found (next check in 24 hours)
+App 54870 output: DEPRECATION WARNING: Support for Rails versions before 4.2 is deprecated and will be removed from skylight 2.0. (called from require at /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81)
+App 54870 output: Error: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/mysql2-0.3.21/lib/mysql2.rb:31:in `<top (required)>'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `require'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `block (2 levels) in require'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `each'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `block in require'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `each'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `require'
+App 54870 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler.rb:114:in `require'
+App 54870 output:     /Users/olga/Documents/GitHub/mapknitter/config/application.rb:7:in `<top (required)>'
+App 54870 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `require'
+App 54870 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `<top (required)>'
+App 54870 output:     config.ru:3:in `require'
+App 54870 output:     config.ru:3:in `block in <main>'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `instance_eval'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `initialize'
+App 54870 output:     config.ru:1:in `new'
+App 54870 output:     config.ru:1:in `<main>'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `eval'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `preload_app'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:189:in `block in <module:App>'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/ruby_supportlib/phusion_passenger/loader_shared_helpers.rb:380:in `run_block_and_record_step_progress'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:188:in `<module:App>'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+App 54870 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+[ E 2019-05-30 23:21:48.8670 54846/Tz age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+  Error ID: b4227714
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-p9TXQq.html
+
+[ E 2019-05-30 23:21:48.8761 54846/T8 age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 1-1] Cannot checkout session because a spawning error occurred. The identifier of the error is b4227714. Please see earlier logs for details about the error.
+App 54906 output: DEPRECATION WARNING: Support for Rails versions before 4.2 is deprecated and will be removed from skylight 2.0. (called from require at /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81)
+App 54906 output: Error: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/mysql2-0.3.21/lib/mysql2.rb:31:in `<top (required)>'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `require'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81:in `block (2 levels) in require'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `each'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:76:in `block in require'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `each'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:65:in `require'
+App 54906 output:     /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler.rb:114:in `require'
+App 54906 output:     /Users/olga/Documents/GitHub/mapknitter/config/application.rb:7:in `<top (required)>'
+App 54906 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `require'
+App 54906 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:2:in `<top (required)>'
+App 54906 output:     config.ru:3:in `require'
+App 54906 output:     config.ru:3:in `block in <main>'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `instance_eval'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `initialize'
+App 54906 output:     config.ru:1:in `new'
+App 54906 output:     config.ru:1:in `<main>'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `eval'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `preload_app'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:189:in `block in <module:App>'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/ruby_supportlib/phusion_passenger/loader_shared_helpers.rb:380:in `run_block_and_record_step_progress'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:188:in `<module:App>'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+App 54906 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+[ E 2019-05-30 23:21:59.7327 54846/T14 age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application encountered the following error: cannot load such file -- mysql2/mysql2 (LoadError)
+  Error ID: 06de17b4
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-BkAqqd.html
+
+[ E 2019-05-30 23:21:59.7416 54846/Ta age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 2-1] Cannot checkout session because a spawning error occurred. The identifier of the error is 06de17b4. Please see earlier logs for details about the error.
+
+[ N 2019-05-30 23:22:33.1475 54846/T8 age/Cor/CoreMain.cpp:671 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ N 2019-05-30 23:22:33.1475 54846/T1 age/Cor/CoreMain.cpp:1245 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ N 2019-05-30 23:22:33.1476 54846/T8 Ser/Server.h:901 ]: [ServerThr.1] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1476 54846/Tk Ser/Server.h:901 ]: [ServerThr.7] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1476 54846/Ti Ser/Server.h:901 ]: [ServerThr.6] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1477 54846/T8 Ser/Server.h:558 ]: [ServerThr.1] Shutdown finished
+[ N 2019-05-30 23:22:33.1476 54846/Tc Ser/Server.h:901 ]: [ServerThr.3] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1477 54846/Ts Ser/Server.h:901 ]: [ServerThr.11] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1478 54846/Tc Ser/Server.h:558 ]: [ServerThr.3] Shutdown finished
+[ N 2019-05-30 23:22:33.1476 54846/Ta Ser/Server.h:901 ]: [ServerThr.2] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1477 54846/Tu Ser/Server.h:901 ]: [ServerThr.12] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1476 54846/Tg Ser/Server.h:901 ]: [ServerThr.5] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1476 54846/Te Ser/Server.h:901 ]: [ServerThr.4] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1478 54846/Ta Ser/Server.h:558 ]: [ServerThr.2] Shutdown finished
+[ N 2019-05-30 23:22:33.1479 54846/Tu Ser/Server.h:558 ]: [ServerThr.12] Shutdown finished
+[ N 2019-05-30 23:22:33.1477 54846/Ti Ser/Server.h:558 ]: [ServerThr.6] Shutdown finished
+[ N 2019-05-30 23:22:33.1479 54846/Te Ser/Server.h:558 ]: [ServerThr.4] Shutdown finished
+[ N 2019-05-30 23:22:33.1479 54846/Tg Ser/Server.h:558 ]: [ServerThr.5] Shutdown finished
+[ N 2019-05-30 23:22:33.1478 54846/Tw Ser/Server.h:901 ]: [ApiServer] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1476 54846/To Ser/Server.h:901 ]: [ServerThr.9] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1480 54846/Tw Ser/Server.h:558 ]: [ApiServer] Shutdown finished
+[ N 2019-05-30 23:22:33.1478 54846/Ts Ser/Server.h:558 ]: [ServerThr.11] Shutdown finished
+[ N 2019-05-30 23:22:33.1477 54846/Tk Ser/Server.h:558 ]: [ServerThr.7] Shutdown finished
+[ N 2019-05-30 23:22:33.1477 54846/Tn Ser/Server.h:901 ]: [ServerThr.8] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1480 54846/To Ser/Server.h:558 ]: [ServerThr.9] Shutdown finished
+[ N 2019-05-30 23:22:33.1477 54846/Tq Ser/Server.h:901 ]: [ServerThr.10] Freed 0 spare client objects
+[ N 2019-05-30 23:22:33.1480 54846/Tn Ser/Server.h:558 ]: [ServerThr.8] Shutdown finished
+[ N 2019-05-30 23:22:33.1480 54846/Tq Ser/Server.h:558 ]: [ServerThr.10] Shutdown finished
+[ N 2019-05-30 23:22:33.6674 54846/T1 age/Cor/CoreMain.cpp:1324 ]: Passenger core shutdown finished
+[ N 2019-05-30 23:23:14.3028 54986/T1 age/Wat/WatchdogMain.cpp:1366 ]: Starting Passenger watchdog...
+[ N 2019-05-30 23:23:14.3337 54988/T1 age/Cor/CoreMain.cpp:1339 ]: Starting Passenger core...
+[ N 2019-05-30 23:23:14.3339 54988/T1 age/Cor/CoreMain.cpp:256 ]: Passenger core running in multi-application mode.
+[ N 2019-05-30 23:23:14.3603 54988/T1 age/Cor/CoreMain.cpp:1014 ]: Passenger core online, PID 54988
+[ N 2019-05-30 23:23:16.8007 54988/T5 age/Cor/SecurityUpdateChecker.h:519 ]: Security update check: no update found (next check in 24 hours)
+App 55005 output: DEPRECATION WARNING: Support for Rails versions before 4.2 is deprecated and will be removed from skylight 2.0. (called from require at /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81)
+App 55005 output: [SKYLIGHT] [1.7.2] Running Skylight in development mode. No data will be reported until you deploy your app.
+App 55005 output: (To disable this message for all local apps, run `skylight disable_dev_warning`.)
+App 55005 output: Error: The application encountered the following error: Please install the mysql2 adapter: `gem install activerecord-mysql2-adapter` (cannot load such file -- mysql2/mysql2) (LoadError)
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/mysql2-0.3.21/lib/mysql2.rb:31:in `<top (required)>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/mysql2_adapter.rb:4:in `<top (required)>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:50:in `resolve_hash_connection'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:41:in `resolve_string_connection'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:25:in `spec'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:130:in `establish_connection'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/railtie.rb:88:in `block (2 levels) in <class:Railtie>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:36:in `instance_eval'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:36:in `execute_hook'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:43:in `block in run_load_hooks'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:42:in `each'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:42:in `run_load_hooks'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/base.rb:720:in `<top (required)>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55005 output:     /Users/olga/Documents/GitHub/mapknitter/config/initializers/column_definition.rb:19:in `<class:ColumnDefinition>'
+App 55005 output:     /Users/olga/Documents/GitHub/mapknitter/config/initializers/column_definition.rb:17:in `<top (required)>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `load'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `block in load'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `load'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:593:in `block (2 levels) in <class:Engine>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:592:in `each'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:592:in `block in <class:Engine>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:30:in `instance_exec'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:30:in `run'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:55:in `block in run_initializers'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:54:in `each'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:54:in `run_initializers'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/application.rb:136:in `initialize!'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/railtie/configurable.rb:30:in `method_missing'
+App 55005 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:5:in `<top (required)>'
+App 55005 output:     config.ru:3:in `require'
+App 55005 output:     config.ru:3:in `block in <main>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `instance_eval'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `initialize'
+App 55005 output:     config.ru:1:in `new'
+App 55005 output:     config.ru:1:in `<main>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `eval'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `preload_app'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:189:in `block in <module:App>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/ruby_supportlib/phusion_passenger/loader_shared_helpers.rb:380:in `run_block_and_record_step_progress'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:188:in `<module:App>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+App 55005 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+[ E 2019-05-30 23:23:17.8306 54988/Tz age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application encountered the following error: Please install the mysql2 adapter: `gem install activerecord-mysql2-adapter` (cannot load such file -- mysql2/mysql2) (LoadError)
+  Error ID: 41de7478
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-RB6FO0.html
+
+[ E 2019-05-30 23:23:17.8402 54988/T9 age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 1-1] Cannot checkout session because a spawning error occurred. The identifier of the error is 41de7478. Please see earlier logs for details about the error.
+App 55052 output: DEPRECATION WARNING: Support for Rails versions before 4.2 is deprecated and will be removed from skylight 2.0. (called from require at /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:81)
+App 55052 output: [SKYLIGHT] [1.7.2] Running Skylight in development mode. No data will be reported until you deploy your app.
+App 55052 output: (To disable this message for all local apps, run `skylight disable_dev_warning`.)
+App 55052 output: Error: The application encountered the following error: Please install the mysql2 adapter: `gem install activerecord-mysql2-adapter` (cannot load such file -- mysql2/mysql2) (LoadError)
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/mysql2-0.3.21/lib/mysql2.rb:31:in `<top (required)>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/mysql2_adapter.rb:4:in `<top (required)>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:50:in `resolve_hash_connection'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:41:in `resolve_string_connection'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:25:in `spec'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:130:in `establish_connection'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/railtie.rb:88:in `block (2 levels) in <class:Railtie>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:36:in `instance_eval'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:36:in `execute_hook'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:43:in `block in run_load_hooks'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:42:in `each'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/lazy_load_hooks.rb:42:in `run_load_hooks'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activerecord-3.2.22.5/lib/active_record/base.rb:720:in `<top (required)>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/skylight-1.7.2/lib/skylight/probes.rb:119:in `require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `block in require'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:251:in `require'
+App 55052 output:     /Users/olga/Documents/GitHub/mapknitter/config/initializers/column_definition.rb:19:in `<class:ColumnDefinition>'
+App 55052 output:     /Users/olga/Documents/GitHub/mapknitter/config/initializers/column_definition.rb:17:in `<top (required)>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `load'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `block in load'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:236:in `load_dependency'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/activesupport-3.2.22.5/lib/active_support/dependencies.rb:245:in `load'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:593:in `block (2 levels) in <class:Engine>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:592:in `each'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/engine.rb:592:in `block in <class:Engine>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:30:in `instance_exec'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:30:in `run'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:55:in `block in run_initializers'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:54:in `each'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/initializable.rb:54:in `run_initializers'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/application.rb:136:in `initialize!'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/railties-3.2.22.5/lib/rails/railtie/configurable.rb:30:in `method_missing'
+App 55052 output:     /Users/olga/Documents/GitHub/mapknitter/config/environment.rb:5:in `<top (required)>'
+App 55052 output:     config.ru:3:in `require'
+App 55052 output:     config.ru:3:in `block in <main>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `instance_eval'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/rack-1.4.7/lib/rack/builder.rb:51:in `initialize'
+App 55052 output:     config.ru:1:in `new'
+App 55052 output:     config.ru:1:in `<main>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `eval'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:101:in `preload_app'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:189:in `block in <module:App>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/ruby_supportlib/phusion_passenger/loader_shared_helpers.rb:380:in `run_block_and_record_step_progress'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:188:in `<module:App>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+App 55052 output:     /Users/olga/.rvm/gems/ruby-2.4.6/gems/passenger-6.0.2/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+[ E 2019-05-30 23:23:28.3840 54988/T14 age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application encountered the following error: Please install the mysql2 adapter: `gem install activerecord-mysql2-adapter` (cannot load such file -- mysql2/mysql2) (LoadError)
+  Error ID: 44c3fbd8
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-ZFpTVZ.html
+
+[ E 2019-05-30 23:23:28.3931 54988/Ta age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 2-1] Cannot checkout session because a spawning error occurred. The identifier of the error is 44c3fbd8. Please see earlier logs for details about the error.
+App 55107 output: /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/resolver.rb:287:in `block in verify_gemfile_dependencies_are_found!': Could not find gem 'rails (~> 4.2)' in any of the gem sources listed in your Gemfile. (Bundler::GemNotFound)
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/resolver.rb:255:in `each'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/resolver.rb:255:in `verify_gemfile_dependencies_are_found!'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/resolver.rb:49:in `start'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/resolver.rb:22:in `resolve'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/definition.rb:258:in `resolve'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/definition.rb:170:in `specs'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/definition.rb:237:in `specs_for'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/definition.rb:226:in `requested_specs'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:108:in `block in definition_method'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/runtime.rb:20:in `setup'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler.rb:107:in `setup'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/bundler/setup.rb:20:in `<top (required)>'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+App 55107 output: 	from /Users/olga/.rvm/rubies/ruby-2.4.6/lib/ruby/site_ruby/2.4.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+[ E 2019-05-30 23:26:53.8842 54988/T19 age/Cor/App/Implementation.cpp:221 ]: Could not spawn process for application /Users/olga/Documents/GitHub/mapknitter: The application process exited prematurely.
+  Error ID: 941cb3e7
+  Error details saved to: /var/folders/65/grz2pl7d265gtj3ldd25jh0c0000gn/T//passenger-error-CtK3yQ.html
+
+[ E 2019-05-30 23:26:53.8929 54988/Tc age/Cor/Con/CheckoutSession.cpp:276 ]: [Client 3-1] Cannot checkout session because a spawning error occurred. The identifier of the error is 941cb3e7. Please see earlier logs for details about the error.
+
+[ N 2019-05-30 23:27:25.9890 54988/T9 age/Cor/CoreMain.cpp:671 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ N 2019-05-30 23:27:25.9891 54988/T1 age/Cor/CoreMain.cpp:1245 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ N 2019-05-30 23:27:25.9891 54988/T9 Ser/Server.h:901 ]: [ServerThr.1] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9891 54988/Tc Ser/Server.h:901 ]: [ServerThr.3] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Tv Ser/Server.h:901 ]: [ServerThr.12] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/T9 Ser/Server.h:558 ]: [ServerThr.1] Shutdown finished
+[ N 2019-05-30 23:27:25.9892 54988/Ta Ser/Server.h:901 ]: [ServerThr.2] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Ti Ser/Server.h:901 ]: [ServerThr.6] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Te Ser/Server.h:901 ]: [ServerThr.4] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9893 54988/Ta Ser/Server.h:558 ]: [ServerThr.2] Shutdown finished
+[ N 2019-05-30 23:27:25.9893 54988/Te Ser/Server.h:558 ]: [ServerThr.4] Shutdown finished
+[ N 2019-05-30 23:27:25.9893 54988/Ti Ser/Server.h:558 ]: [ServerThr.6] Shutdown finished
+[ N 2019-05-30 23:27:25.9893 54988/Tw Ser/Server.h:901 ]: [ApiServer] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Tv Ser/Server.h:558 ]: [ServerThr.12] Shutdown finished
+[ N 2019-05-30 23:27:25.9892 54988/Ts Ser/Server.h:901 ]: [ServerThr.11] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/To Ser/Server.h:901 ]: [ServerThr.9] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9893 54988/Tw Ser/Server.h:558 ]: [ApiServer] Shutdown finished
+[ N 2019-05-30 23:27:25.9894 54988/To Ser/Server.h:558 ]: [ServerThr.9] Shutdown finished
+[ N 2019-05-30 23:27:25.9892 54988/Tq Ser/Server.h:901 ]: [ServerThr.10] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Tl Ser/Server.h:901 ]: [ServerThr.7] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9894 54988/Ts Ser/Server.h:558 ]: [ServerThr.11] Shutdown finished
+[ N 2019-05-30 23:27:25.9892 54988/Tg Ser/Server.h:901 ]: [ServerThr.5] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9895 54988/Tl Ser/Server.h:558 ]: [ServerThr.7] Shutdown finished
+[ N 2019-05-30 23:27:25.9892 54988/Tm Ser/Server.h:901 ]: [ServerThr.8] Freed 0 spare client objects
+[ N 2019-05-30 23:27:25.9892 54988/Tc Ser/Server.h:558 ]: [ServerThr.3] Shutdown finished
+[ N 2019-05-30 23:27:25.9895 54988/Tm Ser/Server.h:558 ]: [ServerThr.8] Shutdown finished
+[ N 2019-05-30 23:27:25.9894 54988/Tq Ser/Server.h:558 ]: [ServerThr.10] Shutdown finished
+[ N 2019-05-30 23:27:25.9895 54988/Tg Ser/Server.h:558 ]: [ServerThr.5] Shutdown finished
+[ N 2019-05-30 23:27:26.5214 54988/T1 age/Cor/CoreMain.cpp:1324 ]: Passenger core shutdown finished

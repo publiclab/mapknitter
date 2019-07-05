@@ -5,6 +5,7 @@ Mapknitter::Application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+<<<<<<< Updated upstream
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
@@ -12,6 +13,9 @@ Mapknitter::Application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
+=======
+  # Full error reports are disabled and caching is turned ondevelopment
+>>>>>>> Stashed changes
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
