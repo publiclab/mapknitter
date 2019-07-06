@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.4.6'
+# ruby '2.4.6'
 gem 'rails', '~> 5.2.3'
 gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
@@ -64,6 +64,7 @@ group :development, :test do
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 1.9.3'
   gem 'pry-rails', '~> 0.3.9'
+  gem 'puma'
 end
 
 group :development do
