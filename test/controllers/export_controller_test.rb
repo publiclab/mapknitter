@@ -16,6 +16,12 @@ class ExportControllerTest < ActionController::TestCase
     assert assigns[:week]
   end
 
+  test 'create returns json' do
+    url = 'https://example.json/12345/status.json'
+    post :create, status_url: url
+    assert_equal url, Export.last.export_url
+  end
+
   test 'should create jpg after export' do
     map = maps(:cubbon)
     system('mkdir -p public/warps/cubbon-park')

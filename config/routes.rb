@@ -47,6 +47,7 @@ Mapknitter::Application.routes.draw do
   get 'export/progress/:id', to: 'export#progress'
   get 'export/status/:id', to: 'export#status'
   get 'exports', to: 'export#index'
+  post 'export' => 'export#create'
   get 'map/:id', to: redirect('/maps/%{id}')
   get 'embed/:id', to: 'maps#embed'
   post 'maps/:map_id/warpables', to: 'images#create' # deprecate this in favor of resourceful route below; this is just to override maps/:id
@@ -66,11 +67,11 @@ Mapknitter::Application.routes.draw do
   end
 
   namespace 'maps' do
-    %w(map featured region license).each do |action|
+    %w(map featured).each do |action|
       get action, action: action
     end
 
-    %w(archive exports).each do |action|
+    %w(archive exports region license).each do |action|
       get action + "/:id", action: action
     end
 

@@ -20,17 +20,15 @@ class FrontUiController < ApplicationController
   end
 
   def nearby_mappers
-    @nearby_maps = []
-
-    if current_location.present?
-      lat = session[:lat]
-      lon = session[:lon]
-      @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
-                        .page(params[:maps])
-                        .per_page(12)
-    end
-
-    @all_mappers = Map.featured_authors.paginate(page: params[:mappers], per_page: 12)
+    return unless current_location.present?
+    lat = session[:lat]
+    lon = session[:lon]
+    @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+                      .page(params[:maps])
+                      .per_page(12)
+    @nearby_mappers = User.where(login: Map.maps_nearby(lat: lat, lon: lon, dist: 10)
+                                           .collect(&:author))
+                                           .paginate(page: params[:mappers], per_page: 12)
   end
 
   def save_location
@@ -50,6 +48,8 @@ class FrontUiController < ApplicationController
                .where(archived: false, password: '')
                .order('updated_at DESC')
                .group('maps.id')
-    @authors = Map.featured_authors.paginate(page: params[:mappers], per_page: 20)
+
+    @authors = User.where(login: Map.featured.collect(&:author))
+                                    .paginate(page: params[:mappers], per_page: 20)
   end
 end

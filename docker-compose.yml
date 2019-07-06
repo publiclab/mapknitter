@@ -14,7 +14,6 @@ services:
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
-      - bower_cache:/app/public/lib
     ports:
       - $PORT:3000
     depends_on:
@@ -22,4 +21,3 @@ services:
 
 volumes:
   bundle_cache:
-  bower_cache:
