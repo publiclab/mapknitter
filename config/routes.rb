@@ -40,6 +40,7 @@ Mapknitter::Application.routes.draw do
   get 'tms/:id/alt/', to: 'utility#tms_info'
 
   # once we have string-based ids, reorganize these around 'maps' and resourceful routing
+  get 'gallery', to: 'front_ui#gallery'
   get 'search/:id', to: 'maps#search'
   get 'search', to: 'maps#search'
   get 'maps/:id/warpables', to: 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
@@ -67,7 +68,7 @@ Mapknitter::Application.routes.draw do
   end
 
   namespace 'maps' do
-    %w(map featured).each do |action|
+    %w(map featured region license).each do |action|
       get action, action: action
     end
 

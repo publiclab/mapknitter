@@ -21,6 +21,7 @@ class FrontUiController < ApplicationController
 
   def nearby_mappers
     return unless current_location.present?
+
     lat = session[:lat]
     lon = session[:lon]
     @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)

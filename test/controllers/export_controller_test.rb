@@ -18,7 +18,7 @@ class ExportControllerTest < ActionController::TestCase
 
   test 'create returns json' do
     url = 'https://example.json/12345/status.json'
-    post :create, status_url: url
+    post :create, params: { status_url: url }
     assert_equal url, Export.last.export_url
   end
 
