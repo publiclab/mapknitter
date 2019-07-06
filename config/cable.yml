@@ -1,7 +1,5 @@
 development:
-  adapter: redis
-  url: <%= "redis://localhost:6379/0" %>
-  channel_prefix: mapknitter_development
+  adapter: async
 
 test:
   adapter: async

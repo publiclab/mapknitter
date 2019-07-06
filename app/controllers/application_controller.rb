@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
     if user_id
       begin
         @user = User.find(user_id)
+        cookies.signed["user_id"] = @current_user.id
       rescue StandardError
         @user = nil
       end
