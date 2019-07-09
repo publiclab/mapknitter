@@ -21,7 +21,7 @@ RUN apt-get update -qq && apt-get install -y \
 # Configure ImageMagick
 COPY ./nolimit.xml /etc/ImageMagick-6/policy.xml
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y npm
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get install -y npm
 RUN npm install -g yarn
 
 # Install bundle of gems
