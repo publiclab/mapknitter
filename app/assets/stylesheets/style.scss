@@ -191,6 +191,12 @@ label small {
   display: none;
 }
 
+#near_maps{
+    img {
+        height: 300px;
+        width: 400px;
+    }
+}
 .login-form {
   width: 200px;
   padding: 10px;
@@ -213,17 +219,6 @@ label small {
 
 .section-header {
   margin: 30px 0;
-}
-
-.mapknitter-info {
-  font-size: 26px;
-  font-weight: 600;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.33;
-  letter-spacing: -0.2px;
-  text-align: center;
-  color: #a2aaad;
 }
 
 .learn-more {

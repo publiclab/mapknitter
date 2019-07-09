@@ -1,6 +1,7 @@
-version: '3.3'
+version: '3.5'
 services:
   db:
+    container_name: database
     image: mysql:5.7
     env_file:
       - mapknitter.env
@@ -8,13 +9,14 @@ services:
       - ../mysql:/var/lib/mysql
       - ../dump:/docker-entrypoint-initdb.d
   web:
+    container_name: mapknitter
     build: .
     env_file:
       - mapknitter.env
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
-      - bower_cache:/app/public/lib
+      - yarn_cache:/app/public/lib
     ports:
       - $PORT:3000
     depends_on:
@@ -22,4 +24,4 @@ services:
 
 volumes:
   bundle_cache:
-  bower_cache:
+  yarn_cache:
