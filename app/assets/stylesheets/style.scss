@@ -230,7 +230,6 @@ label small {
   letter-spacing: -0.2px;
 }
 
-
 .item-description {
   font-size: 18px;
   font-weight: 300;
@@ -238,20 +237,6 @@ label small {
   font-stretch: normal;
   line-height: 1.44;
   color: #a2aaad;
-}
-
-
-#info {
-    .fa-stack {
-        font-size: 0.7em;
-        color: gray
-    }
-}
-
-.fa-industry, .fa-globe, .fa-binoculars{
-    font-size: 4em;
-    padding-bottom: 20px;
-    color: gray;
 }
 
 #all-maps {
@@ -263,5 +248,5 @@ label small {
 }
 
 #light-blue {
-    background-color: lightblue;
+    background-color: #d0e2f2;
 }
