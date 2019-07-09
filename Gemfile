@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-ruby '2.4.6'
-gem 'rails', '~> 5.2.3'
+ruby '2.6.3'
+gem 'rails', '~> 6.0.0.rc1'
 gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
