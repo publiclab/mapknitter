@@ -1189,7 +1189,7 @@ image-sequencer@publiclab/image-sequencer#~1.4.0:
     fisheyegl "^0.1.2"
     font-awesome "~4.5.0"
     get-pixels "~3.3.0"
-    imgareaselect "https://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
+    imgareaselect "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
     jquery "~2"
     jsqr "^0.2.2"
     lodash "^4.17.5"
@@ -1492,9 +1492,9 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
 leaflet-distortableimage@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.0.tgz#3be2e698db1252076f6599c9021400ec770a1f25"
-  integrity sha512-xd98LDyiqvzoKDduJivaIQQXDBk0PNp6NVkjN+8Qp8Lf34s8hgcFEhqn7W6BEZnGyVpwNKX/cISKlPsVrGNnfg==
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.1.tgz#7d66df145a1a49b3f96ed6619033c13249cb722a"
+  integrity sha512-wgNp7ec21H6q3sr5fVzBtCYNx1qirjdON+JXAaAaL1sD3xHZGVV1fIF/lgsBgTESljBRsVPqhzMxFgyzkmW7Bg==
   dependencies:
     grunt-cli "^1.2.0"
     leaflet-toolbar "0.4.0-alpha.2"
@@ -1510,7 +1510,7 @@ leaflet-environmental-layers@^1.3.6:
   dependencies:
     jquery "^3.3.1"
     leaflet "^1.3.1"
-    leaflet-blurred-location "https://github.com/publiclab/leaflet-blurred-location#main"
+    leaflet-blurred-location "git://github.com/publiclab/leaflet-blurred-location#main"
     leaflet-fullhash "github:sagarpreet-chadha/leaflet-fullHash"
     leaflet-heatmap "1.0.0"
     leaflet-providers "^1.1.17"
@@ -1583,7 +1583,7 @@ leaflet.blurred-location-display@^1.1.0:
   integrity sha512-l7vtPdwGbo6Xqeds37DstKNMANiI8g7EUvKrQ34CcBebyz1GcBBnWGn2wq44uqWxvKgt3okZDWdm4i6tWwjKpQ==
   dependencies:
     jquery "^3.3.1"
-    leaflet-blurred-location "https://github.com/publiclab/leaflet-blurred-location#main"
+    leaflet-blurred-location "git://github.com/publiclab/leaflet-blurred-location#main"
 
 leaflet@*, leaflet@Leaflet/Leaflet#^1.0.0, leaflet@^1.3.1, leaflet@^1.3.3:
   version "1.5.1"
