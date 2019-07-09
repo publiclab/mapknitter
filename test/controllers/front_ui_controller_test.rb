@@ -51,7 +51,7 @@ class FrontUiControllerTest < ActionController::TestCase
     get :view_map, id: map.slug
 
     assert_response :success
-    assert assigns(:mappers)
+    assert assigns(:maps)
     assert_template 'front_ui/view_map'
   end
 end
