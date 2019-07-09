@@ -1,7 +1,7 @@
 .image-order{
 	display: inline-block;
 	float: right;
-	margin-right: 32px;
+	margin-right: 35px;
 	margin-bottom: 10px;
 }
 .sidebar-heading{
@@ -32,5 +32,9 @@
   text-decoration: none;
   display: block;
 }
-.image-order-content a:hover {background-color: white;}
+.image-order-content a:hover {
+  background-color: white;
+  text-decoration: none;
+  color: black;
+}
 .image-order:hover .image-order-content {display: block;}

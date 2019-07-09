@@ -1,11 +1,11 @@
 <div>
 <h4 class="sidebar-heading">Images</h4>
 <div class="image-order">
-  <button type="button" class="btn btn-outline-secondary">Order Images</button>
+  <button type="button" class="btn btn-outline-secondary">Sort Images</button>
   <div class="image-order-content">
-    <a href="?sort=name">Name</a>
-    <a href="?sort=size">Size</a>
-    <a href="?sort=recent">Recent</a>
+    <a class="name" href="?sort=name">Name</a>
+    <a class="size" href="?sort=size">Size</a>
+    <a class="recent" href="?sort=recent">Recent</a>
   </div>
 </div>
 </div>
@@ -17,10 +17,19 @@
     <% sort_param = params[:sort] %>
     <% if sort_param == 'name' %>
       <% ary = @map.warpables.sort { |a, b| a.image_file_name <=> b.image_file_name } %>
+      <script>
+        $(".name").css("background-color","#5cb85c");
+      </script>
     <% elsif sort_param == 'size' %>
       <% ary = @map.warpables.sort { |a, b| a.image_file_size <=> b.image_file_size } %>
+      <script>
+        $(".size").css("background-color","#5cb85c");
+      </script>
     <% else %>
       <% ary = @map.warpables.sort { |a, b| b.created_at <=> a.created_at } %>
+      <script>
+        $(".recent").css("background-color","#5cb85c");
+      </script>
     <% end %>
     <% ary.each do |warpable| %>
       <tr id="warpable-<%= warpable.id %>">
