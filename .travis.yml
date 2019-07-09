@@ -7,16 +7,17 @@ services:
   - docker
 
 cache:
-  bundler: true
   directories:
-   - public/lib/
+   - $PWD/public/lib/
+   - $PWD/vendor/.bundle/
 
 install:
   - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
-  - bundle install && yarn install
+  - bundle check --path vendor/.bundle/ || bundle install --path vendor/.bundle/
+  - yarn check || yarn install
   - bundle exec rake db:setup || bundle exec rake db:migrate
 
 env:
