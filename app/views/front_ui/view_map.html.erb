@@ -10,6 +10,10 @@
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
 
 <div id="mapknitter-unique" style="height: 400px; width: 100%;  margin-bottom: 1%; z-index: 5;"> </div>
+<button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
+<div class="share-link" style="display:none;">
+    <%= render :partial => 'maps/share' %>
+</div>
 <a href="/maps/<%= @map.slug %>">
     <button class=  "btn btn-primary" style= "position: absolute; top: 380px;left: 10px; padding: 10px; z-index: 40;" >
         <i class="fas fa-pencil-alt"> </i> Edit this map
@@ -32,7 +36,7 @@
               Get a mapping kit<i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
           </a>
           <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
-              Add your images <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+              Add a new map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
           </a>
           </p>
 
@@ -40,9 +44,12 @@
   </div>
 </div>
   <br><br>
-<div id = "light-blue">
+<div class="light-blue" id ="all-maps">
     <br>
-    <%= render :partial => 'featured_mappers', :locals => { :mappers => @mappers } %>
+    <h3 class="text-center"> Nearby Maps </h3>
+         <hr style="max-width: 500px;">
+    <br>
+    <%= render :partial => 'front_ui/maps', :locals => { :maps => @maps } %>
 </div>
   <br><br>
 

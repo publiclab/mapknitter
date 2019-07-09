@@ -45,9 +45,8 @@ class FrontUiController < ApplicationController
   def view_map
     @map = Map.find_by(slug: params[:id])
     @map.zoom ||= 12
-    @mappers = User.where(login: Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 30)
-                                    .collect(&:author))
-                                    .sample(4)
+    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+               .sample(4)
     @unpaginated = true
   end
 
