@@ -15,7 +15,7 @@
     "cartagen": "jywarren/cartagen#*",
     "components-jqueryui": "components/jqueryui#^1.12.1",
     "exif-js": "jseidelin/exif-js#*",
-    "font-awesome": "FortAwesome/Font-Awesome#~4.2.0",
+    "font-awesome": "FortAwesome/Font-Awesome#~5.9.0",
     "fontawesome": "FortAwesome/Font-Awesome#~4.2.0",
     "glfx-js": "jywarren/glfx.js#*",
     "image-sequencer": "publiclab/image-sequencer#~1.4.0",

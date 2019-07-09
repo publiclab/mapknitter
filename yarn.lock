@@ -937,14 +937,19 @@ flagged-respawn@^1.0.0:
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-1.0.1.tgz#e7de6f1279ddd9ca9aac8a5971d618606b3aab41"
   integrity sha512-lNaHNVymajmk0OJMBn8fVUAU1BtDeKIqKoVhk4xAALB57aALg6b4W0MfJ/cUE0g9YBXy5XhSlPIpYIJ7HaY/3Q==
 
-font-awesome@FortAwesome/Font-Awesome#~4.2.0, fontawesome@FortAwesome/Font-Awesome#~4.2.0:
-  version "4.2.0"
-  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
+font-awesome@FortAwesome/Font-Awesome#~5.9.0:
+  version "0.0.0"
+  uid ba907eaec40fab01d410c3023a5572b2cb46cea6
+  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/ba907eaec40fab01d410c3023a5572b2cb46cea6"
 
 font-awesome@~4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.5.0.tgz#1e9d7ccf7d63bdbe57000e18d5188cb2557e70f8"
   integrity sha1-Hp18z31jvb5XAA4Y1RiMslV+cPg=
+
+fontawesome@FortAwesome/Font-Awesome#~4.2.0:
+  version "4.2.0"
+  resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
 
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
