@@ -13,6 +13,7 @@ class FrontUiControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:mappers)
     assert assigns(:maps)
+    assert_template 'front_ui/index'
   end
 
   test 'gallery page' do
