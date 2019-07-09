@@ -18,6 +18,7 @@
     "font-awesome": "FortAwesome/Font-Awesome#~4.2.0",
     "fontawesome": "FortAwesome/Font-Awesome#~4.2.0",
     "glfx-js": "jywarren/glfx.js#*",
+    "image-sequencer": "publiclab/image-sequencer#~1.4.0",
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.0",
     "jquery": "jquery/jquery-dist#^3.4.1",
     "jquery-ui": "components/jqueryui#^1.12.1",
