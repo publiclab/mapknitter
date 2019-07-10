@@ -53,7 +53,7 @@
                 Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
             </a>
             <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
-                Add your images <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+                Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
             </a>
             </p>
         </div>
@@ -83,8 +83,9 @@
 <div class="section-header text-center">
     <% if session[:lat].present?  %>
       <a href="/mappers" class="alert-link">Nearby people & maps</i></a>
+      &nbsp; | &nbsp;
     <% end %>
-    &nbsp; | &nbsp; <a href="/gallery" class="alert-link">All maps</a>
+    <a href="/gallery" class="alert-link">All maps</a>
     <hr style="max-width: 300px;">
 </div>
 <br>
