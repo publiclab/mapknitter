@@ -117,7 +117,7 @@ class MapsController < ApplicationController
 
   # run the export
   def export
-    export = Export.create!(map_id: params[:id], bands_string: 'default bands_string')
+    Export.create!(map_id: params[:id], bands_string: 'default bands_string')
     warpable_ids = params[:id].split(',')
     warpable_ids.shift
     @map = Map.find_by(id: params[:id])
