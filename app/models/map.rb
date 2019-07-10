@@ -236,11 +236,11 @@ class Map < ApplicationRecord
   # we'll eventually replace this with a JavaScript call to initiate an external export process:
   def run_export(warpable_ids, user, resolution)
     key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
-    if warpable_ids == ''
-      warpables = placed_warpables
-    else
-      warpables = Warpable.find(warpable_ids)
-    end
+    warpables = if warpable_ids == ''
+                  placed_warpables
+                else
+                  Warpable.find(warpable_ids)
+                end
     # warpables = Warpable.find(warpable_ids) || placed_warpables
     new_export = Export.new(map_id: id) unless export
 
