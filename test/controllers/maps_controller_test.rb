@@ -311,4 +311,12 @@ class MapsControllerTest < ActionController::TestCase
     get :featured
     assert_response :success
   end
+
+  test 'view map page' do
+    get :view_map, id: @map.slug
+
+    assert_response :success
+    assert assigns(:maps)
+    assert_template 'maps/view_map'
+  end
 end

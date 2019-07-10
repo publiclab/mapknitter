@@ -42,14 +42,6 @@ class FrontUiController < ApplicationController
     render nothing: true
   end
 
-  def view_map
-    @map = Map.find_by(slug: params[:id])
-    @map.zoom ||= 12
-    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
-               .sample(4)
-    @unpaginated = true
-  end
-
   def about; end
 
   def location

@@ -1,6 +1,5 @@
 Mapknitter::Application.routes.draw do
 
-<<<<<<< HEAD
   root to: 'front_ui#index'
 
   mount ActionCable.server => '/cable'

@@ -4,7 +4,7 @@ class MapsController < ApplicationController
   protect_from_forgery except: :export
 
   before_action :require_login, only: %i(edit update destroy)
-  before_action :find_map, only: %i(show annotate embed edit update images destroy archive)
+  before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
 
@@ -61,6 +61,14 @@ class MapsController < ApplicationController
     # this is used for the resolution slider
     @resolution = @map.average_cm_per_pixel.round(4)
     @resolution = 5 if @resolution < 5 # soft-set min res
+  end
+
+  def view_map
+    @map.zoom ||= 12
+    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+               .sample(4)
+    @unpaginated = true
+    render template: 'maps/view_map', layout: 'application'
   end
 
   def archive

@@ -23,7 +23,7 @@
   <div class="text-center lead-text">
   <p class="text-muted"> a Community Atlas of </p>
   <h2><%= @map.location %> </h2>
-  <p> <%= link_to "@#{@map.author}", "/profile/#{@map.author}" %> </p>
+  <p> <%= link_to "@#{@map.author}", "/profile/#{@map.author}" unless @map.author == 'anonymous' %> </p>
   </div>
   <div class="row text-center">
       <div class="col-md-4 offset-md-4 text-block">
