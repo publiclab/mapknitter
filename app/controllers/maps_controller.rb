@@ -68,7 +68,7 @@ class MapsController < ApplicationController
     @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
                .sample(4)
     @unpaginated = true
-    render template: 'maps/view_map', layout: 'application'
+    render layout: 'application'
   end
 
   def archive
