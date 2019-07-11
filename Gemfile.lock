@@ -68,7 +68,7 @@ GEM
       json (~> 1.4)
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
-    bindex (0.7.0)
+    bindex (0.8.1)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)

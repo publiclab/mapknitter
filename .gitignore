@@ -44,3 +44,4 @@ todo.txt
 coverage_report/
 test/reports/*
 yarn-error.log
+yarn.lock
