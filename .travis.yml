@@ -2,6 +2,7 @@ language: ruby
 
 rvm:
   - 2.4.6
+  - 2.6.3
 
 services:
   - mysql
