@@ -61,9 +61,6 @@ class MapsController < ApplicationController
     # this is used for the resolution slider
     @resolution = @map.average_cm_per_pixel.round(4)
     @resolution = 5 if @resolution < 5 # soft-set min res
-
-    # remove following lines once legacy interface is deprecated
-    render template: 'map/show', layout: 'knitter' if params[:legacy]
   end
 
   def archive
