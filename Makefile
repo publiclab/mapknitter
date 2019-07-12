@@ -14,4 +14,4 @@ deploy-container:
 
 redeploy-container:
 	docker-compose up --force-recreate -d
-	docker-compose exec -T web bash -l -c "sleep 10 && rake db:migrate && rake assets:precompile"
+	while ! docker logs mapknitter | grep "web server started"; do echo "Serving Mapknitter"; sleep 10; done;
