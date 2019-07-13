@@ -1,10 +1,3 @@
-if ENV['CI'] == 'true'
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
-else
-  SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
-end
-
 SimpleCov.start 'rails' do
   add_group 'Units', 'app/models'
   add_group 'Functionals', 'app/controllers'
