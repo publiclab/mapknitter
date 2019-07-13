@@ -12,6 +12,7 @@ cache:
    - $PWD/vendor/.bundle/
 
 install:
+  - rm -rf test/reports
   - cp config/database.yml.example config/database.yml
   - cp config/config.yml.example config/config.yml
   - cp db/schema.rb.example db/schema.rb
