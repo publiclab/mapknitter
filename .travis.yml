@@ -19,7 +19,6 @@ install:
   - bundle check --path vendor/.bundle/ || bundle install --path vendor/.bundle/
   - yarn check || yarn install
   - bundle exec rake db:setup || bundle exec rake db:migrate
-  - rm -rf test/reports
 
 env:
   global:
