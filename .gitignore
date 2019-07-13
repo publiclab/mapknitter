@@ -45,3 +45,4 @@ coverage_report/
 test/reports/*
 yarn-error.log
 yarn.lock
+.idea/
