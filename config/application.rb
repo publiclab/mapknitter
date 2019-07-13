@@ -45,6 +45,8 @@ module Mapknitter
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    config.action_dispatch.default_headers['X-Frame-Options'] = "ALLOW-FROM https://publiclab.org"
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.3'
     config.assets.paths << Rails.root.join("public","lib")
