@@ -499,6 +499,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
       beforeSend: function (e) {
         $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
       },
+      success: function(data) {
+        App.concurrent_editing.speak(data);
+      },
       complete: function (e) {
         $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
       },

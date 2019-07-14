@@ -267,4 +267,9 @@ class Map < ApplicationRecord
     tagname = tagname.downcase
     tags.create(name: tagname, user_id: user.id, map_id: id) unless has_tag(tagname)
   end
+
+  def self.fetch_map_data
+    data = {}
+    data
+  end
 end

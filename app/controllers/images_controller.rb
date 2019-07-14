@@ -93,7 +93,8 @@ class ImagesController < ApplicationController
     @warpable.locked = params[:locked]
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
     @warpable.save
-    render html: 'success'
+    data = Map.fetch_map_data
+    render json: data
   end
 
   def destroy
