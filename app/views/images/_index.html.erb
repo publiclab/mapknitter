@@ -39,6 +39,10 @@
               :'data-map-id' => @map.id,
               :'id' => "warpable-img-#{warpable.id}"
           %>
+          <% warpable.versions.each do |version| %>
+            <p><%= version.id %></p>
+          <% end %>
+          
         </td>
         <td class="col-middle">
           <%= link_to(warpable.image_file_name, warpable.image.url) %>

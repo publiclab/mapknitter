@@ -23,10 +23,16 @@ class ImagesController < ApplicationController
 
   # assign attributes directly after rails update
   def create
+    @versions = PaperTrail::Version.order('created_at DESC')
+    # Warpable.create!(map_id: params[:map_id], history: 'default bands_string')
     @warpable = Warpable.new
+    @warpable.history = "None"
+    # @warpable.create
     @warpable.image = params[:uploaded_data]
     map = Map.find_by(slug: params[:map_id])
-    @warpable.history = ''
+    puts "Hello"
+    # v = Warpable.create
+    # puts "#{v}"
     @warpable.map_id = map.id
     map.updated_at = Time.now
     map.save
