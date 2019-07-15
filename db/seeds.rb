@@ -41,7 +41,6 @@ maps.each do |map|
   image.history =  Faker::Lorem.word
   image.image_file_name =  'demo.png'
   image.width = 500
-  image.nodes = '1,3,4,5'
   system("mkdir -p public/system/images/#{image.id}/original")
   system("cp test/fixtures/demo.png public/system/images/#{image.id}/original/demo.png")
   image.image_content_type = 'image/png'
