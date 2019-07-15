@@ -80,6 +80,7 @@ class MapsController < ApplicationController
   def embed
     @map.zoom ||= 12
     @embed = true
+    response.headers.except! 'X-Frame-Options' # allow use of embed in iframes
     render template: 'maps/show'
   end
 
