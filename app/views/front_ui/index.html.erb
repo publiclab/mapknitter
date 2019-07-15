@@ -31,7 +31,7 @@
   text-align: center;
   padding-bottom: 20px;
   width: 100%;
-  overflow: scroll;
+  overflow: hidden;
   position: absolute;
 }
 @media(max-width: 780px) {
@@ -246,12 +246,6 @@
 
   function setDefaultCoordinates() {
     Mapknitterunique.stopLocate();
-    var bounds = new L.LatLngBounds(
-      new L.LatLng(defaultLoc.lat-1, defaultLoc.lng-1),
-      new L.LatLng(defaultLoc.lat+1 , defaultLoc.lng+1)
-    );
-    Mapknitterunique.options.maxBounds = bounds;
-    Mapknitterunique.options.maxBoundsViscosity = 0.75;
     Mapknitterunique.setView([defaultLoc.lat,defaultLoc.lng], defaultLoc.zoom);
   }
 

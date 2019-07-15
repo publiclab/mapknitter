@@ -16,6 +16,7 @@ deploy-container:
 	done;
 
 redeploy-container:
+	docker volume rm mapknitter_yarn_cache mapknitter_bundle_cache
 	docker-compose up --force-recreate -d
 	while ! docker logs mapknitter | grep "web server started"; do\
 		echo "Serving Mapknitter";\
