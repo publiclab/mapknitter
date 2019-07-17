@@ -1,5 +1,9 @@
 
 require 'simplecov'
+require 'codecov'
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+SimpleCov.start
+
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/reporters'
