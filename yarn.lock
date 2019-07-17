@@ -194,9 +194,10 @@ blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=2.1.1:
   version "3.14.0"
   resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/9f3deb2e710d39c72a988559609d9dc9a319de0b"
 
-blueimp-file-upload@blueimp/jQuery-File-Upload#~9.22.1:
-  version "9.22.2"
-  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/965e300db3cf5218e0d4bebb3f4dd229bc24e865"
+blueimp-file-upload@blueimp/jQuery-File-Upload#~9.32.0:
+  version "9.32.0"
+  uid "23f5c92cad0d9cc8dd37b969db27e3c92a1d0231"
+  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/23f5c92cad0d9cc8dd37b969db27e3c92a1d0231"
   optionalDependencies:
     blueimp-canvas-to-blob "3.5.0"
     blueimp-load-image "2.12.2"
