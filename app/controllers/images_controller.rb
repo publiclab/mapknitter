@@ -72,28 +72,31 @@ class ImagesController < ApplicationController
 
   def update
     @warpable = Warpable.find params[:warpable_id]
-
-    nodes = []
-    author = @warpable.map.author
-
-    # is it really necessary to make new points each time?
-    params[:points].split(':').each do |point|
-      lon = point.split(',')[0]
-      lat = point.split(',')[1]
-      node = Node.new(color: 'black',
-                      lat: lat,
-                      lon: lon,
-                      author: author,
-                      name: '')
-      node.save
-      nodes << node
+    map = Map.find(@warpable.map_id)
+    if map.anonymous? || logged_in?
+      nodes = []
+      author = @warpable.map.author
+      # is it really necessary to make new points each time?
+      params[:points].split(':').each do |point|
+        lon = point.split(',')[0]
+        lat = point.split(',')[1]
+        node = Node.new(color: 'black',
+                        lat: lat,
+                        lon: lon,
+                        author: author,
+                        name: '')
+        node.save
+        nodes << node
+      end
+      @warpable.count_version = 0
+      @warpable.nodes = nodes.collect(&:id).join(',')
+      @warpable.locked = params[:locked]
+      @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
+      @warpable.save
+      render html: 'success'
+    else
+      render plain: 'You must be logged in to update the image, unless the map is anonymous.'
     end
-    @warpable.count_version = 0
-    @warpable.nodes = nodes.collect(&:id).join(',')
-    @warpable.locked = params[:locked]
-    @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
-    @warpable.save
-    render html: 'success'
   end
 
   def revert
