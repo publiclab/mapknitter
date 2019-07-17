@@ -35,9 +35,6 @@ group :dependencies do
   # compiling markdown to html
   gem "rdiscount", "2.2.0.1"
 
-  #version control
-
-
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'

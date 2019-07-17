@@ -32,6 +32,30 @@
       </script>
     <% end %>
     <% ary.each do |warpable| %>
+
+      <td colspan="3">
+        <div class="dropdown" style="margin-top: 20px;">
+          <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="image-history-<%= warpable.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick="$(this).next().toggle();">
+           Image history
+          </button>
+          <div class="dropdown-menu image-version" aria-labelledby="dropdownMenuButton">
+            <% warpable.versions.reverse.each do |version| %>
+              <button class="<%= warpable.id %>" id="<%= version.index + 1%>" onClick="getVersion(this)"><%= version.event.capitalize %>d by
+                <% if version.whodunnit && version.whodunnit != 'Anonymous' %>
+                  <% user = User.find_by_id(version.whodunnit) %>
+                  <% if user %>
+                    <a href="/profile/<%= user.login %>"><%= user.login %></a>
+                  <% end %>
+                <% else %>
+                  <u>an Anonymous user</u>
+                <% end %>
+                <%= time_ago_in_words(version.created_at) %> ago
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
           <%= image_tag warpable.image.url(:thumb), 
@@ -39,11 +63,8 @@
               :'data-map-id' => @map.id,
               :'id' => "warpable-img-#{warpable.id}"
           %>
-          <% warpable.versions.each do |version| %>
-            <p><%= version.id %></p>
-          <% end %>
-          
         </td>
+
         <td class="col-middle">
           <%= link_to(warpable.image_file_name, warpable.image.url) %>
           <p><%= number_to_human_size warpable.image_file_size %></p>
@@ -101,3 +122,18 @@
     <% end %>
   </tbody>
 </table>
+<script>
+  function getVersion(el){
+    var id = $(el).attr('class');
+    var num = $(el).attr('id') - 1;
+    console.log(num);
+    var arr =[id,num]
+    $.ajax({
+      url: '/images/revert/' + arr,
+      type: 'GET',
+       success: function(data) {
+           console.log("Success");
+      }
+  })
+};
+</script>
