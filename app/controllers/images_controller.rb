@@ -88,7 +88,7 @@ class ImagesController < ApplicationController
       node.save
       nodes << node
     end
-    @warpable.count = 0
+    @warpable.count_version = 0
     @warpable.nodes = nodes.collect(&:id).join(',')
     @warpable.locked = params[:locked]
     @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
@@ -102,7 +102,7 @@ class ImagesController < ApplicationController
     warpable = Warpable.find id[0]
     # warpable = warpable.paper_trail.version_at(1.day.ago)
     warpable = warpable.versions[id[1].to_i].reify
-    warpable.count = 1
+    warpable.count_version = 1
     warpable.save
     puts "Warpable no. #{warpable}"
     render html: 'success'
