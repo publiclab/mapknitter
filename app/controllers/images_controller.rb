@@ -24,6 +24,7 @@ class ImagesController < ApplicationController
   # assign attributes directly after rails update
   def create
     @warpable = Warpable.new
+    @warpable.history = 'None'
     @warpable.image = params[:uploaded_data]
     map = Map.find_by(slug: params[:map_id])
     @warpable.map_id = map.id
@@ -101,7 +102,6 @@ class ImagesController < ApplicationController
     warpable = Warpable.find id[0]
     # warpable = warpable.paper_trail.version_at(1.day.ago)
     warpable = warpable.versions[id[1].to_i].reify
-    puts "#{warpable.versions.all}"
     warpable.count = 1
     warpable.save
     puts "Warpable no. #{warpable}"

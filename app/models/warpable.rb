@@ -18,8 +18,8 @@ class Warpable < ActiveRecord::Base
   belongs_to :map
   belongs_to :user
 
-  has_paper_trail on: [:create, :update] , only: [:nodes],
-                  unless: Proc.new { |t| t.count == 1 }
+  has_paper_trail on: %i(create update), only: %i(nodes),
+                  unless: proc { |t| t.count == 1 }
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})

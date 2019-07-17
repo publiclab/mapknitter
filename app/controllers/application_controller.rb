@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_paper_trail_whodunnit
 
   def user_for_paper_trail
-  # Save the user responsible for the action
+    # Save the user responsible for the action
     logged_in? ? current_user.id : 'Anonymous'
   end
 
