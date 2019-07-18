@@ -1198,7 +1198,6 @@ image-sequencer@publiclab/image-sequencer#~1.4.0:
 
 "imgareaselect@git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
   version "0.9.11-rc.1"
-  uid db8ae869ca0fcb289252678cebd17d6f40711f61
   resolved "git://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
 
 inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.1, inherits@~2.0.3:
@@ -1478,7 +1477,6 @@ lazy-cache@^1.0.3:
 
 "leaflet-blurred-location@git://github.com/publiclab/leaflet-blurred-location#main":
   version "1.3.0"
-  uid "1bff37cb96518bd87192277b14c290cba3c138ba"
   resolved "git://github.com/publiclab/leaflet-blurred-location#1bff37cb96518bd87192277b14c290cba3c138ba"
   dependencies:
     haversine-distance "^1.1.4"
@@ -1489,10 +1487,10 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@^0.6.0:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.1.tgz#7d66df145a1a49b3f96ed6619033c13249cb722a"
-  integrity sha512-wgNp7ec21H6q3sr5fVzBtCYNx1qirjdON+JXAaAaL1sD3xHZGVV1fIF/lgsBgTESljBRsVPqhzMxFgyzkmW7Bg==
+leaflet-distortableimage@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.3.tgz#f587ef114a8f490cafd28ddc2d741637e5a66d36"
+  integrity sha512-T6NXEmZfHqMpyggXANgbFrMQdcVGvnsC0i8/wPnU0VezyeUBJ9DCnKLFlM8CDPH5QjEzxLHGzoYHOYV0riVcaA==
   dependencies:
     grunt-cli "^1.2.0"
     leaflet-toolbar "0.4.0-alpha.2"
