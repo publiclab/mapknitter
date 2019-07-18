@@ -462,6 +462,28 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (this.editing._mode != "lock") e.stopPropagation()
   },
 
+  synchronizeData: function(warpables) {
+      var layers = [];
+      map.eachLayer(function(l) {layers.push(l)});
+      layers = layers.filter(image => (image._url!=undefined || image._url!=null));
+      warpables.forEach(function(warpable) {
+          corners = [];
+          warpable.nodes.forEach(function(node) {
+              corners.push(L.latLng(node.lat, node.lon));
+          });
+
+          x = corners[2];
+          y = corners [3];
+          corners [2] = y;
+          corners [3] = x;
+
+          console.log(corners);
+
+          layer = layers.filter(l => l._url==warpable.srcmedium)[0];
+          layer.setCorners(corners);
+      });
+  },
+
   saveImageIfChanged: function () {
     var img = this
     // check if image state has changed at all before saving!

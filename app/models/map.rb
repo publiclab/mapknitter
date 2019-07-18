@@ -268,8 +268,8 @@ class Map < ApplicationRecord
     tags.create(name: tagname, user_id: user.id, map_id: id) unless has_tag(tagname)
   end
 
-  def self.fetch_map_data
-    data = {}
-    data
+  def fetch_map_data
+    data = warpables
+    return data.to_json
   end
 end
