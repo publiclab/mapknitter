@@ -7,5 +7,5 @@ comment:
   branches: null          # branch names that can post comment
 coverage:
   status:
-    project: on
-    patch: off
+    project: off    #turned off due to inconsistencies in reporting
+    patch: on

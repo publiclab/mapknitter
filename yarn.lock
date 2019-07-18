@@ -1200,9 +1200,10 @@ image-sequencer@publiclab/image-sequencer#~1.4.0:
     save-pixels "~2.3.4"
     urify "^2.1.0"
 
-"imgareaselect@https://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
+"imgareaselect@git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
   version "0.9.11-rc.1"
-  resolved "https://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
+  uid db8ae869ca0fcb289252678cebd17d6f40711f61
+  resolved "git://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
 
 inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.1, inherits@~2.0.3:
   version "2.0.4"
@@ -1518,12 +1519,7 @@ leaflet-environmental-layers@^1.3.6:
     leaflet-spin "1.1.0"
     leaflet.blurred-location-display "^1.1.0"
 
-leaflet-fullhash@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/leaflet-fullhash/-/leaflet-fullhash-1.0.0.tgz#230a1562a96cd49b4b1dc944b65a8b3d06cfdbaa"
-  integrity sha512-InZkMX4MZ3ytw119tdEA5LIg8GwV6XDDvovunn4PHQrtPLxPSjpV6FiiuHNocdwHWcNkRelvofo3RGOCx3toBQ==
-
-"leaflet-fullhash@github:sagarpreet-chadha/leaflet-fullHash":
+leaflet-fullhash@^1.0.0, "leaflet-fullhash@github:sagarpreet-chadha/leaflet-fullHash":
   version "1.0.0"
   resolved "https://codeload.github.com/sagarpreet-chadha/leaflet-fullHash/tar.gz/6c547255ef7842281c6af3d6b879a2e994e1c54d"
 
@@ -1613,9 +1609,9 @@ liftoff@~2.5.0:
     resolve "^1.1.7"
 
 lodash@^4.17.5:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
+  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
 log-symbols@^2.2.0:
   version "2.2.0"
