@@ -36,10 +36,10 @@ module ActionView
       end.uniq.join("\n").html_safe
     end
 
-    # Overwrite the javascript_include_tag method to expand sprockets files if 
+    # Overwrite the javascript_pack_tag method to expand sprockets files if 
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     #
-    def javascript_include_tag(*sources)
+    def javascript_pack_tag(*sources)
       options = sources.extract_options!.stringify_keys
       debug   = options.key?(:debug) ? options.delete(:debug) : debug_assets?
 
