@@ -23,8 +23,10 @@ group :dependencies do
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
   gem 'bootsnap', '~> 1.4.4'
-  gem 'turbolinks', '~> 5'
+  gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
+  # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
+  gem 'webpacker', '~> 4.0'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -58,6 +60,8 @@ group :test do
   gem 'codecov', require: false
   gem 'minitest'
   gem 'minitest-reporters'
+  # Easy installation and use of web drivers to run system tests with browsers
+  # gem 'webdrivers'
 end
 
 group :development, :test do

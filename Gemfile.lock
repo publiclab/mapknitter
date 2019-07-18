@@ -180,6 +180,8 @@ GEM
     rack-openid (1.3.1)
       rack (>= 1.1.0)
       ruby-openid (>= 2.1.8)
+    rack-proxy (0.6.5)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.0.rc1)
@@ -303,6 +305,10 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
+    webpacker (4.0.7)
+      activesupport (>= 4.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 4.2)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -361,10 +367,11 @@ DEPENDENCIES
   sprockets (= 3.7.2)
   sprockets-rails
   sqlite3
-  turbolinks (~> 5)
+  turbolinks (~> 5.2)
   tzinfo-data
   uglifier (~> 4.1.20)
   web-console (~> 3.3)
+  webpacker (~> 4.0)
   will_paginate (= 3.1.7)
   will_paginate-bootstrap4 (~> 0.2.2)
 
