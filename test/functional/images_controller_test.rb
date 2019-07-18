@@ -58,6 +58,14 @@ class ImagesControllerTest < ActionController::TestCase
     assert_equal "text/html", response.content_type
   end
 
+  # test 'show revert to an image' do
+  #   session[:user_id] = 1
+  #   a = PaperTrail::Version.count - 1
+  #   PaperTrail.enabled = true
+  #   get :revert, id: @warp.id
+  #   assert_response :success
+  # end
+
   test 'correct user should destroy an image' do
     session[:user_id] = 1
     delete :destroy, id: @warp.id
