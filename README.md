@@ -53,7 +53,118 @@ Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrat
 
 ## Installation
 
-### Quick install
+Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
+
+- [Standard Installation](#Standard-Installation)
+- [Cloud Installation](#Cloud-Installation)
+
+<hr>
+
+## Standard Installation
+
+<hr>
+
+### Prerequisites
+
+Make you have the below 3 prerequisites installed before moving forward with the [Installation Steps](#Installation-Steps).
+
+Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
+
+- [MySQL](#MySQL)
+- [Ruby version manager: RVM / Rbenv](#Ruby-version-manager:-RVM-/-Rbenv)
+- [Package manager: Npm and Yarn](#Package-manager:-Npm-and-Yarn)
+
+#### MySQL
+
+- MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
+
+Install a database, if necessary. sqlite does not seem to work due to some table constraints:
+
+```Bash
+$ sudo apt-get install mysql-server
+```
+
+
+Application-specific dependencies:
+
+`$ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
+
+(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+
+  ```Bash
+  $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
+  ```
+
+==================
+
+
+#### Ruby version manager: RVM / Rbenv
+
+This is for RVM, but the alternative, Rbenv, also works (instructions not listed here). Don't install RVM if you already have Rbenv!
+
+Install RVM for Ruby management (http://rvm.io)
+
+```Bash
+$ curl -L https://get.rvm.io | bash -s stable
+```
+
+**Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+
+**Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+
+Then, use RVM to install version 2.4.6 of Ruby:
+  ```Bash
+$ rvm install 2.4.6
+  ```
+
+==================
+
+#### Package manager: Npm and Yarn
+
+You'll also need **yarn** which is available through NPM. To install npm, you can run:
+  ```Bash
+$ sudo apt-get install npm
+  ```
+
+However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+  ```Bash
+$ sudo apt-get install nodejs-legacy
+  ```
+
+Once NPM is installed, you should be able to run:
+```Bash
+$ sudo npm install -g yarn
+```
+
+  ==================
+
+### Installation Steps
+
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
+
+1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
+2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
+3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
+4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
+5. Initialize database with `bundle exec rake db:setup`
+6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
+7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
+8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
+
+==================
+
+
+### Installation video
+
+For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
+
+http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
+
+<hr>
+
+## Cloud Installation
+
+<hr>
 
 We provide an install script for Codenvy's cloud service, which provides a free developer workspace server that allows anyone to contribute to a project without installing software: https://Codenvy.io.
 
@@ -77,108 +188,7 @@ $ rails server -b 0.0.0.0
 9. Hit the Play button located in the top menu bar.
 10. Open the Codenvy URL provided in the console to see MapKnitter booted up. Great work!
 
-### Installation video
-
-For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
-
-http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
-
-### Prerequisites
-
-Recommended; for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
-
-#1 **MySQL**
-
-MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
-
-Install a database, if necessary. sqlite does not seem to work due to some table constraints:
-
-```Bash
-sudo apt-get install mysql-server
-```
-
-
-Application-specific dependencies:
-
-`sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
-
-(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
-
-  ```Bash
-  sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
-  ```
-
-==================
-
-
-#2 **Ruby version manager** - **RVM / Rbenv**
-
-This is for RVM, but the alternative, Rbenv, also works (instructions not listed here). Don't install RVM if you already have Rbenv!
-
-Install RVM for Ruby management (http://rvm.io)
-
-```Bash
-curl -L https://get.rvm.io | bash -s stable
-```
-
-**Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
-
-**Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
-
-Then, use RVM to install version 2.4.6 of Ruby:
-  ```Bash
-rvm install 2.4.6
-  ```
-
-==================
-
-#3 **Package manager - Npm and Yarn** 
-
-You'll also need **yarn** which is available through NPM. To install npm, you can run:
-  ```Bash
-  sudo apt-get install npm
-  ```
-
-However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
-  ```Bash
-  sudo apt-get install nodejs-legacy
-  ```
-
-Once NPM is installed, you should be able to run:
-```Bash
-sudo npm install -g yarn
-```
-
-  ==================
-
-### Standard Installation
-
-You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
-
-1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
-2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
-3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
-4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
-5. Initialize database with `bundle exec rake db:setup`
-6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
-7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
-8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
-
-### Running tests
-
-When you try to run tests in MapKnitter, you can run the default Rake tasks, such as:
-
-`rake test:units`
-`rake test:functionals`
-`rake test:integration`
-
-or simply:
-
-`rake test`
-
-By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our custom defined task:
-
-`rake test:all`
+<hr>
 
 ## Logging in when running locally
 
@@ -202,6 +212,21 @@ User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'}
 u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
 u_admin.role = 'admin'
 ```
+
+## Running tests
+
+When you try to run tests in MapKnitter, you can run the default Rake tasks, such as:
+
+`rake test:units` `rake test:functionals` `rake test:integration`
+
+or simply:
+
+`rake test`
+
+By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our custom defined task:
+
+`rake test:all`
+
 
 ## Bugs and support
 
