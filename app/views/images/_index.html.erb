@@ -38,7 +38,7 @@
           <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="image-history-<%= warpable.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick="$(this).next().toggle();">
            Image history
           </button>
-          <div class="dropdown-menu image-version" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu image-version" aria-labelledby="dropdownMenuButton" id="image-vesrions-<%= warpable.id %>">
             <% warpable.versions.reverse.each do |version| %>
               <button class="<%= warpable.id %>" id="<%= version.index + 1%>" onClick="getVersion(this)"><%= version.event.capitalize %>d by
                 <% if version.whodunnit && version.whodunnit != 'Anonymous' %>
@@ -58,11 +58,16 @@
 
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
+          <div>
           <%= image_tag warpable.image.url(:thumb), 
               :'data-warpable-id' => warpable.id,
               :'data-map-id' => @map.id,
               :'id' => "warpable-img-#{warpable.id}"
           %>
+          </div>
+          <a class = "btn" onClick="$('#image-vesrions-<%= warpable.id %>').toggle()" style="cursor: pointer; margin-left: 30%;">
+            <i class='fas fa-clock'></i>
+          </a>
         </td>
 
         <td class="col-middle">
