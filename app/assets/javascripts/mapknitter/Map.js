@@ -126,7 +126,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           if (!options.readOnly) {
             // img.on('select', function(e){
             // refactor to use on/fire; but it doesn't seem to work
-            // without doing it like this: 
+            // without doing it like this:
             L.DomEvent.on(img._image, 'click', window.mapKnitter.selectImage, img);
             img.on('deselect', window.mapKnitter.saveImageIfChanged, img)
             L.DomEvent.on(img._image, 'dblclick', window.mapKnitter.dblClickImage, img);
@@ -141,7 +141,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     });
 
-    /* Deselect images if you click on the sidebar, 
+    /* Deselect images if you click on the sidebar,
      * otherwise hotkeys still fire as you type. */
     $('.sidebar').click(function () { $.each(images, function (i, img) { img.editing.disable() }) })
     /* Deselect images if you click on the map. */
@@ -159,7 +159,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         var symbol = '<symbol viewBox="0 0 18 18" id="get_app" xmlns="http://www.w3.org/2000/svg"><path fill="#058dc4" d="M14.662 6.95h-3.15v-4.5H6.787v4.5h-3.15L9.15 12.2l5.512-5.25zM3.637 13.7v1.5h11.025v-1.5H3.637z"/></symbol></svg>'
 
         options = options || {};
-        options.toolbarIcon = { 
+        options.toolbarIcon = {
           html: '<svg>' + use + symbol + '</svg>',
           tooltip: 'Export Images'
         };
@@ -224,7 +224,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     L.DomEvent.on(img._image, 'touchend', window.mapKnitter.saveImageIfChanged, img);
   },
 
-  /* 
+  /*
    * Setup toolbar and events
    */
   setupToolbar: function (img) {
@@ -294,14 +294,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
         img.editing._rotateBy(img.geocoding.angle);
 
         /* Attempt to convert altitude to scale factor based on Leaflet zoom;
-         * for correction based on altitude we need the original dimensions of the image. 
-         * This may work only at sea level unless we factor in ground level. 
+         * for correction based on altitude we need the original dimensions of the image.
+         * This may work only at sea level unless we factor in ground level.
          * We may also need to get camera field of view to get this even closer.
          * We could also fall back to the scale of the last-placed image.
          */
         if (img.geocoding.altitude && img.geocoding.altitude != 0) {
           var width = img._image.width, height = img._image.height
-          //scale = ( (act_height/img_height) * (act_width/img_width) ) / img.geocoding.altitude;           
+          //scale = ( (act_height/img_height) * (act_width/img_width) ) / img.geocoding.altitude;
           //img.editing._scaleBy(scale);
 
           var elevator = new google.maps.ElevationService(),
@@ -373,9 +373,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   /*
-   * Accepts an image element, and executes given function with 
+   * Accepts an image element, and executes given function with
    * params as: function(lat,lng) {}
-   * Adapting from: 
+   * Adapting from:
     https://github.com/publiclab/mapknitter/blob/6e88c7725d3c013f402526289e806b8be4fcc23c/public/cartagen/cartagen.js#L9378
   */
   geocodeImage: function (img, fn, id) {
@@ -385,7 +385,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       /* If the lat/lng is available. */
       if (typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined') {
 
-        // sadly, encoded in [degrees,minutes,seconds] 
+        // sadly, encoded in [degrees,minutes,seconds]
         var lat = (GPS["GPSLatitude"][0]) +
           (GPS["GPSLatitude"][1] / 60) +
           (GPS["GPSLatitude"][2] / 3600);
@@ -397,7 +397,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         if (GPS["GPSLongitudeRef"] == "W") lng = lng * -1
       }
 
-      // Attempt to use GPS compass heading; will require 
+      // Attempt to use GPS compass heading; will require
       // some trig to calc corner points, which you can find below:
 
       var angle = 0;
@@ -433,7 +433,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
       }
 
-      /* only execute callback if lat (and by 
+      /* only execute callback if lat (and by
        * implication lng) exists */
       if (lat) fn(lat, lng, id, angle, altitude);
     });
@@ -442,8 +442,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
   selectImage: function (e) {
     var img = this;
     // var img = e.layer;
-    // save state, watch for changes by tracking 
-    // stringified corner positions: 
+    // save state, watch for changes by tracking
+    // stringified corner positions:
     img._corner_state = JSON.stringify(img._corners)
     for (var i in images) {
       if (img._leaflet_id != images[i]._leaflet_id) {
@@ -508,7 +508,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     })
   },
 
-  // /maps/newbie/warpables/42, but we'll try /warpables/42 
+  // /maps/newbie/warpables/42, but we'll try /warpables/42
   // as it should also be a valid restful route
   deleteImage: function () {
     var img = this
@@ -607,7 +607,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var overlayMaps = {
     };
 
-    var layersControl = new L.Control.Layers(baseMaps, overlayMaps);
+    var layersControl = new L.control.layers(baseMaps, overlayMaps);
     this._map.addControl(layersControl);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -663,7 +663,7 @@ var CToggleOutline = L.EditAction.extend({
       href,
       tooltip,
       symbol;
-  
+
 
     if (edit._outlined) {
       href = '<use xlink:href="#border_clear"></use>';
