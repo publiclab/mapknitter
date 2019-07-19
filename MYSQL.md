@@ -2,11 +2,15 @@
 
 ## Instructions
 
-## MacOS
+<hr>
 
-### Homebrew setup:
+### MacOS
 
-(Note: The alternative to Homebrew is [mySQL community server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) - available for all systems)
+<hr>
+
+This setup uses Homebrew. 
+
+Mojave users, please follow these instructions and, afterwards, the appended commands under [Mojave Users](#Mojave-Users) below.
 
 **Dependencies:**
 
@@ -119,13 +123,26 @@ Whenever you want to access the mysql db locally, you need to run this login fir
 $ mysql -u <username> -p
 ```
 
+### Mojave Users:
 
-## Linux
+- Mojave changed the location of header files necessary for compiling C extensions, as well as mySQL file locations. You'll want to run these commands to ensure that later installation runs smoothly:
+
+```Bash
+$ bundle config --local build.mysql2 "--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"
+
+$ sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+```
+
+<hr>
+
+### Linux
+
+<hr>
+
 
 **Installation:**
 
 ```Bash
-
 # If you do not have mysql-server installed run
 $ sudo apt-get install mysql-server
 # Enter a password you can rem when prompted during installation for root
@@ -161,7 +178,7 @@ $ rm -rf /etc/apparmor.d/abstractions/mysql /etc/apparmor.d/cache/usr.sbin.mysql
 $ updatedb
 $ exit
 
-````
+```
 After this repeat installation and configuration steps
 
 
@@ -169,7 +186,14 @@ Add the username and passsword on the `config/database.yml` development:
 
 Note: _You can use MariaDB in development as your database if you are more comfortable with it_
 
-## Troubleshooting
+<hr>
+
+### Troubleshooting
+
+- [MySQL build / setup](#MySQL-build-/-setup)
+- [mysql2 gem](#mysql2-gem)
+
+<hr>
 
 ### MySQL build / setup
 
@@ -190,7 +214,8 @@ Note: _You can use MariaDB in development as your database if you are more comfo
     -   Copy the contents of [`database.yml.example`](config/database.yml.example), but add your personal username and password, which should have been set up during MySQL setup.
 
 
-2. If you ever see this error, **do not update to this gem**. Look online or ask PL for help!
+2. If you ever see this error, **do not update to this gem**. Instead, try running the commands under [Mojave Users](#Mojave-Users) if you are a Mojave user, or ask look online or ask PL for help!
+
     <blockquote>
     Please install the mysql2 adapter: gem install activerecord-mysql2-adapter (cannot load such file -- mysql2/mysql2) (LoadError)
     </blockquote>
