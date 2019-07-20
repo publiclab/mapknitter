@@ -26,7 +26,7 @@ group :dependencies do
   gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-  gem 'webpacker', '~> 4.0'
+  gem 'webpacker'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
