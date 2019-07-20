@@ -103,7 +103,7 @@ class ImagesController < ApplicationController
     @warpable = Warpable.find params[:id]
     version = @warpable.versions.find(params[:version])
     version.reify&.save
-    redirect_to :back
+    redirect_to @warpable.map
   end
 
   def destroy

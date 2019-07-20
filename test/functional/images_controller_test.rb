@@ -1,13 +1,17 @@
 require 'test_helper'
+require 'paper_trail'
 
 class ImagesControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
     @warp = warpables(:one)
+    system('mkdir -p public/system/images/1/original')
+    system('cp test/fixtures/demo.png public/system/images/2/original/test.png')
 
     @file ||= File.open(File.expand_path(Rails.root + 'test/fixtures/demo.png', __FILE__))
     @uploaded_data = ActionDispatch::Http::UploadedFile.new(tempfile: @file, filename: File.basename(@file), type: "image/png")
+    PaperTrail.enabled = true
   end
 
   def teardown
@@ -56,15 +60,8 @@ class ImagesControllerTest < ActionController::TestCase
     patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
     assert_not_nil @warp.nodes
     assert_equal "text/html", response.content_type
+    assert_response :success
   end
-
-  # test 'show revert to an image' do
-  #   session[:user_id] = 1
-  #   a = PaperTrail::Version.count - 1
-  #   PaperTrail.enabled = true
-  #   get :revert, id: @warp.id
-  #   assert_response :success
-  # end
 
   test 'correct user should destroy an image' do
     session[:user_id] = 1
@@ -78,6 +75,32 @@ class ImagesControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to '/login'
     assert_not_nil flash[:error]
+  end
+
+  test 'creates version after image creation' do
+    session[:user_id] = 1
+    post :create, map_id: @map.slug, uploaded_data: @uploaded_data
+    warp = Warpable.last
+    assert warp.versions.present?
+  end
+
+  test 'create version after update' do
+
+    warp = warpables(:two)
+    warp.versions.destroy_all
+    warp.nodes = "2,3,4,5"
+    warp.save
+    assert warp.versions.present?
+  end
+
+  test 'should revert to an image through versions' do
+    points = "-72.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,41.84"
+
+    session[:user_id] = 1
+    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
+
+    get :revert, id: @warp.id, version: @warp.versions.last
+    assert_response :redirect
   end
 
   # Imports don't work. Relevent issue: https://github.com/publiclab/mapknitter/issues/614
