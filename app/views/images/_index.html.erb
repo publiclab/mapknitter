@@ -115,6 +115,7 @@
                   <u>an Anonymous user</u>
                 <% end %>
                 <%= time_ago_in_words(version.created_at) %> ago
+                <%= link_to '' ,images_revert_path(id: warpable.id, version:version), class: 'fa fa-undo', title: 'Revert to this version' %>
               </button>
             <% end %>
           </div>

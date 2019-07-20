@@ -100,15 +100,10 @@ class ImagesController < ApplicationController
   end
 
   def revert
-    puts "revert action"
-    id = params[:id].split(',')
-    warpable = Warpable.find id[0]
-    # warpable = warpable.paper_trail.version_at(1.day.ago)
-    warpable = warpable.versions[id[1].to_i].reify
-    warpable.count_version = 1
-    warpable.save
-    puts "Warpable no. #{warpable}"
-    render html: 'success'
+    @warpable = Warpable.find params[:id]
+    version = @warpable.versions.find(params[:version])
+    version.reify&.save
+    redirect_to :back
   end
 
   def destroy
