@@ -8,4 +8,4 @@ comment:
 coverage:
   status:
     project: off    #turned off due to inconsistencies in reporting
-    patch: on
+    patch: off
