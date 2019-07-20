@@ -6,8 +6,11 @@ class ImagesControllerTest < ActionController::TestCase
   def setup
     @map = maps(:saugus)
     @warp = warpables(:one)
+    system('mkdir -p public/warps/saugus-landfill-incinerator-working')
     system('mkdir -p public/system/images/1/original')
-    system('cp test/fixtures/demo.png public/system/images/2/original/test.png')
+    system('mkdir -p public/system/images/1/original')
+    system('cp test/fixtures/demo.png public/system/images/1/original/')
+    system('mkdir -p public/warps/saugus-landfill-incinerator')
 
     @file ||= File.open(File.expand_path(Rails.root + 'test/fixtures/demo.png', __FILE__))
     @uploaded_data = ActionDispatch::Http::UploadedFile.new(tempfile: @file, filename: File.basename(@file), type: "image/png")
@@ -85,12 +88,10 @@ class ImagesControllerTest < ActionController::TestCase
   end
 
   test 'create version after update' do
-
-    warp = warpables(:two)
-    warp.versions.destroy_all
-    warp.nodes = "2,3,4,5"
-    warp.save
-    assert warp.versions.present?
+    @warp.versions.destroy_all
+    @warp.nodes = "2,3,4,5"
+    @warp.save
+    assert @warp.versions.present?
   end
 
   test 'should revert to an image through versions' do

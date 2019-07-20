@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
 
   def user_for_paper_trail
     # Save the user responsible for the action
-    logged_in? ? current_user.login : 'Anonymous'
+    logged_in? ? current_user.id : 'Anonymous'
   end
 
   def current_user
