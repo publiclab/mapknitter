@@ -485,8 +485,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // reset change state string:
     img._corner_state = JSON.stringify(img._corners)
     // send save request
-    $.ajax('/images/update', {
-      type: 'POST',
+    $.ajax('/images', {
+      type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
         locked: (img.editing._mode == 'lock'),
