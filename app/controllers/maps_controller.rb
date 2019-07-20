@@ -92,7 +92,7 @@ class MapsController < ApplicationController
   def edit; end
 
   def update
-    @map.update_attributes(map_params)
+    @map.update(map_params)
 
     save_tags(@map)
     @map.save
