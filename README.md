@@ -227,6 +227,14 @@ By running like this you'll see a lot of warnings and deprecation notices - FOR 
 
 `rake test:all`
 
+#### To run one test file:
+
+`rails test test/unit/some_file.rb`
+
+#### And to run just a single test within a file:
+
+`rails test test/functional/some_file.rb:[line number of the test]`
+
 
 ## Bugs and support
 
