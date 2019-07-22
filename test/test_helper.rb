@@ -1,7 +1,11 @@
 
 require_relative '../config/environment'
-require 'rails/test_help'
 require 'simplecov'
+require 'codecov'
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+SimpleCov.start
+
+require 'rails/test_help'
 require 'minitest/reporters'
 MiniTest::Reporters.use! [MiniTest::Reporters::ProgressReporter.new,
                           MiniTest::Reporters::JUnitReporter.new]

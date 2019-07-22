@@ -6,7 +6,6 @@
   "author": "Public Lab contributors <web@publiclab.org>",
   "license": "MIT",
   "dependencies": {
-    "Leaflet.EasyButton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
@@ -24,7 +23,7 @@
     "junction": "theleagueof/junction#*",
     "leaflet": "Leaflet/Leaflet#^1.0.0",
     "leaflet-dist": "vperron/leaflet-dist#0.7.x",
-    "leaflet-distortableimage": "^0.6.0",
+    "leaflet-distortableimage": "^0.6.3",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-easybutton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "leaflet-environmental-layers": "^1.3.6",
