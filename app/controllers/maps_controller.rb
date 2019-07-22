@@ -136,10 +136,14 @@ class MapsController < ApplicationController
     area = params[:id] || 'this area'
     @title = "Maps in #{area}"
     ids = Map.bbox(params[:minlat], params[:minlon], params[:maxlat], params[:maxlon]).collect(&:id)
-    @maps = Map.where(password: '')
-               .where('id IN (?)', ids)
-               .paginate(page: params[:page], per_page: 24)
-               .except(:styles, :email)
+
+    @maps =
+      Rails.cache.fetch("region-#{params[:minlat]}-#{params[:minlon]}-#{params[:maxlat]}-#{params[:maxlon]}", expires_in: 1.day) do
+        Map.where(password: '')
+           .where('id IN (?)', ids)
+           .paginate(page: params[:page], per_page: 50)
+           .except(:styles, :email)
+      end
     @maps.each do |map|
       map.image_urls = map.warpables.map { |warpable| warpable.image.url }
     end
