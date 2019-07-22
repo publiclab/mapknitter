@@ -51,8 +51,8 @@ class Map < ActiveRecord::Base
     Map.where(user_id: 0)
   end
 
-  def self.bbox(minlat, minlon, maxlat, maxlon, tag=nil)
-    if tag == nil
+  def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
+    if tag.nil?
       Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
                  minlat, maxlat, minlon, maxlon])
     else

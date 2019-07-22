@@ -135,10 +135,11 @@ class MapsController < ApplicationController
   def region
     area = params[:id] || 'this area'
     @title = "Maps in #{area}"
-    ids = Map.bbox(params[:minlat], params[:minlon], params[:maxlat], params[:maxlon], params[:tag]).collect(&:id)
-
+    ids = Map.bbox(params[:minlat], params[:minlon], params[:maxlat], params[:maxlon], params[:tag])
+             .collect(&:id)
+    cache_key = "#{params[:minlat]}-#{params[:maxlat]}-#{params[:minlon]}-#{params[:maxlon]}-#{params[:tag]}"
     @maps =
-      Rails.cache.fetch("region-#{params[:minlat]}-#{params[:maxlat]}-#{params[:minlon]}-#{params[:maxlon]}-#{params[:tag]}", expires_in: 1.day) do
+      Rails.cache.fetch(cache_key, expires_in: 1.day) do
         Map.where(password: '')
           .where('id IN (?)', ids)
           .paginate(page: params[:page], per_page: 50)
