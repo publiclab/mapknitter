@@ -85,8 +85,9 @@ $ sudo apt-get install mysql-server
 ```
 
 2. Application-specific dependencies:
-
-`$ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
+```Bash
+$ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev
+```
 
 3. *(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
@@ -106,9 +107,9 @@ This is for RVM, but the alternative, **rbenv**, also works (instructions not li
 $ curl -L https://get.rvm.io | bash -s stable
 ```
 
-**Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+- **Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
 
-*Ubuntu users:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+- *Ubuntu users:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
 2. Use RVM to install version 2.4.6 of Ruby:
 
@@ -128,13 +129,13 @@ We use Yarn as our package manager, which is available through npm.
 $ sudo apt-get install npm
   ```
 
-*on Ubuntu*, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+2. *Ubuntu users only*, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
 
   ```Bash
 $ sudo apt-get install nodejs-legacy
   ```
 
-2. Once npm is installed, you should be able to use it to install Yarn:
+3. Once npm is installed, you should be able to use it to install Yarn:
 
 ```Bash
 $ sudo npm install -g yarn
