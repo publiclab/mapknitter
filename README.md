@@ -85,6 +85,7 @@ $ sudo apt-get install mysql-server
 ```
 
 2. Application-specific dependencies:
+
 ```Bash
 $ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev
 ```
@@ -107,11 +108,11 @@ This is for RVM, but the alternative, **rbenv**, also works (instructions not li
 $ curl -L https://get.rvm.io | bash -s stable
 ```
 
-- **Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+2. At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
 
-- *Ubuntu users:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+   - *Ubuntu users only:* you may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-2. Use RVM to install version 2.4.6 of Ruby:
+3. Use RVM to install version 2.4.6 of Ruby:
 
   ```Bash
 $ rvm install 2.4.6
@@ -129,7 +130,7 @@ We use Yarn as our package manager, which is available through npm.
 $ sudo apt-get install npm
   ```
 
-2. *Ubuntu users only*, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+2. *Ubuntu users only*: you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
 
   ```Bash
 $ sudo apt-get install nodejs-legacy
