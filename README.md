@@ -70,26 +70,25 @@ Make sure you have the below 3 prerequisites installed before moving forward wit
 
 Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
 
-1. [MySQL](#MySQL)
-2. [RVM](#RVM)
-3. [npm & Yarn](#npm-&-Yarn)
+1. [MySQL](#MySQL) - Database
+2. [RVM](#RVM) - Ruby version manager
+3. [Yarn](#Yarn) - Package manager
 
 #### MySQL
 
 MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
 
-Install a database:
+1. Install MYSQL:
 
 ```Bash
 $ sudo apt-get install mysql-server
 ```
 
-
-Application-specific dependencies:
+2. Application-specific dependencies:
 
 `$ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-*(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+3. *(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
   ```Bash
   $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
@@ -99,11 +98,9 @@ Application-specific dependencies:
 
 #### RVM
 
-Here we install a Ruby version manager. 
-
 This is for RVM, but the alternative, **rbenv**, also works (instructions not listed here). Don't install RVM if you already have rbenv!
 
-Install RVM: (http://rvm.io)
+1. Install RVM: (http://rvm.io)
 
 ```Bash
 $ curl -L https://get.rvm.io | bash -s stable
@@ -111,20 +108,21 @@ $ curl -L https://get.rvm.io | bash -s stable
 
 **Note:** At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
 
-**Ubuntu users:** You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+*Ubuntu users:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
-Then, use RVM to install version 2.4.6 of Ruby:
+2. Use RVM to install version 2.4.6 of Ruby:
+
   ```Bash
 $ rvm install 2.4.6
   ```
 
 ==================
 
-#### npm & Yarn
+#### Yarn
 
 We use Yarn as our package manager, which is available through npm. 
 
-To install npm:
+1. Install npm:
 
   ```Bash
 $ sudo apt-get install npm
@@ -136,7 +134,7 @@ $ sudo apt-get install npm
 $ sudo apt-get install nodejs-legacy
   ```
 
-Once npm is installed, you should be able to run:
+2. Once npm is installed, you should be able to use it to install Yarn:
 
 ```Bash
 $ sudo npm install -g yarn
