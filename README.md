@@ -64,21 +64,21 @@ Please consider which installation method you prefer. Cloud Installation require
 
 <hr>
 
-### Prerequisites
+### Prerequisites for Standard Installation
 
-Make you have the below 3 prerequisites installed before moving forward with the [Installation Steps](#Installation-Steps).
+Make sure you have the below 3 prerequisites installed before moving forward with the [Installation Steps](#Installation-Steps).
 
 Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
 
-- [MySQL](#MySQL)
-- [Ruby version manager: RVM / Rbenv](#Ruby-version-manager:-RVM-/-Rbenv)
-- [Package manager: Npm and Yarn](#Package-manager:-Npm-and-Yarn)
+1. [MySQL](#MySQL)
+2. [Ruby version manager: RVM / Rbenv](#Ruby-version-manager:-RVM-/-Rbenv)
+3. [Package manager: Npm and Yarn](#Package-manager:-Npm-and-Yarn)
 
 #### MySQL
 
-- MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
+MacOS and Linux users, please reference [MYSQL.md](MYSQL.md) instead.
 
-Install a database, if necessary. sqlite does not seem to work due to some table constraints:
+Install a database:
 
 ```Bash
 $ sudo apt-get install mysql-server
@@ -89,7 +89,7 @@ Application-specific dependencies:
 
 `$ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev`
 
-(optional) For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+*(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
 
   ```Bash
   $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
@@ -140,7 +140,7 @@ $ sudo npm install -g yarn
 
 ### Installation Steps
 
-You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / rbenv / etc. - to install and set locally)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or rbenv - to install and set locally)
 
 1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
