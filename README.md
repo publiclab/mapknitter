@@ -71,8 +71,8 @@ Make sure you have the below 3 prerequisites installed before moving forward wit
 Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
 
 1. [MySQL](#MySQL)
-2. [Ruby version manager: RVM / Rbenv](#Ruby-version-manager:-RVM-/-Rbenv)
-3. [Package manager: Npm and Yarn](#Package-manager:-Npm-and-Yarn)
+2. [RVM](#RVM)
+3. [npm & Yarn](#npm-&-Yarn)
 
 #### MySQL
 
@@ -97,12 +97,13 @@ Application-specific dependencies:
 
 ==================
 
+#### RVM
 
-#### Ruby version manager: RVM / Rbenv
+Here we install a Ruby version manager. 
 
-This is for RVM, but the alternative, Rbenv, also works (instructions not listed here). Don't install RVM if you already have Rbenv!
+This is for RVM, but the alternative, **rbenv**, also works (instructions not listed here). Don't install RVM if you already have rbenv!
 
-Install RVM for Ruby management (http://rvm.io)
+Install RVM: (http://rvm.io)
 
 ```Bash
 $ curl -L https://get.rvm.io | bash -s stable
@@ -119,19 +120,24 @@ $ rvm install 2.4.6
 
 ==================
 
-#### Package manager: Npm and Yarn
+#### npm & Yarn
 
-You'll also need **yarn** which is available through NPM. To install npm, you can run:
+We use Yarn as our package manager, which is available through npm. 
+
+To install npm:
+
   ```Bash
 $ sudo apt-get install npm
   ```
 
-However, on Ubuntu, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+*on Ubuntu*, you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+
   ```Bash
 $ sudo apt-get install nodejs-legacy
   ```
 
-Once NPM is installed, you should be able to run:
+Once npm is installed, you should be able to run:
+
 ```Bash
 $ sudo npm install -g yarn
 ```
@@ -152,7 +158,6 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
 ==================
-
 
 ### Installation video
 
