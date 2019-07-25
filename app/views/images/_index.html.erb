@@ -124,18 +124,3 @@
     <% end %>
   </tbody>
 </table>
-<script>
-  function getVersion(el){
-    var id = $(el).attr('class');
-    var num = $(el).attr('id') - 1;
-    console.log(num);
-    var arr =[id,num]
-    $.ajax({
-      url: '/images/revert/' + arr,
-      type: 'GET',
-       success: function(data) {
-           console.log("Success");
-      }
-  })
-};
-</script>
