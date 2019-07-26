@@ -6,6 +6,8 @@
   "author": "Public Lab contributors <web@publiclab.org>",
   "license": "MIT",
   "dependencies": {
+    "mkdirp": "0.5.1",
+    "q": "1.5.1",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
@@ -13,8 +15,11 @@
     "bootstrap": "twbs/bootstrap#^4.3.1",
     "cartagen": "jywarren/cartagen#*",
     "components-jqueryui": "components/jqueryui#^1.12.1",
+    "decompress-zip": "0.2.1",
     "exif-js": "jseidelin/exif-js#*",
     "glfx-js": "jywarren/glfx.js#*",
+    "graceful-fs": "4.1.0",
+    "graceful-js": "1.0.0",
     "image-sequencer": "publiclab/image-sequencer#~1.4.0",
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.0",
     "jquery": "jquery/jquery-dist#^3.4.1",
@@ -38,9 +43,7 @@
     "prototypejs-bower": "plynchnlm/prototypejs-bower#1.7.3",
     "sparklines": "mariusGundersen/sparkline#~1.2.0",
     "spin.js": "fgnass/spin.js#^2.3.1",
-    "webgl-distort": "jywarren/webgl-distort#*",
-    "decompress-zip": "^0.2.1",
-    "mkdirp": "^0.5.0"
+    "webgl-distort": "jywarren/webgl-distort#*"
   },
   "engines": {
     "yarn": ">= 1.0.0"
