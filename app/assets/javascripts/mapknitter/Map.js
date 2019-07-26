@@ -607,7 +607,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var overlayMaps = {
     };
 
-    var layersControl = new L.Control.Layers(baseMaps, overlayMaps);
+    var layersControl = L.control.layers(baseMaps, overlayMaps);
     this._map.addControl(layersControl);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
