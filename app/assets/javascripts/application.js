@@ -18,7 +18,7 @@
 
 //= require bootstrap/dist/js/bootstrap.js
 
-//= require leaflet/dist/leaflet
+//= require leaflet/dist/leaflet.js
 //= require leaflet-providers/leaflet-providers.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
