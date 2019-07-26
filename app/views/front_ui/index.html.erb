@@ -2,7 +2,7 @@
 <%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
-<%# <%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %> 
+<%= javascript_include_tag('leaflet-fullHash.js') %>
 
 <style>
 #hero {
@@ -205,8 +205,8 @@
   defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
 
-  var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
-  // var hash = new L.Hash(Mapknitterunique);
+  var Mapknitterunique = L.map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
+  var hash = new L.Hash(Mapknitterunique);
 
   var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
 
