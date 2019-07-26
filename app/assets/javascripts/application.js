@@ -26,12 +26,14 @@
 // = require bootstrap/dist/js/bootstrap.js
 
 // = require leaflet/dist/leaflet.js
+// = require leaflet-fullhash/leaflet-fullHash.js
 // = require leaflet-providers/leaflet-providers.js
 // = require leaflet-toolbar/dist/leaflet.toolbar.js
 //=  require leaflet-draw/dist/leaflet.draw-src.js
 //=  require leaflet-illustrate/dist/Leaflet.Illustrate.js
 // = require leaflet-distortableimage/dist/leaflet.distortableimage.js
 // = require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
+// = require leaflet-environmental-layers/src/windRoseLayer.js
 // = require leaflet-easybutton/src/easy-button.js
 // = require sparklines/source/sparkline.js
 // = require glfx-js/dist/glfx.js

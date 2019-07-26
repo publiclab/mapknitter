@@ -1,9 +1,8 @@
-<%= javascript_include_tag('/lib/leaflet-environmental-layers/src/windRoseLayer.js') %>
-<%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
-<%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
+<%# <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
+<%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
 <%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
-<%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %>
+<%# <%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %> 
 
 <style>
 #hero {
@@ -207,7 +206,7 @@
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
 
   var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
-  var hash = new L.Hash(Mapknitterunique);
+  // var hash = new L.Hash(Mapknitterunique);
 
   var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
 
@@ -256,7 +255,7 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(Mapknitterunique); 
 
-  Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
+  // Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
   Mapknitterunique.on('fullscreenchange', function () {
     if (Mapknitterunique.isFullscreen()) {
       Mapknitterunique.options.minZoom = 3 ;
