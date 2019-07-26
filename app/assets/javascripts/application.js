@@ -23,6 +23,7 @@
 //= require leaflet-providers/leaflet-providers.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
+//= require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
 //= require leaflet-easybutton/src/easy-button.js
 //= require Google.js
 //= require sparklines/source/sparkline.js
