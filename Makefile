@@ -9,7 +9,7 @@ build:
 
 deploy-container:
 	docker-compose up -d
-	while ! docker logs mapknitter | grep "web server started"; do\
+	@while ! docker logs mapknitter | grep "web server started"; do\
 		echo "Serving Mapknitter";\
 		sleep 10;\
 	done;
@@ -17,7 +17,7 @@ deploy-container:
 redeploy-container:
 	docker-compose down --remove-orphans
 	docker-compose up --force-recreate -d
-	while ! docker logs mapknitter | grep "web server started"; do\
+	@while ! docker logs mapknitter | grep "web server started"; do\
 		echo "Serving Mapknitter";\
 		sleep 10;\
 	done;

@@ -16,8 +16,7 @@ Rails.application.configure do
                                'knitter.js',
                                'annotations.js',
                                'maps.js',
-                               'admin.js',
-                               'admin.css']
+                               'leaflet-fullHash.js']
 
 
     # Precompile additional assets.
