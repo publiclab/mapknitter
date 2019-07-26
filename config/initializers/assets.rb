@@ -12,6 +12,5 @@ Rails.application.config.assets.precompile += %w[*.png *.jpg *.jpeg *.gif *.svg]
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile += ['tags.js',
                                                'uploads.js',
-                                               'knitter.js',
                                                'annotations.js',
                                                'maps.js']

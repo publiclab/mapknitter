@@ -39,7 +39,6 @@ Mapknitter::Application.configure do
   config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
   config.assets.precompile += ['tags.js',
                                'uploads.js',
-                               'knitter.js',
                                'annotations.js',
                                'maps.js']
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
