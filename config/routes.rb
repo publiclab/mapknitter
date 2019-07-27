@@ -9,6 +9,7 @@ Mapknitter::Application.routes.draw do
   post "save_location" => 'front_ui#save_location'
   get 'about' => 'front_ui#about'
   get 'all_maps' => 'front_ui#all_maps'
+  get 'anonymous' => 'front_ui#anonymous'
 
   get 'external_url_test' => 'export#external_url_test'
   get 'local/:login' => 'sessions#local'
