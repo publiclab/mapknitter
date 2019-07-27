@@ -34,6 +34,16 @@
   overflow: hidden;
   position: absolute;
 }
+#anonymous-map button{
+  width: 70px;
+  background-color: #ffffff;
+  border: none;
+  margin-right: 0.25rem;
+}
+#anonymous-map  i{
+  font-size:20px;
+  color:white;
+  }
 @media(max-width: 780px) {
   .before-featured-map {
     margin-bottom: 50px;
@@ -52,13 +62,45 @@
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
                 Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
             </a>
-            <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
-                Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+            <% if logged_in? %>
+              <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
+            <% else %>
+              <a class="btn btn-primary btn-lg" href="" data-toggle="collapse" data-target="#anonymous-map">
+            <% end %>
+            Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
             </a>
             </p>
         </div>
-    </div>
-</div>
+
+        <div id = "anonymous-map" class="collapse text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+          <p>We strongly prefer that you should Log in via
+            <br><br>
+          <%= button_tag 'Google', name: "subaction", value: "google_oauth2" do %>
+            <span class="btn btn-default" style="background-color: #d34836;width: 60px;">
+            <i class="fab fa-google fa-fw"></i>
+            </span>
+          <% end %>
+          <%= button_tag submit: 'Twitter', name: "subaction", value: "twitter" do %>
+            <span class="btn btn-default" style="background-color: #1da1f2;width: 60px;">
+              <i class="fab fa-twitter fa-fw"></i>
+            </span>
+          <% end %>
+          <%= button_tag 'Facebook', name: "subaction", value: "facebook" do%>
+            <span class="btn btn-default" style="background-color: #3b5998;width: 60px;">
+              <i class="fab fa-facebook fa-fw"></i>
+            </span>
+          <% end %>
+          <br><br>
+          OR <a href="http://publiclab.org/signup">sign up for a Public Lab account</a>
+          <br>
+          before making a map. However, if you wish to remain anonymous for privacy reasons, <a href="<%= new_map_url %>">click here</a> to create a map. Also, note that, Anonymous maps have some limitations, <a href="/anonymous">click here</a> to learn more.
+          </p>
+      </div>
+
+  </div>
+  <div class="mini-login">
+    <%= render partial: "layouts/login_modal" %>
+  </div>
 </div>
 
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
