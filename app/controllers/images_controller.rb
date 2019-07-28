@@ -102,7 +102,7 @@ class ImagesController < ApplicationController
   def revert
     @warpable = Warpable.find params[:id]
     version = @warpable.versions.find(params[:version])
-    version.reify&.save
+    version.reify
     @warpable.count_version = 1
     @warpable.save
     redirect_to @warpable.map

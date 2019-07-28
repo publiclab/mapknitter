@@ -82,15 +82,17 @@ class ImagesControllerTest < ActionController::TestCase
 
   test 'creates version after image creation' do
     session[:user_id] = 1
-    post :create, map_id: @map.slug, uploaded_data: @uploaded_data
+    post :create, map_id: @map.slug, uploaded_data: @uploaded_data, count_version: 0
     warp = Warpable.last
     assert warp.versions.present?
   end
 
   test 'create version after update' do
     @warp.versions.destroy_all
+    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, nodes: "1,2,3,4"
     @warp.nodes = "2,3,4,5"
     @warp.save
+    assert_response :success
     assert @warp.versions.present?
   end
 
