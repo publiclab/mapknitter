@@ -16,7 +16,7 @@
 
 <% if @map.warpables.empty? %>
   <p id="no-images">No images uploaded. </p>
-<%end%>
+<% end %>
 <table class="warpables-all table table-striped">
   <tbody>
     <% sort_param = params[:sort] %>
@@ -131,16 +131,12 @@
 </table>
 <script>
   function grid(){
+    $('td').hide();
+    $('.warpable').show();
     $('tr').css('display','inline-block');
-    $('tr').css('background-color','none');
-    $('td').css('display','none');
-    $('.warpable').css('display','inline-block');
     $('.warpable').css('padding','0.75rem 0.5rem')
   }
   function list(){
-    $('tr').css('display','block');
-    $('td').css('display','inline-block');
-    $('.warpable').css('display','inline-block');
-    $('.warpable').css('padding-right','3rem')
+    $('td').show();
   }
 </script>
