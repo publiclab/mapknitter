@@ -54,7 +54,7 @@
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         })
 
-	map = new L.Map('leafletmap', {
+	map = L.map('leafletmap', {
 		crs:L.CRS.EPSG3857,
 		layers: [google,main]
 	});
@@ -67,10 +67,10 @@
 	    "Overlay": main
 	};
  
-	var layersControl = new L.Control.Layers(baseMaps,overlayMaps);
+	var layersControl = L.control.Layers(baseMaps,overlayMaps);
 	map.addControl(layersControl);
 
-	map.setView(new L.LatLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
+	map.setView(L.latLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
 
   })()
 </script> 
