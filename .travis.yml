@@ -26,8 +26,9 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle check --path vendor/.bundle/ || bundle install --path vendor/.bundle/
-  - yarn add mkdirp q --install.modules-folder "./public/lib"
-  - yarn check || yarn install
+  - if [ $RAILS_ENV != 'production' ]; then
+      yarn check || yarn install;
+    fi
   - if [ $RAILS_ENV == 'production' ]; then
       mysql -e "CREATE DATABASE mapknitter;";
       mysql -e "CREATE USER 'mapknitter'@'%' IDENTIFIED BY 'mapknitter';";
