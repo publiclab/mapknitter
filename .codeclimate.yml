@@ -17,8 +17,6 @@ plugins:
     enabled: true
   fixme:
     enabled: true
-  rubocop:
-    enabled: true
 
 exclude_patterns:
 - config/
