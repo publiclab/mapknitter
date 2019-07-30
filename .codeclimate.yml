@@ -24,5 +24,6 @@ exclude_patterns:
 - vendor/
 - log/
 - bin/
+- test/
 
 
