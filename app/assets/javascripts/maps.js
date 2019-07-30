@@ -1,3 +1,9 @@
+//= require jquery-ui/jquery-ui.min.js
+//= require knitter
+//= require exif-js/exif.js
+//= require mapknitter
+//= require ion-rangeslider/js/ion.rangeSlider.js
+
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
   window.toggle_sidebar = function() {

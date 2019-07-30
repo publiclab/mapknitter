@@ -27,7 +27,7 @@ L.Google = L.Class.extend({
 
 	// Possible types: SATELLITE, ROADMAP, HYBRID, TERRAIN
 	initialize: function(type, options) {
-		L.Util.setOptions(this, options);
+		L.setOptions(this, options);
 
 		this._ready = google.maps.Map !== undefined;
 		if (!this._ready) L.Google.asyncWait.push(this);
@@ -201,4 +201,8 @@ L.Google.asyncInitialize = function() {
 		}
 	}
 	L.Google.asyncWait = [];
+};
+
+L.google = function (type, options) {
+	return new L.Google(type, options);
 };
