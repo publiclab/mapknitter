@@ -32,11 +32,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
-    var exportA = mapknitter.customExportAction();
-    var imgGroup = L.distortableCollection({
-      actions: [exportA]
-    }).addTo(map);
-
     /* Load warpables data via AJAX request. */
     this._warpablesUrl = options.warpablesUrl;
     this.withWarpables(function (warpables) {
@@ -100,6 +95,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
             mode: 'lock'
           }).addTo(map);
 
+          var exportA = mapknitter.customExportAction();
+          var imgGroup = L.distortableCollection({
+            actions: [exportA]
+          }).addTo(map);
+
           imgGroup.addLayer(img);
 
           bounds = bounds.concat(corners);
@@ -114,8 +114,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
               load: mapknitter.setupToolbar
             }, img);
             
-            img.on('deselect', window.mapknitter.saveImageIfChanged, img)
             L.DomEvent.on(imgGroup, 'layeradd', window.mapknitter.setupEvents, this);
+            img.on('deselect', window.mapknitter.saveImageIfChanged, img);
           }
         }
       });
@@ -231,7 +231,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var img = this,
         edit = img.editing;
 
-    edit.enable();
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
     if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
     edit.addTool(mapknitter.customDeleteAction());
@@ -261,17 +260,24 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img.warpable_id = id;
     img.addTo(map);
 
+    /** 
+     * TODO: creating the feature group now so that event handling works with it 
+     * but can't actually add the img to it until image load because the image has
+     * no corners. Above ^ we initialize image with no corners. Need to figure out a fix.
+    */
     var exportA = mapknitter.customExportAction();
     var imgGroup = L.distortableCollection({
       actions: [exportA]
     }).addTo(map);
 
-    imgGroup.addLayer(img);
-
     L.DomEvent.on(img._image, {
-      click: mapKnitter.selectImage,
-      dblclick: mapknitter.dblClickImage,
-      load: mapknitter.setupToolbarAndGeocode
+      click: mapknitter.selectImage,
+      dblclick: mapknitter.dblClickImage
+    }, img);
+
+    L.DomEvent.on(img._image, 'load', function() {
+      imgGroup.addLayer(img);
+      mapknitter.setupToolbarAndGeocode();
     }, img);
 
     img.on('deselect', window.mapknitter.saveImageIfChanged, img);
@@ -450,10 +456,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var img = this;
     // var img = e.layer;
     // save state, watch for changes by tracking stringified corner positions: 
-    img._corner_state = JSON.stringify(img._corners)
+    img._corner_state = JSON.stringify(img._corners);
     /* Ensure this is enabled */
-    img.editing.enable.bind(img.editing)()
-    img.bringToFront()
+    img.bringToFront();
     /* If it's locked, allow event to propagate on to map below */
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
@@ -480,7 +485,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   saveImage: function () {
     var img = this;
     // reset change state string:
-    img._corner_state = JSON.stringify(img._corners)
+    img._corner_state = JSON.stringify(img._corners);
     // send save request
     $.ajax('/images/update', {
       type: 'POST',
