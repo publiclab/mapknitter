@@ -114,8 +114,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
               load: mapknitter.setupToolbar
             }, img);
             
-            L.DomEvent.on(imgGroup, 'layeradd', window.mapknitter.setupEvents, this);
-            img.on('deselect', window.mapknitter.saveImageIfChanged, img);
+            L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+            img.on('deselect', mapknitter.saveImageIfChanged, img);
           }
         }
       });
@@ -217,11 +217,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
     return action;
   },
 
-  setupEvents: function (e) {
-    var img = e.layer;
+  setupEvents: function () {
+    var img = this;
 
-    L.DomEvent.on(img._image, 'mouseup', window.maknitter.saveImageIfChanged, img);
-    L.DomEvent.on(img._image, 'touchend', window.mapknitter.saveImageIfChanged, img);
+    L.DomEvent.on(img._image, 'mouseup', mapknitter.saveImageIfChanged, img);
+    L.DomEvent.on(img._image, 'touchend', mapknitter.saveImageIfChanged, img);
   },
 
   /* 
@@ -235,11 +235,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
     edit.addTool(mapknitter.customDeleteAction());
 
-    img.on('edit', window.mapknitter.saveImageIfChanged, img);
-    img.on('delete', window.mapknitter.deleteImage, img);
-
-    L.DomEvent.on(img._image, 'mouseup', window.mapknitter.saveImageIfChanged, img);
-    L.DomEvent.on(img._image, 'touchend', window.mapknitter.saveImageIfChanged, img);
+    img.on('edit', mapknitter.saveImageIfChanged, img);
+    img.on('delete', mapknitter.deleteImage, img);
   },
 
   /* Add a new, unplaced, but already uploaded image to the map.
@@ -270,17 +267,26 @@ MapKnitter.Map = MapKnitter.Class.extend({
       actions: [exportA]
     }).addTo(map);
 
+    /** 
+     * Note if you're refactoring:
+     * this event is critical - it sets up the events that save the image state to the database
+     * on mouseup & tounchend. If these events are not setup correctly, for ex. setting them up
+     * in setupToolbar() doesn't work for some reason (propogation maybe?), 
+     * then on page refresh the image will be gone
+     */
+    L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+
     L.DomEvent.on(img._image, {
       click: mapknitter.selectImage,
       dblclick: mapknitter.dblClickImage
     }, img);
 
+    img.on('deselect', mapknitter.saveImageIfChanged, img);
+
     L.DomEvent.on(img._image, 'load', function() {
       imgGroup.addLayer(img);
       mapknitter.setupToolbarAndGeocode();
     }, img);
-
-    img.on('deselect', window.mapknitter.saveImageIfChanged, img);
   },
 
   setupToolbarAndGeocode: function () {
@@ -321,8 +327,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
         //edit._scaleBy(scale);
 
         var elevator = new google.maps.ElevationService(),
-            lat = window.mapknitter._map.getCenter().lat,
-            lng = window.mapknitter._map.getCenter().lng;
+            lat = mapknitter._map.getCenter().lat,
+            lng = mapknitter._map.getCenter().lng;
 
         elevator.getElevationForLocations({
           'locations': [{ lat: lat, lng: lng }]
@@ -346,7 +352,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       img.fire('update');
       /* pan the map there too */
-      window.mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
+      mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
       img._reset();
     }
 
@@ -457,7 +463,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // var img = e.layer;
     // save state, watch for changes by tracking stringified corner positions: 
     img._corner_state = JSON.stringify(img._corners);
-    /* Ensure this is enabled */
+    /* Need to re-enable editing on each select because we disable it when clicking the sidebar */
+    img.editing.enable.bind(img.editing)()
     img.bringToFront();
     /* If it's locked, allow event to propagate on to map below */
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
@@ -467,7 +474,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var img = this,
         edit = img.editing;
     // check if image state has changed at all before saving!
-    if (edit._mode != "lock" && img._corner_state != JSON.stringify(img._corners)) {
+    if (edit._mode !== 'lock' && img._corner_state !== JSON.stringify(img._corners)) {
       window.mapknitter.saveImage.bind(img)()
     }
   },
