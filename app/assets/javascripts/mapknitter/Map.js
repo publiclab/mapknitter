@@ -32,7 +32,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
-    var exportA = window.mapknitter.customExportAction();
+    var exportA = mapknitter.customExportAction();
     var imgGroup = L.distortableCollection({
       actions: [exportA]
     }).addTo(map);
@@ -103,7 +103,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           imgGroup.addLayer(img);
 
           bounds = bounds.concat(corners);
-          window.mapknitter._map.fitBounds(bounds);
+          mapknitter._map.fitBounds(bounds);
           images.push(img);
           img.warpable_id = warpable.id;
 
@@ -228,9 +228,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
    * Setup toolbar and events
    */
   setupToolbar: function (img) {
-    // overriding the upstream Delete action so that, in MapKnitter, it also makes database updates
-    if (img.editing.hasTool(Delete)) { img.editing.removeTool(Delete); }
-    img.editing.addTool(window.mapknitter.customDeleteAction());
+    var edit = img.editing;
+    // overriding the upstream Delete action so that it makes database updates in MapKnitter
+    if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
+    edit.addTool(mapknitter.customDeleteAction());
 
     img.on('edit', window.mapknitter.saveImageIfChanged, img);
     img.on('delete', window.mapknitter.deleteImage, img);
@@ -257,7 +258,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img.warpable_id = id;
     img.addTo(map);
 
-    var exportA = window.mapknitter.customExportAction();
+    var exportA = mapknitter.customExportAction();
     var imgGroup = L.distortableCollection({
       actions: [exportA]
     }).addTo(map);
@@ -331,7 +332,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   geocodeImageFromId: function (dom_id, id, url) {
-    window.mapknitter.geocodeImage(
+    mapknitter.geocodeImage(
       $(dom_id)[0],
       function (lat, lng, id, angle, altitude) {
         /* Display button to place this image with GPS tags. */
