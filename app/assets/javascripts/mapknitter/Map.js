@@ -108,14 +108,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
           img.warpable_id = warpable.id;
 
           if (!options.readOnly) {
-            img.on('deselect', window.mapknitter.saveImageIfChanged, img)
-            L.DomEvent.on(img._image, 'dblclick', window.mapknitter.dblClickImage, img);
-            L.DomEvent.on(imgGroup, 'layeradd', window.mapknitter.setupEvents, this);
-            L.DomEvent.on(img._image, 'load', function () {  /* never hitting this?? */
-              var img = this;
-              img.editing.enable();
-              window.mapknitter.setupToolbar(img);
+            L.DomEvent.on(img._image, {
+              click: mapknitter.selectImage,
+              dblclick: mapknitter.dblClickImage,
+              load: mapknitter.setupToolbar
             }, img);
+            
+            img.on('deselect', window.mapknitter.saveImageIfChanged, img)
+            L.DomEvent.on(imgGroup, 'layeradd', window.mapknitter.setupEvents, this);
           }
         }
       });
@@ -227,8 +227,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
   /* 
    * Setup toolbar and events
    */
-  setupToolbar: function (img) {
-    var edit = img.editing;
+  setupToolbar: function () {
+    var img = this,
+        edit = img.editing;
+
+    edit.enable();
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
     if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
     edit.addTool(mapknitter.customDeleteAction());
@@ -263,73 +266,86 @@ MapKnitter.Map = MapKnitter.Class.extend({
       actions: [exportA]
     }).addTo(map);
 
+    imgGroup.addLayer(img);
+
+    L.DomEvent.on(img._image, {
+      click: mapKnitter.selectImage,
+      dblclick: mapknitter.dblClickImage,
+      load: mapknitter.setupToolbarAndGeocode
+    }, img);
+
     img.on('deselect', window.mapknitter.saveImageIfChanged, img);
-    L.DomEvent.on(img._image, 'dblclick', window.mapknitter.dblClickImage, img);
-    L.DomEvent.on(img._image, 'load', function () {
-      var img = this;
+  },
 
-      imgGroup.addLayer(img);
-      img.editing.enable();
-      window.mapknitter.setupToolbar(img);
+  setupToolbarAndGeocode: function () {
+    var img = this;
 
-      /* use geodata */
-      if (img.geocoding && img.geocoding.lat) {
-        /* move the image to this newly discovered location */
-        var center = L.latLngBounds(img.getCorners()).getCenter(),
-            latBy = img.geocoding.lat - center.lat,
-            lngBy = img.geocoding.lng - center.lng
+    mapknitter.setupToolbar.bind(img);
+    mapknitter.setupGeocode.bind(img);
+  },
 
-        for (var i = 0; i < 4; i++) {
-          img._corners[i].lat += latBy;
-          img._corners[i].lng += lngBy;
-        }
+  setupGeocode: function () {
+    var img = this,
+        edit = img.editing,
+        geo = img.geocoding;
 
-        img.editing._rotateBy(img.geocoding.angle);
+    /* use geodata */
+    if (geo && geo.lat) {
+      /* move the image to this newly discovered location */
+      var center = L.latLngBounds(img.getCorners()).getCenter(),
+        latBy = geo.lat - center.lat,
+        lngBy = geo.lng - center.lng
 
-        /* Attempt to convert altitude to scale factor based on Leaflet zoom;
+      for (var i = 0; i < 4; i++) {
+        img._corners[i].lat += latBy;
+        img._corners[i].lng += lngBy;
+      }
+
+      edit._rotateBy(geo.angle);
+
+      /* Attempt to convert altitude to scale factor based on Leaflet zoom;
          * for correction based on altitude we need the original dimensions of the image. 
          * This may work only at sea level unless we factor in ground level. 
          * We may also need to get camera field of view to get this even closer.
          * We could also fall back to the scale of the last-placed image.
          */
-        if (img.geocoding.altitude && img.geocoding.altitude != 0) {
-          var width = img._image.width, height = img._image.height
-          //scale = ( (act_height/img_height) * (act_width/img_width) ) / img.geocoding.altitude;           
-          //img.editing._scaleBy(scale);
+      if (geo.altitude && geo.altitude != 0) {
+        var width = img._image.width, height = img._image.height
+        //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
+        //edit._scaleBy(scale);
 
-          var elevator = new google.maps.ElevationService(),
+        var elevator = new google.maps.ElevationService(),
             lat = window.mapknitter._map.getCenter().lat,
             lng = window.mapknitter._map.getCenter().lng;
 
-          elevator.getElevationForLocations({
-            'locations': [{ lat: lat, lng: lng }]
-          }, function (results, status) {
-            console.log("Photo taken from " + img.geocoding.altitude + " meters above sea level");
-            console.log("Ground is " + results[0].elevation + " meters above sea level");
-            console.log("Photo taken from " + (img.geocoding.altitude - results[0].elevation) + " meters");
-            var a = img.geocoding.altitude - results[0].elevation,
-                fov = 50,
-                A = fov * (Math.PI / 180),
-                width = 2 * (a / Math.tan(A)),
-                currentWidth = 
-                  img.getCorner(2).distanceTo(img.getCorner(1)) + 
-                  img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
+        elevator.getElevationForLocations({
+          'locations': [{ lat: lat, lng: lng }]
+        }, function (results, status) {
+          console.log("Photo taken from " + geo.altitude + " meters above sea level");
+          console.log("Ground is " + results[0].elevation + " meters above sea level");
+          console.log("Photo taken from " + (geo.altitude - results[0].elevation) + " meters");
+          var a = geo.altitude - results[0].elevation,
+              fov = 50,
+              A = fov * (Math.PI / 180),
+              width = 2 * (a / Math.tan(A)),
+              currentWidth =
+                img.getCorner(2).distanceTo(img.getCorner(1)) +
+                img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
 
-            console.log("Photo should be " + width + " meters wide");
-            img.editing._scaleBy(width / currentWidth);
-            img.fire('update');
-          });
-        }
-
-        img.fire('update');
-        /* pan the map there too */
-        window.mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
-        img._reset();
+          console.log("Photo should be " + width + " meters wide");
+          edit._scaleBy(width / currentWidth);
+          img.fire('update');
+        });
       }
-    }, img);
+
+      img.fire('update');
+      /* pan the map there too */
+      window.mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
+      img._reset();
+    }
 
     return img;
-  },
+  },    
 
   geocodeImageFromId: function (dom_id, id, url) {
     mapknitter.geocodeImage(
@@ -430,6 +446,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
     });
   },
 
+  selectImage: function (e) {
+    var img = this;
+    // var img = e.layer;
+    // save state, watch for changes by tracking stringified corner positions: 
+    img._corner_state = JSON.stringify(img._corners)
+    /* Ensure this is enabled */
+    img.editing.enable.bind(img.editing)()
+    img.bringToFront()
+    /* If it's locked, allow event to propagate on to map below */
+    if (this.editing._mode !== "lock") { e.stopPropagation(); }
+  },
+
   saveImageIfChanged: function () {
     var img = this,
         edit = img.editing;
@@ -480,7 +508,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
   // /maps/newbie/warpables/42, but we'll try /warpables/42 
   // as it should also be a valid restful route
   deleteImage: function () {
-    var img = this;
+    var img = this,
+        edit = img.editing;
     // this should only be possible by logged-in users
     if (window.mapknitter.logged_in) {
       if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
@@ -493,8 +522,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
           complete: function (e) {
             $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
             // disable interactivity:
-            img.editing._removeToolbar();
-            img.editing.disable();
+            edit._removeToolbar();
+            edit.disable();
             // remove from Leaflet map:
             map.removeLayer(img);
             // remove from sidebar too:
