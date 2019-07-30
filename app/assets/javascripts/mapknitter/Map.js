@@ -507,8 +507,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // reset change state string:
     img._corner_state = JSON.stringify(img._corners)
     // send save request
-    $.ajax('/images/update', {
-      type: 'POST',
+    $.ajax('/images', {
+      type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
         locked: (img.editing._mode == 'lock'),
@@ -632,7 +632,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var overlayMaps = {
     };
 
-    var layersControl = new L.Control.Layers(baseMaps, overlayMaps);
+    var layersControl = L.control.layers(baseMaps, overlayMaps);
     this._map.addControl(layersControl);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -640,7 +640,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   imgActionArray: function() {
-    return [CToggleTransparency, CToggleOutline, CToggleLock, CToggleRotateScale, CToggleOrder, CEnableEXIF, CRestore, CExport, CDelete];
+    return [CToggleTransparency, CToggleOutline, CToggleLock, CToggleRotateScale, CToggleOrder, CEnableEXIF, CRevert, CExport, CDelete];
   }
 });
 
@@ -878,7 +878,7 @@ var CEnableEXIF = L.EditAction.extend({
   }
 });
 
-var CRestore = L.EditAction.extend({
+var CRevert = L.EditAction.extend({
   initialize: function (map, overlay, options) {
     var href = '<use xlink:href="#restore"></use>';
     var symbol = '<symbol viewBox="0 0 18 18" id="restore" xmlns="http://www.w3.org/2000/svg"><path fill="#058dc4" d="M15.67 3.839a.295.295 0 0 0-.22.103l-5.116 3.249V4.179a.342.342 0 0 0-.193-.315.29.29 0 0 0-.338.078L3.806 7.751v-4.63h-.002l.002-.022c0-.277-.204-.502-.456-.502h-.873V2.6c-.253 0-.457.225-.457.503l.002.026v10.883h.005c.021.257.217.454.452.455l.016-.002h.822c.013.001.025.004.038.004.252 0 .457-.225.457-.502a.505.505 0 0 0-.006-.068V9.318l6.001 3.811a.288.288 0 0 0 .332.074.34.34 0 0 0 .194-.306V9.878l5.12 3.252a.288.288 0 0 0 .332.073.34.34 0 0 0 .194-.306V4.18a.358.358 0 0 0-.09-.24.296.296 0 0 0-.218-.1z"/></symbol>';
@@ -895,6 +895,6 @@ var CRestore = L.EditAction.extend({
   addHooks: function () {
     var editing = this._overlay.editing;
 
-    editing._restore();
+    editing._revert();
   }
 });

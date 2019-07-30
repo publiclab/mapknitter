@@ -61,9 +61,6 @@ class MapsController < ApplicationController
     # this is used for the resolution slider
     @resolution = @map.average_cm_per_pixel.round(4)
     @resolution = 5 if @resolution < 5 # soft-set min res
-
-    # remove following lines once legacy interface is deprecated
-    render template: 'map/show', layout: 'knitter' if params[:legacy]
   end
 
   def archive
@@ -83,6 +80,7 @@ class MapsController < ApplicationController
   def embed
     @map.zoom ||= 12
     @embed = true
+    response.headers.except! 'X-Frame-Options' # allow use of embed in iframes
     render template: 'maps/show'
   end
 
@@ -137,11 +135,16 @@ class MapsController < ApplicationController
   def region
     area = params[:id] || 'this area'
     @title = "Maps in #{area}"
-    ids = Map.bbox(params[:minlat], params[:minlon], params[:maxlat], params[:maxlon]).collect(&:id)
-    @maps = Map.where(password: '')
-               .where('id IN (?)', ids)
-               .paginate(page: params[:page], per_page: 24)
-               .except(:styles, :email)
+    ids = Map.bbox(params[:minlat], params[:minlon], params[:maxlat], params[:maxlon], params[:tag])
+             .collect(&:id)
+    cache_key = "#{params[:minlat]}-#{params[:maxlat]}-#{params[:minlon]}-#{params[:maxlon]}-#{params[:tag]}"
+    @maps =
+      Rails.cache.fetch(cache_key, expires_in: 1.day) do
+        Map.where(password: '')
+          .where('id IN (?)', ids)
+          .paginate(page: params[:page], per_page: 50)
+          .except(:styles, :email)
+      end
     @maps.each do |map|
       map.image_urls = map.warpables.map { |warpable| warpable.image.url }
     end

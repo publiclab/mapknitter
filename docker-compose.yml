@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.3'
 services:
   db:
     container_name: database
@@ -16,7 +16,7 @@ services:
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
-      - yarn_cache:/app/public/lib
+      - yarn_cache:/app/node_modules/
     ports:
       - $PORT:3000
     depends_on:

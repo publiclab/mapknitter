@@ -8,4 +8,4 @@ comment:
 coverage:
   status:
     project: on
-    patch: off
+    patch: on
