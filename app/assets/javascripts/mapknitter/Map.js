@@ -6,6 +6,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   initialize: function (options) {
     this._zoom = options.zoom || 0;
     this._latlng = L.latLng(options.latlng);
+    this.readOnly = options.readOnly;
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
 
@@ -107,7 +108,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           images.push(img);
           img.warpable_id = warpable.id;
 
-          if (!options.readOnly) {
+          if (!mapknitter.readOnly) {
             L.DomEvent.on(img._image, {
               click: mapknitter.selectImage,
               dblclick: mapknitter.dblClickImage,
@@ -267,26 +268,28 @@ MapKnitter.Map = MapKnitter.Class.extend({
       actions: [exportA]
     }).addTo(map);
 
-    /** 
+    if (!mapknitter.readOnly) {
+      /** 
      * Note if you're refactoring:
      * this event is critical - it sets up the events that save the image state to the database
      * on mouseup & tounchend. If these events are not setup correctly, for ex. setting them up
      * in setupToolbar() doesn't work for some reason (propogation maybe?), 
      * then on page refresh the image will be gone
      */
-    L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+      L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
 
-    L.DomEvent.on(img._image, {
-      click: mapknitter.selectImage,
-      dblclick: mapknitter.dblClickImage
-    }, img);
+      L.DomEvent.on(img._image, {
+        click: mapknitter.selectImage,
+        dblclick: mapknitter.dblClickImage
+      }, img);
 
-    img.on('deselect', mapknitter.saveImageIfChanged, img);
+      img.on('deselect', mapknitter.saveImageIfChanged, img);
 
-    L.DomEvent.on(img._image, 'load', function() {
-      imgGroup.addLayer(img);
-      mapknitter.setupToolbarAndGeocode();
-    }, img);
+      L.DomEvent.on(img._image, 'load', function () {
+        imgGroup.addLayer(img);
+        mapknitter.setupToolbarAndGeocode();
+      }, img);
+    }
   },
 
   setupToolbarAndGeocode: function () {
