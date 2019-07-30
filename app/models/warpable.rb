@@ -1,5 +1,4 @@
 class Warpable < ApplicationRecord
-
   attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
