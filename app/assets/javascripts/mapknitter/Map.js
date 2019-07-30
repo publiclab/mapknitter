@@ -6,7 +6,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
 
-    var mapknitter = this;
+    window.mapknitter = this;
 
     L.Icon.Default.imagePath = '/assets/leaflet/dist/images/';
 
