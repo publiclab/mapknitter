@@ -276,6 +276,6 @@ class Map < ApplicationRecord
 
   def fetch_map_data
     data = warpables
-    return data.to_json
+    data.to_json
   end
 end

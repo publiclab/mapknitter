@@ -7,7 +7,7 @@ class ConcurrentEditingChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def sync changes
+  def sync(changes)
     ActionCable.server.broadcast 'concurrent_editing_channel', changes
   end
 end
