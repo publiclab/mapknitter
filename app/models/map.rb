@@ -51,9 +51,15 @@ class Map < ActiveRecord::Base
     Map.where(user_id: 0)
   end
 
-  def self.bbox(minlat, minlon, maxlat, maxlon)
-    Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-               minlat, maxlat, minlon, maxlon])
+  def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
+    if tag.nil?
+      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+                 minlat, maxlat, minlon, maxlon])
+    else
+      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+                 minlat, maxlat, minlon, maxlon])
+         .joins(:tags).where("tags.name = ?", tag)
+    end
   end
 
   def exporting?
