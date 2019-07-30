@@ -13,6 +13,7 @@ AllCops:
     - '/config.ru'
   Exclude:
     - 'vendor/*'
+    - 'node_modules/**/*'
     - 'spec/**/*'
     - 'bin/*'
     - 'doc/*'
