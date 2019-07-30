@@ -1,25 +1,24 @@
 /* Move navbar links into dropdown if nav is inside the sidebar. */
-// = require jquery/dist/jquery.js
 jQuery(document).ready(function($) {
-  window.toggle_sidebar = function(e){
-    var icon = $('.sidebar-toggle-icon')
+  window.toggle_sidebar = function() {
+    var icon = $('.sidebar-toggle-icon');
     
-    $('#knitter-map-pane').toggleClass('fullscreen')
-    $('.sidebar .sidebar-wrap').toggleClass('fullscreen-only')
-    icon.toggleClass('fa-chevron-left')
-    icon.toggleClass('fa-chevron-right')
+    $('#knitter-map-pane').toggleClass('fullscreen');
+    $('.sidebar .sidebar-wrap').toggleClass('fullscreen-only');
+    icon.toggleClass('fa-chevron-left');
+    icon.toggleClass('fa-chevron-right');
     
     /* trigger a resize event */
-    window.mapknitter._map._onResize()
+    window.mapknitter._map._onResize();
   }
-  window.toggle_sidebar_and_fit_bounds = function(){
-    window.mapknitter._map.once('resize',function(e){
-      if (e.bounds) window.mapknitter._map.fitBounds(e.bounds)
+  window.toggle_sidebar_and_fit_bounds = function() {
+    window.mapknitter._map.once('resize', function(e) {
+      if (e.bounds) { window.mapknitter._map.fitBounds(e.bounds); }
     })
-    window.toggle_sidebar()
+    window.toggle_sidebar();
   }
 
-  $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds)
+  $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds);
 
   haschat = false
   $('.chat-btn').click(function(){
