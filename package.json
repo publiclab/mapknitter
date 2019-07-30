@@ -6,8 +6,6 @@
   "author": "Public Lab contributors <web@publiclab.org>",
   "license": "MIT",
   "dependencies": {
-    "mkdirp": "0.5.1",
-    "q": "1.5.1",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
@@ -37,10 +35,12 @@
     "leaflet-omnivore": "mapbox/leaflet-omnivore#~0.3.2",
     "leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
     "leaflet-spin": "makinacorpus/Leaflet.Spin#1.1.0",
+    "mkdirp": "0.5.1",
     "modalbox": "okonet/modalbox#*",
     "ol2": "openlayers/ol2#release-2.13.1",
     "popper": "^1.0.1",
     "prototypejs-bower": "plynchnlm/prototypejs-bower#1.7.3",
+    "q": "1.5.1",
     "sparklines": "mariusGundersen/sparkline#~1.2.0",
     "spin.js": "fgnass/spin.js#^2.3.1",
     "webgl-distort": "jywarren/webgl-distort#*"
