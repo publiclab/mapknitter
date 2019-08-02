@@ -72,6 +72,7 @@ Mapknitter::Application.routes.draw do
   post 'images/create/:id' => 'images#create' # used?
   post 'warper/update' => 'images#update' # legacy for cartagen.js
   post 'images/update' => 'images#update'
+  get 'images/sort' => 'images#sort'
   post 'images/delete/:id' => 'images#delete'
   delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
   delete 'images/:id' => 'images#destroy' #legacy, will be resourceful

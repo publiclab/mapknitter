@@ -1,11 +1,11 @@
 <div>
 <h4 class="sidebar-heading">Images</h4>
 <div class="image-order">
-  <button type="button" class="btn btn-outline-secondary">Sort Images</button>
+  <button type="button" class="btn btn-outline-secondary" id="hello">Sort Images</button>
   <div class="image-order-content">
-    <a class="name" href="?sort=name">Name</a>
-    <a class="size" href="?sort=size">Size</a>
-    <a class="recent" href="?sort=recent">Recent</a>
+    <a class = "btn" type = "button" onClick="sort('name')"> Name</a>
+    <a class = "btn" type = "button" onClick="sort('size')">Size</a>
+    <a class = "btn" type = "button" onClick="sort('recent')">Recent</a>
   </div>
 </div>
 </div>
@@ -14,24 +14,7 @@
   <%end%>
 <table class="warpables-all table table-striped">
   <tbody>
-    <% sort_param = params[:sort] %>
-    <% if sort_param == 'name' %>
-      <% ary = @map.warpables.sort { |a, b| a.image_file_name <=> b.image_file_name } %>
-      <script>
-        $(".name").css("background-color","#5cb85c");
-      </script>
-    <% elsif sort_param == 'size' %>
-      <% ary = @map.warpables.sort { |a, b| a.image_file_size <=> b.image_file_size } %>
-      <script>
-        $(".size").css("background-color","#5cb85c");
-      </script>
-    <% else %>
-      <% ary = @map.warpables.sort { |a, b| b.created_at <=> a.created_at } %>
-      <script>
-        $(".recent").css("background-color","#5cb85c");
-      </script>
-    <% end %>
-    <% ary.each do |warpable| %>
+    <%  @map.warpables.each do |warpable| %>
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
           <%= image_tag warpable.image.url(:thumb), 
@@ -97,3 +80,16 @@
     <% end %>
   </tbody>
 </table>
+<script>
+  function sort(val){
+    map_id = '<%= @map.id %>';
+    $.ajax({
+      url: '/images/sort/' ,
+      type: 'GET',
+      data: {sort_param: val, map_id: map_id},
+       success: function(data) {
+           console.log("Success");
+      }
+  })
+  }
+</script>

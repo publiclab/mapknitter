@@ -96,6 +96,25 @@ class ImagesController < ApplicationController
     render html: 'success'
   end
 
+  def sort
+    sort_param = params[:sort_param]
+    map_id = params[:map_id];
+
+    order_string = 'warpables.created_at DESC'
+    if sort_param == 'name'
+      order_string = 'warpables.image_file_name ASC'
+    elsif sort_param == 'size'
+      order_string = 'warpables.image_file_size ASC'
+    else
+      order_string = 'warpables.created_at DESC'
+    end
+    @map = Map.find_by(id: params[:id])
+
+    warpable =  Warpable.order(order_string).where(map_id: 35)
+    puts "#{warpable.last.image_file_name}"
+    render html: 'success'
+  end
+
   def destroy
     @warpable = Warpable.find params[:id]
     if logged_in? && current_user.can_delete?(@warpable)
