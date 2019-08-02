@@ -98,21 +98,19 @@ class ImagesController < ApplicationController
 
   def sort
     sort_param = params[:sort_param]
-    map_id = params[:map_id];
-
-    order_string = 'warpables.created_at DESC'
-    if sort_param == 'name'
-      order_string = 'warpables.image_file_name ASC'
-    elsif sort_param == 'size'
-      order_string = 'warpables.image_file_size ASC'
-    else
-      order_string = 'warpables.created_at DESC'
-    end
-    @map = Map.find_by(id: params[:id])
-
-    warpable =  Warpable.order(order_string).where(map_id: 35)
-    puts "#{warpable.last.image_file_name}"
-    render html: 'success'
+    map_id = params[:map_id]
+    order_string = if sort_param == 'name'
+                     'warpables.image_file_name ASC'
+                   elsif sort_param == 'size'
+                     'warpables.image_file_size ASC'
+                   else
+                     'warpables.created_at DESC'
+                   end
+    @map = Map.find_by(id: map_id)
+    @map.warpables = Warpable.order(order_string).where(map_id: map_id)
+    render partial: 'images/index'
+    # puts "#{warpable.last.image_file_name}"
+    # render html: 'success'
   end
 
   def destroy
