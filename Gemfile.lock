@@ -204,7 +204,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rdiscount (2.2.0.1)
-    recaptcha (4.14.0)
+    recaptcha (5.0.0)
       json
     redcarpet (3.5.0)
     right_aws_api (0.3.5)
@@ -228,7 +228,7 @@ GEM
     ruby-openid (2.7.0)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
-    ruby-prof (0.18.0)
+    ruby-prof (1.0.0)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
     sass (3.7.4)
@@ -330,7 +330,7 @@ DEPENDENCIES
   rails-perftest
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
-  recaptcha (~> 4.14.0)
+  recaptcha (~> 5.0.0)
   right_aws_api (~> 0.3.5)
   rubocop (~> 0.70.0)
   rubocop-performance
