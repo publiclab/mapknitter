@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'paper_trail'
+require 'byebug'
 
 class ImagesControllerTest < ActionController::TestCase
   # called before every single test
@@ -82,27 +83,39 @@ class ImagesControllerTest < ActionController::TestCase
 
   test 'creates version after image creation' do
     session[:user_id] = 1
-    post :create, map_id: @map.slug, uploaded_data: @uploaded_data
+    assert_difference 'PaperTrail::Version.count', 1 do
+      post :create, map_id: @map.slug, uploaded_data: @uploaded_data
+    end
     warp = Warpable.last
     assert warp.versions.present?
   end
 
   test 'create version after update' do
-    @warp.versions.destroy_all
-    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, nodes: "1,2,3,4"
-    @warp.nodes = "2,3,4,5"
-    @warp.save
+    points = "-71.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,40.84"
+    session[:user_id] = 1
+
+    assert_difference 'PaperTrail::Version.count', 1 do
+      patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
+    end
     assert_response :success
     assert @warp.versions.present?
   end
 
   test 'should revert to an image through versions' do
-    points = "-72.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,41.84"
-
     session[:user_id] = 1
-    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
+    
+    points1 = "-72.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,41.84"
+    points2 = "-72.39,40.83:-72.39,41.83:-72.39,41.83:-71.39,45.84"
 
-    get :revert, id: @warp.id, version: @warp.versions.last
+    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points1
+    @warp.reload
+    nodes_latest = @warp.nodes
+    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points2
+    assert_difference 'PaperTrail::Version.count', 1 do
+      get :revert, id: @warp.id, version: @warp.versions.last
+    end
+    @warp.reload
+    assert_equal(nodes_latest, @warp.nodes)
     assert_response :redirect
   end
 
