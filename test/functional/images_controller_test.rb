@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'paper_trail'
-require 'byebug'
 
 class ImagesControllerTest < ActionController::TestCase
   # called before every single test
