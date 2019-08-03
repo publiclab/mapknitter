@@ -88,7 +88,6 @@ class ImagesController < ApplicationController
         node.save
         nodes << node
       end
-      @warpable.count_version = 0
       @warpable.nodes = nodes.collect(&:id).join(',')
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
@@ -103,8 +102,6 @@ class ImagesController < ApplicationController
     @warpable = Warpable.find params[:id]
     version = @warpable.versions.find(params[:version])
     version.reify&.save
-    @warpable.count_version = 1
-    @warpable.save
     redirect_to @warpable.map
   end
 
