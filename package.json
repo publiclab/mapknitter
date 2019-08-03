@@ -19,7 +19,7 @@
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.0",
     "jquery": "jquery/jquery-dist#^3.4.1",
     "jquery-ui": "components/jqueryui#^1.12.1",
-    "jquery-ujs": "rails/jquery-ujs#~1.0.3",
+    "jquery-ujs": "rails/jquery-ujs#~1.0.4",
     "junction": "theleagueof/junction#*",
     "leaflet": "Leaflet/Leaflet#^1.0.0",
     "leaflet-dist": "vperron/leaflet-dist#0.7.x",
