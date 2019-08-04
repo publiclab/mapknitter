@@ -36,6 +36,9 @@ group :dependencies do
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
+  # Process manager for applications with multiple components
+  gem "foreman", "~> 0.85.0"
+
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
