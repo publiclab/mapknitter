@@ -249,6 +249,12 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    sass-rails (5.0.7)
+      railties (>= 4.0.0, < 6)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
@@ -354,6 +360,7 @@ DEPENDENCIES
   ruby-openid (~> 2.5)
   ruby-prof
   sass
+  sass-rails (~> 5)
   sassc-rails
   simplecov
   skylight

@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.3'
 gem 'rails', '~> 6.0.0.rc2'
 gem 'rake',  '~> 12.3.2'
-gem 'tzinfo-data'
 gem 'skylight'
 
 gem 'will_paginate', '3.1.7'
@@ -22,7 +22,7 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
-  gem 'bootsnap', '~> 1.4.4'
+  gem 'bootsnap', '~> 1.4.4', require: false
   gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -41,6 +41,7 @@ group :dependencies do
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
+  gem 'sass-rails', '~> 5'
   gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 9.5.1.1'
   gem 'uglifier', '~> 4.1.20'
@@ -58,7 +59,10 @@ group :test do
   gem 'minitest'
   gem 'minitest-reporters'
   # Easy installation and use of web drivers to run system tests with browsers
-  # gem 'webdrivers'
+  #gem 'webdrivers'
+  # Adds support for Capybara system testing and selenium driver
+  #gem 'capybara', '>= 2.15'
+  #gem 'selenium-webdriver'
 end
 
 group :development, :test do
@@ -87,3 +91,6 @@ group :passenger do
 end
 
 gem 'httparty'
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
