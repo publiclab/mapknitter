@@ -10,7 +10,7 @@
     "@rails/actioncable": "^6.0.0-alpha",
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
-    "@rails/webpacker": "https://github.com/rails/webpacker.git",
+    "@rails/webpacker": "^4.0.7",
     "Leaflet.EasyButton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
@@ -43,11 +43,14 @@
     "prototypejs-bower": "plynchnlm/prototypejs-bower#1.7.3",
     "sparklines": "mariusGundersen/sparkline#~1.2.0",
     "spin.js": "fgnass/spin.js#^2.3.1",
+    "true-case-path": "^2.2.1",
     "turbolinks": "^5.2.0",
     "webgl-distort": "jywarren/webgl-distort#*"
   },
   "engines": {
     "yarn": ">= 1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack-dev-server": "^3.7.2"
+  }
 }
