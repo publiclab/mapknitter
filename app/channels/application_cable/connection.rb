@@ -9,7 +9,7 @@ module ApplicationCable
     private
 
     def find_verified_user
-      User.find(id: cookies.signed["user_id"])
+      User.find_by(id: cookies.signed["user_id"])
     end
   end
 end
