@@ -1,16 +1,25 @@
 $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
-@import "style";
-@import "maps";
-@import "header";
-@import "uploads";
-@import "annotations";
-@import "sidebar.css";
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+
+@import '~bootstrap/scss/bootstrap';
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "leaflet-draw/dist/leaflet.draw.css";
 @import "leaflet-illustrate/dist/Leaflet.Illustrate.css";
 @import "leaflet-toolbar/dist/leaflet.toolbar.css";
 @import "leaflet-distortableimage/dist/leaflet.distortableimage.css";
 @import "@fortawesome/fontawesome-free/css/all.css";
+
+@import "../src/stylesheets/style.scss";
+@import "../src/stylesheets/maps.scss";
+@import "../src/stylesheets/header.scss";
+@import "../src/stylesheets/uploads.scss";
+@import "../src/stylesheets/annotations.scss";
+@import "../src/stylesheets/sidebar.css";
+@import "../src/stylesheets/annotations-embed-legacy.css";
+
 // /*
 //  * This is a manifest file that'll be compiled into application.css, which will include all the files
 //  * listed below.
