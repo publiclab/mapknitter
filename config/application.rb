@@ -2,6 +2,9 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'webpacker'
+require 'webpacker/railtie'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -36,6 +39,7 @@ module Mapknitter
     config.action_dispatch.default_headers['X-Frame-Options'] = "ALLOW-FROM https://publiclab.org"
 
     # Version of your assets, change this if you want to expire all your assets
+    Webpacker::Compiler.watched_paths << 'node_modules'
     config.assets.paths << Rails.root.join("node_modules")
   end
 end
