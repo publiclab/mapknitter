@@ -105,10 +105,6 @@ GEM
     image_science (1.3.0)
       RubyInline (~> 3.9)
     jaro_winkler (1.5.3)
-    jquery-rails (4.3.5)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     jshintrb (0.3.0)
       execjs
       multi_json (>= 1.3)
@@ -221,7 +217,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rdiscount (2.2.0.1)
-    recaptcha (4.14.0)
+    recaptcha (5.0.0)
       json
     redcarpet (3.5.0)
     right_aws_api (0.3.5)
@@ -333,7 +329,6 @@ DEPENDENCIES
   geokit-rails (= 1.1.4)
   httparty
   image_science (= 1.3.0)
-  jquery-rails
   jshintrb (~> 0.3.0)
   listen (~> 3.1.5)
   mini_magick (~> 4.8)
@@ -352,7 +347,7 @@ DEPENDENCIES
   rails-perftest
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
-  recaptcha (~> 4.14.0)
+  recaptcha (~> 5.0)
   right_aws_api (~> 0.3.5)
   rubocop (~> 0.70.0)
   rubocop-performance
@@ -364,8 +359,6 @@ DEPENDENCIES
   skylight
   spring
   spring-watcher-listen (~> 2.0.0)
-  sprockets (= 3.7.2)
-  sprockets-rails
   sqlite3
   turbolinks (~> 5.2)
   tzinfo-data

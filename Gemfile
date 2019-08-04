@@ -16,7 +16,7 @@ group :dependencies do
   gem 'mysql2', '< 0.6'
   gem 'geokit-rails', '1.1.4'
   gem 'image_science', '1.3.0'
-  gem 'recaptcha', '~> 4.14.0', require: 'recaptcha/rails'
+  gem 'recaptcha', '~> 5.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
   gem 'ruby-openid', '~>2.5'
   gem 'open_id_authentication'
@@ -41,9 +41,6 @@ group :dependencies do
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
-  gem 'jquery-rails'
-  gem 'sprockets', '3.7.2'
-  gem "sprockets-rails"
   gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 9.5.1.1'
   gem 'uglifier', '~> 4.1.20'
