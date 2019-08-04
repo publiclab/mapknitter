@@ -10,6 +10,7 @@
     "@rails/actioncable": "^6.0.0-alpha",
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
+    "@rails/webpacker": "https://github.com/rails/webpacker.git",
     "Leaflet.EasyButton": "CliffCloud/Leaflet.EasyButton#1.0.0",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
