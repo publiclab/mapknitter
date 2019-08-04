@@ -1,6 +1,6 @@
 // Referencing every image here
 
-import './ballon.png';
+import './balloon.png';
 import './camera.png';
 import './image.png';
 import './kite1.png';
