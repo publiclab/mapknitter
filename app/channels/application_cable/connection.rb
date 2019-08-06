@@ -10,6 +10,9 @@ module ApplicationCable
 
     def find_verified_user
       User.find(id: cookies.signed["user_id"])
+    rescue
+      reject_unauthorized_connection
     end
+
   end
 end

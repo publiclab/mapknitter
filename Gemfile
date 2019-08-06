@@ -68,6 +68,7 @@ group :development, :test do
   gem 'faker', '~> 1.9.3'
   gem 'pry-rails', '~> 0.3.9'
   gem 'puma'
+  gem 'action-cable-testing'
 end
 
 group :development do
