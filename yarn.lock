@@ -1439,7 +1439,6 @@ jpeg-js@^0.3.2:
 
 jquery-ujs@rails/jquery-ujs#~1.0.4:
   version "0.0.0"
-  uid "7146dc96a71fda9b713f1f60fb414c699db0b3a7"
   resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
 
 jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1:
@@ -1536,10 +1535,10 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.6.tgz#f09fe4b080b8051a64dc83d4c7b47ea5d77c4737"
-  integrity sha512-riffjjRGOe17O5SnPNxSuTv86bQXYAGEE57kZnYntgPdeWqu1oteA5MBLyBlIJFykhRRUvjw/KPKYG5/WEPlvA==
+leaflet-distortableimage@^0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.9.tgz#538254dade04d41066cb0d6871267c0b4b6078c2"
+  integrity sha512-d+hRHqqcf9t5FrW6TVVUUWNy8t9BzCQTF/DIJKZrVlsZmkz7h+w3u1w79OMLpatiVDLDwcqkSX6rtQVNKF0urQ==
   dependencies:
     grunt-cli "^1.2.0"
     leaflet-toolbar "0.4.0-alpha.2"

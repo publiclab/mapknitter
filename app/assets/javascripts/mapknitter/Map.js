@@ -91,20 +91,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
           ];
 
           var img = L.distortableImageOverlay(warpable.srcmedium, {
-            keymapper: false,
             corners: corners,
             mode: 'lock'
           }).addTo(map);
 
-          var exportA = mapknitter.customExportAction();
+          var customExports = mapknitter.customExportAction();
           var imgGroup = L.distortableCollection({
-            actions: [exportA]
+            actions: [customExports, Locks, Unlocks, Deletes]
           }).addTo(map);
 
           imgGroup.addLayer(img);
 
           bounds = bounds.concat(corners);
-          mapknitter._map.fitBounds(bounds);
           images.push(img);
           img.warpable_id = warpable.id;
 
@@ -243,9 +241,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
   addImage: function(url,id,lat,lng,angle,altitude) {
-    var img = L.distortableImageOverlay(url, {
-      keymapper: false,
-    });
+    var img = L.distortableImageOverlay(url, {});
 
     img.geocoding = {
       lat: lat,
