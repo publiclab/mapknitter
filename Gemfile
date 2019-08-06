@@ -11,6 +11,7 @@ gem 'will_paginate-bootstrap4'
 gem "friendly_id"
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
 gem 'protected_attributes'
+gem 'paper_trail'
 
 # dependencies
 group :dependencies do
