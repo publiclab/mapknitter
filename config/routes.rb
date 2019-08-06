@@ -89,9 +89,13 @@ Mapknitter::Application.routes.draw do
   end
 
   # make these resourceful after renaming warpables to images
-  post 'warper/update', to: 'images#update' # legacy for cartagen.js
-  delete 'maps/:map_id/warpables/:id', to: 'images#destroy' #legacy, will be resourceful
-  delete 'images/:id', to: 'images#destroy' #legacy, will be resourceful
+  post 'images/create/:id' => 'images#create' # used?
+  post 'warper/update' => 'images#update' # legacy for cartagen.js
+  post 'images/update' => 'images#update'
+  post 'images/delete/:id' => 'images#delete'
+  get 'images/revert' => 'images#revert'
+  delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
+  delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
 
   # RESTful API
   resources :maps do

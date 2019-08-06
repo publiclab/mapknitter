@@ -3215,8 +3215,9 @@ jpeg-js@^0.3.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.5.tgz#6fbd6cd0e49627c5a0341796c9e50c70a2aa3673"
   integrity sha512-hvaExqwmQDS8O9qnZAVDXGWU43Tbu1V0wMZmjROjT11jloSgGICZpscG+P6Nyi1BVAvyu2ARRx8qmEW30sxgdQ==
 
-jquery-ujs@rails/jquery-ujs#~1.0.3:
+jquery-ujs@rails/jquery-ujs#~1.0.4:
   version "0.0.0"
+  uid "7146dc96a71fda9b713f1f60fb414c699db0b3a7"
   resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
 
 jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1:
