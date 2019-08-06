@@ -17,6 +17,8 @@ class Warpable < ApplicationRecord
   belongs_to :map, optional: true
   belongs_to :user, optional: true
 
+  has_paper_trail on: %i(create update), only: %i(nodes)
+
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})
     json = super options
