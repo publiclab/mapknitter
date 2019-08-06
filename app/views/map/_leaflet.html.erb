@@ -49,10 +49,10 @@
 	var label = "Main"
 	var zoom = <%= @map.zoom %>
 	var google = new L.Google("SATELLITE",{opacity:0.5});
-	var main = new L.TileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
+	var main = L.tileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
 
         // add an OpenStreetMap tile layer
-        var osm = new L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        var osm = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         })
 
