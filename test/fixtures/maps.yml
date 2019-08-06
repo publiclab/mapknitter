@@ -34,7 +34,7 @@ nairobi:
   lat: -1.2920659
   lon: 36.8219462
   description: Capital of Kenya
-  created_at: <% Time.now %>
+  created_at: <%= Time.now %>
   license: publicdomain
   user_id: 2
   author: aaron
@@ -47,7 +47,7 @@ village:
   lat: -0.023559
   lon: 37.90619300000003
   description: A mall in Nairobi
-  created_at: <% Time.now %>
+  created_at: <%= Time.now %>
   license: publicdomain
   user_id: 2
   author: aaron
