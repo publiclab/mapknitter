@@ -83,7 +83,7 @@ class ImagesControllerTest < ActionController::TestCase
   test 'creates version after image creation' do
     session[:user_id] = 1
     assert_difference 'PaperTrail::Version.count', 1 do
-      post :create, map_id: @map.slug, uploaded_data: @uploaded_data
+      post :create, params: { map_id: @map.slug, uploaded_data: @uploaded_data }
     end
     warp = Warpable.last
     assert warp.versions.present?
@@ -94,7 +94,7 @@ class ImagesControllerTest < ActionController::TestCase
     session[:user_id] = 1
 
     assert_difference 'PaperTrail::Version.count', 1 do
-      patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points
+      patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points }
     end
     assert_response :success
     assert @warp.versions.present?
@@ -106,12 +106,12 @@ class ImagesControllerTest < ActionController::TestCase
     points1 = "-72.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,41.84"
     points2 = "-72.39,40.83:-72.39,41.83:-72.39,41.83:-71.39,45.84"
 
-    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points1
+    patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points1 }
     @warp.reload
     nodes_latest = @warp.nodes
-    patch :update, id: @map.id, warpable_id: @warp.id, locked: false, points: points2
+    patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points2 }
     assert_difference 'PaperTrail::Version.count', 1 do
-      get :revert, id: @warp.id, version: @warp.versions.last
+      get :revert, params: { id: @warp.id, version: @warp.versions.last }
     end
     @warp.reload
     assert_equal(nodes_latest, @warp.nodes)
