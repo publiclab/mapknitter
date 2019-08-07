@@ -33,8 +33,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
+    map._initialBounds = map.getBounds();
+
     /* Load warpables data via AJAX request. */
     this._warpablesUrl = options.warpablesUrl;
+
     this.withWarpables(function (warpables) {
       $.each(warpables, function (i, warpable) {
 
@@ -97,12 +100,24 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           var customExports = mapknitter.customExportAction();
           var imgGroup = L.distortableCollection({
-            actions: [customExports, Locks, Unlocks, Deletes]
+            actions: [customExports]
           }).addTo(map);
 
           imgGroup.addLayer(img);
 
-          bounds = bounds.concat(corners);
+          /**
+           * TODO: get the images off map onto featureGroup and use featureGroup.getBounds()
+           */
+          var newImgBounds = L.latLngBounds(corners);
+
+          if (!map._initialBounds.equals(newImgBounds)) {
+            if (!map._initialBounds.contains(newImgBounds)) {
+              map._initialBounds.extend(newImgBounds);
+            }
+          }
+
+          mapknitter._map.flyToBounds(map._initialBounds);
+
           images.push(img);
           img.warpable_id = warpable.id;
 
@@ -114,7 +129,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
             }, img);
             
             L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
-            img.on('deselect', mapknitter.saveImageIfChanged, img);
           }
         }
       });
@@ -128,99 +142,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
     //img._image.src = img._image.src.split('_medium').join('')
   },
 
-    /** The upstream delete action also triggers a confirmation window, this one won't */ 
-   customDeleteAction: function() {
-     var action = L.EditAction.extend({
-       initialize: function (map, overlay, options) {
-         var use = 'delete_forever';
-
-         options = options || {};
-         options.toolbarIcon = {
-           svg: true,
-           html: use,
-           tooltip: 'Delete Image'
-         };
-
-         L.EditAction.prototype.initialize.call(this, map, overlay, options);
-       },
-
-       addHooks: function () {
-         this._overlay.fire('delete');
-       }
-     });
-
-     return action;
-   },
-
-  customExportAction: function () {
-    var action = L.EditAction.extend({
-      initialize: function (map, group, options) {
-        var use = 'get_app';
-
-        options = options || {};
-        options.toolbarIcon = { 
-          svg: true,
-          html: use,
-          tooltip: 'Export Images'
-        };
-
-        L.EditAction.prototype.initialize.call(this, map, group, options);
-      },
-
-      addHooks: function () {
-        var group = this._overlay;
-        var exportInterval;
-
-        var updateUI = function updateUI(data) {
-          data = JSON.parse(data);
-          console.log("in updateui: " + data);
-          if (data.status == 'complete') clearInterval(exportInterval);
-          if (data.status == 'complete' && data.jpg.match('.jpg')) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
-        }
-
-        var addUrlToModel = function addUrlToModel(data) {
-          var statusUrl = "//export.mapknitter.org" + data;
-          console.log("statusUrl: " + statusUrl);
-
-          // repeatedly fetch the status.json
-          var updateInterval = function updateInterval() {
-            exportInterval = setInterval(function intervalUpdater() {
-              $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
-                type: "GET",
-                crossDomain: true
-              }).done(function (data) {
-                updateUI(data);
-              });
-            }, 3000);
-          }
-
-          /**
-           * TODO: update API to say if you pass in a custom `handleStatusUrl` you must also build your own updater
-           * and also create your own a frequency
-           * or fix this part
-           */
-          $.ajax({
-            url: "/export",
-            type: 'POST',
-            data: { status_url: statusUrl }
-          }).done(function (data) {
-            console.log('success!! ' + data);
-            updateInterval();
-          });
-        }
-
-        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100)});
-      }
-    });
-
-    return action;
-  },
-
   setupEvents: function () {
     var img = this;
 
     L.DomEvent.on(img._image, 'mouseup', mapknitter.saveImageIfChanged, img);
     L.DomEvent.on(img._image, 'touchend', mapknitter.saveImageIfChanged, img);
+
+    img.on('deselect', mapknitter.saveImageIfChanged, img);
   },
 
   /* 
@@ -259,19 +187,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
      * but can't actually add the img to it until image load because the image has
      * no corners. Above ^ we initialize image with no corners. Need to figure out a fix.
     */
-    var exportA = mapknitter.customExportAction();
+    var customExports = mapknitter.customExportAction();
     var imgGroup = L.distortableCollection({
-      actions: [exportA]
+      actions: [customExports]
     }).addTo(map);
 
     if (!mapknitter.readOnly) {
-      /** 
-     * Note if you're refactoring:
-     * this event is critical - it sets up the events that save the image state to the database
-     * on mouseup & tounchend. If these events are not setup correctly, for ex. setting them up
-     * in setupToolbar() doesn't work for some reason (propogation maybe?), 
-     * then on page refresh the image will be gone
-     */
       L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
 
       L.DomEvent.on(img._image, {
@@ -279,11 +200,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
         dblclick: mapknitter.dblClickImage
       }, img);
 
-      img.on('deselect', mapknitter.saveImageIfChanged, img);
-
       L.DomEvent.on(img._image, 'load', function () {
         imgGroup.addLayer(img);
-        mapknitter.setupToolbarAndGeocode();
+        mapknitter.setupToolbarAndGeocode.bind(img);
       }, img);
     }
   },
@@ -304,8 +223,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (geo && geo.lat) {
       /* move the image to this newly discovered location */
       var center = L.latLngBounds(img.getCorners()).getCenter(),
-        latBy = geo.lat - center.lat,
-        lngBy = geo.lng - center.lng
+          latBy = geo.lat - center.lat,
+          lngBy = geo.lng - center.lng
 
       for (var i = 0; i < 4; i++) {
         img._corners[i].lat += latBy;
@@ -622,5 +541,94 @@ MapKnitter.Map = MapKnitter.Class.extend({
     L.control.zoom({ position: 'topright' }).addTo(map);
     L.control.scale().addTo(map);
   },
+
+  /** ========== custom toolbar actions =========== */ /* TODO: find a better place for these */
+
+  /** The upstream delete action also triggers a confirmation window, this one won't */
+  customDeleteAction: function () {
+    var action = L.EditAction.extend({
+      initialize: function (map, overlay, options) {
+        var use = 'delete_forever';
+
+        options = options || {};
+        options.toolbarIcon = {
+          svg: true,
+          html: use,
+          tooltip: 'Delete Image'
+        };
+
+        L.EditAction.prototype.initialize.call(this, map, overlay, options);
+      },
+
+      addHooks: function () {
+        this._overlay.fire('delete');
+      }
+    });
+
+    return action;
+  },
+
+  customExportAction: function () {
+    var action = L.EditAction.extend({
+      initialize: function (map, overlay, options) {
+        var use = 'get_app';
+
+        options = options || {};
+        options.toolbarIcon = {
+          svg: true,
+          html: use,
+          tooltip: 'Export Images'
+        };
+
+        L.EditAction.prototype.initialize.call(this, map, overlay, options);
+      },
+
+      addHooks: function () {
+        var group = this._overlay;
+        var exportInterval;
+
+        var updateUI = function updateUI(data) {
+          data = JSON.parse(data);
+          console.log("in updateui: " + data);
+          if (data.status == 'complete') clearInterval(exportInterval);
+          if (data.status == 'complete' && data.jpg.match('.jpg')) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
+        }
+
+        var addUrlToModel = function addUrlToModel(data) {
+          var statusUrl = "//export.mapknitter.org" + data;
+          console.log("statusUrl: " + statusUrl);
+          
+          // repeatedly fetch the status.json
+          var updateInterval = function updateInterval() {
+            exportInterval = setInterval(function intervalUpdater() {
+              $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
+                type: "GET",
+                crossDomain: true
+              }).done(function (data) {
+                updateUI(data);
+              });
+            }, 3000);
+          }
+          /**
+           * TODO: update API to say if you pass in a custom `handleStatusUrl` you must also build your own updater
+           * and also create your own a frequency
+           * or fix this part
+           */
+          $.ajax({
+            url: "/export",
+            type: 'POST',
+            data: { status_url: statusUrl }
+          }).done(function (data) {
+            console.log('success!! ' + data);
+            updateInterval();
+          });
+        }
+
+        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
+      }
+    });
+
+    return action;
+  }
 });
 
