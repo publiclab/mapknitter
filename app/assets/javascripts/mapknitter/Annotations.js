@@ -55,7 +55,7 @@ MapKnitter.Annotations.include({
         layer.getTextarea().focus();        
       }
 
-      if (window.mapKnitter.logged_in || window.mapKnitter.anonymous) {
+      if (window.mapknitter.logged_in || window.mapknitter.anonymous) {
 
         /* Create new database record via AJAX request; see MapKnitter.Resources#create. */
         this.create(layer, function(geojsonResponse) {
