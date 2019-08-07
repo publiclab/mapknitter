@@ -28,7 +28,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // make globally accessible map namespace for knitter.js
     map = this._map;
 
-    images = [], bounds = [];
+    images = []; bounds = [];
 
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
@@ -106,17 +106,15 @@ MapKnitter.Map = MapKnitter.Class.extend({
           imgGroup.addLayer(img);
 
           /**
-           * TODO: get the images off map onto featureGroup and use featureGroup.getBounds()
+           * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
            */
+          bounds = bounds.concat(corners);
           var newImgBounds = L.latLngBounds(corners);
 
-          if (!map._initialBounds.equals(newImgBounds)) {
-            if (!map._initialBounds.contains(newImgBounds)) {
-              map._initialBounds.extend(newImgBounds);
-            }
+          if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
+            map._initialBounds.extend(newImgBounds);
+            mapknitter._map.flyToBounds(map._initialBounds);
           }
-
-          mapknitter._map.flyToBounds(map._initialBounds);
 
           images.push(img);
           img.warpable_id = warpable.id;
@@ -199,6 +197,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
         click: mapknitter.selectImage,
         dblclick: mapknitter.dblClickImage
       }, img);
+
+      img.on('deselect', mapknitter.saveImageIfChanged, img);
 
       L.DomEvent.on(img._image, 'load', function () {
         imgGroup.addLayer(img);
