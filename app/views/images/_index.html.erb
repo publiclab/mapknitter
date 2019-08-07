@@ -52,12 +52,12 @@
           <p><%= number_to_human_size warpable.image_file_size %></p>
           <p>
             <% unless warpable.placed? %>
-              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-outline-secondary add-image-<%= warpable.id %>">Place</a>
+              <a onClick="window.mapknitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-outline-secondary add-image-<%= warpable.id %>">Place</a>
               <a class="btn btn-sm btn-outline-secondary add-image-gps-<%= warpable.id %>" style="display:none;">Place w/ GPS</a>
               <!-- <a href="">Re-place</a>  -->
               <script>
                 jQuery(document).ready(function($) {
-                  window.mapKnitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>,'<%= warpable.image.url(:medium) %>');
+                  window.mapknitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>,'<%= warpable.image.url(:medium) %>');
                 })
               </script>
             <% end %>
@@ -81,18 +81,18 @@
               $('#warpable-<%= warpable.id %> [rel=tooltip]').tooltip();
               $('#locate-warpable-<%= warpable.id %>').click(function(){
                 var center_and_bring_to_front = function() {
-                  window.mapKnitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
+                  window.mapknitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
                                                       new L.LatLng(<%= warpable.nodes_array[2].lat %>,<%= warpable.nodes_array[2].lon %>)]);
                   $.each(images,function(i,img) {
                     if (img.warpable_id == <%= warpable.id %>) {
-                      window.mapKnitter.selectImage.bind(img)()
+                      window.mapknitter.selectImage.bind(img)()
                     }
                   })
                 }
                 /* wait for map to load if we're on a small screen and it's been hidden */
                 if ($('body').width() < 400) {
                   window.toggle_sidebar();
-                  window.mapKnitter._map.once('resize', center_and_bring_to_front)
+                  window.mapknitter._map.once('resize', center_and_bring_to_front)
                 } else {
                   center_and_bring_to_front();
                 }

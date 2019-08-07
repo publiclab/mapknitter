@@ -11,20 +11,37 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
+//= require leaflet/dist/leaflet-src.js
+
 //= require jquery
 //= require jquery-ujs
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js 
+//= require jquery-ui/jquery-ui.min.js
+
+//= require blueimp-tmpl/js/tmpl.js
+//= require blueimp-file-upload/js/vendor/jquery.ui.widget
+//= require blueimp-file-upload/js/jquery.fileupload
+//= require blueimp-file-upload/js/jquery.fileupload-process
+//= require blueimp-file-upload/js/jquery.fileupload-ui
 
 //= require bootstrap/dist/js/bootstrap.js
 
-//= require leaflet/dist/leaflet
 //= require leaflet-providers/leaflet-providers.js
+//= require leaflet-easybutton/src/easy-button.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
+//= require leaflet-draw/dist/leaflet.draw-src.js
+//= require leaflet-illustrate/dist/Leaflet.Illustrate.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
+<<<<<<< HEAD
 //= require leaflet-easybutton/src/easy-button.js
+=======
+//= require leaflet-environmental-layers/src/windRoseLayer.js
+//= require Google.js
+>>>>>>> a79a86f2af01a7d1b5a9623616fd043228ebb267
 //= require sparklines/source/sparkline.js
-//= require annotations-legacy.js
 //= require glfx-js/dist/glfx.js
+//= require ion-rangeslider/js/ion.rangeSlider.js
+//= require exif-js/exif.js
 //= require webgl-distort/dist/webgl-distort.js
