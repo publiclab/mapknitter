@@ -61,17 +61,24 @@
   <div class="container-fluid">
       <div class="row text-center lead-text" id="info">
           <div class="col-md-3 col-sm-5 offset-2">
-          <img class="mx-auto d-block" style="max-height: 75px; max-width: 75px;" src="<%= asset_path('quiz.png') %>">
+              <img class="mx-auto d-block" style="max-height: 75px; max-width: 75px;" src="<%= asset_path('quiz.png') %>">
               <h3>Ask a question</h3>
               <p>Questions help you get clarity on a particular topic and explore suggestions. Ask a question to get help from others and share ideas with the PublicLab Community hence helping you in your environmental exploration</p>
-              <p> <%= link_to "Ask a question", 'https://publiclab.org/questions/new', target: 'blank', class: "btn btn-lg btn-primary" %></p>
+              <a href="https://publiclab.org/questions/new?tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>&body=Question posted from map at https://mapknitter.org/m/<%= @map.slug %>" target="blank">
+                  <button class="btn btn-lg btn-primary">
+                      Ask a Question
+                  </button>
+              </a>
           </div>
           <div class="col-md-3 col-sm-5 offset-2">
               <img class="mx-auto d-block faded" style="max-height: 75px; max-width: 75px;" src="<%= asset_path('binoculars.png') %>">
               <h3>Projects/ Requests for observations</h3>
               <p> Community observations and monitoring are a key source of environmental data. Help add to one of the projects <a href='https://publiclab.org/wiki/projects'>here</a>. Read more or post your own call for input</p>
-              <p> <%= link_to "Post an Observation", 'https://publiclab.org/post', target: 'blank', class: "btn btn-outline-secondary btn-lg" %></p>
-
+              <a href="https://publiclab.org/post?tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>&body=Question posted from map at https://mapknitter.org/m/<%= @map.slug %>" target="blank">
+                  <button class="btn btn-lg btn-outline-secondary">
+                      Post an Observation
+                  </button>
+              </a>
           </div>
       </div>
   </div>
