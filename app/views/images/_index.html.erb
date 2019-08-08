@@ -32,25 +32,32 @@
       </script>
     <% end %>
     <% ary.each do |warpable| %>
+
       <tr id="warpable-<%= warpable.id %>">
         <td class="warpable">
+          <div>
           <%= image_tag warpable.image.url(:thumb), 
               :'data-warpable-id' => warpable.id,
               :'data-map-id' => @map.id,
               :'id' => "warpable-img-#{warpable.id}"
           %>
+          </div>
+          <a class = "btn" onClick="$('#image-vesrions-<%= warpable.id %>').toggle()" style="cursor: pointer; margin-left: 30%;">
+            <i class='fas fa-clock'></i>
+          </a>
         </td>
+
         <td class="col-middle">
           <%= link_to(warpable.image_file_name, warpable.image.url) %>
           <p><%= number_to_human_size warpable.image_file_size %></p>
           <p>
             <% unless warpable.placed? %>
-              <a onClick="window.mapKnitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-outline-secondary add-image-<%= warpable.id %>">Place</a>
+              <a onClick="window.mapknitter.addImage('<%= warpable.image.url(:medium) %>',<%= warpable.id %>);$('#warpable-<%= warpable.id %> a').hide()" class="btn btn-sm btn-outline-secondary add-image-<%= warpable.id %>">Place</a>
               <a class="btn btn-sm btn-outline-secondary add-image-gps-<%= warpable.id %>" style="display:none;">Place w/ GPS</a>
               <!-- <a href="">Re-place</a>  -->
               <script>
                 jQuery(document).ready(function($) {
-                  window.mapKnitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>,'<%= warpable.image.url(:medium) %>');
+                  window.mapknitter.geocodeImageFromId('#warpable-img-<%= warpable.id %>',<%= warpable.id %>,'<%= warpable.image.url(:medium) %>');
                 })
               </script>
             <% end %>
@@ -74,18 +81,18 @@
               $('#warpable-<%= warpable.id %> [rel=tooltip]').tooltip();
               $('#locate-warpable-<%= warpable.id %>').click(function(){
                 var center_and_bring_to_front = function() {
-                  window.mapKnitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
+                  window.mapknitter._map.fitBounds([new L.LatLng(<%= warpable.nodes_array.first.lat %>,<%= warpable.nodes_array.first.lon %>),
                                                       new L.LatLng(<%= warpable.nodes_array[2].lat %>,<%= warpable.nodes_array[2].lon %>)]);
                   $.each(images,function(i,img) {
                     if (img.warpable_id == <%= warpable.id %>) {
-                      window.mapKnitter.selectImage.bind(img)()
+                      window.mapknitter.selectImage.bind(img)()
                     }
                   })
                 }
                 /* wait for map to load if we're on a small screen and it's been hidden */
                 if ($('body').width() < 400) {
                   window.toggle_sidebar();
-                  window.mapKnitter._map.once('resize', center_and_bring_to_front)
+                  window.mapknitter._map.once('resize', center_and_bring_to_front)
                 } else {
                   center_and_bring_to_front();
                 }
@@ -94,6 +101,26 @@
           <% end %>
         </td>
       </tr>
+      <td colspan="3">
+        <div class="dropdown" style="margin-top: -40px;">
+          <div class="dropdown-menu image-version" aria-labelledby="dropdownMenuButton" id="image-vesrions-<%= warpable.id %>">
+            <% warpable.versions.reverse.each do |version| %>
+              <button class="<%= warpable.id %>" id="<%= version.index + 1%>" onClick="getVersion(this)"><%= version.event.capitalize %>d by
+                <% if version.whodunnit && version.whodunnit != 'Anonymous' %>
+                  <% user = User.find_by_id(version.whodunnit) %>
+                  <% if user %>
+                    <a href="/profile/<%= user.login %>"><%= user.login %></a>
+                  <% end %>
+                <% else %>
+                  <u>an Anonymous user</u>
+                <% end %>
+                <%= time_ago_in_words(version.created_at) %> ago
+                <%= link_to '' ,images_revert_path(id: warpable.id, version:version), class: 'fa fa-undo', title: 'Revert to this version' %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
     <% end %>
   </tbody>
 </table>

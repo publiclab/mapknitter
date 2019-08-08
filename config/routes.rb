@@ -11,23 +11,23 @@ Mapknitter::Application.routes.draw do
   get 'anonymous', to: 'front_ui#anonymous'
   get 'gallery', to: 'front_ui#gallery'
   post 'save_location', to: 'front_ui#save_location'
-  
+
   get 'legacy', to: 'maps#index' # remove once new front page is stable
-  
+
   get 'external_url_test', to: 'export#external_url_test'
-  
+
   # since rails 3.2, we use this to log in:
   get 'sessions/create', to: 'sessions#create'
   get 'local/:login', to: 'sessions#local'
   get 'logout', to: 'sessions#logout'
   get 'login', to: 'sessions#new'
-  
-  
+
+
   resources :users, :sessions, :maps, :images, :comments, :tags
-  
+
   # redirect legacy route:
   get 'tag/:id', to: redirect('/tags/%{id}')
-  
+
   # Registered user pages:
   get 'register', to: 'users#create'
   get 'signup', to: 'users#new'
@@ -84,16 +84,20 @@ Mapknitter::Application.routes.draw do
   end
 
   namespace 'export' do
-    %w(index logger jpg geotiff cancel 
+    %w(index logger jpg geotiff cancel
     progress status external_url_test).each do |action|
       post action + "/:id", action: action
     end
   end
 
   # make these resourceful after renaming warpables to images
+  post 'images/create/:id' => 'images#create' # used?
+  post 'warper/update' => 'images#update' # legacy for cartagen.js
+  post 'images/delete/:id' => 'images#delete'
+  get 'images/revert' => 'images#revert'
+  delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
+  delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
   post 'warper/update', to: 'images#update' # legacy for cartagen.js
-  delete 'maps/:map_id/warpables/:id', to: 'images#destroy' #legacy, will be resourceful
-  delete 'images/:id', to: 'images#destroy' #legacy, will be resourceful
 
   # RESTful API
   resources :maps do
@@ -106,6 +110,13 @@ Mapknitter::Application.routes.draw do
     end
   end
 
-  # See how all your routes lay out with 'rails routes'
+  # See how all your routes lay out with 'rake routes'
+
+  # This is a legacy wild controller route that's not recommended for RESTful applications.
+  # Note: This route will make all actions in every controller accessible via GET requests.
+  get ':controller/:action'
+  get ':controller/:action/:id'
+  get ':controller/:action.:format'
+  get ':controller/:action/:id.:format'
 
 end

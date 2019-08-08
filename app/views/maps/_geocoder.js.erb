@@ -6,10 +6,10 @@ jQuery(document).ready(function($) {
     e.preventDefault();
   })
 
-  window.mapKnitter.getMap().on('drag',function(e) {
-    $("#map_lat").val(window.mapKnitter.getMap().getCenter().lat);
-    $("#map_lon").val(window.mapKnitter.getMap().getCenter().lng);
-    $("#map_zoom").val(window.mapKnitter.getMap().getZoom());
+  window.mapknitter.getMap().on('drag',function(e) {
+    $("#map_lat").val(window.mapknitter.getMap().getCenter().lat);
+    $("#map_lon").val(window.mapknitter.getMap().getCenter().lng);
+    $("#map_zoom").val(window.mapknitter.getMap().getZoom());
   })
 
   $("#map_location").autocomplete({
@@ -34,16 +34,16 @@ jQuery(document).ready(function($) {
       $("#map_lat").val(ui.item.latitude);
       $("#map_lon").val(ui.item.longitude);
       if (b) {
-        window.mapKnitter.getMap().fitBounds([
+        window.mapknitter.getMap().fitBounds([
           [b.getNorthEast().lat(), b.getNorthEast().lng()],
           [b.getSouthWest().lat(), b.getSouthWest().lng()]
           ]);
       } else {
-        window.mapKnitter.getMap().panTo([ui.item.latitude,
+        window.mapknitter.getMap().panTo([ui.item.latitude,
                                       ui.item.longitude])
-        window.mapKnitter.getMap().setZoom(14)
+        window.mapknitter.getMap().setZoom(14)
       }
-      $("#map_zoom").val(window.mapKnitter.getMap().getZoom());
+      $("#map_zoom").val(window.mapknitter.getMap().getZoom());
     }
   });
 
