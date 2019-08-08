@@ -8,15 +8,21 @@
 <%= javascript_include_tag '/lib/image-sequencer/dist/image-sequencer.js' %>
 
 <div class= "row" id="knitter-map-pane" style="height: 450px; width: 100%;  margin-bottom: 1%; z-index: 5; float: none; max-width: none;"> </div>
-<button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
-<div class="share-link" style="display:none;">
-    <%= render :partial => 'maps/share' %>
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()" style="margin-left: 1%;">Embed code</button>
+        <div class="share-link" style="display:none;">
+            <%= render :partial => 'maps/share' %>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <a href="/maps/<%= @map.slug %>">
+            <button class="btn btn-primary float-right">
+                <span class="fas fa-pencil-alt"> </span> Edit this map
+            </button>
+        </a>
+    </div>
 </div>
-<a href="/maps/<%= @map.slug %>">
-    <button class=  "btn btn-primary" style= "position: absolute; top: 380px;left: 10px; padding: 10px; z-index: 40;" >
-        <i class="fas fa-pencil-alt"> </i> Edit this map
-    </button>
-</a>
 <div class="container-fluid">
   <div class="text-center lead-text">
   <p class="text-muted"> a Community Atlas of </p>
@@ -56,19 +62,14 @@
       <div class="row text-center lead-text" id="info">
           <div class="col-md-3 col-sm-5 offset-2">
           <img class="mx-auto d-block" style="max-height: 75px; max-width: 75px;" src="<%= asset_path('quiz.png') %>">
-          <br>
               <h3>Ask a question</h3>
-              <br><br>
-              <p> Get help from others and share ideas with the PublicLab Community</p>
-              <br><br>
+              <p>Questions help you get clarity on a particular topic and explore suggestions. Ask a question to get help from others and share ideas with the PublicLab Community hence helping you in your environmental exploration</p>
               <p> <%= link_to "Ask a question", 'https://publiclab.org/questions/new', target: 'blank', class: "btn btn-lg btn-primary" %></p>
           </div>
           <div class="col-md-3 col-sm-5 offset-2">
               <img class="mx-auto d-block faded" style="max-height: 75px; max-width: 75px;" src="<%= asset_path('binoculars.png') %>">
-              <br>
               <h3>Projects/ Requests for observations</h3>
-              <br>
-              <p> Community observations and monitoring are a key source of environmental data. Help add to one of the [projects] here. Read more or post your oen call for input</p>
+              <p> Community observations and monitoring are a key source of environmental data. Help add to one of the projects <a href='https://publiclab.org/wiki/projects'>here</a>. Read more or post your own call for input</p>
               <p> <%= link_to "Post an Observation", 'https://publiclab.org/post', target: 'blank', class: "btn btn-outline-secondary btn-lg" %></p>
 
           </div>
