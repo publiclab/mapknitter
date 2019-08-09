@@ -10,6 +10,7 @@ gem 'will_paginate', '3.1.7'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
+gem 'paper_trail'
 
 # dependencies
 group :dependencies do

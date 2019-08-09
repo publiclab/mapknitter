@@ -5,32 +5,33 @@ Mapknitter::Application.routes.draw do
   get 'front-page', to: 'front_ui#index'
   get 'mappers', to: 'front_ui#nearby_mappers'
   get 'about', to: 'front_ui#about'
-  post 'save_location' => 'front_ui#save_location'
   get 'all_maps', to: 'front_ui#all_maps'
-  get 'legacy' => 'maps#index' # remove once new front page is stable
-
+  get 'anonymous', to: 'front_ui#anonymous'
+  get 'gallery', to: 'front_ui#gallery'
   post 'save_location', to: 'front_ui#save_location'
-
+  
+  get 'legacy', to: 'maps#index' # remove once new front page is stable
+  
   get 'external_url_test', to: 'export#external_url_test'
+  
+  # since rails 3.2, we use this to log in:
+  get 'sessions/create', to: 'sessions#create'
   get 'local/:login', to: 'sessions#local'
   get 'logout', to: 'sessions#logout'
   get 'login', to: 'sessions#new'
-  get 'register', to: 'users#create'
-  get 'signup', to: 'users#new'
-
-  # since rails 3.2, we use this to log in:
-  get 'sessions/create', to: 'sessions#create'
-
+  
+  
   resources :users, :sessions, :maps, :images, :comments, :tags
-
+  
   # redirect legacy route:
   get 'tag/:id', to: redirect('/tags/%{id}')
-
+  
   # Registered user pages:
+  get 'register', to: 'users#create'
+  get 'signup', to: 'users#new'
   get 'profile', to: 'users#profile', id: 0
   get 'profile/:id', to: 'users#profile'
   get 'dashboard', to: 'users#dashboard'
-
   get 'authors', to: 'users#index'
 
   get 'images/:url', to: 'images#fetch'
@@ -40,7 +41,6 @@ Mapknitter::Application.routes.draw do
   get 'tms/:id/alt/', to: 'utility#tms_info'
 
   # once we have string-based ids, reorganize these around 'maps' and resourceful routing
-  get 'gallery', to: 'front_ui#gallery'
   get 'search/:id', to: 'maps#search'
   get 'search', to: 'maps#search'
   get 'maps/:id/warpables', to: 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
@@ -89,9 +89,13 @@ Mapknitter::Application.routes.draw do
   end
 
   # make these resourceful after renaming warpables to images
-  post 'warper/update', to: 'images#update' # legacy for cartagen.js
-  delete 'maps/:map_id/warpables/:id', to: 'images#destroy' #legacy, will be resourceful
-  delete 'images/:id', to: 'images#destroy' #legacy, will be resourceful
+  post 'images/create/:id' => 'images#create' # used?
+  post 'warper/update' => 'images#update' # legacy for cartagen.js
+  post 'images/update' => 'images#update'
+  post 'images/delete/:id' => 'images#delete'
+  get 'images/revert' => 'images#revert'
+  delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
+  delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
 
   # RESTful API
   resources :maps do

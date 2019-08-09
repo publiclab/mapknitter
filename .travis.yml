@@ -3,14 +3,22 @@ language: ruby
 rvm:
   - 2.6.3
 
+node_js:
+  - "12.6.0"
+
 services:
   - mysql
   - docker
 
 cache:
   directories:
-   - $PWD/public/lib/
+   - $PWD/node_modules/
    - $PWD/vendor/.bundle/
+
+before_install:
+  - npm i -g npm@6.9.0
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
+  - export PATH="$HOME/.yarn/bin:$PATH"
 
 install:
   - cp config/database.yml.example config/database.yml
@@ -18,7 +26,9 @@ install:
   - cp db/schema.rb.example db/schema.rb
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle check --path vendor/.bundle/ || bundle install --path vendor/.bundle/
-  - yarn check || yarn install
+  - if [ $RAILS_ENV != 'production' ]; then
+      yarn check || yarn install;
+    fi
   - if [ $RAILS_ENV == 'production' ]; then
       mysql -e "CREATE DATABASE mapknitter;";
       mysql -e "CREATE USER 'mapknitter'@'%' IDENTIFIED BY 'mapknitter';";

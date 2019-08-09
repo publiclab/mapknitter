@@ -255,6 +255,13 @@ class MapsControllerTest < ActionController::TestCase
     assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
   end
 
+  test 'displays maps by region filter by tag if present' do
+    get :region, params: { minlat: 10, maxlat: 30, minlon: 60, maxlon: 80, tag: 'featured' }
+    @maps = assigns(:maps)
+    assert_response :success
+    assert @maps.collect(&:name).include?('Cubbon Park')
+  end
+
   test 'should annotate maps' do
     get :annotate, params: { id: @map.slug}
     assert_response :success

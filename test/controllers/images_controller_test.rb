@@ -1,13 +1,20 @@
 require 'test_helper'
+require 'paper_trail'
 
 class ImagesControllerTest < ActionController::TestCase
   # called before every single test
   def setup
     @map = maps(:saugus)
     @warp = warpables(:one)
+    system('mkdir -p public/warps/saugus-landfill-incinerator-working')
+    system('mkdir -p public/system/images/1/original')
+    system('mkdir -p public/system/images/1/original')
+    system('cp test/fixtures/demo.png public/system/images/1/original/')
+    system('mkdir -p public/warps/saugus-landfill-incinerator')
 
-    file_location = Rails.root + 'test/fixtures/demo.png'
-    @uploaded_data = Rack::Test::UploadedFile.new(file_location.to_s, 'demo.png', "image/png")
+    @file ||= File.open(File.expand_path(Rails.root + 'test/fixtures/demo.png', __FILE__))
+    @uploaded_data = ActionDispatch::Http::UploadedFile.new(tempfile: @file, filename: File.basename(@file), type: "image/png")
+    PaperTrail.enabled = true
   end
 
   def teardown
@@ -56,6 +63,7 @@ class ImagesControllerTest < ActionController::TestCase
     patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points}
     assert_not_nil @warp.nodes
     assert_equal "text/html", response.content_type
+    assert_response :success
   end
 
   test 'correct user should destroy an image' do
@@ -70,6 +78,44 @@ class ImagesControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to '/login'
     assert_not_nil flash[:error]
+  end
+
+  test 'creates version after image creation' do
+    session[:user_id] = 1
+    assert_difference 'PaperTrail::Version.count', 1 do
+      post :create, params: { map_id: @map.slug, uploaded_data: @uploaded_data }
+    end
+    warp = Warpable.last
+    assert warp.versions.present?
+  end
+
+  test 'create version after update' do
+    points = "-71.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,40.84"
+    session[:user_id] = 1
+
+    assert_difference 'PaperTrail::Version.count', 1 do
+      patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points }
+    end
+    assert_response :success
+    assert @warp.versions.present?
+  end
+
+  test 'should revert to an image through versions' do
+    session[:user_id] = 1
+    
+    points1 = "-72.39,41.83:-72.39,41.83:-72.39,41.83:-72.39,41.84"
+    points2 = "-72.39,40.83:-72.39,41.83:-72.39,41.83:-71.39,45.84"
+
+    patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points1 }
+    @warp.reload
+    nodes_latest = @warp.nodes
+    patch :update, params: { id: @map.id, warpable_id: @warp.id, locked: false, points: points2 }
+    assert_difference 'PaperTrail::Version.count', 1 do
+      get :revert, params: { id: @warp.id, version: @warp.versions.last }
+    end
+    @warp.reload
+    assert_equal(nodes_latest, @warp.nodes)
+    assert_response :redirect
   end
 
   # Imports don't work. Relevent issue: https://github.com/publiclab/mapknitter/issues/614
