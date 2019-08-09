@@ -1,13 +1,11 @@
 <div class="row map-list mx-auto">
   <% maps.each do |map| %>
-    <% images = map.placed_warpables.limit(1) %>
-    <% has_image = images.length > 0 %>
-    <% image = images.first if has_image %>
+      <% warp = map.placed_warpables.first %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
       <div class="card card-without-border">
         <a href="/maps/<%= map.slug %>">
-          <% if has_image %>
-            <img class="card-img-top map-img" src="<%= image.url  %>" alt="<%= map.name %>">
+            <% if warp.present? %>
+            <img class="card-img-top map-img" src="<%= warp.image.url  %>" alt="<%= map.name %>">
           <% else %>
             <img class="card-img-top" src="<%= asset_path('image.png') %>" alt="Map without image" style="max-height: 400px !important;" />
           <% end %>
