@@ -26,6 +26,7 @@ group :dependencies do
   gem 'bootsnap', '~> 1.4.4', require: false
   gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
+  gem 'papertrail'
   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
   gem 'webpacker', '~> 4.0'
 
