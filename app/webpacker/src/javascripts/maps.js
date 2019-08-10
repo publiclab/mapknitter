@@ -1,4 +1,3 @@
-//= require popper
 //= require jquery-ui/jquery-ui.min.js
 //= require knitter
 //= require exif-js/exif.js
@@ -7,25 +6,25 @@
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
 jQuery(document).ready(function($) {
-  window.toggle_sidebar = function(e){
-    var icon = $('.sidebar-toggle-icon')
+  window.toggle_sidebar = function() {
+    var icon = $('.sidebar-toggle-icon');
     
-    $('#knitter-map-pane').toggleClass('fullscreen')
-    $('.sidebar .sidebar-wrap').toggleClass('fullscreen-only')
-    icon.toggleClass('fa-chevron-left')
-    icon.toggleClass('fa-chevron-right')
+    $('#knitter-map-pane').toggleClass('fullscreen');
+    $('.sidebar .sidebar-wrap').toggleClass('fullscreen-only');
+    icon.toggleClass('fa-chevron-left');
+    icon.toggleClass('fa-chevron-right');
     
     /* trigger a resize event */
-    window.mapKnitter._map._onResize()
+    window.mapknitter._map._onResize();
   }
-  window.toggle_sidebar_and_fit_bounds = function(e){
-    window.mapKnitter._map.once('resize',function(){
-      if (bounds) window.mapKnitter._map.fitBounds(bounds)
+  window.toggle_sidebar_and_fit_bounds = function() {
+    window.mapknitter._map.once('resize', function(e) {
+      if (e.bounds) { window.mapknitter._map.fitBounds(e.bounds); }
     })
-    window.toggle_sidebar()
+    window.toggle_sidebar();
   }
 
-  $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds)
+  $('.sidebar-toggle').click(window.toggle_sidebar_and_fit_bounds);
 
   haschat = false
   $('.chat-btn').click(function(){
@@ -58,22 +57,22 @@ jQuery(document).ready(function($) {
   $(".delete-comment-btn").click(delete_comment);
 
   /* on comment submission */
-  $("#new_comment").on("ajax:success", function(e, data, status, xhr) {
+  $("#new_comment").on("ajax:success", function(e, data, status, xhr) {
     $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
     $("#new_comment textarea").attr('disabled',false)
     $("#new_comment textarea").val('')
 
-    $("#comments").append(xhr.responseText)
+    $("#comments").append(xhr.responseText)
     $("#comments-number").text(function(i, str) { return (parseInt(str) + 1); });
     $('.comment:last').click(edit_comment).click(delete_comment)
-  }).on("ajax:error", function(e, xhr, status, error) {
+  }).on("ajax:error", function(e, xhr, status, error) {
     if (xhr.responseText == "Login required.") {
       window.location = "/login?back_to="+window.location
     } else {
       $("#new_comment button.btn-primary").html("Post comment").removeClass('disabled')
       $("#new_comment textarea").attr('disabled',false)
  
-      $("#comments").append("<p class='alert alert-error'>There was an error.</p>")
+      $("#comments").append("<p class='alert alert-error'>There was an error.</p>")
     }
   })
   /* just before comment submission */
