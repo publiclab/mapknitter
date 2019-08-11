@@ -49,7 +49,6 @@ branches:
     - main
     - unstable
     - development
-    - danger
 
 before_script: 
     - bundle exec danger
