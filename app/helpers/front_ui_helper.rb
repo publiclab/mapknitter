@@ -11,7 +11,7 @@ module FrontUiHelper
     maps.featured
   end
 
-  def location(maps,loc)
-  	maps.location(loc)
+  def location(maps, loc)
+    maps.location(loc)
   end
 end
