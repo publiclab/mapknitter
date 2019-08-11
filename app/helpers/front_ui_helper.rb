@@ -10,4 +10,8 @@ module FrontUiHelper
   def featured(maps)
     maps.featured
   end
+
+  def location(maps,loc)
+  	maps.location(loc)
+  end
 end

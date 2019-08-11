@@ -44,7 +44,14 @@ class FrontUiController < ApplicationController
 
   def about; end
 
+  def location
+    @loc = params[:id]
+    render html: 'success'
+  end
+
   def gallery
+    @loc = 'Suriname'
+
     @maps = Map.page(params[:maps])
                .per_page(20)
                .where(archived: false, password: '')

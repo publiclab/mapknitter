@@ -20,6 +20,9 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#authors" role="tab" aria-selected="false">Authors</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#location" role="tab" aria-selected="false">Location</a>
+            </li>
             <% if params[:controller] == "tags" %>
                 <li class="nav-item">
                     <a class="nav-link" role="tab" href="/feeds/tag/<%= params[:id] %>" aria-selected="false">RSS</a>
@@ -41,7 +44,36 @@
             <div class="tab-pane fade" id="authors" role="tabpanel">
                 <%= render :partial => 'front_ui/featured_mappers', :locals => { :mappers => @authors } %>
             </div>
+            <div class="tab-pane fade"  id="location" role="tabpanel">
+                <div style="text-align: center; margin-bottom: 50px;">
+                    <input class="bg-light" id="usr" type="text" placeholder="Enter location">
+                    <button class="loc" type="submit" style="margin-left: 2px;">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <div id = "location-title" style="text-align: center; margin-bottom: 20px;">
+                    <h4></h4>
+                </div>
+                <div id ="display-location"></div>
+            </div>
         </div>
     <% end %>
 
 </div>
+<script>
+    $("#location-title").css('display','none');
+    $(".loc").click(function(){
+        var loc = $("#usr").val();
+        $.ajax({
+          type: "GET",
+          url: '/gallery/location',
+          data: {id: loc},
+          success: function(data) {
+            $("#location-title").css('display','block');
+            $("h4").text(loc);
+            $("#display-location").html("<%= j render :partial => 'front_ui/maps', :locals => { :maps => location(@maps,"#{@loc}") } %>");
+            $("#usr").val('');
+          },
+        });
+    });
+</script>

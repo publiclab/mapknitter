@@ -96,6 +96,10 @@ class Map < ApplicationRecord
        .order('image_count DESC')
   end
 
+  def self.location(loc)
+    Map.where(location: loc)
+  end
+
   def self.new_maps
     Map.where(['password = "" AND archived = "false"'])
       .order('created_at DESC')
