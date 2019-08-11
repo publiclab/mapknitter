@@ -12,6 +12,7 @@ gem "friendly_id"
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
 gem 'protected_attributes'
 gem 'paper_trail'
+gem 'danger'
 
 # dependencies
 group :dependencies do

@@ -25,6 +25,7 @@ env:
     - RAILS_ENV=test
     - CI=true
     - TRAVIS=true
+    - DANGER_GITHUB_API_TOKEN=ab33018a6f90a1e527998d11596e2b3e388dcfcb
 
 jobs:
   include:
@@ -50,3 +51,5 @@ branches:
     - unstable
     - development
 
+before_script: 
+    - bundle exec danger
