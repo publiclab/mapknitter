@@ -50,5 +50,7 @@ branches:
     - unstable
     - development
 
-before_script: 
-    - bundle exec danger
+after_script: 
+  - echo -e '<?xml version="1.0" encoding="UTF-8"?>' > output.xml
+  - tail -n +2 -q ./test/reports/TEST*.xml >> output.xml
+  - bundle exec danger
