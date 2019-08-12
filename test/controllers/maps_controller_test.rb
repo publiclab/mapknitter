@@ -271,7 +271,7 @@ class MapsControllerTest < ActionController::TestCase
   test 'embed' do
     get :embed, params: { id: @map.slug}
     assert_response :success
-    assert_template :show
+    assert_template :edit
   end
 
   test 'it returns the images' do
@@ -312,11 +312,11 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'view map page' do
-    get :view_map, id: @map.slug
+  test 'show' do
+    get :show, id: @map.slug
 
     assert_response :success
     assert assigns(:maps)
-    assert_template 'maps/view_map'
+    assert_template 'maps/show'
   end
 end
