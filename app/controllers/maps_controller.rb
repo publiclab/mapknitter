@@ -57,14 +57,6 @@ class MapsController < ApplicationController
 
   def show
     @map.zoom ||= 12
-
-    # this is used for the resolution slider
-    @resolution = @map.average_cm_per_pixel.round(4)
-    @resolution = 5 if @resolution < 5 # soft-set min res
-  end
-
-  def view_map
-    @map.zoom ||= 12
     @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
                .sample(4)
     @unpaginated = true
@@ -97,7 +89,13 @@ class MapsController < ApplicationController
     @annotations = true # loads annotations-specific assets
   end
 
-  def edit; end
+  def edit
+    @map.zoom ||= 12
+
+    # this is used for the resolution slider
+    @resolution = @map.average_cm_per_pixel.round(4)
+    @resolution = 5 if @resolution < 5 # soft-set min res
+  end
 
   def update
     @map.update_attributes(map_params)
