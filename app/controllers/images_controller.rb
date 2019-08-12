@@ -92,7 +92,7 @@ class ImagesController < ApplicationController
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
       @warpable.save
-      data = @warpable.map.fetch_map_data
+      data = @warpable.map.fetch_map_data # Get the updated warpable data
       render json: data
       render html: 'success'
     else

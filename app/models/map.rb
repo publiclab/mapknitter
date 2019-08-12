@@ -275,6 +275,7 @@ class Map < ApplicationRecord
   end
 
   def fetch_map_data
+    # fetches a list of updated warpables along with their corners in a json format.
     data = warpables
     data.to_json
   end
