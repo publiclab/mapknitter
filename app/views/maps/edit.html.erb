@@ -1,6 +1,8 @@
 <% content_for :title do %>
   <div class="sidebar-title mt-3">
-    <h3><%= @map.name %></h3>
+    <h3><%= @map.name %>
+<%= link_to 'Go to show page', @map, class: 'float-right btn btn-sm btn-info'%>
+</h3>
   </div>
   <div class="map-author">
     <% if @map.user %>
@@ -8,7 +10,7 @@
     <% else %>
       anonymous
     <% end %>
-  </div>  
+  </div
 <% end %>
 
 <% content_for :details do %>
