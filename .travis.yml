@@ -50,7 +50,7 @@ branches:
     - unstable
     - development
 
-after_script: 
+script: 
   - echo -e '<?xml version="1.0" encoding="UTF-8"?>' > output.xml
   - tail -n +2 -q ./test/reports/TEST*.xml >> output.xml
-  - bundle exec danger
+  - bundle exec danger --verbose
