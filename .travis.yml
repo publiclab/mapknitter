@@ -19,12 +19,6 @@ before_install:
   - npm i -g npm@6.9.0
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
-  - wget https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_linux64.zip # https://sites.google.com/a/chromium.org/chromedriver/
-  - sudo unzip chromedriver_linux64.zip
-  - sudo mv chromedriver /usr/local/bin/chromedriver
-  - sudo chmod +x /usr/local/bin/chromedriver
 
 install:
   - cp config/database.yml.example config/database.yml
