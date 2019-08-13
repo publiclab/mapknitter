@@ -257,6 +257,11 @@ class Map < ActiveRecord::Base
     self.version = last.version + 1
   end
 
+  def change_edit_permission editable
+    self.is_editable = editable
+    self.save!
+  end
+
   def license_link
     if license == "cc-by"
       "<a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 Unported License</a>"

@@ -18,6 +18,8 @@ Mapknitter::Application.routes.draw do
   get 'register' => 'users#create'
   get 'signup' => 'users#new'
 
+  post 'toggle_editing' => 'maps#toggle_editing'
+
   # since rails 3.2, we use this to log in:
   get 'sessions/create' => 'sessions#create'
 
