@@ -12,8 +12,8 @@ class ImagesControllerTest < ActionController::TestCase
     system('cp test/fixtures/demo.png public/system/images/1/original/')
     system('mkdir -p public/warps/saugus-landfill-incinerator')
 
-    @file ||= File.open(File.expand_path(Rails.root + 'test/fixtures/demo.png', __FILE__))
-    @uploaded_data = ActionDispatch::Http::UploadedFile.new(tempfile: @file, filename: File.basename(@file), type: "image/png")
+    file_location = Rails.root + 'test/fixtures/demo.png'
+    @uploaded_data = Rack::Test::UploadedFile.new(file_location.to_s, 'demo.png', "image/png")
     PaperTrail.enabled = true
   end
 
