@@ -45,8 +45,7 @@ class FrontUiController < ApplicationController
   def about; end
 
   def location
-
-    @loc = params[:q];
+    @loc = params[:q]
 
     @maps = Map.page(params[:maps])
                .per_page(20)
@@ -55,7 +54,7 @@ class FrontUiController < ApplicationController
                .group('maps.id')
 
     respond_to do |format|
-        format.js
+      format.js
     end
   end
 
