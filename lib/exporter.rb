@@ -261,7 +261,7 @@ class Exporter
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
     end
-    gdalwarp = "gdalwarp -s_srs EPSG:3857 -te #{minlon} #{minlat} #{maxlon} #{maxlat} #{geotiffs} #{directory}#{id}.tif"
+    gdalwarp = "gdalwarp -s_srs EPSG:3857 -te #{minlon} #{minlat} #{maxlon} #{maxlat} #{geotiffs} #{directory}#{slug}.tif"
     puts gdalwarp
     system(self.ulimit+gdalwarp)
     composite_location
