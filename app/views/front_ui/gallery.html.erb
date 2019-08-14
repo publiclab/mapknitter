@@ -45,35 +45,16 @@
                 <%= render :partial => 'front_ui/featured_mappers', :locals => { :mappers => @authors } %>
             </div>
             <div class="tab-pane fade"  id="location" role="tabpanel">
-                <div style="text-align: center; margin-bottom: 50px;">
-                    <input class="bg-light" id="usr" type="text" placeholder="Enter location">
-                    <button class="loc" type="submit" style="margin-left: 2px;">
-                        <i class="fa fa-search"></i>
-                    </button>
+                <div style="text-align: center;">
+                    <%= form_tag("/location", method: "get", remote: true) do %>
+                      <%= label_tag(:q, "Enter location:") %>
+                      <%= text_field_tag :q %>
+                      <%= submit_tag "Search"%>
+                    <% end %>
                 </div>
-                <div id = "location-title" style="text-align: center; margin-bottom: 20px;">
-                    <h4></h4>
-                </div>
-                <div id ="display-location"></div>
-            </div>
+                <div id="display-location"></div>
+             </div>
         </div>
     <% end %>
 
 </div>
-<script>
-    $("#location-title").css('display','none');
-    $(".loc").click(function(){
-        var loc = $("#usr").val();
-        $.ajax({
-          type: "GET",
-          url: '/gallery/location',
-          data: {id: loc},
-          success: function(data) {
-            $("#location-title").css('display','block');
-            $("h4").text(loc);
-            $("#display-location").html("<%= j render :partial => 'front_ui/maps', :locals => { :maps => location(@maps,"#{@loc}") } %>");
-            $("#usr").val('');
-          },
-        });
-    });
-</script>

@@ -45,13 +45,21 @@ class FrontUiController < ApplicationController
   def about; end
 
   def location
-    @loc = params[:id]
-    render html: 'success'
+
+    @loc = params[:q];
+
+    @maps = Map.page(params[:maps])
+               .per_page(20)
+               .where(archived: false, password: '')
+               .order('updated_at DESC')
+               .group('maps.id')
+
+    respond_to do |format|
+        format.js
+    end
   end
 
   def gallery
-    @loc = 'Suriname'
-
     @maps = Map.page(params[:maps])
                .per_page(20)
                .where(archived: false, password: '')
