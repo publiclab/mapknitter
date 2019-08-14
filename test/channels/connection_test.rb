@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'byebug'
 
 module ApplicationCable
   class ConnectionTest < ActionCable::Connection::TestCase
