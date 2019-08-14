@@ -388,6 +388,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
 
+    /* Called by the concurrent_editing.js channel's 'received' function (app/assets/javascripts/channels/concurrent_editing.js).
+     * It recieves a list of updated warpables,i.e. list of images with updated corner points. The aim of writing this function
+     * is to reposition the updated images onto the map on every connected browser (via the ActionCable). */
+
   synchronizeData: function(warpables) {
       var layers = [];
       map.eachLayer(function(l) {layers.push(l)});
