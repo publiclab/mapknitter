@@ -14,8 +14,15 @@ RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > 
 COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
 RUN apt-key add /app/sysadmin.publiclab.key
 
+# Install dependencies for Mapknitter
+RUN apt-get update -qq && apt-get install -y \
+  nodejs gdal-bin curl procps git imagemagick python-gdal zip
+
 # Install dependencies for system tests
-RUN wget https://github.com/webnicer/chrome-downloads/raw/master/x64.deb/google-chrome-stable_75.0.3770.142-1_amd64.deb \
+RUN apt-get -y install fonts-liberation libappindicator3-1 libasound2 \
+    libatk-bridge2.0-0 libatspi2.0-0 libgtk-3-0 libnspr4 \
+    libnss3 libx11-xcb1 libxss1 libxtst6 lsb-release xdg-utils && \
+    wget https://github.com/webnicer/chrome-downloads/raw/master/x64.deb/google-chrome-stable_75.0.3770.142-1_amd64.deb \
           -O google-chrome.deb && \
     dpkg -i google-chrome.deb && \
     apt-get -fy install && \
@@ -23,10 +30,6 @@ RUN wget https://github.com/webnicer/chrome-downloads/raw/master/x64.deb/google-
     unzip chromedriver_linux64.zip && \
     mv chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver
-
-# Install dependencies
-RUN apt-get update -qq && apt-get install -y \
-  nodejs gdal-bin curl procps git imagemagick python-gdal zip
 
 # Configure ImageMagick
 COPY ./nolimit.xml /etc/ImageMagick-6/policy.xml
