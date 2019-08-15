@@ -10,4 +10,5 @@ SimpleCov.start 'rails' do
   add_filter '/vendor/'
   add_filter '/log/'
   add_filter '/tmp/'
+  add_filter '/node_modules/'
 end

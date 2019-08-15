@@ -1,6 +1,6 @@
 require 'digest/sha1'
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :maps
   has_many :tags
   has_many :comments
@@ -16,8 +16,7 @@ class User < ActiveRecord::Base
   validates_length_of       :email, within: 6..100 # r@a.wk
   validates_uniqueness_of   :email
 
-  # HACK: HACK HACK -- how to do attr_accessible from here?
-  # prevents a user from submitting a crafted form that bypasses activation
+  # Prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.

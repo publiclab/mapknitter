@@ -19,7 +19,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should get profile" do
-    get(:profile, id: @user.login)
+    get(:profile, params: {id: @user.login} )
     assert_response :success
     assert_not_nil :user
   end

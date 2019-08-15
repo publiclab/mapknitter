@@ -1,4 +1,4 @@
-class AddTagIndex < ActiveRecord::Migration
+class AddTagIndex < ActiveRecord::Migration[5.2]
   def self.up
   	add_index :tags, :map_id
   	add_index :tags, :warpable_id

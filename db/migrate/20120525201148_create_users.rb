@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration
+class CreateUsers < ActiveRecord::Migration[5.2]
   def self.up
     create_table "users", :force => true do |t|
       t.string   :login,                     :limit => 40

@@ -5,6 +5,7 @@
 //= require ion-rangeslider/js/ion.rangeSlider.js
 
 /* Move navbar links into dropdown if nav is inside the sidebar. */
+// = require jquery/dist/jquery.js
 jQuery(document).ready(function($) {
   window.toggle_sidebar = function() {
     var icon = $('.sidebar-toggle-icon');
