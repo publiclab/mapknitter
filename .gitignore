@@ -25,6 +25,7 @@ public/warpables/*
 public/system/*
 public/warps/*
 public/tms/*
+public/lib/*
 db/schema.rb
 *.db
 config/database.yml
