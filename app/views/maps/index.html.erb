@@ -1,8 +1,5 @@
-<%= javascript_include_tag('/node_modules/leaflet-fullhash/leaflet-fullHash.js') %>
-<%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
-<%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
-<%= javascript_include_tag('/node_modules/leaflet-spin/example/spin/dist/spin.min.js') %>
-<%= javascript_include_tag('/node_modules/leaflet-spin/example/leaflet.spin.min.js') %>
+<%= javascript_include_tag('/assets/leaflet-spin/example/spin/dist/spin.min.js') %>
+<%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
 
 <div class="container-fluid">
   <div id="mapknitter-unique" style="height: 300px ; width: 100% ;  margin-bottom: 1%; z-index: 5;"></div> 
@@ -122,51 +119,40 @@
   jQuery(document).ready(function($) {
     $("#loginModal").appendTo("body");
   });
-    var bounds = L.latLngBounds(L.latLng(84.67351257 , -172.96875) , L.latLng(-54.36775852 , 178.59375)) ;
-    var Mapknitterunique = L.map('mapknitter-unique' , {
-      maxBounds: bounds , 
-      maxBoundsViscosity: 0.75
-    }).setView([43, -83] , 2);  
-    Mapknitterunique.options.minZoom = 2 ;
 
-    //L.tileLayer('').addTo() ; 
-  //  L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
-     var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(Mapknitterunique) ; 
+  var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
+  var Mapknitterunique = new L.map('mapknitter-unique' , {
+    maxBounds: bounds , 
+    maxBoundsViscosity: 0.75
+  }).setView([43, -83] , 2);  
+  Mapknitterunique.options.minZoom = 2 ;
 
-    Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
-    Mapknitterunique.on('fullscreenchange', function () {
-      if (Mapknitterunique.isFullscreen()) {
-        Mapknitterunique.options.minZoom = 3 ;
-       } 
-      else {
-        Mapknitterunique.options.minZoom = 1 ;
-       // Mapknitterunique.panTo(new L.LatLng(lat,lon));
-      }
-    });
+  //L.tileLayer('').addTo() ; 
+//  L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
+    var baselayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(Mapknitterunique) ; 
 
-   // var PurpleLayer = L.layerGroup.purpleLayer() ;
-    var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
-    var SkyTruth = L.layerGroup.skyTruthLayer() ;
-    var Fractracker = L.layerGroup.fracTrackerLayer() ;
-    var OdorReport = L.layerGroup.odorReportLayer() ;
-    var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique) ;
-    var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+  Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
+  Mapknitterunique.on('fullscreenchange', function () {
+    if (Mapknitterunique.isFullscreen()) {
+      Mapknitterunique.options.minZoom = 3 ;
+      } 
+    else {
+      Mapknitterunique.options.minZoom = 1 ;
+      // Mapknitterunique.panTo(new L.LatLng(lat,lon));
+    }
+  });
 
-    var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
+  // var PurpleLayer = L.layerGroup.purpleLayer() ;
+  var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
+  var SkyTruth = L.layerGroup.skyTruthLayer() ;
+  var Fractracker = L.layerGroup.fracTrackerLayer() ;
+  var OdorReport = L.layerGroup.odorReportLayer() ;
+  var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique) ;
+  var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+
+  var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
   });
