@@ -6,6 +6,7 @@
   "author": "Public Lab contributors <web@publiclab.org>",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.9.0",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
@@ -16,7 +17,6 @@
     "decompress-zip": "0.2.1",
     "exif-js": "jseidelin/exif-js#*",
     "glfx-js": "jywarren/glfx.js#*",
-    "decompress-zip": "0.2.1",
     "graceful-fs": "4.1.0",
     "graceful-js": "1.0.0",
     "image-sequencer": "publiclab/image-sequencer#~1.4.0",
@@ -47,7 +47,5 @@
   "engines": {
     "yarn": ">= 1.0.0"
   },
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.9.0"
-  }
+  "devDependencies": {}
 }
