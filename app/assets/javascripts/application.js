@@ -43,8 +43,8 @@
 //= require exif-js/exif.js
 //= require webgl-distort/dist/webgl-distort.js
 //= require mapknitter/core/Class.js
-//= leaflet-spin/example/spin/dist/spin.min.js
-//= leaflet-spin/example/leaflet.spin.min.js
-
+//= require leaflet-spin/example/spin/dist/spin.min.js
+//= require leaflet-spin/example/leaflet.spin.min.js
+//= require image-sequencer/dist/image-sequencer.js
 
 //= require_tree .
