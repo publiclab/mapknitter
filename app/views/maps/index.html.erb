@@ -123,8 +123,8 @@
   $(function(){
     $("#loginModal").appendTo("body");
   });
-    var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
-    var Mapknitterunique = new L.map('mapknitter-unique' , {
+    var bounds = L.latLngBounds(L.latLng(84.67351257 , -172.96875) , L.latLng(-54.36775852 , 178.59375)) ;
+    var Mapknitterunique = L.map('mapknitter-unique' , {
       maxBounds: bounds , 
       maxBoundsViscosity: 0.75
     }).setView([43, -83] , 2);  
