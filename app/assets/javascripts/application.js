@@ -25,6 +25,7 @@
 //= require blueimp-file-upload/js/jquery.fileupload-process
 //= require blueimp-file-upload/js/jquery.fileupload-ui
 
+//= require popper
 //= require bootstrap/dist/js/bootstrap.js
 
 //= require leaflet-fullHash.js
@@ -45,4 +46,5 @@
 //= leaflet-spin/example/spin/dist/spin.min.js
 //= leaflet-spin/example/leaflet.spin.min.js
 
-// = require_tree .
+
+//= require_tree .
