@@ -4,7 +4,7 @@ xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
  xml.channel do
 
    xml.title       "Maps by "+params[:id]+" at MapKnitter.org"
-   xml.link        url_for :only_path => false, :controller => 'spectrums'
+   xml.link        url_for only_path: false, controller: 'feeds', action: 'author'
    xml.description "Recently posted maps at MapKnitter.org, a Public Laboratory open source research initiative"
 
    @maps.each do |map|

@@ -1,4 +1,4 @@
-class ChangeLatLonTypes < ActiveRecord::Migration
+class ChangeLatLonTypes < ActiveRecord::Migration[5.2]
   def self.up
   	drop_table :ways
   	drop_table :nodes

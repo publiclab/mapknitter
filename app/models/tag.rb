@@ -1,6 +1,6 @@
-class Tag < ActiveRecord::Base
-  belongs_to :map
-  belongs_to :user
+class Tag < ApplicationRecord
+  belongs_to :map, optional: true
+  belongs_to :user, optional: true
 
   validates_presence_of :name, on: :create, message: "can't be blank"
   validates_presence_of :user_id, on: :create, message: "can't be blank"

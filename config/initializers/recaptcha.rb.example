@@ -1,7 +1,8 @@
 require "recaptcha/rails"
 
 class ActionView::Base 
-  include Recaptcha::ClientHelper 
+  include Recaptcha::Adapters::ViewMethods
+  include Recaptcha::Adapters::ControllerMethods
 end 
 
 Recaptcha.configure do |config|

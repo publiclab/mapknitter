@@ -1,4 +1,4 @@
-class CreateWays < ActiveRecord::Migration
+class CreateWays < ActiveRecord::Migration[5.2]
   def self.up
     create_table :ways do |t|
       t.string :color, :default => 'red'

@@ -15,14 +15,14 @@ class AnnotationsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     post :create,
          format: :json,
-         map_id: 1,
+         params: {map_id: 1,
          annotation: {
            properties: {
              annotation_type: 'polyline',
              textContent: 'Some cool text'
            },
            geometry: { coordinates: [10, 33] }
-         }
+         }}
 
     @map.reload
     assert_response 302
@@ -34,14 +34,14 @@ class AnnotationsControllerTest < ActionController::TestCase
     before_count = @map.annotations.count
     post :create,
          format: :json,
-         map_id: 1,
+         params: { map_id: 1,
          annotation: {
            properties: {
              annotation_type: 'polyline',
              textContent: 'Some cool text'
            },
            geometry: { coordinates: [10, 33] }
-         }
+         }}
 
     @map.reload
     assert_response 302
