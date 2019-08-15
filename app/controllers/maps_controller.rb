@@ -4,7 +4,7 @@ class MapsController < ApplicationController
   protect_from_forgery except: :export
 
   before_filter :require_login, only: %i(edit update destroy)
-  before_filter :find_map, only: %i(show annotate embed edit update images destroy archive)
+  before_filter :find_map, only: %i(show annotate embed edit update images destroy archive toggle_editing)
 
   layout 'knitter2'
 
@@ -190,6 +190,22 @@ class MapsController < ApplicationController
         format.json { render json: @maps }
       end
     end
+  end
+
+  def toggle_editing
+    can_edit = params[:can_edit]
+    is_editable = 1
+    is_not_editable = 0
+
+    if current_user.present? && current_user.id == @map.user_id
+      if can_edit == is_editable
+        @map.change_edit_permission true
+      elsif can_edit == is_not_editable
+        @map.change_edit_permission false
+      end
+    end
+
+    redirect_to :back
   end
 
   private
