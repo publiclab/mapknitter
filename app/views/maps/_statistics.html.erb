@@ -5,7 +5,6 @@
     <p class="card-text">
       MapKnitter is hosting <b><%= Export.where("cm_per_pixel != ''").count %> completed maps</b> of an average resolution of <b><%= Export.average_cm_per_pixel.to_i %> cm per pixel</b>. Images average. Currently <a href="/exports">exporting <%= Export.export_count %> maps</a>.</p>
     <p class="card-text"><small>Resolutions:</small></p>
-    <p class="card-text"><small>Resolutions:</small></p>
     <p class="card-text"><small><b>Maps:</b>
     <br />0 cm/px
     <span id="map-bars"></span>
