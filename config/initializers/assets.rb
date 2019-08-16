@@ -11,12 +11,14 @@ Rails.application.configure do
     config.assets.paths << Rails.root.join('node_modules')
 
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
-    config.assets.precompile += ['tags.js',
-                               'uploads.js',
-                               'knitter.js',
-                               'annotations.js',
-                               'maps.js',
-                               'leaflet-fullHash.js']
+    config.assets.precompile += [
+                                 'uploads.js',
+                                 'knitter.js',
+                                 'annotations.js',
+                                 'maps.js',
+                                 'mapknitter.js',
+                                 'leaflet-fullHash.js'
+                                ]
 
     # Precompile additional assets.
     # application.js, application.css, and all non-JS/CSS in the app/assets
