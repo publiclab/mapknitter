@@ -1,3 +1,5 @@
+require 'sprockets'
+
 # Overwrite some Asset Tag Helpers to use Sprockets
 module ActionView
   module Helpers
@@ -56,12 +58,12 @@ module ActionView
 
     def javascript_src_tag(source, options)
       body = options.has_key?(:body) ? options.delete(:body) : false
-      content_tag("script", "", { "type" => Mime::JS, "src" => path_to_javascript(source, :body => body) }.merge(options))
+      content_tag("script", "", { "type" => "text/js", "src" => path_to_javascript(source, :body => body) }.merge(options))
     end
 
     def stylesheet_tag(source, options)
       body = options.has_key?(:body) ? options.delete(:body) : false
-      tag("link", { "rel" => "stylesheet", "type" => Mime::CSS, "media" => "screen", "href" => html_escape(path_to_stylesheet(source, :body => body)) }.merge(options), false, false)
+      tag("link", { "rel" => "stylesheet", "type" => "text/css", "media" => "screen", "href" => html_escape(path_to_stylesheet(source, :body => body)) }.merge(options), false, false)
     end
 
     def debug_assets?
@@ -111,11 +113,11 @@ module ActionView
     end
 
     def digest_available?(logical_path, ext)
-      (manifest = Sprockets.manifest) && (manifest.assets[logical_path + "." + ext])
+      (manifest = Sprockets::Manifest.new(nil, logical_path)) && (manifest.assets[logical_path + "." + ext])
     end
 
     def digest_for(logical_path)
-      if (manifest = Sprockets.manifest) && (digest = manifest.assets[logical_path])
+      if (manifest = Sprockets::Manifest.new(@env, logical_path)) && (digest = manifest.assets[logical_path])
         digest
       else
         logical_path

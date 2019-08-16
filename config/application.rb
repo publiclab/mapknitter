@@ -8,7 +8,6 @@ Bundler.require(*Rails.groups)
 module Mapknitter
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
     config.eager_load_paths << Rails.root.join('lib')
 
     # Settings in config/environments/* take precedence over those specified here.
@@ -16,7 +15,7 @@ module Mapknitter
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
      # Initialize configuration defaults for originally generated Rails version.
-     config.load_defaults 6.0
+    config.load_defaults 5.2
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
@@ -34,8 +33,5 @@ module Mapknitter
     config.assets.enabled = true
 
     config.action_dispatch.default_headers['X-Frame-Options'] = "ALLOW-FROM https://publiclab.org"
-
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.paths << Rails.root.join("public","lib")
   end
 end
