@@ -37,7 +37,7 @@ end
 # Fake maps images
 maps.each do |map|
   image = map.warpables.new
-  image.id  = Faker::Number.unique.between(10, 100)
+  image.id  = Faker::Number.unique.between(from: 10, to: 100)
   image.history =  Faker::Lorem.word
   image.image_file_name =  'demo.png'
   image.width = 500

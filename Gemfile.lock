@@ -110,8 +110,8 @@ GEM
     docile (1.3.2)
     erubi (1.8.0)
     execjs (2.7.0)
-    faker (1.9.6)
-      i18n (>= 0.7)
+    faker (2.1.2)
+      i18n (>= 0.8)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
@@ -246,7 +246,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.2.0)
+    rails-html-sanitizer (1.1.0)
       loofah (~> 2.2, >= 2.2.2)
     rails-perftest (0.0.7)
     railties (5.2.3)
@@ -380,7 +380,7 @@ DEPENDENCIES
   codecov
   danger
   danger-junit
-  faker (~> 1.9.3)
+  faker (~> 2.1.2)
   friendly_id
   geokit-rails (= 1.1.4)
   httparty
