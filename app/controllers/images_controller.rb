@@ -1,8 +1,8 @@
 require 'open-uri'
 class ImagesController < ApplicationController
   rescue_from Errno::ENOENT, Errno::ETIMEDOUT,
-    OpenURI::HTTPError, Timeout::Error,
-    with: :url_upload_not_found
+              OpenURI::HTTPError, Timeout::Error,
+              with: :url_upload_not_found
   protect_from_forgery except: %i(update delete)
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
@@ -92,8 +92,6 @@ class ImagesController < ApplicationController
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
       @warpable.save
-      data = @warpable.map.fetch_map_data # Get the updated warpable data
-      render json: data
       render html: 'success'
     else
       render plain: 'You must be logged in to update the image, unless the map is anonymous.'

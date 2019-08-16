@@ -6,7 +6,6 @@ bump_database(){
 	bundle exec rails db:schema:load || bundle exec rails db:migrate
 }
 
-bundle update
 bundle check || bundle install
 
 if bundle exec rails db:exists; then

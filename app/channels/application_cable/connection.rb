@@ -12,6 +12,6 @@ module ApplicationCable
       User.find(cookies.signed["user_id"])
     rescue ActiveRecord::RecordNotFound
       reject_unauthorized_connection
-    end    
+    end
   end
 end
