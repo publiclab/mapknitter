@@ -28,10 +28,17 @@ class ImagesTest < ApplicationSystemTestCase
         user: @user,
         author: @user.login
       )
+
+    file_location = Rails.root + 'test/fixtures/demo.png'
+    @uploaded_data = Rack::Test::UploadedFile.new(file_location.to_s, 'demo.png', "image/png")
+    Warpable.create history: 'none', image: @uploaded_data, map_id: @map.id
   end
 
   test "Image placing" do
+    page.set_rack_session(user_id: @user.id)
     visit "/maps/#{@map.slug}"
-    assert_response :success
+    click_button('Images')
+    assert_selector('.btn-sm', text: 'Place')
+    find("a.add-image-#{@map.warpables.first.id}").click
   end
 end
