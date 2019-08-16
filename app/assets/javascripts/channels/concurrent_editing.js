@@ -1,12 +1,12 @@
+/* Handles all the frontend interactions with action cable and the server.  */
+
 App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChannel", {
   connected: function() {
     // Called when the subscription is ready for use on the server
-    console.log("Connected");
   },
 
   disconnected: function() {
     // Called when the subscription has been terminated by the server
-    console.log("bye");
   },
 
   received: function(data) {
@@ -15,6 +15,10 @@ App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChanne
   },
 
   speak: function(changes) {
+   /* Called when an image is updated from Map.js ('saveImage' function).
+    *  This function calls concurrent_editing_channel.rb's 'sync' method
+    *  which is responsible for broadcasting the updated warpables
+    *  to all the user's connected to the concurrent_editing channel. */
     return this.perform("sync", {
         changes: changes
     });
