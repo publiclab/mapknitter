@@ -6,6 +6,9 @@ rvm:
 node_js:
   - "12.6.0"
 
+node_js:
+  - "12.6.0"
+
 services:
   - mysql
   - docker
