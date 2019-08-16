@@ -9,19 +9,14 @@
   <meta name="description" content="<%= @map.description.gsub('"',"'") if @map.description %>" />  
   <meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
-  <link rel="stylesheet" href="/lib/leaflet/dist/leaflet.css"/>
   <link rel="shortcut icon" href="/images/mapknitter-255.png" />
 
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application' %>
-  <%= javascript_include_tag 'maps' %>
-  <%= javascript_include_tag 'uploads' %>
-  <% if @annotations %><%= javascript_include_tag 'annotations' %><% end %>
 
   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js' async defer></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlBXzYwdeaOMKZgx_UNBp2qBtdD0L_9g"></script>
   <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@0.7.0/Leaflet.GoogleMutant.js'></script>
-  <script src='/lib/image-sequencer/dist/image-sequencer.js'></script>
 </head>
 <body>
 
@@ -191,7 +186,7 @@
   <script>
     var map
     (function(){
-      window.mapKnitter = new MapKnitter.Map({
+      window.mapknitter = new MapKnitter.Map({
         latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
         zoom:       <%= @map.zoom %>,
         readOnly:   <%= @embed == true || @annotations == true %>,

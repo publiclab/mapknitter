@@ -254,22 +254,16 @@ class Exporter
         maxlon = n.lon if maxlon == nil || n.lon > maxlon
       end
     end
-    first = true
     if ordered != true
       # sort by area; this would be overridden by a provided order
       warpables = placed_warpables.sort{|a,b|b.poly_area <=> a.poly_area}
     end
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
-      if first
-        gdalwarp = "gdalwarp -s_srs EPSG:3857 -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
-        first = false
-      else
-        gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
-      end
-      puts gdalwarp
-      system(self.ulimit+gdalwarp)
     end
+    gdalwarp = "gdalwarp -s_srs EPSG:3857 -te #{minlon} #{minlat} #{maxlon} #{maxlat} #{geotiffs} #{directory}#{slug}-geo.tif"
+    puts gdalwarp
+    system(self.ulimit+gdalwarp)
     composite_location
   end
 
@@ -306,6 +300,7 @@ class Exporter
       export.geotiff = false
       export.zip = false
       export.jpg = false
+      export.bands_string = 'default bands_string'
       export.save
 
       directory = "#{root}/public/warps/"+slug+"/"

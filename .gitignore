@@ -25,6 +25,7 @@ public/warpables/*
 public/system/*
 public/warps/*
 public/tms/*
+public/lib/*
 db/schema.rb
 *.db
 config/database.yml
@@ -36,12 +37,14 @@ vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
 public/assets
-public/lib
-node_modules
+node_modules/
 todo.txt
 .sass-cache
 .byebug_history
 coverage_report/
-test/reports/*
+test/reports/
 yarn-error.log
 yarn.lock
+.idea/
+passenger.3000.pid
+passenger.3000.pid.lock

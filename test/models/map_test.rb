@@ -124,4 +124,14 @@ class MapTest < ActiveSupport::TestCase
     assert_includes(Map.anonymous, map)
     assert map.anonymous?
   end
+
+  test 'filter bbox with tag if present' do
+    maps =  Map.bbox(10,60,30,80,'featured')
+    assert maps.collect(&:name).include?('Cubbon Park')
+  end
+
+  test 'bbox without tag returns results' do
+    maps =  Map.bbox(40,-80,50,-60)
+    assert maps.collect(&:name).include?('Saugus Landfill Incinerator')
+  end
 end

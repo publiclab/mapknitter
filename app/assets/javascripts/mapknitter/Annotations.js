@@ -3,8 +3,8 @@ MapKnitter.Annotations.include({
   initialize: function(options) {
     MapKnitter.Resources.prototype.initialize.call(this, options);
 
-    var map = options.map
-      drawOptions = {};
+    var map = options.map,
+        drawOptions = {};
 
     this._map = map;
     this._drawnItems = new L.FeatureGroup().addTo(map);
@@ -55,7 +55,7 @@ MapKnitter.Annotations.include({
         layer.getTextarea().focus();        
       }
 
-      if (window.mapKnitter.logged_in || window.mapKnitter.anonymous) {
+      if (window.mapknitter.logged_in || window.mapknitter.anonymous) {
 
         /* Create new database record via AJAX request; see MapKnitter.Resources#create. */
         this.create(layer, function(geojsonResponse) {
