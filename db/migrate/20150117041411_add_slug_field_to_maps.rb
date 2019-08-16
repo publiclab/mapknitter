@@ -1,4 +1,4 @@
-class AddSlugFieldToMaps < ActiveRecord::Migration
+class AddSlugFieldToMaps < ActiveRecord::Migration[5.2]
   def change
     # There are some duplicate maps, but none have images, so we can delete dupes that don't have images. 
     dupes = []

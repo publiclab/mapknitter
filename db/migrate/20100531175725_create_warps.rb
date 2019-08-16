@@ -1,4 +1,4 @@
-class CreateWarps < ActiveRecord::Migration
+class CreateWarps < ActiveRecord::Migration[5.2]
   def self.up
     create_table :warps do |t|
       t.integer :parent_id

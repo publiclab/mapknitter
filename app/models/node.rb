@@ -1,3 +1,3 @@
-class Node < ActiveRecord::Base
-  belongs_to :way
+class Node < ApplicationRecord
+  belongs_to :way, optional: true
 end

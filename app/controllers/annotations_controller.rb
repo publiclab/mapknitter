@@ -1,8 +1,8 @@
 require 'json'
 
 class AnnotationsController < ApplicationController
-  # before_filter :require_user, :except => [ :index, :show ]
-  before_filter :find_map
+  # before_action :require_user, :except => [ :index, :show ]
+  before_action :find_map
 
   def index
     render file: 'annotations/index.json.erb', content_type: 'application/json'
@@ -36,9 +36,9 @@ class AnnotationsController < ApplicationController
     return if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
 
     Annotation.update(@annotation.id,
-      coordinates: geojson[:geometry][:coordinates],
-      text: geojson[:properties][:textContent],
-      style: geojson[:properties][:style])
+                      coordinates: geojson[:geometry][:coordinates],
+                      text: geojson[:properties][:textContent],
+                      style: geojson[:properties][:style])
     render file: 'annotations/update.json.erb',
       content_type: 'application/json'
   end

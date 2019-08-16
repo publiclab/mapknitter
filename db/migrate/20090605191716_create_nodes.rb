@@ -1,4 +1,4 @@
-class CreateNodes < ActiveRecord::Migration
+class CreateNodes < ActiveRecord::Migration[5.2]
   def self.up
     create_table :nodes do |t|
       t.string :color, :default => 'red'
