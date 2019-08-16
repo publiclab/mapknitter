@@ -33,9 +33,9 @@
   integrity sha512-6ckxMjBBD8URvjB6J3NcnuAn5Pkl7t3TizAg+xdlzzQGSPSmBcXf8KoIH0ua/i+tio+ZRUHEXp0HEmvaR4kt0w==
 
 "@types/node@*":
-  version "12.7.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.1.tgz#3b5c3a26393c19b400844ac422bd0f631a94d69d"
-  integrity sha512-aK9jxMypeSrhiYofWWBf/T7O+KwaiAHzM4sveCdWPn71lzUSMimRnKzhXDKfKwV1kWoBo2P1aGgaIYGLf9/ljw==
+  version "12.7.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.2.tgz#c4e63af5e8823ce9cc3f0b34f7b998c2171f0c44"
+  integrity sha512-dyYO+f6ihZEtNPDcWNR1fkoTDf3zAK3lAABDze3mz6POyIercH0lEUawUFXlG8xaQZmm1yEBON/4TsYv/laDYg==
 
 "@types/node@^8.0.7", "@types/node@^8.10.50":
   version "8.10.51"
@@ -2551,9 +2551,9 @@ graceful-fs@4.1.0:
   integrity sha1-a+YRkkT2TWQX/jA8w2q0l7V1bME=
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.3, graceful-fs@^4.2.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.1.tgz#1c1f0c364882c868f5bff6512146328336a11b1d"
-  integrity sha512-b9usnbDGnD928gJB3LrCmxoibr3VE4U2SMo5PBuBnokWyDADTqDPXg4YpwKF1trpH+UbGp7QLicO3+aWEy0+mw==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.2.tgz#6f0952605d0140c1cfdb138ed005775b92d67b02"
+  integrity sha512-IItsdsea19BoLC7ELy13q1iJFNmd7ofZH5+X/pJr90/nRoPEX0DJo1dHDbgtYWOhJhcCgMDTOw84RZ72q6lB+Q==
 
 graceful-js@1.0.0:
   version "1.0.0"
@@ -3361,9 +3361,9 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-"leaflet-blurred-location@git://github.com/publiclab/leaflet-blurred-location.git#main":
+"leaflet-blurred-location@git://github.com/publiclab/leaflet-blurred-location#main":
   version "1.3.0"
-  resolved "git://github.com/publiclab/leaflet-blurred-location.git#1bff37cb96518bd87192277b14c290cba3c138ba"
+  resolved "git://github.com/publiclab/leaflet-blurred-location#1bff37cb96518bd87192277b14c290cba3c138ba"
   dependencies:
     haversine-distance "^1.1.4"
     jquery "^3.2.1"
@@ -3373,10 +3373,10 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@^0.6.9:
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.6.9.tgz#538254dade04d41066cb0d6871267c0b4b6078c2"
-  integrity sha512-d+hRHqqcf9t5FrW6TVVUUWNy8t9BzCQTF/DIJKZrVlsZmkz7h+w3u1w79OMLpatiVDLDwcqkSX6rtQVNKF0urQ==
+leaflet-distortableimage@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.7.2.tgz#a3aa4ce359e20dcc6066252ecfc1677d95cf4e88"
+  integrity sha512-RzQOlC0bAfEohzk8BanyKU2I//MxoeoaicaadSgjoEgoSLSLfcHNOqKB6tHDRI04uFfwwW+1+BD6mWVX+EHq4A==
   dependencies:
     grunt-cli "^1.2.0"
     leaflet-toolbar "0.4.0-alpha.2"
@@ -4792,9 +4792,9 @@ readdirp@^2.0.0:
     readable-stream "^2.0.2"
 
 readdirp@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-3.1.1.tgz#b158123ac343c8b0f31d65680269cc0fc1025db1"
-  integrity sha512-XXdSXZrQuvqoETj50+JAitxz1UPdt5dupjT6T5nVB+WvjMv2XKYj+s7hPeAVCXvmJrL36O4YYyWlIC3an2ePiQ==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-3.1.2.tgz#fa85d2d14d4289920e4671dead96431add2ee78a"
+  integrity sha512-8rhl0xs2cxfVsqzreYCvs8EwBfn/DhVdqtoLmw19uI3SC5avYX9teCurlErfpPXGmYtMHReGaP2RsLnFvz/lnw==
   dependencies:
     picomatch "^2.0.4"
 
@@ -5067,9 +5067,9 @@ rijs@*:
     utilise "*"
 
 rimraf@^2.6.1:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.0.tgz#eb43198c5e2fb83b9323abee63bd87836f9a7c85"
-  integrity sha512-4Liqw7ccABzsWV5BzeZeGRSq7KWIgQYzOcmRDEwSX4WAawlQpcAFXZ1Kid72XYrjSnK5yxOS6Gez/iGusYE/Pw==
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
+  integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
   dependencies:
     glob "^7.1.3"
 

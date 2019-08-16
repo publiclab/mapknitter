@@ -52,6 +52,8 @@ jobs:
       script: bundle exec rails test:integration
     - name: "Controllers Tests"
       script: bundle exec rails test:controllers
+    - name: "System Tests"
+      script: bundle exec rails test:system
     - name: "Rubocop Linter"
       script: bundle exec rubocop
     - name: "Docker Builds"

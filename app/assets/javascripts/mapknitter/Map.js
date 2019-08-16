@@ -1,5 +1,3 @@
-//= require leaflet-toolbar/dist/leaflet.toolbar.js
-//= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 
 MapKnitter.Map = MapKnitter.Class.extend({
 
