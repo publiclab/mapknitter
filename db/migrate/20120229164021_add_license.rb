@@ -1,4 +1,4 @@
-class AddLicense < ActiveRecord::Migration
+class AddLicense < ActiveRecord::Migration[5.2]
   def self.up
     add_column :maps, :license, :string, :default => 'copyright'
   end

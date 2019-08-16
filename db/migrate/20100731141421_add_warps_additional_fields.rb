@@ -1,4 +1,4 @@
-class AddWarpsAdditionalFields < ActiveRecord::Migration
+class AddWarpsAdditionalFields < ActiveRecord::Migration[5.2]
   def self.up
     drop_table :warps
     create_table :exports do |t|

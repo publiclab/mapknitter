@@ -1,4 +1,4 @@
-class CleanupKnitterAddMapArchiveAndUserEmail < ActiveRecord::Migration
+class CleanupKnitterAddMapArchiveAndUserEmail < ActiveRecord::Migration[5.2]
   def self.up
     add_column :maps, :email, :string, :default => "", :null => false
     add_column :maps, :archived, :boolean, :default => false, :null => false

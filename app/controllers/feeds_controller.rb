@@ -1,5 +1,5 @@
 class FeedsController < ApplicationController
-  before_filter :query, only: %i(clean license)
+  before_action :query, only: %i(clean license)
 
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)

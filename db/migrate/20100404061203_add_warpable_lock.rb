@@ -1,4 +1,4 @@
-class AddWarpableLock < ActiveRecord::Migration
+class AddWarpableLock < ActiveRecord::Migration[5.2]
   def self.up 
     add_column :warpables, :locked, :boolean, :default => false, :null => false
   end

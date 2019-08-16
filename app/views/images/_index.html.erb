@@ -1,7 +1,15 @@
 <div>
 <h4 class="sidebar-heading">Images</h4>
+<div class="grid-list">
+  <button class="list-view" onClick="list()"><i class="fa fa-bars"></i></button>
+  <button class="grid-view" onClick="grid()"><i class="fa fa-th"></i></button>
+</div>
 <div class="image-order">
-  <button type="button" class="btn btn-outline-secondary">Sort Images</button>
+  <p style="display: inline;">Sort by: </p>
+  <div class="sort-label">
+    <p class="sort-by-text">Recent</p>
+    <i class="fa fa-angle-down" onClick="$('.image-order-content').toggle()" style="cursor: pointer; padding-left: 5px;"></i>
+  </div>
   <div class="image-order-content">
     <a class="name" href="?sort=name">Name</a>
     <a class="size" href="?sort=size">Size</a>
@@ -9,26 +17,30 @@
   </div>
 </div>
 </div>
+
 <% if @map.warpables.empty? %>
   <p id="no-images">No images uploaded. </p>
-  <%end%>
+<% end %>
 <table class="warpables-all table table-striped">
   <tbody>
     <% sort_param = params[:sort] %>
     <% if sort_param == 'name' %>
       <% ary = @map.warpables.sort { |a, b| a.image_file_name <=> b.image_file_name } %>
       <script>
-        $(".name").css("background-color","#5cb85c");
+        $(".name").css("color","#5cb85c");
+        $(".sort-by-text").text("Name");
       </script>
     <% elsif sort_param == 'size' %>
       <% ary = @map.warpables.sort { |a, b| a.image_file_size <=> b.image_file_size } %>
       <script>
-        $(".size").css("background-color","#5cb85c");
+        $(".size").css("color","#5cb85c");
+        $(".sort-by-text").text("Size");
       </script>
     <% else %>
       <% ary = @map.warpables.sort { |a, b| b.created_at <=> a.created_at } %>
       <script>
-        $(".recent").css("background-color","#5cb85c");
+        $(".recent").css("color","#5cb85c");
+        $(".sort-by-text").text("Recent");
       </script>
     <% end %>
     <% ary.each do |warpable| %>
@@ -42,9 +54,6 @@
               :'id' => "warpable-img-#{warpable.id}"
           %>
           </div>
-          <a class = "btn" onClick="$('#image-vesrions-<%= warpable.id %>').toggle()" style="cursor: pointer; margin-left: 30%;">
-            <i class='fas fa-clock'></i>
-          </a>
         </td>
 
         <td class="col-middle">
@@ -74,8 +83,16 @@
             %>
           <% end %>
           <% if warpable.placed? %>
+<<<<<<< HEAD
             <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" style="cursor: pointer" class="btn btn-sm btn-success" style="word-wrap: break-word"><i class='fa fa-crosshairs'></i></a>
             <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" style="cursor: pointer" class="btn btn-sm btn-outline-secondary img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"style="word-wrap: break-word"><i class="fa fa-download"></i></a>
+=======
+            <a id="locate-warpable-<%= warpable.id %>" title="Pan to this image" class="btn btn-sm btn-success"><i class='fa fa-crosshairs'></i></a>
+            <a title="Download full resolution distorted image (please allow popups)" class="btn btn-sm btn-outline-secondary img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"><i class="fa fa-download"></i></a>
+            <a title="History of the image" class = "btn btn-sm btn-warning" onClick="$('#image-vesrions-<%= warpable.id %>').toggle()" style="cursor: pointer;">
+            <i class='fas fa-clock'></i>
+            </a>
+>>>>>>> upstream/main
             <div class="full-image-container-<%= warpable.id %>" style="overflow:hidden;width:0;height:0;"><img id="full-img-<%= warpable.id %>" /></div>
             <script>
               $('#warpable-<%= warpable.id %> [rel=tooltip]').tooltip();
@@ -101,11 +118,14 @@
           <% end %>
         </td>
       </tr>
-      <td colspan="3">
-        <div class="dropdown" style="margin-top: -40px;">
+      <td colspan="3" style="padding: 0px; padding-top: 10px;">
+        <div class="dropdown" style="margin-top: -20px;">
           <div class="dropdown-menu image-version" aria-labelledby="dropdownMenuButton" id="image-vesrions-<%= warpable.id %>">
+            <ul >
+              <li><%= warpable.versions.length - 1 %> revisions. <a target="_blank" href="https://publiclab.org/mapknitter-version-tracking">Learn more</a>
+              </li>
             <% warpable.versions.reverse.each do |version| %>
-              <button class="<%= warpable.id %>" id="<%= version.index + 1%>" onClick="getVersion(this)"><%= version.event.capitalize %>d by
+              <li class="<%= warpable.id %>" id="<%= version.index + 1%>" onClick="getVersion(this)"><%= version.event.capitalize %>d by
                 <% if version.whodunnit && version.whodunnit != 'Anonymous' %>
                   <% user = User.find_by_id(version.whodunnit) %>
                   <% if user %>
@@ -115,12 +135,27 @@
                   <u>an Anonymous user</u>
                 <% end %>
                 <%= time_ago_in_words(version.created_at) %> ago
-                <%= link_to '' ,images_revert_path(id: warpable.id, version:version), class: 'fa fa-undo', title: 'Revert to this version' %>
-              </button>
+                <%= link_to '' ,images_revert_path(id: warpable.id, version:version), class: 'fa fa-undo btn btn-sm btn-primary', title: 'Revert to this version' %>
+              </li>
             <% end %>
+          </ul>
           </div>
         </div>
       </td>
     <% end %>
   </tbody>
 </table>
+<<<<<<< HEAD
+=======
+<script>
+  function grid(){
+    $('td').hide();
+    $('.warpable').show();
+    $('tr').css('display','inline-block');
+    $('.warpable').css('padding','0.75rem 0.5rem')
+  }
+  function list(){
+    $('td').show()
+  }
+</script>
+>>>>>>> upstream/main

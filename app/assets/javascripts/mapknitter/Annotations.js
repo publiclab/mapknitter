@@ -3,8 +3,8 @@ MapKnitter.Annotations.include({
   initialize: function(options) {
     MapKnitter.Resources.prototype.initialize.call(this, options);
 
-    var map = options.map
-      drawOptions = {};
+    var map = options.map,
+        drawOptions = {};
 
     this._map = map;
     this._drawnItems = new L.FeatureGroup().addTo(map);

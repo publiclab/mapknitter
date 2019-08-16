@@ -1,4 +1,4 @@
-class CommentMailer < ActionMailer::Base
+class CommentMailer < ApplicationMailer
   default from: "do-not-reply@mapknitter.org"
 
   # CommentMailer.notify_of_comment(user,self).deliver
