@@ -1,7 +1,14 @@
+.grid-list {
+  margin-left: 25px;
+  margin-bottom: 10px;
+  display: inline-block;
+  padding-right: 30px;
+  color: orange;
+}
 .image-order{
 	display: inline-block;
 	float: right;
-	margin-right: 35px;
+	margin-right: 15px;
 	margin-bottom: 10px;
 }
 .sidebar-heading{
