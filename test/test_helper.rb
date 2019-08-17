@@ -7,7 +7,7 @@ SimpleCov.start
 
 require 'rails/test_help'
 require 'minitest/reporters'
-MiniTest::Reporters.use! [MiniTest::Reporters::ProgressReporter.new,
+MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
                           MiniTest::Reporters::JUnitReporter.new]
 ENV["RAILS_ENV"] = "test"
 
