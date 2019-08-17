@@ -37,7 +37,7 @@ class ImagesTest < ApplicationSystemTestCase
   test "Image placing" do
     page.set_rack_session(user_id: @user.id)
     visit "/maps/#{@map.slug}"
-    click_button('Images')
+    click_link('Images')
     assert_selector('.btn-sm', text: 'Place')
     find("a.add-image-#{@map.warpables.first.id}").click
   end
