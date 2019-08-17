@@ -49,7 +49,7 @@ class FrontUiController < ApplicationController
 
     @maps = Map.page(params[:maps])
                .per_page(20)
-               .where(archived: false, password: '', location: "%#{@loc}%")
+               .where('archived = ?, password = ?, location LIKE ?', false, '', "%#{@loc}%")
                .order('updated_at DESC')
                .group('maps.id')
 
