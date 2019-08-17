@@ -1,24 +1,20 @@
 Mapknitter::Application.routes.draw do
 
-  root :to => 'front_ui#index'
+  root to: 'front_ui#index'
 
-  get 'legacy' => 'maps#index' # remove once new front page is stable
-  get 'front-page' => 'front_ui#index'
-  get 'mappers' => 'front_ui#nearby_mappers'
-  get 'gallery' => 'front_ui#gallery'
-  post "save_location" => 'front_ui#save_location'
-  get 'about' => 'front_ui#about'
+  get 'front-page', to: 'front_ui#index'
+  get 'mappers', to: 'front_ui#nearby_mappers'
+  get 'about', to: 'front_ui#about'
+  get 'all_maps', to: 'front_ui#all_maps'
+  get 'anonymous', to: 'front_ui#anonymous'
+  get 'gallery', to: 'front_ui#gallery'
   get 'location' => 'front_ui#location'
-  get 'all_maps' => 'front_ui#all_maps'
-  get 'anonymous' => 'front_ui#anonymous'
-
-  get 'external_url_test' => 'export#external_url_test'
-  get 'local/:login' => 'sessions#local'
-  get 'logout' => 'sessions#logout'
-  get 'login' => 'sessions#new'
-  get 'register' => 'users#create'
-  get 'signup' => 'users#new'
-
+  post 'save_location', to: 'front_ui#save_location'
+  
+  get 'legacy', to: 'maps#index' # remove once new front page is stable
+  
+  get 'external_url_test', to: 'export#external_url_test'
+  
   # since rails 3.2, we use this to log in:
   get 'sessions/create', to: 'sessions#create'
   get 'local/:login', to: 'sessions#local'
