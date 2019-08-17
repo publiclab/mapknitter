@@ -1,4 +1,4 @@
-class ZoomToFloat < ActiveRecord::Migration
+class ZoomToFloat < ActiveRecord::Migration[5.2]
   def self.up
     remove_column :maps, :zoom
     add_column :maps, :zoom, :decimal, :precision => 15, :scale => 10,  :default => 2

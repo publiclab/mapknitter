@@ -1,4 +1,4 @@
-class AddLocation < ActiveRecord::Migration
+class AddLocation < ActiveRecord::Migration[5.2]
   def self.up
     add_column :maps, :location, :string, :default => ''
   end

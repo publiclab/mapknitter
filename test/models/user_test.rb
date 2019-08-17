@@ -43,7 +43,12 @@ class UserTest < ActiveSupport::TestCase
     user = users(:quentin)
     map_images = user.maps.map(&:warpables)
 
-    assert_equal Warpable::ActiveRecord_Associations_CollectionProxy, user.warpables.class
+    map_images.flatten.each do |image|
+      user.warpables.each do |warpable|
+        assert_equal image.class, warpable.class
+      end
+    end
+
     assert_equal map_images.flatten, user.warpables
   end
 

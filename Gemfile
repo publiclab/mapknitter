@@ -1,55 +1,60 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 ruby '2.4.6'
-gem 'rails', '4.2.11.1'
-gem 'rake',  '~> 12.3.3'
+gem 'rails', '~> 5.2.3'
+gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
 
-gem "will_paginate", "3.1.7"
-gem 'will_paginate-bootstrap4'
-gem "friendly_id"
+gem 'will_paginate', '3.1.7'
+gem 'will_paginate-bootstrap4', '~> 0.2.2'
+gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
-gem 'protected_attributes'
 gem 'paper_trail'
 
 # dependencies
 group :dependencies do
   gem 'mysql2', '< 0.6'
-  gem "geokit-rails", "1.1.4"
+  gem 'geokit-rails', '1.1.4'
   gem 'image_science', '1.3.0'
-  gem "recaptcha", :require => "recaptcha/rails"
-  gem "oa-openid", "0.3.2"
-  gem "ruby-openid", "~>2.5"
-  gem "open_id_authentication"
-  gem "RubyInline"
-  gem "paperclip", "~>4.3.7"
+  gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
+  gem 'oa-openid', '0.3.2'
+  gem 'ruby-openid', '~>2.5'
+  gem 'open_id_authentication'
+  gem 'RubyInline', '~> 3.12.4'
+  gem 'paperclip', '~> 6.1.0'
+  gem 'bootsnap', '~> 1.4.4'
+  gem 'turbolinks', '~> 5'
+  gem 'mini_magick', '~> 4.8'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
 
   # for rake image migration tasks
   # gem 'right_aws'
-  gem 'right_aws_api'
+  gem 'right_aws_api', '~> 0.3.5'
 
   # compiling markdown to html
-  gem "rdiscount", "2.2.0.1"
+  gem 'rdiscount', '2.2.0.1'
 
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
   gem 'jquery-rails'
-  gem "sprockets"
+  gem 'sprockets', '3.7.2'
   gem "sprockets-rails"
-  gem "sass", :require => 'sass'
-  gem "autoprefixer-rails"
-  gem "uglifier"
+  gem 'sass', require: 'sass'
+  gem 'autoprefixer-rails', '~> 9.5.1.1'
+  gem 'uglifier', '~> 4.1.20'
+
 end
 
 group :test do
-  gem 'rubocop', '~> 0.52.0'
+  gem 'rubocop', '~> 0.70.0'
+  gem 'rubocop-performance'
   gem 'ruby-prof'
   gem 'rails-perftest'
+  gem 'rails-controller-testing'
   gem 'simplecov', require: false
   gem 'codecov', require: false
   gem 'minitest'
@@ -57,25 +62,31 @@ group :test do
 end
 
 group :development, :test do
-  gem "byebug"
-  gem 'faker'
-  gem 'pry-rails'
+  gem 'capybara'
+  gem 'puma'
+  gem 'selenium-webdriver'
+  gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'faker', '~> 2.1.2'
+  gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
-  gem "jshintrb"
-  gem "therubyracer"
+  gem 'jshintrb', '~> 0.3.0'
+  gem 'mini_racer', platforms: :ruby
+  gem 'listen', '~> 3.1.5'
   gem 'web-console', '~> 3.3'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :sqlite do
   # if you decide to use sqlite3 as the database
-  gem "sqlite3"
+  gem 'sqlite3'
 end
 
 group :passenger do
   # passenger server
-  gem "passenger"
+  gem 'passenger'
 end
 
 gem 'httparty'
