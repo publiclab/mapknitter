@@ -45,7 +45,7 @@ class FrontUiController < ApplicationController
   def about; end
 
   def location
-    @loc = params[:q]
+    @loc = params[:loc]
 
     @maps = Map.page(params[:maps])
                .per_page(20)

@@ -47,8 +47,8 @@
             <div class="tab-pane fade"  id="location" role="tabpanel">
                 <div style="text-align: center;">
                     <%= form_tag("/location", method: "get", remote: true) do %>
-                      <%= label_tag(:q, "Enter location:") %>
-                      <%= text_field_tag :q %>
+                      <%= label_tag(:loc, "Enter location:") %>
+                      <%= text_field_tag :loc %>
                       <%= submit_tag "Search"%>
                     <% end %>
                 </div>
