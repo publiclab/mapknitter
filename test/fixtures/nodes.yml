@@ -56,3 +56,16 @@ four:
   way_order: 0
   body: nil
 
+five:
+  id: 5
+  color: "black"
+  author: "anonymous"
+  lat: 42.8377535388083
+  lon: -75.3981708900972
+  way_id: 0
+  order: 0
+  name: ""
+  description: ""
+  map_id: 1
+  way_order: 0
+  body: nil
