@@ -97,8 +97,6 @@ class ImagesController < ApplicationController
         format.html { render html: 'success' }
         format.json { render json: @warpable.map.fetch_map_data }
       end
-
-      render html: 'success'
     else
       render plain: 'You must be logged in to update the image, unless the map is anonymous.'
     end
