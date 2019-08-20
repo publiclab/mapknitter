@@ -9,7 +9,7 @@ class SynchronousTest < ApplicationSystemTestCase
   test 'warpables change flow' do
     map = maps(:saugus)
     original_data = map.fetch_map_data
-    map.warpables.first.update(nodes: "2,5,1,3")
+    map.warpables.first.update_column(:nodes, "2,5,1,3")
     updated_data = map.fetch_map_data
     assert_not_equal updated_data, original_data
   end
