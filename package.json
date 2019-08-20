@@ -31,7 +31,7 @@
     "junction": "theleagueof/junction#*",
     "leaflet": "Leaflet/Leaflet#^1.0.0",
     "leaflet-dist": "vperron/leaflet-dist#0.7.x",
-    "leaflet-distortableimage": "^0.6.9",
+    "leaflet-distortableimage": "^0.7.2",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-easybutton": "^2.4.0",
     "leaflet-environmental-layers": "^1.3.6",
