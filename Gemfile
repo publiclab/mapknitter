@@ -61,6 +61,9 @@ group :test do
   gem 'codecov', require: false
   gem 'minitest'
   gem 'minitest-reporters'
+  # for creating sessions on capybara
+  gem 'rack_session_access'
+
   # Easy installation and use of web drivers to run system tests with browsers
   # gem 'webdrivers'
 end
