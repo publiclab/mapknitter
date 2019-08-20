@@ -30,13 +30,13 @@ class ImagesTest < ApplicationSystemTestCase
     click_link('Images')
 
     #expect layers to not have an ldi instance before placing
-    assert !page.evaluate_script(check_if_image_placed);
+    assert !page.evaluate_script(check_if_image_placed)
 
     assert_selector('.btn-sm', text: 'Place')
     find("a.add-image-#{@map.warpables.first.id}").click
 
     #expect layers to have an ldi instance after placing
-    assert page.evaluate_script(check_if_image_placed);
+    assert page.evaluate_script(check_if_image_placed)
   end
 
   def check_if_image_placed
