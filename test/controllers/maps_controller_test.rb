@@ -277,7 +277,7 @@ class MapsControllerTest < ActionController::TestCase
   test 'it returns the images' do
     get :images, params: { id: @map.slug}
     assert_response :success
-    assert_equal 'application/json', response.content_type
+    assert_equal 'application/json; charset=utf-8', response.content_type
   end
 
   def export_if_logged_in
