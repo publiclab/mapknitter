@@ -5,6 +5,7 @@ require 'codecov'
 SimpleCov.formatter = SimpleCov::Formatter::Codecov
 SimpleCov.start
 
+require "rack_session_access/capybara"
 require 'rails/test_help'
 require 'minitest/reporters'
 MiniTest::Reporters.use! [MiniTest::Reporters::ProgressReporter.new,
