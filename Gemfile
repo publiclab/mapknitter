@@ -59,6 +59,8 @@ group :test do
   gem 'codecov', require: false
   gem 'minitest'
   gem 'minitest-reporters'
+  # for creating sessions on capybara
+  gem 'rack_session_access'
 end
 
 group :development, :test do
