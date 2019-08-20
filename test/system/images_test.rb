@@ -1,19 +1,6 @@
 require "application_system_test_case"
 
 class ImagesTest < ApplicationSystemTestCase
-# def setup
-#   @map = maps(:saugus)
-#   @warp = warpables(:one)
-#   system('mkdir -p public/warps/saugus-landfill-incinerator-working')
-#   system('mkdir -p public/system/images/1/original')
-#   system('mkdir -p public/system/images/1/original')
-#   system('cp test/fixtures/demo.png public/system/images/1/original/')
-#   system('mkdir -p public/warps/saugus-landfill-incinerator')
-
-#   file_location = Rails.root + 'test/fixtures/demo.png'
-#   @uploaded_data = Rack::Test::UploadedFile.new(file_location.to_s, 'demo.png', "image/png")
-#   PaperTrail.enabled = true
-# end
   def setup
     @user = User.create({login: Faker::Internet.username,
                      name: Faker::Name.name,
@@ -35,10 +22,32 @@ class ImagesTest < ApplicationSystemTestCase
   end
 
   test "Image placing" do
+
+    #log in 
     page.set_rack_session(user_id: @user.id)
+
     visit "/maps/#{@map.slug}"
     click_link('Images')
+
+    #expect layers to not have an ldi instance before placing
+    assert !page.evaluate_script(check_if_image_placed);
+
     assert_selector('.btn-sm', text: 'Place')
     find("a.add-image-#{@map.warpables.first.id}").click
+
+    #expect layers to have an ldi instance after placing
+    assert page.evaluate_script(check_if_image_placed);
+  end
+
+  def check_if_image_placed
+    "(function a(){
+      var layers = map._layers;
+      for (var k in layers) {
+        if (layers[k] instanceof L.DistortableImageOverlay) { 
+          return true;
+          }
+        }
+      return false;
+    }());"
   end
 end
