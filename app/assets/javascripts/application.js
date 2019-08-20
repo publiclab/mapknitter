@@ -30,10 +30,6 @@
 
 // = require leaflet-fullHash.js
 // = require leaflet-providers/leaflet-providers.js
-// = require leaflet-toolbar/dist/leaflet.toolbar.js
-// = require leaflet-draw/dist/leaflet.draw-src.js
-// = require leaflet-illustrate/dist/Leaflet.Illustrate.js
-// = require leaflet-distortableimage/dist/leaflet.distortableimage.js
 // = require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
 // = require leaflet-environmental-layers/src/windRoseLayer.js
 // = require leaflet-easybutton/src/easy-button.js
@@ -43,6 +39,15 @@
 // = require exif-js/exif.js
 // = require webgl-distort/dist/webgl-distort.js
 // = require mapknitter/core/Class.js
+// = require leaflet-spin/example/spin/dist/spin.min.js
+// = require leaflet-spin/example/leaflet.spin.min.js
+// = require image-sequencer/dist/image-sequencer.js
+// = require leaflet-toolbar/dist/leaflet.toolbar.js
+// = require leaflet-draw/dist/leaflet.draw-src.js
+// = require leaflet-illustrate/dist/Leaflet.Illustrate.js
+// = require leaflet-distortableimage/dist/leaflet.distortableimage.js
+// = require leaflet-distortableimage/src/edit/tools/EditAction.js
+// = require mapknitter/Map.js
 // = require cable.js
 
 // = require_tree .
