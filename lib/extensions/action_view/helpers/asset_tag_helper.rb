@@ -1,5 +1,3 @@
-require 'sprockets'
-
 # Overwrite some Asset Tag Helpers to use Sprockets
 module ActionView
   module Helpers
@@ -22,7 +20,7 @@ module ActionView
       alias_method :path_to_stylesheet, :stylesheet_path # aliased to avoid conflicts with a stylesheet_path named route
     end
 
-    # Overwrite the stylesheet_link_tag method to expand sprockets files if 
+    # Overwrite the stylesheet_link_tag method to expand sprockets files if
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     # 
     def stylesheet_link_tag(*sources)
@@ -38,10 +36,10 @@ module ActionView
       end.uniq.join("\n").html_safe
     end
 
-    # Overwrite the javascript_pack_tag method to expand sprockets files if 
+    # Overwrite the javascript_include_tag method to expand sprockets files if 
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     #
-    def javascript_pack_tag(*sources)
+    def javascript_include_tag(*sources)
       options = sources.extract_options!.stringify_keys
       debug   = options.key?(:debug) ? options.delete(:debug) : debug_assets?
 
@@ -58,12 +56,12 @@ module ActionView
 
     def javascript_src_tag(source, options)
       body = options.has_key?(:body) ? options.delete(:body) : false
-      content_tag("script", "", { "type" => "text/js", "src" => path_to_javascript(source, :body => body) }.merge(options))
+      content_tag("script", "", { "type" => Mime::JS, "src" => path_to_javascript(source, :body => body) }.merge(options))
     end
 
     def stylesheet_tag(source, options)
       body = options.has_key?(:body) ? options.delete(:body) : false
-      tag("link", { "rel" => "stylesheet", "type" => "text/css", "media" => "screen", "href" => html_escape(path_to_stylesheet(source, :body => body)) }.merge(options), false, false)
+      tag("link", { "rel" => "stylesheet", "type" => Mime::CSS, "media" => "screen", "href" => html_escape(path_to_stylesheet(source, :body => body)) }.merge(options), false, false)
     end
 
     def debug_assets?
@@ -113,11 +111,11 @@ module ActionView
     end
 
     def digest_available?(logical_path, ext)
-      (manifest = Sprockets::Manifest.new(nil, logical_path)) && (manifest.assets[logical_path + "." + ext])
+      (manifest = Sprockets.manifest) && (manifest.assets[logical_path + "." + ext])
     end
 
     def digest_for(logical_path)
-      if (manifest = Sprockets::Manifest.new(@env, logical_path)) && (digest = manifest.assets[logical_path])
+      if (manifest = Sprockets.manifest) && (digest = manifest.assets[logical_path])
         digest
       else
         logical_path
