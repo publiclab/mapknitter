@@ -92,7 +92,11 @@ class ImagesController < ApplicationController
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
       @warpable.save
-      render html: 'success'
+
+      respond_to do |format|
+        format.html { render html: 'success' }
+        format.json { render json: @warpable.map.fetch_map_data }
+      end
     else
       render plain: 'You must be logged in to update the image, unless the map is anonymous.'
     end
