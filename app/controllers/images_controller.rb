@@ -92,10 +92,7 @@ class ImagesController < ApplicationController
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
       @warpable.save
-      respond_to do |format|
-        format.html { render html: 'success' }
-        format.json { render json: @warpable.map.fetch_map_data }
-      end
+      render json: @warpable.map.fetch_map_data
     else
       render plain: 'You must be logged in to update the image, unless the map is anonymous.'
     end
@@ -114,7 +111,7 @@ class ImagesController < ApplicationController
       @warpable.destroy
       respond_to do |format|
         format.html { redirect_to @warpable.map }
-        format.json { render json: @warpable }
+        format.json { render json: @warpable.map.fetch_map_data }
       end
     else
       flash[:error] = 'You must be logged in to delete images.'

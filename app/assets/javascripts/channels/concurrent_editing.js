@@ -11,7 +11,7 @@ App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChanne
 
   received: function(data) {
     // Called when there's incoming data on the websocket for this channel
-    window.mapKnitter.synchronizeData(data.changes);
+    window.mapknitter.synchronizeData(data.changes);
   },
 
   speak: function(changes) {
