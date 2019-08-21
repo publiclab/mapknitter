@@ -383,7 +383,7 @@ DEPENDENCIES
   pry-rails (~> 0.3.9)
   puma
   rack_session_access
-  rails (~> 6.0.0.rc1)
+  rails (~> 6.0.0)
   rails-controller-testing
   rails-perftest
   rake (~> 12.3.2)
