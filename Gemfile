@@ -26,6 +26,9 @@ group :dependencies do
   gem 'bootsnap', '~> 1.4.4'
   gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
+  gem 'puma'
+  gem 'thor', '~> 0.20.3'
+
   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
   # gem 'webpacker'
 
@@ -39,12 +42,15 @@ group :dependencies do
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
+  # Process manager for applications with multiple components
+  gem 'foreman', git: 'https://github.com/alaxalves/foreman.git', branch: 'master'
+
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
   gem 'jquery-rails'
   gem 'sprockets', '3.7.2'
-  gem "sprockets-rails"
+  gem 'sprockets-rails'
   gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 9.5.1.1'
   gem 'uglifier', '~> 4.1.20'
@@ -70,7 +76,6 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'puma'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 2.1.2'

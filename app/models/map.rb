@@ -273,4 +273,10 @@ class Map < ApplicationRecord
     tagname = tagname.downcase
     tags.create(name: tagname, user_id: user.id, map_id: id) unless has_tag(tagname)
   end
+
+  def fetch_map_data
+    # fetches a list of updated warpables along with their corners in a json format.
+    data = warpables
+    data.to_json
+  end
 end

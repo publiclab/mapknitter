@@ -386,6 +386,32 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
 
+    /* Called by the concurrent_editing.js channel's 'received' function (app/assets/javascripts/channels/concurrent_editing.js).
+     * It recieves a list of updated warpables,i.e. list of images with updated corner points. The aim of writing this function
+     * is to reposition the updated images onto the map on every connected browser (via the ActionCable). */
+
+  synchronizeData: function(warpables) {
+      var layers = [];
+      map.eachLayer(function(l) {layers.push(l)});
+      layers = layers.filter(image => (image._url!=undefined || image._url!=null));
+      warpables.forEach(function(warpable) {
+          corners = [];
+          warpable.nodes.forEach(function(node) {
+              corners.push(L.latLng(node.lat, node.lon));
+          });
+
+          x = corners[2];
+          y = corners [3];
+          corners [2] = y;
+          corners [3] = x;
+
+          console.log(corners);
+
+          layer = layers.filter(l => l._url==warpable.srcmedium)[0];
+          layer.setCorners(corners);
+      });
+  },
+
   saveImageIfChanged: function () {
     var img = this,
         edit = img.editing;
@@ -407,10 +433,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   saveImage: function () {
     var img = this;
-    // reset change state string:
-    img._corner_state = JSON.stringify(img._corners);
-    // send save request
-    $.ajax('/images', {
+    img._corner_state = JSON.stringify(img._corners); // reset change state string:
+    $.ajax('/images', { // send save request
       type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
@@ -423,6 +447,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
       },
       beforeSend: function (e) {
         $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+      },
+      success: function(data) {
+        App.concurrent_editing.speak(data);
       },
       complete: function (e) {
         $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
