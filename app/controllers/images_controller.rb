@@ -72,8 +72,8 @@ class ImagesController < ApplicationController
 
   def update
     @warpable = Warpable.find params[:warpable_id]
-    map = Map.find(@warpable.map_id)
-    if map.anonymous? || logged_in?
+
+    if Map.find(@warpable.map_id).anonymous? || logged_in?
       nodes = []
       author = @warpable.map.author
       # is it really necessary to make new points each time?
@@ -92,7 +92,6 @@ class ImagesController < ApplicationController
       @warpable.locked = params[:locked]
       @warpable.cm_per_pixel = @warpable.get_cm_per_pixel
       @warpable.save
-
       respond_to do |format|
         format.html { render html: 'success' }
         format.json { render json: @warpable.map.fetch_map_data }

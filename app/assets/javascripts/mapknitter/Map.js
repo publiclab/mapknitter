@@ -433,10 +433,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   saveImage: function () {
     var img = this;
-    // reset change state string:
-    img._corner_state = JSON.stringify(img._corners);
-    // send save request
-    $.ajax('/images', {
+    img._corner_state = JSON.stringify(img._corners); // reset change state string:
+    $.ajax('/images', { // send save request
       type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
