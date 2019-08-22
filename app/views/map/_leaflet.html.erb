@@ -50,18 +50,18 @@
     		crs:L.CRS.EPSG3857,
     		layers: [google,main]
     	});
-    	
+    
       var baseMaps = {
     	    "Google Satellite": google,
     	    "OpenStreetMap": osm
     	};
-      
+    
     	var overlayMaps = {
     	    "Overlay": main
     	};
-      
+    
     	var layersControl = L.control.Layers(baseMaps,overlayMaps);
-    	
+    
       map.addControl(layersControl);
     	map.setView(L.latLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
     
