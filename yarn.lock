@@ -2545,12 +2545,7 @@ global-prefix@^1.0.1:
     is-windows "^1.0.1"
     which "^1.2.14"
 
-graceful-fs@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.0.tgz#6be6119244f64d6417fe303cc36ab497b5756cc1"
-  integrity sha1-a+YRkkT2TWQX/jA8w2q0l7V1bME=
-
-graceful-fs@^4.1.11, graceful-fs@^4.1.3, graceful-fs@^4.2.0:
+graceful-fs@4.2.2, graceful-fs@^4.1.11, graceful-fs@^4.1.3, graceful-fs@^4.2.0:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.2.tgz#6f0952605d0140c1cfdb138ed005775b92d67b02"
   integrity sha512-IItsdsea19BoLC7ELy13q1iJFNmd7ofZH5+X/pJr90/nRoPEX0DJo1dHDbgtYWOhJhcCgMDTOw84RZ72q6lB+Q==
