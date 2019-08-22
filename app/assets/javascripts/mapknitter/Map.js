@@ -12,13 +12,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     L.Icon.Default.imagePath = '/assets/leaflet/dist/images/';
 
-    /* Initialize before map in order to add to layers; probably it can be done later too */
-    var google = L.google('SATELLITE', {
-      maxZoom: 24,
-      maxNativeZoom: 20,
-      opacity: 0.5
-    });
-
     this._map = L.map('knitter-map-pane', {
       zoomControl: false,
     }).setView(this._latlng, this._zoom);
@@ -94,14 +87,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var img = L.distortableImageOverlay(warpable.srcmedium, {
             corners: corners,
             mode: 'lock'
-          }).addTo(map);
+          });
 
-          var customExports = mapknitter.customExportAction();
-          var imgGroup = L.distortableCollection({
-            actions: [customExports]
-          }).addTo(map);
-
-          imgGroup.addLayer(img);
+          map._imgGroup.addLayer(img);
 
           /**
            * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
@@ -117,15 +105,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
           images.push(img);
           img.warpable_id = warpable.id;
 
-          if (!mapknitter.readOnly) {
+          // if (!mapknitter.readOnly) {
             L.DomEvent.on(img._image, {
               click: mapknitter.selectImage,
-              dblclick: mapknitter.dblClickImage,
               load: mapknitter.setupToolbar
             }, img);
             
-            L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
-          }
+            L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents, img);
+          // }
         }
       });
 
@@ -165,7 +152,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
   addImage: function(url,id,lat,lng,angle,altitude) {
-    var img = L.distortableImageOverlay(url, {});
+    var img = L.distortableImageOverlay(url);
 
     img.geocoding = {
       lat: lat,
@@ -176,33 +163,22 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     images.push(img);
     img.warpable_id = id;
-    img.addTo(map);
 
-    /** 
-     * TODO: creating the feature group now so that event handling works with it 
-     * but can't actually add the img to it until image load because the image has
-     * no corners. Above ^ we initialize image with no corners. Need to figure out a fix.
-    */
-    var customExports = mapknitter.customExportAction();
-    var imgGroup = L.distortableCollection({
-      actions: [customExports]
-    }).addTo(map);
+    map._imgGroup.addLayer(img);
 
-    if (!mapknitter.readOnly) {
-      L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+    // if (!mapknitter.readOnly) {
+      L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents, img);
 
       L.DomEvent.on(img._image, {
         click: mapknitter.selectImage,
-        dblclick: mapknitter.dblClickImage
       }, img);
 
       img.on('deselect', mapknitter.saveImageIfChanged, img);
 
       L.DomEvent.on(img._image, 'load', function () {
-        imgGroup.addLayer(img);
         mapknitter.setupToolbarAndGeocode.bind(img);
       }, img);
-    }
+    // }
   },
 
   setupToolbarAndGeocode: function () {
@@ -533,16 +509,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     }
   },
 
-  dblClickImage: function (e) {
-    var img = this,
-        edit = img.editing;
-
-    edit._enableDragging();
-    edit.enable();
-    edit._toggleRotateScale();
-    e.stopPropagation();
-  },
-
   saveImage: function () {
     var img = this;
     img._corner_state = JSON.stringify(img._corners); // reset change state string:
@@ -649,34 +615,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   setupMap: function () {
     var map = this._map;
+    map.addGoogleMutant();
 
-    //L.tileLayer.provider('Esri.WorldImagery').addTo(map);
-    var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
-      maxZoom: 24,
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      id: 'examples.map-i86knfo3'
-    })
+    var customExports = mapknitter.customExportAction();
 
-    // https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
-    var googleMutant = L.gridLayer.googleMutant({
-      type: 'satellite', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
-      maxZoom: 24,
-      maxNativeZoom: 20,
-      opacity: 0.5
-    }).addTo(this._map);
-
-    var baseMaps = {
-      "OpenStreetMap": mapbox,
-      "Google Satellite": googleMutant
-    };
-    // eventually, annotations
-    var overlayMaps = {
-    };
-
-    var layersControl = L.control.layers(baseMaps, overlayMaps);
-    this._map.addControl(layersControl);
+    map._imgGroup = L.distortableCollection({
+      actions: [customExports],
+      editable: !mapknitter.readOnly
+    }).addTo(map);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
     L.control.scale().addTo(map);

@@ -3363,10 +3363,10 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.7.2.tgz#a3aa4ce359e20dcc6066252ecfc1677d95cf4e88"
-  integrity sha512-RzQOlC0bAfEohzk8BanyKU2I//MxoeoaicaadSgjoEgoSLSLfcHNOqKB6tHDRI04uFfwwW+1+BD6mWVX+EHq4A==
+leaflet-distortableimage@0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.7.5.tgz#9235e94f3e809acc8b48e905475517a090e6fdaa"
+  integrity sha512-Ra1AAGwZ+UHCxX8EKP2hhVdLWfLt+kBCOHkM/1VBTm+HANxRIh9/bggzhNvJT1Y0aMM/KQME9XBEDh7PsnBnZQ==
   dependencies:
     grunt-cli "^1.2.0"
     leaflet-toolbar "0.4.0-alpha.2"
