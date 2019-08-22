@@ -1,4 +1,4 @@
-class Way < ActiveRecord::Base
+class Way < ApplicationRecord
   has_many :nodes, dependent: :destroy
 
   def bbox=(bbox)

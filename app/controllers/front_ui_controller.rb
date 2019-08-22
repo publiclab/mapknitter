@@ -8,9 +8,12 @@ class FrontUiController < ApplicationController
     @maps = Map.new_maps.first(4)
     @unpaginated = true
     # TODO: these could use optimization but are better than prev:
-    tag = Tag.where(name: 'featured').first # note that this is not a join table but the .maps method still works
-    @mappers = User.where(login: tag.maps.collect(&:author)) if tag
-    @mappers ||= []
+    tag = Tag.where(name: 'featured').first
+    @mappers = if tag
+                 User.where(login: tag.maps.collect(&:author))
+               else
+                 []
+               end
   end
 
   def all_maps
@@ -19,6 +22,7 @@ class FrontUiController < ApplicationController
 
   def nearby_mappers
     return unless current_location.present?
+
     lat = session[:lat]
     lon = session[:lon]
     @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)

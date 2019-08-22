@@ -1,5 +1,4 @@
-require File.expand_path('../boot', __FILE__)
-
+require_relative 'boot'
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -27,6 +26,9 @@ module Mapknitter
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
+     # Initialize configuration defaults for originally generated Rails version.
+     config.load_defaults 5.2
+
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
@@ -39,16 +41,12 @@ module Mapknitter
     # parameters by using an attr_accessible or attr_protected declaration.
     # config.active_record.whitelist_attributes = true
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     # Enable the asset pipeline
     config.assets.enabled = true
 
     config.action_dispatch.default_headers['X-Frame-Options'] = "ALLOW-FROM https://publiclab.org"
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.3'
     config.assets.paths << Rails.root.join("public","lib")
   end
 end

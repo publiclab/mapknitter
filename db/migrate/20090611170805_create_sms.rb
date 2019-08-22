@@ -1,4 +1,4 @@
-class CreateSms < ActiveRecord::Migration
+class CreateSms < ActiveRecord::Migration[5.2]
   def self.up
     # create_table "frontline_actions_triggers", :id => false, :force => true do |t|
     #   t.integer "action_id"

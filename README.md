@@ -146,7 +146,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
-5. Initialize database with `bundle exec rake db:setup`
+5. Initialize database with `bundle exec rails db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
 8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
@@ -217,15 +217,11 @@ u_admin.role = 'admin'
 
 When you try to run tests in MapKnitter, you can run the default Rake tasks, such as:
 
-`rake test:units` `rake test:functionals` `rake test:integration`
+`rails test:unit` `rails test:controllers` `rails test:integration`
 
 or simply:
 
-`rake test`
-
-By running like this you'll see a lot of warnings and deprecation notices - FOR NOW -, but we're working on them. If you'd like a cleaner visual of your tests, you can just use our custom defined task:
-
-`rake test:all`
+`rails test`
 
 #### Running tests of a specific file:
 

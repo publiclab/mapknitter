@@ -1,4 +1,4 @@
-class AddZipWarpableResHistory < ActiveRecord::Migration
+class AddZipWarpableResHistory < ActiveRecord::Migration[5.2]
   def self.up
     add_column :warpables, :history, :text, :default => "", :null => false
     add_column :warpables, :cm_per_pixel, :float, :default => 0, :null => false

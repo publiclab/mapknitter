@@ -1,4 +1,4 @@
-class CreateMaps < ActiveRecord::Migration
+class CreateMaps < ActiveRecord::Migration[5.2]
   def self.up
     create_table :maps do |t|
       t.string :name, :default => ''
