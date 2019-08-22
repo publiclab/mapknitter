@@ -3443,16 +3443,10 @@ leaflet-providers@leaflet-extras/leaflet-providers#1.0.6:
   version "1.0.6"
   resolved "https://codeload.github.com/leaflet-extras/leaflet-providers/tar.gz/620d7a433b74a47b93e6fa9bf6536a384b47d9da"
 
-leaflet-spin@1.1.0:
+leaflet-spin@1.1.0, leaflet-spin@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/leaflet-spin/-/leaflet-spin-1.1.0.tgz#7298be3be9ab05b540913d84915d6347f49b1e4e"
   integrity sha1-cpi+O+mrBbVAkT2EkV1jR/SbHk4=
-  dependencies:
-    spin.js "^2.3.1"
-
-leaflet-spin@makinacorpus/Leaflet.Spin#1.1.0:
-  version "1.0.0"
-  resolved "https://codeload.github.com/makinacorpus/Leaflet.Spin/tar.gz/f7c86843d24e6a6a50f94a66d8881b370fb8218f"
   dependencies:
     spin.js "^2.3.1"
 
