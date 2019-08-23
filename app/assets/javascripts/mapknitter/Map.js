@@ -24,6 +24,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
+    this.setupCollection();
+
     map._initialBounds = map.getBounds();
 
     /* Load warpables data via AJAX request. */
@@ -99,39 +101,53 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
             map._initialBounds.extend(newImgBounds);
-            mapknitter._map.flyToBounds(map._initialBounds);
+            map.flyToBounds(map._initialBounds);
           }
 
           images.push(img);
           img.warpable_id = warpable.id;
 
-          // if (!mapknitter.readOnly) {
+          if (!mapknitter.readOnly) {
             L.DomEvent.on(img._image, {
-              click: mapknitter.selectImage,
-              load: mapknitter.setupToolbar
+              // click: mapknitter.selectImage,
+              // load: mapknitter.setupToolbar
+              load: mapknitter.setupEvents
             }, img);
-            
-            L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents, img);
-          // }
+          }
         }
       });
-
     });
-
-    // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
-    $('.sidebar').click(function () { $.each(images, function (i, img) { img.editing.disable() }) })
-
-    // hi res:
-    //img._image.src = img._image.src.split('_medium').join('')
   },
 
-  setupEvents: function () {
-    var img = this;
+  _enter: function() {
+    map._imgGroup.editing.disable();
+  },
 
-    L.DomEvent.on(img._image, 'mouseup', mapknitter.saveImageIfChanged, img);
-    L.DomEvent.on(img._image, 'touchend', mapknitter.saveImageIfChanged, img);
+  _out: function() {
+    map._imgGroup.editing.enable();
+  },
 
-    img.on('deselect', mapknitter.saveImageIfChanged, img);
+  setupEvents: function (e) {
+    var img = e.layer;
+
+    /**
+     * TODO: the edit event is fire on handleDragEnd from LDI. This needs to be documented.
+     * and maybe change to 'handledragend' or something to be very explicit. this handle 
+     * is necessary beyond click / mouseup because you can distort the image without clicking
+     * on it.
+     */
+    L.DomEvent.on(img, {
+      edit: mapknitter.saveImage,
+    }, img);
+
+    L.DomEvent.on(img._image, {
+      click: mapknitter.selectImage,
+      mouseup: mapknitter.saveImageIfChanged,
+      touchend: mapknitter.saveImageIfChanged
+    }, img);
+
+    // deselect is not a real event / can we just use mouseup instead
+    // img.on('deselect', mapknitter.saveImageIfChanged, img);
   },
 
   /* 
@@ -166,19 +182,19 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     map._imgGroup.addLayer(img);
 
-    // if (!mapknitter.readOnly) {
+    if (!mapknitter.readOnly) {
+      // for some reason even though we already define this listener earlier it needs to be here again 
+      // or the image won't be clickable, etc.
       L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents, img);
 
-      L.DomEvent.on(img._image, {
-        click: mapknitter.selectImage,
-      }, img);
-
-      img.on('deselect', mapknitter.saveImageIfChanged, img);
+      // L.DomEvent.on(img._image, {
+      //   click: mapknitter.selectImage,
+      // }, img);
 
       L.DomEvent.on(img._image, 'load', function () {
         mapknitter.setupToolbarAndGeocode.bind(img);
       }, img);
-    // }
+    }
   },
 
   setupToolbarAndGeocode: function () {
@@ -205,7 +221,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         img._corners[i].lng += lngBy;
       }
 
-      edit._rotateBy(geo.angle);
+      img.rotateBy(geo.angle);
 
       /* Attempt to convert altitude to scale factor based on Leaflet zoom;
          * for correction based on altitude we need the original dimensions of the image. 
@@ -237,8 +253,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
 
           console.log("Photo should be " + width + " meters wide");
-          edit._scaleBy(width / currentWidth);
-          img.fire('update');
+          img.scaleBy(width / currentWidth);
         });
       }
 
@@ -358,7 +373,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Need to re-enable editing on each select because we disable it when clicking the sidebar */
     img.editing.enable.bind(img.editing)()
     img.bringToFront();
-    /* If it's locked, allow event to propagate on to map below */
+    /* If it's locked, allow event to propagate on to map below */   // sb: why? commenting out below line. 
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
 
@@ -616,7 +631,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
   setupMap: function () {
     var map = this._map;
     map.addGoogleMutant();
+    console.log("setup");
 
+    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.scale().addTo(map);
+  },
+
+  setupCollection: function() {
+    console.log("collection");
     var customExports = mapknitter.customExportAction();
 
     map._imgGroup = L.distortableCollection({
@@ -624,8 +646,15 @@ MapKnitter.Map = MapKnitter.Class.extend({
       editable: !mapknitter.readOnly
     }).addTo(map);
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
-    L.control.scale().addTo(map);
+    var sidebar = document.querySelector("body > div.sidebar");
+
+    // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
+    L.DomEvent.on(sidebar, {
+      mouseenter: mapknitter._enter,
+      mouseleave: mapknitter._out,
+    });
+
+    L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents);
   },
 
   /** ========== custom toolbar actions =========== */ /* TODO: find a better place for these */
