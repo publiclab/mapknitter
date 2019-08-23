@@ -1,6 +1,10 @@
 /* Handles all the frontend interactions with action cable and the server.  */
 
-App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChannel", {
+App.concurrent_editing = App.cable.subscriptions.create(
+    {
+        channel: "ConcurrentEditingChannel",
+        mapSlug: window.location.href.split("/").pop()
+    }, {
   connected: function() {
     // Called when the subscription is ready for use on the server
   },
@@ -11,7 +15,7 @@ App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChanne
 
   received: function(data) {
     // Called when there's incoming data on the websocket for this channel
-    window.mapKnitter.synchronizeData(data.changes);
+    window.mapknitter.synchronizeData(data.changes);
   },
 
   speak: function(changes) {
@@ -20,7 +24,8 @@ App.concurrent_editing = App.cable.subscriptions.create("ConcurrentEditingChanne
     *  which is responsible for broadcasting the updated warpables
     *  to all the user's connected to the concurrent_editing channel. */
     return this.perform("sync", {
-        changes: changes
+        changes: changes,
+        map_slug: window.location.href.split("/").pop()
     });
   }
 });
