@@ -32,7 +32,7 @@
     "leaflet-fullhash": "^1.0.0",
     "leaflet-illustrate": "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",
     "leaflet-omnivore": "mapbox/leaflet-omnivore#~0.3.2",
-    "leaflet-providers": "leaflet-extras/leaflet-providers#1.0.6",
+    "leaflet-providers": "^1.8.0",
     "leaflet-spin": "^1.1.0",
     "modalbox": "okonet/modalbox#*",
     "ol2": "openlayers/ol2#release-2.13.1",
