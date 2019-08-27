@@ -31,6 +31,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Load warpables data via AJAX request. */
     this._warpablesUrl = options.warpablesUrl;
 
+    /** this took me a bit to notice - this below code is all one big chunk run
+     * only after a map refresh. Events need to be setup before this 
+     */
+
     this.withWarpables(function (warpables) {
       $.each(warpables, function (i, warpable) {
 
@@ -109,8 +113,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           if (!mapknitter.readOnly) {
             L.DomEvent.on(img._image, {
-              // click: mapknitter.selectImage,
-              // load: mapknitter.setupToolbar
               load: mapknitter.setupEvents
             }, img);
           }
@@ -150,19 +152,18 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // img.on('deselect', mapknitter.saveImageIfChanged, img);
   },
 
-  /* 
-   * Setup toolbar and events
-   */
-  setupToolbar: function () {
-    var img = this,
+  setupToolbar: function (e) {
+    var img = e.layer,
         edit = img.editing;
 
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
-    if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
-    edit.addTool(mapknitter.customDeleteAction());
+    L.DomEvent.on(img._image, 'load', function() {
+      if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
+      edit.addTool(mapknitter.customDeleteAction());
 
-    img.on('edit', mapknitter.saveImageIfChanged, img);
-    img.on('delete', mapknitter.deleteImage, img);
+      img.on('edit', mapknitter.saveImageIfChanged, img);
+      img.on('delete', mapknitter.deleteImage, img);
+    })
   },
 
   /* Add a new, unplaced, but already uploaded image to the map.
@@ -183,17 +184,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
     map._imgGroup.addLayer(img);
 
     if (!mapknitter.readOnly) {
-      // for some reason even though we already define this listener earlier it needs to be here again 
-      // or the image won't be clickable, etc.
-      L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents, img);
-
-      // L.DomEvent.on(img._image, {
-      //   click: mapknitter.selectImage,
+      // L.DomEvent.on(img._image, 'load', function () {
+      //   mapknitter.setupToolbarAndGeocode.bind(img);
       // }, img);
-
-      L.DomEvent.on(img._image, 'load', function () {
-        mapknitter.setupToolbarAndGeocode.bind(img);
-      }, img);
     }
   },
 
@@ -654,7 +647,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
       mouseleave: mapknitter._out,
     });
 
-    L.DomEvent.on(map._imgGroup, 'layeradd', mapknitter.setupEvents);
+    L.DomEvent.on(map._imgGroup, 'layeradd', function(e) {
+      mapknitter.setupEvents(e);
+      mapknitter.setupToolbar(e);
+    });
   },
 
   /** ========== custom toolbar actions =========== */ /* TODO: find a better place for these */
