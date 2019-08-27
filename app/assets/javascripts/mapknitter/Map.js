@@ -164,7 +164,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       if (!edit._selected) { edit._deselect(); }
 
-      // img.on('edit', mapknitter.saveImageIfChanged, img);
       img.on('delete', mapknitter.deleteImage, img);
     })
   },
@@ -357,7 +356,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img._corner_state = JSON.stringify(img._corners);
     /* Need to re-enable editing on each select because we disable it when clicking the sidebar */
     img.editing.enable.bind(img.editing)()
-    img.bringToFront();
     /* If it's locked, allow event to propagate on to map below */   // sb: why? commenting out below line. 
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
