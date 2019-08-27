@@ -112,9 +112,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
           img.warpable_id = warpable.id;
 
           if (!mapknitter.readOnly) {
-            L.DomEvent.on(img._image, {
-              load: mapknitter.setupEvents
-            }, img);
+            L.DomEvent.on(img._image, 'load', function(e) {
+              mapknitter.setupEvents(e);
+              mapknitter.setupToolbar(e);
+            });
           }
         }
       });
@@ -161,7 +162,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
       if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
       edit.addTool(mapknitter.customDeleteAction());
 
-      img.on('edit', mapknitter.saveImageIfChanged, img);
+      if (!edit._selected) { edit._deselect(); }
+
+      // img.on('edit', mapknitter.saveImageIfChanged, img);
       img.on('delete', mapknitter.deleteImage, img);
     })
   },
@@ -182,81 +185,70 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img.warpable_id = id;
 
     map._imgGroup.addLayer(img);
-
-    if (!mapknitter.readOnly) {
-      // L.DomEvent.on(img._image, 'load', function () {
-      //   mapknitter.setupToolbarAndGeocode.bind(img);
-      // }, img);
-    }
   },
 
-  setupToolbarAndGeocode: function () {
-    var img = this;
-
-    mapknitter.setupToolbar.bind(img);
-    mapknitter.setupGeocode.bind(img);
-  },
-
-  setupGeocode: function () {
-    var img = this,
-        edit = img.editing,
+  setupGeocode: function (e) {
+    var img = e.layer,
         geo = img.geocoding;
 
-    /* use geodata */
-    if (geo && geo.lat) {
-      /* move the image to this newly discovered location */
-      var center = L.latLngBounds(img.getCorners()).getCenter(),
-          latBy = geo.lat - center.lat,
-          lngBy = geo.lng - center.lng
+    L.DomEvent.on(img._image, 'load', function () {
 
-      for (var i = 0; i < 4; i++) {
-        img._corners[i].lat += latBy;
-        img._corners[i].lng += lngBy;
+      /* use geodata */
+      if (geo && geo.lat) {
+        /* move the image to this newly discovered location */
+        var center = L.latLngBounds(img.getCorners()).getCenter(),
+            latBy = geo.lat - center.lat,
+            lngBy = geo.lng - center.lng
+
+        for (var i = 0; i < 4; i++) {
+          img._corners[i].lat += latBy;
+          img._corners[i].lng += lngBy;
+        }
+
+        img.rotateBy(geo.angle);
+
+        /* Attempt to convert altitude to scale factor based on Leaflet zoom;
+          * for correction based on altitude we need the original dimensions of the image. 
+          * This may work only at sea level unless we factor in ground level. 
+          * We may also need to get camera field of view to get this even closer.
+          * We could also fall back to the scale of the last-placed image.
+          */
+        if (geo.altitude && geo.altitude != 0) {
+          var width = img._image.width, height = img._image.height
+          //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
+          //edit._scaleBy(scale);
+
+          var elevator = new google.maps.ElevationService(),
+              lat = mapknitter._map.getCenter().lat,
+              lng = mapknitter._map.getCenter().lng;
+
+          elevator.getElevationForLocations({
+            'locations': [{ lat: lat, lng: lng }]
+          }, function (results, status) {
+            console.log("Photo taken from " + geo.altitude + " meters above sea level");
+            console.log("Ground is " + results[0].elevation + " meters above sea level");
+            console.log("Photo taken from " + (geo.altitude - results[0].elevation) + " meters");
+            var a = geo.altitude - results[0].elevation,
+                fov = 50,
+                A = fov * (Math.PI / 180),
+                width = 2 * (a / Math.tan(A)),
+                currentWidth =
+                  img.getCorner(2).distanceTo(img.getCorner(1)) +
+                  img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
+
+            console.log("Photo should be " + width + " meters wide");
+            img.scaleBy(width / currentWidth);
+          });
+        }
+
+        img.fire('update');
+        /* pan the map there too */
+        mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
+        img._reset();
       }
 
-      img.rotateBy(geo.angle);
-
-      /* Attempt to convert altitude to scale factor based on Leaflet zoom;
-         * for correction based on altitude we need the original dimensions of the image. 
-         * This may work only at sea level unless we factor in ground level. 
-         * We may also need to get camera field of view to get this even closer.
-         * We could also fall back to the scale of the last-placed image.
-         */
-      if (geo.altitude && geo.altitude != 0) {
-        var width = img._image.width, height = img._image.height
-        //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
-        //edit._scaleBy(scale);
-
-        var elevator = new google.maps.ElevationService(),
-            lat = mapknitter._map.getCenter().lat,
-            lng = mapknitter._map.getCenter().lng;
-
-        elevator.getElevationForLocations({
-          'locations': [{ lat: lat, lng: lng }]
-        }, function (results, status) {
-          console.log("Photo taken from " + geo.altitude + " meters above sea level");
-          console.log("Ground is " + results[0].elevation + " meters above sea level");
-          console.log("Photo taken from " + (geo.altitude - results[0].elevation) + " meters");
-          var a = geo.altitude - results[0].elevation,
-              fov = 50,
-              A = fov * (Math.PI / 180),
-              width = 2 * (a / Math.tan(A)),
-              currentWidth =
-                img.getCorner(2).distanceTo(img.getCorner(1)) +
-                img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
-
-          console.log("Photo should be " + width + " meters wide");
-          img.scaleBy(width / currentWidth);
-        });
-      }
-
-      img.fire('update');
-      /* pan the map there too */
-      mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
-      img._reset();
-    }
-
-    return img;
+      return img;
+    });
   },    
 
   geocodeImageFromId: function (dom_id, id, url) {
@@ -624,14 +616,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
   setupMap: function () {
     var map = this._map;
     map.addGoogleMutant();
-    console.log("setup");
 
     L.control.zoom({ position: 'topright' }).addTo(map);
     L.control.scale().addTo(map);
   },
 
   setupCollection: function() {
-    console.log("collection");
     var customExports = mapknitter.customExportAction();
 
     map._imgGroup = L.distortableCollection({
@@ -641,16 +631,19 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     var sidebar = document.querySelector("body > div.sidebar");
 
-    // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
-    L.DomEvent.on(sidebar, {
-      mouseenter: mapknitter._enter,
-      mouseleave: mapknitter._out,
-    });
+    if (!mapknitter.readOnly) {
+      // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
+      L.DomEvent.on(sidebar, {
+        mouseenter: mapknitter._enter,
+        mouseleave: mapknitter._out,
+      });
 
-    L.DomEvent.on(map._imgGroup, 'layeradd', function(e) {
-      mapknitter.setupEvents(e);
-      mapknitter.setupToolbar(e);
-    });
+      L.DomEvent.on(map._imgGroup, 'layeradd', function (e) {
+        mapknitter.setupEvents(e);
+        mapknitter.setupToolbar(e);
+        mapknitter.setupGeocode(e);
+      });
+    }
   },
 
   /** ========== custom toolbar actions =========== */ /* TODO: find a better place for these */
