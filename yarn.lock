@@ -2545,20 +2545,10 @@ global-prefix@^1.0.1:
     is-windows "^1.0.1"
     which "^1.2.14"
 
-graceful-fs@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.0.tgz#6be6119244f64d6417fe303cc36ab497b5756cc1"
-  integrity sha1-a+YRkkT2TWQX/jA8w2q0l7V1bME=
-
 graceful-fs@^4.1.11, graceful-fs@^4.1.3, graceful-fs@^4.2.0:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.2.tgz#6f0952605d0140c1cfdb138ed005775b92d67b02"
   integrity sha512-IItsdsea19BoLC7ELy13q1iJFNmd7ofZH5+X/pJr90/nRoPEX0DJo1dHDbgtYWOhJhcCgMDTOw84RZ72q6lB+Q==
-
-graceful-js@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/graceful-js/-/graceful-js-1.0.0.tgz#c71628e75055ab5f2ddca2851451ce93eb26194e"
-  integrity sha1-xxYo51BVq18t3KKFFFHOk+smGU4=
 
 growl@1.10.5:
   version "1.10.5"
@@ -3443,16 +3433,10 @@ leaflet-providers@leaflet-extras/leaflet-providers#1.0.6:
   version "1.0.6"
   resolved "https://codeload.github.com/leaflet-extras/leaflet-providers/tar.gz/620d7a433b74a47b93e6fa9bf6536a384b47d9da"
 
-leaflet-spin@1.1.0:
+leaflet-spin@1.1.0, leaflet-spin@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/leaflet-spin/-/leaflet-spin-1.1.0.tgz#7298be3be9ab05b540913d84915d6347f49b1e4e"
   integrity sha1-cpi+O+mrBbVAkT2EkV1jR/SbHk4=
-  dependencies:
-    spin.js "^2.3.1"
-
-leaflet-spin@makinacorpus/Leaflet.Spin#1.1.0:
-  version "1.0.0"
-  resolved "https://codeload.github.com/makinacorpus/Leaflet.Spin/tar.gz/f7c86843d24e6a6a50f94a66d8881b370fb8218f"
   dependencies:
     spin.js "^2.3.1"
 

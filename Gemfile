@@ -6,7 +6,7 @@ gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
 
-gem 'will_paginate', '3.1.7'
+gem 'will_paginate', '3.1.8'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
@@ -44,7 +44,7 @@ group :dependencies do
   gem 'sprockets', '3.7.2'
   gem "sprockets-rails"
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.5.1.1'
+  gem 'autoprefixer-rails', '~> 9.6.1'
   gem 'uglifier', '~> 4.1.20'
 
 end
