@@ -8,6 +8,7 @@ Mapknitter::Application.routes.draw do
   get 'all_maps', to: 'front_ui#all_maps'
   get 'anonymous', to: 'front_ui#anonymous'
   get 'gallery', to: 'front_ui#gallery'
+  get 'location' => 'front_ui#location'
   post 'save_location', to: 'front_ui#save_location'
   
   get 'legacy', to: 'maps#index' # remove once new front page is stable
