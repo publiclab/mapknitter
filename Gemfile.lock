@@ -52,7 +52,7 @@ GEM
     ansi (1.5.0)
     arel (9.0.0)
     ast (2.4.0)
-    autoprefixer-rails (9.5.1.1)
+    autoprefixer-rails (9.6.1)
       execjs
     aws-sdk (1.5.8)
       httparty (~> 0.7)
@@ -322,7 +322,7 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-    will_paginate (3.1.7)
+    will_paginate (3.1.8)
     will_paginate-bootstrap4 (0.2.2)
       will_paginate (~> 3.0, >= 3.0.0)
     xpath (3.2.0)
@@ -389,7 +389,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (~> 4.1.20)
   web-console (~> 3.3)
-  will_paginate (= 3.1.7)
+  will_paginate (= 3.1.8)
   will_paginate-bootstrap4 (~> 0.2.2)
 
 RUBY VERSION
