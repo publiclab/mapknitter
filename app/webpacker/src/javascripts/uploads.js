@@ -1,5 +1,5 @@
 // iframe-transport is ajax file upload support for IE, Uncomment if needed      
-// javascript_include_tag  (file_upload + "js/jquery.iframe-transport")      
+// javascript_pack_tag  (file_upload + "js/jquery.iframe-transport")      
 
 function addUploadedImageToSidebar($upload) {
   /* Modify the table row created by jQuery-File-Upload to remove unneeded cells. */

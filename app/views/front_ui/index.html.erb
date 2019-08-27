@@ -1,7 +1,12 @@
-<%# <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
-<%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
-<%= javascript_include_tag('/assets/leaflet-spin/example/spin/dist/spin.min.js') %>
-<%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
+<%= stylesheet_pack_tag "assets/leaflet/dist/leaflet" %>
+<%= stylesheet_pack_tag "assets/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers" %>
+<%= javascript_pack_tag('assets/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers') %>
+<%= javascript_pack_tag('assets/leaflet-environmental-layers/src/windRoseLayer') %>
+<%= #javascript_pack_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min') %>
+<%= #stylesheet_pack_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen" %>
+<%= javascript_pack_tag('assets/leaflet-spin/example/spin/dist/spin.min') %>
+<%= javascript_pack_tag('assets/leaflet-spin/example/leaflet.spin.min') %>
+<%= javascript_pack_tag('assets/leaflet-fullhash/leaflet-fullHash') %>
 <%= javascript_include_tag('leaflet-fullHash.js') %>
 
 <style>
@@ -136,7 +141,7 @@
 <!-- mapping kites -->
 <div class="card-deck mb-6  text-center mx-auto" id="mapping-kits">
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
+        <img class="card-img-top img-draw mx-auto" src="<%= asset_pack_path('images/balloon.png') %>" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Balloon mapping</h5>
             <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
@@ -144,7 +149,7 @@
         </div>
     </div>
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw mx-auto" src="<%= asset_path('kite1.png') %>" alt="Card image cap">
+        <img class="card-img-top img-draw mx-auto" src="<%= asset_pack_path('images/kite1.png') %>" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Kites</h5>
             <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
@@ -157,7 +162,7 @@
 
 <div class="mapping-kits card-deck mb-6  text-center mx-auto">
     <div class="card mapping-kits">
-      <img class="card-img-top img-draw mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
+      <img class="card-img-top img-draw mx-auto" src="<%= asset_pack_path('images/camera.png') %>" alt="Card image cap">
       <div class="card-body">
           <h5 class="card-title">Raspberry Pi Camera</h5>
           <p class="card-text item-description"> Lightweight battery pack, easy to use, connects to to your laptop/phone,<br> great for streaming video, photos, and motion triggered capture</p>
@@ -165,7 +170,7 @@
       </div>
     </div>
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw  mx-auto" src="<%= asset_path('selfie.png') %>" alt="Card image cap">
+        <img class="card-img-top img-draw  mx-auto" src="<%= asset_pack_path('images/selfie.png') %>" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Pole mapping</h5>
             <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>

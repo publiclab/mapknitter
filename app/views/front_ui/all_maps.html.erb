@@ -6,7 +6,7 @@
           <% if map.warpables.length > 0 %>
             <img class="card-img-top map-img" src="<%= map.warpables.first.image.url(:small) %>" alt="<%= map.name %>">
           <% else %>
-            <img class="card-img-top" src="<%= asset_path('image.png') %>" alt="Map without image" style="max-height: 400px !important;">
+            <img class="card-img-top" src="<%= asset_pack_path('images/image.png') %>" alt="Map without image" style="max-height: 400px !important;">
           <% end %>
         </a>
         <div class="card-body" style="margin-left: -18px !important;">

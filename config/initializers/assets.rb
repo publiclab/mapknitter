@@ -1,9 +1,11 @@
+require 'uglifier'
 # Be sure to restart your server when you modify this file.
 
 Rails.application.configure do
     # Version of your assets, change this if you want to expire all your assets.
     config.assets.version = '1.3'
-    config.assets.precompile += %w[*.png *.jpg *.jpeg *.gif]
+    config.assets.js_compressor = Uglifier.new(harmony: true)
+    config.assets.css_compressor = :sass
 
     # Add additional assets to the asset load path.
     # Rails.application.config.assets.paths << Emoji.images_path
