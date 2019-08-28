@@ -687,6 +687,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       addHooks: function () {
         var group = this._overlay;
+        var edit = group.editing;
         var exportInterval;
 
         var updateUI = function updateUI(data) {
@@ -726,7 +727,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           });
         }
 
-        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
+        edit.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
       }
     });
 
