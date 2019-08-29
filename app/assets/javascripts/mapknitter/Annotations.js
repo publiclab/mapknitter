@@ -7,7 +7,7 @@ MapKnitter.Annotations.include({
       drawOptions = {};
 
     this._map = map;
-    this._drawnItems = = L.featureGroup().addTo(map);
+    this._drawnItems = L.featureGroup().addTo(map);
 
     /* Read in styles from MapKnitter.Annotations.style */
     for (var annotationType in MapKnitter.Annotations.style) {
