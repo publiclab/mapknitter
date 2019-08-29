@@ -3,11 +3,11 @@ MapKnitter.Annotations.include({
   initialize: function(options) {
     MapKnitter.Resources.prototype.initialize.call(this, options);
 
-    var map = options.map,
-        drawOptions = {};
+    var map = options.map
+      drawOptions = {};
 
     this._map = map;
-    this._drawnItems = new L.FeatureGroup().addTo(map);
+    this._drawnItems = = L.featureGroup().addTo(map);
 
     /* Read in styles from MapKnitter.Annotations.style */
     for (var annotationType in MapKnitter.Annotations.style) {
@@ -28,7 +28,7 @@ MapKnitter.Annotations.include({
 
     /* Get annotations for this map from the database. */
     this.retrieve(function(annotations) {
-      new L.GeoJSON(annotations, { 
+      L.geoJSON(annotations, { 
         pointToLayer: this._pointToLayer.bind(this),
         onEachFeature: function(geojson, layer) {
           layer.type = geojson.properties.annotation_type;
