@@ -1,4 +1,4 @@
-class AddWarpableDeleted < ActiveRecord::Migration
+class AddWarpableDeleted < ActiveRecord::Migration[5.2]
   def self.up
     add_column :warpables, :deleted, :boolean, :default => false, :null => false
   end

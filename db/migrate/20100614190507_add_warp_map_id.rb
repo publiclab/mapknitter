@@ -1,4 +1,4 @@
-class AddWarpMapId < ActiveRecord::Migration
+class AddWarpMapId < ActiveRecord::Migration[5.2]
   def self.up
     add_column :warps, :map_id, :integer, :default => 0, :null => false
     add_column :warps, :warpable_id, :integer, :default => 0, :null => false

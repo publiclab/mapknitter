@@ -20,6 +20,9 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#authors" role="tab" aria-selected="false">Authors</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#location" role="tab" aria-selected="false">Location</a>
+            </li>
             <% if params[:controller] == "tags" %>
                 <li class="nav-item">
                     <a class="nav-link" role="tab" href="/feeds/tag/<%= params[:id] %>" aria-selected="false">RSS</a>
@@ -41,6 +44,16 @@
             <div class="tab-pane fade" id="authors" role="tabpanel">
                 <%= render :partial => 'front_ui/featured_mappers', :locals => { :mappers => @authors } %>
             </div>
+            <div class="tab-pane fade"  id="location" role="tabpanel">
+                <div style="text-align: center;">
+                    <%= form_tag("/location", method: "get", remote: true) do %>
+                      <%= label_tag(:loc, "Enter location:") %>
+                      <%= text_field_tag :loc %>
+                      <%= submit_tag "Search"%>
+                    <% end %>
+                </div>
+                <div id="display-location"></div>
+             </div>
         </div>
     <% end %>
 

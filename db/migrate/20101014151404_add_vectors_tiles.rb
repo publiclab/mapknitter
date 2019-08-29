@@ -1,4 +1,4 @@
-class AddVectorsTiles < ActiveRecord::Migration
+class AddVectorsTiles < ActiveRecord::Migration[5.2]
   def self.up
     add_column :maps, :vectors, :boolean, :default => true, :null => false
     add_column :maps, :tiles, :string, :default => '', :null => false

@@ -27,7 +27,7 @@ class SessionsControllerTest < ActionController::TestCase
 
   test 'successful local login' do
     system('cp config/config.yml.example config/config.yml')
-    get :local, login: 'quentin'
+    get :local, params: { login: 'quentin'}
     assert_response :redirect
     assert flash[:success].present?
     assert_not_nil session[:user_id]
@@ -36,7 +36,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'unsuccessful local login' do
-    get :local, login: 'cess'
+    get :local, params: { login: 'cess'}
     assert_response :redirect
     assert flash[:error].present?
     assert_nil session[:user_id]

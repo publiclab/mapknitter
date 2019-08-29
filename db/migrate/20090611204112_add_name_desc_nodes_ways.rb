@@ -1,4 +1,4 @@
-class AddNameDescNodesWays < ActiveRecord::Migration
+class AddNameDescNodesWays < ActiveRecord::Migration[5.2]
   def self.up
     add_column :ways, :name, :string, :default => ""
     add_column :ways, :description, :string, :default => ""

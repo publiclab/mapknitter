@@ -1,12 +1,8 @@
-<%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
-<%= stylesheet_link_tag "/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" %>
-<%= javascript_include_tag('/lib/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js') %>
-<%= javascript_include_tag('/lib/leaflet-environmental-layers/src/windRoseLayer.js') %>
-<%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
-<%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
-<%= javascript_include_tag('/lib/leaflet-spin/example/spin/dist/spin.min.js') %>
-<%= javascript_include_tag('/lib/leaflet-spin/example/leaflet.spin.min.js') %>
-<%= javascript_include_tag('/lib/leaflet-fullhash/leaflet-fullHash.js') %>
+<%# <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
+<%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
+<%= javascript_include_tag('/assets/leaflet-spin/example/spin/dist/spin.min.js') %>
+<%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
+<%= javascript_include_tag('leaflet-fullHash.js') %>
 
 <style>
 #hero {
@@ -75,21 +71,25 @@
         <div id = "anonymous-map" class="collapse text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
           <p>We strongly prefer that you should Log in via
             <br><br>
-          <%= button_tag 'Google', name: "subaction", value: "google_oauth2" do %>
-            <span class="btn btn-default" style="background-color: #d34836;width: 60px;">
-            <i class="fab fa-google fa-fw"></i>
-            </span>
-          <% end %>
-          <%= button_tag submit: 'Twitter', name: "subaction", value: "twitter" do %>
-            <span class="btn btn-default" style="background-color: #1da1f2;width: 60px;">
-              <i class="fab fa-twitter fa-fw"></i>
-            </span>
-          <% end %>
-          <%= button_tag 'Facebook', name: "subaction", value: "facebook" do%>
-            <span class="btn btn-default" style="background-color: #3b5998;width: 60px;">
-              <i class="fab fa-facebook fa-fw"></i>
-            </span>
-          <% end %>
+            <form id="open_id_form" method="GET" action="/sessions/create" style="padding:10px;">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+            <%= hidden_field_tag :back_to, params[:back_to] || request.path -%>
+            <%= button_tag 'Google', name: "subaction", value: "google_oauth2" do %>
+              <span class="btn btn-default" style="background-color: #d34836;width: 60px;">
+              <i class="fab fa-google fa-fw"></i>
+              </span>
+            <% end %>
+            <%= button_tag submit: 'Twitter', name: "subaction", value: "twitter" do %>
+              <span class="btn btn-default" style="background-color: #1da1f2;width: 60px;">
+                <i class="fab fa-twitter fa-fw"></i>
+              </span>
+            <% end %>
+            <%= button_tag 'Facebook', name: "subaction", value: "facebook" do%>
+              <span class="btn btn-default" style="background-color: #3b5998;width: 60px;">
+                <i class="fab fa-facebook fa-fw"></i>
+              </span>
+            <% end %>
+            </form>
           <br><br>
           OR <a href="http://publiclab.org/signup">sign up for a Public Lab account</a>
           <br>
@@ -251,7 +251,7 @@
   defaultLoc.lng = defaultLoc.lng || <%= params[:lng] || 'false' %>;
   defaultLoc.zoom = defaultLoc.zoom || <%= params[:z] || 'false' %>;
 
-  var Mapknitterunique = new L.Map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
+  var Mapknitterunique = L.map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
   var hash = new L.Hash(Mapknitterunique);
 
   var MapKnitter = L.layerGroup.mapKnitterLayer().addTo(Mapknitterunique);
@@ -301,7 +301,7 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(Mapknitterunique); 
 
-  Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
+  // Mapknitterunique.addControl(new L.Control.Fullscreen()); // to go full-screen
   Mapknitterunique.on('fullscreenchange', function () {
     if (Mapknitterunique.isFullscreen()) {
       Mapknitterunique.options.minZoom = 3 ;
