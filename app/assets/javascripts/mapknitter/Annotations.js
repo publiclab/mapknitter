@@ -3,7 +3,7 @@ MapKnitter.Annotations.include({
   initialize: function(options) {
     MapKnitter.Resources.prototype.initialize.call(this, options);
 
-    var map = options.map
+    var map = options.map,
       drawOptions = {};
 
     this._map = map;
