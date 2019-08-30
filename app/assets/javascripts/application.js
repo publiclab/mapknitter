@@ -17,7 +17,7 @@
 //= require jquery
 //= require jquery-ujs
 //= require jquery/dist/jquery.js
-//= require jquery-ujs/src/rails.js 
+//= require jquery-ujs/src/rails.js
 //= require jquery-ui/jquery-ui.min.js
 
 //= require blueimp-tmpl/js/tmpl.js
@@ -44,9 +44,10 @@
 //= require image-sequencer/dist/image-sequencer.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js
 //= require leaflet-draw/dist/leaflet.draw-src.js
-//= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js
+//= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require leaflet-distortableimage/src/edit/tools/EditAction.js
 //= require mapknitter/Map.js
+//= require cable.js
 
 //= require_tree .
