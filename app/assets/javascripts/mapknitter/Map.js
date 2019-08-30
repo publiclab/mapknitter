@@ -405,11 +405,123 @@ MapKnitter.Map = MapKnitter.Class.extend({
           corners [2] = y;
           corners [3] = x;
 
-          console.log(corners);
-
           layer = layers.filter(l => l._url==warpable.srcmedium)[0];
-          layer.setCorners(corners);
+
+          if(layer == null || layer == undefined) {
+              window.mapknitter.synchronizeNewAddedImage(warpable);
+          } else {
+              layer.setCorners(corners);
+              var index = layers.indexOf(layer);
+              if (index > -1) {
+                  layers.splice(index, 1);
+              }
+          }
       });
+
+      // remove images if deleted from any user's browser
+      layers.forEach(function(layer) {
+          edit = layer.editing
+          edit._removeToolbar();
+          edit.disable();
+          // remove from Leaflet map:
+          map.removeLayer(layer);
+          // remove from sidebar too:
+          $('#warpable-' + layer.warpable_id).remove();
+      });
+  },
+
+  synchronizeNewAddedImage: function(warpable) {
+      var wn = warpable.nodes;
+      bounds = [];
+
+      // only already-placed images:
+      if (wn.length > 0) {
+          var downloadEl = $('.img-download-' + warpable.id),
+              imgEl = $('#full-img-' + warpable.id);
+
+          downloadEl.click(function () {
+              downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
+
+              imgEl[0].onload = function () {
+                  var height = imgEl.height(),
+                      width = imgEl.width(),
+                      nw = map.latLngToContainerPoint(wn[0]),
+                      ne = map.latLngToContainerPoint(wn[1]),
+                      se = map.latLngToContainerPoint(wn[2]),
+                      sw = map.latLngToContainerPoint(wn[3]),
+                      offsetX = nw.x,
+                      offsetY = nw.y,
+                      displayedWidth = $('#warpable-img-' + warpable.id).width(),
+                      ratio = width / displayedWidth;
+
+                  nw.x -= offsetX;
+                  ne.x -= offsetX;
+                  se.x -= offsetX;
+                  sw.x -= offsetX;
+
+                  nw.y -= offsetY;
+                  ne.y -= offsetY;
+                  se.y -= offsetY;
+                  sw.y -= offsetY;
+
+                  warpWebGl(
+                      'full-img-' + warpable.id,
+                      [0, 0, width, 0, width, height, 0, height],
+                      [nw.x, nw.y, ne.x, ne.y, se.x, se.y, sw.x, sw.y],
+                      true // trigger download
+                  )
+
+                  downloadEl.html('<i class="fa fa-download"></i>');
+              }
+
+              imgEl[0].src = $('.img-download-' + warpable.id).attr('data-image');
+          });
+
+          var corners = [
+              L.latLng(wn[0].lat, wn[0].lon),
+              L.latLng(wn[1].lat, wn[1].lon),
+              L.latLng(wn[3].lat, wn[3].lon),
+              L.latLng(wn[2].lat, wn[2].lon)
+          ];
+
+          var img = L.distortableImageOverlay(warpable.srcmedium, {
+              corners: corners,
+              mode: 'lock'
+          }).addTo(map);
+
+          var customExports = mapknitter.customExportAction();
+          var imgGroup = L.distortableCollection({
+              actions: [customExports]
+          }).addTo(map);
+
+          imgGroup.addLayer(img);
+
+          /**
+           * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
+           */
+          bounds = bounds.concat(corners);
+          var newImgBounds = L.latLngBounds(corners);
+
+          if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
+              map._initialBounds.extend(newImgBounds);
+              mapknitter._map.flyToBounds(map._initialBounds);
+          }
+
+          images.push(img);
+          img.warpable_id = warpable.id;
+
+          if (!mapknitter.readOnly) {
+              L.DomEvent.on(img._image, {
+                  click: mapknitter.selectImage,
+                  dblclick: mapknitter.dblClickImage,
+                  load: mapknitter.setupToolbar
+              }, img);
+
+              L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+          }
+
+          img.editing.disable()
+      }
   },
 
   saveImageIfChanged: function () {
@@ -433,10 +545,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   saveImage: function () {
     var img = this;
-    // reset change state string:
-    img._corner_state = JSON.stringify(img._corners);
-    // send save request
-    $.ajax('/images', {
+    img._corner_state = JSON.stringify(img._corners); // reset change state string:
+    $.ajax('/images/'+img.warpable_id, { // send save request
       type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
@@ -475,6 +585,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
           type: 'DELETE',
           beforeSend: function (e) {
             $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
+          },
+          success: function(data) {
+              App.concurrent_editing.speak(data);
           },
           complete: function (e) {
             $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')

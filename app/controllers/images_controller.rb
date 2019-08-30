@@ -72,8 +72,8 @@ class ImagesController < ApplicationController
 
   def update
     @warpable = Warpable.find params[:warpable_id]
-    map = Map.find(@warpable.map_id)
-    if map.anonymous? || logged_in?
+
+    if Map.find(@warpable.map_id).anonymous? || logged_in?
       nodes = []
       author = @warpable.map.author
       # is it really necessary to make new points each time?
@@ -115,7 +115,7 @@ class ImagesController < ApplicationController
       @warpable.destroy
       respond_to do |format|
         format.html { redirect_to @warpable.map }
-        format.json { render json: @warpable }
+        format.json { render json: @warpable.map.fetch_map_data }
       end
     else
       flash[:error] = 'You must be logged in to delete images.'
