@@ -24,4 +24,4 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-bundle exec passenger start
+bundle exec foreman start
