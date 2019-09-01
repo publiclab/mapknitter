@@ -4,7 +4,7 @@ MapKnitter.Annotations.include({
     MapKnitter.Resources.prototype.initialize.call(this, options);
 
     var map = options.map,
-      drawOptions = {};
+    drawOptions = {};
 
     this._map = map;
     this._drawnItems = L.featureGroup().addTo(map);
