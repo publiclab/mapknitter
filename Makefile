@@ -22,7 +22,7 @@ redeploy-container:
 	docker-compose down --remove-orphans
 	docker-compose up --force-recreate -d
 	$(call wait_for_container)
-	docker exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 mapknitter bash -lc \
+	docker-compose exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 web bash -lc \
 												"bundle exec rails db:drop && \
 												 bundle exec rails db:create && \
 												 bundle exec rails db:schema:load && \
