@@ -22,8 +22,9 @@ redeploy-container:
 	docker-compose down --remove-orphans
 	docker-compose up --force-recreate -d
 	$(call wait_for_container)
-	DISABLE_DATABASE_ENVIRONMENT_CHECK=1 docker-compose exec web bash -lc \
-												"bundle exec rails db:drop && \
-												 bundle exec rails db:create && \
-												 bundle exec rails db:schema:load && \
-												 bundle exec rails db:migrate"
+	docker-compose exec web bash -lc \
+				"export DISABLE_DATABASE_ENVIRONMENT_CHECK=1 && \
+				 bundle exec rails db:drop && \
+				 bundle exec rails db:create && \
+				 bundle exec rails db:schema:load && \
+				 bundle exec rails db:migrate"
