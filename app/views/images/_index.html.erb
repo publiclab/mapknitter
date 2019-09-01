@@ -83,8 +83,8 @@
             %>
           <% end %>
           <% if warpable.placed? %>
-            <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" style="cursor: pointer" class="btn btn-sm btn-success" style="word-wrap: break-word"><i class='fa fa-crosshairs'></i></a>
-            <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" style="cursor: pointer" class="btn btn-sm btn-outline-secondary img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"style="word-wrap: break-word"><i class="fa fa-download"></i></a>
+            <a rel="tooltip" id="locate-warpable-<%= warpable.id %>" title="Pan to this image" style="cursor: pointer" class="btn btn-sm btn-success"><i class='fa fa-crosshairs'></i></a>
+            <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" style="cursor: pointer" class="btn btn-sm btn-outline-secondary img-download img-download-<%= warpable.id %>" data-image="/images/fetch/?url=<%= warpable.image.url(:original) %>"><i class="fa fa-download"></i></a>
             <a title="History of the image" class = "btn btn-sm btn-warning" onClick="$('#image-vesrions-<%= warpable.id %>').toggle()" style="cursor: pointer;">
             <i class='fas fa-clock'></i>
             </a>
