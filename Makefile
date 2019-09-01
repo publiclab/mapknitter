@@ -1,7 +1,7 @@
 export COMPOSE_HTTP_TIMEOUT=360
 
 define wait_for_container
-	@while ! docker logs mapknitter | grep "web server started"; do\
+	@while ! docker-compose logs web | grep "web server started"; do\
 		echo "Serving Mapknitter";\
 		sleep 10;\
 	done;
