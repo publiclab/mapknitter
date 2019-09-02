@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/alaxalves/foreman.git
+  revision: ac1c0919f8a8f5c81112bc1bb9b41a2565d56202
+  branch: master
+  specs:
+    foreman (0.85.0)
+      thor (~> 0.20.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -91,8 +99,6 @@ GEM
     faker (2.1.2)
       i18n (>= 0.8)
     ffi (1.11.1)
-    foreman (0.85.0)
-      thor (~> 0.19.1)
     friendly_id (5.2.5)
       activerecord (>= 4.0.0)
     geokit (1.13.1)
@@ -299,7 +305,7 @@ GEM
     sqlite3 (1.4.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
-    thor (0.19.4)
+    thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.9)
     turbolinks (5.2.0)
@@ -334,7 +340,7 @@ PLATFORMS
 DEPENDENCIES
   RubyInline (~> 3.12.4)
   action-cable-testing
-  autoprefixer-rails (~> 9.5.1.1)
+  autoprefixer-rails (~> 9.6.1)
   aws-sdk (~> 1.5.7)
   bootsnap (~> 1.4.4)
   bootstrap-sass
@@ -342,7 +348,7 @@ DEPENDENCIES
   capybara
   codecov
   faker (~> 2.1.2)
-  foreman (~> 0.85.0)
+  foreman!
   friendly_id
   geokit-rails (= 1.1.4)
   httparty
@@ -385,6 +391,7 @@ DEPENDENCIES
   sprockets (= 3.7.2)
   sprockets-rails
   sqlite3
+  thor (~> 0.20.3)
   turbolinks (~> 5)
   tzinfo-data
   uglifier (~> 4.1.20)

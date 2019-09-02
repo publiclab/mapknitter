@@ -27,6 +27,7 @@ group :dependencies do
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
   gem 'puma', '~> 4.1.0'
+  gem 'thor', '~> 0.20.3'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -39,7 +40,7 @@ group :dependencies do
   gem 'rdiscount', '2.2.0.1'
 
   # Process manager for applications with multiple components
-  gem 'foreman', '~> 0.85.0'
+  gem 'foreman', git: 'https://github.com/alaxalves/foreman.git', branch: 'master'
 
   # asset pipelining
   gem 'bootstrap-sass'
