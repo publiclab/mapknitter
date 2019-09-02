@@ -86,7 +86,7 @@
                         <p>
                           <a onClick="window.mapknitter.addImage('{%= file.url %}',{%= file.id %});$('.add-image-{%= file.id %}').hide();$('#uploadModal').modal('hide')" class="btn btn-sm btn-outline-secondary add-image-{%= file.id %}">Place</a>
                           <a class="btn btn-sm btn-outline-secondary add-image-gps-{%= file.id %}" style="display:none;">Auto-place with GPS</a>
-                          <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" class="btn btn-sm btn-outline-secondary img-download-{%= file.id %}" data-image="/images/fetch/?url={%= file.original_url %}"><i class="fa fa-download"></i></a>
+                          <a rel="tooltip" title="Download full resolution distorted image (please allow popups)" style="cursor: pointer" class="btn btn-sm btn-outline-secondary img-download-{%= file.id %}" data-image="/images/fetch/?url={%= file.original_url %}"><i class="fa fa-download"></i></a>
                           <div class="full-image-container-{%= file.id %}" style="overflow:hidden;width:0;height:0;"><img id="full-img-{%= file.id %}" /></div>
                         <a target="_blank" href="http://publiclab.org/wiki/mapknitter#GPS+Placement">Learn more</a>
                       </p>
