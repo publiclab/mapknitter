@@ -37,6 +37,11 @@ COPY ./nolimit.xml /etc/ImageMagick-6/policy.xml
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get install -y npm
 RUN npm install -g yarn
 
+# Installing ForeGo to schedule processes
+RUN wget https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz && \
+    tar xvf forego-stable-linux-amd64.tgz -C /usr/local/bin && \
+    rm forego-stable-linux-amd64.tgz
+
 # See https://github.com/instructure/canvas-lms/issues/1404#issuecomment-461023483 and
 # https://github.com/publiclab/mapknitter/pull/803
 RUN git config --global url."https://".insteadOf git://

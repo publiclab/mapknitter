@@ -91,8 +91,6 @@ GEM
     faker (2.1.2)
       i18n (>= 0.8)
     ffi (1.11.1)
-    foreman (0.85.0)
-      thor (~> 0.19.1)
     friendly_id (5.2.5)
       activerecord (>= 4.0.0)
     geokit (1.13.1)
@@ -334,7 +332,7 @@ PLATFORMS
 DEPENDENCIES
   RubyInline (~> 3.12.4)
   action-cable-testing
-  autoprefixer-rails (~> 9.5.1.1)
+  autoprefixer-rails (~> 9.6.1)
   aws-sdk (~> 1.5.7)
   bootsnap (~> 1.4.4)
   bootstrap-sass
@@ -342,7 +340,6 @@ DEPENDENCIES
   capybara
   codecov
   faker (~> 2.1.2)
-  foreman (~> 0.85.0)
   friendly_id
   geokit-rails (= 1.1.4)
   httparty
