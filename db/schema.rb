@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190902135252) do
+ActiveRecord::Schema.define(version: 20190420025012) do
 
   create_table "annotations", force: :cascade do |t|
     t.integer  "map_id",          limit: 4
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20190902135252) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "zip",                        default: false,    null: false
-    t.text     "bands_string", limit: 65535, default: "default bands_string",   null: false
+    t.text     "bands_string", limit: 65535,                    null: false
     t.string   "export_type",  limit: 255,   default: "normal", null: false
     t.integer  "user_id",      limit: 4,     default: 0
     t.string   "export_url",   limit: 255
