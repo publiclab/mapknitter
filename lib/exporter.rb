@@ -300,7 +300,6 @@ class Exporter
       export.geotiff = false
       export.zip = false
       export.jpg = false
-      export.bands_string = 'default bands_string'
       export.save
 
       directory = "#{root}/public/warps/"+slug+"/"
