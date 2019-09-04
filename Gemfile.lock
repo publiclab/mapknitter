@@ -60,7 +60,7 @@ GEM
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
     bindex (0.8.1)
-    bootsnap (1.4.4)
+    bootsnap (1.4.5)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
@@ -334,9 +334,9 @@ PLATFORMS
 DEPENDENCIES
   RubyInline (~> 3.12.4)
   action-cable-testing
-  autoprefixer-rails (~> 9.5.1.1)
+  autoprefixer-rails (~> 9.6.1)
   aws-sdk (~> 1.5.7)
-  bootsnap (~> 1.4.4)
+  bootsnap (~> 1.4.5)
   bootstrap-sass
   byebug (~> 11.0.1)
   capybara
