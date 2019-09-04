@@ -23,7 +23,7 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
-  gem 'bootsnap', '~> 1.4.4'
+  gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
   gem 'puma', '~> 4.1.0'
@@ -37,9 +37,6 @@ group :dependencies do
 
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
-
-  # Process manager for applications with multiple components
-  gem 'foreman', '~> 0.85.0'
 
   # asset pipelining
   gem 'bootstrap-sass'
