@@ -24,4 +24,4 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-bundle exec foreman start
+forego start
