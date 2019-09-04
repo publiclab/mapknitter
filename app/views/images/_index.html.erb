@@ -1,8 +1,8 @@
 <div>
 <h4 class="sidebar-heading">Images</h4>
 <div class="grid-list">
-  <button class="list-view" onClick="list()"><i class="fa fa-bars"></i></button>
-  <button class="grid-view" onClick="grid()"><i class="fa fa-th"></i></button>
+  <a class="list-view" onClick="list()"><i class="fa fa-bars"></i></a>
+  <a class="grid-view" onClick="grid()"><i class="fa fa-th"></i></a>
 </div>
 <div class="image-order">
   <p style="display: inline;">Sort by: </p>
@@ -144,10 +144,17 @@
   function grid(){
     $('td').hide();
     $('.warpable').show();
-    $('tr').css('display','inline-block');
-    $('.warpable').css('padding','0.75rem 0.5rem')
+    $('tr').css({
+    'display':'inline-block',
+    'height' : '100px',
+    'overflow' : 'hidden'
+    });
   }
   function list(){
-    $('td').show()
+    $('td').show();
+    $('tr').css({
+      'display':'',
+      'height' : '',
+    });
   }
 </script>
