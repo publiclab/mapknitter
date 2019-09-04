@@ -68,7 +68,7 @@ group :development, :test do
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.1.2'
+  gem 'faker', '~> 2.2.1'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
 end
