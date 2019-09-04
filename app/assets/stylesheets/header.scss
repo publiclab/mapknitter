@@ -36,6 +36,10 @@ body {
   margin-top: 0;
 }
 
+#open_id_form button{
+  outline: 0;
+}
+
 @media(max-width: 992px) {
   .navbar-nav .navbar-form {
     margin-top: 10px;

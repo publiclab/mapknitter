@@ -2,8 +2,14 @@
   margin-left: 25px;
   margin-bottom: 10px;
   display: inline-block;
-  padding-right: 30px;
-  color: orange;
+  margin-right: 30px;
+  color: #5cb85c;
+  cursor: pointer;
+  font-size: 18px;
+}
+.grid-list a{
+  border: 1px solid #e1e4e8;
+  padding: 5px;
 }
 .image-order{
 	display: inline-block;

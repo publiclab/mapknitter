@@ -20,7 +20,9 @@ class ApplicationController < ActionController::Base
     user_id = session[:user_id]
     if user_id
       begin
-        @user = User.find(user_id)
+        u = User.find(user_id)
+        cookies.signed["user_id"] = u.id
+        @user = u
       rescue StandardError
         @user = nil
       end

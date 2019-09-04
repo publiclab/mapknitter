@@ -11,7 +11,8 @@ Rails.application.configure do
     config.assets.paths << Rails.root.join('node_modules')
 
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
-    config.assets.precompile += ['uploads.js',
+    config.assets.precompile += [
+                                 'uploads.js',
                                  'knitter.js',
                                  'annotations.js',
                                  'maps.js',

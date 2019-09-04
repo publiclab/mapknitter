@@ -23,9 +23,10 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
-  gem 'bootsnap', '~> 1.4.4'
+  gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
+  gem 'puma', '~> 4.1.0'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk', '~> 1.5.7'
@@ -42,7 +43,7 @@ group :dependencies do
   gem 'sassc-rails'
   gem 'jquery-rails'
   gem 'sprockets', '3.7.2'
-  gem "sprockets-rails"
+  gem 'sprockets-rails'
   gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 9.6.1'
   gem 'uglifier', '~> 4.1.20'
@@ -65,11 +66,11 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'puma'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 2.1.2'
   gem 'pry-rails', '~> 0.3.9'
+  gem 'action-cable-testing'
 end
 
 group :development do
