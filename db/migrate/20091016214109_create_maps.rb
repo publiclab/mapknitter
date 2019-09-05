@@ -8,7 +8,7 @@ class CreateMaps < ActiveRecord::Migration[5.2]
       t.integer :version, :default => 1
       # haha you call this security:
       t.string :password, :default => ''
-      t.text :styles, :default => ''
+      t.text :styles
       t.timestamps
     end
   end
