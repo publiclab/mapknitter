@@ -113,8 +113,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           if (!mapknitter.readOnly) {
             L.DomEvent.on(img._image, 'load', function(e) {
-              mapknitter.setupEvents(e);
-              mapknitter.setupToolbar(e);
+              mapknitter.setupEvents(L.Util.extend(e, {layer: img}));
+              mapknitter.setupToolbar(L.Util.extend(e, {layer: img}));
             });
           }
         }
@@ -195,9 +195,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
       /* use geodata */
       if (geo && geo.lat) {
         /* move the image to this newly discovered location */
-        var center = L.latLngBounds(img.getCorners()).getCenter(),
-            latBy = geo.lat - center.lat,
-            lngBy = geo.lng - center.lng
+        var center = img.getCenter();
+        var latBy = geo.lat - center.lat;
+        var lngBy = geo.lng - center.lng;
 
         for (var i = 0; i < 4; i++) {
           img._corners[i].lat += latBy;
@@ -215,14 +215,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
         if (geo.altitude && geo.altitude != 0) {
           var width = img._image.width, height = img._image.height
           //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
-          //edit._scaleBy(scale);
+          //img.scaleBy(scale);
 
-          var elevator = new google.maps.ElevationService(),
-              lat = mapknitter._map.getCenter().lat,
-              lng = mapknitter._map.getCenter().lng;
+          var elevator = new google.maps.ElevationService();
+          var lat = mapknitter._map.getCenter().lat;
+          var lng = mapknitter._map.getCenter().lng;
 
           elevator.getElevationForLocations({
-            'locations': [{ lat: lat, lng: lng }]
+            'locations': [{lat: lat, lng: lng}]
           }, function (results, status) {
             console.log("Photo taken from " + geo.altitude + " meters above sea level");
             console.log("Ground is " + results[0].elevation + " meters above sea level");
@@ -487,7 +487,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
           if (!mapknitter.readOnly) {
               L.DomEvent.on(img._image, {
                   click: mapknitter.selectImage,
-                  dblclick: mapknitter.dblClickImage,
                   load: mapknitter.setupToolbar
               }, img);
 
@@ -510,7 +509,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   saveImage: function () {
     var img = this;
     img._corner_state = JSON.stringify(img._corners); // reset change state string:
-    $.ajax('/images/'+img.warpable_id, { // send save request
+    $.ajax('/images/' + img.warpable_id, { // send save request
       type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
@@ -615,7 +614,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     var map = this._map;
     map.addGoogleMutant();
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.zoom({position: 'topright'}).addTo(map);
     L.control.scale().addTo(map);
   },
 
@@ -627,7 +626,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       editable: !mapknitter.readOnly
     }).addTo(map);
 
-    var sidebar = document.querySelector("body > div.sidebar");
+    var sidebar = document.querySelector('body > div.sidebar');
 
     if (!mapknitter.readOnly) {
       // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
