@@ -1,4 +1,3 @@
-
 require_relative '20111005211631_add_zip_warpable_res_history'
 
 class EnsureNoWarpableCorruption < ActiveRecord::Migration[5.2]

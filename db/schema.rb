@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_020057) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  create_table "warpables", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "MySQL 5.7 began throwing errors on migrations that set a default for columns of type text. We edited that migration and rerun it here to ensure no data corruption in production", force: :cascade do |t|
+  create_table "warpables", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "MySQL 5.7 began throwing errors on migrations that set a default for columns of type text.We edited that migration and rerun it here to ensure no data corruption in production", force: :cascade do |t|
     t.integer "parent_id"
     t.string "image_content_type"
     t.string "image_file_name"
