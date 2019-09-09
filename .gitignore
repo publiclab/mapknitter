@@ -38,6 +38,7 @@ app/assets/bower_components
 app/assets/node_modules
 public/assets
 node_modules/
+public/lib
 todo.txt
 .sass-cache
 .byebug_history
