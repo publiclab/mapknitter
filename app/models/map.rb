@@ -286,7 +286,7 @@ class Map < ApplicationRecord
   def set_default_on_text
     self.styles ||= ''
     self.description ||= ''
-    self.tile_url || = ''
+    self.tile_url ||= ''
     self.tile_layer ||= ''
   end
 end
