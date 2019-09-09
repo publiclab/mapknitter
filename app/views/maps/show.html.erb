@@ -1,67 +1,100 @@
-<% content_for :title do %>
-  <div class="sidebar-title mt-3">
-    <h3><%= @map.name %></h3>
-  </div>
-  <div class="map-author">
-    <% if @map.user %>
-      by <a href="//publiclab.org/profile/<%= @map.user.login %>"><%= @map.user.login %></a>
-    <% else %>
-      anonymous
-    <% end %>
-  </div>  
-<% end %>
+<%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
+<%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 
-<% content_for :details do %>
-  <div>
-    <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
-  </div>
+<%= javascript_include_tag 'maps' %>
+<%= javascript_include_tag '//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js' %>
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlBXzYwdeaOMKZgx_UNBp2qBtdD0L_9g" %>
+<%= javascript_include_tag 'https://unpkg.com/leaflet.gridlayer.googlemutant@0.7.0/Leaflet.GoogleMutant.js' %>
+<%= javascript_include_tag '/lib/image-sequencer/dist/image-sequencer.js' %>
 
-  <p>
-    <span class="map-detail-label">Location</span>
-    <a href="https://www.openstreetmap.org/#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>"><%= @map.location %></a>
-  </p>
-
-  <table>
-    <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
-  </table>
-
-  <p>
-    <span class="map-detail-label">License (<a target="_blank" href="http://publiclab.org/licenses">Learn more</a>):</span>
-    <a href="/maps/license/<%= @map.license %>"><%= @map.license %></a> 
-  </p>
-
-  <hr />
-  <p>
-    <% if logged_in? %>
-      <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
-    <% end %>
-    <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
-    <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button>
-    <button type="button" class="btn btn-outline-info btn-sm" rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))">Add ImageSequencer code</button> 
-    <div class="share-link" style="display:none;">
-      <%= render :partial => 'maps/share' %>
+<div class= "row" id="knitter-map-pane" style="height: 450px; width: 100%;  margin-bottom: 1%; z-index: 5; float: none; max-width: none;"> </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()" style="margin-left: 1%;">Embed code</button>
+            <div class="share-link" style="display:none;">
+                <%= render :partial => 'maps/share' %>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <a href="/maps/edit/<%= @map.slug %>">
+                <button class="btn btn-outline-info float-right">
+                    <span class="fas fa-pencil-alt"> </span> Edit this map
+                </button>
+            </a>
+        </div>
     </div>
-    <a href="https://publiclab.org/image-sequencer#NDVI">Learn more about ImageSequencer code</a>
-  </p>
+</div>
 
-  <div style="display:none;" id="map-edit-container">
-    <%= render :partial => 'maps/edit' %>
+<div class="container-fluid">
+    <div class="text-center lead-text">
+        <p class="text-muted">A Community Atlas of </p>
+        <h2><%= @map.location %> </h2>
+        <p> by <%= link_to "@#{@map.author}", "/profile/#{@map.author}" unless @map.author == 'anonymous' %> </p>
+    </div>
+    <br>
+</div>
+
+    <div class="container">
+        <div class="card-deck mb-6  text-center mx-auto">
+            <div class="card mapping-kits">
+                <img class="card-img-top img-draw  mx-auto" src="<%= asset_path('balloon1.png') %>" alt="balloon icon">
+                <div class="card-body">
+                    <h3>Make your own map </h3>
+                    <p class="card-text item-description">
+                    Use a kite, balloon, pole or drone to take an aerial photo and tell your own visual story of the place
+                    </p>
+                    <p>
+                    <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
+                        Get a mapping kit<i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
+                    </a>
+                    <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
+                        Add a new map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+                    </a>
+                    </p>
+                </div>
+            </div>
+            <div class="card mapping-kits">
+                <img class="card-img-top img-draw mx-auto" src="<%= asset_path('quiz.png') %>" alt="questions">
+                <div class="card-body">
+                    <h3>Ask a question</h3>
+                    <p class="card-text item-description">
+                    <a href="https://publiclab.org/questions" target="blank">Search </a>through questions or Ask a question to get help from others and share ideas with the PublicLab Community
+                    <%# hence helping you in your environmental exploration %>
+                    </p>
+                    <p>
+                    <a href="https://publiclab.org/questions/new?tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>&body=Question posted from map at https://mapknitter.org/m/<%= @map.slug %>" target="blank">
+                        <button class="btn btn-lg btn-primary">
+                            Ask a Question
+                        </button>
+                    </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <div class="all-maps light-blue">
+      <br>
+      <h3 class="text-center"> Nearby Maps </h3>
+      <hr style="max-width: 500px;">
+      <br>
+      <%= render :partial => 'front_ui/maps', :locals => { :maps => @maps } %>
   </div>
 
-  <hr />
-  <div class="tags">
-    <%= render :partial => "tags/index" %>
-  </div>
-
-  <hr />
-
-  <div class="comments">
-    <%= render :partial => "comments/index" %>
-    <hr />
-    <%= render :partial => "comments/new" %>
-  </div>
-<% end %>
-
-<% content_for :images do %>
-  <%= render :partial => "/images/index" %>
-<% end %>
+ <script>
+    var map
+    (function(){
+      window.mapKnitter = new MapKnitter.Map({
+        latlng:     L.latLng(<%= @map.lat %>, <%= @map.lon %>),
+        zoom:       <%= @map.zoom %>,
+        readOnly:   true,
+        logged_in:   <%= logged_in? == true %>,
+        anonymous:   <%= @map.anonymous? == true %>,
+        warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
+      });
+      <% if @map.warpables.empty? && params[:action] == "show" %>
+        $('.modal-welcome').modal()
+      <% end %>
+     })();
+  </script>

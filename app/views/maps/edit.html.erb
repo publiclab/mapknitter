@@ -1,0 +1,69 @@
+<% content_for :title do %>
+  <div class="sidebar-title mt-3">
+    <h3><%= @map.name %>
+<%= link_to 'Exit editor', @map, class: 'float-right btn btn-sm btn-info'%>
+</h3>
+  </div>
+  <div class="map-author">
+    <% if @map.user %>
+      by <a href="//publiclab.org/profile/<%= @map.user.login %>"><%= @map.user.login %></a>
+    <% else %>
+      anonymous
+    <% end %>
+  </div>
+<% end %>
+
+<% content_for :details do %>
+  <div>
+    <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
+  </div>
+
+  <p>
+    <span class="map-detail-label">Location</span>
+    <a href="https://www.openstreetmap.org/#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>"><%= @map.location %></a>
+  </p>
+
+  <table>
+    <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+  </table>
+
+  <p>
+    <span class="map-detail-label">License (<a target="_blank" href="http://publiclab.org/licenses">Learn more</a>):</span>
+    <a href="/maps/license/<%= @map.license %>"><%= @map.license %></a> 
+  </p>
+
+  <hr />
+  <p>
+    <% if logged_in? %>
+      <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
+    <% end %>
+    <button type="button" class="btn btn-outline-info btn-sm" onClick="$('.share-link').toggle()">Embed code</button>
+    <button type="button" class="btn btn-outline-info btn-sm" title="Preview with NDVI" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',['ndvi','colormap'])">NDVI (beta)</button>
+    <button type="button" class="btn btn-outline-info btn-sm" rel="tooltip" title="Custom image processing" onClick="ImageSequencer().replaceImage('.leaflet-image-layer',prompt('Enter an ImageSequencer code', 'invert,ndvi,colormap').split(','))">Add ImageSequencer code</button> 
+    <div class="share-link" style="display:none;">
+      <%= render :partial => 'maps/share' %>
+    </div>
+    <a href="https://publiclab.org/image-sequencer#NDVI">Learn more about ImageSequencer code</a>
+  </p>
+
+  <div style="display:none;" id="map-edit-container">
+    <%= render :partial => 'maps/edit' %>
+  </div>
+
+  <hr />
+  <div class="tags">
+    <%= render :partial => "tags/index" %>
+  </div>
+
+  <hr />
+
+  <div class="comments">
+    <%= render :partial => "comments/index" %>
+    <hr />
+    <%= render :partial => "comments/new" %>
+  </div>
+<% end %>
+
+<% content_for :images do %>
+  <%= render :partial => "/images/index" %>
+<% end %>
