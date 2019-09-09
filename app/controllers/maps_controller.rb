@@ -4,7 +4,7 @@ class MapsController < ApplicationController
   protect_from_forgery except: :export
 
   before_action :require_login, only: %i(edit update destroy)
-  before_action :find_map, only: %i(show annotate embed edit update images destroy archive)
+  before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
 
@@ -57,10 +57,10 @@ class MapsController < ApplicationController
 
   def show
     @map.zoom ||= 12
-
-    # this is used for the resolution slider
-    @resolution = @map.average_cm_per_pixel.round(4)
-    @resolution = 5 if @resolution < 5 # soft-set min res
+    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+               .sample(4)
+    @unpaginated = true
+    render layout: 'application'
   end
 
   def archive
@@ -81,7 +81,7 @@ class MapsController < ApplicationController
     @map.zoom ||= 12
     @embed = true
     response.headers.except! 'X-Frame-Options' # allow use of embed in iframes
-    render template: 'maps/show'
+    render template: 'maps/edit'
   end
 
   def annotate
@@ -89,7 +89,13 @@ class MapsController < ApplicationController
     @annotations = true # loads annotations-specific assets
   end
 
-  def edit; end
+  def edit
+    @map.zoom ||= 12
+
+    # this is used for the resolution slider
+    @resolution = @map.average_cm_per_pixel.round(4)
+    @resolution = 5 if @resolution < 5 # soft-set min res
+  end
 
   def update
     @map.update_attributes(map_params)
