@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_07_020057) do
+ActiveRecord::Schema.define(version: 2019_09_09_184650) do
 
   create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "map_id"
@@ -43,11 +43,11 @@ ActiveRecord::Schema.define(version: 2019_09_07_020057) do
     t.boolean "geotiff", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "bands_string", null: false
     t.string "export_type", default: "normal", null: false
     t.integer "user_id", default: 0
     t.string "export_url"
     t.boolean "zip", default: false, null: false
+    t.text "bands_string", null: false
   end
 
   create_table "maps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -56,10 +56,8 @@ ActiveRecord::Schema.define(version: 2019_09_07_020057) do
     t.decimal "lon", precision: 20, scale: 10, default: "0.0"
     t.integer "version", default: 1
     t.string "password", default: ""
-    t.text "styles"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "description"
     t.string "author", default: "anonymous"
     t.decimal "zoom", precision: 15, scale: 10, default: "2.0"
     t.string "location", default: ""
@@ -68,12 +66,14 @@ ActiveRecord::Schema.define(version: 2019_09_07_020057) do
     t.string "tiles", default: "google", null: false
     t.string "email", default: "", null: false
     t.boolean "archived", default: false, null: false
-    t.text "tile_url"
-    t.text "tile_layer"
     t.string "license", default: "copyright"
     t.integer "user_id", default: 0
     t.boolean "anon_annotatable", default: false
     t.string "slug"
+    t.text "description"
+    t.text "styles"
+    t.text "tile_url"
+    t.text "tile_layer"
     t.index ["slug"], name: "index_maps_on_slug", unique: true
   end
 
