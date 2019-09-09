@@ -3,7 +3,6 @@ class Warpable < ApplicationRecord
   attr_accessor :src, :srcmedium # for json generation
 
   before_validation :set_default_on_text
-  after_initialize :update_cm_per_pixel
 
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
@@ -178,13 +177,5 @@ class Warpable < ApplicationRecord
   protected
   def set_default_on_text
     self.history ||= ''
-  end
-
-  def update_cm_per_pixel
-    r = self.get_cm_per_pixel
-    if r != nil
-      self.cm_per_pixel = r
-      self.save
-    end
   end
 end
