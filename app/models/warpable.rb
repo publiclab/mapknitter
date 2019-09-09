@@ -2,6 +2,11 @@ class Warpable < ApplicationRecord
   attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
+  before_validation :set_default_on_text
+  after_initialize :update_cm_per_pixel
+
+  validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
+
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
@@ -11,8 +16,6 @@ class Warpable < ApplicationRecord
                       small: "240x180",
                       thumb: "100x100>"
                     }
-
-  validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
 
   belongs_to :map, optional: true
   belongs_to :user, optional: true
@@ -169,6 +172,19 @@ class Warpable < ApplicationRecord
       basename(attachment, style) # generate hash path here
     else
       "#{basename(attachment, style)}_#{style}" # generate hash path here
+    end
+  end
+
+  protected
+  def set_default_on_text
+    self.history ||= ''
+  end
+
+  def update_cm_per_pixel
+    r = self.get_cm_per_pixel
+    if r != nil
+      self.cm_per_pixel = r
+      self.save
     end
   end
 end
