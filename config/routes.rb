@@ -106,7 +106,8 @@ Mapknitter::Application.routes.draw do
   resources :maps do
     resources :tags,  only: [:create, :show, :destroy]
     resources :comments
-    resources :warpables
+    # resources :warpables
+    resources :images
     resources :annotations
     member do
       get :search
