@@ -62,9 +62,9 @@ class User < ApplicationRecord
   protected
   def update_identity_url
     # if it matches http://publiclaboratory.org/...
-    if u.identity_url != "" && !u.identity_url.nil? && u.identity_url[0..26] == "http://publiclaboratory.org"
-      u.identity_url = "http://publiclab.org/openid/"+ u.login.downcase
-      u.save
+    if self.identity_url != "" && !self.identity_url.nil? && self.identity_url[0..26] == "http://publiclaboratory.org"
+      self.identity_url = "http://publiclab.org/openid/" + self.login.downcase
+      self.save
     end
   end
 end
