@@ -8,7 +8,7 @@ Rails.application.configure do
     # Add additional assets to the asset load path.
     # Rails.application.config.assets.paths << Emoji.images_path
     # Add Yarn node_modules folder to the asset load path.
-    config.assets.paths << Rails.root.join('node_modules')
+    config.assets.paths << Rails.root.join('public/lib')
 
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
     config.assets.precompile += [
