@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
-      - yarn_cache:/app/node_modules/
+      - yarn_cache:/app/public/lib/
     ports:
       - $PORT:3000
     depends_on:
