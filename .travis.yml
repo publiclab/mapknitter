@@ -12,7 +12,7 @@ services:
 
 cache:
   directories:
-   - $PWD/node_modules/
+   - $PWD/public/lib/
    - $PWD/vendor/.bundle/
 
 before_install:
