@@ -5,8 +5,6 @@ class Map < ApplicationRecord
 
   attr_accessor :image_urls
 
-  before_validation :set_default_on_text
-
   validates_presence_of :name, :slug, :author, :lat, :lon
   validates_uniqueness_of :slug
   validates_presence_of :location, message: ' cannot be found. Try entering a latitude and longitude if this problem persists.'
@@ -280,14 +278,5 @@ class Map < ApplicationRecord
     # fetches a list of updated warpables along with their corners in a json format.
     data = warpables
     data.to_json
-  end
-
-  protected
-
-  def set_default_on_text
-    self.styles ||= ''
-    self.description ||= ''
-    self.tile_url ||= ''
-    self.tile_layer ||= ''
   end
 end
