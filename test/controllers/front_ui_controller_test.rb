@@ -45,13 +45,4 @@ class FrontUiControllerTest < ActionController::TestCase
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
   end
-
-  test 'view map page' do
-    map = maps(:saugus)
-    get :view_map, id: map.slug
-
-    assert_response :success
-    assert assigns(:maps)
-    assert_template 'front_ui/view_map'
-  end
 end
