@@ -6,15 +6,15 @@ var MapKnitter = {};
  * See https://github.com/Leaflet/Leaflet/blob/master/src/core/Class.js.
  */
 
-MapKnitter.Class = function() {};
-MapKnitter.Class.extend = function(obj) {
-	var NewClass = function() {
+MapKnitter.Class = function () { };
+MapKnitter.Class.extend = function (obj) {
+	var NewClass = function () {
 		if (this.initialize) {
 			this.initialize.apply(this, arguments);
 		}
 	};
 
-	var F = function() {};
+	var F = function () { };
 	F.prototype = this.prototype;
 
 	var proto = new F();
@@ -35,6 +35,6 @@ MapKnitter.Class.extend = function(obj) {
 
 	return NewClass;
 };
-MapKnitter.Class.include = function(obj) {
+MapKnitter.Class.include = function (obj) {
 	L.extend(this.prototype, obj);
 };
