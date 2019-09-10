@@ -313,7 +313,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'show' do
-    get :show, params: { id: @map.slug}
+    get :show, params: { id: @map.slug }
 
     assert_response :success
     assert assigns(:maps)
