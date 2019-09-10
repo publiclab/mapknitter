@@ -317,6 +317,10 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
+    webdrivers (4.1.2)
+      nokogiri (~> 1.6)
+      rubyzip (~> 1.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -374,7 +378,6 @@ DEPENDENCIES
   ruby-prof
   sass
   sassc-rails
-  selenium-webdriver
   simplecov
   skylight
   spring
@@ -386,6 +389,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (~> 4.1.20)
   web-console (~> 3.3)
+  webdrivers
   will_paginate (= 3.1.8)
   will_paginate-bootstrap4 (~> 0.2.2)
 
