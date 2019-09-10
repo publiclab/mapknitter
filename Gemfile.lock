@@ -339,8 +339,7 @@ DEPENDENCIES
   byebug (~> 11.0.1)
   capybara
   codecov
-  foreman (~> 0.85.0)
-  faker (~> 2.1.2)
+  faker (~> 2.2.1)
   friendly_id
   geokit-rails (= 1.1.4)
   httparty
