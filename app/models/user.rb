@@ -2,7 +2,7 @@ require 'digest/sha1'
 
 class User < ApplicationRecord
 
-  before_initialize :set_identity_url
+  before_validation :set_identity_url
 
   has_many :maps
   has_many :tags
