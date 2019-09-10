@@ -378,6 +378,7 @@ DEPENDENCIES
   ruby-prof
   sass
   sassc-rails
+  selenium-webdriver
   simplecov
   skylight
   spring
