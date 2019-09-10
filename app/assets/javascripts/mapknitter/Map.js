@@ -12,13 +12,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     L.Icon.Default.imagePath = '/assets/leaflet/dist/images/';
 
-    /* Initialize before map in order to add to layers; probably it can be done later too */
-    var google = L.google('SATELLITE', {
-      maxZoom: 24,
-      maxNativeZoom: 20,
-      opacity: 0.5
-    });
-
     this._map = L.map('knitter-map-pane', {
       zoomControl: false,
     }).setView(this._latlng, this._zoom);
@@ -31,10 +24,16 @@ MapKnitter.Map = MapKnitter.Class.extend({
     /* Set up basemap and drawing toolbars. */
     this.setupMap();
 
+    this.setupCollection();
+
     map._initialBounds = map.getBounds();
 
     /* Load warpables data via AJAX request. */
     this._warpablesUrl = options.warpablesUrl;
+
+    /** this took me a bit to notice - this below code is all one big chunk run
+     * only after a map refresh. Events need to be setup before this 
+     */
 
     this.withWarpables(function (warpables) {
       $.each(warpables, function (i, warpable) {
@@ -94,14 +93,9 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var img = L.distortableImageOverlay(warpable.srcmedium, {
             corners: corners,
             mode: 'lock'
-          }).addTo(map);
+          });
 
-          var customExports = mapknitter.customExportAction();
-          var imgGroup = L.distortableCollection({
-            actions: [customExports]
-          }).addTo(map);
-
-          imgGroup.addLayer(img);
+          map._imgGroup.addLayer(img);
 
           /**
            * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
@@ -111,61 +105,73 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
             map._initialBounds.extend(newImgBounds);
-            mapknitter._map.flyToBounds(map._initialBounds);
+            map.flyToBounds(map._initialBounds);
           }
 
           images.push(img);
           img.warpable_id = warpable.id;
 
           if (!mapknitter.readOnly) {
-            L.DomEvent.on(img._image, {
-              click: mapknitter.selectImage,
-              dblclick: mapknitter.dblClickImage,
-              load: mapknitter.setupToolbar
-            }, img);
-            
-            L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+            L.DomEvent.on(img._image, 'load', function(e) {
+              mapknitter.setupEvents(L.Util.extend(e, {layer: img}));
+              mapknitter.setupToolbar(L.Util.extend(e, {layer: img}));
+            });
           }
         }
       });
-
     });
-
-    // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
-    $('.sidebar').click(function () { $.each(images, function (i, img) { img.editing.disable() }) })
-
-    // hi res:
-    //img._image.src = img._image.src.split('_medium').join('')
   },
 
-  setupEvents: function () {
-    var img = this;
-
-    L.DomEvent.on(img._image, 'mouseup', mapknitter.saveImageIfChanged, img);
-    L.DomEvent.on(img._image, 'touchend', mapknitter.saveImageIfChanged, img);
-
-    img.on('deselect', mapknitter.saveImageIfChanged, img);
+  _enter: function() {
+    map._imgGroup.editing.disable();
   },
 
-  /* 
-   * Setup toolbar and events
-   */
-  setupToolbar: function () {
-    var img = this,
+  _out: function() {
+    map._imgGroup.editing.enable();
+  },
+
+  setupEvents: function (e) {
+    var img = e.layer;
+
+    /**
+     * TODO: the edit event is fire on handleDragEnd from LDI. This needs to be documented.
+     * and maybe change to 'handledragend' or something to be very explicit. this handle 
+     * is necessary beyond click / mouseup because you can distort the image without clicking
+     * on it.
+     */
+    L.DomEvent.on(img, {
+      edit: mapknitter.saveImage,
+    }, img);
+
+    L.DomEvent.on(img._image, {
+      click: mapknitter.selectImage,
+      mouseup: mapknitter.saveImageIfChanged,
+      touchend: mapknitter.saveImageIfChanged
+    }, img);
+
+    // deselect is not a real event / can we just use mouseup instead
+    // img.on('deselect', mapknitter.saveImageIfChanged, img);
+  },
+
+  setupToolbar: function (e) {
+    var img = e.layer,
         edit = img.editing;
 
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
-    if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
-    edit.addTool(mapknitter.customDeleteAction());
+    L.DomEvent.on(img._image, 'load', function() {
+      if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
+      edit.addTool(mapknitter.customDeleteAction());
 
-    img.on('edit', mapknitter.saveImageIfChanged, img);
-    img.on('delete', mapknitter.deleteImage, img);
+      if (!edit._selected) { edit._deselect(); }
+
+      img.on('delete', mapknitter.deleteImage, img);
+    })
   },
 
   /* Add a new, unplaced, but already uploaded image to the map.
    * <lat> and <lng> are optional. */
   addImage: function(url,id,lat,lng,angle,altitude) {
-    var img = L.distortableImageOverlay(url, {});
+    var img = L.distortableImageOverlay(url);
 
     img.geocoding = {
       lat: lat,
@@ -176,103 +182,72 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     images.push(img);
     img.warpable_id = id;
-    img.addTo(map);
 
-    /** 
-     * TODO: creating the feature group now so that event handling works with it 
-     * but can't actually add the img to it until image load because the image has
-     * no corners. Above ^ we initialize image with no corners. Need to figure out a fix.
-    */
-    var customExports = mapknitter.customExportAction();
-    var imgGroup = L.distortableCollection({
-      actions: [customExports]
-    }).addTo(map);
-
-    if (!mapknitter.readOnly) {
-      L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
-
-      L.DomEvent.on(img._image, {
-        click: mapknitter.selectImage,
-        dblclick: mapknitter.dblClickImage
-      }, img);
-
-      img.on('deselect', mapknitter.saveImageIfChanged, img);
-
-      L.DomEvent.on(img._image, 'load', function () {
-        imgGroup.addLayer(img);
-        mapknitter.setupToolbarAndGeocode.bind(img);
-      }, img);
-    }
+    map._imgGroup.addLayer(img);
   },
 
-  setupToolbarAndGeocode: function () {
-    var img = this;
-
-    mapknitter.setupToolbar.bind(img);
-    mapknitter.setupGeocode.bind(img);
-  },
-
-  setupGeocode: function () {
-    var img = this,
-        edit = img.editing,
+  setupGeocode: function (e) {
+    var img = e.layer,
         geo = img.geocoding;
 
-    /* use geodata */
-    if (geo && geo.lat) {
-      /* move the image to this newly discovered location */
-      var center = L.latLngBounds(img.getCorners()).getCenter(),
-          latBy = geo.lat - center.lat,
-          lngBy = geo.lng - center.lng
+    L.DomEvent.on(img._image, 'load', function () {
 
-      for (var i = 0; i < 4; i++) {
-        img._corners[i].lat += latBy;
-        img._corners[i].lng += lngBy;
+      /* use geodata */
+      if (geo && geo.lat) {
+        /* move the image to this newly discovered location */
+        var center = img.getCenter();
+        var latBy = geo.lat - center.lat;
+        var lngBy = geo.lng - center.lng;
+
+        for (var i = 0; i < 4; i++) {
+          img._corners[i].lat += latBy;
+          img._corners[i].lng += lngBy;
+        }
+
+        img.rotateBy(geo.angle);
+
+        /* Attempt to convert altitude to scale factor based on Leaflet zoom;
+          * for correction based on altitude we need the original dimensions of the image. 
+          * This may work only at sea level unless we factor in ground level. 
+          * We may also need to get camera field of view to get this even closer.
+          * We could also fall back to the scale of the last-placed image.
+          */
+        if (geo.altitude && geo.altitude != 0) {
+          var width = img._image.width, height = img._image.height
+          //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
+          //img.scaleBy(scale);
+
+          var elevator = new google.maps.ElevationService();
+          var lat = mapknitter._map.getCenter().lat;
+          var lng = mapknitter._map.getCenter().lng;
+
+          elevator.getElevationForLocations({
+            'locations': [{lat: lat, lng: lng}]
+          }, function (results, status) {
+            console.log("Photo taken from " + geo.altitude + " meters above sea level");
+            console.log("Ground is " + results[0].elevation + " meters above sea level");
+            console.log("Photo taken from " + (geo.altitude - results[0].elevation) + " meters");
+            var a = geo.altitude - results[0].elevation,
+                fov = 50,
+                A = fov * (Math.PI / 180),
+                width = 2 * (a / Math.tan(A)),
+                currentWidth =
+                  img.getCorner(2).distanceTo(img.getCorner(1)) +
+                  img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
+
+            console.log("Photo should be " + width + " meters wide");
+            img.scaleBy(width / currentWidth);
+          });
+        }
+
+        img.fire('update');
+        /* pan the map there too */
+        mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
+        img._reset();
       }
 
-      edit._rotateBy(geo.angle);
-
-      /* Attempt to convert altitude to scale factor based on Leaflet zoom;
-         * for correction based on altitude we need the original dimensions of the image. 
-         * This may work only at sea level unless we factor in ground level. 
-         * We may also need to get camera field of view to get this even closer.
-         * We could also fall back to the scale of the last-placed image.
-         */
-      if (geo.altitude && geo.altitude != 0) {
-        var width = img._image.width, height = img._image.height
-        //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
-        //edit._scaleBy(scale);
-
-        var elevator = new google.maps.ElevationService(),
-            lat = mapknitter._map.getCenter().lat,
-            lng = mapknitter._map.getCenter().lng;
-
-        elevator.getElevationForLocations({
-          'locations': [{ lat: lat, lng: lng }]
-        }, function (results, status) {
-          console.log("Photo taken from " + geo.altitude + " meters above sea level");
-          console.log("Ground is " + results[0].elevation + " meters above sea level");
-          console.log("Photo taken from " + (geo.altitude - results[0].elevation) + " meters");
-          var a = geo.altitude - results[0].elevation,
-              fov = 50,
-              A = fov * (Math.PI / 180),
-              width = 2 * (a / Math.tan(A)),
-              currentWidth =
-                img.getCorner(2).distanceTo(img.getCorner(1)) +
-                img.getCorner(1).distanceTo(img.getCorner(2)) / 2;
-
-          console.log("Photo should be " + width + " meters wide");
-          edit._scaleBy(width / currentWidth);
-          img.fire('update');
-        });
-      }
-
-      img.fire('update');
-      /* pan the map there too */
-      mapknitter._map.fitBounds(L.latLngBounds(img.getCorners()));
-      img._reset();
-    }
-
-    return img;
+      return img;
+    });
   },    
 
   geocodeImageFromId: function (dom_id, id, url) {
@@ -381,8 +356,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     img._corner_state = JSON.stringify(img._corners);
     /* Need to re-enable editing on each select because we disable it when clicking the sidebar */
     img.editing.enable.bind(img.editing)()
-    img.bringToFront();
-    /* If it's locked, allow event to propagate on to map below */
+    /* If it's locked, allow event to propagate on to map below */   // sb: why? commenting out below line. 
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
 
@@ -513,7 +487,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
           if (!mapknitter.readOnly) {
               L.DomEvent.on(img._image, {
                   click: mapknitter.selectImage,
-                  dblclick: mapknitter.dblClickImage,
                   load: mapknitter.setupToolbar
               }, img);
 
@@ -533,20 +506,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
     }
   },
 
-  dblClickImage: function (e) {
-    var img = this,
-        edit = img.editing;
-
-    edit._enableDragging();
-    edit.enable();
-    edit._toggleRotateScale();
-    e.stopPropagation();
-  },
-
   saveImage: function () {
     var img = this;
     img._corner_state = JSON.stringify(img._corners); // reset change state string:
-    $.ajax('/images/'+img.warpable_id, { // send save request
+    $.ajax('/images/' + img.warpable_id, { // send save request
       type: 'PATCH',
       data: {
         warpable_id: img.warpable_id,
@@ -649,37 +612,35 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   setupMap: function () {
     var map = this._map;
+    map.addGoogleMutant();
 
-    //L.tileLayer.provider('Esri.WorldImagery').addTo(map);
-    var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/anishshah101.ipm9j6em/{z}/{x}/{y}.png', {
-      maxZoom: 24,
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      id: 'examples.map-i86knfo3'
-    })
-
-    // https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
-    var googleMutant = L.gridLayer.googleMutant({
-      type: 'satellite', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
-      maxZoom: 24,
-      maxNativeZoom: 20,
-      opacity: 0.5
-    }).addTo(this._map);
-
-    var baseMaps = {
-      "OpenStreetMap": mapbox,
-      "Google Satellite": googleMutant
-    };
-    // eventually, annotations
-    var overlayMaps = {
-    };
-
-    var layersControl = L.control.layers(baseMaps, overlayMaps);
-    this._map.addControl(layersControl);
-
-    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.zoom({position: 'topright'}).addTo(map);
     L.control.scale().addTo(map);
+  },
+
+  setupCollection: function() {
+    var customExports = mapknitter.customExportAction();
+
+    map._imgGroup = L.distortableCollection({
+      actions: [customExports],
+      editable: !mapknitter.readOnly
+    }).addTo(map);
+
+    var sidebar = document.querySelector('body > div.sidebar');
+
+    if (!mapknitter.readOnly) {
+      // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
+      L.DomEvent.on(sidebar, {
+        mouseenter: mapknitter._enter,
+        mouseleave: mapknitter._out,
+      });
+
+      L.DomEvent.on(map._imgGroup, 'layeradd', function (e) {
+        mapknitter.setupEvents(e);
+        mapknitter.setupToolbar(e);
+        mapknitter.setupGeocode(e);
+      });
+    }
   },
 
   /** ========== custom toolbar actions =========== */ /* TODO: find a better place for these */
@@ -725,6 +686,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       addHooks: function () {
         var group = this._overlay;
+        var edit = group.editing;
         var exportInterval;
 
         var updateUI = function updateUI(data) {
@@ -764,7 +726,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           });
         }
 
-        group.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
+        edit.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
       }
     });
 

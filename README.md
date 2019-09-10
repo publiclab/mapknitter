@@ -149,7 +149,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM / r
 5. Initialize database with `bundle exec rails db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
 7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
-8. Start rails with `bundle exec passenger start` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `passenger start` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
+8. Start rails with `bundle exec rails s` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `rails s` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
 ==================
 
