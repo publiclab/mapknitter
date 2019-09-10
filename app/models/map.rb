@@ -283,7 +283,7 @@ class Map < ApplicationRecord
   end
 
   protected
-  
+
   def set_default_on_text
     self.styles ||= ''
     self.description ||= ''

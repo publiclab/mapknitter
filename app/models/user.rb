@@ -1,9 +1,6 @@
 require 'digest/sha1'
 
 class User < ApplicationRecord
-
-  after_initialize :set_identity_url
-
   has_many :maps
   has_many :tags
   has_many :comments
@@ -57,15 +54,5 @@ class User < ApplicationRecord
 
   def can_edit?(resource)
     owns?(resource)
-  end
-
-  protected
-
-  def set_identity_url
-    # if it matches http://publiclaboratory.org/...
-    if self.identity_url != nil && self.identity_url[0..26] == "http://publiclaboratory.org"
-      self.identity_url = "http://publiclab.org/openid/" + login.downcase
-      self.save
-    end
   end
 end
