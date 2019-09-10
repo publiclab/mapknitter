@@ -67,7 +67,7 @@ end
 group :development, :test do
   gem 'capybara'
   # see https://github.com/SeleniumHQ/selenium/issues/5248
-  gem 'webdrivers'
+  # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 2.2.1'
