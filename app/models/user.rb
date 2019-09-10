@@ -2,7 +2,7 @@ require 'digest/sha1'
 
 class User < ApplicationRecord
 
-  after_initialize :update_identity_url
+  before_initialize :set_identity_url
 
   has_many :maps
   has_many :tags
@@ -60,7 +60,7 @@ class User < ApplicationRecord
   end
 
   protected
-  def update_identity_url
+  def set_identity_url
     # if it matches http://publiclaboratory.org/...
     if self.identity_url != "" && !self.identity_url.nil? && self.identity_url[0..26] == "http://publiclaboratory.org"
       self.identity_url = "http://publiclab.org/openid/" + self.login.downcase
