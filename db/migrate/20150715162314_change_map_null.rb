@@ -1,6 +1,6 @@
 class ChangeMapNull < ActiveRecord::Migration[5.2]
   def up
-    change_column_null :maps, :tile_url,   true
+    change_column_null :maps, :tile_url, true
     change_column_null :maps, :tile_layer, true
   end
 
