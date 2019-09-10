@@ -29,8 +29,8 @@
 <div class="container-fluid">
     <div class="text-center lead-text">
         <p class="text-muted">A Community Atlas of </p>
-        <h2><%= @map.location %> </h2>
-        <p> by <%= link_to "@#{@map.author}", "/profile/#{@map.author}" unless @map.author == 'anonymous' %> </p>
+        <h2><%= @map.name %> </h2>
+        <p><%= @map.location %> | by <%= link_to "@#{@map.author}", "/profile/#{@map.author}" unless @map.author == 'anonymous' %> </p>
     </div>
     <br>
 </div>
@@ -63,7 +63,7 @@
                     <%# hence helping you in your environmental exploration %>
                     </p>
                     <p>
-                    <a href="https://publiclab.org/questions/new?tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>&body=Question posted from map at https://mapknitter.org/m/<%= @map.slug %>" target="blank">
+                    <a href="https://publiclab.org/questions/new?tags=lat:<%= @map.lat %>,lon:<%= @map.lon %>,<%= @map.tags.collect(&:name).join(',') %>&body=Question posted from map at https://mapknitter.org/m/<%= @map.slug %>" target="blank">
                         <button class="btn btn-lg btn-primary">
                             Ask a Question
                         </button>
@@ -79,7 +79,7 @@
       <h3 class="text-center"> Nearby Maps </h3>
       <hr style="max-width: 500px;">
       <br>
-      <%= render :partial => 'front_ui/maps', :locals => { :maps => @maps } %>
+      <%= render partial: 'front_ui/maps', locals: { maps: @maps } %>
   </div>
 
  <script>
