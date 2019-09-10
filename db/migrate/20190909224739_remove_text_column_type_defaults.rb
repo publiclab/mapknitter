@@ -5,8 +5,6 @@ class RemoveTextColumnTypeDefaults < ActiveRecord::Migration[5.2]
     change_column_default :maps, :description, nil
     change_column_default :maps, :tile_layer, nil
     change_column_default :maps, :tile_url, nil
-    change_column_default :nodes, :body, nil
-    change_column_default :ways, :body, nil
     change_column_default :exports, :bands_string, nil
   end
 end

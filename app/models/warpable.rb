@@ -2,8 +2,6 @@ class Warpable < ApplicationRecord
   attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
-  before_validation :set_default_on_text
-
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
@@ -172,10 +170,5 @@ class Warpable < ApplicationRecord
     else
       "#{basename(attachment, style)}_#{style}" # generate hash path here
     end
-  end
-
-  protected
-  def set_default_on_text
-    self.history ||= ''
   end
 end

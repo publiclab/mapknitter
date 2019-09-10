@@ -2,8 +2,6 @@ class Export < ApplicationRecord
   belongs_to :map, optional: true
   belongs_to :user, optional: true
 
-  before_validation :set_default_on_text
-
   # currently exporting?
   def running?
     !(%w(complete none failed).include? status)
@@ -61,10 +59,5 @@ class Export < ApplicationRecord
   def self.exporting
     Export.where('status != "failed" AND status != "complete" AND status != "none" AND updated_at > ?',
                  (DateTime.now - 24.hours).to_s(:db))
-  end
-
-  protected
-  def set_default_on_text
-    self.bands_string ||= ''
   end
 end
