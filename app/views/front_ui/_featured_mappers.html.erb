@@ -1,11 +1,11 @@
 <div class="row map-list mx-auto mt-3">
   <% mappers.each do |user| %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
-      <div class="card card-without-border">
+      <div class="bg-transparent card card-without-border">
        <%= image_tag(profile_image(user), class: "img-icon card-img-top mx-auto") %>
         <div class="card-body text-center" style="margin-left: -18px !important;">
           <h5 class="card-title"><a href="/profile/<%= user.login %>">@<%= user.login %></a></h5>
-          <p class="card-text text-muted"> <%= user.maps.count %>
+          <p class="card-text text-muted"> <%= user.maps.count %> maps
             near <%= user.maps.first.location %>
             <br>
           </p>
