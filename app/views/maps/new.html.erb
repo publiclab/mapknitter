@@ -42,11 +42,11 @@
       <tbody>
         <tr><td style="padding-right:6px;">
           <%= f.label :latitude %>
-          <%= f.text_field :lat, :class => "form-control" %>
+          <%= f.text_field :lat, class: "form-control", value: params[:lat] %>
         </td>
         <td>
           <%= f.label :longitude %>
-          <%= f.text_field :lon, :class => "form-control" %>
+          <%= f.text_field :lon, class: "form-control", value: params[:lon] %>
         </td></tr>
       </tbody>
     </table>
