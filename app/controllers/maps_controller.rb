@@ -58,6 +58,7 @@ class MapsController < ApplicationController
   def show
     @map.zoom ||= 12
     @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+               .where.not(id: @map.id)
                .sample(4)
     @unpaginated = true
     render layout: 'application'
