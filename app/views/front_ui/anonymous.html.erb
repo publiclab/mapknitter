@@ -1,40 +1,44 @@
 <div class="container-fluid jumbotron text-center" id="hero">
-	<div class="row">
-    	<div class= "text-block">
-			<h5>Some major limitations that the anonymous maps have are:</h5>
-			<br>
-			<ul>
-				<li>You cannot post comments on the maps and be part of the discussion.</li>
-				<li>You cannot export featured maps.</li>
-				<li>You cannot delete the images -- because as an anonymous user we can't tell whose images they are or who should be allowed to delete them.</li>
-			</ul>
-			<p>If you still want to create an anonymous map,<a href="<%= new_map_url %>"> click here.</a></p>
-		</div>
+  <div class="row">
+    <div class= "text-block">
+	  <h5>Some major limitations that the anonymous maps have are:</h5>
+	  <br>
+	  <ul>
+		<li>You cannot post comments on the maps and be part of the discussion.</li>
+		<li>You cannot export featured maps.</li>
+		<li>You cannot delete the images -- because as an anonymous user we can't tell whose images they are or who should be allowed to delete them.</li>
+	  </ul>
+	  <p>If you still want to create an anonymous map,<a href="<%= new_map_url %>"> click here.</a></p>
 	</div>
+  </div>
 </div>
+
 <style>
-	.text-block{
-		text-align: left;
-		margin: 20px;
-		padding: 50px;
-		width: 60%;
-		margin-left: 17%;
-	}
-	button{
-	  width: 70px;
-	  background-color: #ffffff;
-	  border: none;
-	  margin-right: 0.25rem;
-	  }
-	i{
-		font-size:20px;
-		color:white;
-	  }
-	@media (max-width: 750px) {
-	  .text-block {
-	    width: 100%;
-	    margin: 10px;
-	    padding: 10px;
-	  }
-}
+  .text-block {
+    text-align: left;
+  	margin: 20px;
+  	padding: 50px;
+  	width: 60%;
+  	margin-left: 17%;
+  }
+  
+  button {
+  	width: 70px;
+  	background-color: #ffffff;
+  	border: none;
+  	margin-right: 0.25rem;
+  }
+  
+  i {
+    font-size:20px;
+  	color:white;
+  }
+  
+  @media (max-width: 750px) {
+  	.text-block {
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+  	}
+  }
 </style>
