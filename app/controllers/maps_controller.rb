@@ -38,15 +38,14 @@ class MapsController < ApplicationController
     else
       @map = Map.new(map_params)
     end
-      #  debugger
 
     if Rails.env == 'production' && !verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
       @map.errors.add(:base, I18n.t(:wrong_captcha))
       render 'new'
     end
+
     if @map.save
-        render 'new'
-      #  redirect_to @map
+      redirect_to @map
     else
       flash.now[:errors] = @map.errors.full_messages
       render 'new'
