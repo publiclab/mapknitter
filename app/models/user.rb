@@ -41,13 +41,11 @@ class User < ApplicationRecord
   # Permissions for editing and deleting resources
 
   def owns?(resource)
-    puts "resource.user_id: #{resource.user_id}"
-    puts "id: #{id}"
-    resource.user_id == id
+    resource.user_id.to_i == id
   end
 
   def owns_map?(resource)
-    resource.respond_to?(:map) && resource.map.user_id == id
+    resource.respond_to?(:map) && resource.map.user_id.to_i == id
   end
 
   def can_delete?(resource)
