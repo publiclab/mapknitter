@@ -16,8 +16,6 @@ class User < ApplicationRecord
   validates_length_of       :email, within: 6..100 # r@a.wk
   validates_uniqueness_of   :email
 
-  # after_initialize :ensure_identity_url
-
   # Prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
 
@@ -57,13 +55,4 @@ class User < ApplicationRecord
   def can_edit?(resource)
     owns?(resource)
   end
-  
-  # private
-  # def ensure_identity_url
-  #   if self.identity_url[0..26] == "http://publiclaboratory.org"
-  #     self.identity_url =  "http://publiclab.org/openid/" + self.login.downcase
-  #     self.save
-  #   end
-  # end
-
 end
