@@ -114,7 +114,7 @@ class ImagesController < ApplicationController
     if (logged_in? && current_user.can_edit?(@warpable.map)) || (@warpable.map.anonymous? && !logged_in?)
       @warpable.destroy
       respond_to do |format|
-        format.html { render html: { notice: 'Image was successfully destroyed.'} }
+        format.html { render html: { notice: 'Image was successfully destroyed.' } }
         format.json { render json: @warpable }
       end
     else
