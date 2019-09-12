@@ -179,7 +179,7 @@
     </div><!-- .sidebar-wrap -->
   </div><!-- .sidebar -->
 
-  <%= render :partial => "/images/new" unless params[:action] == 'new' %>
+  <%= render :partial => "/images/new" unless params[:action] == 'new' || params[:action] == 'create' %>
   <% end %>
   
   <script>

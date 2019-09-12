@@ -35,23 +35,20 @@ class MapsController < ApplicationController
     if logged_in?
       @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
-      if @map.save
-        redirect_to @map
-      else
-        render 'new'
-      end
     else
       @map = Map.new(map_params)
-      if Rails.env != 'production' || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
-        if @map.save
-          redirect_to @map
-        else
-          render 'new'
-        end
-      else
-        @map.errors.add(:base, I18n.t(:wrong_captcha))
-        render 'new'
-      end
+    end
+
+    if Rails.env == 'production' && !verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
+      @map.errors.add(:base, I18n.t(:wrong_captcha))
+      render 'new'
+    end
+
+    if @map.save
+      redirect_to @map
+    else
+      flash.now[:errors] = @map.errors.full_messages
+      render 'new'
     end
   end
 
