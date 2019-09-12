@@ -1,11 +1,8 @@
-<%= stylesheet_link_tag "/lib/leaflet/dist/leaflet.css" %>
 <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %>
 
 <%= javascript_include_tag 'maps' %>
 <%= javascript_include_tag '//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js' %>
 <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlBXzYwdeaOMKZgx_UNBp2qBtdD0L_9g" %>
-<%= javascript_include_tag 'https://unpkg.com/leaflet.gridlayer.googlemutant@0.7.0/Leaflet.GoogleMutant.js' %>
-<%= javascript_include_tag '/lib/image-sequencer/dist/image-sequencer.js' %>
 
 <div class= "row" id="knitter-map-pane" style="height: 450px; width: 100%;  margin-bottom: 1%; z-index: 5; float: none; max-width: none;"> </div>
 <div class="container-fluid">
@@ -17,11 +14,14 @@
             </div>
         </div>
         <div class="col-md-6">
+        <% if !@map.anonymous? || (current_user == true && current_user.can_edit?(@map)) %>
             <a href="/maps/<%= @map.slug %>/edit">
                 <button class="btn btn-outline-info float-right">
-                    <span class="fas fa-pencil-alt"> </span> Edit this map
+                  <span class="fas fa-pencil-alt"></span>
+                  Edit this map
                 </button>
             </a>
+        <% end %>
         </div>
     </div>
 </div>
@@ -30,7 +30,7 @@
     <div class="text-center lead-text">
         <p class="text-muted">A Community Atlas of </p>
         <h2><%= @map.name %> </h2>
-        <p><%= @map.location %> | by <%= link_to "@#{@map.author}", "/profile/#{@map.author}" unless @map.author == 'anonymous' %> </p>
+        <p><%= @map.location %> | by <%= @map.anonymous? ? @map.author : link_to("@#{@map.author}", "/profile/#{@map.author}") %></p>
     </div>
     <br>
 </div>
@@ -91,10 +91,8 @@
         readOnly:   true,
         logged_in:   <%= logged_in? == true %>,
         anonymous:   <%= @map.anonymous? == true %>,
-        warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
+        destructable: <%= current_user == true && current_user.can_edit?(@map) %>,
+        warpablesUrl: "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
-      <% if @map.warpables.empty? && params[:action] == "show" %>
-        $('.modal-welcome').modal()
-      <% end %>
      })();
   </script>

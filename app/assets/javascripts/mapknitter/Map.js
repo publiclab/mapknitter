@@ -7,6 +7,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this.readOnly = options.readOnly;
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
+    this.destructable = options.destructable;
 
     window.mapknitter = this;
 
@@ -92,7 +93,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           var img = L.distortableImageOverlay(warpable.srcmedium, {
             corners: corners,
-            mode: 'lock'
+            mode: 'lock',
           });
 
           map._imgGroup.addLayer(img);
@@ -406,7 +407,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
   synchronizeNewAddedImage: function(warpable) {
       var wn = warpable.nodes;
-      bounds = [];
+      var bounds = [];
 
       // only already-placed images:
       if (wn.length > 0) {
@@ -460,12 +461,12 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           var img = L.distortableImageOverlay(warpable.srcmedium, {
               corners: corners,
-              mode: 'lock'
+              mode: 'lock',
           }).addTo(map);
 
           var customExports = mapknitter.customExportAction();
           var imgGroup = L.distortableCollection({
-              actions: [customExports]
+              actions: [customExports],
           }).addTo(map);
 
           imgGroup.addLayer(img);
@@ -538,37 +539,27 @@ MapKnitter.Map = MapKnitter.Class.extend({
   // /maps/newbie/warpables/42, but we'll try /warpables/42 
   // as it should also be a valid restful route
   deleteImage: function () {
-    var img = this,
-        edit = img.editing;
-    // this should only be possible by logged-in users
-    if (window.mapknitter.logged_in) {
-      if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
-        $.ajax('/images/' + img.warpable_id, {
-          dataType: "json",
-          type: 'DELETE',
-          beforeSend: function (e) {
-            $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin')
-          },
-          success: function(data) {
-              App.concurrent_editing.speak(data);
-          },
-          complete: function (e) {
-            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green')
-            // disable interactivity:
-            edit._removeToolbar();
-            edit.disable();
-            // remove from Leaflet map:
-            map.removeLayer(img);
-            // remove from sidebar too:
-            $('#warpable-' + img.warpable_id).remove();
-          },
-          error: function (e) {
-            $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
-          }
-        })
-      }
-    } else {
-      alert('You must be logged in to delete images.');
+    var img = this;
+    if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
+      $.ajax('/images/' + img.warpable_id, {
+        dataType: "json",
+        type: 'DELETE',
+        beforeSend: function(e) {
+          $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin');
+        },
+        success: function(data) {
+          App.concurrent_editing.speak(data);
+          map._imgGroup.removeLayer(img);
+          // remove from sidebar too:
+          $('#warpable-' + img.warpable_id).remove();
+        },
+        complete: function(e) {
+          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green');
+        },
+        error: function(e) {
+          $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red');
+        }
+      })
     }
   },
 
@@ -662,7 +653,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
       },
 
       addHooks: function () {
-        this._overlay.fire('delete');
+        var ov = this._overlay;
+
+        if (ov.editing._mode !== 'lock') { 
+          ov.fire('delete'); 
+        }
       }
     });
 

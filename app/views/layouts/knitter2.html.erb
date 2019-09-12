@@ -191,13 +191,15 @@
         readOnly:   <%= @embed == true || @annotations == true %>,
         logged_in:   <%= logged_in? == true %>,
         anonymous:   <%= @map.anonymous? == true %>,
-        warpablesUrl:   "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
+        destructable: <%= current_user == true && current_user.can_edit?(@map) %>,
+        warpablesUrl:  "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
-      <% if @map.warpables.empty? && params[:action] == "show" %>
-        $('.modal-welcome').modal()
+      <% if @map.warpables.empty? && params[:action] == 'edit' %>
+        $('.modal-welcome').modal();
       <% end %>
      })();
   </script>  
+
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
