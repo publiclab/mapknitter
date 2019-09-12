@@ -551,7 +551,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           App.concurrent_editing.speak(data);
           map._imgGroup.removeLayer(img);
           // remove from sidebar too:
-          $('#warpable-' + img.warpable_id).remove();
+          // $('#warpable-' + img.warpable_id).remove();
         },
         complete: function(e) {
           $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green');
