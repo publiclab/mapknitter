@@ -111,7 +111,7 @@ class ImagesController < ApplicationController
 
   def destroy
     @warpable = Warpable.find(params[:id])
-    if (logged_in? && current_user.can_edit?(@warpable.map)) || (@warpable.map.anonymous? && !logged_in?)
+    if (logged_in? && current_user.can_edit?(@warpable.map)) || @warpable.map.anonymous?
       @warpable.destroy
       respond_to do |format|
         format.html { render html: { notice: 'Image was successfully destroyed.' } }
@@ -119,8 +119,10 @@ class ImagesController < ApplicationController
       end
     else
       respond_to do |format|
+        msg =  "You do not have privileges to delete this image"
+        flash[:notice] = msg
         format.html { redirect_to @warpable.map }
-        flash[:error] = "You do not have privileges to delete this image"
+        format.json { render json: msg, status: 401 }
       end
     end
   end

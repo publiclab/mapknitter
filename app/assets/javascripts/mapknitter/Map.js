@@ -540,11 +540,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
   // as it should also be a valid restful route
   deleteImage: function () {
     var img = this;
-    if (confirm("Are you sure you want to delete this image? You cannot undo this.")) {
+    if (confirm('Are you sure you want to delete this image? You cannot undo this.')) {
       $.ajax('/images/' + img.warpable_id, {
-        dataType: "json",
+        dataType: 'json',
         type: 'DELETE',
-        beforeSend: function(e) {
+        beforeSend: function() {
           $('.mk-save').removeClass('fa-check-circle fa-times-circle fa-green fa-red').addClass('fa-spinner fa-spin');
         },
         success: function(data) {
@@ -553,10 +553,11 @@ MapKnitter.Map = MapKnitter.Class.extend({
           // remove from sidebar too:
           $('#warpable-' + img.warpable_id).remove();
         },
-        complete: function(e) {
+        complete: function() {
           $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-check-circle fa-green');
         },
-        error: function(e) {
+        error: function(request) {
+          alert(request.responseText);
           $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red');
         }
       })
