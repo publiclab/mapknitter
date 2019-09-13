@@ -72,6 +72,14 @@ class ImagesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test 'anonymous user can  destroy an images on anonymous map' do
+    map = maps(:yaya)
+    image = warpables(:four)
+    delete :destroy, params: { id: image.id}
+    assert_response :success
+  end
+
+
   test 'redirects to login if attempt destroy and not logged in' do
     delete :destroy, params: { id: @warp.id}
     assert_response :redirect

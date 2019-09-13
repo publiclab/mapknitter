@@ -32,7 +32,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should not display archived maps' do
@@ -44,7 +44,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should get map of maps' do
@@ -318,5 +318,11 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:maps)
     assert_template 'maps/show'
+  end
+
+  test 'edit an anonymous map if not logged in' do
+    map = maps(:yaya)
+    get :edit, params: { id: map.slug }
+    assert_response :success
   end
 end
