@@ -194,7 +194,8 @@
         destructable: <%= current_user == true && current_user.can_edit?(@map) %>,
         warpablesUrl:  "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
-      <% if @map.warpables.empty? && params[:action] == 'edit' %>
+      <% if @map.warpables.empty? && params[:action] == 'edit' && @map.display_welcome %>
+        <% @map.update!(display_welcome: false) %>
         $('.modal-welcome').modal();
       <% end %>
      })();
