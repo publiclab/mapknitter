@@ -119,9 +119,8 @@ class ImagesController < ApplicationController
       end
     else
       respond_to do |format|
-        error_msg = "You do not have privileges to delete this image"
-        format.html { render html: { notice: error_msg } }
-        format.json { render status: 400 }
+        format.html { redirect_to @warpable.map }
+        flash[:error] = "You do not have privileges to delete this image"
       end
     end
   end

@@ -69,14 +69,13 @@ class ImagesControllerTest < ActionController::TestCase
   test 'correct user should destroy an image' do
     session[:user_id] = 1
     delete :destroy, params: { id: @warp.id}
-    assert_response :redirect
-    assert_redirected_to "/maps/#{@map.slug}"
+    assert_response :success
   end
 
   test 'redirects to login if attempt destroy and not logged in' do
     delete :destroy, params: { id: @warp.id}
     assert_response :redirect
-    assert_redirected_to '/login'
+    assert_redirected_to "/maps/#{@map.slug}"
     assert_not_nil flash[:error]
   end
 

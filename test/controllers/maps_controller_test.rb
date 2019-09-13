@@ -114,7 +114,7 @@ class MapsControllerTest < ActionController::TestCase
     @map = assigns(:map)
 
     assert_response 302
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_equal @map.user.login, 'quentin'
@@ -131,7 +131,7 @@ class MapsControllerTest < ActionController::TestCase
          }})
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_nil @map.user
@@ -151,7 +151,7 @@ class MapsControllerTest < ActionController::TestCase
     }}
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Yaya Center')
     assert_equal user, @map.user
