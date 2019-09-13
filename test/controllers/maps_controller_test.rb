@@ -32,7 +32,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should not display archived maps' do
@@ -44,7 +44,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should get map of maps' do
@@ -114,7 +114,7 @@ class MapsControllerTest < ActionController::TestCase
     @map = assigns(:map)
 
     assert_response 302
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_equal @map.user.login, 'quentin'
@@ -131,7 +131,7 @@ class MapsControllerTest < ActionController::TestCase
          }})
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_nil @map.user
@@ -151,7 +151,7 @@ class MapsControllerTest < ActionController::TestCase
     }}
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Yaya Center')
     assert_equal user, @map.user
@@ -318,5 +318,11 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:maps)
     assert_template 'maps/show'
+  end
+
+  test 'edit an anonymous map if not logged in' do
+    map = maps(:yaya)
+    get :edit, params: { id: map.slug }
+    assert_response :success
   end
 end

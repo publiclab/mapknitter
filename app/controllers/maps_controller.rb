@@ -205,9 +205,7 @@ class MapsController < ApplicationController
 
   def require_login_or_anon
     map = find_map
-    unless params[:commit] = "Create map" && map.anonymous?
-      require_login
-    end
+    require_login unless params[:commit] = "Create map" && map.anonymous?
   end
 
   def map_params
