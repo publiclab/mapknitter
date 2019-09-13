@@ -5,6 +5,7 @@ gem 'rails', '~> 5.2.3'
 gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
+gem 'sentry-raven'
 
 gem 'will_paginate', '3.1.8'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
