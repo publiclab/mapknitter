@@ -91,7 +91,6 @@
         readOnly:   true,
         logged_in:   <%= logged_in? == true %>,
         anonymous:   <%= @map.anonymous? == true %>,
-        destructable: <%= current_user == true && current_user.can_edit?(@map) %>,
         warpablesUrl: "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
      })();

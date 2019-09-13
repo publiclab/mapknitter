@@ -7,7 +7,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
     this.readOnly = options.readOnly;
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
-    this.destructable = options.destructable;
 
     window.mapknitter = this;
 
