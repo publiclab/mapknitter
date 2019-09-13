@@ -9,7 +9,6 @@ endef
 
 build:
 	cp config/database.yml.example config/database.yml
-	cp config/amazon_s3.yml.example config/amazon_s3.yml
 	cp config/config.yml.example config/config.yml
 	cp db/schema.rb.example db/schema.rb
 	docker-compose build
