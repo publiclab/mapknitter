@@ -3,7 +3,8 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
 
-  before_action :require_login, only: %i(edit update destroy)
+  before_action :require_login, only: %i(update destroy)
+  before_action :require_login_or_anon, only: %i(edit)
   before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
@@ -35,23 +36,20 @@ class MapsController < ApplicationController
     if logged_in?
       @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
-      if @map.save
-        redirect_to @map
-      else
-        render 'new'
-      end
     else
       @map = Map.new(map_params)
-      if Rails.env != 'production' || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
-        if @map.save
-          redirect_to @map
-        else
-          render 'new'
-        end
-      else
-        @map.errors.add(:base, I18n.t(:wrong_captcha))
-        render 'new'
-      end
+    end
+
+    if Rails.env == 'production' && !verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
+      @map.errors.add(:base, I18n.t(:wrong_captcha))
+      render 'new'
+    end
+
+    if @map.save
+      redirect_to "/maps/#{@map.slug}/edit"
+    else
+      flash.now[:errors] = @map.errors.full_messages
+      render 'new'
     end
   end
 
@@ -205,7 +203,12 @@ class MapsController < ApplicationController
     @map = Map.find_by(slug: params[:id])
   end
 
+  def require_login_or_anon
+    map = find_map
+    require_login unless params[:commit] = "Create map" && map.anonymous?
+  end
+
   def map_params
-    params.require(:map).permit(:author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license)
+    params.require(:map).permit(:name, :slug, :lat, :lon, :location, :description, :zoom, :license)
   end
 end

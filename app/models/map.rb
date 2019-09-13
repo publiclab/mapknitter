@@ -44,7 +44,7 @@ class Map < ApplicationRecord
   end
 
   def anonymous?
-    author == "" || user_id.zero?
+    author == "anonymous" || user_id.zero?
   end
 
   def self.anonymous
