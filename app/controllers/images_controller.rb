@@ -103,23 +103,27 @@ class ImagesController < ApplicationController
   end
 
   def revert
-    @warpable = Warpable.find params[:id]
+    @warpable = Warpable.find(params[:id])
     version = @warpable.versions.find(params[:version])
     version.reify&.save
     redirect_to @warpable.map
   end
 
   def destroy
-    @warpable = Warpable.find params[:id]
-    if logged_in? && current_user.can_delete?(@warpable)
+    @warpable = Warpable.find(params[:id])
+    if (logged_in? && current_user.can_edit?(@warpable.map)) || @warpable.map.anonymous?
       @warpable.destroy
       respond_to do |format|
-        format.html { redirect_to @warpable.map }
-        format.json { render json: @warpable.map.fetch_map_data }
+        format.html { render html: { notice: 'Image was successfully destroyed.' } }
+        format.json { render json: @warpable }
       end
     else
-      flash[:error] = 'You must be logged in to delete images.'
-      redirect_to '/login'
+      respond_to do |format|
+        msg = "You do not have privileges to delete this image"
+        flash[:notice] = msg
+        format.html { redirect_to @warpable.map }
+        format.json { render json: msg, status: 401 }
+      end
     end
   end
 end
