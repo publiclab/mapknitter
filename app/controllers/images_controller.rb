@@ -119,7 +119,7 @@ class ImagesController < ApplicationController
       end
     else
       respond_to do |format|
-        msg =  "You do not have privileges to delete this image"
+        msg = "You do not have privileges to delete this image"
         flash[:notice] = msg
         format.html { redirect_to @warpable.map }
         format.json { render json: msg, status: 401 }

@@ -84,7 +84,7 @@ class ImagesControllerTest < ActionController::TestCase
     delete :destroy, params: { id: @warp.id}
     assert_response :redirect
     assert_redirected_to "/maps/#{@map.slug}"
-    assert_not_nil flash[:error]
+    assert_not_nil flash[:notice]
   end
 
   test 'creates version after image creation' do
