@@ -42,7 +42,6 @@ class MapsController < ApplicationController
 
     if Rails.env == 'production' && !verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
       @map.errors.add(:base, I18n.t(:wrong_captcha))
-      render 'new'
     end
 
     if @map.save
