@@ -55,4 +55,8 @@ class User < ApplicationRecord
   def can_edit?(resource)
     owns?(resource)
   end
+
+  def first_time_poster?
+    Map.where(user_id: id, status: Map::Status::NORMAL).count == 0
+  end
 end

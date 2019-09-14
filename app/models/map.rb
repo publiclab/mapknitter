@@ -26,6 +26,14 @@ class Map < ApplicationRecord
   scope :active, -> { where(archived: false) }
   scope :has_user, -> { where('user_id != ?', 0) }
 
+  module Status
+    VALUES = [
+        NORMAL = 1,   # Usage: Status::NORMAL
+        BANNED = 0,   # Usage: Status::BANNED
+        MODERATED = 4 # Usage: Status::MODERATED
+    ].freeze
+  end
+
   def validate
     lat >= -90 && lat <= 90 && lon >= -180 && lat <= 180 if name != 'untitled'
   end

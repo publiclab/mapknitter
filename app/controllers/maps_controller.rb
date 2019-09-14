@@ -45,6 +45,7 @@ class MapsController < ApplicationController
     end
 
     if @map.save
+      ModerationService::ModerateMap.new.process(@map.id)
       redirect_to "/maps/#{@map.slug}/edit"
     else
       flash.now[:errors] = @map.errors.full_messages

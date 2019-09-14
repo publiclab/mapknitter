@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2019_12_14_062147) do
     t.boolean "anon_annotatable", default: false
     t.string "slug"
     t.boolean "display_welcome", default: true
+    t.integer "status", default: 1
     t.index ["slug"], name: "index_maps_on_slug", unique: true
   end
 
@@ -165,5 +166,4 @@ ActiveRecord::Schema.define(version: 2019_12_14_062147) do
     t.integer "map_id", default: 0
     t.text "body"
   end
-
 end
