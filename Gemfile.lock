@@ -333,7 +333,7 @@ DEPENDENCIES
   RubyInline (~> 3.12.4)
   action-cable-testing
   autoprefixer-rails (~> 9.6.1)
-  aws-sdk (~> 1.5.7)
+  aws-sdk-s3 (~> 1.0.0)
   bootsnap (~> 1.4.5)
   bootstrap-sass
   byebug (~> 11.0.1)
