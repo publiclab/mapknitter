@@ -51,7 +51,7 @@ class Warpable < ApplicationRecord
   # this runs each time warpable is moved/distorted,
   # to calculate resolution
   def save_dimensions
-    path = (image.options[:storage]==:s3) ? image.url : image.path
+    path = (image.options[:storage] == :s3) ? image.url : image.path
     geo = Paperclip::Geometry.from_file(path.sub('https', 'http'))
 
     update_column(:width, geo.width)
