@@ -2,6 +2,8 @@ class Warpable < ApplicationRecord
   attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
+  require 'cartagen'
+
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
