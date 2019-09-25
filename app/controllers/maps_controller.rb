@@ -58,6 +58,7 @@ class MapsController < ApplicationController
                .where.not(id: @map.id)
                .sample(4)
     @unpaginated = true
+    @users = @map.authors
     render layout: 'application'
   end
 
