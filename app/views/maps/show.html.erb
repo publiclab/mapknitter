@@ -29,10 +29,21 @@
 <div class="container-fluid">
     <div class="text-center lead-text">
         <p class="text-muted">A Community Atlas of </p>
-        <h2><%= @map.name %> </h2>
-        <p><%= @map.location %> | by <%= @map.anonymous? ? @map.author : link_to("@#{@map.author}", "/profile/#{@map.author}") %></p>
+        <h2><%= @map.name %>,</h2>
+        <p><%= @map.location %> </p>
+        <p>by <%= @map.anonymous? ? @map.author : link_to("@#{@map.author}", "/profile/#{@map.author}") %>
+    <%= 'with' unless @users.empty? %>
+    <% @users.each_with_index do |author,i| %>
+        <a href="/profile/<%= author.login %>">
+            <%= "@#{author.login}"%></a>
+        <% if i < @users.length-2 %>
+            <%= ',' %>
+        <% elsif i < @users.length-1 %>
+            <%= '&' %>
+        <% end %>
+    <% end %>
+    <br><br>
     </div>
-    <br>
 </div>
 
     <div class="container">
