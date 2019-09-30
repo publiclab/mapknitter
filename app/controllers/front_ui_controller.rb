@@ -14,6 +14,7 @@ class FrontUiController < ApplicationController
                else
                  []
                end
+    @comments = Comment.last(10)
   end
 
   def all_maps

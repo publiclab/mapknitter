@@ -1,0 +1,19 @@
+<div class="container-fluid text-center" id="discussions">
+    <div class= "row">
+        <% @comments.each do |comment| %>
+            <div class= "col-md-3 offset-1">
+                <div class="card border-dark mb-3" style="max-width: 30rem;">
+                    <div class="card-header">
+                        <%= link_to "@#{comment.user.login}",  "/profile#{comment.user.login}" %> commented on
+                        <%= link_to comment.map.name, "/maps#{comment.map.slug}" %>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><%= comment.body %></p>
+                        <p class="card-text"><small class="text-muted"><%= time_ago_in_words(comment.created_at) %> ago</p> </small>
+                    </div>
+                </div>
+                <br>
+            </div>
+        <% end %>
+    </div>
+</div>
