@@ -44,7 +44,7 @@ class Map < ApplicationRecord
   end
 
   def anonymous?
-    author == "" || user_id.zero?
+    author == "anonymous" || user_id.zero?
   end
 
   def self.anonymous
@@ -278,5 +278,13 @@ class Map < ApplicationRecord
     # fetches a list of updated warpables along with their corners in a json format.
     data = warpables
     data.to_json
+  end
+
+  def authors
+    user_ids = []
+    warpables.each do |warp|
+      user_ids.push(warp.versions.map(&:whodunnit))
+    end
+    User.where(id: user_ids.flatten.uniq).where.not(id: user_id)
   end
 end

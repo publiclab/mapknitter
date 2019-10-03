@@ -2,6 +2,8 @@ class Warpable < ApplicationRecord
   attr_accessor :image
   attr_accessor :src, :srcmedium # for json generation
 
+  require 'cartagen'
+
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
@@ -51,17 +53,11 @@ class Warpable < ApplicationRecord
   # this runs each time warpable is moved/distorted,
   # to calculate resolution
   def save_dimensions
-    geo = if Rails.env.production?
-            Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image.url)) # s3 version
-          else
-            Paperclip::Geometry.from_file(Paperclip.io_adapters.for(image).path) # local filesystem version
-          end
+    path = image.options[:storage] == :s3 ? image.url : image.path
+    geo = Paperclip::Geometry.from_file(path.sub('https', 'http'))
 
-    # Rails >= v3.1 only
     update_column(:width, geo.width)
     update_column(:height, geo.height)
-    # Rails >= v4.0 only
-    # self.update_columns(attributes)
   end
 
   # if has non-nil width and has nodes, it's been placed.

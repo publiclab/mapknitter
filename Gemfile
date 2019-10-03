@@ -5,8 +5,9 @@ gem 'rails', '~> 5.2.3'
 gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
+gem 'sentry-raven'
 
-gem 'will_paginate', '3.1.7'
+gem 'will_paginate', '3.1.8'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
@@ -23,13 +24,13 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
-  gem 'bootsnap', '~> 1.4.4'
+  gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
   gem 'puma', '~> 4.1.0'
 
   # if you use amazon s3 for warpable image storage
-  gem 'aws-sdk', '~> 1.5.7'
+  gem 'aws-sdk-s3', '~> 1'
 
   # for rake image migration tasks
   # gem 'right_aws'
@@ -48,7 +49,7 @@ group :dependencies do
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.5.1.1'
+  gem 'autoprefixer-rails', '~> 9.6.1'
   gem 'uglifier', '~> 4.1.20'
 
 end
@@ -69,9 +70,11 @@ end
 
 group :development, :test do
   gem 'capybara'
+  # see https://github.com/SeleniumHQ/selenium/issues/5248
+  # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.1.2'
+  gem 'faker', '~> 2.2.2'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
 end

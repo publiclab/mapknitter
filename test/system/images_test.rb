@@ -26,8 +26,8 @@ class ImagesTest < ApplicationSystemTestCase
     #log in 
     page.set_rack_session(user_id: @user.id)
 
-    visit "/maps/#{@map.slug}"
-    click_link('Images')
+    visit "/maps/#{@map.slug}/edit"
+    click_on 'Images'
 
     #expect layers to not have an ldi instance before placing
     assert !page.evaluate_script(check_if_image_placed)

@@ -1,6 +1,6 @@
 class AddMapDescriptionAuthor < ActiveRecord::Migration[5.2]
   def self.up
-    add_column :maps, :description, :text, :default => ''
+    add_column :maps, :description, :text
     add_column :maps, :author, :string, :default => 'anonymous'
   end
 

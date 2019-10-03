@@ -28,6 +28,7 @@ AllCops:
     - 'public/**/*'
     - 'Dangerfile'
     - 'app/views/**/*'
+    - 'app/assets/javascripts/application.js'
   TargetRubyVersion: '2.4'
 
 Layout/MultilineMethodCallIndentation:

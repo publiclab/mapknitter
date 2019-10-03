@@ -10,24 +10,27 @@ Mapknitter::Application.routes.draw do
   get 'all_maps', to: 'front_ui#all_maps'
   get 'anonymous', to: 'front_ui#anonymous'
   get 'gallery', to: 'front_ui#gallery'
+  get 'location' => 'front_ui#location'
   post 'save_location', to: 'front_ui#save_location'
-  
+
   get 'legacy', to: 'maps#index' # remove once new front page is stable
-  
+
   get 'external_url_test', to: 'export#external_url_test'
-  
+
+  get 'm/:id' => 'front_ui#view_map'
+
   # since rails 3.2, we use this to log in:
   get 'sessions/create', to: 'sessions#create'
   get 'local/:login', to: 'sessions#local'
   get 'logout', to: 'sessions#logout'
   get 'login', to: 'sessions#new'
-  
-  
+
+
   resources :users, :sessions, :maps, :images, :comments, :tags
-  
+
   # redirect legacy route:
   get 'tag/:id', to: redirect('/tags/%{id}')
-  
+
   # Registered user pages:
   get 'register', to: 'users#create'
   get 'signup', to: 'users#new'
