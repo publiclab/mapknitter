@@ -18,7 +18,7 @@ group :dependencies do
   gem 'mysql2', '< 0.6'
   gem 'geokit-rails', '1.1.4'
   gem 'image_science', '1.3.0'
-  gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
+  gem 'recaptcha', '~> 5.1.1', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
   gem 'ruby-openid', '~>2.5'
   gem 'open_id_authentication'
