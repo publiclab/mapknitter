@@ -3,8 +3,9 @@ require 'open3'
 class MapsController < ApplicationController
   protect_from_forgery except: :export
 
-  before_action :require_login, only: %i(edit update destroy)
-  before_action :find_map, only: %i(show annotate embed edit update images destroy archive)
+  before_action :require_login, only: %i(update destroy)
+  before_action :require_login_or_anon, only: %i(edit)
+  before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
 
@@ -35,32 +36,30 @@ class MapsController < ApplicationController
     if logged_in?
       @map = current_user.maps.new(map_params)
       @map.author = current_user.login # eventually deprecate
-      if @map.save
-        redirect_to @map
-      else
-        render 'new'
-      end
     else
       @map = Map.new(map_params)
-      if Rails.env != 'production' || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
-        if @map.save
-          redirect_to @map
-        else
-          render 'new'
-        end
-      else
-        @map.errors.add(:base, I18n.t(:wrong_captcha))
-        render 'new'
-      end
+    end
+
+    if Rails.env == 'production' && !verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not human! Try again!")
+      @map.errors.add(:base, I18n.t(:wrong_captcha))
+    end
+
+    if @map.save
+      redirect_to "/maps/#{@map.slug}/edit"
+    else
+      flash.now[:errors] = @map.errors.full_messages
+      render 'new'
     end
   end
 
   def show
     @map.zoom ||= 12
-
-    # this is used for the resolution slider
-    @resolution = @map.average_cm_per_pixel.round(4)
-    @resolution = 5 if @resolution < 5 # soft-set min res
+    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+               .where.not(id: @map.id)
+               .sample(4)
+    @unpaginated = true
+    @users = @map.authors
+    render layout: 'application'
   end
 
   def archive
@@ -81,7 +80,7 @@ class MapsController < ApplicationController
     @map.zoom ||= 12
     @embed = true
     response.headers.except! 'X-Frame-Options' # allow use of embed in iframes
-    render template: 'maps/show'
+    render template: 'maps/edit'
   end
 
   def annotate
@@ -89,7 +88,13 @@ class MapsController < ApplicationController
     @annotations = true # loads annotations-specific assets
   end
 
-  def edit; end
+  def edit
+    @map.zoom ||= 12
+
+    # this is used for the resolution slider
+    @resolution = @map.average_cm_per_pixel.round(4)
+    @resolution = 5 if @resolution < 5 # soft-set min res
+  end
 
   def update
     @map.update(map_params)
@@ -198,7 +203,12 @@ class MapsController < ApplicationController
     @map = Map.find_by(slug: params[:id])
   end
 
+  def require_login_or_anon
+    map = find_map
+    require_login unless params[:commit] = "Create map" && map.anonymous?
+  end
+
   def map_params
-    params.require(:map).permit(:author, :name, :slug, :lat, :lon, :location, :description, :zoom, :license)
+    params.require(:map).permit(:name, :slug, :lat, :lon, :location, :description, :zoom, :license)
   end
 end

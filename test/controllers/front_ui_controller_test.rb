@@ -3,6 +3,7 @@ require 'test_helper'
 class FrontUiControllerTest < ActionController::TestCase
 
   def setup
+    @map = maps(:saugus)
   end
 
   def teardown
@@ -34,5 +35,14 @@ class FrontUiControllerTest < ActionController::TestCase
     assert assigns(:nearby_maps)
     assert assigns(:nearby_mappers)
     assert_template 'front_ui/nearby_mappers'
+  end
+
+  test 'search map by location' do
+    get :location, params: { loc: 'India'}, xhr: true
+    @maps = assigns(:maps)
+
+    assert_response :success
+    assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
+    assert @maps.collect(&:name).include?('Cubbon Park')
   end
 end

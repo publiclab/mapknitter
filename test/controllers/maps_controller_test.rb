@@ -11,7 +11,7 @@ class MapsControllerTest < ActionController::TestCase
 
   test 'should display image url for maps by region' do
     get :region,
-        params: { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60},
+        params: { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60 },
         format: :json
 
     image_urls = []
@@ -32,7 +32,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should not display archived maps' do
@@ -44,7 +44,7 @@ class MapsControllerTest < ActionController::TestCase
     assert_response :success
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
-    assert @maps.collect { |map| map.user.login }.include?('quentin')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
   end
 
   test 'should get map of maps' do
@@ -70,7 +70,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should search for maps by location' do
-    get :search, params: { q: 'India'}
+    get :search, params: { q: 'India' }
     @maps = assigns(:maps)
 
     assert_response :success
@@ -81,7 +81,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should search for maps by description' do
-    get :search, params: { q: 'a park'}
+    get :search, params: { q: 'a park' }
     @maps = assigns(:maps)
 
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
@@ -114,7 +114,7 @@ class MapsControllerTest < ActionController::TestCase
     @map = assigns(:map)
 
     assert_response 302
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_equal @map.user.login, 'quentin'
@@ -131,7 +131,7 @@ class MapsControllerTest < ActionController::TestCase
          }})
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Coal terminal map')
     assert_nil @map.user
@@ -151,7 +151,7 @@ class MapsControllerTest < ActionController::TestCase
     }}
     @map = assigns(:map)
 
-    assert_redirected_to '/maps/' + @map.slug
+    assert_redirected_to "/maps/#{@map.slug}/edit"
     assert_not_equal before_count, Map.count
     assert Map.all.collect(&:name).include?('Yaya Center')
     assert_equal user, @map.user
@@ -178,7 +178,7 @@ class MapsControllerTest < ActionController::TestCase
   test 'should not delete map if not owner' do
     session[:user_id] = 3
     before_count = Map.count
-    post(:destroy, params: { id: @map.slug})
+    post(:destroy, params: { id: @map.slug })
 
     assert_redirected_to '/maps/' + @map.slug
     assert_equal flash[:error], 'Only admins or map owners may delete maps.'
@@ -188,7 +188,7 @@ class MapsControllerTest < ActionController::TestCase
   test 'should delete map if owner' do
     session[:user_id] = 1
     before_count = Map.count
-    post(:destroy, params: { id: @map.slug})
+    post(:destroy, params: { id: @map.slug })
 
     assert_redirected_to '/'
     assert_not_equal before_count, Map.count
@@ -196,14 +196,14 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get(:show, params: { id: @map.slug})
+    get(:show, params: { id: @map.slug })
     assert_response :success
     assert_not_nil assigns(:map)
   end
 
   test 'should archive map' do
     session[:user_id] = 1
-    get(:archive, params: { id: @map.slug})
+    get(:archive, params: { id: @map.slug })
     @map.reload
 
     assert_redirected_to '/?_=' + Time.now.to_i.to_s
@@ -212,7 +212,7 @@ class MapsControllerTest < ActionController::TestCase
 
   test 'should not archive map without enough permissions' do
     session[:user_id] = 3
-    get(:archive, params: { id: @map.slug})
+    get(:archive, params: { id: @map.slug })
     @map.reload
 
     assert_redirected_to '/?_=' + Time.now.to_i.to_s
@@ -242,11 +242,6 @@ class MapsControllerTest < ActionController::TestCase
     assert @map.has_tag('bears')
   end
 
-  test 'should not update unless logged in' do
-    put :update, params: { id: 2, map: { name: 'Street 5'}}
-    assert_redirected_to '/login?back_to=/maps/2'
-  end
-
   test 'should display maps by region' do
     get :region, params: { minlat: 40, maxlat: 50, minlon: -80, maxlon: -60 }
     @maps = assigns(:maps)
@@ -263,7 +258,7 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test 'should annotate maps' do
-    get :annotate, params: { id: @map.slug}
+    get :annotate, params: { id: @map.slug }
     assert_response :success
     assigns(:annotations) == true
   end
@@ -271,11 +266,11 @@ class MapsControllerTest < ActionController::TestCase
   test 'embed' do
     get :embed, params: { id: @map.slug}
     assert_response :success
-    assert_template :show
+    assert_template :edit
   end
 
   test 'it returns the images' do
-    get :images, params: { id: @map.slug}
+    get :images, params: { id: @map.slug }
     assert_response :success
     assert_equal 'application/json; charset=utf-8', response.content_type
   end
@@ -283,7 +278,7 @@ class MapsControllerTest < ActionController::TestCase
   def export_if_logged_in
     Rails.stub(:env, ActiveSupport::StringInquirer.new('development')) do
       session[:user_id] = 1
-      post :export, params: { id: @map.id, resolution: 5}
+      post :export, params: { id: @map.id, resolution: 5 }
       assert_response :success
       assert_equal 'complete', @response.body
     end
@@ -292,13 +287,13 @@ class MapsControllerTest < ActionController::TestCase
   def export_anonmymous_map
     Rails.stub(:env, ActiveSupport::StringInquirer.new('development')) do
       map = maps(:cubbon)
-      post :export, params: { id: map.id, resolution: 5}
+      post :export, params: { id: map.id, resolution: 5 }
       assert_response :success
     end
   end
 
   test 'returns the exports' do
-    get :exports, params: { id: @map.id}
+    get :exports, params: { id: @map.id }
     assert_response :success
   end
 
@@ -309,6 +304,20 @@ class MapsControllerTest < ActionController::TestCase
 
   test 'featured' do
     get :featured
+    assert_response :success
+  end
+
+  test 'show' do
+    get :show, params: { id: @map.slug }
+
+    assert_response :success
+    assert assigns(:maps)
+    assert_template 'maps/show'
+  end
+
+  test 'anonymous map can be edited during it\'s initial creation' do
+    map = maps(:yaya)
+    get :edit, params: { id: map.slug }
     assert_response :success
   end
 end

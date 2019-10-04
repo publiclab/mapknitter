@@ -51,3 +51,16 @@ village:
   license: publicdomain
   user_id: 2
   author: aaron
+
+yaya:
+  id: 5
+  name: Yaya Centre
+  slug: yaya-centre
+  location: Kenya
+  lat: -1.2928832
+  lon: 36.78806829999996
+  description: Ancient mall in Nairobi
+  created_at: <%= Time.now %>
+  license: publicdomain
+  user_id: 0
+  author: anonymous

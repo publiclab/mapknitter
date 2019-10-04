@@ -4,44 +4,48 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 */
 
 @font-face {
-    font-family: 'Junction Regular';
-    src: url('junction/webfonts/junction-regular.eot');
-    src: url('junction/webfonts/junction-regular.eot?#iefix') format('embedded-opentype'),
-         url('junction/webfonts/junction-regular.woff') format('woff'),
-         url('junction/webfonts/junction-regular.ttf') format('truetype'),
-         url('junction/webfonts/junction-regular.svg#junction') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Junction Regular';
+  src: url('junction/webfonts/junction-regular.eot');
+  src: url('junction/webfonts/junction-regular.eot?#iefix') format('embedded-opentype'),
+        url('junction/webfonts/junction-regular.woff') format('woff'),
+        url('junction/webfonts/junction-regular.ttf') format('truetype'),
+        url('junction/webfonts/junction-regular.svg#junction') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Junction Light';
-    src: url('junction/webfonts/junction-light.eot');
-    src: url('junction/webfonts/junction-light.eot?#iefix') format('embedded-opentype'),
-          url('junction/webfonts/junction-light.woff') format('woff'),
-          url('junction/webfonts/junction-light.ttf') format('truetype'),
-          url('junction/webfonts/junction-light.svg#junction') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Junction Light';
+  src: url('junction/webfonts/junction-light.eot');
+  src: url('junction/webfonts/junction-light.eot?#iefix') format('embedded-opentype'),
+        url('junction/webfonts/junction-light.woff') format('woff'),
+        url('junction/webfonts/junction-light.ttf') format('truetype'),
+        url('junction/webfonts/junction-light.svg#junction') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 #hero {
-    background-image: url('image.png');
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-image: url('image.png');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-    .text-block {
-        margin-bottom: 5px;
-        padding-top:30px;
-        padding-bottom:50px;
-        background-color: white;
-        display: inline-block;
-        .btn {
-            width: 45%;
-            font-size: 1em;
-        }
-    }
+
+.text-block {
+  margin-bottom: 5px;
+  padding-top:30px;
+  padding-bottom:50px;
+  background-color: white;
+  display: inline-block;
+  .btn {
+      width: 45%;
+      font-size: 1em;
+  }
+  .btn.btn-default {
+    width: auto;
+  }
+}
 
 .jumbotron {
   margin-bottom: 1rem;
@@ -191,12 +195,13 @@ label small {
   display: none;
 }
 
-#near_maps{
-    img {
-        height: 300px;
-        width: 400px;
-    }
+#near_maps {
+  img {
+    height: 300px;
+    width: 400px;
+  }
 }
+
 .login-form {
   width: 200px;
   padding: 10px;
@@ -230,7 +235,6 @@ label small {
   letter-spacing: -0.2px;
 }
 
-
 .item-description {
   font-size: 18px;
   font-weight: 300;
@@ -240,21 +244,14 @@ label small {
   color: #a2aaad;
 }
 
-
-#info {
-    .fa-stack {
-        font-size: 0.7em;
-        color: gray
-    }
-    .fa {
-        font-size: 6em;
-        padding-bottom: 20px;
-    }
+.all-maps {
+  img {
+    display: block;
+    width: 200px;
+    height: 200px;
+  }
 }
-#all-maps {
-    img {
-        display: block;
-        width: 200px;
-        height: 200px;
-    }
+
+.light-blue {
+    background-color: #d0e2f2;
 }

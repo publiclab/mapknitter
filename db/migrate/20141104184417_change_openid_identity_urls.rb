@@ -1,16 +1,13 @@
 class ChangeOpenidIdentityUrls < ActiveRecord::Migration[5.2]
   def up
-
-    users = User.find :all
-    users.each do |user|
+    User.all.each do |u|
       # if it matches http://publiclaboratory.org/...
-      if user.identity_url != "" && !user.identity_url.nil? && user.identity_url[0..26] == "http://publiclaboratory.org"
-        user.identity_url = "http://publiclab.org/openid/"+user.login.downcase
-        puts " => "+user.identity_url
-        user.save
+      if u.identity_url != "" && !u.identity_url.nil? && u.identity_url[0..26] == "http://publiclaboratory.org"
+        u.identity_url = "http://publiclab.org/openid/"+ u.login.downcase
+        puts " => "+ u.identity_url
+        u.save
       end
     end
-
   end
 
   def down

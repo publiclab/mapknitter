@@ -44,6 +44,20 @@ class FrontUiController < ApplicationController
 
   def about; end
 
+  def location
+    @loc = params[:loc]
+
+    @maps = Map.page(params[:maps])
+               .per_page(20)
+               .where('archived = ? and password = ? and location LIKE ?', false, '', "%#{@loc}%")
+               .order('updated_at DESC')
+               .group('maps.id')
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def gallery
     @maps = Map.page(params[:maps])
                .per_page(20)

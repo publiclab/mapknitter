@@ -25,7 +25,7 @@ App.concurrent_editing = App.cable.subscriptions.create(
     *  to all the user's connected to the concurrent_editing channel. */
     return this.perform("sync", {
         changes: changes,
-        map_slug: window.location.href.split("/").pop()
+        map_slug: window.location.href.split("maps/").pop().split('/')[0] // extract slug from "https://mapknitter.org/maps/SLUG/edit"
     });
   }
 });
