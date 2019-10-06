@@ -1,5 +1,5 @@
-/* 
-Junction is provided under the OFL and is available at http://www.theleagueofmoveabletype.com/junction or https://github.com/theleagueof/junction 
+/*
+Junction is provided under the OFL and is available at http://www.theleagueofmoveabletype.com/junction or https://github.com/theleagueof/junction
 It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 */
 
@@ -175,6 +175,10 @@ label small {
 
 .img-draw {
   width: 100px;
+}
+//To Add Border in the gallery section on the author name.
+.card-title a{
+  border: 1px solid #ddd;
 }
 
 .img-icon {
