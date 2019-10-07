@@ -20,7 +20,7 @@ group :dependencies do
   gem 'image_science', '1.3.0'
   gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
-  gem 'ruby-openid', '~>2.5'
+  gem 'ruby-openid', '~>2.8'
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.4'
   gem 'paperclip', '~> 6.1.0'
