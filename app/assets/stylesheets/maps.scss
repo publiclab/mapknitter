@@ -1,7 +1,7 @@
 /*
  *= require jquery-ui/themes/overcast/jquery-ui.min.css
  *= require ion-rangeslider/css/ion.rangeSlider.css
-*/ 
+*/
 /* Variables */
 $sidebar-width: 30%;
 $sidebar-min-width: 400px;
@@ -81,7 +81,7 @@ code {
   max-width: none;
 }
 
-/* fix for firefox partial image display bug 
+/* fix for firefox partial image display bug
  * in css3 matrix distorted images */
 .leaflet-image-layer {
   border:0px solid red;
@@ -112,7 +112,7 @@ code {
     z-index:999;
   }
 
-  .sidebar-wrap { 
+  .sidebar-wrap {
     border-left: 1px solid $subtle-grey;
     height: 100%;
   }
@@ -175,8 +175,8 @@ code {
       width: 47%;
       float: left;
       margin-right: 10px;
-      input { width: 80%; }  
-    }        
+      input { width: 80%; }
+    }
   }
   .label {
     margin-left: 2px;
@@ -221,8 +221,8 @@ table .btn {
   }
 }
 
-/* 
- * Override Bootstrap styles for when the nav is contained in the sidebar. 
+/*
+ * Override Bootstrap styles for when the nav is contained in the sidebar.
  * This is to ensure that the navbar maintains a fixed height,
  * regardless of screen size, so that the top offset for .sidebar-wrap doesn't change.
  */
@@ -259,7 +259,7 @@ table .btn {
     margin-left:3px;
   }
 }
-  
+
 .tab-pane { padding-top: 10px; }
 
 .public-lab-primary button { background-color: #f8e4e4; }
@@ -269,7 +269,7 @@ table .btn {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size:14px;
   background-color: white;
-  background-image: none; 
+  background-image: none;
   width:300px;
   position:absolute;
   list-style-type: none;
@@ -285,7 +285,7 @@ table .btn {
 .ui-menu-item.ui-state-focus {
   background:#ddd;
   border:none;
-  background-image: none; 
+  background-image: none;
   color: #666;
   font-weight:normal;
 }
@@ -295,4 +295,21 @@ table .btn {
 }
 .fa-red {
   color:red;
+}
+
+.text-anonymous {
+  text-align: left;
+  margin: 20px;
+  padding: 50px;
+  width: 60%;
+  margin-left: 17%;
+}
+
+
+@media (max-width: 750px) {
+  .text-anonymous {
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+  }
 }
