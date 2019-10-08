@@ -255,3 +255,20 @@ label small {
 .light-blue {
     background-color: #d0e2f2;
 }
+
+.text-anonymous {
+    text-align: left;
+    margin: 20px;
+    padding: 50px;
+    width: 60%;
+    margin-left: 17%;
+  }
+  
+  
+  @media (max-width: 750px) {
+    .text-anonymous {
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+    }
+  }
