@@ -5,7 +5,7 @@
 [![Join the chat at https://publiclab.org/chat](https://img.shields.io/badge/chat-in%20different%20ways-blue.svg)](https://publiclab.org/chat)
 [![first-timers-only-friendly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://code.publiclab.org#r=all)
 [![View performance data on Skylight](https://badges.skylight.io/typical/ArYnJAb3VUC9.svg?token=DJ-zenCIFAootUAeQ8BkTiTkMBXkNpNc-PXTLA4dqDU)](https://www.skylight.io/app/applications/ArYnJAb3VUC9)
-
+[Mapkitter in depth](#mapknitter-in-depth)
 
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
@@ -276,3 +276,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MapKnitter. If not, see <http://www.gnu.org/licenses/>.
+***
+
+## Mapknitter in depth
+
+MapKnitter is a free and open source software created and run by Public Lab. MapKnitter is hosted through a donation of server space byRackspace.
+
+MapKnitter can make maps from any image source, but it particularly lends itself to making maps with balloons and kites. The manual process of making maps with MapKnitter differs greatly from automated aerial imaging systems. In those systems, the imaging is of higher precision and processed with spatial and telemetry data collected along with the imagery, typically at higher altitudes and with consistent image overlap in the flight path sequence.
+
+With MapKnitter the cartographer dynamically places each image and selects which images to include in the mosaic. Although the approaches are similar in that they use some type of additional information (usually pre-existing imagery of a lower resolution) as a reference, and that they are bound to specific cartographic elements such as map scale and map projection
