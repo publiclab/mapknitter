@@ -29,6 +29,7 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 5. [Developers](#developers)
 6. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
 7. [License](#license)
+8. [Mapkitter in depth](#mapknitter-in-depth)
 
 
 ****
@@ -276,3 +277,15 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MapKnitter. If not, see <http://www.gnu.org/licenses/>.
+
+
+
+***
+
+## Mapknitter in depth
+
+MapKnitter is a free and open source software created and run by Public Lab. MapKnitter is hosted through a donation of server space byRackspace.
+
+MapKnitter can make maps from any image source, but it particularly lends itself to making maps with balloons and kites. The manual process of making maps with MapKnitter differs greatly from automated aerial imaging systems. In those systems, the imaging is of higher precision and processed with spatial and telemetry data collected along with the imagery, typically at higher altitudes and with consistent image overlap in the flight path sequence.
+
+With MapKnitter the cartographer dynamically places each image and selects which images to include in the mosaic. Although the approaches are similar in that they use some type of additional information (usually pre-existing imagery of a lower resolution) as a reference, and that they are bound to specific cartographic elements such as map scale and map projection
