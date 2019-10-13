@@ -35,6 +35,7 @@
       <div class="input-group">
         <div class="input-group-prepend"><button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button></div>
         <%= f.text_field :location, :class => "form-control", :tabIndex => 2 %>
+        <div class="input-group-append"><button class="btn btn-outline-secondary btn-geocode-map" type="button"><i class="fa fa-crosshairs"></i></button></div>
       </div>
     </div>
 
@@ -87,7 +88,18 @@
     $("#map_name,#map_slug").keyup(function() {
       $("#map_slug").val(string_to_slug($(this).val()))
     });
-  });
+  }
+  );
+  $(".btn-geocode-map").click(function (){
+    if ("geolocation" in navigator){ 
+	    navigator.geolocation.getCurrentPosition(function(position){ 
+        $("#map_lat").val(position.coords.latitude);
+        $("#map_lon").val(position.coords.longitude);
+		    });
+    }else{
+	    console.log("Browser doesn't support geolocation!");
+    }
+  })
 
   function string_to_slug(text){
     return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-')
