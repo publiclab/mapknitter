@@ -88,13 +88,13 @@
     $("#map_name,#map_slug").keyup(function() {
       $("#map_slug").val(string_to_slug($(this).val()))
     });
-  }
-  );
+  });
   $(".btn-geocode-map").click(function (){
-    if ("geolocation" in navigator){ 
+    if ("geolocation" in navigator){
 	    navigator.geolocation.getCurrentPosition(function(position){ 
         $("#map_lat").val(position.coords.latitude);
         $("#map_lon").val(position.coords.longitude);
+        map.flyTo([position.coords.latitude,position.coords.longitude],13);
 		    });
     }else{
 	    console.log("Browser doesn't support geolocation!");
