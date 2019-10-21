@@ -8,7 +8,6 @@ dist
 docker-compose*.yml
 Dockerfile
 docs
-logs
 Makefile
 tmp
 node_modules
@@ -22,5 +21,16 @@ coverage_report/
 .byebug_history
 coverage_report/
 test/reports/
+/.bundle
+*.swp
+*.swo
+log/
+todo.txt
+.sass-cache
+.byebug_history
+coverage_report/
+test/reports/
+yarn-error.log
+.idea/
 
 
