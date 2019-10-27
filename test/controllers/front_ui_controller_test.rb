@@ -45,4 +45,27 @@ class FrontUiControllerTest < ActionController::TestCase
     assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
     assert @maps.collect(&:name).include?('Cubbon Park')
   end
+
+  test 'should not display archived maps' do
+    session[:user_id] = 1
+    @map.update(archived: true)
+    get :gallery
+    @maps = assigns(:maps)
+
+    assert_response :success
+    assert !@maps.collect(&:name).include?('Saugus Landfill Incinerator')
+    assert @maps.collect(&:name).include?('Cubbon Park')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
+  end
+
+test 'should get maps gallery' do
+    get :gallery
+    @maps = assigns(:maps)
+
+    assert_response :success
+    assert @maps.collect(&:name).include?('Saugus Landfill Incinerator')
+    assert @maps.collect(&:name).include?('Cubbon Park')
+    assert @maps.collect { |map| map.user&.login }.include?('quentin')
+  end
+
 end
