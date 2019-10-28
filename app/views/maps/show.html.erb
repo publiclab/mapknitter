@@ -13,7 +13,7 @@
                 <%= render :partial => 'maps/share' %>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 offset-md-1">
             <% @map.tags.each do |tag| %>
                 <span id="tag_<%= tag.id %>" class="badge badge-light">
                     <a href="/tags/<%= tag.name %>" id="tag_<%= tag.id %>"><%= tag.name %></a>
