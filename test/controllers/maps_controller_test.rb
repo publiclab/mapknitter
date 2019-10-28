@@ -196,9 +196,14 @@ class MapsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
+    @map = maps(:yaya)
+    map = maps(:nairobi)
     get(:show, params: { id: @map.slug })
     assert_response :success
     assert_not_nil assigns(:map)
+    assert assigns(:users)
+    assert assigns(:maps)
+    assert_includes assigns(:maps), map
   end
 
   test 'should archive map' do
