@@ -57,6 +57,7 @@ Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrat
 Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
 
 - [Standard Installation](#Standard-Installation)
+- [Windows Installation](#windows-installation)
 - [Cloud Installation](#Cloud-Installation)
 
 <hr>
@@ -193,6 +194,14 @@ $ rails server -b 0.0.0.0
 ```
 9. Hit the Play button located in the top menu bar.
 10. Open the Codenvy URL provided in the console to see MapKnitter booted up. Great work!
+
+<hr>
+
+### Windows Installation
+We recommend you either work in a virtual environment, or on a dual booted system to avoid dependencies issues and also Unix system works smoother with Ruby and Rails. This will not only benefit you now for Mapknitter, but also in future while working on other Ruby projects, a Linux or Mac OS will make your life easier.
+
+1. [Dual Booting](https://www.tecmint.com/install-ubuntu-alongside-with-windows-dual-boot/amp/), [option2](https://askubuntu.com/questions/1031993/how-to-install-ubuntu-18-04-alongside-windows-10), [video guide](https://www.youtube.com/watch?v=qNeJvujdB-0&fbclid=IwAR0APhs89jlNR_ENKbSwrp6TI6P-wxlx-a0My9XBvPNAfwtADZaAXqcKtP4)
+2. [Setting up a linux virtual env](https://itsfoss.com/install-linux-in-virtualbox/)
 
 <hr>
 
