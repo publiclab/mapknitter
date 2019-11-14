@@ -15,9 +15,10 @@ production:
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: <%= ENV.fetch("MYSQL_HOST") { '127.0.0.1' } %>
-  username: mapknitter
-  password: mapknitter
-  database: mapknitter
+  username: <%= ENV.fetch("MYSQL_USER") { "mapknitter" } %>
+  password: <%= ENV.fetch("MYSQL_PASSWORD") { "mapknitter" } %>
+  database: <%= ENV.fetch("MYSQL_DATABASE") { "mapknitter" } %>
+  socket: <%= ENV.fetch("MYSQL_SOCKET") %>
 
 test:
   <<: *default

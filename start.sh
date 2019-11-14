@@ -24,4 +24,5 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-forego start
+#forego start
+passenger start --port $PORT
