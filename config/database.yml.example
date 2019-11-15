@@ -18,7 +18,7 @@ production:
   username: <%= ENV.fetch("MYSQL_USER") { "mapknitter" } %>
   password: <%= ENV.fetch("MYSQL_PASSWORD") { "mapknitter" } %>
   database: <%= ENV.fetch("MYSQL_DATABASE") { "mapknitter" } %>
-  socket: <%= ENV.fetch("MYSQL_SOCKET") %>
+  socket: <%= ENV.fetch("MYSQL_SOCKET") { '' } %>
 
 test:
   <<: *default
