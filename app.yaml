@@ -1,0 +1,18 @@
+runtime: custom
+env: flex
+
+resources:
+  cpu: 2
+  memory_gb: 2.3
+  disk_size_gb: 10
+
+manual_scaling:
+  instances: 1
+
+beta_settings:
+  cloud_sql_instances: public-lab:us-central1:mapknitter-dev
+
+env_variables:
+  RAILS_ENV: "production"
+  MYSQL_SOCKET: "/cloudsql/public-lab:us-central1:mapknitter-dev"
+  MYSQL_DATABASE: "mapknitter-dev"
