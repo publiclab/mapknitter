@@ -122,9 +122,13 @@ class MapsController < ApplicationController
 
   # run the export
   def export
+    Export.create!(map_id: params[:id], bands_string: 'default bands_string')
+    warpable_ids = params[:id].split(',')
+    warpable_ids.shift
     @map = Map.find_by(id: params[:id])
+    # puts @map
     if logged_in? || Rails.env.development? || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not a human!")
-      render plain: @map.run_export(current_user, params[:resolution].to_f)
+      render plain: @map.run_export(warpable_ids, current_user, params[:resolution].to_f)
     else
       render plain: 'You must be logged in to export, unless the map is anonymous.'
     end
