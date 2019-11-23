@@ -27,7 +27,7 @@ group :dependencies do
   gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
-  gem 'puma', '~> 4.1.0'
+  gem 'puma', '~> 4.2.1'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk-s3', '~> 1'
@@ -71,7 +71,7 @@ group :development, :test do
   # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.2.2'
+  gem 'faker', '~> 2.6.0'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
 end
