@@ -3095,7 +3095,7 @@ jquery-ujs@rails/jquery-ujs#~1.0.4:
   version "0.0.0"
   resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
 
-jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1:
+jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1, "jquery@~> 3.4.0":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -3236,13 +3236,14 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@0.7.7:
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.7.7.tgz#72a8516aa31edb75fc6f5d9e7da41158fac44441"
-  integrity sha512-ncLq9UR5n67jlEuzQnln7p9YaKww8fUWfkylCrujRFi4lktFsYlblhRGEB+7p7gmBsB503l/M8SxMmKNhlC8Rg==
+leaflet-distortableimage@^0.8.7:
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.8.7.tgz#d6cdaac6c54872416a124af604bdbbed3b37af91"
+  integrity sha512-D643lX4V6HRVTWDroZVrm6IriWVJlpMINooMsxyTkFyNq/cPLj11pB0nayHIykENA8PqJNvzAB2WZc/uci3Kdg==
   dependencies:
     exif-js "^2.3.0"
     glfx "0.0.4"
+    jquery "~> 3.4.0"
     leaflet-toolbar "0.4.0-alpha.2"
     webgl-distort "0.0.2"
 
