@@ -610,10 +610,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   setupCollection: function() {
-    var customExports = mapknitter.customExportAction();
 
     map._imgGroup = L.distortableCollection({
-      actions: [customExports],
       editable: !mapknitter.readOnly
     }).addTo(map);
 
@@ -662,70 +660,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     });
 
     return action;
-  },
-
-  customExportAction: function () {
-    var action = L.EditAction.extend({
-      initialize: function (map, overlay, options) {
-        var use = 'get_app';
-
-        options = options || {};
-        options.toolbarIcon = {
-          svg: true,
-          html: use,
-          tooltip: 'Export Images'
-        };
-
-        L.EditAction.prototype.initialize.call(this, map, overlay, options);
-      },
-
-      addHooks: function () {
-        var group = this._overlay;
-        var edit = group.editing;
-        var exportInterval;
-
-        var updateUI = function updateUI(data) {
-          data = JSON.parse(data);
-          console.log("in updateui: " + data);
-          if (data.status == 'complete') clearInterval(exportInterval);
-          if (data.status == 'complete' && data.jpg.match('.jpg')) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
-        }
-
-        var addUrlToModel = function addUrlToModel(data) {
-          var statusUrl = "//export.mapknitter.org" + data;
-          console.log("statusUrl: " + statusUrl);
-          
-          // repeatedly fetch the status.json
-          var updateInterval = function updateInterval() {
-            exportInterval = setInterval(function intervalUpdater() {
-              $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
-                type: "GET",
-                crossDomain: true
-              }).done(function (data) {
-                updateUI(data);
-              });
-            }, 3000);
-          }
-          /**
-           * TODO: update API to say if you pass in a custom `handleStatusUrl` you must also build your own updater
-           * and also create your own a frequency
-           * or fix this part
-           */
-          $.ajax({
-            url: "/export",
-            type: 'POST',
-            data: { status_url: statusUrl }
-          }).done(function (data) {
-            console.log('success!! ' + data);
-            updateInterval();
-          });
-        }
-
-        edit.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
-      }
-    });
-
-    return action;
   }
+
 });
 

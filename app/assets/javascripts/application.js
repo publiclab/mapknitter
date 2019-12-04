@@ -46,7 +46,6 @@
 //= require leaflet-draw/dist/leaflet.draw-src.js
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
-//= require leaflet-distortableimage/src/edit/tools/EditAction.js
 //= require mapknitter/Map.js
 //= require cable.js
 
