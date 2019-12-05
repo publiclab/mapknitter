@@ -185,7 +185,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.4.0)
       ast (~> 2.4.0)
-    passenger (6.0.2)
+    passenger (6.0.4)
       rack
       rake (>= 0.8.1)
     popper_js (1.14.5)
