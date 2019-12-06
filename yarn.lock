@@ -509,9 +509,10 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
-bootstrap@twbs/bootstrap#^4.3.1:
-  version "4.3.1"
-  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/8fa0d3010112dca5dd6dd501173415856001ba8b"
+bootstrap@twbs/bootstrap#^4.4.1:
+  version "4.4.1"
+  uid dca1ab7d877bc4b664b43604657a2b5fbe2b4ecb
+  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/dca1ab7d877bc4b664b43604657a2b5fbe2b4ecb"
 
 bootstrap@~3.2.0:
   version "3.2.0"
