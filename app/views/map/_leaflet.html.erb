@@ -14,7 +14,6 @@
 
   </div>
 
-
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn btn-large">Close</a>
   </div>
@@ -47,7 +46,7 @@
 	var maxZoom = 22
 	var label = "Main"
 	var zoom = <%= @map.zoom %>
-	var google = L.Google("SATELLITE",{opacity:0.5});
+	var google = new L.Google("SATELLITE",{opacity:0.5});
 	var main = L.tileLayer(tms, {minZoom: minZoom, maxZoom: maxZoom, scheme:"tms", tms:true});
 
         // add an OpenStreetMap tile layer
@@ -55,7 +54,7 @@
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         })
 
-	map = L.Map('leafletmap', {
+	map = L.map('leafletmap', {
 		crs:L.CRS.EPSG3857,
 		layers: [google,main]
 	});
@@ -68,10 +67,10 @@
 	    "Overlay": main
 	};
 
-	var layersControl = L.Control.Layers(baseMaps,overlayMaps);
+	var layersControl = L.control.layers(baseMaps,overlayMaps);
 	map.addControl(layersControl);
 
-	map.setView(L.LatLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
+	map.setView(L.latLng(<%= @map.lat %>,<%= @map.lon %>), zoom)
 
   })()
 </script>
