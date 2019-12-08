@@ -141,8 +141,9 @@ $ sudo apt-get install nodejs-legacy
 3. Once npm is installed, you should be able to use it to install Yarn:
 
 ```Bash
-$ sudo npm install -g yarn
+$ npm install -g yarn
 ```
+NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) incase NPM throws permission errors
 
   ==================
 
