@@ -453,36 +453,37 @@ bl@^3.0.0:
   dependencies:
     readable-stream "^3.0.1"
 
-blueimp-canvas-to-blob@3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.5.0.tgz#5679ac32f6a2835821f0c3ad661719ff85a9236b"
-  integrity sha1-VnmsMvaig1gh8MOtZhcZ/4WpI2s=
+blueimp-canvas-to-blob@3:
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.16.0.tgz#eb5932207f9bf23558c8bc2fbcdc5ca2cca35c36"
+  integrity sha512-r5TRlxH5Y0iKrRajCfiW1K4o2U1JniarjLXuNJrC5nnlWV/UopieF8sysw9pAYBauxg2I3Ah1hUp3NEuinwmkA==
 
 blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=2.1.1:
   version "3.15.0"
   resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/f47d01f2827f69dde571c0fe06159e8e99a1de96"
 
-blueimp-file-upload@blueimp/jQuery-File-Upload#~9.22.1:
-  version "9.22.2"
-  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/965e300db3cf5218e0d4bebb3f4dd229bc24e865"
+blueimp-file-upload@blueimp/jQuery-File-Upload#~10.4.0:
+  version "10.4.0"
+  uid "36b246aac322bdbf96c7f5d20ab703d6bde365e6"
+  resolved "https://codeload.github.com/blueimp/jQuery-File-Upload/tar.gz/36b246aac322bdbf96c7f5d20ab703d6bde365e6"
   optionalDependencies:
-    blueimp-canvas-to-blob "3.5.0"
-    blueimp-load-image "2.12.2"
-    blueimp-tmpl "3.6.0"
+    blueimp-canvas-to-blob "3"
+    blueimp-load-image "2"
+    blueimp-tmpl "3"
 
-blueimp-load-image@2.12.2:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-2.12.2.tgz#6a17598aab858d4fbf01543e0631141b51057c87"
-  integrity sha1-ahdZiquFjU+/AVQ+BjEUG1EFfIc=
+blueimp-load-image@2:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-2.24.0.tgz#ced5b78fc9b32b4743fc4f780d3305d56391f04f"
+  integrity sha512-fR/CNGEOqbcgbQC7+6hJKcxjD5updapWECbptrHrYpkacP1eXCOoA+92D0v49Sc+gwtxTDzu8nxNmYYd7AXzUg==
 
 blueimp-load-image@blueimp/JavaScript-Load-Image#>=1.13.0:
   version "2.23.0"
   resolved "https://codeload.github.com/blueimp/JavaScript-Load-Image/tar.gz/455a28c68dc1cd1046e8c458cc0f5027ed7ac03f"
 
-blueimp-tmpl@3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.6.0.tgz#a4910975d042e2bc03ba77f0e62d04f1548a524c"
-  integrity sha1-pJEJddBC4rwDunfw5i0E8VSKUkw=
+blueimp-tmpl@3:
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.13.0.tgz#910c337d5742a8a17e3237139389853ebc9ced56"
+  integrity sha512-TC5eLXhPGGgBJG1gGxKRORB5DMxSVSTS/GsqsQuJ+shv0Ez5wc9bjoXVhPqtdbzVZAzFvveasAMrjqEYY/18Og==
 
 blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4:
   version "2.5.4"
