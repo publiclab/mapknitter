@@ -6,7 +6,7 @@
   "author": "Public Lab contributors <web@publiclab.org>",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.9.0",
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "blueimp-canvas-to-blob": "blueimp/JavaScript-Canvas-to-Blob#>=2.1.1",
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=1.13.0",
