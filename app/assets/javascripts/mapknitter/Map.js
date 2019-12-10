@@ -159,8 +159,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
     L.DomEvent.on(img._image, 'load', function() {
-      if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
-      edit.addTool(mapknitter.customDeleteAction());
+      var newTool = mapknitter.customDeleteAction();
+
+      if (edit.hasTool(L.DeleteAction)) { 
+        edit.replaceTool(L.DeleteAction, newTool); 
+      } else {
+        edit.addTool(newTool);
+      }
 
       if (!edit._selected) { edit._deselect(); }
 
