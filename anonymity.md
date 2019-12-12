@@ -5,10 +5,12 @@
 Users **should not** be bogged down with privacy issues and the extra barrier of creating an account as they advance this initiative but there are also [problems created by this functionality](https://github.com/publiclab/mapknitter/issues/1029)
 
 ## Privacy and Impact
+Section about why users might need to contribute anonymously and how we can allow these people to help.
 
 ---
 
 ## User Interface Problems and Deterrence
+Section about loss of features for anonymous users and how certain users might be deterred by the barrier of having to create an account if anonymity was not supported
 
 ---
 
