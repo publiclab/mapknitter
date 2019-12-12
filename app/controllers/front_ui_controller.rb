@@ -42,7 +42,10 @@ class FrontUiController < ApplicationController
     render nothing: true
   end
 
-  def about; end
+  def about
+    @map_count = Map.count
+    @img_count = Warpable.count
+  end
 
   def location
     @loc = params[:loc]

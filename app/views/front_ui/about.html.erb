@@ -1,6 +1,6 @@
 <div class="card mt-2 align-middle card-without-border">
   <div class="row no-gutters">
-    <img src="<%= asset_path('image.png') %>" class="card-img"  height="600" width="80%" alt="Aerial mapping tools">
+    <img src="<%= asset_path('image.png') %>" id="about-img" alt="Aerial mapping tools">
     </div>
   <div class="row no-gutters text-block">
       <div class="card-body">
@@ -8,9 +8,12 @@
         <hr>
         <br>
         <br>
-<div class= "col-md-10 offset-md-2">
+<div class= "col-md-10 offset-md-2" id="about-text">
     <p class="card-text">
-        MapKnitter 2 is a <a class="alert-link" href="http://github.com/publiclab/mapknitter">free and open source software</a> created and run by <a class="alert-link" href="http://publiclab.org">Public Lab</a>.
+        MapKnitter 2 is a <a class="alert-link" href="http://github.com/publiclab/mapknitter">free and open source software</a> created and run by <a class="alert-link" href="http://publiclab.org">Public Lab</a> to to upload your own aerial photographs.
+        </p>
+        <p class="card-text">
+          MapKnitter can make maps from any image source, but it particularly lends itself to making maps with balloons and kites. The manual process of making maps with MapKnitter differs greatly from automated aerial imaging systems. In those systems, the imaging is of higher precision and processed with spatial and telemetry data collected along with the imagery, typically at higher altitudes and with consistent image overlap in the flight path sequence.
         </p>
         <p class="card-text">MapKnitter is hosted through a donation of server space by <a class="alert-link" href="http://rackspace.com">Rackspace</a>.</p>
         <h6>Open Source Softwares and Work that we use:</h6>
@@ -25,9 +28,21 @@
           </li>
         </ul>
         <br>
+        <div id="count-container">
+              <figure>
+                <%= image_tag "maps.svg" %>
+                <figcaption><h3><%= @map_count %> maps hosted</h3></figcaption>
+              </figure>
+              <figure>
+                <%= image_tag "images.svg" %>
+                <figcaption><h3><%= @img_count %> images uploaded</h3></figcaption>
+            </figure>
+          </div>
 </div>
-        <span class="mb-3"><%= render :partial => 'maps/statistics' %></span>
+        <span class="mb-3">
+          <%= render :partial => 'maps/statistics' %>
+        </span>
       </div>
-    </div>
+    </div> 
   </div>
 </div>
