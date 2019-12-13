@@ -5,7 +5,15 @@
 Users **should not** be bogged down with privacy issues and the extra barrier of creating an account as they advance this initiative but fighting the [problems of anonymous contributions](https://github.com/publiclab/mapknitter/issues/1029) is also important.
 
 ## Privacy and Impact
-Section about why users might need to contribute anonymously and how we can allow these people to help.
+ Supporting **user privacy** is crucial to Mapknitter and its contributors because of this information explained by @jywarren:
+
+> We have had input from community partners that people who may be  vulnerable or are concerned about being connected to data produced on  MapKnitter.org may be more comfortable producing maps anonymously,  despite the drawbacks. 
+
+Indeed, users of our open source software have explained that keeping their data private is a major concern for them and might even help ensure their security. 
+
+They would not want to be identified and need anonymity to preserve this. Implementing and perfecting this feature lets us aid these users as they exert their freedom of expression in a way that is safe for them. Although it can be difficult to comprehend the importance of anonymity for these people, the mere fact that this is a concern justifies our attempts to accommodate and assist them.
+
+You can learn read a short overview of this issue relative to Mapknitter [here](https://github.com/publiclab/mapknitter/issues/1021#issuecomment-565624601) or you can read this more general but extremely relevant article about [anonymity and freedom of expression](https://www.eff.org/files/filenode/unspecialrapporteurfoe2011-final_3.pdf).
 
 ---
 
@@ -28,7 +36,8 @@ This allows us to preserve anonymity while preventing vandalism or degradation o
 Some potential features that could help fix this are:
 
 - [Edit history for maps and images](https://github.com/publiclab/mapknitter/issues/463#issuecomment-478184881) - Registered users could then **revert** changes made by anonymous ones if they are not useful.
+
 - [Edit permissions](https://github.com/publiclab/mapknitter/issues/84#issuecomment-510123139) - Registered users can restrict whether anyone can edit their map **or not**.
+
 - [Review before maps are posted](https://github.com/publiclab/mapknitter/issues/1029) - This would make submissions from anonymous or first time posters require moderation before being approved and public.
 
----
