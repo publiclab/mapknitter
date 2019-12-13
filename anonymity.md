@@ -10,17 +10,18 @@ Section about why users might need to contribute anonymously and how we can allo
 ---
 
 ## User Interface Problems and Deterrence
-Section about loss of features for anonymous users and how certain users might be deterred by the barrier of having to create an account if anonymity was not supported
+
+[Login walls](https://www.nngroup.com/articles/login-walls/) can very easily deter users from accessing Mapknitter tools and creating maps. We want to ensure that any user can have an easy and direct access to the platform. An important part of our decision to allow anonymity is to make sure users are not put off by a pushy user interface that forces them to create an account for our **nonprofit** website.
 
 ---
 
 ## Technical Aspects
 
-Currently. users can be anonymous although they cannot:
+Currently. we allow anonymous users but they are limited in certain aspects as they cannot:
 
 - Post comments on the maps and be part of the discussion.
 - Export featured maps.
-- Delete images -- because for anonymous users we can't tell whose images they are or who should be allowed to delete  them
+- Delete images - because for anonymous users we can't tell whose images they are or who should be allowed to delete  them
 
 This allows us to preserve anonymity while preventing vandalism or degradation of content quality although it does not fully counter [spammy behavior](https://github.com/publiclab/mapknitter/issues/246). 
 
