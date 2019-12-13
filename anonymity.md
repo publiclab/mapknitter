@@ -25,8 +25,6 @@ As you can see below, we've opted for a compromise that warns users that they wi
 
 ![mapknitter](https://raw.githubusercontent.com/Uzay-G/mapknitter/main/mapknitter-anon.png)
 
-Anonymous users must be restricted in certain ways to prevent spam or the damaging of registered users' maps.
-
 ---
 
 ## Technical Aspects
