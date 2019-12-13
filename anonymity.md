@@ -24,6 +24,7 @@ You can learn read a short overview of this issue relative to Mapknitter [here](
 As you can see below, we've opted for a compromise that warns users that they will have access to more functionality if they log in **but** if they prefer to stay anonymous this is also possible.
 
 ![mapknitter](https://raw.githubusercontent.com/Uzay-G/mapknitter/main/mapknitter-anon.png)
+
 Anonymous users must be restricted in certain ways to prevent spam or the damaging of registered users' maps.
 
 ---
