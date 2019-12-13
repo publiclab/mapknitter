@@ -21,6 +21,11 @@ You can learn read a short overview of this issue relative to Mapknitter [here](
 
 [Login walls](https://www.nngroup.com/articles/login-walls/) can very easily deter users from accessing Mapknitter tools and creating maps. We want to ensure that any user can have an easy and direct access to the platform. An important part of our decision to allow anonymity is to make sure users are not put off by a pushy user interface that forces them to create an account for our **nonprofit** website.
 
+As you can see below, we've opted for a compromise that warns users that they will have access to more functionality if they log in **but** if they prefer to stay anonymous this is also possible.
+
+![mapknitter](https://raw.githubusercontent.com/Uzay-G/mapknitter/main/mapknitter-anon.png)
+Anonymous users must be restricted in certain ways to prevent spam or the damaging of registered users' maps.
+
 ---
 
 ## Technical Aspects
@@ -41,3 +46,8 @@ Some potential features that could help fix this are:
 
 - [Review before maps are posted](https://github.com/publiclab/mapknitter/issues/1029) - This would make submissions from anonymous or first time posters require moderation before being approved and public.
 
+---
+
+Thank you for reading this and helping us make these tools better as a community. Check out [these issues](https://github.com/publiclab/mapknitter/issues?page=1&q=is%3Aissue+anonymous&utf8=%E2%9C%93) if you want to participate in the amelioration of this feature and please edit this document and make a pull request if you've noticed anything relevant that should be added.
+
+Happy coding! :+1: :smile:
