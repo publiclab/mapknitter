@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_13_045600) do
+ActiveRecord::Schema.define(version: 2019_12_14_062147) do
 
   create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "map_id"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 2019_09_13_045600) do
     t.boolean "deleted", default: false, null: false
     t.text "history", null: false
     t.float "cm_per_pixel", default: 0.0, null: false
+    t.index ["map_id"], name: "index_warpables_on_map_id"
   end
 
   create_table "ways", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
