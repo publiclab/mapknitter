@@ -1,4 +1,4 @@
-class AddIndexForWarpableMapId < ActiveRecord::Migration[5.2]
+class AddIndexForWarpableMapId < ActiveRecord::Migration
     def up
         add_index "warpables", ["map_id"], :name => "index_warpables_on_map_id"
     end
