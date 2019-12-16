@@ -35,7 +35,7 @@ Currently, we allow anonymous users but they are limited in certain aspects as t
 - Export featured maps.
 - Delete images - because for anonymous users we can't tell whose images they are or who should be allowed to delete  them
 
-This allows us to preserve anonymity while preventing vandalism or degradation of content quality although it does not fully counter [spammy behavior](https://github.com/publiclab/mapknitter/issues/246). 
+This allows us to preserve anonymity while preventing vandalism or degradation of content quality, although it does not fully counter [spammy behavior](https://github.com/publiclab/mapknitter/issues/246). 
 
 Some potential features that could help fix this are:
 
