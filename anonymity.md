@@ -5,7 +5,7 @@
 Users **should not** be bogged down with privacy issues and the extra barrier of creating an account as they advance this initiative but fighting the [problems of anonymous contributions](https://github.com/publiclab/mapknitter/issues/1029) is also important.
 
 ## Privacy and Impact
- Supporting **user privacy** is crucial to Mapknitter and its contributors because of this information explained by @jywarren:
+ Supporting **user privacy** is crucial to MapKnitter and its contributors because of this information explained by [@jywarren](https://github.com/jywarren):
 
 > We have had input from community partners that people who may be  vulnerable or are concerned about being connected to data produced on  MapKnitter.org may be more comfortable producing maps anonymously,  despite the drawbacks. 
 
