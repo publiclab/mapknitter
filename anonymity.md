@@ -1,4 +1,4 @@
-# Anonymity on [Mapknitter](https://mapknitter.org)
+# Anonymity on [MapKnitter](https://mapknitter.org)
 
 [Public Lab](https://publiclab.org) is an organization dedicated to protecting the planet by building useful [tools](https://github.com/publiclab) and bringing together passionate and kind people who want to have a positive impact. MapKnitter was at the beginning of this collaboration between committed individuals when it was used to [provide public information about the 2010 BP Oil Disaster](https://publiclab.org/wiki/stories). It has since grown and now hosts more than **2761** maps, yet it still upholds its fundamental idea of sharing **open** data that anyone can **contribute to or edit**.  
 
