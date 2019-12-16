@@ -13,7 +13,7 @@ Indeed, users of our open source software have explained that keeping their data
 
 They would not want to be identified and need anonymity to preserve this. Implementing and perfecting this feature lets us aid these users as they exert their freedom of expression in a way that is safe for them.
 
-You can learn read a short overview of this issue relative to Mapknitter [here](https://github.com/publiclab/mapknitter/issues/1021#issuecomment-565624601) or you can read this more general but extremely relevant article about [anonymity and freedom of expression](https://www.eff.org/files/filenode/unspecialrapporteurfoe2011-final_3.pdf).
+You can read a short overview of this issue relative to MapKnitter [here](https://github.com/publiclab/mapknitter/issues/1021#issuecomment-565624601) or you can read this more general but extremely relevant article about [anonymity and freedom of expression](https://www.eff.org/files/filenode/unspecialrapporteurfoe2011-final_3.pdf).
 
 ---
 
