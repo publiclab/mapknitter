@@ -29,7 +29,7 @@ As you can see below, we've opted for a compromise that warns users that they wi
 
 ## Technical Aspects
 
-Currently. we allow anonymous users but they are limited in certain aspects as they cannot:
+Currently, we allow anonymous users but they are limited in certain aspects as they cannot:
 
 - Post comments on the maps and be part of the discussion.
 - Export featured maps.
