@@ -19,7 +19,7 @@ You can read a short overview of this issue relative to MapKnitter [here](https:
 
 ## User Interface Problems and Deterrence
 
-[Login walls](https://www.nngroup.com/articles/login-walls/) can very easily deter users from accessing Mapknitter tools and creating maps. We want to ensure that any user can have an easy and direct access to the platform. An important part of our decision to allow anonymity is to make sure users are not put off by a pushy user interface that forces them to create an account for our **nonprofit** website.
+[Login walls](https://www.nngroup.com/articles/login-walls/) can very easily deter users from accessing MapKnitter tools and creating maps. We want to ensure that any user can have an easy and direct access to the platform.
 
 As you can see below, we've opted for a compromise that warns users that they will have access to more functionality if they log in **but** if they prefer to stay anonymous this is also possible.
 
