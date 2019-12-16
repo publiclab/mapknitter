@@ -625,7 +625,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     if (!mapknitter.readOnly) {
       // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
       L.DomEvent.on(sidebar, {
-        mouseenter: mapknitter._enter,
+        click: mapknitter._enter,
         mouseleave: mapknitter._out,
       });
 
