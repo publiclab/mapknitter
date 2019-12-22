@@ -2,6 +2,11 @@
 
 pidfile=/app/tmp/pids/server.pid
 
+if [ ! -f "./config/initializers/recaptcha.rb" ]; then
+    echo -e "\e[33mWARNING\e[0m: You haven't configured recaptcha!"
+    echo -e "\e[94mRead More\e[0m: https://github.com/publiclab/mapknitter#installation-steps"
+fi
+
 bump_database(){
 	bundle exec rails db:schema:load || bundle exec rails db:migrate
 }
