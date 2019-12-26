@@ -52,7 +52,7 @@
     <div class="row">
         <div class= "text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
-            <p><i style="color:#aaa;">A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
+            <p style="display:flex;justify-content:space-around;><i style="color:#aaa;">A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
             <p>Use a kite, balloon, or pole to take an aerial photo and tell your own visual story of a place. <a href="/about" class="alert-link">Learn more</a></p>
             <p>
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
@@ -61,9 +61,9 @@
             <% if logged_in? %>
               <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
             <% else %>
-              <a class="btn btn-primary btn-lg" href="" data-toggle="collapse" data-target="#anonymous-map">
+              <a class="btn btn-primary btn-lg" href="" style="display:flex;align-items:center;justify-content:center;" data-toggle="collapse" data-target="#anonymous-map">
             <% end %>
-            Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;"></i>
+            Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;margin-left:2%;"></i>
             </a>
             </p>
         </div>
