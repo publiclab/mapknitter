@@ -73,7 +73,7 @@
 
     <% if !logged_in? %><p><% if Rails.env == 'production' %><%= recaptcha_tags :display => {:theme => "white"} %><% end %></p><% end %>
 
-    <%= f.submit "Create map", :class => "btn btn-primary btn-lg", :tabIndex => 4 %>  
+    <%= f.submit "Create map", :class => "btn btn-primary btn-lg", :tabIndex => 4, :data => {:confirm => 'Are you sure? You will no longer be able to edit the map.'} %>  
 
     <input type="hidden" name="map[zoom]" id="map_zoom" />
 
