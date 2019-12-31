@@ -143,7 +143,7 @@ $ sudo apt-get install nodejs-legacy
 ```Bash
 $ npm install -g yarn
 ```
-NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) incase NPM throws permission errors
+NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) in case NPM throws permission errors
 
   ==================
 
