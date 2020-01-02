@@ -8,7 +8,7 @@ class MapsController < ApplicationController
   before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
-
+  
   def index
     # show only maps with at least 1 image to reduce spammer interest
     @maps = Map.page(params[:page])
@@ -189,7 +189,7 @@ class MapsController < ApplicationController
         format.html { render 'front_ui/gallery', layout: 'application' }
       else
         @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
-        if @maps.length > 0
+        if @maps.length.positive?
           @title = "Search results for '#{data}'"
           format.html { render 'front_ui/gallery', layout: 'application' }
           format.json { render json: @maps }
