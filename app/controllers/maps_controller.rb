@@ -8,7 +8,7 @@ class MapsController < ApplicationController
   before_action :find_map, only: %i(show annotate embed edit update images destroy archive view_map)
 
   layout 'knitter2'
-  
+
   def index
     # show only maps with at least 1 image to reduce spammer interest
     @maps = Map.page(params[:page])
@@ -173,33 +173,25 @@ class MapsController < ApplicationController
     @maps = Map.featured.paginate(page: params[:page], per_page: 24)
     render 'maps/index', layout: 'application'
   end
+  
   def search
     data = params[:q]
     query = params[:q].gsub(/\s+/, '')
 
     respond_to do |format|
-      if query.length < 3
-        flash.now[:info] = 'Invalid Query: non white-space character count is less than 3'
+      @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
+      if query.length < 3 || @maps.length.zero?
+        flash.now[:info] = query.length < 3 ? 'Invalid Query: non white-space character count is less than 3' : "No results found for '#{data}'"
         @title = 'Featured maps'
         @maps = Map.featured
                    .paginate(page: params[:page], per_page: 24)
-                   .except(:styles, :email)
         @authors = User.where(login: Map.featured.collect(&:author))
                                      .paginate(page: params[:mappers], per_page: 20)
         format.html { render 'front_ui/gallery', layout: 'application' }
       else
-        @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
-        if @maps.length.positive?
-          @title = "Search results for '#{data}'"
-          format.html { render 'front_ui/gallery', layout: 'application' }
-          format.json { render json: @maps }
-        else
-          flash[:info] = "No results found for '#{data}'"
-          @title = "Featured Maps"
-          @maps = Map.featured
-          .paginate(page: params[:page], per_page: 24)
-          format.html { render 'front_ui/gallery', layout: 'application' }
-        end
+        @title = "Search results for '#{data}'"
+        format.html { render 'front_ui/gallery', layout: 'application' }
+        format.json { render json: @maps }
       end
     end
   end
