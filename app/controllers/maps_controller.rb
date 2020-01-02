@@ -173,7 +173,6 @@ class MapsController < ApplicationController
     @maps = Map.featured.paginate(page: params[:page], per_page: 24)
     render 'maps/index', layout: 'application'
   end
-
   def search
     data = params[:q]
     query = params[:q].gsub(/\s+/, '')
@@ -189,10 +188,18 @@ class MapsController < ApplicationController
                                      .paginate(page: params[:mappers], per_page: 20)
         format.html { render 'front_ui/gallery', layout: 'application' }
       else
-        @title = "Search results for '#{data}'"
         @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
-        format.html { render 'front_ui/gallery', layout: 'application' }
-        format.json { render json: @maps }
+        if @maps.length > 0
+          @title = "Search results for '#{data}'"
+          format.html { render 'front_ui/gallery', layout: 'application' }
+          format.json { render json: @maps }
+        else
+          flash[:info] = "No results found for '#{data}'"
+          @title = "Featured Maps"
+          @maps = Map.featured
+          .paginate(page: params[:page], per_page: 24)
+          format.html { render 'front_ui/gallery', layout: 'application' }
+        end
       end
     end
   end
