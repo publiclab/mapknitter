@@ -173,7 +173,7 @@ class MapsController < ApplicationController
     @maps = Map.featured.paginate(page: params[:page], per_page: 24)
     render 'maps/index', layout: 'application'
   end
-  
+
   def search
     data = params[:q]
     query = params[:q].gsub(/\s+/, '')
