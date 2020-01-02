@@ -79,6 +79,13 @@ class MapsControllerTest < ActionController::TestCase
     assert_template 'front_ui/gallery'
   end
 
+  test "searching with 0 results return featured" do
+    get :search, params: { q: 'adadada'}
+    @maps = assigns(:maps)
+    assert_response :success
+    assert flash[:info], "No results found for 'adadada'"
+    assert_select ".section-title", "Featured maps"
+  end
   test 'should create map if logged in' do
     session[:user_id] = 1
     before_count = Map.count
