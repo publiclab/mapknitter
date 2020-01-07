@@ -1,0 +1,16 @@
+runtime: custom
+env: flex
+
+resources:
+  cpu: 2
+  memory_gb: 2.3
+  disk_size_gb: 10
+
+manual_scaling:
+  instances: 1
+
+beta_settings:
+  cloud_sql_instances: public-lab:us-central1:mapknitter-dev
+
+includes:
+  - env_vars.yaml
