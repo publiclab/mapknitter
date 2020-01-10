@@ -26,7 +26,7 @@
     "leaflet": "Leaflet/Leaflet#^1.0.0",
     "leaflet-dist": "vperron/leaflet-dist#0.7.x",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
-    "leaflet-distortableimage": "0.8.7",
+    "leaflet-distortableimage": "^0.10.0",
     "leaflet-easybutton": "^2.4.0",
     "leaflet-environmental-layers": "^2.1.9",
     "leaflet-fullhash": "^1.0.0",

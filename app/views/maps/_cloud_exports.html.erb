@@ -14,7 +14,7 @@
       console.log(response);
       response = JSON.parse(response);
       if (response.status) export_el.append('<span class="status">' + response.status + '</span>');
-      if (response.jpg) export_el.append('<span class="file">' + response.jpg + '</span>');
+      if (response.jpg) export_el.append('<span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg + '">JPG</span>');
     });
   })
 })()

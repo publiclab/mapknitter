@@ -470,8 +470,44 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
           var customExports = mapknitter.customExportAction();
           var imgGroup = L.distortableCollection({
-              actions: [customExports],
+            // exportUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+            // exportStartUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+            // fetchStatusUrl: fetchStatusUrl,
+            handleStatusResponse: handleStatusResponse
           }).addTo(map);
+
+          // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
+          // this may be overridden to integrate with any UI
+          function handleStatusResponse(data, opts) {
+            console.log(data);
+            // this is for the JS exporter:
+            // var statusUrl = data.split('please visit, ')[1];
+
+            // save the location of the status URL
+            $.ajax({	
+              url: "/export",	
+              type: 'POST',	
+              data: { status_url: data.status_url }	
+            }).done(function (data) {	
+              console.log('saved status.json URL to MapKnitter' + data);	
+            });
+
+            // repeatedly fetch the status.json
+            var updateInterval = setInterval(function intervalUpdater() {
+              $.ajax(statusUrl + '?' + Date.now(), {// bust cache with timestamp
+                type: 'GET',
+                crossDomain: true,
+              }).done(function(data) {
+                // update the progress bar or spinner
+
+                opts.updater(data); 
+              });
+            }, 3000); // frequency of updating
+ 
+            // but in this example, we're not; we just get the URL of the finished image;
+            // we should stop the spinner
+            opts.resolve();
+          }
 
           imgGroup.addLayer(img);
 
