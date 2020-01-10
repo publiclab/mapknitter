@@ -1,0 +1,21 @@
+<p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">About the Cloud Exporter</a></p>
+<% exports.order(created_at: :desc).each_with_index do |i, export| %>
+  <p class="export">
+    <b>Export <%= i %>:</b> 
+    <a href="<%= export.export_url %>">Status file</a>
+  </p>
+<% end %>
+<script>
+(function() {
+  $('#map-export-subtab .export').each(function collectExportUrls() {
+    var export_el = $(this);
+    var export_url = export_el.find('a').attr('href');
+    $.ajax(export_url).success(function displayExportStatus(response) {
+      console.log(response);
+      response = JSON.parse(response);
+      if (response.status) export_el.append('<span class="status">' + response.status + '</span>');
+      if (response.jpg) export_el.append('<span class="file">' + response.jpg + '</span>');
+    });
+  })
+})()
+</script> 
