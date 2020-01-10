@@ -1,5 +1,5 @@
 <p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">About the Cloud Exporter</a></p>
-<% exports.order(created_at: :desc).each_with_index do |i, export| %>
+<% exports.order(created_at: :desc).each_with_index do |export, i| %>
   <p class="export">
     <b>Export <%= i %>:</b> 
     <a href="<%= export.export_url %>">Status file</a>
