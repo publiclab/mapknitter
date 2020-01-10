@@ -103,6 +103,12 @@
       <%= render partial: 'front_ui/maps', locals: { maps: @maps } %>
   </div>
 
+  <div class="all-maps light-blue">
+      <br>
+      <h3 class="text-center"> Exports </h3>
+      <%= render partial: 'maps/cloud_exports', locals: { exports: @map.exports }%>
+  </div>
+
  <script>
     var map
     (function(){
