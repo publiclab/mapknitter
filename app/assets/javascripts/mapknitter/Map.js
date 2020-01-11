@@ -479,7 +479,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
           // this may be overridden to integrate with any UI
           function handleStatusResponse(data, opts) {
-            console.log(data);
+            console.log('handlestatus custom', data);
             // this is for the JS exporter:
             // var statusUrl = data.split('please visit, ')[1];
 
