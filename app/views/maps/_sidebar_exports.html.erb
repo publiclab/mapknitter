@@ -28,7 +28,7 @@
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="map-export-subtab">
   
-    <div class="progress"<% unless @map.exporting? %> style="display:none;"<% end %>>
+    <div class="progress mb-3"<% unless @map.exporting? %> style="display:none;"<% end %>>
       <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
         <span class="" id="export_progress"><%= @map.export ? @map.export.status : "Loading..." %></span>
       </div>
