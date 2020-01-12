@@ -134,7 +134,7 @@
                   </p>
 
                   <hr />
-                  <p>
+                  <p class="cta-buttons">
                     <% if logged_in? %>
                       <button type="button" class="btn btn-outline-info btn-sm" onClick="$('#map-edit-container').toggle()">Edit details</button>
                       <%= link_to 'Delete map', map_path(@map), method: :delete, class: "btn btn-outline-info btn-sm", data: { confirm: 'Are you sure? This cannot be undone.' } %>
