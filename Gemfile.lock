@@ -127,7 +127,7 @@ GEM
       execjs
       multi_json (>= 1.3)
       rake
-    json (2.2.0)
+    json (2.3.0)
     libv8 (7.3.492.27.1)
     libxml-ruby (3.1.0)
     listen (3.2.1)
@@ -240,7 +240,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rdiscount (2.2.0.1)
-    recaptcha (5.0.0)
+    recaptcha (5.3.0)
       json
     redcarpet (3.5.0)
     regexp_parser (1.6.0)
@@ -379,7 +379,7 @@ DEPENDENCIES
   rails-perftest
   rake (~> 12.3.2)
   rdiscount (= 2.2.0.1)
-  recaptcha (~> 5.0.0)
+  recaptcha (~> 5.3.0)
   right_aws_api (~> 0.3.5)
   rubocop (~> 0.70.0)
   rubocop-performance
