@@ -98,14 +98,16 @@
                   <a class="nav-link" href="#map-images-container" role="tab" data-toggle="tab">Images</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#map-editing-container" role="tab" data-toggle="tab">Annotate</a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="#map-exports-container" role="tab" data-toggle="tab">Export</a>
                 </li>
                 <li class="nav-item d-none d-sm-block">
                   <a class="nav-link" target="_blank" href="https://publiclab.org/chat" role="tab" style="border: none;">Chat</a>
                 </li>
+<!--
+                <li class="nav-item">
+                  <a class="nav-link" href="#map-editing-container" role="tab" data-toggle="tab">Annotate</a>
+                </li>
+-->
               </ul>
 
               <!-- Tab panes -->
@@ -191,6 +193,7 @@
         readOnly:   <%= @embed == true || @annotations == true %>,
         logged_in:   <%= logged_in? == true %>,
         anonymous:   <%= @map.anonymous? == true %>,
+        map_id:      <%= @map.id %>,
         warpablesUrl:  "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
       <% if @map.warpables.empty? && params[:action] == 'edit' && @map.display_welcome %>
