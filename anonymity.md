@@ -35,7 +35,7 @@ Anonymous users are limited in certain aspects as they cannot:
 
 - Post comments on the maps and be part of the discussion.
 - Export featured maps.
-- Delete images - because for anonymous users we can't tell whose images they are or who should be allowed to delete  them
+- Delete images - we can't tell whose images they are or who should be allowed to delete them if they were created anonymously.
 
 This allows us to preserve anonymity while preventing vandalism or degradation of content quality, although it does not fully counter [spammy behavior](https://github.com/publiclab/mapknitter/issues/246). 
 
