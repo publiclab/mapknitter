@@ -1,13 +1,15 @@
 <p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">About the Cloud Exporter</a></p>
+<div class="mapknitter-cloud-exports">
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
-  <p class="export">
+  <p class="export mapknitter-cloud-export">
     <b>Export <%= i %>:</b> 
     <a href="<%= export.export_url %>">Status file</a>
   </p>
 <% end %>
+</div>
 <script>
 (function() {
-  $('#map-export-subtab .export').each(function collectExportUrls() {
+  $('.mapknitter-cloud-exports .mapknitter-cloud-export').each(function collectExportUrls() {
     var export_el = $(this);
     var export_url = export_el.find('a').attr('href');
     $.ajax(export_url).success(function displayExportStatus(response) {

@@ -1,9 +1,9 @@
-
 MapKnitter.Map = MapKnitter.Class.extend({
 
   initialize: function (options) {
     this._zoom = options.zoom || 0;
     this._latlng = L.latLng(options.latlng);
+    this.map_id = options.map_id || 0;
     this.readOnly = options.readOnly;
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
@@ -45,6 +45,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var downloadEl = $('.img-download-' + warpable.id),
               imgEl = $('#full-img-' + warpable.id);
 
+          // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
           downloadEl.click(function () {
             downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 
@@ -418,6 +419,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var downloadEl = $('.img-download-' + warpable.id),
               imgEl = $('#full-img-' + warpable.id);
 
+          // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
           downloadEl.click(function () {
               downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 
@@ -469,45 +471,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           }).addTo(map);
 
           var customExports = mapknitter.customExportAction();
-          var imgGroup = L.distortableCollection({
-            // exportUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
-            // exportStartUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
-            // fetchStatusUrl: fetchStatusUrl,
-            handleStatusResponse: handleStatusResponse
-          }).addTo(map);
-
-          // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
-          // this may be overridden to integrate with any UI
-          function handleStatusResponse(data, opts) {
-            console.log('handlestatus custom', data);
-            // this is for the JS exporter:
-            // var statusUrl = data.split('please visit, ')[1];
-
-            // save the location of the status URL
-            $.ajax({	
-              url: "/export",	
-              type: 'POST',	
-              data: { status_url: data.status_url }	
-            }).done(function (data) {	
-              console.log('saved status.json URL to MapKnitter' + data);	
-            });
-
-            // repeatedly fetch the status.json
-            var updateInterval = setInterval(function intervalUpdater() {
-              $.ajax(statusUrl + '?' + Date.now(), {// bust cache with timestamp
-                type: 'GET',
-                crossDomain: true,
-              }).done(function(data) {
-                // update the progress bar or spinner
-
-                opts.updater(data); 
-              });
-            }, 3000); // frequency of updating
- 
-            // but in this example, we're not; we just get the URL of the finished image;
-            // we should stop the spinner
-            opts.resolve();
-          }
+          var imgGroup = L.distortableCollection({}).addTo(map);
 
           imgGroup.addLayer(img);
 
@@ -653,8 +617,73 @@ MapKnitter.Map = MapKnitter.Class.extend({
   setupCollection: function() {
 
     map._imgGroup = L.distortableCollection({
-      editable: !mapknitter.readOnly
+      editable: !mapknitter.readOnly,
+      exportOpts: {
+        // exportUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+        // exportStartUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+        fetchStatusUrl: fetchStatusUrl
+      }
     }).addTo(map);
+
+    // customize the function that starts up the export
+    function fetchStatusUrl(opts) {
+      console.log('fetch status json', opts);
+
+      var scale = 0;
+      opts.collection.images.forEach(function(img) {
+        scale += img.cm_per_pixel;
+      });
+      // average of scales of each image
+      scale = parseInt(scale/opts.collection.images.length);
+
+      $.ajax({
+        url: 'http://export.mapknitter.org/export',
+        crossDomain: true,
+        type: 'POST',
+        data: {
+          collection: JSON.stringify(opts.collection.images),
+          scale: prompt("Choose a scale in 'centimeters per pixel' (where a smaller 50cm pixel is higher resolution - comparable to Google Maps - or a larger 200cm pixel is lower resolution):", scale) || opts.scale,
+          upload: true,
+        },
+        success: handleStatusResponse
+      });
+    }
+
+    // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
+    // this may be overridden to integrate with any UI
+    function handleStatusResponse(status_url, opts) {
+      alert("Export has begun: leave this window open to be notified of completion. Due to a known issue, please refresh the page if you'd like to start another."); // https://github.com/publiclab/Leaflet.DistortableImage/issues/522
+      // this is for the JS exporter:
+      // var statusUrl = data.split('please visit, ')[1];
+      
+      // save the location of the status URL
+      $.ajax({	
+        url: "/export",	
+        type: 'POST',	
+        data: { 
+          status_url: 'http://export.mapknitter.org' + status_url,
+          map_id: mapknitter.map_id
+        }
+      }).done(function (data) {	
+        console.log('saved status.json URL to MapKnitter', data);	
+      });
+
+      // repeatedly fetch the status.json
+      var updateInterval = setInterval(function intervalUpdater() {
+// need to bust cache with a rotating timestamp...
+        $.ajax('http://export.mapknitter.org/' + status_url + '?' + Date.now(), { // bust cache with timestamp
+          type: 'GET',
+          crossDomain: true,
+        }).done(function(data) {
+          // update the progress bar or spinner
+          // opts.updater(data);
+          data = JSON.parse(data);
+          console.log(data, data.status, data.jpg);
+        });
+      }, 3000); // frequency of updating
+
+      opts.resolve(); // stop the spinner
+    }
 
     var sidebar = document.querySelector('body > div.sidebar');
 
