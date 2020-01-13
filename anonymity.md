@@ -6,12 +6,12 @@ Users **should not** be bogged down with privacy issues and the extra barrier of
 
 ## Privacy and Impact
 
- Supporting **user privacy** is crucial to MapKnitter and its contributors because of this information explained by [@jywarren](https://github.com/jywarren):
+ Supporting **user privacy** is crucial to MapKnitter and its contributors as explained by [@jywarren](https://github.com/jywarren):
 
-> We have had input from community partners that people who may be vulnerable or are concerned about being connected to data produced on mapknitter.org may be more comfortable producing maps anonymously, despite the drawbacks. 
+> Publiclab has had input from community partners that people who may be vulnerable or are concerned about being connected to data produced on mapknitter.org may be more comfortable producing maps anonymously, despite the drawbacks. 
 > Indeed, users of our open source software have explained that keeping their data private is a major concern for them and might even help ensure their security.
 
-They would not want to be identified and need anonymity to preserve this. Implementing and perfecting this feature lets us aid these users as they exert their freedom of expression in a way that is safe for them.
+Certain users do not want to be identified and need anonymity to preserve this. Implementing and perfecting this feature lets us aid these users as they exert their freedom of expression in a way that is safe for them.
 
 You can read this more general but extremely relevant article on the important issue of [anonymity and freedom of expression](https://www.eff.org/files/filenode/unspecialrapporteurfoe2011-final_3.pdf) to better understand the roots of this issue.
 
@@ -49,6 +49,6 @@ Some potential but complex features that could help enhance this are:
 
 ---
 
-Thank you for reading this and helping us make these tools better as a community. Check out [these issues](https://github.com/publiclab/mapknitter/issues?page=1&q=is%3Aissue+anonymous&utf8=%E2%9C%93) if you want to participate in the amelioration of this feature and please edit this document and make a pull request if you've noticed anything relevant that should be added.
+Thanks for reading this and helping us make these tools better as a community. Check out [these issues](https://github.com/publiclab/mapknitter/issues?page=1&q=is%3Aissue+anonymous&utf8=%E2%9C%93) if you want to participate in the amelioration of this feature and please edit this document and make a pull request if you've noticed anything relevant that should be added.
 
 Happy coding! :+1: :smile:
