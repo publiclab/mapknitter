@@ -31,7 +31,7 @@ We would love to let anonymous users uses these features but unfortunately it wo
 
 ## Technical Aspects
 
-Currently, we allow anonymous users but they are limited in certain aspects as they cannot:
+Anonymous users are limited in certain aspects as they cannot:
 
 - Post comments on the maps and be part of the discussion.
 - Export featured maps.
