@@ -26,9 +26,6 @@
 //= require blueimp-file-upload/js/jquery.fileupload-process
 //= require blueimp-file-upload/js/jquery.fileupload-ui
 
-//= require popper
-//= require bootstrap/dist/js/bootstrap.js
-
 //= require leaflet-fullHash.js
 //= require leaflet-providers/leaflet-providers.js
 //= require leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js
@@ -49,5 +46,8 @@
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require mapknitter/Map.js
 //= require cable.js
+
+//= require popper
+//= require bootstrap/dist/js/bootstrap.js
 
 //= require_tree .
