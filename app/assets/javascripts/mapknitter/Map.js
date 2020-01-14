@@ -630,23 +630,27 @@ MapKnitter.Map = MapKnitter.Class.extend({
       console.log('fetch status json', opts);
 
       var scale = 0;
-      opts.collection.images.forEach(function(img) {
+      opts.collection.forEach(function(img) {
         scale += img.cm_per_pixel;
       });
       // average of scales of each image
-      scale = parseInt(scale/opts.collection.images.length);
+      scale = parseInt(scale/opts.collection.length);
 
       $.ajax({
         url: 'http://export.mapknitter.org/export',
         crossDomain: true,
         type: 'POST',
         data: {
-          collection: JSON.stringify(opts.collection.images),
+          collection: JSON.stringify(opts.collection),
           scale: prompt("Choose a scale in 'centimeters per pixel' (where a smaller 50cm pixel is higher resolution - comparable to Google Maps - or a larger 200cm pixel is lower resolution):", scale) || opts.scale,
           upload: true,
         },
         success: handleStatusResponse
       });
+      // show exports
+      $('.export-tab').click();
+      $('.exports-tab').click();
+      window.location.hash = "#cloud-exports";
     }
 
     // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
