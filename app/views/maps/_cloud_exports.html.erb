@@ -1,9 +1,9 @@
-<p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">About the Cloud Exporter</a></p>
-<div class="mapknitter-cloud-exports">
+<p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">Using the Cloud Exporter &raquo;</a></p>
+<div class="mapknitter-cloud-exports" id="cloud-exports">
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
-  <p class="export mapknitter-cloud-export">
+  <p class="export mapknitter-cloud-export" style="font-size:11px;">
     <b>Export <%= i %>:</b> 
-    <a href="<%= export.export_url %>">Status file</a>
+    (<a href="<%= export.export_url %>">status</a>)
   </p>
 <% end %>
 </div>
@@ -12,11 +12,20 @@
   $('.mapknitter-cloud-exports .mapknitter-cloud-export').each(function collectExportUrls() {
     var export_el = $(this);
     var export_url = export_el.find('a').attr('href');
-    $.ajax(export_url).success(function displayExportStatus(response) {
-      console.log(response);
+    $.ajax(export_url).done(function displayExportStatus(response) {
       response = JSON.parse(response);
-      if (response.status) export_el.append('<span class="status">' + response.status + '</span>');
-      if (response.jpg) export_el.append('<span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg + '">JPG</span>');
+      console.log(response, response.status);
+
+      if (response.status) export_el.append(' <i class="status">' + response.status + '</i>');
+      if (response.jpg) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
+      if (response.geotiff) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
+
+      export_el.append('<br />');
+
+      if (response.height && response.width) export_el.append(' <span class="meta">' + response.height + 'x' + response.width + '</span>');
+      if (response.size) export_el.append(' <span class="meta">' + (response.size.split('B')[0]/1000000) + 'MB</span>');
+      if (response.zip) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
+      if (response.start_time) export_el.append(' <i class="start_time">' + response.start_time + '</i>');
     });
   })
 })()
