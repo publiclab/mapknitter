@@ -26,6 +26,7 @@
 //= require blueimp-file-upload/js/jquery.fileupload-process
 //= require blueimp-file-upload/js/jquery.fileupload-ui
 
+//= require popper
 //= require bootstrap/dist/js/bootstrap.js
 
 //= require leaflet-fullHash.js

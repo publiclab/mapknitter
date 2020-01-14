@@ -470,7 +470,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
               mode: 'lock',
           }).addTo(map);
 
-          var customExports = mapknitter.customExportAction();
           var imgGroup = L.distortableCollection({}).addTo(map);
 
           imgGroup.addLayer(img);
