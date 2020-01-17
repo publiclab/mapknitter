@@ -193,7 +193,7 @@
         readOnly:   <%= @embed == true || @annotations == true %>,
         logged_in:   <%= logged_in? == true %>,
         anonymous:   <%= @map.anonymous? == true %>,
-        map_id:      <%= @map.id %>,
+        map_id:      <%= @map.id || 0 %>,
         warpablesUrl:  "<%= url_for([@map, :warpables])+'.json' unless @map.warpables.empty? %>"
       });
       <% if @map.warpables.empty? && params[:action] == 'edit' && @map.display_welcome %>
