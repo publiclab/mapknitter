@@ -20,7 +20,7 @@
 //= require jquery-ujs/src/rails.js
 //= require jquery-ui/jquery-ui.min.js
 
-//= require popper
+//= require popper.js
 //= require bootstrap/dist/js/bootstrap.js
 
 //= require blueimp-tmpl/js/tmpl.js
