@@ -36,7 +36,7 @@
     "leaflet-spin": "^1.1.0",
     "modalbox": "okonet/modalbox#*",
     "ol2": "openlayers/ol2#release-2.13.1",
-    "popper": "^1.0.1",
+    "popper.js": "^1.16.0",
     "prototypejs-bower": "plynchnlm/prototypejs-bower#1.7.3",
     "sparklines": "mariusGundersen/sparkline#~1.2.0",
     "spin.js": "fgnass/spin.js#^2.3.1",
