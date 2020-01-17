@@ -3251,10 +3251,10 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@^0.11.3:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.11.5.tgz#f65be9282501012a49a7f506557eb4f693c33866"
-  integrity sha512-ln++/YPCa93IgX03eM3g5VrxfD9RwATrUFCJmNha9VT/DCnod889+cbt+FeluTL2tOBTs/HkOfOJ5xg9t3drDA==
+leaflet-distortableimage@0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.11.6.tgz#88fc5245bdbc8ed4b68eae7cff08872781e11cd9"
+  integrity sha512-SHh8Yu7c74+GnSlSzusARFQBfDcvdAEr/hSe53mll5O5nrjLuGH4TaUdRVioz1WVXbytwcB45CYuAjYcUuE6KA==
   dependencies:
     exif-js "^2.3.0"
     glfx "0.0.4"

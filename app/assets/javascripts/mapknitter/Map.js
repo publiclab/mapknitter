@@ -1,3 +1,4 @@
+(function() {
 MapKnitter.Map = MapKnitter.Class.extend({
 
   initialize: function (options) {
@@ -736,4 +737,4 @@ MapKnitter.Map = MapKnitter.Class.extend({
   }
 
 });
-
+})();

@@ -20,6 +20,9 @@
 //= require jquery-ujs/src/rails.js
 //= require jquery-ui/jquery-ui.min.js
 
+//= require popper
+//= require bootstrap/dist/js/bootstrap.js
+
 //= require blueimp-tmpl/js/tmpl.js
 //= require blueimp-file-upload/js/vendor/jquery.ui.widget
 //= require blueimp-file-upload/js/jquery.fileupload
@@ -46,8 +49,5 @@
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
 //= require mapknitter/Map.js
 //= require cable.js
-
-//= require popper
-//= require bootstrap/dist/js/bootstrap.js
 
 //= require_tree .
