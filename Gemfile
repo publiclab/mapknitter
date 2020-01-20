@@ -70,7 +70,7 @@ group :development, :test do
   # see https://github.com/SeleniumHQ/selenium/issues/5248
   # gem 'webdrivers'
   gem 'selenium-webdriver'
-  gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', '~> 11.1.0', platforms: [:mri, :mingw, :x64_mingw]
   gem 'faker', '~> 2.6.0'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
