@@ -3322,14 +3322,10 @@ leaflet-omnivore@mapbox/leaflet-omnivore#~0.3.2:
     topojson "1.6.26"
     wellknown "0.4.2"
 
-leaflet-providers@^1.1.17:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/leaflet-providers/-/leaflet-providers-1.8.0.tgz#65a5867270d70d7bd5411613a4071c3203372b47"
-  integrity sha512-y0qr1PxrcCq3Vah+COptp29xDmuAEu4Wg/a8YDL+hztfqdsO+OQJzE4aZ+ZVoHFucX5HP5ELw0nrD+xa5T8m0g==
-
-leaflet-providers@leaflet-extras/leaflet-providers#1.0.6:
-  version "1.0.6"
-  resolved "https://codeload.github.com/leaflet-extras/leaflet-providers/tar.gz/620d7a433b74a47b93e6fa9bf6536a384b47d9da"
+leaflet-providers@^1.1.17, leaflet-providers@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/leaflet-providers/-/leaflet-providers-1.9.1.tgz#43b82defe6cfbc33e891c3b7a6a6439a169f343f"
+  integrity sha512-YpJB9y4/nT5NGicU9vuqlttJaCer6paD3J3b8Wrw+IIQvK9dtcdzE9CsTkDg7Dg9FeGp5NEr3hu17xcHbYI/2w==
 
 leaflet-spin@1.1.0, leaflet-spin@^1.1.0:
   version "1.1.0"
