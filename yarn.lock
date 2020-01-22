@@ -3251,15 +3251,16 @@ leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
 
-leaflet-distortableimage@0.8.7:
-  version "0.8.7"
-  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.8.7.tgz#d6cdaac6c54872416a124af604bdbbed3b37af91"
-  integrity sha512-D643lX4V6HRVTWDroZVrm6IriWVJlpMINooMsxyTkFyNq/cPLj11pB0nayHIykENA8PqJNvzAB2WZc/uci3Kdg==
+leaflet-distortableimage@0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.11.6.tgz#88fc5245bdbc8ed4b68eae7cff08872781e11cd9"
+  integrity sha512-SHh8Yu7c74+GnSlSzusARFQBfDcvdAEr/hSe53mll5O5nrjLuGH4TaUdRVioz1WVXbytwcB45CYuAjYcUuE6KA==
   dependencies:
     exif-js "^2.3.0"
     glfx "0.0.4"
     jquery "~> 3.4.0"
     leaflet-toolbar "0.4.0-alpha.2"
+    promise-polyfill "^8.1.3"
     webgl-distort "0.0.2"
 
 leaflet-draw@Leaflet/Leaflet.draw#0.2.4:
@@ -4419,6 +4420,11 @@ process@~0.11.0:
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
+
+promise-polyfill@^8.1.3:
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.1.3.tgz#8c99b3cf53f3a91c68226ffde7bde81d7f904116"
+  integrity sha512-MG5r82wBzh7pSKDRa9y+vllNHz3e3d4CNj1PQE4BQYxLme0gKYYBm9YENq+UkEikyZ0XbiGWxYlVw3Rl9O/U8g==
 
 prototypejs-bower@plynchnlm/prototypejs-bower#1.7.3:
   version "0.0.0"
