@@ -267,7 +267,7 @@ GEM
     ruby-openid (2.9.1)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
-    ruby-prof (1.0.0)
+    ruby-prof (1.2.0)
     ruby-progressbar (1.10.1)
     rubyzip (2.0.0)
     sass (3.7.4)
