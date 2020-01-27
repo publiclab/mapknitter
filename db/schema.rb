@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_14_062147) do
+ActiveRecord::Schema.define(version: 2019_12_19_051509) do
 
   create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "map_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2019_12_14_062147) do
     t.integer "map_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["map_id"], name: "index_comments_on_map_id"
   end
 
   create_table "exports", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -48,6 +49,7 @@ ActiveRecord::Schema.define(version: 2019_12_14_062147) do
     t.string "export_type", default: "normal", null: false
     t.integer "user_id", default: 0
     t.string "export_url"
+    t.index ["map_id"], name: "index_exports_on_map_id"
   end
 
   create_table "maps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -75,7 +77,9 @@ ActiveRecord::Schema.define(version: 2019_12_14_062147) do
     t.boolean "anon_annotatable", default: false
     t.string "slug"
     t.boolean "display_welcome", default: true
+    t.index ["author"], name: "index_maps_on_author"
     t.index ["slug"], name: "index_maps_on_slug", unique: true
+    t.index ["user_id"], name: "index_maps_on_user_id"
   end
 
   create_table "nodes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

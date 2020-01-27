@@ -364,7 +364,7 @@ DEPENDENCIES
   mini_racer
   minitest
   minitest-reporters
-  mysql2 (< 0.6)
+  mysql2
   oa-openid (= 0.3.2)
   open_id_authentication
   paper_trail
