@@ -15,7 +15,7 @@ gem 'paper_trail'
 
 # dependencies
 group :dependencies do
-  gem 'mysql2'
+   gem 'mysql2', '< 0.6'
   gem 'geokit-rails', '1.1.4'
   gem 'image_science', '1.3.0'
   gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
