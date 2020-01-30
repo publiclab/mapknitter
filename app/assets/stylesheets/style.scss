@@ -317,6 +317,7 @@ label small {
     width: 100%
   }
 }
+
 .text-anonymous {
     text-align: left;
     margin: 20px;
@@ -333,3 +334,10 @@ label small {
       padding: 10px;
     }
   }
+
+#open_id_form button {
+  width: 70px;
+  background-color: #ffffff;
+  border: none;
+  margin-right: 0.25rem;
+}
