@@ -318,6 +318,23 @@ label small {
   }
 }
 
+.text-anonymous {
+    text-align: left;
+    margin: 20px;
+    padding: 50px;
+    width: 60%;
+    margin-left: 17%;
+  }
+  
+  
+  @media (max-width: 750px) {
+    .text-anonymous {
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+    }
+  }
+
 #open_id_form button {
   width: 70px;
   background-color: #ffffff;
