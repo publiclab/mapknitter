@@ -39,6 +39,9 @@ group :dependencies do
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
+  # Process manager for applications with multiple components
+  gem 'foreman', '~> 0.85.0'
+
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
@@ -74,10 +77,10 @@ group :development, :test do
   gem 'faker', '~> 2.6.0'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
-  gem 'brakeman'
 end
 
 group :development do
+  gem 'brakeman'
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.1.5'
