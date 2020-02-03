@@ -143,6 +143,12 @@ label small {
   }
 }
 
+.cta-buttons {
+  .btn {
+    margin-top: 0.25rem;
+  }
+}
+
 .footer {
   margin: 10px auto;
   padding: 30px 60px 40px;
@@ -194,6 +200,7 @@ label small {
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  border: 1px solid #ddd; 
 }
 
 .btn.create-map {
@@ -309,4 +316,28 @@ label small {
   .footer {
     width: 100%
   }
+}
+
+.text-anonymous {
+    text-align: left;
+    margin: 20px;
+    padding: 50px;
+    width: 60%;
+    margin-left: 17%;
+  }
+  
+  
+  @media (max-width: 750px) {
+    .text-anonymous {
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+    }
+  }
+
+#open_id_form button {
+  width: 70px;
+  background-color: #ffffff;
+  border: none;
+  margin-right: 0.25rem;
 }

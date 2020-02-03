@@ -20,7 +20,7 @@ group :dependencies do
   gem 'image_science', '1.3.0'
   gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
-  gem 'ruby-openid', '~>2.5'
+  gem 'ruby-openid', '~>2.9'
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.5'
   gem 'paperclip', '~> 6.1.0'
@@ -49,7 +49,7 @@ group :dependencies do
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.6.1'
+  gem 'autoprefixer-rails', '~> 9.7.3'
   gem 'uglifier', '~> 4.1.20'
 
 end
@@ -83,7 +83,7 @@ group :development do
   gem 'brakeman'
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
-  gem 'listen', '~> 3.1.5'
+  gem 'listen', '~> 3.2.1'
   gem 'web-console', '~> 3.3'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

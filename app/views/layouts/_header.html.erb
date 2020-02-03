@@ -8,9 +8,9 @@
     <ul class="navbar-nav">
       <form action="/search" method='get' class="navbar-form navbar-left" autocomplete="off">
         <div class="input-group" style="min-width: 160px;">
-          <input class="form-control bg-light" id="search-input" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
+          <input class="form-control" id="search-input" type="text" name='q' placeholder="Search maps" value='<%= params[:id] if params[:action] == "search" %>'>
           <span class="input-group-append">
-            <button class="btn btn-light" type="submit" style="margin-left: 2px;"><i class="fa fa-search"></i></button>
+            <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
           </span>
         </div>
       </form>
