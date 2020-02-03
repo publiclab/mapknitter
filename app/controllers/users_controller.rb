@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     @users = User.joins(:maps)
                  .select('users.*, count(users.id) as maps_count')
                  .group('maps.user_id')
-                 .order(sort_column + ' ' + sort_direction)
+                 .order(sort_column: sort_direction)
                  .paginate(page: params[:page], per_page: 24)
     render 'users/index'
   end
