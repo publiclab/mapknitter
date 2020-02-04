@@ -77,6 +77,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'brakeman'
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.2.1'

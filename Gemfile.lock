@@ -76,6 +76,7 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
+    brakeman (4.7.2)
     builder (3.2.4)
     byebug (11.0.1)
     capybara (3.29.0)
@@ -349,6 +350,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1)
   bootsnap (~> 1.4.5)
   bootstrap-sass
+  brakeman
   byebug (~> 11.0.1)
   capybara
   codecov
