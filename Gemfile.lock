@@ -163,7 +163,7 @@ GEM
     mysql2 (0.5.3)
     net-http-persistent (2.9.4)
     nio4r (2.5.2)
-    nokogiri (1.10.7)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     oa-core (0.3.2)
     oa-openid (0.3.2)
