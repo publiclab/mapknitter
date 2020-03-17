@@ -22,4 +22,4 @@ redeploy-container:
 	docker-compose up --force-recreate -d
 	$(call wait_for_container)
 	docker-compose run -e "DISABLE_DATABASE_ENVIRONMENT_CHECK=1" --rm web bash -lc \
-				 bundle exec rails db:migrate"
+			      "bundle exec rails db:migrate"
