@@ -637,7 +637,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       scale = parseInt(scale/opts.collection.length);
 
       $.ajax({
-        url: 'http://export.mapknitter.org/export',
+        url: 'https://export.mapknitter.org/export',
         crossDomain: true,
         type: 'POST',
         data: {
@@ -665,7 +665,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         url: "/export",	
         type: 'POST',	
         data: { 
-          status_url: 'http://export.mapknitter.org' + status_url,
+          status_url: 'https://export.mapknitter.org' + status_url,
           map_id: mapknitter.map_id
         }
       }).done(function (data) {	
@@ -675,7 +675,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       // repeatedly fetch the status.json
       var updateInterval = setInterval(function intervalUpdater() {
 // need to bust cache with a rotating timestamp...
-        $.ajax('http://export.mapknitter.org/' + status_url + '?' + Date.now(), { // bust cache with timestamp
+        $.ajax('https://export.mapknitter.org/' + status_url + '?' + Date.now(), { // bust cache with timestamp
           type: 'GET',
           crossDomain: true,
         }).done(function(data) {
