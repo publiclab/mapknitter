@@ -19,8 +19,8 @@ deploy-container:
 
 redeploy-container:
 	docker-compose build --pull
-	docker-compose run --rm web yarn install
-	docker-compose run --rm web bash -c "rake db:migrate && rake assets:precompile && rake tmp:cache:clear"
+	docker-compose exec web yarn install
+	docker-compose exec web bash -c "rake db:migrate && rake assets:precompile && rake tmp:cache:clear"
 	docker-compose down --remove-orphans
 	docker-compose up --force-recreate -d
 	$(call wait_for_container)
