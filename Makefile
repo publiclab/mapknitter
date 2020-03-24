@@ -18,11 +18,8 @@ deploy-container:
 	$(call wait_for_container)
 
 redeploy-container:
-	docker-compose build --pull
-	docker-compose run --rm web yarn install
-	docker-compose run --rm web bash -c "rake db:migrate && rake assets:precompile && rake tmp:cache:clear"
 	docker-compose down --remove-orphans
-	docker-compose up -d
+	docker-compose up --force-recreate -d
 	$(call wait_for_container)
 	docker-compose run -e "DISABLE_DATABASE_ENVIRONMENT_CHECK=1" --rm web bash -lc \
 			      "bundle exec rails db:migrate"
