@@ -24,7 +24,7 @@
 
       if (response.height && response.width) export_el.append(' <span class="meta">' + response.height + 'x' + response.width + '</span>');
       if (response.size) export_el.append(' <span class="meta">' + (response.size.split('B')[0]/1000000) + 'MB</span>');
-      if (response.zip) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
+      if (response.zip) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
       if (response.start_time) export_el.append(' <i class="start_time">' + response.start_time + '</i>');
     });
   })
