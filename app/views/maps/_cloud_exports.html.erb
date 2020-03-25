@@ -2,7 +2,7 @@
 <div class="mapknitter-cloud-exports" id="cloud-exports">
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
   <p class="export mapknitter-cloud-export" style="font-size:11px;">
-    <b>Export <%= i %>:</b> 
+    <b>Export <%= exports.count - i %>:</b> 
     (<a href="<%= export.export_url %>">status</a>)
   </p>
 <% end %>
