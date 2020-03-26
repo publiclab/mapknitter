@@ -256,6 +256,10 @@ For additional support, join the Public Lab website and mailing list at http://p
 
 For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
+### Code of Conduct
+
+Please read and abide by our [Code of Conduct](https://github.com/publiclab/mapknitter/blob/main/CODE_OF_CONDUCT.md); our community aspires to be a respectful place both during online and in-­person interactions.
+
 ## Developers
 
 Help improve Public Lab software!
