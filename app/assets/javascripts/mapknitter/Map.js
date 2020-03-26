@@ -683,7 +683,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           data = JSON.parse(data);
           console.log(data, data.status, data.jpg);
           if (data && data.status == "complete") {
-            alert("Export completed at " + data.cm_per_pixel + " cm/px. JPG available at https://mapknitter-exports-warps.storage.googleapis.com/" + data.jpg.split('public/warps')[1] + " -- Please refresh page to view completed exports.");
+            alert("Export completed at " + data.cm_per_pixel + " cm/px. JPG available at https://mapknitter-exports-warps.storage.googleapis.com" + data.jpg.split('public/warps')[1] + " -- Please refresh page to view completed exports.");
             clearInterval(updateInterval);
           }
           });
