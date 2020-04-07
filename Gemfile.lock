@@ -52,7 +52,7 @@ GEM
     ansi (1.5.0)
     arel (9.0.0)
     ast (2.4.0)
-    autoprefixer-rails (9.7.3)
+    autoprefixer-rails (9.7.6)
       execjs
     aws-eventstream (1.0.3)
     aws-partitions (1.258.0)
@@ -345,7 +345,7 @@ PLATFORMS
 DEPENDENCIES
   RubyInline (~> 3.12.5)
   action-cable-testing
-  autoprefixer-rails (~> 9.7.3)
+  autoprefixer-rails (~> 9.7.6)
   aws-sdk-s3 (~> 1)
   bootsnap (~> 1.4.5)
   bootstrap-sass
