@@ -24,7 +24,7 @@
             <% end %>
         </div>
         <div class="col-md-4">
-        <% if !@map.anonymous? || (current_user == true && current_user.can_edit?(@map)) %>
+        <% if !@map.anonymous? || (current_user == true && current_user.can_edit?(@map)) || (current_user == true && current_user.can_delete?(@map)) %>
             <a href="/maps/<%= @map.slug %>/edit">
                 <button class="btn btn-outline-info float-right">
                   <span class="fas fa-pencil-alt"></span>
