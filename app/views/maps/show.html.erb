@@ -42,19 +42,24 @@
         <h2><%= @map.name %>,</h2>
         <p><%= @map.location %> </p>
         <p>by <%= @map.anonymous? ? @map.author : link_to("@#{@map.author}", "/profile/#{@map.author}") %>
-    <%= 'with' unless @users.empty? %>
-    <% @users.each_with_index do |author,i| %>
-        <a href="/profile/<%= author.login %>">
+          <%= 'with' unless @users.empty? %>
+          <% @users.each_with_index do |author,i| %>
+            <a href="/profile/<%= author.login %>">
             <%= "@#{author.login}"%></a>
-        <% if i < @users.length-2 %>
-            <%= ',' %>
-        <% elsif i < @users.length-1 %>
-            <%= '&' %>
-        <% end %>
-    <% end %>
-    <br><br>
+            <% if i < @users.length-2 %>
+              <%= ',' %>
+            <% elsif i < @users.length-1 %>
+              <%= '&' %>
+            <% end %>
+          <% end %>
+        </p>
+        
+        <div>
+          <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
+        </div>
+        <br><br>
+      </div>
     </div>
-</div>
 
     <div class="container">
         <div class="card-deck mb-6  text-center mx-auto">
