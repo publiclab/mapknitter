@@ -25,6 +25,7 @@
       var status_el = export_el.find('.status-container');
       status_el.html('');
 
+      if (response.status != "complete") status_el.append(' <i class="fa fa-spinner fa-spin"></i>');
       if (response.status)  status_el.append(' <i class="status">' + response.status + '</i>');
       if (response.jpg)     status_el.append(' <span class="file badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
       if (response.geotiff) status_el.append(' <span class="file badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
