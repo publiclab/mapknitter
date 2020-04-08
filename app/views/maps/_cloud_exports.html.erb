@@ -12,7 +12,8 @@
 <script>
 (function() {
   $('.mapknitter-cloud-exports .mapknitter-cloud-export').each(function() {
-    setTimeout(function() { collectExportUrls(this) }, 500);
+    var export_el = this;
+    setTimeout(function() { collectExportUrls(export_el) }, 500);
   });
   
   function collectExportUrls(export_el) {
