@@ -3,7 +3,7 @@
 </p>
 <div class="mapknitter-cloud-exports" id="cloud-exports">
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
-  <p class="export mapknitter-cloud-export" style="font-size:11px;">
+  <p class="export mapknitter-cloud-export" style="font-size:12px;">
     <b>Export <%= exports.count - i %>:</b> 
     <a href="<%= export.export_url %>">Status</a>: 
   </p>
@@ -11,8 +11,12 @@
 </div>
 <script>
 (function() {
-  $('.mapknitter-cloud-exports .mapknitter-cloud-export').each(function collectExportUrls() {
-    var export_el = $(this);
+  $('.mapknitter-cloud-exports .mapknitter-cloud-export').each(function(el) {
+    setTimeout(function() { collectExportUrls(el) }, 500);
+  });
+  
+  function collectExportUrls(export_el) {
+    export_el = $(export_el);
     var export_url = export_el.find('a').attr('href') + "?_=" + Date.now();
     $.ajax(export_url).done(function displayExportStatus(response) {
       response = JSON.parse(response);
@@ -29,6 +33,7 @@
       if (response.size) export_el.append(' <span class="meta">' + (('1000B'.split('B')[0]/1000000) || "?") + ' MB</span>');
       if (response.start_time) export_el.append(' <i class="start_time">' + response.start_time + '</i>');
     });
-  })
-})()
+    setTimeout(function() { collectExportUrls(export_el) }, 10000); // 10s recheck
+  }
+})();
 </script> 
