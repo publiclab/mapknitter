@@ -46,7 +46,7 @@ var addExport, collectExportUrls;
       status_el.append('<br />');
 
       if (response.height && response.width) status_el.append(' <span class="meta">' + response.height + 'x' + response.width + ' px</span>');
-      if (response.size)                     status_el.append(' <span class="meta">' + (('1000B'.split('B')[0]/1000000) || "?") + ' MB</span>');
+      if (response.size)                     status_el.append(' <span class="meta">' + ((response.size.split('B')[0]/1000000) || "?") + ' MB</span>');
       if (response.start_time)               status_el.append(' <i class="start_time">' + response.start_time + '</i>');
 
       if (response.status != "complete") setTimeout(function() { collectExportUrls(export_el) }, 10000); // 10s recheck
