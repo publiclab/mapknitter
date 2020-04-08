@@ -1,9 +1,11 @@
-<p><a href="https://publiclab.org/wiki/mapknitter-cloud-exporter">Using the Cloud Exporter &raquo;</a></p>
+<p class="text-center">
+  The <a href="https://publiclab.org/mapknitter-cloud-exporter">Cloud Exporter</a> generates high-resolution images and map tiles from MapKnitter maps.
+</p>
 <div class="mapknitter-cloud-exports" id="cloud-exports">
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
   <p class="export mapknitter-cloud-export" style="font-size:11px;">
     <b>Export <%= exports.count - i %>:</b> 
-    (<a href="<%= export.export_url %>">status</a>)
+    <a href="<%= export.export_url %>">Status</a>: 
   </p>
 <% end %>
 </div>
@@ -17,14 +19,14 @@
       console.log(response, response.status);
 
       if (response.status) export_el.append(' <i class="status">' + response.status + '</i>');
-      if (response.jpg) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
-      if (response.geotiff) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
+      if (response.jpg) export_el.append(' <span class="file badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
+      if (response.geotiff) export_el.append(' <span class="file badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
+      if (response.zip) export_el.append(' <span class="file badge badge-primary"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
 
       export_el.append('<br />');
 
-      if (response.height && response.width) export_el.append(' <span class="meta">' + response.height + 'x' + response.width + '</span>');
-      if (response.size) export_el.append(' <span class="meta">' + (response.size.split('B')[0]/1000000) + 'MB</span>');
-      if (response.zip) export_el.append(' <span class="file"><a href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
+      if (response.height && response.width) export_el.append(' <span class="meta">' + response.height + 'x' + response.width + ' px</span>');
+      if (response.size) export_el.append(' <span class="meta">' + (('1000B'.split('B')[0]/1000000) || "?") + ' MB</span>');
       if (response.start_time) export_el.append(' <i class="start_time">' + response.start_time + '</i>');
     });
   })
