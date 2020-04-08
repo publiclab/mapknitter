@@ -39,14 +39,14 @@ var addExport, collectExportUrls;
 
       if (response.status != "complete") status_el.append(' <i class="fa fa-spinner fa-spin"></i>');
       if (response.status)  status_el.append(' <i class="status">' + response.status + '</i>');
-      if (response.jpg)     status_el.append(' <span class="file badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
-      if (response.geotiff) status_el.append(' <span class="file badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
-      if (response.zip)     status_el.append(' <span class="file badge badge-primary"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
+      if (response.jpg)     status_el.append(' <span class="file jpg badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
+      if (response.geotiff) status_el.append(' <span class="file geotiff badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
+      if (response.zip)     status_el.append(' <span class="file zip badge badge-primary"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
 
       status_el.append('<br />');
 
-      if (response.height && response.width) status_el.append(' <span class="meta">' + response.height + 'x' + response.width + ' px</span>');
-      if (response.size)                     status_el.append(' <span class="meta">' + ((response.size.split('B')[0]/1000000) || "?") + ' MB</span>');
+      if (response.height && response.width) status_el.append(' <span class="meta dimensions">' + response.height + 'x' + response.width + ' px</span>');
+      if (response.size)                     status_el.append(' <span class="meta size">' + response.size + '</span>');
       if (response.start_time)               status_el.append(' <i class="start_time">' + response.start_time + '</i>');
 
       if (response.status != "complete") setTimeout(function() { collectExportUrls(export_el) }, 10000); // 10s recheck
