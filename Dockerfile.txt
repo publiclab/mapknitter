@@ -55,4 +55,8 @@ COPY config/database.yml.example /app/config/database.yml
 COPY config/config.yml.example /app/config/config.yml
 COPY config/initializers/recaptcha.rb.example /app/config/initializers/recaptcha.rb
 
-CMD [ "sh", "start.sh" ]
+# Get dependencies
+RUN bash -c "bundle check || bundle install"
+RUN rails assets:precompile
+
+CMD [ "rails", "s", "-p", $PORT, "-b", "0.0.0.0" ]
