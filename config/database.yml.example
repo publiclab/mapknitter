@@ -15,10 +15,10 @@ production:
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: <%= ENV.fetch('DB_HOST') || 'db' %>
-  username: <%= ENV.fetch('DB_USER') || 'mapknitter' %>
-  password: <%= ENV.fetch('DB_PASS') || 'mapknitter' %>
-  database: <%= ENV.fetch('DB_NAME') || 'mapknitter' %>
-  socket: <%= ENV.fetch('DB_SOCKET') %>
+  username: <%= ENV['DB_USER'] || 'mapknitter' %>
+  password: <%= ENV['DB_PASS'] || 'mapknitter' %>
+  database: <%= ENV['DB_NAME'] || 'mapknitter' %>
+  socket: <%= ENV['DB_SOCKET'] %>
   timeout: 5000
 
 test:
