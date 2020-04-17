@@ -29,5 +29,5 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-forego start
-# Or?: bundle exec rails s -p $PORT -b '0.0.0.0'
+# ? forego start
+bundle exec rails s -p $PORT -b '0.0.0.0'
