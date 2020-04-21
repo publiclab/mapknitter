@@ -5,7 +5,7 @@
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
   <p class="export mapknitter-cloud-export" style="font-size:12px;">
     <b>Export <%= exports.count - i %>:</b> 
-    <a href="<%= export.export_url || "/export/status/#{export.map_id}" %>">Status</a>: <span class="status-container"></span>
+    <a data-slug="<%= export.map.slug %>" href="<%= export.export_url || "/export/status/#{export.map_id}" %>">Status</a>: <span class="status-container"></span>
   </p>
 <% end %>
 </div>
@@ -35,13 +35,20 @@ var addExport, collectExportUrls;
       if (typeof response === 'string') response = JSON.parse(response);
       console.log(response, response.status);
       var status_el = export_el.find('.status-container');
+      var slug = status_el.attr('data-slug');
       status_el.html('');
 
       if (response.status != "complete") status_el.append(' <i class="fa fa-spinner fa-spin"></i>');
       if (response.status)  status_el.append(' <i class="status">' + response.status + '</i>');
-      if (response.jpg)     status_el.append(' <span class="file jpg badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
-      if (response.geotiff) status_el.append(' <span class="file geotiff badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
-      if (response.zip)     status_el.append(' <span class="file zip badge badge-primary"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
+
+      if (response.jpg && typeof response.jpg === "boolean") status_el.append(' <span class="file jpg badge badge-danger"><a style="color:white;" href="/warps/' + slug + '/' + slug + '.jpg">JPG</span>');
+      else if (response.jpg) status_el.append(' <span class="file jpg badge badge-danger"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.jpg.split('public/warps/')[1] + '">JPG</span>');
+
+      if (response.geotiff && typeof response.geotiff === "boolean") status_el.append(' <span class="file geotiff badge badge-success"><a style="color:white;" href="/warps/' + slug + '/' + slug + '.tif">GeoTiff</span>');
+      else if (response.geotiff) status_el.append(' <span class="file geotiff badge badge-success"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.geotiff.split('public/warps/')[1] + '">GeoTiff</span>');
+
+      if (response.zip && typeof response.zip === "boolean") status_el.append(' <span class="file zip badge badge-primary"><a style="color:white;" href="/tms/' + slug + '.zip">TMS (zip)</span>');
+      else if (response.zip) status_el.append(' <span class="file zip badge badge-primary"><a style="color:white;" href="https://mapknitter-exports-warps.storage.googleapis.com/' + response.zip.split('public/tms/')[1].split('.zip')[0] + "/" + response.zip.split('public/tms/')[1] + '">TMS (zip)</span>');
 
       status_el.append('<br />');
 
