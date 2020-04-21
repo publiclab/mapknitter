@@ -32,7 +32,7 @@ var addExport, collectExportUrls;
     export_el = $(export_el);
     var export_url = export_el.find('a').attr('href') + "?_=" + Date.now();
     $.ajax(export_url).done(function displayExportStatus(response) {
-      response = JSON.parse(response);
+      if (typeof response === 'string') response = JSON.parse(response);
       console.log(response, response.status);
       var status_el = export_el.find('.status-container');
       status_el.html('');
