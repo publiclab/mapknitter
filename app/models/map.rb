@@ -14,7 +14,7 @@ class Map < ApplicationRecord
   #                       :on => :create
   # validates_format_of :tile_url, :with => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
   validates_with NotAtOriginValidator, unless: Proc.new { |map| map.created_at < DateTime.new(2015, 1, 13, 0, 0, 0) }
-  validates :lat, :lon, NotAtOrigin: true
+  validates :lat, :lon, NotAtOrigin: true, unless: Proc.new { |map| map.created_at < DateTime.new(2015, 1, 13, 0, 0, 0) }
 
   has_many :exports, dependent: :destroy
   has_many :tags, dependent: :destroy
