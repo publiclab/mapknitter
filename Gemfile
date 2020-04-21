@@ -10,7 +10,7 @@ gem 'sentry-raven'
 gem 'will_paginate', '3.3.0'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
-gem 'popper_js', '~> 1.11', '>= 1.11.1'
+gem 'popper_js', '~> 1.16'
 gem 'paper_trail'
 
 # dependencies
