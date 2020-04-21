@@ -74,7 +74,7 @@ Mapknitter::Application.routes.draw do
 
   # preserve legacy API alias for https://github.com/publiclab/leaflet-environmental-layers/
   namespace 'map' do
-    get 'region', action: region
+    get 'region', action: :region
   end
 
   namespace 'maps' do
