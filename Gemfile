@@ -7,7 +7,7 @@ gem 'tzinfo-data'
 gem 'skylight'
 gem 'sentry-raven'
 
-gem 'will_paginate', '3.1.8'
+gem 'will_paginate', '3.3.0'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
