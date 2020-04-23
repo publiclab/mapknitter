@@ -57,6 +57,5 @@ COPY config/initializers/recaptcha.rb.example /app/config/initializers/recaptcha
 
 # Get dependencies
 RUN bash -c "bundle check || bundle install"
-RUN bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 rails assets:precompile"
 
-CMD [ "rails", "s", "-p", $PORT, "-b", "0.0.0.0" ]
+CMD [ "./start.sh" ]
