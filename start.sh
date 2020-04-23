@@ -8,7 +8,7 @@ if [ ! -f "./config/initializers/recaptcha.rb" ]; then
 fi
 
 
-DISABLE_DATABASE_ENVIRONMENT_CHECK=1 rails assets:precompile
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails assets:precompile
 
 if [ -f $pidfile ] ; then
 	>&2 echo 'Server PID file already exists. Removing it...';
