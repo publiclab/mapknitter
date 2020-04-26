@@ -43,6 +43,7 @@ env:
     - RAILS_ENV=test
     - CI=true
     - TRAVIS=true
+    - DB_HOST='127.0.0.1'
 
 jobs:
   include:
