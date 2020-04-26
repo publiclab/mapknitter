@@ -1,0 +1,31 @@
+<div class="map col-md-3 col-xs-6">
+  <a href="/maps/<%= map.slug %>">
+    <% if map.warpables.length > 0 %>
+      <img src="<%= map.warpables.first.image.url(:small) %>" />
+    <% else %>
+      <div style="width:100%;background:#eee;height:170px;"></div>
+    <% end %>
+  </a>
+  <h3><a href="/maps/<%= map.slug %>"><%= map.name.capitalize %></a></h3>
+  <p><small>
+    <% if map.user %>
+      by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
+    <% else %>
+      anonymous
+    <% end %>
+    | <%= map.location %>
+  </small></p>
+  <p class="map map-meta">
+    <small>
+      <% if map.archived %><i>Archived</i> | <% end %>
+      <a rel="tooltip" title="Flag as spam." class="btn btn-sm btn-outline-secondary" href="mailto:moderators@publiclab.org?subject=Reporting+spam+on+MapKnitter&body=Hi,+I+found+this+map+that+looks+like+spam+or+needs+to+be+moderated:++http://mapknitter.org/maps/<%= map.slug %><% if map.user %>+by+http://mapknitter.org/profile/<%= map.user.login %><% end %>+Thanks!">
+      <i class="fa fa-flag"></i>
+      </a>
+      <% if logged_in? && current_user.can_delete?(map) %><a href="/map/archive/<%= map.slug %>">Archive/Spam</a> | <% end %>
+      Updated <%= map.updated_at.to_s(:short) %> |
+      <%= map.warpables.length %> images | <%= map.comments.length %> comments
+    </small>
+  </p>
+    <br style="clear:both;" />
+
+</div>
