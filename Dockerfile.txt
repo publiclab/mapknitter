@@ -6,6 +6,7 @@ FROM ruby:2.4.6-stretch
 
 # Set correct environment variables.
 ENV HOME /root
+ENV PORT 8080
 
 # Backported GDAL
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
@@ -39,6 +40,7 @@ COPY config/database.yml.example /app/config/database.yml
 COPY config/config.yml.example /app/config/config.yml
 COPY config/initializers/recaptcha.rb.example /app/config/initializers/recaptcha.rb
 COPY config/amazon_s3.yml.example /app/config/amazon_s3.yml
+COPY Passenger.json.production Passenger.json
 
 
 CMD [ "sh", "start.sh" ]

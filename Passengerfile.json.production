@@ -1,0 +1,7 @@
+{
+    // Run the app in a production environment. The default value is "development".
+    "environment": "production",
+    // Run Passenger on the given port. In this example, we use port 80,
+    // the standard HTTP port.
+    "port": 8080
+}
