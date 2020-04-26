@@ -24,7 +24,7 @@
             <% end %>
         </div>
         <div class="col-md-4">
-        <% if !@map.anonymous? || (current_user == true && current_user.can_edit?(@map)) %>
+        <% if @map.anonymous? || (current_user && current_user.can_edit?(@map)) || (current_user && current_user.can_delete?(@map)) %>
             <a href="/maps/<%= @map.slug %>/edit">
                 <button class="btn btn-outline-info float-right">
                   <span class="fas fa-pencil-alt"></span>
@@ -42,19 +42,24 @@
         <h2><%= @map.name %>,</h2>
         <p><%= @map.location %> </p>
         <p>by <%= @map.anonymous? ? @map.author : link_to("@#{@map.author}", "/profile/#{@map.author}") %>
-    <%= 'with' unless @users.empty? %>
-    <% @users.each_with_index do |author,i| %>
-        <a href="/profile/<%= author.login %>">
+          <%= 'with' unless @users.empty? %>
+          <% @users.each_with_index do |author,i| %>
+            <a href="/profile/<%= author.login %>">
             <%= "@#{author.login}"%></a>
-        <% if i < @users.length-2 %>
-            <%= ',' %>
-        <% elsif i < @users.length-1 %>
-            <%= '&' %>
-        <% end %>
-    <% end %>
-    <br><br>
+            <% if i < @users.length-2 %>
+              <%= ',' %>
+            <% elsif i < @users.length-1 %>
+              <%= '&' %>
+            <% end %>
+          <% end %>
+        </p>
+        
+        <div>
+          <%=raw markdown_to_html(@map.description) unless @map.description.nil? %>
+        </div>
+        <br><br>
+      </div>
     </div>
-</div>
 
     <div class="container">
         <div class="card-deck mb-6  text-center mx-auto">
@@ -103,10 +108,12 @@
       <%= render partial: 'front_ui/maps', locals: { maps: @maps } %>
   </div>
 
-  <div class="all-maps light-blue">
+  <div class="row justify-content-center">
+    <div class="all-maps off-3 col-6">
       <br>
       <h3 class="text-center"> Exports </h3>
       <%= render partial: 'maps/cloud_exports', locals: { exports: @map.exports }%>
+    </div>
   </div>
 
  <script>

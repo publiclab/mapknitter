@@ -26,7 +26,7 @@ class FrontUiController < ApplicationController
     lat = session[:lat]
     lon = session[:lon]
     @nearby_maps = Map.maps_nearby(lat: lat, lon: lon, dist: 10)
-                      .page(params[:maps])
+                      .page(params[:page])
                       .per_page(12)
     @nearby_mappers = User.where(login: Map.maps_nearby(lat: lat, lon: lon, dist: 10)
                                            .collect(&:author))
@@ -50,7 +50,7 @@ class FrontUiController < ApplicationController
   def location
     @loc = params[:loc]
 
-    @maps = Map.page(params[:maps])
+    @maps = Map.page(params[:page])
                .per_page(20)
                .where('archived = ? and password = ? and location LIKE ?', false, '', "%#{@loc}%")
                .order('updated_at DESC')
@@ -62,7 +62,7 @@ class FrontUiController < ApplicationController
   end
 
   def gallery
-    @maps = Map.page(params[:maps])
+    @maps = Map.page(params[:page])
                .per_page(20)
                .where(archived: false, password: '')
                .order('updated_at DESC')

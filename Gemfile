@@ -7,7 +7,7 @@ gem 'tzinfo-data'
 gem 'skylight'
 gem 'sentry-raven'
 
-gem 'will_paginate', '3.1.8'
+gem 'will_paginate', '3.3.0'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
@@ -27,7 +27,7 @@ group :dependencies do
   gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
-  gem 'puma', '~> 4.3.1'
+  gem 'puma', '~> 4.3.3'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk-s3', '~> 1'
