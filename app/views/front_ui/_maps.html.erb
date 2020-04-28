@@ -38,4 +38,4 @@
   <% end %>
 </div>
 <br style="clear:both;" />
-<%= will_paginate maps, param_name: 'maps', list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
+<%= will_paginate maps, param_name: 'page', list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>

@@ -24,7 +24,7 @@
             <% end %>
         </div>
         <div class="col-md-4">
-        <% if !@map.anonymous? || (current_user == true && current_user.can_edit?(@map)) || (current_user == true && current_user.can_delete?(@map)) %>
+        <% if @map.anonymous? || (current_user && current_user.can_edit?(@map)) || (current_user && current_user.can_delete?(@map)) %>
             <a href="/maps/<%= @map.slug %>/edit">
                 <button class="btn btn-outline-info float-right">
                   <span class="fas fa-pencil-alt"></span>
@@ -108,10 +108,12 @@
       <%= render partial: 'front_ui/maps', locals: { maps: @maps } %>
   </div>
 
-  <div class="all-maps light-blue">
+  <div class="row justify-content-center">
+    <div class="all-maps off-3 col-6">
       <br>
       <h3 class="text-center"> Exports </h3>
       <%= render partial: 'maps/cloud_exports', locals: { exports: @map.exports }%>
+    </div>
   </div>
 
  <script>

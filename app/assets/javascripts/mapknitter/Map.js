@@ -656,7 +656,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
     // this may be overridden to integrate with any UI
     function handleStatusResponse(status_url, opts) {
-      alert("Export has begun: leave this window open to be notified of completion. Due to a known issue, please refresh the page if you'd like to start another."); // https://github.com/publiclab/Leaflet.DistortableImage/issues/522
+      // alert("Export has begun: leave this window open to be notified of completion."); // https://github.com/publiclab/Leaflet.DistortableImage/issues/522
       // this is for the JS exporter:
       // var statusUrl = data.split('please visit, ')[1];
       
@@ -672,7 +672,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
         console.log('saved status.json URL to MapKnitter', data);	
       });
 
-      // repeatedly fetch the status.json
+      // hand it off to https://github.com/publiclab/mapknitter/blob/main/app/views/maps/_cloud_exports.html.erb
+      addExport('https://export.mapknitter.org' + status_url);
+
+      // repeatedly fetch the status.json (now may be unnecessary after above addExport() usage)
       var updateInterval = setInterval(function intervalUpdater() {
         $.ajax('https://export.mapknitter.org/' + status_url + '?' + Date.now(), { // bust cache with timestamp
           type: 'GET',
@@ -681,7 +684,6 @@ MapKnitter.Map = MapKnitter.Class.extend({
           // update the progress bar or spinner
           // opts.updater(data);
           data = JSON.parse(data);
-          console.log(data, data.status, data.jpg);
           if (data && data.status == "complete") {
             alert("Export completed at " + data.cm_per_pixel + " cm/px. JPG available at https://mapknitter-exports-warps.storage.googleapis.com" + data.jpg.split('public/warps')[1] + " -- Please refresh page to view completed exports.");
             clearInterval(updateInterval);
