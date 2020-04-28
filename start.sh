@@ -6,6 +6,7 @@ cp config/database.yml.example config/database.yml
 cp config/config.yml.example config/config.yml
 cp db/schema.rb.example db/schema.rb
 mkdir -p tmp/pids
+rm -rf tmp/cache/bootsnap*
 
 if [ ! -f "./config/initializers/recaptcha.rb" ]; then
     echo -e "\e[33mWARNING\e[0m: You haven't configured recaptcha!"
