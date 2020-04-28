@@ -18,7 +18,6 @@ services:
       - .:/app
       - bundle_cache:/usr/local/bundle
       - yarn_cache:/app/node_modules/
-      - /app/tmp
     ports:
         - ${PORT:-3000}
     depends_on:
