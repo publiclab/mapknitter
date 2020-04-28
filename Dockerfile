@@ -51,4 +51,7 @@ RUN git config --global url."https://".insteadOf git://
 COPY . /app/
 WORKDIR /app
 
+RUN bundle install
+RUN rake assets:precompile RAILS_ENV=production
+
 CMD [ "sh", "/app/start.sh" ]
