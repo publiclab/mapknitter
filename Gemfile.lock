@@ -346,7 +346,7 @@ DEPENDENCIES
   action-cable-testing
   autoprefixer-rails (~> 9.7.3)
   aws-sdk-s3 (~> 1)
-  bootsnap (~> 1.4.5)
+  bootsnap (~> 1.4.6)
   bootstrap-sass
   byebug (~> 11.0.1)
   capybara
