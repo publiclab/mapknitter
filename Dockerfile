@@ -51,6 +51,6 @@ RUN git config --global url."https://".insteadOf git://
 COPY . /app/
 WORKDIR /app
 
-bundle install
+RUN bundle install
 
 CMD [ "sh", "/app/start.sh" ]
