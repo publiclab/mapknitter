@@ -52,5 +52,6 @@ COPY . /app/
 WORKDIR /app
 
 RUN bundle install
+RUN rake assets:precompile
 
 CMD [ "sh", "/app/start.sh" ]
