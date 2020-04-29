@@ -3,3 +3,23 @@ runtime: custom
 
 manual_scaling:
   instances: 1
+
+resources:
+  cpu: 1
+  memory_gb: 4
+env_variables:
+  AWS_ACCESS_KEY_ID: 
+  AWS_SECRET_ACCESS_KEY: 
+  DB_USER: mapknitter
+  DB_PASS: mapknitter
+  DB_NAME: mapknitter
+  DB_HOST: localhost
+  DB_SOCKET: 
+  RAILS_ENV: production
+  RECAPTCHA_KEY: 
+  RECAPTCHA_SITE_KEY: 
+  SECRET_KEY_BASE: 
+  SENTRY_DSN: 
+
+beta_settings:
+  cloud_sql_instances: 
