@@ -1,2 +1,2 @@
-passenger: passenger start --port 3000
+passenger: passenger start --port $PORT
 puma: puma -C config/puma.rb
