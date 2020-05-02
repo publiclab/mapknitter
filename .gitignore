@@ -8,7 +8,7 @@
 /.bundle
 
 # avoid committing your secrets inadvertly
-app.yaml
+./app.yaml
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
