@@ -120,4 +120,5 @@ Mapknitter::Application.routes.draw do
 
   # See how all your routes lay out with 'rails routes'
 
+  get '/warps/:map/:file(.:format)', to: redirect('https://archive.publiclab.org/warps/%{map}/%{file}.%{format}')
 end

@@ -7,9 +7,6 @@
 # Ignore bundler config
 /.bundle
 
-# avoid committing your secrets inadvertly
-./app.yaml
-
 # Ignore the default SQLite database.
 /db/*.sqlite3
 
@@ -23,12 +20,11 @@
 log/
 tmp/*
 tmp/**/*
-coverage/
+coverage*
 public/warpables/*
 public/system/*
 public/warps/*
 public/tms/*
-public/lib/*
 db/schema.rb
 *.db
 config/database.yml
@@ -40,14 +36,8 @@ vendor/bundle
 app/assets/bower_components
 app/assets/node_modules
 public/assets
-node_modules/
+public/lib
+node_modules
 todo.txt
 .sass-cache
-.byebug_history
-coverage_report/
-test/reports/
-yarn-error.log
-yarn.lock
-.idea/
-passenger.3000.pid
-passenger.3000.pid.lock
+.git/
