@@ -7,7 +7,7 @@ gem 'tzinfo-data'
 gem 'skylight'
 gem 'sentry-raven'
 
-gem 'will_paginate', '3.1.8'
+gem 'will_paginate', '~> 3.3.0'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
@@ -20,9 +20,9 @@ group :dependencies do
   gem 'image_science', '1.3.0'
   gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
-  gem 'ruby-openid', '~>2.5'
+  gem 'ruby-openid', '~>2.9'
   gem 'open_id_authentication'
-  gem 'RubyInline', '~> 3.12.4'
+  gem 'RubyInline', '~> 3.12.5'
   gem 'paperclip', '~> 6.1.0'
   gem 'bootsnap', '~> 1.4.5'
   gem 'turbolinks', '~> 5.2'
@@ -43,9 +43,6 @@ group :dependencies do
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
-  # Process manager for applications with multiple components
-  gem 'foreman', git: 'https://github.com/alaxalves/foreman.git', branch: 'master'
-
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
@@ -53,7 +50,7 @@ group :dependencies do
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.6.1'
+  gem 'autoprefixer-rails', '~> 9.7.3'
   gem 'uglifier', '~> 4.1.20'
 
 end
@@ -81,14 +78,14 @@ group :development, :test do
   # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.2.2'
+  gem 'faker', '~> 2.6.0'
   gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
-  gem 'listen', '~> 3.1.5'
+  gem 'listen', '~> 3.2.1'
   gem 'web-console', '~> 3.3'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

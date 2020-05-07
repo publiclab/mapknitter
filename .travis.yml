@@ -46,6 +46,10 @@ env:
     - RAILS_ENV=test
     - CI=true
     - TRAVIS=true
+    - DB_HOST='127.0.0.1'
+    - DB_USER='mapknitter'
+    - DB_PASS='mapknitter'
+    - DB_NAME='mapknitter'
 
 jobs:
   include:

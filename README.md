@@ -29,6 +29,7 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 5. [Developers](#developers)
 6. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
 7. [License](#license)
+8. [MapKnitter in depth](#mapknitter-in-depth)
 
 
 ****
@@ -56,6 +57,7 @@ Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrat
 Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
 
 - [Standard Installation](#Standard-Installation)
+- [Windows Installation](#windows-installation)
 - [Cloud Installation](#Cloud-Installation)
 
 <hr>
@@ -139,8 +141,9 @@ $ sudo apt-get install nodejs-legacy
 3. Once npm is installed, you should be able to use it to install Yarn:
 
 ```Bash
-$ sudo npm install -g yarn
+$ npm install -g yarn
 ```
+NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) in case NPM throws permission errors
 
   ==================
 
@@ -195,6 +198,14 @@ $ rails server -b 0.0.0.0
 
 <hr>
 
+### Windows Installation
+We recommend you either work in a virtual environment, or on a dual booted system to avoid dependencies issues and also Unix system works smoother with Ruby and Rails. This will not only benefit you now for Mapknitter, but also in future while working on other Ruby projects, a Linux or Mac OS will make your life easier.
+
+1. [Dual Booting](https://www.tecmint.com/install-ubuntu-alongside-with-windows-dual-boot/amp/), [option2](https://askubuntu.com/questions/1031993/how-to-install-ubuntu-18-04-alongside-windows-10), [video guide](https://www.youtube.com/watch?v=qNeJvujdB-0&fbclid=IwAR0APhs89jlNR_ENKbSwrp6TI6P-wxlx-a0My9XBvPNAfwtADZaAXqcKtP4)
+2. [Setting up a linux virtual env](https://itsfoss.com/install-linux-in-virtualbox/)
+
+<hr>
+
 ## Logging in when running locally
 
 Because MapKnitter uses a remote OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password:
@@ -245,6 +256,10 @@ For additional support, join the Public Lab website and mailing list at http://p
 
 For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
 
+### Code of Conduct
+
+Please read and abide by our [Code of Conduct](https://github.com/publiclab/mapknitter/blob/main/CODE_OF_CONDUCT.md); our community aspires to be a respectful place both during online and in-­person interactions.
+
 ## Developers
 
 Help improve Public Lab software!
@@ -276,3 +291,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MapKnitter. If not, see <http://www.gnu.org/licenses/>.
+
+****
+
+## MapKnitter in depth
+
+MapKnitter is a free and open source software created and run by Public Lab. MapKnitter is hosted through a donation of server space by Rackspace.
+
+MapKnitter can make maps from any image source, but it particularly lends itself to making maps with balloons and kites. The manual process of making maps with MapKnitter differs greatly from automated aerial imaging systems. In those systems, the imaging is of higher precision and processed with spatial and telemetry data collected along with the imagery, typically at higher altitudes and with consistent image overlap in the flight path sequence.
+
+With MapKnitter the cartographer dynamically places each image and selects which images to include in the mosaic. Although the approaches are similar in that they use some type of additional information (usually pre-existing imagery of a lower resolution) as a reference, and that they are bound to specific cartographic elements such as map scale and map projection.

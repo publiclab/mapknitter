@@ -20,13 +20,13 @@
 //= require jquery-ujs/src/rails.js
 //= require jquery-ui/jquery-ui.min.js
 
+//= require bootstrap/dist/js/bootstrap.bundle.min.js
+
 //= require blueimp-tmpl/js/tmpl.js
 //= require blueimp-file-upload/js/vendor/jquery.ui.widget
 //= require blueimp-file-upload/js/jquery.fileupload
 //= require blueimp-file-upload/js/jquery.fileupload-process
 //= require blueimp-file-upload/js/jquery.fileupload-ui
-
-//= require bootstrap/dist/js/bootstrap.js
 
 //= require leaflet-fullHash.js
 //= require leaflet-providers/leaflet-providers.js
@@ -46,7 +46,6 @@
 //= require leaflet-draw/dist/leaflet.draw-src.js
 //= require leaflet-illustrate/dist/Leaflet.Illustrate.js
 //= require leaflet-distortableimage/dist/leaflet.distortableimage.js
-//= require leaflet-distortableimage/src/edit/tools/EditAction.js
 //= require mapknitter/Map.js
 //= require cable.js
 

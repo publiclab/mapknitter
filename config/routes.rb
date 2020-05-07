@@ -72,6 +72,11 @@ Mapknitter::Application.routes.draw do
     end
   end
 
+  # preserve legacy API alias for https://github.com/publiclab/leaflet-environmental-layers/
+  namespace 'map' do
+    get 'region', action: :region
+  end
+
   namespace 'maps' do
     %w(map featured region license).each do |action|
       get action, action: action
@@ -115,4 +120,5 @@ Mapknitter::Application.routes.draw do
 
   # See how all your routes lay out with 'rails routes'
 
+  get '/warps/:map/:file(.:format)', to: redirect('https://archive.publiclab.org/warps/%{map}/%{file}.%{format}')
 end

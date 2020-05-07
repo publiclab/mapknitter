@@ -14,10 +14,12 @@ production:
   adapter: mysql2
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV.fetch("MYSQL_HOST") { '127.0.0.1' } %>
-  username: mapknitter
-  password: mapknitter
-  database: mapknitter
+  host: <%= ENV['DB_HOST'] || 'db' %>
+  username: <%= ENV['DB_USER'] || 'mapknitter' %>
+  password: <%= ENV['DB_PASS'] || 'mapknitter' %>
+  database: <%= ENV['DB_NAME'] || 'mapknitter' %>
+  socket: <%= ENV['DB_SOCKET'] %>
+  timeout: 5000
 
 test:
   <<: *default
