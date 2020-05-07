@@ -47,7 +47,7 @@ class ExportControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 'You must be logged in to export, unless the map is anonymous.', @response.body
     assert assigns[:map]
-    assert_equal 'text/plain', @response.content_type
+    assert_equal 'text/plain; charset=utf-8', @response.content_type
     assert flash.empty?
   end
 
@@ -71,7 +71,7 @@ class ExportControllerTest < ActionController::TestCase
     get :progress, params: { id: @map.id}
     assert_response :success
     assert_equal 'export not running', @response.body
-    assert_equal 'text/plain', @response.content_type
+    assert_equal 'text/plain; charset=utf-8', @response.content_type
   end
 
   test 'should display progress with no export' do

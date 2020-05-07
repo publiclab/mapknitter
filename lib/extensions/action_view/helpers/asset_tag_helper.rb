@@ -20,7 +20,7 @@ module ActionView
       alias_method :path_to_stylesheet, :stylesheet_path # aliased to avoid conflicts with a stylesheet_path named route
     end
 
-    # Overwrite the stylesheet_link_tag method to expand sprockets files if 
+    # Overwrite the stylesheet_link_tag method to expand sprockets files if
     # debug mode is turned on.  Never cache files (like the default Rails 2.3 does).
     # 
     def stylesheet_link_tag(*sources)

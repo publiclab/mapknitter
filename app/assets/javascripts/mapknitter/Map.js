@@ -1,9 +1,10 @@
-
+//(function() {
 MapKnitter.Map = MapKnitter.Class.extend({
 
   initialize: function (options) {
     this._zoom = options.zoom || 0;
     this._latlng = L.latLng(options.latlng);
+    this.map_id = options.map_id || 0;
     this.readOnly = options.readOnly;
     this.logged_in = options.logged_in;
     this.anonymous = options.anonymous;
@@ -45,6 +46,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var downloadEl = $('.img-download-' + warpable.id),
               imgEl = $('#full-img-' + warpable.id);
 
+          // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
           downloadEl.click(function () {
             downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 
@@ -159,8 +161,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
     // overriding the upstream Delete action so that it makes database updates in MapKnitter
     L.DomEvent.on(img._image, 'load', function() {
-      if (edit.hasTool(Delete)) { edit.removeTool(Delete); }
-      edit.addTool(mapknitter.customDeleteAction());
+      var newTool = mapknitter.customDeleteAction();
+
+      if (edit.hasTool(L.DeleteAction)) { 
+        edit.replaceTool(L.DeleteAction, newTool); 
+      } else {
+        edit.addTool(newTool);
+      }
 
       if (!edit._selected) { edit._deselect(); }
 
@@ -413,6 +420,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var downloadEl = $('.img-download-' + warpable.id),
               imgEl = $('#full-img-' + warpable.id);
 
+          // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
           downloadEl.click(function () {
               downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 
@@ -463,10 +471,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
               mode: 'lock',
           }).addTo(map);
 
-          var customExports = mapknitter.customExportAction();
-          var imgGroup = L.distortableCollection({
-              actions: [customExports],
-          }).addTo(map);
+          var imgGroup = L.distortableCollection({}).addTo(map);
 
           imgGroup.addLayer(img);
 
@@ -610,19 +615,91 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   setupCollection: function() {
-    var customExports = mapknitter.customExportAction();
 
     map._imgGroup = L.distortableCollection({
-      actions: [customExports],
-      editable: !mapknitter.readOnly
+      editable: !mapknitter.readOnly,
+      exportOpts: {
+        // exportUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+        // exportStartUrl: 'http://34.74.118.242/api/v2/export/', // to swap to JS exporter
+        fetchStatusUrl: fetchStatusUrl
+      }
     }).addTo(map);
+
+    // customize the function that starts up the export
+    function fetchStatusUrl(opts) {
+      console.log('fetch status json', opts);
+
+      var scale = 0;
+      opts.collection.forEach(function(img) {
+        scale += img.cm_per_pixel;
+      });
+      // average of scales of each image
+      scale = parseInt(scale/opts.collection.length);
+
+      $.ajax({
+        url: 'https://export.mapknitter.org/export',
+        crossDomain: true,
+        type: 'POST',
+        data: {
+          collection: JSON.stringify(opts.collection),
+          scale: prompt("Choose a scale in 'centimeters per pixel' (where a smaller 50cm pixel is higher resolution - comparable to Google Maps - or a larger 200cm pixel is lower resolution):", scale) || opts.scale,
+          upload: true,
+        },
+        success: handleStatusResponse
+      });
+      // show exports
+      $('.export-tab').click();
+      $('.exports-tab').click();
+      window.location.hash = "#cloud-exports";
+    }
+
+    // receives the URL of status.json, and starts running the updater to repeatedly fetch from status.json;
+    // this may be overridden to integrate with any UI
+    function handleStatusResponse(status_url, opts) {
+      // alert("Export has begun: leave this window open to be notified of completion."); // https://github.com/publiclab/Leaflet.DistortableImage/issues/522
+      // this is for the JS exporter:
+      // var statusUrl = data.split('please visit, ')[1];
+      
+      // save the location of the status URL
+      $.ajax({	
+        url: "/export",	
+        type: 'POST',	
+        data: { 
+          status_url: 'https://export.mapknitter.org' + status_url,
+          map_id: mapknitter.map_id
+        }
+      }).done(function (data) {	
+        console.log('saved status.json URL to MapKnitter', data);	
+      });
+
+      // hand it off to https://github.com/publiclab/mapknitter/blob/main/app/views/maps/_cloud_exports.html.erb
+      addExport('https://export.mapknitter.org' + status_url);
+
+      // repeatedly fetch the status.json (now may be unnecessary after above addExport() usage)
+      var updateInterval = setInterval(function intervalUpdater() {
+        $.ajax('https://export.mapknitter.org/' + status_url + '?' + Date.now(), { // bust cache with timestamp
+          type: 'GET',
+          crossDomain: true,
+        }).done(function(data) {
+          // update the progress bar or spinner
+          // opts.updater(data);
+          data = JSON.parse(data);
+          if (data && data.status == "complete") {
+            alert("Export completed at " + data.cm_per_pixel + " cm/px. JPG available at https://mapknitter-exports-warps.storage.googleapis.com" + data.jpg.split('public/warps')[1] + " -- Please refresh page to view completed exports.");
+            clearInterval(updateInterval);
+          }
+          });
+      }, 3000); // frequency of updating
+
+      opts.resolve(); // stop the spinner
+    }
 
     var sidebar = document.querySelector('body > div.sidebar');
 
     if (!mapknitter.readOnly) {
       // Deselect images if you click on the sidebar, otherwise hotkeys still fire as you type.
       L.DomEvent.on(sidebar, {
-        mouseenter: mapknitter._enter,
+        click: mapknitter._enter,
         mouseleave: mapknitter._out,
       });
 
@@ -662,70 +739,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
     });
 
     return action;
-  },
-
-  customExportAction: function () {
-    var action = L.EditAction.extend({
-      initialize: function (map, overlay, options) {
-        var use = 'get_app';
-
-        options = options || {};
-        options.toolbarIcon = {
-          svg: true,
-          html: use,
-          tooltip: 'Export Images'
-        };
-
-        L.EditAction.prototype.initialize.call(this, map, overlay, options);
-      },
-
-      addHooks: function () {
-        var group = this._overlay;
-        var edit = group.editing;
-        var exportInterval;
-
-        var updateUI = function updateUI(data) {
-          data = JSON.parse(data);
-          console.log("in updateui: " + data);
-          if (data.status == 'complete') clearInterval(exportInterval);
-          if (data.status == 'complete' && data.jpg.match('.jpg')) alert("Export succeeded. http://export.mapknitter.org/" + data.jpg);
-        }
-
-        var addUrlToModel = function addUrlToModel(data) {
-          var statusUrl = "//export.mapknitter.org" + data;
-          console.log("statusUrl: " + statusUrl);
-          
-          // repeatedly fetch the status.json
-          var updateInterval = function updateInterval() {
-            exportInterval = setInterval(function intervalUpdater() {
-              $.ajax(statusUrl + "?" + Date.now(), { // bust cache with timestamp;
-                type: "GET",
-                crossDomain: true
-              }).done(function (data) {
-                updateUI(data);
-              });
-            }, 3000);
-          }
-          /**
-           * TODO: update API to say if you pass in a custom `handleStatusUrl` you must also build your own updater
-           * and also create your own a frequency
-           * or fix this part
-           */
-          $.ajax({
-            url: "/export",
-            type: 'POST',
-            data: { status_url: statusUrl }
-          }).done(function (data) {
-            console.log('success!! ' + data);
-            updateInterval();
-          });
-        }
-
-        edit.startExport({ handleStatusUrl: addUrlToModel, updater: updateUI, scale: prompt("Choose a scale or use the default (cm per pixel):", 100) });
-      }
-    });
-
-    return action;
   }
-});
 
+});
+//})();

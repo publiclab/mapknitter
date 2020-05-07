@@ -16,5 +16,28 @@
       </div>
       <input type="text" class="form-control" placeholder="Enter tags" aria-label="tags" name="tags" id="new-tags">
     </div>
+    <small class="d-inline-block ml-5 pl-2 mt-2" data-toggle="modal" data-target="#create-collection-modal" style="cursor: pointer;">Create a collection &raquo;</small>
   <% end %>
+</div>
+
+<!-- "Create a collection" button modal -->
+<div class="modal fade" id="create-collection-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Collections of maps</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Using a unique tag on multiple maps creates a page at <a class="text-primary">https://mapknitter.org/tag/your_tag_name</a>.
+        <br>
+        That's the best way to group and showcase your maps.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Awesome!</button>
+      </div>
+    </div>
+  </div>
 </div>

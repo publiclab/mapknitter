@@ -1,7 +1,10 @@
 language: ruby
 
 rvm:
-  - 2.4.6
+  - 2.6.3
+
+node_js:
+  - "12.6.0"
 
 node_js:
   - "12.6.0"
@@ -43,6 +46,10 @@ env:
     - RAILS_ENV=test
     - CI=true
     - TRAVIS=true
+    - DB_HOST='127.0.0.1'
+    - DB_USER='mapknitter'
+    - DB_PASS='mapknitter'
+    - DB_NAME='mapknitter'
 
 jobs:
   include:

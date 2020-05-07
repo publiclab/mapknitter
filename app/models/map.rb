@@ -6,7 +6,7 @@ class Map < ApplicationRecord
   attr_accessor :image_urls
 
   validates_presence_of :name, :slug, :author, :lat, :lon
-  validates_uniqueness_of :slug
+  validates_uniqueness_of :slug, case_sensitive: true
   validates_presence_of :location, message: ' cannot be found. Try entering a latitude and longitude if this problem persists.'
   # validates_format_of   :slug,
   #                       :with => /^[\w-]*$/,

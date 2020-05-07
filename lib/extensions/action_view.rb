@@ -1,1 +1,1 @@
-require 'extensions/action_view/helpers'
+require_relative 'action_view/helpers'

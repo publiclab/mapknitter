@@ -143,9 +143,15 @@ label small {
   }
 }
 
+.cta-buttons {
+  .btn {
+    margin-top: 0.25rem;
+  }
+}
+
 .footer {
-  margin: 20px 0 0 0;
-  padding: 20px 60px 40px;
+  margin: 10px auto;
+  padding: 30px 60px 40px;
   border-top: 1px solid #ddd;
   background:#f6f9fc;
 }
@@ -153,7 +159,9 @@ label small {
 .footer .footer-link {
   color: #8898aa;
 }
-
+.footer-links {
+  text-align: left;
+}
 .footer .footer-link:hover {
   text-decoration: none;
   color: #32325d;
@@ -164,11 +172,22 @@ label small {
   font-weight: bolder;
   letter-spacing: .025em;
   font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+
   text-transform: uppercase;
 }
-
+.fab {
+  color: #464159;
+  font-size:35px;
+  padding: 4px;
+}
+.fab:hover {
+  text-decoration: none;
+  color: #272343;
+  transition: color 1.5s
+}
+.social {
+  text-align: right;
+}
 .mapping-kits {
   border: none;
 }
@@ -181,6 +200,7 @@ label small {
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  border: 1px solid #ddd; 
 }
 
 .btn.create-map {
@@ -254,4 +274,75 @@ label small {
 
 .light-blue {
     background-color: #d0e2f2;
+}
+
+#about-text {
+  width: 70%;
+  margin: auto;
+}
+#about-img {
+  margin: 20px auto;
+}
+#count-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  img {
+    width: 200px;
+    height: 200px
+  }
+  figure {
+    text-align: center;
+  }
+}
+
+.appear {
+  animation: appearance 2.5s;
+}
+@keyframes appearance {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+@media screen and (max-width: 400px) {
+  #about-text {
+    width: 100%;
+  }
+  #count-container {
+    flex-direction: column;
+  }
+  .social, .footer-links {
+    text-align: center;
+  }
+  .footer {
+    width: 100%
+  }
+}
+
+.container#login_mk {
+  padding-top: 2.5%;
+  text-align: center;
+}
+
+.text-anonymous {
+    text-align: left;
+    margin: 20px;
+    padding: 50px;
+    width: 60%;
+    margin-left: 17%;
+  }
+  
+  
+  @media (max-width: 750px) {
+    .text-anonymous {
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+    }
+  }
+
+#open_id_form button {
+  width: 70px;
+  background-color: #ffffff;
+  border: none;
+  margin-right: 0.25rem;
 }

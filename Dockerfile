@@ -2,7 +2,7 @@
 # https://github.com/publiclab/mapknitter/
 # This image deploys Mapknitter!
 
-FROM ruby:2.4.6-stretch
+FROM ruby:2.6.3-stretch
 
 # Set correct environment variables.
 ENV HOME /root
@@ -50,5 +50,7 @@ RUN git config --global url."https://".insteadOf git://
 # Add the Rails app
 COPY . /app/
 WORKDIR /app
+
+RUN bundle install
 
 CMD [ "sh", "/app/start.sh" ]

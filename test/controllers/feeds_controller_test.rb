@@ -11,7 +11,7 @@ class FeedsControllerTest < ActionController::TestCase
     get :all
     assert_response :success
     assert_not_nil :maps
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/all'
   end
 
@@ -19,14 +19,14 @@ class FeedsControllerTest < ActionController::TestCase
     get :all
     assert_response :success
     assert_not_nil :maps
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/all'
   end
 
   test 'get clean' do
     get :clean
     assert_response :success
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/clean'
   end
 
@@ -34,7 +34,7 @@ class FeedsControllerTest < ActionController::TestCase
     get :all, params: { moderators: 'true'}
     assert_response :success
     assert_not_nil :maps
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/all'
   end
 
@@ -42,7 +42,7 @@ class FeedsControllerTest < ActionController::TestCase
     get :license, params: { :id => "publicdomain"}
     assert_response :success
     assert_not_nil :maps
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/license'
   end
 
@@ -50,7 +50,7 @@ class FeedsControllerTest < ActionController::TestCase
     get :author, params: { :id => "quentin"}
     assert_response :success
     assert_not_nil :maps
-    assert_equal 'application/xml', @response.content_type
+    assert_equal 'application/xml; charset=utf-8', @response.content_type
     assert_template 'feeds/author'
   end
 
@@ -64,7 +64,7 @@ class FeedsControllerTest < ActionController::TestCase
 
   test 'rescues if tag not present' do
     get :tag, params: { id: 'cess'}
-    assert_equal 'text/plain', @response.content_type
+    assert_equal 'text/plain; charset=utf-8', @response.content_type
     assert_equal 'No maps with tag cess', @response.body
   end
 end

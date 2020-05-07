@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-ruby '2.4.6'
-gem 'rails', '~> 5.2.3'
+ruby '2.6.3'
+gem 'rails', '~> 6.0.0'
 gem 'rake',  '~> 12.3.2'
 gem 'tzinfo-data'
 gem 'skylight'
 gem 'sentry-raven'
 
-gem 'will_paginate', '3.1.8'
+gem 'will_paginate', '~> 3.3.0'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'friendly_id'
 gem 'popper_js', '~> 1.11', '>= 1.11.1'
@@ -20,14 +20,18 @@ group :dependencies do
   gem 'image_science', '1.3.0'
   gem 'recaptcha', '~> 5.0.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
-  gem 'ruby-openid', '~>2.5'
+  gem 'ruby-openid', '~>2.9'
   gem 'open_id_authentication'
-  gem 'RubyInline', '~> 3.12.4'
+  gem 'RubyInline', '~> 3.12.5'
   gem 'paperclip', '~> 6.1.0'
   gem 'bootsnap', '~> 1.4.5'
-  gem 'turbolinks', '~> 5'
+  gem 'turbolinks', '~> 5.2'
   gem 'mini_magick', '~> 4.8'
-  gem 'puma', '~> 4.1.0'
+  gem 'puma'
+  gem 'thor', '~> 0.20.3'
+
+  # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
+  # gem 'webpacker'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk-s3', '~> 1'
@@ -39,17 +43,15 @@ group :dependencies do
   # compiling markdown to html
   gem 'rdiscount', '2.2.0.1'
 
-  # Process manager for applications with multiple components
-  gem 'foreman', '~> 0.85.0'
-
   # asset pipelining
   gem 'bootstrap-sass'
   gem 'sassc-rails'
   gem 'jquery-rails'
+  gem 'jquery-ui-rails'
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.6.1'
+  gem 'autoprefixer-rails', '~> 9.7.3'
   gem 'uglifier', '~> 4.1.20'
 
 end
@@ -66,6 +68,9 @@ group :test do
   gem 'minitest-reporters'
   # for creating sessions on capybara
   gem 'rack_session_access'
+
+  # Easy installation and use of web drivers to run system tests with browsers
+  # gem 'webdrivers'
 end
 
 group :development, :test do
@@ -74,15 +79,14 @@ group :development, :test do
   # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.0.1', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.2.2'
+  gem 'faker', '~> 2.6.0'
   gem 'pry-rails', '~> 0.3.9'
-  gem 'action-cable-testing'
 end
 
 group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
-  gem 'listen', '~> 3.1.5'
+  gem 'listen', '~> 3.2.1'
   gem 'web-console', '~> 3.3'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

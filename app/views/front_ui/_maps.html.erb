@@ -26,7 +26,10 @@
             </div>
             <div class="col-8 map-details" style="margin-top: 8px !important;">
               <i class="far fa-comment"></i> <%= pluralize(map.comments.length, "comment") %>
-              <% if logged_in? && current_user.can_delete?(map) %><a href="/map/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a><% end %>
+              <% if logged_in? && current_user.can_delete?(map) %>
+                <a href="/map/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a>
+                <a data-confirm="Are you sure? This cannot be undone." rel="nofollow" data-method="delete" href="/maps/<%= map.id %>"><i class="fa fa-trash"></i></a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -35,4 +38,4 @@
   <% end %>
 </div>
 <br style="clear:both;" />
-<%= will_paginate maps, param_name: 'maps', list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
+<%= will_paginate maps, param_name: 'page', list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
