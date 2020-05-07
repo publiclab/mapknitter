@@ -47,6 +47,7 @@ group :dependencies do
   gem 'bootstrap-sass'
   gem 'sassc-rails'
   gem 'jquery-rails'
+  gem 'jquery-ui-rails'
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'

@@ -12,13 +12,13 @@
 //
 
 
-// = require leaflet/dist/leaflet-src.js
+//= require leaflet/dist/leaflet-src.js
 
 //= require jquery
 //= require jquery-ujs
+//= require jquery-ui
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js
-//= require jquery-ui/jquery-ui.min.js
 
 //= require bootstrap/dist/js/bootstrap.bundle.min.js
 
@@ -49,4 +49,4 @@
 //= require mapknitter/Map.js
 //= require cable.js
 
-// = require_tree .
+//= require_tree .
