@@ -139,9 +139,10 @@ blueimp-canvas-to-blob@3.5.0:
   resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.5.0.tgz#5679ac32f6a2835821f0c3ad661719ff85a9236b"
   integrity sha1-VnmsMvaig1gh8MOtZhcZ/4WpI2s=
 
-blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=2.1.1:
-  version "3.15.0"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/f47d01f2827f69dde571c0fe06159e8e99a1de96"
+blueimp-canvas-to-blob@blueimp/JavaScript-Canvas-to-Blob#>=3.26.0:
+  version "3.26.0"
+  uid f7932ba56741d9fb14c2b156fccebcd76998e4af
+  resolved "https://codeload.github.com/blueimp/JavaScript-Canvas-to-Blob/tar.gz/f7932ba56741d9fb14c2b156fccebcd76998e4af"
 
 blueimp-file-upload@blueimp/jQuery-File-Upload#~9.22.1:
   version "9.22.2"
