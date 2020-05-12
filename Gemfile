@@ -17,7 +17,7 @@ gem 'paper_trail'
 group :dependencies do
   gem 'mysql2', '< 0.6'
   gem 'geokit-rails', '1.1.4'
-  gem 'image_science', '1.3.0'
+  gem 'image_science', '1.3.1'
   gem 'recaptcha', '~> 5.5.0', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
   gem 'ruby-openid', '~>2.9'
