@@ -320,7 +320,7 @@ GEM
       thread_safe (~> 0.1)
     tzinfo-data (1.2020.1)
       tzinfo (>= 1.0.0)
-    uglifier (4.1.20)
+    uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.1)
     url (0.3.2)
@@ -397,7 +397,7 @@ DEPENDENCIES
   sqlite3
   turbolinks (~> 5)
   tzinfo-data
-  uglifier (~> 4.1.20)
+  uglifier (~> 4.2.0)
   web-console (~> 3.3)
   will_paginate (= 3.3.0)
   will_paginate-bootstrap4 (~> 0.2.2)
