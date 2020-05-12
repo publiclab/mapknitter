@@ -95,6 +95,19 @@ MapKnitter.Map = MapKnitter.Class.extend({
           var img = L.distortableImageOverlay(warpable.srcmedium, {
             corners: corners,
             mode: 'lock',
+            actions: [
+              L.DragAction,
+              L.DistortAction,
+              L.FreeRotateAction,
+              L.ScaleAction,
+              L.RotateAction,
+              L.LockAction,
+              L.OpacityAction,
+              L.BorderAction,
+              L.RevertAction,
+              L.StackAction,
+              L.DeleteAction
+            ]
           });
 
           map._imgGroup.addLayer(img);
