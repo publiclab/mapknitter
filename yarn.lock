@@ -1097,9 +1097,10 @@ leaflet-heatmap@1.0.0:
     heatmap.js "*"
     leaflet "*"
 
-leaflet-illustrate@manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7:
-  version "0.0.2"
-  resolved "https://codeload.github.com/manleyjster/Leaflet.Illustrate/tar.gz/31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7"
+leaflet-illustrate@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/leaflet-illustrate/-/leaflet-illustrate-0.0.3.tgz#2b0d7bd5d651436768bb02755af7aadbd703f9ed"
+  integrity sha1-Kw171dZRQ2douwJ1Wveq29cD+e0=
 
 leaflet-omnivore@mapbox/leaflet-omnivore#~0.3.2:
   version "0.3.4"
