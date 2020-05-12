@@ -28,7 +28,7 @@
               <i class="far fa-comment"></i> <%= pluralize(map.comments.length, "comment") %>
               <% if logged_in? && current_user.can_delete?(map) %>
                 <a href="/map/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a>
-                <a data-confirm="Are you sure? This cannot be undone." rel="nofollow" data-method="delete" href="/maps/<%= map.id %>"><i class="fa fa-trash"></i></a>
+                <a data-confirm="Are you sure? This cannot be undone." rel="nofollow" data-method="delete" href="/maps/<%= map.slug %>"><i class="fa fa-trash"></i></a>
               <% end %>
             </div>
           </div>
