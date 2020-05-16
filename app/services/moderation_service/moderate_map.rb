@@ -1,19 +1,20 @@
 module ModerationService
   class ModerateMap
 
-    def process(map_id)
-      @map = Map.find(map_id)
-      @user = map.user
+    def initialize(map_id)
+      self.map = Map.find(map_id)
+    end
 
+    def process
       mark_map_as_moderated if moderation_required?
     end
 
     private
 
-    attr_accessor :map, :user
+    attr_accessor :map
 
     def moderation_required?
-      map.anonymous? || user.first_time_poster?
+      map.anonymous? || map.user.first_time_poster?
     end
 
     def mark_map_as_moderated
