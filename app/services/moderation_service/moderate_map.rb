@@ -1,6 +1,5 @@
 module ModerationService
   class ModerateMap
-
     def initialize(map_id)
       self.map = Map.find(map_id)
     end

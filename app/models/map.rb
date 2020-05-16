@@ -28,9 +28,9 @@ class Map < ApplicationRecord
 
   module Status
     VALUES = [
-        NORMAL = 1,   # Usage: Status::NORMAL
-        BANNED = 0,   # Usage: Status::BANNED
-        MODERATED = 4 # Usage: Status::MODERATED
+      NORMAL = 1,   # Usage: Status::NORMAL
+      BANNED = 0,   # Usage: Status::BANNED
+      MODERATED = 4 # Usage: Status::MODERATED
     ].freeze
   end
 
