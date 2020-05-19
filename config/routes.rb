@@ -39,6 +39,7 @@ Mapknitter::Application.routes.draw do
   get 'dashboard', to: 'users#dashboard'
   get 'authors', to: 'users#index'
 
+  get 'images/revert', to: 'images#revert'
   get 'images/:url', to: 'images#fetch'
 
   get 'tms/:id/alt/:z/:x/:y.png', to: 'utility#tms_alt'
@@ -104,7 +105,6 @@ Mapknitter::Application.routes.draw do
   post 'warper/update' => 'images#update' # legacy for cartagen.js
   post 'images/update' => 'images#update'
   post 'images/delete/:id' => 'images#delete'
-  get 'images/revert' => 'images#revert'
   delete 'maps/:map_id/warpables/:id' => 'images#destroy' #legacy, will be resourceful
   delete 'images/:id' => 'images#destroy' #legacy, will be resourceful
 
