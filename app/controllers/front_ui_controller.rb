@@ -39,7 +39,7 @@ class FrontUiController < ApplicationController
 
     session[:lat] = lat
     session[:lon] = lon
-    render nothing: true
+    head 200, content_type: "text/html"
   end
 
   def about
