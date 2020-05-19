@@ -70,7 +70,9 @@ Please consider which installation method you prefer. Cloud Installation require
 
 Make sure you have the below 3 prerequisites installed before moving forward with the [Installation Steps](#Installation-Steps).
 
-Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
+Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc. 
+
+Mac OS 10.14 users may need this: https://silvae86.github.io/2018/07/05/fixing-missing-headers-for-homebrew-in-mac-osx-mojave/
 
 1. [MySQL](#MySQL) - Database
 2. [RVM](#RVM) - Ruby version manager
