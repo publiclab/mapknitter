@@ -53,6 +53,7 @@ var addExport, collectExportUrls;
       status_el.append('<br />');
 
       if (response.height && response.width) status_el.append(' <span class="meta dimensions">' + response.height + 'x' + response.width + ' px</span>');
+      if (response.cm_per_px)                status_el.append(' <span class="meta resolution">' + response.cm_per_px + '</span>');
       if (response.size)                     status_el.append(' <span class="meta size">' + response.size + '</span>');
       if (response.start_time)               status_el.append(' <i class="start_time">' + response.start_time + '</i>');
 
