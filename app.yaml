@@ -23,4 +23,4 @@ env_variables:
   SENTRY_DSN: $_SENTRY_DSN
 
 beta_settings:
-  cloud_sql_instances: $_CLOUD_SQL_INSTANCES
+    cloud_sql_instances: public-lab:us-central1:mapknitter-dev
