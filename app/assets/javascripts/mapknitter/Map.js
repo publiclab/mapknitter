@@ -649,6 +649,16 @@ MapKnitter.Map = MapKnitter.Class.extend({
       // average of scales of each image
       scale = parseInt(scale/opts.collection.length);
 
+      // sort by order of appearance in DOM, as Leaflet uses to sort display order:
+      // https://github.com/Leaflet/Leaflet/blob/37d2fd15ad6518c254fae3e033177e96c48b5012/src/dom/DomUtil.js#L95-L102
+      var domCollection = $('img.collected').toArray();
+      opts.collection.sort(function(a, b) {
+        return(
+          Number(domCollection.indexOf(map._imgGroup._layers[a.id]._image)) - 
+          Number(domCollection.indexOf(map._imgGroup._layers[b.id]._image))
+        );
+      });
+
       $.ajax({
         url: 'https://export.mapknitter.org/export',
         crossDomain: true,
