@@ -60,8 +60,10 @@ jobs:
       script: bundle exec rails test:system
     - name: "Rubocop Linter"
       script: bundle exec rubocop
-    - name: "Docker Builds"
-      script: docker build -t mapknitter .
+    - name: "Development Docker Build"
+      script: docker build -t mapknitter -f development .
+    - name: "Production Docker Build"
+      script: docker build -t mapknitter -f production .
     - name: "Asset Precompilation"
       env:
         - RAILS_ENV=production
