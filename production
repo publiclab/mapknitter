@@ -15,7 +15,7 @@ COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
 RUN apt-key add /app/sysadmin.publiclab.key
 
 # Install dependencies for Mapknitter
-RUN apt-get update -qq && apt-get install -y \
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   nodejs gdal-bin curl procps git imagemagick python-gdal zip
 
 # Configure ImageMagick
@@ -37,6 +37,10 @@ RUN git config --global url."https://".insteadOf git://
 # Add the Rails app
 COPY . /app/
 WORKDIR /app
+
+RUN apt-get clean && \
+    apt-get autoremove -y && \
+    apt-get purge -y git zip curl
 
 RUN bundle install
 
