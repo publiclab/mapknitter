@@ -61,7 +61,7 @@ jobs:
     - name: "Rubocop Linter"
       script: bundle exec rubocop
     - name: "Docker Builds"
-      script: docker build -t mapknitter .
+      script: docker build -t mapknitter --file ./Dockerfile
     - name: "Asset Precompilation"
       env:
         - RAILS_ENV=production
