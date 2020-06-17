@@ -8,9 +8,12 @@ services:
       - ../mysql:/var/lib/mysql
       - ../dump:/docker-entrypoint-initdb.d
   web:
-    build: .
+    build: 
+      context: .
+      dockerfile: ${RAILS_ENV}
     ulimits:
       core: 0
+    command: [ "sh", "/app/start.sh" ]
     image: mapknitter-dev
     env_file:
       - mapknitter.env
