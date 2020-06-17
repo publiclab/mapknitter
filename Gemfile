@@ -27,7 +27,7 @@ group :dependencies do
   gem 'bootsnap', '~> 1.4.6'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
-  gem 'puma', '~> 4.3.3'
+  gem 'puma', '~> 4.3.5'
 
   # if you use amazon s3 for warpable image storage
   gem 'aws-sdk-s3', '~> 1'
