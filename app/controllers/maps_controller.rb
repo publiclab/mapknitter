@@ -11,16 +11,17 @@ class MapsController < ApplicationController
 
   def index
     # show only maps with at least 1 image to reduce spammer interest
-    @maps = Map.page(params[:page])
-               .per_page(20)
-               .where(archived: false, password: '')
-               .order('updated_at DESC')
-               .joins(:warpables)
-               .group('maps.id')
-    # ensure even maps with no images are shown on front page and don't get lost; some spam risk
-    @new_maps = Map.where(archived: false, password: '')
-                   .order('updated_at DESC')
-    render layout: 'application'
+    redirect_to '/gallery'
+    # @maps = Map.page(params[:page])
+    #            .per_page(20)
+    #            .where(archived: false, password: '')
+    #            .order('updated_at DESC')
+    #            .joins(:warpables)
+    #            .group('maps.id')
+    # # ensure even maps with no images are shown on front page and don't get lost; some spam risk
+    # @new_maps = Map.where(archived: false, password: '')
+    #                .order('updated_at DESC')
+    # render layout: 'application'
   end
 
   def map
