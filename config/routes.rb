@@ -13,7 +13,7 @@ Mapknitter::Application.routes.draw do
   get 'location' => 'front_ui#location'
   post 'save_location', to: 'front_ui#save_location'
 
-  get 'legacy', to: 'maps#index' # remove once new front page is stable
+  get 'legacy', to: 'front_ui#gallery' # remove once new front page is stable
 
   get 'external_url_test', to: 'export#external_url_test'
 
