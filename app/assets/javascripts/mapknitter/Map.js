@@ -386,7 +386,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
   synchronizeData: function(warpables) {
     var layers = [];
     map.eachLayer(function(l) {layers.push(l)});
-    layers = layers.filter(image => (image._url!=undefined || image._url!=null));
+    layers = layers.filter(image => !!image._url);
     warpables.forEach(function(warpable) {
       var corners = [];
       warpable.nodes.forEach(function(node) {
