@@ -398,7 +398,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       corners [2] = y;
       corners [3] = x;
 
-      var layer = layers.filter(l => l._url==warpable.srcmedium)[0];
+      var layer = layers.filter(l => l._url === warpable.srcmedium)[0];
 
       if (layer == null || layer == undefined) {
         window.mapknitter.synchronizeNewAddedImage(warpable);
