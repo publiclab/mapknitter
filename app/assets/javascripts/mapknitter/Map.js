@@ -1,4 +1,3 @@
-//(function() {
 MapKnitter.Map = MapKnitter.Class.extend({
 
   initialize: function (options) {
@@ -77,10 +76,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
                 [0, 0, width, 0, width, height, 0, height],
                 [nw.x, nw.y, ne.x, ne.y, se.x, se.y, sw.x, sw.y],
                 true // trigger download
-              )
+              );
 
               downloadEl.html('<i class="fa fa-download"></i>');
-            }
+            };
 
             imgEl[0].src = $('.img-download-' + warpable.id).attr('data-image');
           });
@@ -104,7 +103,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
               L.LockAction,
               L.OpacityAction,
               L.BorderAction,
-              L.RevertAction,
+              L.RestoreAction,
               L.StackAction,
               L.DeleteAction
             ]
@@ -176,8 +175,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
     L.DomEvent.on(img._image, 'load', function() {
       var newTool = mapknitter.customDeleteAction();
 
-      if (edit.hasTool(L.DeleteAction)) { 
-        edit.replaceTool(L.DeleteAction, newTool); 
+      if (edit.hasTool(L.DeleteAction)) {
+        edit.replaceTool(L.DeleteAction, newTool);
       } else {
         edit.addTool(newTool);
       }
@@ -185,7 +184,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       if (!edit._selected) { edit._deselect(); }
 
       img.on('delete', mapknitter.deleteImage, img);
-    })
+    });
   },
 
   /* Add a new, unplaced, but already uploaded image to the map.
@@ -227,14 +226,14 @@ MapKnitter.Map = MapKnitter.Class.extend({
         img.rotateBy(geo.angle);
 
         /* Attempt to convert altitude to scale factor based on Leaflet zoom;
-          * for correction based on altitude we need the original dimensions of the image. 
-          * This may work only at sea level unless we factor in ground level. 
+          * for correction based on altitude we need the original dimensions of the image.
+          * This may work only at sea level unless we factor in ground level.
           * We may also need to get camera field of view to get this even closer.
           * We could also fall back to the scale of the last-placed image.
           */
         if (geo.altitude && geo.altitude != 0) {
-          var width = img._image.width, height = img._image.height
-          //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;           
+          // var width = img._image.width, height = img._image.height
+          //scale = ( (act_height/img_height) * (act_width/img_width) ) / geo.altitude;
           //img.scaleBy(scale);
 
           var elevator = new google.maps.ElevationService();
@@ -268,7 +267,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       return img;
     });
-  },    
+  },
 
   geocodeImageFromId: function (dom_id, id, url) {
     mapknitter.geocodeImage(
@@ -303,19 +302,19 @@ MapKnitter.Map = MapKnitter.Class.extend({
   },
 
   /*
-   * Accepts an image element, and executes given function with 
+   * Accepts an image element, and executes given function with
    * params as: function(lat,lng) {}
-   * Adapting from: 
+   * Adapting from:
     https://github.com/publiclab/mapknitter/blob/6e88c7725d3c013f402526289e806b8be4fcc23c/public/cartagen/cartagen.js#L9378
   */
   geocodeImage: function (img, fn, id) {
     EXIF.getData(img, function () {
-      var GPS = EXIF.getAllTags(img)
+      var GPS = EXIF.getAllTags(img);
 
       /* If the lat/lng is available. */
       if (typeof GPS["GPSLatitude"] !== 'undefined' && typeof GPS["GPSLongitude"] !== 'undefined') {
 
-        // sadly, encoded in [degrees,minutes,seconds] 
+        // sadly, encoded in [degrees,minutes,seconds]
         var lat = (GPS["GPSLatitude"][0]) +
           (GPS["GPSLatitude"][1] / 60) +
           (GPS["GPSLatitude"][2] / 3600);
@@ -327,7 +326,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         if (GPS["GPSLongitudeRef"] == "W") lng = lng * -1
       }
 
-      // Attempt to use GPS compass heading; will require 
+      // Attempt to use GPS compass heading; will require
       // some trig to calc corner points, which you can find below:
 
       var angle = 0;
@@ -363,7 +362,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
       }
 
-      /* only execute callback if lat (and by 
+      /* only execute callback if lat (and by
        * implication lng) exists */
       if (lat) fn(lat, lng, id, angle, altitude);
     });
@@ -372,10 +371,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
   selectImage: function (e) {
     var img = this;
     // var img = e.layer;
-    // save state, watch for changes by tracking stringified corner positions: 
+    // save state, watch for changes by tracking stringified corner positions:
     img._corner_state = JSON.stringify(img._corners);
     /* Need to re-enable editing on each select because we disable it when clicking the sidebar */
-    img.editing.enable.bind(img.editing)()
+    img.editing.enable.bind(img.editing)();
     /* If it's locked, allow event to propagate on to map below */   // sb: why? commenting out below line. 
     if (this.editing._mode !== "lock") { e.stopPropagation(); }
   },
@@ -385,134 +384,134 @@ MapKnitter.Map = MapKnitter.Class.extend({
      * is to reposition the updated images onto the map on every connected browser (via the ActionCable). */
 
   synchronizeData: function(warpables) {
-      var layers = [];
-      map.eachLayer(function(l) {layers.push(l)});
-      layers = layers.filter(image => (image._url!=undefined || image._url!=null));
-      warpables.forEach(function(warpable) {
-          corners = [];
-          warpable.nodes.forEach(function(node) {
-              corners.push(L.latLng(node.lat, node.lon));
-          });
-
-          x = corners[2];
-          y = corners [3];
-          corners [2] = y;
-          corners [3] = x;
-
-          layer = layers.filter(l => l._url==warpable.srcmedium)[0];
-
-          if(layer == null || layer == undefined) {
-              window.mapknitter.synchronizeNewAddedImage(warpable);
-          } else {
-              layer.setCorners(corners);
-              var index = layers.indexOf(layer);
-              if (index > -1) {
-                  layers.splice(index, 1);
-              }
-          }
+    var layers = [];
+    map.eachLayer(function(l) {layers.push(l)});
+    layers = layers.filter(image => (image._url!=undefined || image._url!=null));
+    warpables.forEach(function(warpable) {
+      var corners = [];
+      warpable.nodes.forEach(function(node) {
+        corners.push(L.latLng(node.lat, node.lon));
       });
 
-      // remove images if deleted from any user's browser
-      layers.forEach(function(layer) {
-          edit = layer.editing
-          edit._removeToolbar();
-          edit.disable();
-          // remove from Leaflet map:
-          map.removeLayer(layer);
-          // remove from sidebar too:
-          $('#warpable-' + layer.warpable_id).remove();
-      });
+      var x = corners[2];
+      var y = corners [3];
+      corners [2] = y;
+      corners [3] = x;
+
+      var layer = layers.filter(l => l._url==warpable.srcmedium)[0];
+
+      if (layer == null || layer == undefined) {
+        window.mapknitter.synchronizeNewAddedImage(warpable);
+      } else {
+        layer.setCorners(corners);
+        var index = layers.indexOf(layer);
+        if (index > -1) {
+          layers.splice(index, 1);
+        }
+      }
+    });
+
+    // remove images if deleted from any user's browser
+    layers.forEach(function(layer) {
+      var edit = layer.editing;
+      edit._removeToolbar();
+      edit.disable();
+      // remove from Leaflet map:
+      map.removeLayer(layer);
+      // remove from sidebar too:
+      $('#warpable-' + layer.warpable_id).remove();
+    });
   },
 
   synchronizeNewAddedImage: function(warpable) {
-      var wn = warpable.nodes;
-      var bounds = [];
+    var wn = warpable.nodes;
+    var bounds = [];
 
-      // only already-placed images:
-      if (wn.length > 0) {
-          var downloadEl = $('.img-download-' + warpable.id),
-              imgEl = $('#full-img-' + warpable.id);
+    // only already-placed images:
+    if (wn.length > 0) {
+      var downloadEl = $('.img-download-' + warpable.id),
+          imgEl = $('#full-img-' + warpable.id);
 
-          // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
-          downloadEl.click(function () {
-              downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
+      // this 'download' section can likely be dropped as Leaflet.DistortableImage now provides for such download itself
+      downloadEl.click(function () {
+        downloadEl.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 
-              imgEl[0].onload = function () {
-                  var height = imgEl.height(),
-                      width = imgEl.width(),
-                      nw = map.latLngToContainerPoint(wn[0]),
-                      ne = map.latLngToContainerPoint(wn[1]),
-                      se = map.latLngToContainerPoint(wn[2]),
-                      sw = map.latLngToContainerPoint(wn[3]),
-                      offsetX = nw.x,
-                      offsetY = nw.y,
-                      displayedWidth = $('#warpable-img-' + warpable.id).width(),
-                      ratio = width / displayedWidth;
+        imgEl[0].onload = function () {
+          var height = imgEl.height(),
+              width = imgEl.width(),
+              nw = map.latLngToContainerPoint(wn[0]),
+              ne = map.latLngToContainerPoint(wn[1]),
+              se = map.latLngToContainerPoint(wn[2]),
+              sw = map.latLngToContainerPoint(wn[3]),
+              offsetX = nw.x,
+              offsetY = nw.y,
+              displayedWidth = $('#warpable-img-' + warpable.id).width(),
+              ratio = width / displayedWidth;
 
-                  nw.x -= offsetX;
-                  ne.x -= offsetX;
-                  se.x -= offsetX;
-                  sw.x -= offsetX;
+          nw.x -= offsetX;
+          ne.x -= offsetX;
+          se.x -= offsetX;
+          sw.x -= offsetX;
 
-                  nw.y -= offsetY;
-                  ne.y -= offsetY;
-                  se.y -= offsetY;
-                  sw.y -= offsetY;
+          nw.y -= offsetY;
+          ne.y -= offsetY;
+          se.y -= offsetY;
+          sw.y -= offsetY;
 
-                  warpWebGl(
-                      'full-img-' + warpable.id,
-                      [0, 0, width, 0, width, height, 0, height],
-                      [nw.x, nw.y, ne.x, ne.y, se.x, se.y, sw.x, sw.y],
-                      true // trigger download
-                  )
+          warpWebGl(
+            'full-img-' + warpable.id,
+            [0, 0, width, 0, width, height, 0, height],
+            [nw.x, nw.y, ne.x, ne.y, se.x, se.y, sw.x, sw.y],
+            true // trigger download
+          );
 
-                  downloadEl.html('<i class="fa fa-download"></i>');
-              }
+          downloadEl.html('<i class="fa fa-download"></i>');
+        };
 
-              imgEl[0].src = $('.img-download-' + warpable.id).attr('data-image');
-          });
+        imgEl[0].src = $('.img-download-' + warpable.id).attr('data-image');
+      });
 
-          var corners = [
-              L.latLng(wn[0].lat, wn[0].lon),
-              L.latLng(wn[1].lat, wn[1].lon),
-              L.latLng(wn[3].lat, wn[3].lon),
-              L.latLng(wn[2].lat, wn[2].lon)
-          ];
+      var corners = [
+        L.latLng(wn[0].lat, wn[0].lon),
+        L.latLng(wn[1].lat, wn[1].lon),
+        L.latLng(wn[3].lat, wn[3].lon),
+        L.latLng(wn[2].lat, wn[2].lon),
+      ];
 
-          var img = L.distortableImageOverlay(warpable.srcmedium, {
-              corners: corners,
-              mode: 'lock',
-          }).addTo(map);
+      var img = L.distortableImageOverlay(warpable.srcmedium, {
+        corners: corners,
+        mode: 'lock',
+      });
 
-          var imgGroup = L.distortableCollection({}).addTo(map);
+      var imgGroup = L.distortableCollection().addTo(map);
 
-          imgGroup.addLayer(img);
+      imgGroup.addLayer(img);
 
-          /**
-           * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
-           */
-          bounds = bounds.concat(corners);
-          var newImgBounds = L.latLngBounds(corners);
+      /**
+       * TODO: toolbar may still appear outside of frame. Create a getter for toolbar corners in LDI and then include them in this calculation
+       */
+      bounds = bounds.concat(corners);
+      var newImgBounds = L.latLngBounds(corners);
 
-          if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
-              map._initialBounds.extend(newImgBounds);
-              mapknitter._map.flyToBounds(map._initialBounds);
-          }
-
-          images.push(img);
-          img.warpable_id = warpable.id;
-
-          if (!mapknitter.readOnly) {
-              L.DomEvent.on(img._image, {
-                  click: mapknitter.selectImage,
-                  load: mapknitter.setupToolbar
-              }, img);
-
-              L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
-          }
-
-          img.editing.disable()
+      if (!map._initialBounds.contains(newImgBounds) && !map._initialBounds.equals(newImgBounds)) {
+        map._initialBounds.extend(newImgBounds);
+        mapknitter._map.flyToBounds(map._initialBounds);
       }
+
+      images.push(img);
+      img.warpable_id = warpable.id;
+
+      if (!mapknitter.readOnly) {
+        L.DomEvent.on(img.getElement(), {
+          click: mapknitter.selectImage,
+          load: mapknitter.setupToolbar
+        }, img);
+
+        L.DomEvent.on(imgGroup, 'layeradd', mapknitter.setupEvents, img);
+      }
+
+      img.editing.disable();
+    }
   },
 
   saveImageIfChanged: function () {
@@ -520,7 +519,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         edit = img.editing;
     // check if image state has changed at all before saving!
     if (edit._mode !== 'lock' && img._corner_state !== JSON.stringify(img._corners)) {
-      window.mapknitter.saveImage.bind(img)()
+      window.mapknitter.saveImage.bind(img)();
     }
   },
 
@@ -550,10 +549,10 @@ MapKnitter.Map = MapKnitter.Class.extend({
       error: function (e) {
         $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red')
       }
-    })
+    });
   },
 
-  // /maps/newbie/warpables/42, but we'll try /warpables/42 
+  // /maps/newbie/warpables/42, but we'll try /warpables/42
   // as it should also be a valid restful route
   deleteImage: function () {
     var img = this;
@@ -577,7 +576,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
           alert(request.responseText);
           $('.mk-save').removeClass('fa-spinner fa-spin').addClass('fa-times-circle fa-red');
         }
-      })
+      });
     }
   },
 
@@ -654,7 +653,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
       var domCollection = $('img.collected').toArray();
       opts.collection.sort(function(a, b) {
         return(
-          Number(domCollection.indexOf(map._imgGroup._layers[a.id]._image)) - 
+          Number(domCollection.indexOf(map._imgGroup._layers[a.id]._image)) -
           Number(domCollection.indexOf(map._imgGroup._layers[b.id]._image))
         );
       });
@@ -682,17 +681,17 @@ MapKnitter.Map = MapKnitter.Class.extend({
       // alert("Export has begun: leave this window open to be notified of completion."); // https://github.com/publiclab/Leaflet.DistortableImage/issues/522
       // this is for the JS exporter:
       // var statusUrl = data.split('please visit, ')[1];
-      
+
       // save the location of the status URL
-      $.ajax({	
-        url: "/export",	
-        type: 'POST',	
-        data: { 
+      $.ajax({
+        url: "/export",
+        type: 'POST',
+        data: {
           status_url: 'https://export.mapknitter.org' + status_url,
           map_id: mapknitter.map_id
         }
-      }).done(function (data) {	
-        console.log('saved status.json URL to MapKnitter', data);	
+      }).done(function (data) {
+        console.log('saved status.json URL to MapKnitter', data);
       });
 
       // hand it off to https://github.com/publiclab/mapknitter/blob/main/app/views/maps/_cloud_exports.html.erb
@@ -755,8 +754,8 @@ MapKnitter.Map = MapKnitter.Class.extend({
       addHooks: function () {
         var ov = this._overlay;
 
-        if (ov.editing._mode !== 'lock') { 
-          ov.fire('delete'); 
+        if (ov.editing._mode !== 'lock') {
+          ov.fire('delete');
         }
       }
     });
@@ -765,4 +764,3 @@ MapKnitter.Map = MapKnitter.Class.extend({
   }
 
 });
-//})();
