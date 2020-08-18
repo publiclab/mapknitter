@@ -1,12 +1,10 @@
-## MapKnitter 
+## MapKnitter
 
 [![Code of Conduct](https://img.shields.io/badge/code-of%20conduct-green.svg)](https://publiclab.org/conduct)
 [![codecov](https://codecov.io/gh/publiclab/mapknitter/branch/main/graph/badge.svg)](https://codecov.io/gh/publiclab/mapknitter)
 [![Join the chat at https://publiclab.org/chat](https://img.shields.io/badge/chat-in%20different%20ways-blue.svg)](https://publiclab.org/chat)
 [![first-timers-only-friendly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://code.publiclab.org#r=all)
 [![View performance data on Skylight](https://badges.skylight.io/typical/ArYnJAb3VUC9.svg?token=DJ-zenCIFAootUAeQ8BkTiTkMBXkNpNc-PXTLA4dqDU)](https://www.skylight.io/app/applications/ArYnJAb3VUC9)
-
-
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
@@ -31,7 +29,6 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 7. [License](#license)
 8. [MapKnitter in depth](#mapknitter-in-depth)
 
-
 ****
 
 ## Architecture
@@ -44,13 +41,13 @@ MapKnitter is broken into three major components:
 
 **Component 1** has been broken out into a new Leaflet plugin, [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage/), which allows for client-side, CSS3-based distortion of images over a Leaflet base map
 
-**Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts. 
+**Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts.
 
-**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick, which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation. 
+**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick, which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation.
 
 Component 3 is soon to be replaced with an external exporter service built in a small Sinatra app called [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem.
 
-Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrate](https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps. 
+Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrate](https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps.
 
 ## Installation
 
@@ -94,7 +91,7 @@ $ sudo apt-get install mysql-server
 $ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev
 ```
 
-3. *(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features. 
+3. *(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features.
 
   ```Bash
   $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
@@ -112,7 +109,7 @@ This is for RVM, but the alternative, **rbenv**, also works (instructions not li
 $ curl -L https://get.rvm.io | bash -s stable
 ```
 
-2. At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment. 
+2. At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment.
 
    - *Ubuntu users only:* you may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
@@ -126,7 +123,7 @@ $ rvm install 2.4.6
 
 #### Yarn
 
-We use Yarn as our package manager, which is available through npm. 
+We use Yarn as our package manager, which is available through npm.
 
 1. Install npm:
 
@@ -153,13 +150,13 @@ NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error
 
 You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or rbenv - to install and set locally)
 
-1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git` 
+1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git`
 2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
 3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
 4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
 5. Initialize database with `bundle exec rails db:setup`
 6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
-7. Install static assets (like external javascript libraries, fonts) with `yarn install` 
+7. Install static assets (like external javascript libraries, fonts) with `yarn install`
 8. Start rails with `bundle exec rails s` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `rails s` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
 
 ==================
@@ -186,13 +183,13 @@ To use it:
 4. Under the `Projects` section,
 add the URL of your forked version of mapknitter (`https://github.com/USERNAME/mapknitter.git`).
 5. Hit create.
-6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory. 
+6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory.
 7. Run the installation script. The initial installation may take a bit.
 ```Bash
-$ source install_cloud.sh 
+$ source install_cloud.sh
 ```
 8. When you see it's complete, run the server:
-```Bash 
+```Bash
 $ rails server -b 0.0.0.0
 ```
 9. Hit the Play button located in the top menu bar.
@@ -249,14 +246,13 @@ or simply:
 
 `rails test test/functional/some_file.rb:[line number of the test]`
 
-
 ## Bugs and support
 
-To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues 
+To report bugs and request features, please use the GitHub issue tracker provided at https://github.com/publiclab/mapknitter/issues
 
 For additional support, join the Public Lab website and mailing list at http://publiclab.org/lists or for urgent requests, email web@publiclab.org
 
-For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group. 
+For questions related to the use of this software and balloon or kite mapping, the same page links to the "grassrootsmapping" discussion group.
 
 ### Code of Conduct
 
