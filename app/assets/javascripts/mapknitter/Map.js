@@ -400,7 +400,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
 
       var layer = layers.filter(l => l._url === warpable.srcmedium)[0];
 
-      if (layer == null || layer == undefined) {
+      if (!layer) {
         window.mapknitter.synchronizeNewAddedImage(warpable);
       } else {
         layer.setCorners(corners);
