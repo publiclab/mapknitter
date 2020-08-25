@@ -6,6 +6,7 @@ FROM ruby:2.4.6-stretch
 
 # Set correct environment variables.
 ENV HOME /root
+ENV RAILS_ENV production
 
 # Backported GDAL
 RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
