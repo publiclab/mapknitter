@@ -27,7 +27,7 @@ install:
   - ./lib/exporter-deps.sh > /dev/null 2>&1
   - bundle check --path vendor/.bundle/ || bundle install --path vendor/.bundle/
   - if [ $RAILS_ENV != 'production' ]; then
-      yarn check || yarn install;
+      yarn check || yarn config set ignore-engines true && yarn install;
     fi
   - if [ $RAILS_ENV == 'production' ]; then
       mysql -e "CREATE DATABASE mapknitter;";

@@ -25,7 +25,7 @@ module ApplicationCable
       end
 
       #check is connection is nil(which it  should be)
-      assert_equal nil, connection
+      assert_nil connection
     end
   end
 end
