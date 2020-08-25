@@ -96,7 +96,6 @@ $ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfr
   ```Bash
   $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
   ```
-
 ==================
 
 #### RVM
