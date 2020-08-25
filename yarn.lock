@@ -1045,9 +1045,10 @@ leaflet-distortableimage@0.20.7:
     leaflet-toolbar "0.4.0-alpha.2"
     webgl-distort "0.0.2"
 
-leaflet-draw@Leaflet/Leaflet.draw#0.2.4:
-  version "0.2.3"
-  resolved "https://codeload.github.com/Leaflet/Leaflet.draw/tar.gz/07b1448f4eba33982f662398988f0337ee55cc02"
+leaflet-draw@Leaflet/Leaflet.draw#v1.0.4:
+  version "1.0.4"
+  uid "65d7866b14e926b72465d0077809683a77344019"
+  resolved "https://codeload.github.com/Leaflet/Leaflet.draw/tar.gz/65d7866b14e926b72465d0077809683a77344019"
 
 leaflet-easybutton@^2.4.0:
   version "2.4.0"
