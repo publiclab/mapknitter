@@ -169,9 +169,10 @@ blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4:
   version "2.5.4"
   resolved "https://codeload.github.com/blueimp/JavaScript-Templates/tar.gz/b75e882ec0e353ce2d8bfdb2ea755060d2012368"
 
-bootstrap@twbs/bootstrap#^4.4.1:
-  version "4.4.1"
-  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/dca1ab7d877bc4b664b43604657a2b5fbe2b4ecb"
+bootstrap@twbs/bootstrap#^4.5.2:
+  version "4.5.2"
+  uid "5f2480a90ab911babc53039835fe78c6fc12646d"
+  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/5f2480a90ab911babc53039835fe78c6fc12646d"
 
 bootstrap@~3.2.0:
   version "3.2.0"
