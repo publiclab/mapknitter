@@ -41,6 +41,7 @@ WORKDIR /app
 RUN apt-get clean && \
     apt-get autoremove -y
 
-RUN bundle install
+RUN bundle install && \
+    rake assets:precompile
 
 CMD [ "sh", "/app/start.sh" ]
