@@ -5,7 +5,7 @@ ports:
       onOpen: open-preview
 tasks:
     - init: >
-        cp config/database.yml.example config/database.yml &&
+        cp config/database.yml.gitpod config/database.yml &&
         cp config/config.yml.example config/config.yml &&
         cp db/schema.rb.example db/schema.rb &&
         bundle install --without production &&
