@@ -27,8 +27,11 @@
             <div class="col-8 map-details" style="margin-top: 8px !important;">
               <i class="far fa-comment"></i> <%= pluralize(map.comments.length, "comment") %>
               <% if logged_in? && current_user.can_delete?(map) %>
-                <a href="/map/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a>
-                <a data-confirm="Are you sure? This cannot be undone." rel="nofollow" data-method="delete" href="/maps/<%= map.slug %>"><i class="fa fa-trash"></i></a>
+                <a href="/maps/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a>
+                <a href="javascript:void();" onclick="$('.map-delete-<%= map.id %>').show();"><i class="fa fa-trash"></i></i></a>
+                <a style="display:none;" class="btn btn-outline-info btn-sm map-delete-<%= map.id %>" rel="nofollow" data-method="delete" href="/maps/<%= map.slug %>">
+                  confirm deletion
+                </a>
               <% end %>
             </div>
           </div>
