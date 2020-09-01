@@ -74,7 +74,7 @@ class MapsController < ApplicationController
     else
       flash[:error] = 'Only admins may archive maps.'
     end
-    redirect_to "/?_=#{Time.now.to_i}"
+    redirect_back(fallback_location: "/")
   end
 
   def embed
@@ -109,7 +109,7 @@ class MapsController < ApplicationController
     if current_user.can_delete?(@map)
       @map.destroy
       flash[:notice] = 'Map deleted.'
-      redirect_to '/'
+      redirect_back(fallback_location: "/")
     else
       flash[:error] = 'Only admins or map owners may delete maps.'
       redirect_to @map

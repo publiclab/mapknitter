@@ -189,7 +189,7 @@ class MapsControllerTest < ActionController::TestCase
     get(:archive, params: { id: @map.slug })
     @map.reload
 
-    assert_redirected_to '/?_=' + Time.now.to_i.to_s
+    assert_redirected_to '/'
     assert @map.archived
   end
 
@@ -198,7 +198,7 @@ class MapsControllerTest < ActionController::TestCase
     get(:archive, params: { id: @map.slug })
     @map.reload
 
-    assert_redirected_to '/?_=' + Time.now.to_i.to_s
+    assert_redirected_to '/'
     assert_not @map.archived
   end
 
