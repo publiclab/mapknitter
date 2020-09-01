@@ -156,9 +156,10 @@ blueimp-load-image@2.12.2:
   resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-2.12.2.tgz#6a17598aab858d4fbf01543e0631141b51057c87"
   integrity sha1-ahdZiquFjU+/AVQ+BjEUG1EFfIc=
 
-blueimp-load-image@blueimp/JavaScript-Load-Image#>=1.13.0:
-  version "2.23.0"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Load-Image/tar.gz/455a28c68dc1cd1046e8c458cc0f5027ed7ac03f"
+blueimp-load-image@blueimp/JavaScript-Load-Image#>=5.14.0:
+  version "5.14.0"
+  uid cb5e5d0736101894d22ab1094f2fede402a89be0
+  resolved "https://codeload.github.com/blueimp/JavaScript-Load-Image/tar.gz/cb5e5d0736101894d22ab1094f2fede402a89be0"
 
 blueimp-tmpl@3.6.0:
   version "3.6.0"
