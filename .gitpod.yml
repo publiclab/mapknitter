@@ -1,0 +1,27 @@
+ports:
+    - port: 5000
+      onOpen: open-preview
+tasks:
+    - init: >
+        cp config/database.yml.gitpod config/database.yml &&
+        cp config/config.yml.example config/config.yml &&
+        cp db/schema.rb.example db/schema.rb &&
+        bundle install --without production &&
+        yarn install &&
+        rails db:create &&
+        rails db:schema:load &&
+        rails db:migrate
+      command: >
+        passenger start --port 5000
+        
+    - command: rails c
+    
+github:
+    prebuilds:
+        branches: true
+        pullRequests: true
+        pullRequestsFromForks: true
+        addCheck: true
+        addComment: true
+        addBadge: false
+        addLabel: false
