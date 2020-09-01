@@ -1,0 +1,30 @@
+default: &default
+  encoding: utf8
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  port: 3306
+  socket: /var/run/mysqld/mysqld.sock
+
+development:
+  <<: *default
+  host: 127.0.0.1
+  username: root
+  password:
+  database: mapknitter_development
+
+production:
+  encoding: utf8
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV['MYSQL_HOST'] || '127.0.0.1' %>
+  username: <%= ENV['MYSQL_USER'] || 'root' %>
+  password: <%= ENV['MYSQL_PASSWORD'] || '' %>
+  database: <%= ENV['MYSQL_DATABASE'] || 'root' %>
+  socket: <%= ENV['MYSQL_SOCKET'] || '/var/run/mysqld/mysqld.sock' %>
+
+test:
+  <<: *default
+  host: 127.0.0.1
+  username: root 
+  password:
+  database: mapknitter_test
