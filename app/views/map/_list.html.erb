@@ -13,13 +13,13 @@
         <% if map.archived %><i>Archived</i> | <% end %> 
         <a href="/map/view/<%= map.name %>">View</a> | 
         <% if current_user == true && current_user.can_delete?(map) %>
+          <a href="/maps/archive/<%= map.slug %>"><i class="fa fa-ban"></i></a>
           <a href="javascript:void();" onclick="$('.map-delete-<%= map.id %>').show();"><i class="fa fa-trash"></i></i></a>
-          <a style="display:none;" class="btn btn-outline-info btn-sm map-delete-<%= map.id %>" rel="nofollow" data-method="delete" href="/maps/<%= map.id %>">
+          <a style="display:none;" class="btn btn-outline-info btn-sm map-delete-<%= map.id %>" rel="nofollow" data-method="delete" href="/maps/<%= map.slug %>">
             confirm deletion
           </a>
         <% end %>
         <% if APP_CONFIG["deletion_active"] && params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/map/delete/<%= map.id %>?password=<%= APP_CONFIG["password"] %>">Delete</a> | <% end %>
-        <% if params[:password] && params[:password] == APP_CONFIG["password"] %><a href="/maps/archive/<%= map.name %>?password=<%= APP_CONFIG["password"] %>"><i class="fa fa-ban"></i></a> <% end %>
         Updated <%= map.updated_at.to_s(:short) %> | 
         <%= map.warpables.length %> images 
       </small></p>
