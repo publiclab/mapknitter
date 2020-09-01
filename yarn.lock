@@ -165,9 +165,10 @@ blueimp-tmpl@3.6.0:
   resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.6.0.tgz#a4910975d042e2bc03ba77f0e62d04f1548a524c"
   integrity sha1-pJEJddBC4rwDunfw5i0E8VSKUkw=
 
-blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4:
-  version "2.5.4"
-  resolved "https://codeload.github.com/blueimp/JavaScript-Templates/tar.gz/b75e882ec0e353ce2d8bfdb2ea755060d2012368"
+blueimp-tmpl@^3.18.0:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.18.0.tgz#f778046f131d0e5858a839069bfc6519f027985e"
+  integrity sha512-1DFtiOm/IRzHZtemQ6X3z7VXDcZ39xyq/inCE4r8lZSlT99TTIQ4SHmKTWX1DoBxL+e///qaB+ZD90my500jVQ==
 
 bootstrap@twbs/bootstrap#^4.5.2:
   version "4.5.2"
