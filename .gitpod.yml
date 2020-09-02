@@ -9,7 +9,7 @@ tasks:
         cp config/config.yml.example config/config.yml &&
         cp db/schema.rb.example db/schema.rb &&
         bundle install --without production &&
-        yarn install &&
+        yarn config set ignore-engines true && yarn install;
         rails db:create &&
         rails db:schema:load &&
         rails db:migrate
