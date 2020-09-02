@@ -37,7 +37,7 @@ group :dependencies do
   gem 'right_aws_api', '~> 0.3.5'
 
   # compiling markdown to html
-  gem 'rdiscount', '2.2.0.1'
+  gem 'rdiscount', '2.2.0.2'
 
   # asset pipelining
   gem 'bootstrap-sass'
