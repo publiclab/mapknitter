@@ -1,12 +1,10 @@
 steps:
-- name: 'docker/compose:1.19.0'
-  args: ['up', '-d']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['tag', 'mapknitter-dev:latest', 'gcr.io/public-lab/mapknitter-dev']
-# Push it to GCR.
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/mapknitter-dev']
+  args: ['build',
+         '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:$SHORT_SHA',
+         '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:latest',
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/$PROJECT_ID/mapknitter-dev']
-images: ['gcr.io/$PROJECT_ID/mapknitter-dev']
+  args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/public-lab/github.com/publiclab/mapknitter:latest']
+images: ['gcr.io/public-lab/github.com/publiclab/mapknitter']
 timeout: 2200s
+
