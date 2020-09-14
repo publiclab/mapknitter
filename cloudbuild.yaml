@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build',
          '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:$SHORT_SHA',
-         '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:latest',
+         '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:latest']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/public-lab/github.com/publiclab/mapknitter:latest']
 images: ['gcr.io/public-lab/github.com/publiclab/mapknitter']
