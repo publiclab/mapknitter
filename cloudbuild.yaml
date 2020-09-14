@@ -7,6 +7,8 @@ steps:
          '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/public-lab/github.com/publiclab/mapknitter']
+- name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://mapknitter-production-config/app.yaml', 'app.yaml']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/public-lab/github.com/publiclab/mapknitter:latest']
 images: ['gcr.io/public-lab/github.com/publiclab/mapknitter']
