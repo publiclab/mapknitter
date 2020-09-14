@@ -3,6 +3,7 @@ steps:
   args: ['build',
          '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:$SHORT_SHA',
          '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:latest',
+         '-f', 'production',
          '.']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy', 'app.yaml', '--image-url=gcr.io/public-lab/github.com/publiclab/mapknitter:latest']
