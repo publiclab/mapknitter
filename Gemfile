@@ -46,7 +46,7 @@ group :dependencies do
   gem 'sprockets', '3.7.2'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
-  gem 'autoprefixer-rails', '~> 9.8.6'
+  gem 'autoprefixer-rails', '~> 10.0.0'
   gem 'uglifier', '~> 4.2.0'
 
 end
