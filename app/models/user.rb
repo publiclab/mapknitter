@@ -26,6 +26,14 @@ class User < ApplicationRecord
   # This will also let us return a human error message.
   #
 
+  module Status
+    VALUES = [
+        NORMAL = 1,   # Usage: Status::NORMAL
+        BANNED = 0,   # Usage: Status::BANNED
+        MODERATED = 5 # Usage: Status::MODERATED
+    ].freeze
+  end
+
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
   end
@@ -58,5 +66,19 @@ class User < ApplicationRecord
 
   def first_time_poster?
     Map.where(user_id: id, status: Map::Status::NORMAL).count == 0
+  end
+
+  def moderate
+    self.update!(status: Status::MODERATED)
+    # user is logged out next time they access current_user in a controller; see application controller
+  end
+
+  def normalise_user_status
+    self.update!(status: Status::NORMAL)
+  end
+
+  def ban
+    self.update!(status: Status::BANNED)
+    # user is logged out next time they access current_user in a controller; see application controller
   end
 end

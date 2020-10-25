@@ -31,6 +31,36 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_user
+    unless current_user.present?
+      flash[:warning] ||= 'You must be logged in to access this page'
+      redirect_to '/login'
+      false
+    end
+    current_user
+  end
+
+  def alert_and_redirect_moderated
+    return unless current_user.present?
+
+    if @map.author.status == User::Status::BANNED && !(logged_in_as(['admin', 'moderator']))
+      flash[:error] = 'Author has been banned'
+      redirect_to '/'
+    elsif @map.status == Map::Status::MODERATED && (logged_in_as(['admin', 'moderator']))
+      flash.now[:warning] = "First-time poster <a href='/profile/#{@node.author.name}'>#{@node.author.name}</a> submitted this #{time_ago_in_words(@node.created_at)} ago and it has not yet been approved by a moderator. <a class='btn btn-default btn-sm' href='/moderate/publish/#{@node.id}'>Approve</a> <a class='btn btn-default btn-sm' href='/moderate/spam/#{@node.id}'>Spam</a>"
+    elsif @map.status == Map::Status::MODERATED && current_user&.id == @node.author.id && !flash[:first_time_post]
+      flash.now[:warning] = "Thank you for contributing open research, and thanks for your patience while your post is approved by <a href='/wiki/moderation'>community moderators</a> and we'll email you when it is published. In the meantime, if you have more to contribute, feel free to do so."
+    elsif @map.author.status == User::Status::MODERATED
+      flash.now[:warning] = "The user '#{@node.author.username}' has been placed <a href='https://#{request.host}/wiki/moderators'>in moderation</a> and will not be able to respond to comments."
+    end
+  end
+
+  def logged_in_as(roles)
+    return false unless current_user
+
+    roles.any? {|role| current_user.role == role }
+  end
+
   private
 
   def current_location
