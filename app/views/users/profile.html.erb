@@ -10,7 +10,5 @@
   </h2>
   <hr>
   <%= render :partial => '/front_ui/maps', :locals => { :maps => @maps } %>
-
-  <%= will_paginate @maps, list_classes: %w(pagination justify-content-center), previous_label: 'Prev', next_label: 'Next', renderer: WillPaginate::ActionView::BootstrapLinkRenderer unless @unpaginated %>
 </div>
 <hr />
