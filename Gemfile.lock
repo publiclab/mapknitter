@@ -52,8 +52,8 @@ GEM
     ansi (1.5.0)
     arel (9.0.0)
     ast (2.4.0)
-    autoprefixer-rails (10.0.0.2)
-      execjs
+    autoprefixer-rails (10.2.5.0)
+      execjs (< 2.8.0)
     aws-eventstream (1.1.0)
     aws-partitions (1.383.0)
     aws-sdk-core (3.109.1)
@@ -143,6 +143,9 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.0512)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
@@ -341,7 +344,7 @@ PLATFORMS
 DEPENDENCIES
   RubyInline (~> 3.12.5)
   action-cable-testing
-  autoprefixer-rails (~> 10.0.0)
+  autoprefixer-rails (~> 10.2.5)
   aws-sdk-s3 (~> 1)
   bootsnap (~> 1.4.8)
   bootstrap-sass
