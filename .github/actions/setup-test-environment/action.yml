@@ -13,11 +13,16 @@ runs:
   using: "composite"
   steps:
 
+  - name: Install JavaScript dependencies with Yarn
+    shell: bash
+    run: yarn check || yarn install --frozen-lockfile;
+
   - name: Setup database
     shell: bash
     env:
       RAILS_ENV: test
-      DB_PASSWORD: root
+      DB_USER: root
+      DB_PASS: root
       # tell Rails to use proper port for MySQL
       DB_PORT: ${{ job.services.mysql.ports[3306] }}
       DISABLE_BOOTSNAP: true
