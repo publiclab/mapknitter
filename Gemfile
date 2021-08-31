@@ -75,7 +75,7 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails', require: false
-  gem "rubocop-shopify", require: false
+  gem 'rubocop-shopify', require: false
 end
 
 group :development do

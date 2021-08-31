@@ -2,6 +2,8 @@ version: 2
 plugins:
   rubocop:
     enabled: true
+    config:
+      file: .rubocop.yml
     channel: rubocop-0-70
   brakeman:
     enabled: true
