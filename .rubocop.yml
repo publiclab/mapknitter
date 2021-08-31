@@ -1,4 +1,4 @@
-require: rubocop-performance
+require: rubocop-rails
 
 # Start with Spotifys style guide as a base then customize from there
 inherit_from:
