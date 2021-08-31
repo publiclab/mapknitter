@@ -15,7 +15,7 @@ AllCops:
     - '/Rakefile'
     - '/config.ru'
   Exclude:
-    - 'vendor/*'
+    - 'vendor/**/*'
     - 'node_modules/**/*'
     - 'spec/**/*'
     - 'bin/*'
@@ -83,7 +83,4 @@ Metrics/LineLength:
   Max: 423
 
 Style/Documentation:
-  Enabled: false
-
-Style/BracesAroundHashParameters:
   Enabled: false
