@@ -5,6 +5,6 @@ class UtilityController < ApplicationController
     # /z/x/y.png
     # /z/x/(2*z-y-1).png
     y = 2**params[:z].to_i - params[:y].to_i - 1
-    redirect_to "/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{y}.png"
+    redirect_to("/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{y}.png")
   end
 end

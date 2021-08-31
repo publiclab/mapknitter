@@ -7,12 +7,12 @@ class Warpable < ApplicationRecord
   # Paperclip; config and production/development specific configs
   # in /config/initializers/paperclip.rb
   has_attached_file :image,
-                    s3_protocol: 'https',
-                    styles: {
-                      medium: "500x375",
-                      small: "240x180",
-                      thumb: "100x100>"
-                    }
+    s3_protocol: 'https',
+    styles: {
+      medium: "500x375",
+      small: "240x180",
+      thumb: "100x100>",
+    }
 
   validates_attachment_content_type :image, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
 
@@ -23,7 +23,7 @@ class Warpable < ApplicationRecord
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})
-    json = super options
+    json = super(options)
     json[:src] = image.url
     json[:srcmedium] = image.url(:medium)
     json[:nodes] = nodes_array
@@ -70,14 +70,14 @@ class Warpable < ApplicationRecord
     nodes = nodes_array
     nodes.each_with_index do |node, index|
       nextnode = if index < nodes.length - 1
-                   nodes[index + 1]
-                 else
-                   nodes[0]
+        nodes[index + 1]
+      else
+        nodes[0]
                  end
       last = if index.positive?
-               nodes[index - 1]
-             else
-               nodes[nodes.length - 1]
+        nodes[index - 1]
+      else
+        nodes[nodes.length - 1]
              end
       scale = 20_037_508.34
       # inefficient but workable, we don't use this that often:
@@ -128,7 +128,7 @@ class Warpable < ApplicationRecord
   end
 
   def nodes_array
-    Node.find nodes.split(',')
+    Node.find(nodes.split(','))
   end
 
   # allow uploads via URL
@@ -155,12 +155,12 @@ class Warpable < ApplicationRecord
   end
 
   def user_id
-    Map.find map_id
+    Map.find(map_id)
     map.user_id
   end
 
   # adjust filename behavior of Paperclip after migrating from attachment_fu
-  Paperclip.interpolates :custom_filename do |attachment, style|
+  Paperclip.interpolates(:custom_filename) do |attachment, style|
     if style == :original
       basename(attachment, style) # generate hash path here
     else

@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
 
   def new
     if logged_in?
-      redirect_to "/"
+      redirect_to("/")
     else
       @referer = params[:back_to]
     end
@@ -21,25 +21,25 @@ class SessionsController < ApplicationController
     openid_url = CGI.unescape(open_id)
     # here it is localhost:3000/people/admin/identity for admin
     # possibly user is providing the whole URL
-    if openid_url.include? "publiclab"
-      if openid_url.include? "http"
+    if openid_url.include?("publiclab")
+      if openid_url.include?("http")
         # params[:subaction] contains the value of the provider
         # provider implies ['github', 'google_oauth2', 'twitter', 'facebook']
         url = if params[:subaction]
-                # provider based authentication
-                openid_url + "/" + params[:subaction]
-              else
-                # form based authentication
-                openid_url
+          # provider based authentication
+          openid_url + "/" + params[:subaction]
+        else
+          # form based authentication
+          openid_url
               end
       end
     else
       url = if params[:subaction]
-              # provider based authentication
-              @openid_url_base + openid_url + @openid_url_suffix + "/" + params[:subaction]
-            else
-              # form based authentication
-              @openid_url_base + openid_url + @openid_url_suffix
+        # provider based authentication
+        @openid_url_base + openid_url + @openid_url_suffix + "/" + params[:subaction]
+      else
+        # form based authentication
+        @openid_url_base + openid_url + @openid_url_suffix
             end
     end
     openid_authentication(url, back_to)
@@ -52,14 +52,14 @@ class SessionsController < ApplicationController
       successful_login('', nil)
     else
       flash[:error] = "Forbidden"
-      redirect_to "/"
+      redirect_to("/")
     end
   end
 
   def logout
     session[:user_id] = nil
     flash[:success] = "You have successfully logged out."
-    redirect_to '/' + '?_=' + Time.now.to_i.to_s
+    redirect_to('/' + '?_=' + Time.now.to_i.to_s)
   end
 
   protected
@@ -88,13 +88,13 @@ class SessionsController < ApplicationController
             @user.save!
           rescue ActiveRecord::RecordInvalid => e
             puts e
-            failed_login "User can not be associated to local account. Probably the account already exists with different capitalization!"
+            failed_login("User can not be associated to local account. Probably the account already exists with different capitalization!")
             return
           end
         end
         nonce = params[:n]
         if nonce
-          tmp = Sitetmp.find_by nonce: nonce
+          tmp = Sitetmp.find_by(nonce: nonce)
           if tmp
             data = tmp.attributes
             data.delete("nonce")
@@ -105,12 +105,12 @@ class SessionsController < ApplicationController
         end
         @current_user = @user
         if site
-          successful_login back_to, site.id
+          successful_login(back_to, site.id)
         else
-          successful_login back_to, nil
+          successful_login(back_to, nil)
         end
       else
-        failed_login result.message
+        failed_login(result.message)
         return false
       end
     end
@@ -120,19 +120,19 @@ class SessionsController < ApplicationController
 
   def failed_login(message = "Authentication failed.")
     flash[:danger] = message
-    redirect_to '/'
+    redirect_to('/')
   end
 
   def successful_login(back_to, id)
     session[:user_id] = @current_user.id
     flash[:success] = "You have successfully logged in."
     if id
-      redirect_to '/sites/' + id.to_s + '/upload'
+      redirect_to('/sites/' + id.to_s + '/upload')
     else
       if back_to
-        redirect_to back_to
+        redirect_to(back_to)
       else
-        redirect_to '/sites'
+        redirect_to('/sites')
       end
     end
   end

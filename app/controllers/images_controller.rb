@@ -1,8 +1,8 @@
 require 'open-uri'
 class ImagesController < ApplicationController
   rescue_from Errno::ENOENT, Errno::ETIMEDOUT,
-              OpenURI::HTTPError, Timeout::Error,
-              with: :url_upload_not_found
+    OpenURI::HTTPError, Timeout::Error,
+    with: :url_upload_not_found
   protect_from_forgery except: %i(update delete)
   # Convert model to json without including root name. Eg. 'warpable'
   ActiveRecord::Base.include_root_in_json = false
@@ -14,10 +14,10 @@ class ImagesController < ApplicationController
       if params[:url][0..42] == 'https://s3.amazonaws.com/grassrootsmapping/'
         url = URI.parse(params[:url])
         result = Net::HTTP.get_response(url)
-        send_data result.body, type: result.content_type, disposition: 'inline'
+        send_data(result.body, type: result.content_type, disposition: 'inline')
       end
     else
-      redirect_to params[:url]
+      redirect_to(params[:url])
     end
   end
 
@@ -32,46 +32,46 @@ class ImagesController < ApplicationController
     map.save
     respond_to do |format|
       if @warpable.save
-        format.html { render json: [@warpable.fup_json].to_json, content_type: 'text/html' }
-        format.json { render json: { files: [@warpable.fup_json] }, status: :created, location: @warpable.image.url }
+        format.html { render(json: [@warpable.fup_json].to_json, content_type: 'text/html') }
+        format.json { render(json: { files: [@warpable.fup_json] }, status: :created, location: @warpable.image.url) }
       else
-        format.html { render action: 'new' }
-        format.json { render json: { files: [@warpable.fup_error_json] }, layout: false }
+        format.html { render(action: 'new') }
+        format.json { render(json: { files: [@warpable.fup_error_json] }, layout: false) }
       end
     end
   end
 
   # mapknitter.org/import/<map-name>/?url=http://myurl.com/image.jpg
   def import
-    map = Map.find_by_name params[:name]
+    map = Map.find_by_name(params[:name])
     @warpable = Warpable.new
     @warpable.map_id = map.id
     @warpable.url = params[:url]
     map.updated_at = Time.now
     map.save
     if @warpable.save
-      redirect_to '/maps/' + params[:name]
+      redirect_to('/maps/' + params[:name])
     else
       flash[:notice] = 'Sorry, the image failed to import.'
-      redirect_to '/map/edit/' + params[:name]
+      redirect_to('/map/edit/' + params[:name])
     end
   end
 
   def url_upload_not_found
     flash[:notice] = 'Sorry, the URL you provided was not valid.'
-    redirect_to '/map/edit/' + params[:id]
+    redirect_to('/map/edit/' + params[:id])
   end
 
   def show
-    @image = Warpable.find params[:id]
+    @image = Warpable.find(params[:id])
     respond_to do |format|
       format.html
-      format.json { render json: @image.map(&:fup_json) }
+      format.json { render(json: @image.map(&:fup_json)) }
     end
   end
 
   def update
-    @warpable = Warpable.find params[:warpable_id]
+    @warpable = Warpable.find(params[:warpable_id])
 
     if Map.find(@warpable.map_id).anonymous? || logged_in?
       nodes = []
@@ -94,11 +94,11 @@ class ImagesController < ApplicationController
       @warpable.save
 
       respond_to do |format|
-        format.html { render html: 'success' }
-        format.json { render json: @warpable.map.fetch_map_data }
+        format.html { render(html: 'success') }
+        format.json { render(json: @warpable.map.fetch_map_data) }
       end
     else
-      render plain: 'You must be logged in to update the image, unless the map is anonymous.'
+      render(plain: 'You must be logged in to update the image, unless the map is anonymous.')
     end
   end
 
@@ -106,7 +106,7 @@ class ImagesController < ApplicationController
     @warpable = Warpable.find(params[:id])
     version = @warpable.versions.find(params[:version])
     version.reify&.save
-    redirect_to @warpable.map
+    redirect_to(@warpable.map)
   end
 
   def destroy
@@ -114,15 +114,15 @@ class ImagesController < ApplicationController
     if (logged_in? && current_user.can_edit?(@warpable.map)) || @warpable.map.anonymous?
       @warpable.destroy
       respond_to do |format|
-        format.html { render html: { notice: 'Image was successfully destroyed.' } }
-        format.json { render json: @warpable }
+        format.html { render(html: { notice: 'Image was successfully destroyed.' }) }
+        format.json { render(json: @warpable) }
       end
     else
       respond_to do |format|
         msg = "You do not have privileges to delete this image"
         flash[:notice] = msg
-        format.html { redirect_to @warpable.map }
-        format.json { render json: msg, status: 401 }
+        format.html { redirect_to(@warpable.map) }
+        format.json { render(json: msg, status: 401) }
       end
     end
   end
