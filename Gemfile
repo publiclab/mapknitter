@@ -73,9 +73,9 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
   gem 'rubocop', require: false
-  gem 'rubocop-discourse'
-  gem 'rubocop-rails', require: false
   gem 'rubocop-performance'
+  gem 'rubocop-rails', require: false
+  gem "rubocop-shopify", require: false
 end
 
 group :development do
