@@ -52,9 +52,6 @@ group :dependencies do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.70.0'
-  gem 'rubocop-discourse'
-  gem 'rubocop-performance'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'rails-controller-testing'
@@ -81,9 +78,12 @@ group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.2.1'
-  gem 'web-console', '~> 3.3'
+  gem 'rubocop', '~> 0.70.0'
+  gem 'rubocop-discourse'
+  gem 'rubocop-performance'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'web-console', '~> 3.3'
 end
 
 group :sqlite do
