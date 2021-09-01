@@ -27,6 +27,17 @@ jobs:
         ruby-version: 2.4.6
         bundler-cache: true
     - uses: ./.github/actions/setup-test-environment
+    - name: Get yarn cache path
+      id: yarn-cache-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - name: Cache yarn modules
+      uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+    - name: Install packages
+      run: yarn install
     - name: "Model Tests"
       env:
         RAILS_ENV: test
