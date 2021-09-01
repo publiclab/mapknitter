@@ -17,6 +17,23 @@ jobs:
         env:
           FORCE_COLOR: 1
         run: bundle exec rubocop --color --fail-fast
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.4.6
+        bundler-cache: true
+    - uses: ./.github/actions/setup-test-environment
+    - name: "Model Tests"
+      env:
+        RAILS_ENV: test
+        DB_PASSWORD: root
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        DISABLE_BOOTSNAP: true
+      run: bundle exec rails test test:models
   
   # docker:
   #   runs-on: ubuntu-latest
@@ -30,22 +47,7 @@ jobs:
   #   - name: "Development Docker Build"
   #     run: docker build -t mapknitter -f development .
 
-  # unit-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: ruby/setup-ruby@v1
-  #     with:
-  #       ruby-version: 2.4.6
-  #       bundler-cache: true
-  #   - uses: ./.github/actions/setup-test-environment
-  #   - name: "Model Tests"
-  #     env:
-  #       RAILS_ENV: test
-  #       DB_PASSWORD: root
-  #       DB_PORT: ${{ job.services.mysql.ports[3306] }}
-  #       DISABLE_BOOTSNAP: true
-  #     run: bundle exec rails test test:models
+
 
   # functional-tests:
   #   runs-on: ubuntu-latest
