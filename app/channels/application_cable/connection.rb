@@ -9,7 +9,8 @@ module ApplicationCable
     private
 
     def find_verified_user
-      User.find(cookies.signed["user_id"])
+      reject_unauthorized_connection if cookies.signed["user_id"].nil?
+      User.find(cookies.signed["user_id"].id)
     rescue ActiveRecord::RecordNotFound
       reject_unauthorized_connection
     end
