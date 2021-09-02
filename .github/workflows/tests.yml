@@ -44,7 +44,9 @@ jobs:
         DB_PASSWORD: root
         DB_PORT: ${{ job.services.mysql.ports[3306] }}
         DISABLE_BOOTSNAP: true
-      run: bundle exec rails test test:models
+      run: |
+        ./lib/exporter-deps.sh > /dev/null 2>&1
+        bundle exec rails test test:models
   
   # docker:
   #   runs-on: ubuntu-latest
