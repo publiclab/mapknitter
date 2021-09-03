@@ -1,0 +1,32 @@
+image:
+    file: .gitpod.dockerfile
+ports:
+    - port: 3000
+      onOpen: open-preview
+tasks:
+    - init: >
+        export CHROME_BIN=/usr/bin/chromium-browser &&
+        gem install bundler &&
+        bundle config set without 'production' &&
+        ./lib/exporter-deps.sh > /dev/null 2>&1 &&
+        bundle install &&
+        cp config/database.yml.gitpod config/database.yml &&
+        cp config/config.yml.example config/config.yml &&
+        mysql -e "CREATE DATABASE mapknitter_development;" &&
+        cp db/schema.rb.example db/schema.rb
+        rake db:setup
+        yarn install
+      command: >
+          passenger start
+    - command: chromium-browser --no-sandbox
+    - command: rails c
+
+github:
+    prebuilds:
+        branches: true
+        pullRequests: true
+        pullRequestsFromForks: true
+        addCheck: true
+        addComment: true
+        addBadge: false
+        addLabel: false
