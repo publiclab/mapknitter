@@ -13,6 +13,7 @@ tasks:
         cp config/database.yml.gitpod config/database.yml &&
         cp config/config.yml.example config/config.yml &&
         mysql -e "CREATE DATABASE mapknitter_development;" &&
+        mysql -e "CREATE DATABASE mapknitter_test;" &&
         cp db/schema.rb.example db/schema.rb
         rake db:setup
         yarn install
