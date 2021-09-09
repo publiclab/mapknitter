@@ -46,7 +46,7 @@ module Mapknitter
     config.assets.enabled = true
 
     config.action_dispatch.default_headers['X-Frame-Options'] = "ALLOW-FROM https://publiclab.org"
-    config.action_dispatch.default_headers['Access-Control-Allow-Origin'] = 'https://publiclab.org',
+    config.action_dispatch.default_headers['Access-Control-Allow-Origin'] = 'https://publiclab.org'
     config.action_dispatch.default_headers['Access-Control-Request-Method'] = 'GET' 
 
     # Version of your assets, change this if you want to expire all your assets
