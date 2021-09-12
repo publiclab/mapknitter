@@ -37,8 +37,27 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DISABLE_BOOTSNAP: true
         run: |
-          ./lib/exporter-deps.sh
           bundle exec rails test test:models
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'Integration Tests'
+        env:
+          RAILS_ENV: test
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
+        run: bundle exec rails test test:integration
 
   # docker:
   #   runs-on: ubuntu-latest
@@ -81,25 +100,6 @@ jobs:
   #       DB_PASSWORD: root
   #       DB_PORT: ${{ job.services.mysql.ports[3306] }}
   #     run: bundle exec rails test test:controllers
-
-  # integration-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: ruby/setup-ruby@v1
-  #     with:
-  #       ruby-version: 2.4.6
-  #       bundler-cache: true
-  #   - uses: ./.github/actions/setup-test-environment
-  #   - name: Install JavaScript dependencies with Yarn
-  #     run: yarn check || yarn install;
-  #   - name: "Integration Tests"
-  #     env:
-  #       RAILS_ENV: test
-  #       DB_PASSWORD: root
-  #       DB_PORT: ${{ job.services.mysql.ports[3306] }}
-  #       DISABLE_BOOTSNAP: true
-  #     run: bundle exec rails test test:integration
 
   # system-tests:
   #     runs-on: ubuntu-latest

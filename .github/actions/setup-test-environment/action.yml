@@ -28,3 +28,4 @@ runs:
         sudo systemctl start mysql
         mysql -uroot -proot -e "CREATE DATABASE mapknitter_test;"
         bundle exec rake db:schema:load db:migrate --trace
+        sudo apt-get install -y gdal-bin
