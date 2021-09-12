@@ -37,8 +37,7 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DISABLE_BOOTSNAP: true
         run: |
-          sudo apt-get install gdal-bin
-          ./lib/exporter-deps.sh > /dev/null 2>&1
+          ./lib/exporter-deps.sh
           bundle exec rails test test:models
 
   # docker:
