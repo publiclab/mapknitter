@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 on: [pull_request]
 
 jobs:
-  rubocop:
+  Rubocop:
     name: Rubocop
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +18,7 @@ jobs:
           FORCE_COLOR: 1
         run: bundle exec rubocop --color --fail-fast
 
-  unit-tests:
+  Unit tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
         run: |
           bundle exec rails test test:models
 
-  integration-tests:
+  Integration tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
           DISABLE_BOOTSNAP: true
         run: bundle exec rails test test:integration
 
-  controller-tests:
+  Controller tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -79,7 +79,7 @@ jobs:
           DISABLE_BOOTSNAP: true
         run: bundle exec rails test test:controllers
 
-  system-tests:
+  System tests:
     runs-on: ubuntu-latest
     services:
       redis:
@@ -121,44 +121,14 @@ jobs:
           name: system-test-screenshots
           path: tmp/screenshots/*
 
-  # docker:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: ruby/setup-ruby@v1
-  #     with:
-  #       ruby-version: 2.4.6
-  #       bundler-cache: true
-  #   - uses: ./github/actions/setup-test-environment
-  #   - name: "Development Docker Build"
-  #     run: docker build -t mapknitter -f development .
-
-  # functional-tests:
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     redis:
-  #       image: redis
-  #       # Set health checks to wait until redis has started
-  #       options: >-
-  #         --health-cmd "redis-cli ping"
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #       ports:
-  #         # Maps port 6379 on service container to the host
-  #         - 6379:6379
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: ruby/setup-ruby@v1
-  #     with:
-  #       ruby-version: 2.4.6
-  #       bundler-cache: true
-  #   - uses: ./.github/actions/setup-test-environment
-  #   - name: Install JavaScript dependencies with Yarn
-  #     run: yarn check || yarn install;
-  #   - name: "Controller Tests"
-  #     env:
-  #       RAILS_ENV: test
-  #       DB_PASSWORD: root
-  #       DB_PORT: ${{ job.services.mysql.ports[3306] }}
-  #     run: bundle exec rails test test:controllers
+  Development Docker Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./github/actions/setup-test-environment
+      - name: 'Development Docker Build'
+        run: docker build -t mapknitter -f development .
