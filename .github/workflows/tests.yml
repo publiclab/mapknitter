@@ -153,6 +153,7 @@ jobs:
         with:
           ruby-version: 2.4.6
           bundler-cache: true
+      - uses: ./.github/actions/setup-production-environment
       - uses: egordm/gha-yarn-node-cache@v1
       - name: Install JavaScript dependencies with Yarn
         run: yarn check || yarn install;
