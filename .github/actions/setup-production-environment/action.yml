@@ -26,8 +26,6 @@ runs:
         cp db/schema.rb.example db/schema.rb
         cp config/config.yml.example config/config.yml
         sudo systemctl start mysql
-        mysql -e "CREATE DATABASE mapknitter;"
-        mysql -e "CREATE USER 'mapknitter'@'%' IDENTIFIED BY 'mapknitter';"
-        mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'mapknitter'@'%';"
+        mysql -uroot -proot -e "CREATE DATABASE mapknitter;"
         bundle exec rake db:schema:load db:migrate --trace
         sudo apt-get install -y gdal-bin
