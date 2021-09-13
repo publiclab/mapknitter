@@ -8,11 +8,11 @@ FROM ruby:2.4.6-stretch
 ENV HOME /root
 
 # Backported GDAL
-RUN echo "deb http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
+RUN echo "deb [trusted=yes] http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
 
 # We bring our own key to verify our packages
 COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
-RUN apt-key add /app/sysadmin.publiclab.key
+RUN apt-key add /app/sysadmin.publiclab.key > /dev/null 2>&1
 
 # Install dependencies for Mapknitter
 RUN apt-get update -qq && apt-get install -y \
@@ -51,6 +51,7 @@ RUN git config --global url."https://".insteadOf git://
 COPY . /app/
 WORKDIR /app
 
+RUN gem install bundler
 RUN bundle install
 
 CMD [ "sh", "/app/start.sh" ]
