@@ -160,4 +160,7 @@ jobs:
       - name: 'Asset Precompilation'
         env:
           RAILS_ENV: production
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
         run: bundle exec rails assets:precompile
