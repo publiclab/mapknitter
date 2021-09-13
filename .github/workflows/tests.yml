@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 on: [pull_request]
 
 jobs:
-  Rubocop:
+  rubocop:
     name: Rubocop
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +18,7 @@ jobs:
           FORCE_COLOR: 1
         run: bundle exec rubocop --color --fail-fast
 
-  Unit tests:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
         run: |
           bundle exec rails test test:models
 
-  Integration tests:
+  integration-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
           DISABLE_BOOTSNAP: true
         run: bundle exec rails test test:integration
 
-  Controller tests:
+  controller-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -79,7 +79,7 @@ jobs:
           DISABLE_BOOTSNAP: true
         run: bundle exec rails test test:controllers
 
-  System tests:
+  system-tests:
     runs-on: ubuntu-latest
     services:
       redis:
@@ -121,14 +121,15 @@ jobs:
           name: system-test-screenshots
           path: tmp/screenshots/*
 
-  Development Docker Build:
+  docker-development:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.4.6
-          bundler-cache: true
-      - uses: ./github/actions/setup-test-environment
-      - name: 'Development Docker Build'
-        run: docker build -t mapknitter -f development .
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.4.6
+        bundler-cache: true
+    - uses: ./github/actions/setup-test-environment
+    - name: "Development Docker Build"
+      run: docker build -t mapknitter -f development .
+
