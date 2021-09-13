@@ -144,3 +144,19 @@ jobs:
       - uses: ./.github/actions/setup-test-environment
       - name: 'Development Docker Build'
         run: docker build -t mapknitter -f production .
+
+  assets-precompilation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'Asset Precompilation'
+        env:
+          RAILS_ENV: production
+        run: bundle exec rails assets:precompile
