@@ -121,7 +121,7 @@ jobs:
           name: system-test-screenshots
           path: tmp/screenshots/*
 
-  development-docker-build:
+  docker-build-check-development:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -133,7 +133,7 @@ jobs:
       - name: 'Development Docker Build'
         run: docker build -t mapknitter -f dockerfiles/development .
 
-  production-docker-build:
+  docker-build-check-production:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
