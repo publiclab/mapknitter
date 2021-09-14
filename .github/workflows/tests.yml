@@ -131,7 +131,7 @@ jobs:
           bundler-cache: true
       - uses: ./.github/actions/setup-test-environment
       - name: 'Development Docker Build'
-        run: docker build -t mapknitter -f development .
+        run: docker build -t mapknitter -f dockerfiles/development .
 
   docker-production:
     runs-on: ubuntu-latest
