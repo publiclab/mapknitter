@@ -1,9 +1,9 @@
-name: CI/CD Pipeline
+name: CI/CD workflow
 on: [pull_request]
 
 jobs:
   rubocop:
-    name: Rubocop
+    name: Code style suggestions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
