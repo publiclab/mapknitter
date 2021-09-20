@@ -23,12 +23,12 @@ class ExportController < ApplicationController
 
   # https://mapknitter.org/warps/yale-farm/yale-farm.jpg
   def jpg
-    send_file 'public/warps/' + params[:id] + '/' + params[:id] + '.jpg'
+    send_file('public/warps/' + params[:id] + '/' + params[:id] + '.jpg')
   end
 
   # https://mapknitter.org/warps/yale-farm/yale-farm-geo.tif
   def geotiff
-    send_file 'public/warps/' + params[:id] + '/' + params[:id] + '-geo.tif'
+    send_file('public/warps/' + params[:id] + '/' + params[:id] + '-geo.tif')
   end
 
   def cancel
@@ -39,12 +39,12 @@ class ExportController < ApplicationController
       export.save
       if params[:exports]
         flash[:notice] = 'Export cancelled.'
-        redirect_to '/exports'
+        redirect_to('/exports')
       else
-        render plain: 'cancelled'
+        render(plain: 'cancelled')
       end
     else
-      render plain: 'You must be logged in to export, unless the map is anonymous.'
+      render(plain: 'You must be logged in to export, unless the map is anonymous.')
     end
   end
 
@@ -52,19 +52,19 @@ class ExportController < ApplicationController
     map = Map.find_by(id: params[:id])
     export = map.export
     output = if export.present?
-               if export.status == 'complete'
-                 'complete'
-               elsif export.status == 'none'
-                 'export not running'
-               elsif export.status == 'failed'
-                 'export failed'
-               else
-                 export.status
-                        end
-             else
-               'export has not been run'
+      if export.status == 'complete'
+        'complete'
+      elsif export.status == 'none'
+        'export not running'
+      elsif export.status == 'failed'
+        'export failed'
+      else
+        export.status
+               end
+    else
+      'export has not been run'
              end
-    render plain: output, layout: false
+    render(plain: output, layout: false)
   end
 
   def status
@@ -72,12 +72,12 @@ class ExportController < ApplicationController
     if export = map.export
       if export.export_url.present?
         status_response = ExporterClient.new(export.export_url).status
-        render json: status_response
+        render(json: status_response)
       else
-        render json: export.to_json
+        render(json: export.to_json)
       end
     else
-      render json: { status: 'export has not been run' }
+      render(json: { status: 'export has not been run' })
     end
   end
 
@@ -93,12 +93,12 @@ class ExportController < ApplicationController
       map_id: params[:map_id],
       bands_string: 'default bands_string'
     )
-    render json: export.to_json
+    render(json: export.to_json)
   end
 
   # for demoing remote url functionality during testing
   def external_url_test
-    render json: Export.last.to_json
+    render(json: Export.last.to_json)
   end
 
   private

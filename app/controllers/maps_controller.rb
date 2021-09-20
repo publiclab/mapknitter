@@ -11,7 +11,7 @@ class MapsController < ApplicationController
 
   def index
     # show only maps with at least 1 image to reduce spammer interest
-    redirect_to '/gallery'
+    redirect_to('/gallery')
     # @maps = Map.page(params[:page])
     #            .per_page(20)
     #            .where(archived: false, password: '')
@@ -26,7 +26,7 @@ class MapsController < ApplicationController
 
   def map
     @maps = Map.map
-    render layout: false
+    render(layout: false)
   end
 
   def new
@@ -46,10 +46,10 @@ class MapsController < ApplicationController
     end
 
     if @map.save
-      redirect_to "/maps/#{@map.slug}/edit"
+      redirect_to("/maps/#{@map.slug}/edit")
     else
       flash.now[:errors] = @map.errors.full_messages
-      render 'new'
+      render('new')
     end
   end
 
@@ -60,7 +60,7 @@ class MapsController < ApplicationController
                .sample(4)
     @unpaginated = true
     @users = @map.authors
-    render layout: 'application'
+    render(layout: 'application')
   end
 
   def archive
@@ -80,8 +80,8 @@ class MapsController < ApplicationController
   def embed
     @map.zoom ||= 12
     @embed = true
-    response.headers.except! 'X-Frame-Options' # allow use of embed in iframes
-    render template: 'maps/edit'
+    response.headers.except!('X-Frame-Options') # allow use of embed in iframes
+    render(template: 'maps/edit')
   end
 
   def annotate
@@ -102,7 +102,7 @@ class MapsController < ApplicationController
 
     save_tags(@map)
     @map.save
-    redirect_to action: 'show'
+    redirect_to(action: 'show')
   end
 
   def destroy
@@ -112,29 +112,29 @@ class MapsController < ApplicationController
       redirect_back(fallback_location: "/")
     else
       flash[:error] = 'Only admins or map owners may delete maps.'
-      redirect_to @map
+      redirect_to(@map)
     end
   end
 
   # used by leaflet to fetch corner coords of each warpable
   def images
-    render json: @map.warpables
+    render(json: @map.warpables)
   end
 
   # run the export
   def export
     @map = Map.find_by(id: params[:id])
     if logged_in? || Rails.env.development? || verify_recaptcha(model: @map, message: "ReCAPTCHA thinks you're not a human!")
-      render plain: @map.run_export(current_user, params[:resolution].to_f)
+      render(plain: @map.run_export(current_user, params[:resolution].to_f))
     else
-      render plain: 'You must be logged in to export, unless the map is anonymous.'
+      render(plain: 'You must be logged in to export, unless the map is anonymous.')
     end
   end
 
   # render list of exports
   def exports
     @map = Map.find_by(id: params[:id])
-    render partial: 'maps/exports', layout: false
+    render(partial: 'maps/exports', layout: false)
   end
 
   # list by region
@@ -155,8 +155,8 @@ class MapsController < ApplicationController
       map.image_urls = map.warpables.map { |warpable| warpable.image.url }
     end
     respond_to do |format|
-      format.html { render 'maps/index', layout: 'application' }
-      format.json { render json: @maps.to_json(methods: :image_urls) }
+      format.html { render('maps/index', layout: 'application') }
+      format.json { render(json: @maps.to_json(methods: :image_urls)) }
     end
   end
 
@@ -166,13 +166,13 @@ class MapsController < ApplicationController
     @maps = Map.where(password: '', license: params[:id])
                .order('updated_at DESC')
                .paginate(page: params[:page], per_page: 24)
-    render 'maps/index', layout: 'application'
+    render('maps/index', layout: 'application')
   end
 
   def featured
     @title = 'Featured maps'
     @maps = Map.featured.paginate(page: params[:page], per_page: 24)
-    render 'maps/index', layout: 'application'
+    render('maps/index', layout: 'application')
   end
 
   def search
@@ -188,12 +188,12 @@ class MapsController < ApplicationController
                    .except(:styles, :email)
         @authors = User.where(login: Map.featured.collect(&:author))
                                      .paginate(page: params[:mappers], per_page: 20)
-        format.html { render 'front_ui/gallery', layout: 'application' }
+        format.html { render('front_ui/gallery', layout: 'application') }
       else
         @title = "Search results for '#{data}'"
         @maps = Map.search(data).paginate(page: params[:page], per_page: 24)
-        format.html { render 'front_ui/gallery', layout: 'application' }
-        format.json { render json: @maps }
+        format.html { render('front_ui/gallery', layout: 'application') }
+        format.json { render(json: @maps) }
       end
     end
   end

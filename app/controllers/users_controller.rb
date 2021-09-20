@@ -15,7 +15,7 @@ class UsersController < ApplicationController
                  .group('maps.user_id')
                  .order(sort_column + ' ' + sort_direction)
                  .paginate(page: params[:page], per_page: 24)
-    render 'users/index'
+    render('users/index')
   end
 
   private
@@ -30,6 +30,6 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:login, :email, :name,
-                                 :password, :password_confirmation)
+      :password, :password_confirmation)
   end
 end

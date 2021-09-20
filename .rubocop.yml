@@ -1,9 +1,12 @@
+require: rubocop-rails
 require: rubocop-performance
 
 # Start with Spotifys style guide as a base then customize from there
 inherit_from:
-  - .rubocop_shopify_styleguide.yml
   - .rubocop_todo.yml
+
+inherit_gem:
+  rubocop-shopify: rubocop.yml
 
 # Apply rule to all cops
 AllCops:
@@ -12,7 +15,7 @@ AllCops:
     - '/Rakefile'
     - '/config.ru'
   Exclude:
-    - 'vendor/*'
+    - 'vendor/**/*'
     - 'node_modules/**/*'
     - 'spec/**/*'
     - 'bin/*'

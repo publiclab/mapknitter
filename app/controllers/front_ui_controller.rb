@@ -10,9 +10,9 @@ class FrontUiController < ApplicationController
     # TODO: these could use optimization but are better than prev:
     tag = Tag.where(name: 'featured').first
     @mappers = if tag
-                 User.where(login: tag.maps.collect(&:author))
-               else
-                 []
+      User.where(login: tag.maps.collect(&:author))
+    else
+      []
                end
   end
 
@@ -39,7 +39,7 @@ class FrontUiController < ApplicationController
 
     session[:lat] = lat
     session[:lon] = lon
-    head 200, content_type: "text/html"
+    head(200, content_type: "text/html")
   end
 
   def about

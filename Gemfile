@@ -52,8 +52,6 @@ group :dependencies do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.70.0'
-  gem 'rubocop-performance'
   gem 'ruby-prof'
   gem 'rails-perftest'
   gem 'rails-controller-testing'
@@ -74,15 +72,19 @@ group :development, :test do
   gem 'faker', '~> 2.12.0'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
+  gem 'rubocop', require: false
+  gem 'rubocop-performance'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-shopify', require: false
 end
 
 group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
   gem 'listen', '~> 3.2.1'
-  gem 'web-console', '~> 3.3'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'web-console', '~> 3.3'
 end
 
 group :sqlite do

@@ -1,0 +1,166 @@
+name: CI/CD workflow
+on: [pull_request]
+
+jobs:
+  rubocop:
+    name: Code style suggestions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Prepare Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - name: Rubocop report
+        env:
+          FORCE_COLOR: 1
+        run: bundle exec rubocop --color --fail-fast
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install packages
+        run: yarn install
+      - name: 'Model Tests'
+        env:
+          RAILS_ENV: test
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
+        run: |
+          bundle exec rails test test:models
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'Integration Tests'
+        env:
+          RAILS_ENV: test
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
+        run: bundle exec rails test test:integration
+
+  controller-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'Controller Tests'
+        env:
+          RAILS_ENV: test
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
+        run: bundle exec rails test test:controllers
+
+  system-tests:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: nanasess/setup-chromedriver@v1.0.1
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'System Tests'
+        env:
+          RAILS_ENV: test
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          bundle exec rails test test:system
+      - name: Archive system test screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: system-test-screenshots
+          path: tmp/screenshots/*
+
+  docker-build-check-development:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - name: 'Development Docker Build'
+        run: docker build -t mapknitter -f dockerfiles/development .
+
+  docker-build-check-production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - name: 'Development Docker Build'
+        run: docker build -t mapknitter -f dockerfiles/production .
+
+  assets-precompilation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.6
+          bundler-cache: true
+      - uses: ./.github/actions/setup-test-environment
+      - uses: egordm/gha-yarn-node-cache@v1
+      - name: Install JavaScript dependencies with Yarn
+        run: yarn check || yarn install;
+      - name: 'Asset Precompilation'
+        env:
+          RAILS_ENV: production
+          DB_PASSWORD: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DISABLE_BOOTSNAP: true
+        run: bundle exec rails assets:precompile

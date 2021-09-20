@@ -5,7 +5,7 @@ class AnnotationsController < ApplicationController
   before_action :find_map
 
   def index
-    render file: 'annotations/index.json.erb', content_type: 'application/json'
+    render(file: 'annotations/index.json.erb', content_type: 'application/json')
   end
 
   def create
@@ -20,38 +20,38 @@ class AnnotationsController < ApplicationController
           style: geojson[:properties][:style]
         )
         @annotation.user_id = current_user.id if logged_in?
-        redirect_to map_annotation_url(@map, @annotation) if @annotation.save
+        redirect_to(map_annotation_url(@map, @annotation)) if @annotation.save
       end
     end
   end
 
   def show
-    @annotation = Annotation.find params[:id]
-    render file: 'annotations/show.json.erb', content_type: 'application/json'
+    @annotation = Annotation.find(params[:id])
+    render(file: 'annotations/show.json.erb', content_type: 'application/json')
   end
 
   def update
-    @annotation = Annotation.find params[:id]
+    @annotation = Annotation.find(params[:id])
     geojson = params[:annotation]
     return if @annotation.user_id.nil? || current_user.can_edit?(@annotation)
 
     Annotation.update(@annotation.id,
-                      coordinates: geojson[:geometry][:coordinates],
-                      text: geojson[:properties][:textContent],
-                      style: geojson[:properties][:style])
-    render file: 'annotations/update.json.erb',
-      content_type: 'application/json'
+      coordinates: geojson[:geometry][:coordinates],
+      text: geojson[:properties][:textContent],
+      style: geojson[:properties][:style])
+    render(file: 'annotations/update.json.erb',
+      content_type: 'application/json')
   end
 
   def destroy
-    @annotation = Annotation.find params[:id]
+    @annotation = Annotation.find(params[:id])
     # if current_user.can_delete?(@annotation)
     @annotation.delete
-    head :ok
+    head(:ok)
     # end
   end
 
   def find_map
-    @map = Map.find params[:map_id]
+    @map = Map.find(params[:map_id])
   end
 end

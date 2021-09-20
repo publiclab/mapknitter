@@ -23,6 +23,6 @@ production:
 
 test:
   <<: *default
-  username:
-  password:
+  username: <%= ENV['DB_USER'] || 'root' %>
+  password: <%= ENV['DB_PASS'] || 'root' %>
   database: mapknitter_test

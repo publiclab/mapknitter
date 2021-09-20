@@ -19,13 +19,13 @@ module ApplicationHelper
     unless object.nil? || object.errors.blank?
       html << "<div class='alert alert-error #{object.class.name.humanize.downcase}Errors'>\n"
       html << if message.blank?
-                if object.new_record?
-                  "\t\t<h5>There was a problem creating the #{object.class.name.humanize.downcase}</h5>\n"
-                else
-                  "\t\t<h5>There was a problem updating the #{object.class.name.humanize.downcase}</h5>\n"
-                        end
-              else
-                "<h5>#{message}</h5>"
+        if object.new_record?
+          "\t\t<h5>There was a problem creating the #{object.class.name.humanize.downcase}</h5>\n"
+        else
+          "\t\t<h5>There was a problem updating the #{object.class.name.humanize.downcase}</h5>\n"
+                end
+      else
+        "<h5>#{message}</h5>"
               end
       html << "\t\t<ul>\n"
       object.errors.full_messages.each do |error|
@@ -50,6 +50,6 @@ module ApplicationHelper
   def sortable(column, title = nil)
     title ||= column.titleize
     direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
-    link_to title, sort: column, direction: direction
+    link_to(title, sort: column, direction: direction)
   end
 end
