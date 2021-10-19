@@ -1,5 +1,7 @@
 name: CI/CD workflow
-on: [pull_request]
+on: 
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
 
 jobs:
   rubocop:
