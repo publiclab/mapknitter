@@ -36,6 +36,9 @@ WORKDIR /app
 RUN apt-get clean && \
     apt-get autoremove -y
 
-RUN gem install bundler && bundle install
+ENV BUNDLER_VERSION=2.1.4
+RUN gem install --default bundler && \
+    gem update --system && \
+    bundle install
 
 CMD [ "sh", "/app/start.sh" ]
