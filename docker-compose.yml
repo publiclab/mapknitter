@@ -10,7 +10,7 @@ services:
   web:
     build: 
       context: .
-      dockerfile: ${RAILS_ENV:-production}
+      dockerfile: ./dockerfiles/${RAILS_ENV:-production}
     ulimits:
       core: 0
     command: [ "sh", "/app/start.sh" ]

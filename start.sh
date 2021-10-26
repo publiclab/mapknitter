@@ -36,4 +36,4 @@ if [ -f $pidfile ] ; then
 	rm $pidfile;
 fi
 
-forego start
+bundle exec passenger start --port $PORT
