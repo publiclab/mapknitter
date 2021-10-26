@@ -51,6 +51,7 @@ Mapknitter::Application.routes.draw do
   get 'search', to: 'maps#search'
   get 'maps/:id/warpables', to: 'maps#images' # deprecate this in favor of resourceful route below; this is just to override maps/:id
   get 'maps/view/:id', to: redirect('/maps/%{id}') # legacy
+  get 'map/view/:id', to: redirect('/maps/%{id}') # legacy
   get 'export/progress/:id', to: 'export#progress'
   get 'export/status/:id', to: 'export#status'
   get 'exports', to: 'export#index'
