@@ -28,7 +28,7 @@
     "leaflet-distortableimage": "0.20.7",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-easybutton": "^2.4.0",
-    "leaflet-environmental-layers": "^2.1.9",
+    "leaflet-environmental-layers": "^2.4.3",
     "leaflet-fullhash": "^1.0.0",
     "leaflet-illustrate": "manleyjster/Leaflet.Illustrate#31d7daa42fb140c063c4a9d9ccf13a279bb1b8d7",
     "leaflet-omnivore": "mapbox/leaflet-omnivore#~0.3.2",
