@@ -42,7 +42,7 @@ Mapknitter::Application.routes.draw do
   get 'images/revert', to: 'images#revert'
   get 'images/:url', to: 'images#fetch'
 
-  get 'tms/:id/alt/:z/:x/:y.png' to: redirect {|params, req| "/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{2**params[:z].to_i - params[:y].to_i - 1}.png"}
+  get 'tms/:id/alt/:z/:x/:y.png', to: redirect {|params, req| "/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{2**params[:z].to_i - params[:y].to_i - 1}.png"}
   get 'tms/:id/:z/:x/:y.png', to: redirect {|params, req| "/tms/#{params[:id]}/#{params[:z]}/#{params[:x]}/#{params[:y]}.png"}
   get 'tms/:id/', to: 'utility#tms_info'
   get 'tms/:id/alt/', to: 'utility#tms_info'
