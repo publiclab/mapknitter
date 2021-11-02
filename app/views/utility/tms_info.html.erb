@@ -1,9 +1,15 @@
-<div class="well">
+<div class="container" style="padding:50px">
 
 <p>The TMS (Tiled Map Service) URL forms the basis of a longer TMS-style URL, which is mainly useful in plugging your map into other services. To access a specific tile, you can use a URL with the format:</p> 
 
-<pre>https://mapknitter.org/tms/<%= params[:id] %>/:z/:x/:y.png</pre>
+<input type='text' value="https://mapknitter.org/tms/<%= params[:id] %>/:z/:x/:y.png" style="width:100%;" />
 
-<p>Read more: <a href="https://en.wikipedia.org/wiki/Tile_Map_Service">https://en.wikipedia.org/wiki/Tile_Map_Service</a></p>
+<p>For the OpenStreetMap ID editor, the format would be:
+  
+<input type='text' value="https://mapknitter.org/tms/<%= params[:id] %>/{zoom}/{x}/{y}.png" style="width:100%;" />
+
+<p>Read more about TMS: <a href="https://en.wikipedia.org/wiki/Tile_Map_Service">https://en.wikipedia.org/wiki/Tile_Map_Service</a></p>
+
+<p>Read more about MapKnitter TMS: <a href="https://publiclab.org/mapknitter-cloud-exporter#TMS"></a></p>
 
 </div>
