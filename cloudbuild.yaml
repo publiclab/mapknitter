@@ -3,7 +3,7 @@ steps:
   args: ['build',
          '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:$SHORT_SHA',
          '-t', 'gcr.io/public-lab/github.com/publiclab/mapknitter:latest',
-         '-f', 'production',
+         '-f', 'dockerfiles/production',
          '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/public-lab/github.com/publiclab/mapknitter']
