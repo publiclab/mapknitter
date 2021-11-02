@@ -8,5 +8,4 @@ class UtilityController < ApplicationController
       redirect_to("https://mapknitter-exports-warps.storage.googleapis.com/#{params[:id]}/tms/#{params[:z]}/#{params[:x]}/#{params[:y]}.png")
     end
   end
-
 end
