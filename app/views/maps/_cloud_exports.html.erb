@@ -5,7 +5,7 @@
 <% exports.order(created_at: :desc).each_with_index do |export, i| %>
   <p class="export mapknitter-cloud-export" style="font-size:12px;">
     <b>Export <%= exports.count - i %>:</b> 
-    <a data-slug="<%= export.map.slug %>" href="<%= export.export_url || "/export/status/#{export.map_id}" %>">Status</a>: <span class="status-container"></span>
+    <a class="slug-el" data-slug="<%= export.map.slug %>" href="<%= export.export_url || "/export/status/#{export.map_id}" %>">Status</a>: <span class="status-container"></span>
   </p>
 <% end %>
 </div>
@@ -36,6 +36,8 @@ var addExport, collectExportUrls;
       console.log(response, response.status);
       var status_el = export_el.find('.status-container');
       var slug = status_el.attr('data-slug');
+      var slug_el = export_el.find('.slug-el');
+      var slug = slug_el.attr('data-slug');
       status_el.html('');
 
       if (response.status != "complete") status_el.append(' <i class="fa fa-spinner fa-spin"></i>');
