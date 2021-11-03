@@ -8,4 +8,7 @@ comment:
 coverage:
   status:
     project: on
-    patch: on
+    patch: 
+      default:
+        target: 50%
+        threshold: 5%
