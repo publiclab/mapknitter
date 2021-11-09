@@ -81,7 +81,7 @@ end
 group :development do
   gem 'jshintrb', '~> 0.3.0'
   gem 'mini_racer', platforms: :ruby
-  gem 'listen', '~> 3.2.1'
+  gem 'listen', '~> 3.7.0'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '~> 3.3'
