@@ -19,6 +19,7 @@ bump_database(){
 }
 
 bundle check || bundle install
+yarn
 
 if bundle exec rails db:exists; then
 	>&2 echo "Database exists, only migrating it..."
