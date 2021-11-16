@@ -197,7 +197,10 @@
   var Mapknitterunique = L.map('mapknitter-unique').setView([places[0].lat, places[0].lng], 8);
   var hash = new L.Hash(Mapknitterunique);
 
-  L.LayerGroup.EnvironmentalLayers({include: ['mapknitter']}).addTo(Mapknitterunique);
+  L.LayerGroup.EnvironmentalLayers({
+    addLayersToMap: true, 
+    include: ['mapknitter']
+  }).addTo(Mapknitterunique);
 
   function displayFeaturedPlaces() {
     shuffleArray(places);
