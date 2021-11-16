@@ -51,10 +51,10 @@ var addExport, collectExportUrls;
 
       if (response.tms && typeof response.tms === "boolean") 
         status_el.append(' <span class="file tms badge badge-info"><a style="color:white;" href="/tms/' + slug + '/">TMS</span>');
-        status_el.append(' <span class="file tms-osm badge badge-warning"><a href="https://www.openstreetmap.org/edit#map=<%= export.map.zoom %>/<%= export.map.lat %>/<%= export.map.lon %>&background=custom:https://mapknitter.org/tms/' + slug + '/{z}/{x}/{-y}.png">OSM</span>');
+        status_el.append(' <span class="file tms-osm badge badge-warning"><a href="https://www.openstreetmap.org/edit#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>&background=custom:https://mapknitter.org/tms/' + slug + '/{z}/{x}/{-y}.png">OSM</span>');
       else if (response.tms) 
         status_el.append(' <span class="file tms badge badge-info"><a style="color:white;" href="/tms/' + slug + '/">TMS</span>');
-        status_el.append(' <span class="file tms-osm badge badge-warning"><a href="https://www.openstreetmap.org/edit#map=<%= export.map.zoom %>/<%= export.map.lat %>/<%= export.map.lon %>&background=custom:https://mapknitter-exports-warps.storage.googleapis.com/' + response.tms.split('public/tms/')[1] + 'tms/{z}/{x}/{-y}.png">OSM</span>');
+        status_el.append(' <span class="file tms-osm badge badge-warning"><a href="https://www.openstreetmap.org/edit#map=<%= @map.zoom %>/<%= @map.lat %>/<%= @map.lon %>&background=custom:https://mapknitter-exports-warps.storage.googleapis.com/' + response.tms.split('public/tms/')[1] + 'tms/{z}/{x}/{-y}.png">OSM</span>');
       end
 
       if (response.zip && typeof response.zip === "boolean") status_el.append(' <span class="file zip badge badge-primary"><a style="color:white;" href="/tms/' + slug + '.zip">TMS (zip)</span>');
