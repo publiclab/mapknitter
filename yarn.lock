@@ -984,9 +984,10 @@ jquery-ujs@rails/jquery-ujs#~1.0.4:
   version "0.0.0"
   resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
 
-jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1, jquery@jquery/jquery-dist#^3.5.0:
-  version "3.5.1"
-  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/4c0e4becb8263bb5b3e6dadc448d8e7305ef8215"
+jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1, jquery@jquery/jquery-dist#^3.6.0:
+  version "3.6.0"
+  uid e786e3d9707ffd9b0dd330ca135b66344dcef85a
+  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/e786e3d9707ffd9b0dd330ca135b66344dcef85a"
 
 jquery@~2:
   version "2.2.4"
@@ -1111,6 +1112,11 @@ leaflet-google-places-autocomplete@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/leaflet-google-places-autocomplete/-/leaflet-google-places-autocomplete-0.0.8.tgz#dbcf5d1833d011bef3f266bb4357b79e3bf81d70"
   integrity sha1-289dGDPQEb7z8ma7Q1e3njv4HXA=
+
+leaflet-google-places-autocomplete@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/leaflet-google-places-autocomplete/-/leaflet-google-places-autocomplete-0.0.9.tgz#88b20a90948af7158b4bf0a25301a9e595747a30"
+  integrity sha512-NHefPZn53GQIjuAZmwEN/KTy8TobEu8kRU/WlYR58j5WrQU3vZ4w2OKVUCFzKU5jlWxeZP/SQTFhmXf2vkHIeQ==
 
 leaflet-heatmap@1.0.0:
   version "1.0.0"
