@@ -17,6 +17,7 @@
     "decompress-zip": "0.2.1",
     "exif-js": "jseidelin/exif-js#*",
     "glfx-js": "jywarren/glfx.js#*",
+    "leaflet-google-places-autocomplete": "0.0.9",
     "image-sequencer": "publiclab/image-sequencer#~1.4.0",
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.0",
     "jquery": "jquery/jquery-dist#^3.5.0",
