@@ -4,6 +4,10 @@
 <%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
 <%= javascript_include_tag('leaflet-fullHash.js') %>
 <%= stylesheet_link_tag "/assets/front_ui.css" %>
+<!-- Required for leaflet search control -->
+<script src="/assets/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
+<link rel="stylesheet" href="/assets/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places"></script>
 
 <!-- jumbotron with background-image -->
 <div class="container-fluid jumbotron text-center" id="hero" style="margin-bottom:-10px;">
