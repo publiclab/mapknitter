@@ -134,7 +134,7 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
       });
     });
-    map.fitBounds(map._imgGroup.getBounds());
+    if (map._imgGroup.getBounds().isValid()) map.fitBounds(map._imgGroup.getBounds());
   },
 
   _enter: function() {
