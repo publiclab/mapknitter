@@ -134,7 +134,13 @@ MapKnitter.Map = MapKnitter.Class.extend({
         }
       });
     });
-    if (map._imgGroup.getBounds().isValid()) map.fitBounds(map._imgGroup.getBounds());
+
+    function getBounds() {
+      console.log('Center map on images')
+      if (map._imgGroup.getBounds().isValid()) map.fitBounds(map._imgGroup.getBounds());
+      else setTimeout(getBounds, 1000);
+    }
+    getBounds();    
   },
 
   _enter: function() {
