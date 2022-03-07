@@ -18,12 +18,12 @@
             <p>Use a kite, balloon, or pole to take an aerial photo and tell your own visual story of a place. <a href="/about" class="alert-link">Learn more</a></p>
             <div class="modal-buttons">
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
-                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;"></i>
+                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;margin-top:7px;margin-left:5px;"></i>
             </a>
             <% if logged_in? %>
-              <a class="btn btn-primary btn-lg" href="<%= new_map_url %>" style="display:flex; align-content:center; flex-wrap:wrap; justify-content:center;">
+              <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
             <% else %>
-              <a class="btn btn-primary btn-lg" href="" data-toggle="collapse" data-target="#anonymous-map" style="display:flex; align-content:center; flex-wrap:wrap; justify-content:center;">
+              <a class="btn btn-primary btn-lg" href="" data-toggle="collapse" data-target="#anonymous-map">
             <% end %>
             Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;margin-top:10px;margin-left:5px;"></i>
             </a>
@@ -261,8 +261,15 @@
 
 <style>
 .modal-buttons {
-  display : flex;
+  display: flex;
   justify-content: space-evenly;
   margin-bottom: 20px;
+}
+
+.modal-buttons a {
+  display: flex; 
+  align-content: center; 
+  flex-wrap: wrap; 
+  justify-content: center;
 }
 </style>
