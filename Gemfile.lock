@@ -255,7 +255,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdiscount (2.2.0.2)
-    recaptcha (5.8.1)
+    recaptcha (5.9.0)
       json
     redcarpet (3.5.1)
     regexp_parser (1.8.2)
@@ -405,7 +405,7 @@ DEPENDENCIES
   rails-perftest
   rake (~> 13.0.1)
   rdiscount (= 2.2.0.2)
-  recaptcha (~> 5.8.1)
+  recaptcha (~> 5.9.0)
   right_aws_api (~> 0.3.5)
   rubocop
   rubocop-performance
