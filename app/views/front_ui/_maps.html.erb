@@ -1,4 +1,11 @@
 <div class="row map-list mx-auto">
+  <% if maps.length == 0 %>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%"> 
+      <i class="fas fa-search fa-5x" style="size:100px;line-height:100px;padding:20px;border-radius:20px;color:#343a40;background-color:#dfdfdf;"></i></br>
+      <h4>No results found</h4>
+      <a href="/gallery"> See our featured maps </a>
+    </div>
+  <% end %>
   <% maps.each do |map| %>
       <% warp = map.placed_warpables.first %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
