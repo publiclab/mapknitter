@@ -183,7 +183,6 @@ blueimp-tmpl@blueimp/JavaScript-Templates#2.5.4:
 
 bootstrap@twbs/bootstrap#^4.5.2:
   version "4.5.2"
-  uid "5f2480a90ab911babc53039835fe78c6fc12646d"
   resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/5f2480a90ab911babc53039835fe78c6fc12646d"
 
 bootstrap@~3.2.0:
@@ -914,7 +913,7 @@ image-sequencer@publiclab/image-sequencer#~1.4.0:
     fisheyegl "^0.1.2"
     font-awesome "~4.5.0"
     get-pixels "~3.3.0"
-    imgareaselect "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
+    imgareaselect "git+https://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
     jquery "~2"
     jsqr "^0.2.2"
     lodash "^4.17.5"
@@ -925,9 +924,9 @@ image-sequencer@publiclab/image-sequencer#~1.4.0:
     save-pixels "~2.3.4"
     urify "^2.1.0"
 
-"imgareaselect@git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
+"imgareaselect@git+https://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
   version "0.9.11-rc.1"
-  resolved "git://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
+  resolved "git+https://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
 
 inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.1, inherits@~2.0.3:
   version "2.0.4"
@@ -986,7 +985,6 @@ jquery-ujs@rails/jquery-ujs#~1.0.4:
 
 jquery@>=1.8, jquery@^3.2.1, jquery@^3.3.1, jquery@jquery/jquery-dist#^3.6.0:
   version "3.6.0"
-  uid e786e3d9707ffd9b0dd330ca135b66344dcef85a
   resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/e786e3d9707ffd9b0dd330ca135b66344dcef85a"
 
 jquery@~2:
