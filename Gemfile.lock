@@ -338,6 +338,8 @@ GEM
     sqlite3 (1.4.2)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
+    terser (1.1.8)
+      execjs (>= 0.3.0, < 3)
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -348,8 +350,6 @@ GEM
       thread_safe (~> 0.1)
     tzinfo-data (1.2021.5)
       tzinfo (>= 1.0.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (2.0.0)
     web-console (3.7.0)
       actionview (>= 5.0)
@@ -424,9 +424,9 @@ DEPENDENCIES
   sprockets (= 3.7.2)
   sprockets-rails
   sqlite3
+  terser (~> 1.1.8)
   turbolinks (~> 5)
   tzinfo-data
-  uglifier (~> 4.2.0)
   web-console (~> 3.3)
   will_paginate (= 3.3.1)
   will_paginate-bootstrap4 (~> 0.2.2)
@@ -435,4 +435,4 @@ RUBY VERSION
    ruby 2.4.6p354
 
 BUNDLED WITH
-   2.2.26
+   2.3.9
