@@ -26,6 +26,7 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
+  Sprockets.register_compressor 'application/javascript', :terser, Terser::Compressor
   config.assets.js_compressor = :terser
   # config.assets.css_compressor = :sass
 
