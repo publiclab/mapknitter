@@ -44,11 +44,7 @@ MapKnitter is broken into three major components:
 
 **Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts.
 
-**Component 3** is a set of calls to GDAL (Geospatial Data Abstraction Library) and ImageMagick, which perform the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. These are baked into the Warpable and Map models, as well as the Export controller, and could use some consolidation.
-
-Component 3 is soon to be replaced with an external exporter service built in a small Sinatra app called [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem.
-
-Another moving part is the new-ish Annotations 2.0 which uses [Leaflet.Illustrate](https://github.com/manleyjster/Leaflet.Illustrate) to provide rich annotation on top of maps.
+**Component 3** is a set of calls to an external application, MapKnitter Exporter, which performs the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. The external exporter service is built in a small Sinatra app at [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem. Requests for exports are sent and progress is tracked using the API. 
 
 ## Installation
 
@@ -57,6 +53,15 @@ Please consider which installation method you prefer. Cloud Installation require
 - [Standard Installation](#Standard-Installation)
 - [Windows Installation](#windows-installation)
 - [Cloud Installation](#Cloud-Installation)
+
+<hr>
+
+
+## Cloud Installation
+
+Cloud installation is possible with GitPod, using this link; it should be fully automated: 
+
+> https://gitpod.io/#https://github.com/publiclab/mapknitter
 
 <hr>
 
@@ -167,34 +172,6 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or 
 For a run-through of the Prerequisites and Installation steps listed below, you can watch the install video at:
 
 http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
-
-<hr>
-
-## Cloud Installation
-
-<hr>
-
-We provide an install script for Codenvy's cloud service, which provides a free developer workspace server that allows anyone to contribute to a project without installing software: https://Codenvy.io.
-
-To use it:
-
-1. Create a personal account.
-2. Click `Create new workspace`.
-3. Select a new workspace with a `Rails` stack.
-4. Under the `Projects` section,
-add the URL of your forked version of mapknitter (`https://github.com/USERNAME/mapknitter.git`).
-5. Hit create.
-6. It will open in the projects explorer - use the `bash` console at the bottom of the screen to `cd` into this project's directory.
-7. Run the installation script. The initial installation may take a bit.
-```Bash
-$ source install_cloud.sh
-```
-8. When you see it's complete, run the server:
-```Bash
-$ rails server -b 0.0.0.0
-```
-9. Hit the Play button located in the top menu bar.
-10. Open the Codenvy URL provided in the console to see MapKnitter booted up. Great work!
 
 <hr>
 
