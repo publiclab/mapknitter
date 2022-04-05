@@ -19,16 +19,19 @@ Use Public Lab's open source MapKnitter to upload your own aerial photographs (f
 ## Table of Contents
 1. [Architecture](#architecture)
 2. [Installation](#installation)
-	- [Quick Installation](#quick-installation)
-	- [Installation Video](#installation-video)
-	- [Prerequisites](#prerequisites)
+	- [Cloud Installation](#cloud-installation)
 	- [Standard Installation](#standard-installation)
+		- [Prerequisites](#prerequisites-for-standard-installation)
+		- [Installation Steps](#installation-steps)
+		- [Installation Video](#installation-video)
+	- [Windows Installation](#windows-installation)
 3. [Logging in when running locally](#logging-in-when-running-locally)
-4. [Bugs and support](#bugs-and-support)
-5. [Developers](#developers)
-6. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
-7. [License](#license)
-8. [MapKnitter in depth](#mapknitter-in-depth)
+4. [Running tests](#running-tests)
+5. [Bugs and support](#bugs-and-support)
+6. [Developers](#developers)
+7. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
+8. [License](#license)
+9. [MapKnitter in depth](#mapknitter-in-depth)
 
 ****
 
@@ -50,9 +53,9 @@ MapKnitter is broken into three major components:
 
 Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
 
-- [Standard Installation](#Standard-Installation)
-- [Windows Installation](#windows-installation)
 - [Cloud Installation](#Cloud-Installation)
+- [Standard Installation](#Standard-Installation)
+- [Windows Installation](#Windows-Installation)
 
 <hr>
 
@@ -175,7 +178,7 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 
 <hr>
 
-### Windows Installation
+## Windows Installation
 We recommend you either work in a virtual environment, or on a dual booted system to avoid dependencies issues and also Unix system works smoother with Ruby and Rails. This will not only benefit you now for Mapknitter, but also in future while working on other Ruby projects, a Linux or Mac OS will make your life easier.
 
 1. [Dual Booting](https://www.tecmint.com/install-ubuntu-alongside-with-windows-dual-boot/amp/), [option2](https://askubuntu.com/questions/1031993/how-to-install-ubuntu-18-04-alongside-windows-10), [video guide](https://www.youtube.com/watch?v=qNeJvujdB-0&fbclid=IwAR0APhs89jlNR_ENKbSwrp6TI6P-wxlx-a0My9XBvPNAfwtADZaAXqcKtP4)
