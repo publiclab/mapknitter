@@ -120,13 +120,16 @@ $ curl -L https://get.rvm.io | bash -s stable
 
 2. At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment.
 
-   - *Ubuntu users only:* you may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+   - *Ubuntu users only:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
 3. Use RVM to install version 2.4.6 of Ruby:
 
-  ```Bash
+   - *macOS Big Sur users only:* You may encounter a `Error running '__rvm_make -j8'` compilation error while installing Ruby with RVM. Run `export warnflags=-Wno-error=implicit-function-declaration` and then retry the installation command below. if you still encounter issues, [this thread](https://github.com/rvm/rvm/issues/5033) provides very helpful suggestions.
+
+ ```Bash
 $ rvm install 2.4.6
   ```
+
 
 ==================
 
