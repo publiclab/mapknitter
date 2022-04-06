@@ -19,6 +19,8 @@
 </head>
 <body>
 
+  <%= render :partial => 'layouts/header' %>
+
   <div class="modal modal-welcome">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -59,7 +61,6 @@
 
   <% unless @embed %>
   <div class="sidebar">
-    <%= render :partial => 'layouts/header' %>
     <div class="sidebar-wrap">
       <div class="sidebar-inner-wrap">
         <div class="sidebar-header"><%= yield :title %></div> <% if @map.new_record? %>
