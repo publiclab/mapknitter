@@ -210,7 +210,7 @@
       $('.featured-places').append('<a class="place-' + i + '" href="javascript:void(0);">' + place.name + '</a>');
       $('.featured-places .place-' + i).click(function click() {
         var loc = hash.parseHash(locHash);
-        Mapknitterunique.flyTo(loc.center, loc.zoom)
+        Mapknitterunique.flyTo(loc.centFer, loc.zoom)
       });
     });
   }

@@ -165,15 +165,17 @@ label small {
 .footer .footer-link:hover {
   text-decoration: none;
   color: #32325d;
+  font-size: 20px;
 }
 
 .footer .footer-title {
   font-weight: 600;
   font-weight: bolder;
   letter-spacing: .025em;
-  font-size: 14px;
-
   text-transform: uppercase;
+}
+.style-padding{
+  padding-top: 3.5%;
 }
 .fab {
   color: #464159;
