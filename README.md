@@ -60,7 +60,7 @@ Please consider which installation method you prefer. Cloud Installation require
 <hr>
 
 
-## Cloud Installation
+### Cloud Installation
 
 Cloud installation is possible with GitPod using this link and is a fully-automated process: 
 
@@ -68,11 +68,11 @@ Cloud installation is possible with GitPod using this link and is a fully-automa
 
 <hr>
 
-## Standard Installation
+### Standard Installation
 
 <hr>
 
-### Prerequisites for Standard Installation
+#### Prerequisites for Standard Installation
 
 Make sure you have the 3 prerequisites below installed before moving forward with the [Installation Steps](#installation-steps).
 
@@ -130,7 +130,6 @@ $ curl -L https://get.rvm.io | bash -s stable
 $ rvm install 2.4.6
   ```
 
-
 ==================
 
 #### Yarn
@@ -154,11 +153,11 @@ $ sudo apt-get install nodejs-legacy
 ```Bash
 $ npm install -g yarn
 ```
-NOTE: Refer to [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) in case npm throws permission errors.
+NOTE: Refer to [this Stack Overflow question](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) in case npm throws permission errors.
 
   ==================
 
-### Installation Steps
+#### Installation Steps
 
 You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or rbenv - to install and set locally)
 
@@ -173,7 +172,7 @@ You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or 
 
 ==================
 
-### Installation video
+#### Installation video
 
 For a run-through of the [Prerequisites](#prerequisites-for-standard-installation) and [Installation Steps](#installation-steps) listed above, you can watch the installation video at:
 
@@ -181,7 +180,7 @@ http://youtu.be/iGYGpS8rZMY (it may be slightly out-of-date but gives an helpful
 
 <hr>
 
-## Windows Installation
+### Windows Installation
 We recommend either working in a virtual environment or on a dual-booted system to avoid dependency issues. In addition, the Unix operating system works smoother with Ruby on Rails. Using a Linux or macOS will not only benefit you now with the Mapknitter project, but will also make your life easier while working on other Ruby projects in the future.
 
 1. Dual Booting
@@ -243,7 +242,7 @@ For questions related to the use of this software and balloon or kite mapping, t
 
 ### Code of Conduct
 
-Please read and abide by our [Code of Conduct](https://github.com/publiclab/mapknitter/blob/main/CODE_OF_CONDUCT.md). Our community aspires to be a respectful place both during online and in-­person interactions.
+Please read and abide by our [Code of Conduct](https://github.com/publiclab/mapknitter/blob/main/CODE_OF_CONDUCT.md). Our community aspires to be a respectful place both during online and in-person interactions.
 
 ## Developers
 
