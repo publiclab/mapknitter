@@ -160,16 +160,19 @@ NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error
 
 ### Installation Steps
 
-You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or rbenv - to install and set locally)
+You'll need Ruby v2.4.6 (use your local ruby version management system - RVM or rbenv - to install and set up locally).
 
-1. Download a copy of the source with `git clone https://github.com/publiclab/mapknitter.git`
-2. Install gems with `bundle install` from the rails root folder. You may need to run `bundle update` if you have older gems in your environment.
-3. Copy and configure config/database.yml from config/database.yml.example, using a new empty database you've created
-4. Copy and configure config/config.yml from config/config.yml.example (for now, this is only for the [Google Maps API Key, which is optional](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3), and a path for [logging in when running locally, also optional](#Logging-in-when-running-locally))
-5. Initialize database with `bundle exec rails db:setup`
-6. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb, copied from recaptcha.rb.example. To get keys, visit https://www.google.com/recaptcha/admin/create
-7. Install static assets (like external javascript libraries, fonts) with `yarn install`
-8. Start rails with `bundle exec rails s` from the Rails root and open http://localhost:3000 in a web browser. (For some, just `rails s` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.)
+1. Fork the repo from `https://github.com/publiclab/mapknitter`
+2. Clone the forked repo into any fresh, temporary folder with `git clone https://github.com/your_username/mapknitter.git`
+3. Change your working directory into the root folder you just cloned locally with `cd <folder-name>`
+4. Add upstream with `git remote add upstream https://github.com/publiclab/mapknitter.git`
+5. Install gems with `bundle install`. You may need to run `bundle update` if you have older gems in your environment.
+6. Copy and configure config/database.yml from config/database.yml.example using a new empty database you've created.
+7. Copy and configure config/config.yml from config/config.yml.example. For now, this is used for adding the [Google Maps API Key](http://stackoverflow.com/questions/2769148/whats-the-api-key-for-in-google-maps-api-v3) configurations and a path for [logging in when running locally](https://github.com/publiclab/mapknitter/blob/main/README.md#logging-in-when-running-locally). Both are optional.
+8. Initialize database with `bundle exec rails db:setup`
+9. Enter ReCaptcha public and private keys in config/initializers/recaptcha.rb (copied from config/initializers/recaptcha.rb.example). To get keys, visit https://www.google.com/recaptcha/admin/create
+10. Install static assets (like external javascript libraries and fonts) with `yarn install`
+11. Start rails with `bundle exec rails s` and open http://localhost:3000 in a web browser. For some, just `rails s` will work; adding `bundle exec` ensures you're using the version of passenger you just installed with Bundler.
 
 ==================
 
