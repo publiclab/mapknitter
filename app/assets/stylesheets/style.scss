@@ -81,6 +81,21 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   color: rgb(72, 72, 72);
 }
 
+#map-title a{
+    margin: 0px;
+    overflow-wrap: break-word;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgb(72, 72, 72);
+}
+
+#map-title a:hover{
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0056b3;
+}
 .map-details {
   display: block;
   text-decoration: none;
