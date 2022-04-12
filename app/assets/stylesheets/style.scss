@@ -39,8 +39,24 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   background-color: white;
   display: inline-block;
   .btn {
-      width: 45%;
+      width: auto;
       font-size: 1em;
+  }
+  @media (max-width: 1087px) {
+    .btn {
+      width: auto;
+      margin: 5px;
+      padding: 10px;
+      font-size: 1em;
+    }
+  }
+  @media (min-width: 998px) {
+    .btn {
+      width: auto;
+      margin: 5px;
+      padding: 10px;
+      font-size: 1em;
+    }
   }
   .btn.btn-default {
     width: auto;
@@ -89,13 +105,6 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   font-size: 14px;
   font-weight: 400;
   line-height: 1.2em;
-}
-
-.image{
-  position: relative;
-  width: 100%;
-  padding-right: 0px;
-  padding-left: 15px;
 }
 
 .alert-link {
