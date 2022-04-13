@@ -9,31 +9,40 @@
 
 Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example those from balloon or kite mapping: http://publiclab.org/balloon-mapping) and combine them into:
 
-* Web "slippy maps" like Google Maps
-* GeoTiff
-* TMS
-* High resolution JPEG
+-   Web "slippy maps" like Google Maps
+-   GeoTiff
+-   TMS
+-   High resolution JPEG
 
 ![demo](https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif)
 
 ## Table of Contents
-1. [Architecture](#architecture)
-2. [Installation](#installation)
-	- [Cloud Installation](#cloud-installation)
-	- [Standard Installation](#standard-installation)
-		- [Prerequisites](#prerequisites-for-standard-installation)
-		- [Installation Steps](#installation-steps)
-		- [Installation Video](#installation-video)
-	- [Windows Installation](#windows-installation)
-3. [Logging in when running locally](#logging-in-when-running-locally)
-4. [Running tests](#running-tests)
-5. [Bugs and support](#bugs-and-support)
-6. [Developers](#developers)
-7. [Staging infrastructure and testing](#staging-infrastructure-and-testing)
-8. [License](#license)
-9. [MapKnitter in depth](#mapknitter-in-depth)
 
-****
+- [MapKnitter](#mapknitter)
+- [Table of Contents](#table-of-contents)
+- [Architecture](#architecture)
+- [Installation](#installation)
+- [Cloud Installation](#cloud-installation)
+- [Standard Installation](#standard-installation)
+  - [Prerequisites for Standard Installation](#prerequisites-for-standard-installation)
+    - [MySQL](#mysql)
+    - [RVM](#rvm)
+    - [Yarn](#yarn)
+  - [Installation Steps](#installation-steps)
+  - [Installation video](#installation-video)
+- [Windows Installation](#windows-installation)
+- [Logging in when running locally](#logging-in-when-running-locally)
+- [Running tests](#running-tests)
+    - [Running tests of a specific file:](#running-tests-of-a-specific-file)
+    - [Running a single test from the test suite:](#running-a-single-test-from-the-test-suite)
+- [Bugs and support](#bugs-and-support)
+  - [Code of Conduct](#code-of-conduct)
+- [Developers](#developers)
+- [Staging infrastructure and testing](#staging-infrastructure-and-testing)
+- [License](#license)
+- [MapKnitter in depth](#mapknitter-in-depth)
+
+---
 
 ## Architecture
 
@@ -47,22 +56,21 @@ MapKnitter is broken into three major components:
 
 **Component 2** is a Ruby on Rails application which is the core of what you've looked at. It stores images, image corner locations, annotations, map details, and user accounts.
 
-**Component 3** is a set of calls to an external application, MapKnitter Exporter, which performs the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. The external exporter service is built in a small Sinatra app at [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem. Requests for exports are sent and progress is tracked using the API. 
+**Component 3** is a set of calls to an external application, MapKnitter Exporter, which performs the distortions, geolocations, and produce export products like GeoTiff, TMS, jpg, etc. The external exporter service is built in a small Sinatra app at [mapknitter-exporter-sinatra](https://github.com/publiclab/mapknitter-exporter-sinatra) using the [mapknitter-exporter](https://github.com/publiclab/mapknitter-exporter) gem. Requests for exports are sent and progress is tracked using the API.
 
 ## Installation
 
 Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
 
-- [Cloud Installation](#Cloud-Installation)
-- [Standard Installation](#Standard-Installation)
-- [Windows Installation](#Windows-Installation)
+-   [Cloud Installation](#Cloud-Installation)
+-   [Standard Installation](#Standard-Installation)
+-   [Windows Installation](#Windows-Installation)
 
 <hr>
 
-
 ## Cloud Installation
 
-Cloud installation is possible with GitPod, using this link; it should be fully automated: 
+Cloud installation is possible with GitPod, using this link; it should be fully automated:
 
 > https://gitpod.io/#https://github.com/publiclab/mapknitter
 
@@ -76,7 +84,7 @@ Cloud installation is possible with GitPod, using this link; it should be fully 
 
 Make sure you have the below 3 prerequisites installed before moving forward with the [Installation Steps](#Installation-Steps).
 
-Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc. 
+Instructions are for an Ubuntu/Debian system. Varies slightly for mac/fedora/etc.
 
 Mac OS 10.14 users may need this: https://silvae86.github.io/2018/07/05/fixing-missing-headers-for-homebrew-in-mac-osx-mojave/
 
@@ -100,11 +108,11 @@ $ sudo apt-get install mysql-server
 $ sudo apt-get install bundler libmysqlclient-dev imagemagick ruby-rmagick libfreeimage3 libfreeimage-dev ruby-dev libmagickcore-dev libmagickwand-dev
 ```
 
-3. *(Optional)*: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features.
+3. _(Optional)_: For exporting, you'll need GDAL >=1.7.x (gdal.org), as well as `curl` and `zip`-- but these are not needed for much of development, unless you're working on the exporting features.
 
-  ```Bash
-  $ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
-  ```
+```Bash
+$ sudo apt-get install gdal-bin python-gdal curl libcurl4-openssl-dev libssl-dev zip
+```
 
 ==================
 
@@ -120,16 +128,15 @@ $ curl -L https://get.rvm.io | bash -s stable
 
 2. At this point during the process, you may want to log out and log back in, or open a new terminal window; RVM will then properly load in your environment.
 
-   - *Ubuntu users only:* You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
+    - _Ubuntu users only:_ You may need to enable `Run command as a login shell` in Ubuntu's Terminal, under Profile Preferences > Title and Command. Then close the terminal and reopen it.
 
 3. Use RVM to install version 2.4.6 of Ruby:
 
-   - *macOS Big Sur users only:* You may encounter a `Error running '__rvm_make -j8'` compilation error while installing Ruby with RVM. Run `export warnflags=-Wno-error=implicit-function-declaration` and then retry the installation command below. if you still encounter issues, [this thread](https://github.com/rvm/rvm/issues/5033) provides very helpful suggestions.
+    - _macOS Big Sur users only:_ You may encounter a `Error running '__rvm_make -j8'` compilation error while installing Ruby with RVM. Run `export warnflags=-Wno-error=implicit-function-declaration` and then retry the installation command below. if you still encounter issues, [this thread](https://github.com/rvm/rvm/issues/5033) provides very helpful suggestions.
 
- ```Bash
+```Bash
 $ rvm install 2.4.6
-  ```
-
+```
 
 ==================
 
@@ -139,24 +146,25 @@ We use Yarn as our package manager, which is available through npm.
 
 1. Install npm:
 
-  ```Bash
+```Bash
 $ sudo apt-get install npm
-  ```
+```
 
-2. *Ubuntu users only*: you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
+2. _Ubuntu users only_: you may need to also install the `nodejs-legacy` package, as due to a naming collision, some versions of Ubuntu already have an unrelated package called `node`. To do this, run:
 
-  ```Bash
+```Bash
 $ sudo apt-get install nodejs-legacy
-  ```
+```
 
 3. Once npm is installed, you should be able to use it to install Yarn:
 
 ```Bash
 $ npm install -g yarn
 ```
+
 NOTE: Refer [this](https://stackoverflow.com/questions/16151018/npm-throws-error-without-sudo) in case NPM throws permission errors
 
-  ==================
+==================
 
 ### Installation Steps
 
@@ -185,6 +193,7 @@ http://youtu.be/iGYGpS8rZMY (may be slightly out of date, but gives an overview)
 <hr>
 
 ## Windows Installation
+
 We recommend you either work in a virtual environment, or on a dual booted system to avoid dependencies issues and also Unix system works smoother with Ruby and Rails. This will not only benefit you now for Mapknitter, but also in future while working on other Ruby projects, a Linux or Mac OS will make your life easier.
 
 1. [Dual Booting](https://www.tecmint.com/install-ubuntu-alongside-with-windows-dual-boot/amp/), [option2](https://askubuntu.com/questions/1031993/how-to-install-ubuntu-18-04-alongside-windows-10), [video guide](https://www.youtube.com/watch?v=qNeJvujdB-0&fbclid=IwAR0APhs89jlNR_ENKbSwrp6TI6P-wxlx-a0My9XBvPNAfwtADZaAXqcKtP4)
@@ -200,9 +209,9 @@ You can log in locally at the path `http://localhost:3000/local/USERNAME` where 
 
 For this to work:
 
- - You will need to have copied and configured config/config.yml from config/config.yml.example
+-   You will need to have copied and configured config/config.yml from config/config.yml.example
 
- - The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/seeds.rb) to make their corresponding paths available in development after installation:
+-   The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/seeds.rb) to make their corresponding paths available in development after installation:
 
 ```Ruby
 # basic account path - http://localhost:3000/local/harry
@@ -211,8 +220,7 @@ User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'}
 
 # admin account path - http://localhost:3000/local/albus
 # created from:
-u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
-u_admin.role = 'admin'
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com', role: 'admin'})
 ```
 
 ## Running tests
@@ -249,18 +257,18 @@ Please read and abide by our [Code of Conduct](https://github.com/publiclab/mapk
 
 Help improve Public Lab software!
 
-* Join the 'plots-dev@googlegroups.com' discussion list to get involved
-* Look for open issues at https://github.com/publiclab/mapknitter/issues
-* Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
-* Some devs hang out in http://publiclab.org/chat (irc webchat)
-* Find lots of info on contributing at http://publiclab.org/wiki/developers
-* Join our gitter chat at https://gitter.im/publiclab/publiclab
+-   Join the 'plots-dev@googlegroups.com' discussion list to get involved
+-   Look for open issues at https://github.com/publiclab/mapknitter/issues
+-   Review contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
+-   Some devs hang out in http://publiclab.org/chat (irc webchat)
+-   Find lots of info on contributing at http://publiclab.org/wiki/developers
+-   Join our gitter chat at https://gitter.im/publiclab/publiclab
 
 ## Staging infrastructure and testing
 
 In addition automatic testing with Travis CI - we have a branch (`unstable`) is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes with a production-like environment. We also have a `stable` build at http://mapknitter-stable.laboratoriopublico.org/ which builds off of our `main` branch. Any commits or PRs merged to the main branch will trigger the `stable` server to rebuild; you can monitor progress at https://jenkins.laboratoriopublico.org/
 
-****
+---
 
 ## License
 
@@ -277,7 +285,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MapKnitter. If not, see <http://www.gnu.org/licenses/>.
 
-****
+---
 
 ## MapKnitter in depth
 
