@@ -213,8 +213,7 @@ User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'}
 
 # admin account path - http://localhost:3000/local/albus
 # created from:
-u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
-u_admin.role = 'admin'
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com', role: 'admin'})
 ```
 
 ## Running tests
