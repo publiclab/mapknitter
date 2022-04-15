@@ -78,7 +78,17 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 .map-list div:nth-child(4n+1){
   clear: left;
 }
-
+.card-img { 
+	width:250.7894592285156px;
+	height:160.3662719726562px;
+	/* position:absolute; */
+	left:-0.00002248663622594904px;
+	top:-88.56105041503906px;
+	background-image:url("https://3000-publiclab-mapknitter-1f5i6spevl6.ws-us39.gitpod.io/assets/image-cd28b9101644e1fb24be3adb6baf2d8717d366c3df526f4ec8436b7efba7a73c.png");
+	background-repeat:no-repeat;
+	background-size:cover;
+  border-radius: 10px;
+}
 .map-location {
   color: rgb(118, 118, 118);
   overflow-wrap: break-word;
@@ -97,6 +107,21 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   color: rgb(72, 72, 72);
 }
 
+#map-title a{
+    margin: 0px;
+    overflow-wrap: break-word;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgb(72, 72, 72);
+}
+
+#map-title a:hover{
+  margin: 0px;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0056b3;
+}
 .map-details {
   display: block;
   text-decoration: none;
@@ -129,11 +154,6 @@ a {
 label small {
   font-weight:normal;
   color:#888;
-}
-
-.container-fluid .row img {
-  width: 100%;
-  padding-bottom: 20px;
 }
 
 .link-thumbnail {
@@ -181,15 +201,17 @@ label small {
 .footer .footer-link:hover {
   text-decoration: none;
   color: #32325d;
+  font-size: 20px;
 }
 
 .footer .footer-title {
   font-weight: 600;
   font-weight: bolder;
   letter-spacing: .025em;
-  font-size: 14px;
-
   text-transform: uppercase;
+}
+.style-padding{
+  padding-top: 3.5%;
 }
 .fab {
   color: #464159;
@@ -278,14 +300,6 @@ label small {
   font-stretch: normal;
   line-height: 1.44;
   color: #a2aaad;
-}
-
-.all-maps {
-  img {
-    display: block;
-    width: 200px;
-    height: 200px;
-  }
 }
 
 .light-blue {
