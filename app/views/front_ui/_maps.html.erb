@@ -9,12 +9,12 @@
   <% maps.each do |map| %>
       <% warp = map.placed_warpables.first %>
     <div class="card-deck map col-md-6 col-lg-3 col-xs-12 mb-2 ml-2">
-        <div class="card bg-transparent card-without-border">
+        <div class="card bg-transparent card-without-border ">
         <a href="/maps/<%= map.slug %>">
             <% if warp.present? %>
-            <img class="card-img-top map-img" src="<%= warp.image.url  %>" alt="<%= map.name %>">
+            <img class="card-img" src="<%= warp.image.url  %>" alt="<%= map.name %>">
           <% else %>
-            <img class="card-img-top" src="<%= asset_path('image.png') %>" alt="Map without image" style="max-height: 400px !important;" />
+            <img class="card-img" src="<%= asset_path('image.png') %>" alt="Map without image" ></img>
           <% end %>
         </a>
         <div class="card-body" style="margin-left: -18px !important;">
@@ -22,14 +22,14 @@
           <h4><a href="/maps/<%= map.slug %>" class="map-title"><%= map.name %></a></h4>
           <p class="map-details">
             <% if map.user %>
-              by <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
+              By <a href="/profile/<%= map.user.login %>"><%= map.user.login %></a>
             <% else %>
-              by anonymous
+              By anonymous
             <% end %>
           </p>
           <div class="row mb-2">
             <div class="col-4 map-details" style="margin-top: 9px !important;">
-              <i class="far fa-image"></i> <%= pluralize(map.warpables.length, "image") %>
+              <i class="far fa-image"></i> <%= pluralize(map.warpables.length,"image") %>
             </div>
             <div class="col-8 map-details" style="margin-top: 8px !important;">
               <i class="far fa-comment"></i> <%= pluralize(map.comments.length, "comment") %>
