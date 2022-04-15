@@ -39,27 +39,27 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   background-color: white;
   display: inline-block;
   .btn {
-      width: auto;
+      width: 180px;
       font-size: 1em;
   }
   @media (max-width: 1087px) {
     .btn {
-      width: auto;
-      margin: 5px;
+      width: 180px;
+      margin: 10px;
       padding: 10px;
       font-size: 1em;
     }
   }
   @media (min-width: 998px) {
     .btn {
-      width: auto;
-      margin: 5px;
+      width: 180px;
+      margin: 10px;
       padding: 10px;
       font-size: 1em;
     }
   }
   .btn.btn-default {
-    width: auto;
+    width: 180px;
   }
 }
 

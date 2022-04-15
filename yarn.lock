@@ -3150,14 +3150,6 @@ leaflet-blurred-location@^1.7.0:
     jquery "^3.2.1"
     leaflet "^1.3.3"
 
-"leaflet-blurred-location@git+https://github.com/publiclab/leaflet-blurred-location#main":
-  version "1.3.0"
-  resolved "git+https://github.com/publiclab/leaflet-blurred-location#1bff37cb96518bd87192277b14c290cba3c138ba"
-  dependencies:
-    haversine-distance "^1.1.4"
-    jquery "^3.2.1"
-    leaflet "^1.3.3"
-
 leaflet-dist@vperron/leaflet-dist#0.7.x:
   version "0.0.0"
   resolved "https://codeload.github.com/vperron/leaflet-dist/tar.gz/2ec7a0846eaecdce1321d92b3c45c74f4fd08dd3"
