@@ -62,7 +62,7 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
 .map-list div:nth-child(4n+1){
   clear: left;
 }
-.e2_48 { 
+.card-img { 
 	width:250.7894592285156px;
 	height:160.3662719726562px;
 	/* position:absolute; */
@@ -123,11 +123,6 @@ a {
 label small {
   font-weight:normal;
   color:#888;
-}
-
-.container-fluid .row img {
-  width: 100%;
-  padding-bottom: 20px;
 }
 
 .link-thumbnail {
