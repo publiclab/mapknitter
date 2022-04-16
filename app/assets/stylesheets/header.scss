@@ -41,6 +41,10 @@ body {
 }
 
 @media(max-width: 992px) {
+  #about-img {
+    margin: 20px auto;
+    width: -webkit-fill-available;
+  }  
   .navbar-nav .navbar-form {
     margin-top: 10px;
   }
