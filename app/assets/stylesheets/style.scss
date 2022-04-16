@@ -49,12 +49,13 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
       padding: 10px;
       font-size: 1em;
     }
+    
   }
   @media (min-width: 998px) {
     .btn {
       width: 180px;
       margin: 10px;
-      padding: 10px;
+      padding: 7px;
       font-size: 1em;
     }
   }
@@ -372,6 +373,13 @@ label small {
       margin: 10px;
       padding: 10px;
     }
+    .modal-buttons{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+    }
   }
 
 #open_id_form button {
@@ -379,4 +387,13 @@ label small {
   background-color: #ffffff;
   border: none;
   margin-right: 0.25rem;
+}
+@media(min-width: 992px) {
+  .offset {
+    margin-left: 33.333333%;
+  } 
+  .col{
+    flex: 0 0 33.333333%;
+    max-width: 41.333333%;
+  }
 }
