@@ -122,6 +122,10 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   font-weight: 600;
   color: #0056b3;
 }
+.container-fluid .row img {
+  width: 100%;
+  padding-bottom: 20px;
+}
 .map-details {
   display: block;
   text-decoration: none;
