@@ -43,7 +43,7 @@ body {
 @media(max-width: 992px) {
   #about-img {
     margin: 20px auto;
-    width: -webkit-fill-available;
+    min-width: 100%;
   }  
   .navbar-nav .navbar-form {
     margin-top: 10px;
