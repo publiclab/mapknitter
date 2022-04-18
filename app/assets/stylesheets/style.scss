@@ -322,7 +322,10 @@ label small {
   padding-top: 2.5%;
   text-align: center;
 }
-
+.mb{
+  display: flex;
+  flex-direction: column;
+}
 .text-anonymous {
     text-align: left;
     margin: 20px;
