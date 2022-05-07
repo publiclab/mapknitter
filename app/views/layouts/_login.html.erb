@@ -3,11 +3,11 @@
     <a href="#" class="nav-link dropdown-toggle" id="logout-menu" aria-haspopup="true" aria-expanded="false">
       <i class="fa fa-user"></i> <%= current_user.login %>
     </a>
-    <div class="dropdown-menu login-form" aria-labelled-by="logout-menu">
+    <div class="dropdown-menu login-form dropdown-menu-right" aria-labelled-by="logout-menu">
       <a href="//publiclab.org/profile/<%= current_user.login %>" class="dropdown-item">Profile</a>
       <a href="/logout" class="dropdown-item">Log out</a>
       <% if current_user.role == 'admin' %>
-        <a href="#">Role: <b>Admin</b></a>
+        <a href="#" class="dropdown-item">Role: <b>Admin</b></a>
       <% end %>
     </div>
   </li>
