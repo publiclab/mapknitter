@@ -1,0 +1,9 @@
+.footer{
+    .fab{
+        transform: 0.5s;
+        &:hover{
+            transform: translateY(-7px);
+            cursor: pointer;
+        }
+    }
+}
