@@ -2,7 +2,7 @@
 <%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
 <%= javascript_include_tag('/assets/leaflet-spin/example/spin/dist/spin.min.js') %>
 <%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
-<%= javascript_include_tag('leaflet-fullHash.js') %>
+<%= javascript_include_tag('/assets/leaflet-fullhash/leaflet-fullHash.js') %>
 <%= stylesheet_link_tag "/assets/front_ui.css" %>
 <!-- Required for leaflet search control -->
 <script src="/assets/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
@@ -11,6 +11,19 @@
 
 <!-- jumbotron with background-image -->
 <div class="container-fluid jumbotron text-center" id="hero" style="margin-bottom:-10px;">
+
+    <!-- banner -->
+    <div class="alert alert-success" style="margin-top: 0;">
+        Support Public Lab’s mission to provide this platform freely to the whole world! 
+        <a href="https://secure.lglforms.com/form_engine/s/zIbQWRjJiBYCVwCN6tXIHw">Join our Software Stewards with a $5/month donation</a>.
+    </div>
+    <style>
+      .jumbotron {
+        padding-top: 1rem !important;
+      }
+    </style>
+    <!-- end banner -->
+
     <div class="row">
         <div class= "text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
@@ -49,7 +62,7 @@
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
 
 <div style="padding:5px;">
-  <div class="featured-places">
+  <div class="row justify-content-center featured-places ml-2 mr-2">
     <!-- <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> -->
   </div>
 </div>
