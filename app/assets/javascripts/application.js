@@ -18,7 +18,6 @@
 //= require jquery-ujs
 //= require jquery/dist/jquery.js
 //= require jquery-ujs/src/rails.js
-//= require jquery-ui/jquery-ui.min.js
 
 //= require bootstrap/dist/js/bootstrap.bundle.min.js
 
