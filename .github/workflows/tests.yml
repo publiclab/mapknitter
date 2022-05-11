@@ -101,7 +101,7 @@ jobs:
         with:
           ruby-version: 2.4.6
           bundler-cache: true
-      - uses: nanasess/setup-chromedriver@v1.0.1
+      - uses: nanasess/setup-chromedriver@v1.0.7
       - uses: ./.github/actions/setup-test-environment
       - uses: egordm/gha-yarn-node-cache@v1
       - name: Install JavaScript dependencies with Yarn
