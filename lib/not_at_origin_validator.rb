@@ -10,6 +10,6 @@ class NotAtOriginValidator < ActiveModel::Validator
   end
 
   def null_island?(record)
-    record.lat.zero? || record.lon.zero?
+    record.lat.nil? || record.lon.nil? || record.lat.zero? || record.lon.zero?
   end
 end
