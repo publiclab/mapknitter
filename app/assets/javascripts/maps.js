@@ -1,3 +1,4 @@
+//= require jquery-ui/jquery-ui.min.js
 //= require knitter
 //= require exif-js/exif.js
 //= require mapknitter
