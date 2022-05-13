@@ -31,6 +31,8 @@ class MapsTest < ApplicationSystemTestCase
 
     fill_in('map_location', with: 'New Haven')
 
+    assert_selector('.ui-menu-item', text: 'New Haven, CT, USA') # if geocoding works
+
     # expect at least one result
     assert page.evaluate_script("$('.ui-menu-item').length >= 1")
 
