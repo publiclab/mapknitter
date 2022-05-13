@@ -39,7 +39,7 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DISABLE_BOOTSNAP: true
         run: |
-          bundle exec rails test test:models
+          bundle exec rails test test/models
 
   integration-tests:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
           DB_PASSWORD: root
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DISABLE_BOOTSNAP: true
-        run: bundle exec rails test test:integration
+        run: bundle exec rails test test/integration
 
   controller-tests:
     runs-on: ubuntu-latest
@@ -79,7 +79,7 @@ jobs:
           DB_PASSWORD: root
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DISABLE_BOOTSNAP: true
-        run: bundle exec rails test test:controllers
+        run: bundle exec rails test test/controllers
 
   system-tests:
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
         with:
           ruby-version: 2.4.6
           bundler-cache: true
-      - uses: nanasess/setup-chromedriver@v1.0.1
+      - uses: nanasess/setup-chromedriver@v1.0.7
       - uses: ./.github/actions/setup-test-environment
       - uses: egordm/gha-yarn-node-cache@v1
       - name: Install JavaScript dependencies with Yarn
@@ -114,9 +114,11 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
         run: |
+          export CHROME_BIN=/usr/bin/chromium-browser &&
+          ./lib/exporter-deps.sh > /dev/null 2>&1 &&
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
-          bundle exec rails test test:system
+          bundle exec rails test test/system
       - name: Archive system test screenshots
         uses: actions/upload-artifact@v2
         with:
