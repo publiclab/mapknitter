@@ -35,6 +35,8 @@ class MapsTest < ApplicationSystemTestCase
 
     # expect at least one result
     assert page.evaluate_script("$('.ui-menu-item').length >= 1")
+    
+    click_on "New Haven, CT, USA"
 
     click_on "Create map"
 
