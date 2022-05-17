@@ -3003,9 +3003,10 @@ jpegtran-bin@^6.0.1:
     bin-build "^3.0.0"
     bin-wrapper "^4.0.0"
 
-jquery-ujs@rails/jquery-ujs#~1.0.4:
-  version "0.0.0"
-  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/7146dc96a71fda9b713f1f60fb414c699db0b3a7"
+jquery-ujs@rails/jquery-ujs#~1.2.3:
+  version "1.2.3"
+  uid "83b041ba72261f487b9264b9e94211e8107a1f18"
+  resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/83b041ba72261f487b9264b9e94211e8107a1f18"
 
 jquery@>=1.10, jquery@^3.2.1, jquery@^3.3.1, jquery@jquery/jquery-dist#^3.6.0:
   version "3.6.0"
