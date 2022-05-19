@@ -5004,10 +5004,9 @@ spin.js@^2.3.1:
   resolved "https://registry.yarnpkg.com/spin.js/-/spin.js-2.3.2.tgz#6caa56d520673450fd5cfbc6971e6d0772c37a1a"
   integrity sha1-bKpW1SBnNFD9XPvGlx5tB3LDeho=
 
-spin.js@fgnass/spin.js#^4.1.1:
-  version "4.1.1"
-  uid ae42fa61f746992f034dbeb02708544ae5d77f82
-  resolved "https://codeload.github.com/fgnass/spin.js/tar.gz/ae42fa61f746992f034dbeb02708544ae5d77f82"
+spin.js@fgnass/spin.js#^2.3.1:
+  version "2.3.2"
+  resolved "https://codeload.github.com/fgnass/spin.js/tar.gz/f0cc4b82358bee8bbb50f0fd90090bfe4d612da1"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
