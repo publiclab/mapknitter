@@ -16,13 +16,7 @@
     <%= action_cable_meta_tag %>
     <%=raw csrf_meta_tags %>
     <%= javascript_include_tag 'application' %>
-  </head>
-  <body>
-    <%= render 'layouts/header' %>
-    <%= render 'layouts/alerts' %>
-    <%= yield; %>
-    <%= render 'layouts/footer' %>
-
+    
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K5D2HTSG0B"></script>
     <script>
@@ -32,6 +26,11 @@
 
       gtag('config', 'G-K5D2HTSG0B');
     </script>
-
+  </head>
+  <body>
+    <%= render 'layouts/header' %>
+    <%= render 'layouts/alerts' %>
+    <%= yield; %>
+    <%= render 'layouts/footer' %>
   </body>
 </html>
