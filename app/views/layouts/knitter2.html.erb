@@ -16,6 +16,16 @@
 
   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js' async defer></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlBXzYwdeaOMKZgx_UNBp2qBtdD0L_9g"></script>
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K5D2HTSG0B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K5D2HTSG0B');
+  </script>
 </head>
 <body>
 
@@ -204,18 +214,6 @@
         $('.modal-welcome').modal();
       <% end %>
      })();
-  </script>  
-
-   <!-- Global site tag (gtag.js) - Google Analytics -->
-   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K5D2HTSG0B"></script>
-   <script>
-     window.dataLayer = window.dataLayer || [];
-     function gtag(){dataLayer.push(arguments);}
-     gtag('js', new Date());
-
-     gtag('config', 'G-K5D2HTSG0B');
-   </script>
-   <script>
    $(function() {
      $('[rel="tooltip"]').tooltip();
    });
