@@ -98,25 +98,6 @@ GEM
     execjs (2.8.1)
     faker (2.12.0)
       i18n (>= 1.6, < 2)
-    faraday (1.7.1)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0.1)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.1)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      multipart-post (>= 1.2, < 3)
-      ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
-    faraday-net_http (1.0.1)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
     ffi (1.15.5)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
@@ -174,7 +155,6 @@ GEM
     msgpack (1.4.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multipart-post (2.1.1)
     mysql2 (0.5.4)
     net-http-persistent (2.9.4)
     nio4r (2.5.8)
@@ -296,7 +276,6 @@ GEM
       ruby-openid (>= 2.1.7)
     ruby-prof (1.4.2)
     ruby-progressbar (1.11.0)
-    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
@@ -314,16 +293,20 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sentry-raven (3.1.2)
-      faraday (>= 1.0)
+    sentry-rails (5.3.1)
+      railties (>= 5.0)
+      sentry-ruby-core (~> 5.3.1)
+    sentry-ruby (5.3.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      sentry-ruby-core (= 5.3.1)
+    sentry-ruby-core (5.3.1)
+      concurrent-ruby
     simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.3)
-    skylight (4.3.2)
-      skylight-core (= 4.3.2)
-    skylight-core (4.3.2)
-      activesupport (>= 4.2.0)
+    skylight (5.0.1)
+      activesupport (>= 5.2.0)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -416,9 +399,10 @@ DEPENDENCIES
   sass
   sassc-rails
   selenium-webdriver
-  sentry-raven
+  sentry-rails
+  sentry-ruby
   simplecov
-  skylight
+  skylight (~> 5.0.0)
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (= 3.7.2)
@@ -432,7 +416,7 @@ DEPENDENCIES
   will_paginate-bootstrap4 (~> 0.2.2)
 
 RUBY VERSION
-   ruby 2.4.6p354
+   ruby 2.7.6p219
 
 BUNDLED WITH
-   2.3.9
+   2.3.14
