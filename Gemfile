@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.7.3'
+ruby '2.7.6'
 gem 'rails', '~> 5.2.8'
 gem 'rake',  '~> 13.0.1'
 gem 'tzinfo-data'
