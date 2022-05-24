@@ -52,8 +52,13 @@ module Mapknitter
     # Version of your assets, change this if you want to expire all your assets
     config.assets.paths << Rails.root.join("public","lib")
 
-    Raven.configure do |config|
-      config.current_environment = ENV["COMPOSE_PROJECT_NAME"] || ENV["RAILS_ENV"] || %w(production)
+    Sentry.init do |config|
+      config.environment = ENV["COMPOSE_PROJECT_NAME"] || ENV["RAILS_ENV"] || %w(production)
+      config.enabled_environments = %w[production, mapknitter_stable, mapknitter_unstable]
+      config.breadcrumbs_logger = [:sentry_logger, :http_logger]
+      # To activate performance monitoring, set one of these options.
+      # We recommend adjusting the value in production:
+      config.traces_sample_rate = 0.5
     end
 
   end
