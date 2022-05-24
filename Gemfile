@@ -22,7 +22,7 @@ group :dependencies do
   gem 'oa-openid', '0.3.2'
   gem 'ruby-openid', '~>2.9'
   gem 'open_id_authentication'
-  gem 'RubyInline', '~> 3.12.5'
+  gem 'RubyInline', '~> 3.12.6'
   gem 'paperclip', '~> 6.1.0'
   gem 'bootsnap', '~> 1.11.1'
   gem 'turbolinks', '~> 5'
