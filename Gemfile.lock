@@ -1,9 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    RubyInline (3.12.5)
+    RubyInline (3.12.6)
       ZenTest (~> 4.3)
-    ZenTest (4.12.0)
+    ZenTest (4.12.1)
     action-cable-testing (0.6.1)
       actioncable (>= 5.0)
     actioncable (5.2.8)
@@ -369,7 +369,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RubyInline (~> 3.12.5)
+  RubyInline (~> 3.12.6)
   action-cable-testing
   autoprefixer-rails (~> 10.4.7)
   aws-sdk-s3 (~> 1)
