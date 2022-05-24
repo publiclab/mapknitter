@@ -7,16 +7,13 @@ FROM ruby:2.7.6
 # Set correct environment variables.
 ENV HOME /root
 
-# Backported GDAL
-RUN echo "deb [trusted=yes] http://packages.laboratoriopublico.org/publiclab/ stretch main" > /etc/apt/sources.list.d/publiclab.list
-
 # We bring our own key to verify our packages
 COPY sysadmin.publiclab.key /app/sysadmin.publiclab.key
 RUN apt-key add /app/sysadmin.publiclab.key > /dev/null 2>&1
 
 # Install dependencies for Mapknitter
 RUN apt-get update -qq && apt-get install -y \
-  nodejs gdal-bin curl procps git imagemagick python-gdal zip
+  nodejs curl procps git imagemagick
 
 # Install dependencies for system tests
 RUN apt-get -y install fonts-liberation libappindicator3-1 libasound2 \
