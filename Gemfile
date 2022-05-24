@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-ruby '2.4.6'
+ruby '2.7.3'
 gem 'rails', '~> 5.2.8'
 gem 'rake',  '~> 13.0.1'
 gem 'tzinfo-data'
-gem 'skylight'
+gem 'skylight', '~> 5.0.0'
 gem 'sentry-ruby'
 gem 'sentry-rails'
 
