@@ -16,8 +16,7 @@ sudo apt-get install -y curl \
 
 # Installing system tests dependencies
 sudo apt-get install -y fonts-liberation \
-                        libindicator3-7 \
-                        libappindicator3-1 \
+                        libayatana-appindicator \
                         libasound2 \
                         libatk-bridge2.0-0 \
                         libatspi2.0-0 \
