@@ -2,12 +2,9 @@ sudo add-apt-repository -y ppa:ubuntugis/ppa
 sudo apt-get update
 
 # Installing Mapknitter dependencies
-sudo apt-get install -y gdal-bin \
-                        python3-gdal \
-                        python-gdal \
-                        curl \
+sudo apt-get install -y curl \
                         libcurl4-openssl-dev \
-                        libssl-dev zip \
+                        libssl-dev \
                         libmysqlclient-dev \
                         imagemagick \
                         ruby-rmagick \
