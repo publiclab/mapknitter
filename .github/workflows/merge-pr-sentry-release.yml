@@ -17,4 +17,4 @@ jobs:
           SENTRY_ORG: publiclab
           SENTRY_PROJECT: mapknitter
         with:
-          environment: staging
+          environment: mapknitter_stable
