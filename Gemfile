@@ -70,7 +70,7 @@ group :development, :test do
   # gem 'webdrivers'
   gem 'selenium-webdriver'
   gem 'byebug', '~> 11.1.3', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'faker', '~> 2.12.0'
+  gem 'faker', '~> 2.21.0'
   gem 'pry-rails', '~> 0.3.9'
   gem 'action-cable-testing'
   gem 'rubocop', require: false
