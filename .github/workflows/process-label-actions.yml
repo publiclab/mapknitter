@@ -13,4 +13,5 @@ jobs:
       - name: Process Label Action
         uses: hramos/label-actions@v1
         with:
+          configuration-path: '.github/label-actions.yml'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
