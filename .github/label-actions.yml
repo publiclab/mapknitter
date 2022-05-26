@@ -2,6 +2,6 @@
   uses: hramos/respond-to-issue-based-on-label@v2
 needs-dependabot-vetting:
   comment: |
-    This is an automated pull request by @dependabot, a service we use to keep libraries up to date in our projects. Read this post to learn how to help us understand if it's ready to be merged (there are lots of conisderations to balance!): https://github.com/publiclab/plots2/issues/11140
+    This is an automated pull request by @dependabot, a service we use to keep libraries up to date in our projects. Read this post to learn how to help us understand if it's ready to be merged (there are lots of conisderations to balance!): https://bit.ly/3GphOhV
   labels:
     - dependencies
