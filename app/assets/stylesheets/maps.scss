@@ -210,6 +210,19 @@ table .btn {
   margin-bottom:3px;
 }
 
+.card-img-centre{
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+  margin-left: auto;
+  margin-right: auto;
+}
+.card-content{
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
 @media (max-width: 400px) {
   .sidebar {
     width: 100%;
