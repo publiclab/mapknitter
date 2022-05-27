@@ -123,7 +123,7 @@ GEM
       execjs
       multi_json (>= 1.3)
       rake
-    json (2.6.1)
+    json (2.6.2)
     libv8-node (15.14.0.1)
     libxml-ruby (3.1.0)
     listen (3.7.1)
@@ -170,7 +170,7 @@ GEM
       ruby-openid-apps-discovery (~> 1.2.0)
     open_id_authentication (1.3.0)
       rack-openid (~> 1.3)
-    paper_trail (11.1.0)
+    paper_trail (12.3.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
     paperclip (6.1.0)
@@ -239,11 +239,11 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdiscount (2.2.0.2)
-    recaptcha (5.9.0)
+    recaptcha (5.10.0)
       json
     redcarpet (3.5.1)
     regexp_parser (2.4.0)
-    request_store (1.5.0)
+    request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.5)
     right_aws_api (0.3.5)
@@ -268,10 +268,10 @@ GEM
     rubocop-performance (1.14.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.9.1)
+    rubocop-rails (2.14.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 0.90.0, < 2.0)
+      rubocop (>= 1.7.0, < 2.0)
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
     ruby-hmac (0.4.0)
@@ -394,7 +394,7 @@ DEPENDENCIES
   rails-perftest
   rake (~> 13.0.1)
   rdiscount (= 2.2.0.2)
-  recaptcha (~> 5.9.0)
+  recaptcha (~> 5.10.0)
   right_aws_api (~> 0.3.5)
   rubocop
   rubocop-performance
