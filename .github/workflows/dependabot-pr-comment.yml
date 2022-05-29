@@ -1,0 +1,23 @@
+name: Dependabot PR Auto-Comment task
+
+on:
+  pull_request_target:
+    types:
+      - opened
+
+jobs:
+  auto-comment:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Automatically Comment on Dependabot PR
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: ${{ github.event.number }},
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "This is an automated pull request by @dependabot, a service we use to keep libraries up to date in our projects. Read this post to learn how to help us understand if it's ready to be merged (there are lots of considerations to balance!): https://bit.ly/3GphOhV"
+          })
