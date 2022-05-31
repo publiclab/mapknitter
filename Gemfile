@@ -25,7 +25,7 @@ group :dependencies do
   gem 'open_id_authentication'
   gem 'RubyInline', '~> 3.12.6'
   gem 'paperclip', '~> 6.1.0'
-  gem 'bootsnap', '~> 1.11.1'
+  gem 'bootsnap', '~> 1.12.0'
   gem 'turbolinks', '~> 5'
   gem 'mini_magick', '~> 4.8'
   gem 'puma', '~> 5.6.4'
