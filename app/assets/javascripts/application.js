@@ -12,7 +12,7 @@
 //
 
 
-//= require leaflet/dist/leaflet-src.js
+//= require leaflet/dist/leaflet.js
 
 //= require jquery
 //= require jquery-ujs
