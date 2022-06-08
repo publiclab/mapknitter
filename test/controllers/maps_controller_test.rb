@@ -188,18 +188,20 @@ class MapsControllerTest < ActionController::TestCase
     session[:user_id] = 1
     get(:archive, params: { id: @map.slug })
     @map.reload
-
+    
     assert_redirected_to '/'
     assert @map.archived
+    assert_equal 0, @map.status
   end
 
   test 'should not archive map without enough permissions' do
     session[:user_id] = 3
     get(:archive, params: { id: @map.slug })
     @map.reload
-
+    
     assert_redirected_to '/'
     assert_not @map.archived
+    assert_equal 1, @map.status
   end
 
   test 'should update map' do

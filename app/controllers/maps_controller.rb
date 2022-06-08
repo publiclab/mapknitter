@@ -66,6 +66,7 @@ class MapsController < ApplicationController
   def archive
     if logged_in? && current_user.can_delete?(@map)
       @map.archived = true
+      @map.status = 0
       if @map.save
         flash[:notice] = 'Archived map.'
       else
