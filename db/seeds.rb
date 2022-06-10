@@ -5,8 +5,7 @@ USERS = []
 USERS << User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'})
 
 # admin account 
-u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
-u_admin.role = 'admin'
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com', role: 'admin'})
 USERS.push(u_admin)
 
 # a few randomized basic accounts to have varied map authors
