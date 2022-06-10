@@ -191,6 +191,7 @@ class MapsControllerTest < ActionController::TestCase
 
     assert_redirected_to '/'
     assert @map.archived
+    assert_equal 0, @map.status
   end
 
   test 'should not archive map without enough permissions' do
@@ -200,6 +201,7 @@ class MapsControllerTest < ActionController::TestCase
 
     assert_redirected_to '/'
     assert_not @map.archived
+    assert_equal 1, @map.status
   end
 
   test 'should update map' do
