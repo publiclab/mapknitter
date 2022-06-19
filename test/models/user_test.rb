@@ -52,6 +52,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal map_images.flatten, user.warpables
   end
 
+  test 'should ban user' do
+    user = users(:quentin)
+    assert_equal User::Status::NORMAL, user.status
+    user.ban
+    assert_equal User::Status::BANNED, user.status
+  end
+
   # def test_should_authenticate_user
   #   assert_equal users(:quentin), User.authenticate('quentin', 'monkey')
   # end
