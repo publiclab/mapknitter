@@ -1,22 +1,32 @@
 class SpamController < ApplicationController
+  module ModerationGuards
+    def spam_check(map)
+      #check and spam only unspammed maps
+      map.spam unless map.status == Map::Status::BANNED
+    end
+  
+    def ban_check(map)
+      #check and ban only unbanned non-anonymous authors
+      map.user.ban unless map.anonymous? || map.user.status == User::Status::BANNED
+    end
+  end
+
+  include ModerationGuards
+
+  require 'set'
+
   before_action :require_login
   before_action { logged_in_as(['admin', 'moderator'], 'moderate maps and users') }
   
-  require 'set'
-  
   def spam_map
     @map = Map.find(params[:id])
-    if @map.status == Map::Status::NORMAL || @map.status == Map::Status::MODERATED
-      @map.spam
+    if spam_check(@map)
       notice_text = 'Map marked as spam.'
-      unless @map.anonymous? || @map.user.status == User::Status::BANNED #skip banning of anonymous or already-banned authors
-        @map.user.ban
-        notice_text.chop! << ' and author banned.'
-      end
-      flash[:notice] = notice_text
+      notice_text.chop! << ' and author banned.' if ban_check(@map)
     else
-      flash[:notice] = 'Map already marked as spam.'
+      notice_text = 'Map already marked as spam.'
     end
+    flash[:notice] = notice_text
     redirect_back(fallback_location: root_path)
   end
 
@@ -25,13 +35,9 @@ class SpamController < ApplicationController
     banned_authors = Set.new
     params[:ids].split(',').uniq.each do |id|
       map = Map.find(id)
-      if map.status == Map::Status::NORMAL || map.status == Map::Status::MODERATED
-        map.spam
+      if spam_check(map)
         spammed_maps += 1
-        unless map.anonymous? || map.user.status == User::Status::BANNED #skip banning of anonymous or already-banned authors
-          map.user.ban
-          banned_authors << map.user.id
-        end
+        banned_authors << map.user.id if ban_check(map)
       end
     end
     flash[:notice] = helpers.pluralize(spammed_maps, 'map') + ' spammed and ' + helpers.pluralize(banned_authors.size, 'author') + ' banned.'

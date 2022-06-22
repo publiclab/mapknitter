@@ -51,3 +51,4 @@ yarn.lock
 .idea/
 passenger.3000.pid
 passenger.3000.pid.lock
+.vscode

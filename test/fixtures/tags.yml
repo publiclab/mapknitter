@@ -9,5 +9,5 @@ nice:
 featured:
     name: featured
     created_at: <%= Time.now %>
-    map_id: 2
+    map_id: 3
     user_id: 1

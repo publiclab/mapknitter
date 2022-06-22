@@ -89,8 +89,8 @@ class MapTest < ActiveSupport::TestCase
   end
 
   test 'filter bbox with tag if present' do
-    maps =  Map.bbox(10,60,30,80,'featured')
-    assert maps.collect(&:name).include?('Cubbon Park')
+    maps =  Map.bbox(-5,35,0,40,'featured')
+    assert maps.collect(&:name).include?('Nairobi City')
   end
 
   test 'bbox without tag returns results' do
