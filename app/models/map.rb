@@ -3,6 +3,14 @@ class Map < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: %i(slugged static)
 
+  module Status
+    VALUES = [
+      BANNED = 0,   # Usage: Status::BANNED
+      NORMAL = 1,   # Usage: Status::NORMAL
+      MODERATED = 4 # Usage: Status::MODERATED
+    ].freeze
+  end
+
   attr_accessor :image_urls
 
   validates_presence_of :name, :slug, :author, :lat, :lon
@@ -286,5 +294,9 @@ class Map < ApplicationRecord
       user_ids.push(warp.versions.map(&:whodunnit))
     end
     User.where(id: user_ids.flatten.uniq).where.not(id: user_id)
+  end
+
+  def spam
+    self.update!(status: Status::BANNED)
   end
 end

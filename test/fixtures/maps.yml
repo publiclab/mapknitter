@@ -24,7 +24,7 @@ cubbon:
   created_at: <%= Time.now %>
   license: publicdomain
   user_id: 1
-  author: aaron
+  author: quentin
 
 nairobi:
   id: 3
@@ -49,8 +49,8 @@ village:
   description: A mall in Nairobi
   created_at: <%= Time.now %>
   license: publicdomain
-  user_id: 2
-  author: aaron
+  user_id: 3
+  author: chris
 
 yaya:
   id: 5
