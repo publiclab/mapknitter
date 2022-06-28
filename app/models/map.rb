@@ -5,9 +5,9 @@ class Map < ApplicationRecord
 
   module Status
     VALUES = [
-      BANNED = 0,   # Usage: Status::BANNED
-      NORMAL = 1,   # Usage: Status::NORMAL
-      MODERATED = 4 # Usage: Status::MODERATED
+      BANNED = 0,    # Usage: Status::BANNED
+      NORMAL = 1,    # Usage: Status::NORMAL
+      MODERATED = 4, # Usage: Status::MODERATED
     ].freeze
   end
 
@@ -297,6 +297,6 @@ class Map < ApplicationRecord
   end
 
   def spam
-    self.update!(status: Status::BANNED)
+    update!(status: Status::BANNED)
   end
 end
