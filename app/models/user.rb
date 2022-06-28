@@ -8,7 +8,7 @@ class User < ApplicationRecord
       MODERATED = 5, # Usage: Status::MODERATED
     ].freeze
   end
-  
+
   has_many :maps
   has_many :tags
   has_many :comments
