@@ -7,6 +7,14 @@ class RoutesTest < ActionDispatch::IntegrationTest
   end
 
   test "test batch-spam-maps route" do
-    assert_routing({ path: '/moderate/batch_spam_map/1,2', method: :patch }, { controller: 'spam', action: 'batch_spam_map', ids: '1,2' })
+    assert_routing({ path: '/moderate/batch_spam_maps/1,2', method: :patch }, { controller: 'spam', action: 'batch_spam_maps', ids: '1,2' })
+  end
+
+  test "test single-publish-map route" do
+    assert_routing({ path: '/moderate/publish_map/2', method: :patch }, { controller: 'spam', action: 'publish_map', id: '2' })
+  end
+
+  test "test batch-publish-maps route" do
+    assert_routing({ path: '/moderate/batch_publish_maps/1,2', method: :patch }, { controller: 'spam', action: 'batch_publish_maps', ids: '1,2' })
   end
 end
