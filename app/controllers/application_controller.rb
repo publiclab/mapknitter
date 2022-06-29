@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
 
   def logged_in_as(roles, action)
     unless current_user && roles.any? { |role| current_user.role == role }
-      flash[:error] = "Only #{roles.collect { |role| role.pluralize }.join(' and ')} can #{action}."
+      flash[:error] = "Only #{roles.collect(&:pluralize).join(" and ")} can #{action}."
       redirect_to('/' + '?_=' + Time.now.to_i.to_s)
     end
   end
