@@ -13,7 +13,7 @@ class SpamControllerTest < ActionController::TestCase
         map.user.ban
       }
     end
-    @map_ids = @maps.collect { |map| map['id'] }.join(',')
+    @map_ids = @maps.collect(&:id).join(',')
   end
 
   test 'should not moderate a map if user not logged in' do

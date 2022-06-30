@@ -1,21 +1,21 @@
 class SpamController < ApplicationController
   module ModerationGuards
-    def spam_check(map)
+    def check_and_spam(map)
       # check and spam only unspammed maps
       map.spam unless map.status == Map::Status::BANNED
     end
-  
-    def ban_check(map)
+
+    def check_and_ban(map)
       # check and ban only unbanned non-anonymous authors
       map.user.ban unless map.anonymous? || map.user.status == User::Status::BANNED
     end
 
-    def publish_check(map)
+    def check_and_publish(map)
       # check and publish only spammed or moderated maps
       map.publish unless map.status == Map::Status::NORMAL
     end
 
-    def unban_check(map)
+    def check_and_unban(map)
       # check and unban only banned non-anonymous authors
       map.user.unban unless map.anonymous? || map.user.status != User::Status::BANNED
     end
@@ -25,12 +25,12 @@ class SpamController < ApplicationController
 
   before_action :require_login
   before_action { logged_in_as(['admin', 'moderator'], 'moderate maps and users') }
-  
+
   def spam_map
     @map = Map.find(params[:id])
-    if spam_check(@map)
+    if check_and_spam(@map)
       notice_text = 'Map marked as spam.'
-      notice_text.chop! << ' and author banned.' if ban_check(@map)
+      notice_text.chop! << ' and author banned.' if check_and_ban(@map)
     else
       notice_text = 'Map already marked as spam.'
     end
@@ -43,9 +43,9 @@ class SpamController < ApplicationController
     banned_authors = 0
     params[:ids].split(',').uniq.each do |id|
       map = Map.find(id)
-      if spam_check(map)
+      if check_and_spam(map)
         spammed_maps += 1
-        banned_authors += 1 if ban_check(map)
+        banned_authors += 1 if check_and_ban(map)
       end
     end
     flash[:notice] = helpers.pluralize(spammed_maps, 'map') + ' spammed and ' + helpers.pluralize(banned_authors, 'author') + ' banned.'
@@ -54,9 +54,9 @@ class SpamController < ApplicationController
 
   def publish_map
     @map = Map.find(params[:id])
-    if publish_check(@map)
+    if check_and_publish(@map)
       notice_text = 'Map published.'
-      notice_text.chop! << ' and author unbanned.' if unban_check(@map)
+      notice_text.chop! << ' and author unbanned.' if check_and_unban(@map)
     else
       notice_text = 'Map already published.'
     end
@@ -69,9 +69,9 @@ class SpamController < ApplicationController
     unbanned_authors = 0
     params[:ids].split(',').uniq.each do |id|
       map = Map.find(id)
-      if publish_check(map)
+      if check_and_publish(map)
         published_maps += 1
-        unbanned_authors += 1 if unban_check(map)
+        unbanned_authors += 1 if check_and_unban(map)
       end
     end
     flash[:notice] = helpers.pluralize(published_maps, 'map') + ' published and ' + helpers.pluralize(unbanned_authors, 'author') + ' unbanned.'
