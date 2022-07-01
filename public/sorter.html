@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 <title>MapKnitter Sorter - beta</title>
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../flot/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="../flot/jquery.js"></script> 
-	<script language="javascript" type="text/javascript" src="../flot/jquery.flot.js"></script> 
+	<script language="javascript" type="text/javascript" src="../flot/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="../flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="../flot/jquery.flot.crosshair.js"></script>
 <style type='text/css'>
 body {
@@ -106,7 +106,7 @@ function import_files() {
 
       data[0].data.push([i,f.size])
 	var image_class = ''
-	if (f.size > cutoff*1000000 && cutoff != 0) { 
+	if (f.size > cutoff*1000000 && cutoff != 0) {
 		image_class = 'red'
 		chosen += 1
 	}
@@ -137,13 +137,13 @@ function import_files() {
 
 flotoptions = {
         series: {
-                lines: { 
-                        show: true, 
+                lines: {
+                        show: true,
                         lineWidth: 1,
                 },
         },
         crosshair: { mode: "x" },
-        yaxis: { show: true, tickFormatter: function(n) { return (n/1000000)+"MB" } }, 
+        yaxis: { show: true, tickFormatter: function(n) { return (n/1000000)+"MB" } },
         xaxis: { show: true },
         shadowSize: 0,
         grid: {

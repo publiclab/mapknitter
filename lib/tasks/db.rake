@@ -10,7 +10,7 @@ namespace :db do
     ActiveRecord::Base.connection
     puts "There is a database"
     rescue StandardError
-      puts "There is NOT a database"
+      puts "There is no database"
       exit 1
     else
       exit 0

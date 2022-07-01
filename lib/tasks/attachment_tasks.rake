@@ -36,7 +36,7 @@ namespace :utils do
     task :empty_s3_bucket => :initialize_s3 do
       from_bucket = @s3.bucket(ENV['BUCKET'])
 
-      puts "Emtptying #{from_bucket.name}"
+      puts "Emptying #{from_bucket.name}"
       bucket.keys({'max-keys' => 100}).each do |key|
         (1..10).each do |try|
           begin

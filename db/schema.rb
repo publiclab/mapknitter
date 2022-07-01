@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_19_051509) do
+ActiveRecord::Schema.define(version: 2022_06_28_190519) do
 
   create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "map_id"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2019_12_19_051509) do
     t.boolean "anon_annotatable", default: false
     t.string "slug"
     t.boolean "display_welcome", default: true
+    t.integer "status", default: 1, null: false
     t.index ["author"], name: "index_maps_on_author"
     t.index ["slug"], name: "index_maps_on_slug", unique: true
     t.index ["user_id"], name: "index_maps_on_user_id"
@@ -122,6 +123,8 @@ ActiveRecord::Schema.define(version: 2019_12_19_051509) do
     t.datetime "updated_at"
     t.string "remember_token", limit: 40
     t.datetime "remember_token_expires_at"
+    t.integer "status", default: 1, null: false
+    t.datetime "status_updated_at"
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 

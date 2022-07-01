@@ -137,6 +137,13 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   line-height: 1.2em;
 }
 
+.image{
+  position: relative;
+  width: 100%;
+  padding-right: 0px;
+  padding-left: 15px;
+}
+
 .alert-link {
   text-shadow: none;
 }
@@ -357,7 +364,10 @@ label small {
   padding-top: 2.5%;
   text-align: center;
 }
-
+.mb{
+  display: flex;
+  flex-direction: column;
+}
 .text-anonymous {
     text-align: left;
     margin: 20px;

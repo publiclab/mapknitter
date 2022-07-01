@@ -30,7 +30,7 @@ else
 	bump_database
 fi
 
-rake assets:precompile
+bundle exec rake assets:precompile
 
 if [ -f $pidfile ] ; then
 	>&2 echo 'Server PID file already exists. Removing it...';

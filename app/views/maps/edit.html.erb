@@ -1,8 +1,7 @@
 <% content_for :title do %>
   <div class="sidebar-title mt-3">
-    <h3><%= @map.name %>
-<%= link_to 'Exit editor', @map, class: 'float-right btn btn-sm btn-info'%>
-</h3>
+    <h3 id="map_title"><%= @map.name %></h3>
+    <%= link_to 'Exit editor', @map, class: 'float-right btn btn-sm btn-info'%>
   </div>
   <div class="map-author">
     <% if @map.user %>
@@ -24,7 +23,16 @@
   </p>
 
   <table>
-    <tr><td><span class="map-detail-label">Latitude </span><%= @map.lat %></td><td><span class="map-detail-label">Longitude </span><%= @map.lon %></td></tr>
+    <tr>
+      <td>
+        <span class="map-detail-label">Latitude </span>
+        <span id="map_lat"><%= @map.lat %></span>
+      </td>
+      <td>
+        <span class="map-detail-label">Longitude </span>
+        <span id="map_lon"><%= @map.lon %></span>
+      </td>
+    </tr>
   </table>
 
   <p>

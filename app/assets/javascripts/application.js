@@ -12,7 +12,7 @@
 //
 
 
-//= require leaflet/dist/leaflet-src.js
+//= require leaflet/dist/leaflet.js
 
 //= require jquery
 //= require jquery-ujs
@@ -39,7 +39,7 @@
 //= require exif-js/exif.js
 //= require webgl-distort/dist/webgl-distort.js
 //= require mapknitter/core/Class.js
-// require leaflet-spin/example/spin/dist/spin.min.js
+// require spin.js/spin.min.js
 //= require leaflet-spin/leaflet.spin.min.js
 //= require image-sequencer/dist/image-sequencer.js
 //= require leaflet-toolbar/dist/leaflet.toolbar.js

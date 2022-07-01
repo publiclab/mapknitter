@@ -213,8 +213,7 @@ User.create({login: 'harry', name: 'harry potter', email: 'potter@hogwarts.com'}
 
 # admin account path - http://localhost:3000/local/albus
 # created from:
-u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com'})
-u_admin.role = 'admin'
+u_admin = User.create({login: 'albus', name: 'albus dumbledore', email: 'dumbledore@hogwarts.com', role: 'admin'})
 ```
 
 ## Running tests
@@ -260,7 +259,7 @@ Help improve Public Lab software!
 
 ## Staging infrastructure and testing
 
-In addition to automatic testing with Travis CI, we have a branch (`unstable`) that is set to auto-build and deploy to [a staging instance](http://mapknitter-unstable.laboratoriopublico.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes in a production-like environment. We also have a `stable` build at http://mapknitter-stable.laboratoriopublico.org/ which builds off of our `main` branch. Any commits or PRs merged to the main branch will trigger the `stable` server to rebuild, and you can monitor the progress at https://jenkins.laboratoriopublico.org/
+In addition to automatic testing with Travis CI, we have a branch (`unstable`) that is set to auto-build and deploy to [a staging instance](https://unstable.mapknitter.org/). This instance includes a copy of the production database and is intended for experimenting or debugging purposes in a production-like environment. We also have a `stable` build at https://stable.mapknitter.org/ which builds off of our `main` branch. Any commits or PRs merged to the main branch will trigger the `stable` server to rebuild, and you can monitor the progress at https://jenkins.laboratoriopublico.org/
 
 ****
 

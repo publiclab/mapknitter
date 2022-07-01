@@ -49,42 +49,6 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil map.latest_export
     assert_not_nil map.nodes
     assert_not_nil map.average_cm_per_pixel
-
-    # use a map fixture with no warpables
-    village = maps(:village)
-    assert_equal 0,  village.average_cm_per_pixel
-
-    resolution = 20
-    assert_not_nil map.run_export(users(:quentin), resolution)  #map.average_cm_per_pixel)
-
-    # main issue will be that it creates and continuously updates an Export model. 
-    # we could shift this to a polling model, either on the client side (eliminating the Export model)
-    # ... or some other way to make it possible to do many of these tasks without needing ActiveRecord
-
-    # let's start at the bottom and factor this all out working upwards
-
-    # refactor so that we pass in as much in parameters as possible, reducing in-model cross-references
-
-      # creates an Export and sets initial values
-      # depends on: map.average_scale
-      # runs self.distort_warpables(pxperm)
-      # runs self.generate_composite_tiff(warpable_coords,origin)
-      # runs `identify` and assigns some values (height, width) to Export
-      # runs export.tms = true if self.generate_tiles
-      # runs export.zip = true if self.zip_tiles
-      # runs export.jpg = true if self.generate_jpg
-    # map.distort_warpables(scale)
-      # collects self.placed_warpables
-      # runs on each one: warpable.generate_perspectival_distort(scale,self.slug)
-    # map.generate_composite_tiff(coords,origin)
-      # collects self.placed_warpables
-      # runs gdal_warp on the output of each, flattening onto a single geotiff
-    # map.generate_tiles
-      # runs on composite tiff output: gdal2tiles = 'gdal2tiles.py -k -t "'+self.slug+'" -g "'+google_api_key+'" '+Rails.root.to_s+'/public/warps/'+self.slug+'/'+self.slug+'-geo.tif '+Rails.root.to_s+'/public/tms/'+self.slug+"/"
-    # map.zip_tiles
-    # map.generate_jpg
-      # runs convert on composite tiff
-
   end
 
   test 'should have histograms' do
@@ -94,7 +58,6 @@ class MapTest < ActiveSupport::TestCase
     assert_not_nil hist
     assert_not_nil map.grouped_images_histogram(3)
     assert_equal hist.count/3, map.grouped_images_histogram(3).count
-
   end
 
   test 'should have nearby maps' do
@@ -126,12 +89,23 @@ class MapTest < ActiveSupport::TestCase
   end
 
   test 'filter bbox with tag if present' do
-    maps =  Map.bbox(10,60,30,80,'featured')
-    assert maps.collect(&:name).include?('Cubbon Park')
+    maps =  Map.bbox(-5,35,0,40,'featured')
+    assert maps.collect(&:name).include?('Nairobi City')
   end
 
   test 'bbox without tag returns results' do
     maps =  Map.bbox(40,-80,50,-60)
     assert maps.collect(&:name).include?('Saugus Landfill Incinerator')
+  end
+
+  test 'should spam and publish map' do
+    map = maps(:saugus)
+    assert_equal Map::Status::NORMAL, map.status
+
+    map.spam
+    assert_equal Map::Status::BANNED, map.status
+    
+    map.publish
+    assert_equal Map::Status::NORMAL, map.status
   end
 end

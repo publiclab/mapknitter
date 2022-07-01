@@ -81,10 +81,10 @@ class ImagesController < ApplicationController
         lon = point.split(',')[0]
         lat = point.split(',')[1]
         node = Node.new(color: 'black',
-                        lat: lat,
-                        lon: lon,
-                        author: author,
-                        name: '')
+          lat: lat,
+          lon: lon,
+          author: author,
+          name: '')
         node.save
         nodes << node
       end

@@ -1,6 +1,14 @@
 require 'digest/sha1'
 
 class User < ApplicationRecord
+  module Status
+    VALUES = [
+      BANNED = 0,    # Usage: Status::BANNED
+      NORMAL = 1,    # Usage: Status::NORMAL
+      MODERATED = 5, # Usage: Status::MODERATED
+    ].freeze
+  end
+
   has_many :maps
   has_many :tags
   has_many :comments
@@ -54,5 +62,13 @@ class User < ApplicationRecord
 
   def can_edit?(resource)
     owns?(resource)
+  end
+
+  def ban
+    update!({ status: Status::BANNED, status_updated_at: Time.now })
+  end
+
+  def unban
+    update!({ status: Status::NORMAL, status_updated_at: Time.now })
   end
 end

@@ -1,8 +1,6 @@
-<%# <%= javascript_include_tag('https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js') %>
-<%# # <%= stylesheet_link_tag "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" %> 
-<%= javascript_include_tag('/assets/leaflet-spin/example/spin/dist/spin.min.js') %>
-<%= javascript_include_tag('/assets/leaflet-spin/example/leaflet.spin.min.js') %>
-<%= javascript_include_tag('leaflet-fullHash.js') %>
+<%= javascript_include_tag('/assets/spin.js/spin.min.js') %>
+<%= javascript_include_tag('/assets/leaflet-spin/leaflet.spin.min.js') %>
+<%= javascript_include_tag('/assets/leaflet-fullhash/leaflet-fullHash.js') %>
 <%= stylesheet_link_tag "/assets/front_ui.css" %>
 <!-- Required for leaflet search control -->
 <script src="/assets/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
@@ -11,6 +9,19 @@
 
 <!-- jumbotron with background-image -->
 <div class="container-fluid jumbotron text-center" id="hero" style="margin-bottom:-10px;">
+
+    <!-- banner -->
+    <div class="alert alert-success" style="margin-top: 0;">
+        Support Public Lab’s mission to provide this platform freely to the whole world! 
+        <a href="https://secure.lglforms.com/form_engine/s/zIbQWRjJiBYCVwCN6tXIHw">Join our Software Stewards with a $5/month donation</a>.
+    </div>
+    <style>
+      .jumbotron {
+        padding-top: 1rem !important;
+      }
+    </style>
+    <!-- end banner -->
+
     <div class="row">
         <div class= "text-block lead-text col offset col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
@@ -49,7 +60,7 @@
 <div id="mapknitter-unique" class="mx-auto" style="height: 450px; width: 100%;"></div>
 
 <div style="padding:5px;">
-  <div class="featured-places">
+  <div class="row justify-content-center featured-places ml-2 mr-2">
     <!-- <%= link_to 'Nearby Maps', 'front_ui/nearby_mappers' %> -->
   </div>
 </div>
@@ -83,16 +94,16 @@
 <!-- mapping kites -->
 <div class="card-deck mb-6  text-center mx-auto" id="mapping-kits">
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
-        <div class="card-body">
+        <img class="card-img-centre img-draw mx-auto" src="<%= asset_path('balloon.png') %>" alt="Card image cap">
+        <div class="card-content">
             <h5 class="card-title">Balloon mapping</h5>
             <p class="card-text item-description">Reliable, ~1000-3000 ft high and great for groups and workshops.</p>
             <a href="//store.publiclab.org/collections/mapping-kits/products/balloon-mapping-kit?variant=7028822724" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
         </div>
     </div>
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw mx-auto" src="<%= asset_path('kite1.png') %>" alt="Card image cap">
-        <div class="card-body">
+        <img class="card-img-centre img-draw mx-auto" src="<%= asset_path('kite1.png') %>" alt="Card image cap">
+        <div class="card-content">
             <h5 class="card-title">Kites</h5>
             <p class="card-text item-description">Cheap, ~500-1500 ft high and very portable, great for kids.</p>
             <a href="//store.publiclab.org/collections/education/products/kite-mapping-pack?variant=10531821124" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
@@ -104,16 +115,16 @@
 
 <div class="mapping-kits card-deck mb-6  text-center mx-auto">
     <div class="card mapping-kits">
-      <img class="card-img-top img-draw mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
-      <div class="card-body">
+      <img class="card-img-centre img-draw mx-auto" src="<%= asset_path('camera.png') %>" alt="Card image cap">
+      <div class="card-content">
           <h5 class="card-title">Raspberry Pi Camera</h5>
           <p class="card-text item-description"> Lightweight battery pack, easy to use, connects to to your laptop/phone,<br> great for streaming video, photos, and motion triggered capture</p>
           <a href="https://store.publiclab.org/collections/mapping-kits/products/waterproof-mini-camera" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
       </div>
     </div>
     <div class="card mapping-kits">
-        <img class="card-img-top img-draw  mx-auto" src="<%= asset_path('selfie.png') %>" alt="Card image cap">
-        <div class="card-body">
+        <img class="card-img-centre img-draw  mx-auto" src="<%= asset_path('selfie.png') %>" alt="Card image cap">
+        <div class="card-content">
             <h5 class="card-title">Pole mapping</h5>
             <p class="card-text item-description">Cheap, ~10-40 ft high, good for gardens + yards, versatile.</p>
             <a href="//store.publiclab.org/collections/mapping-kits/products/pole-mapping-kit?variant=1259641040" class="btn btn-lg btn-outline-secondary" target="_blank">Build or get a kit <i class="fa fa-angle-double-right"></i></a>
