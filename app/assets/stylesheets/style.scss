@@ -39,11 +39,28 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   background-color: white;
   display: inline-block;
   .btn {
-      width: 45%;
+      width: 180px;
       font-size: 1em;
   }
+  @media (max-width: 1087px) {
+    .btn {
+      width: 180px;
+      margin: 10px;
+      padding: 10px;
+      font-size: 1em;
+    }
+    
+  }
+  @media (min-width: 998px) {
+    .btn {
+      width: 180px;
+      margin: 10px;
+      padding: 7px;
+      font-size: 1em;
+    }
+  }
   .btn.btn-default {
-    width: auto;
+    width: 180px;
   }
 }
 
@@ -105,6 +122,10 @@ It was originally created by Caroline Hadilaksono: http://www.hadilaksono.com
   font-size: 16px;
   font-weight: 600;
   color: #0056b3;
+}
+.container-fluid .row img {
+  width: 100%;
+  padding-bottom: 20px;
 }
 .map-details {
   display: block;
@@ -362,6 +383,13 @@ label small {
       margin: 10px;
       padding: 10px;
     }
+    .modal-buttons{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+    }
   }
 
 #open_id_form button {
@@ -369,4 +397,13 @@ label small {
   background-color: #ffffff;
   border: none;
   margin-right: 0.25rem;
+}
+@media(min-width: 992px) {
+  .offset {
+    margin-left: 33.333333%;
+  } 
+  .col{
+    flex: 0 0 33.333333%;
+    max-width: 41.333333%;
+  }
 }
