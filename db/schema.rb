@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_19_221926) do
+ActiveRecord::Schema.define(version: 2022_06_28_190519) do
 
   create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "map_id"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 2022_06_19_221926) do
     t.string "remember_token", limit: 40
     t.datetime "remember_token_expires_at"
     t.integer "status", default: 1, null: false
+    t.datetime "status_updated_at"
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 

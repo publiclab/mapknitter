@@ -299,4 +299,8 @@ class Map < ApplicationRecord
   def spam
     update!(status: Status::BANNED)
   end
+
+  def publish
+    update!(status: Status::NORMAL)
+  end
 end

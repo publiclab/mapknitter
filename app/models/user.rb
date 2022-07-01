@@ -65,6 +65,10 @@ class User < ApplicationRecord
   end
 
   def ban
-    update!(status: Status::BANNED)
+    update!({ status: Status::BANNED, status_updated_at: Time.now })
+  end
+
+  def unban
+    update!({ status: Status::NORMAL, status_updated_at: Time.now })
   end
 end
