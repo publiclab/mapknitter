@@ -23,20 +23,20 @@
     <!-- end banner -->
 
     <div class="row">
-        <div class= "text-block lead-text col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+        <div class= "text-block lead-text col offset col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             <h1>MapKnitter</h1>
             <p><i style="color:#aaa;">A Community Atlas hosted by <a href="https://publiclab.org">PublicLab</a></i></p>
             <p>Use a kite, balloon, or pole to take an aerial photo and tell your own visual story of a place. <a href="/about" class="alert-link">Learn more</a></p>
             <div class="modal-buttons">
             <a class="btn btn-primary btn-lg" href= 'https://store.publiclab.org/collections/mapping-kits'>
-                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:18px;color:white;margin-top:7px;margin-left:5px;"></i>
+                Get a mapping kit <i class="fa fa-angle-double-right fa-fw" style="font-size:12px;color:white;margin-top:7px;margin-left:5px;"></i>
             </a>
             <% if logged_in? %>
               <a class="btn btn-primary btn-lg" href="<%= new_map_url %>">
             <% else %>
               <a class="btn btn-primary btn-lg" href="" data-toggle="collapse" data-target="#anonymous-map">
             <% end %>
-            Make a map <i class="fa fa-plus fa-fw" style="font-size:12px;color:white;margin-top:10px;margin-left:5px;"></i>
+            Make a map <i class="fa fa-plus fa-fw" style="font-size:10px;color:white;margin-top:10px;margin-left:5px;"></i>
             </a>
             </div>
             <div class="alert alert-success">Read about the <a href="https://publiclab.org/mapknitter3">newly relaunched MapKnitter 3</a>!</div>
@@ -276,6 +276,7 @@
   justify-content: space-evenly;
   margin-bottom: 20px;
 }
+
 
 .modal-buttons a {
   display: flex; 
