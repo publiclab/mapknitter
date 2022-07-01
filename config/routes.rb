@@ -123,8 +123,15 @@ Mapknitter::Application.routes.draw do
 
   get '/warps/:map/:file(.:format)', to: redirect('https://archive.publiclab.org/warps/%{map}/%{file}.%{format}')
 
-  patch 'moderate/spam_map/:id' => 'spam#spam_map', as: 'spam_map'
-  patch 'moderate/batch_spam_map/:ids' => 'spam#batch_spam_map', as: 'batch_spam_map'
+  scope 'moderate', module: 'spam' do
+    %w(spam_map publish_map).each do |action|
+      patch action + '/:id', action: action, as: action
+    end
+
+    %w(batch_spam_maps batch_publish_maps).each do |action|
+      patch action + '/:ids', action: action, as: action
+    end
+  end
   
   # See how all your routes lay out with 'rails routes'
 

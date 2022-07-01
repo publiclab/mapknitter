@@ -98,10 +98,14 @@ class MapTest < ActiveSupport::TestCase
     assert maps.collect(&:name).include?('Saugus Landfill Incinerator')
   end
 
-  test 'should spam map' do
+  test 'should spam and publish map' do
     map = maps(:saugus)
     assert_equal Map::Status::NORMAL, map.status
+
     map.spam
     assert_equal Map::Status::BANNED, map.status
+    
+    map.publish
+    assert_equal Map::Status::NORMAL, map.status
   end
 end
