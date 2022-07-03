@@ -2,7 +2,7 @@
 require_relative '../config/environment'
 require 'simplecov'
 require 'codecov'
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
+# SimpleCov.formatter = SimpleCov::Formatter::Codecov
 SimpleCov.start
 
 require "rack_session_access/capybara"
