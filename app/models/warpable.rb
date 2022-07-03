@@ -19,7 +19,7 @@ class Warpable < ApplicationRecord
   belongs_to :map, optional: true
   belongs_to :user, optional: true
 
-  has_paper_trail on: %i(create update), only: %i(nodes)
+  has_paper_trail on: [:create, :update], only: :nodes
 
   # overriding JSON formatting for Leaflet.DistortableImage
   def as_json(options = {})
@@ -39,13 +39,13 @@ class Warpable < ApplicationRecord
       "id" => read_attribute(:id),
       "thumbnail_url" => image.url(:thumb),
       "delete_url" => image.url,
-      "delete_type" => "DELETE" }
+      "delete_type" => "DELETE", }
   end
 
   def fup_error_json
     { "name" => read_attribute(:image_filename),
       "size" => read_attribute(:image_size),
-      "error" => errors["base"] }
+      "error" => errors["base"], }
   end
 
   after_save :save_dimensions
@@ -135,14 +135,17 @@ class Warpable < ApplicationRecord
   # needs update for Paperclip!!
   require 'open-uri'
   attr_reader :url
+
   def url=(uri)
     nil if uri.blank?
 
-    io = (begin
-            URI.parse(uri).open
-          rescue StandardError
-            nil
-          end)
+    io = (
+      begin
+        URI.parse(uri).open
+    rescue StandardError
+      nil
+    end
+    )
     (class << io; self; end;).class_eval do
       define_method(:original_filename) { base_uri.path.split('/').last }
     end
