@@ -142,9 +142,9 @@ class Warpable < ApplicationRecord
     io = (
       begin
         URI.parse(uri).open
-    rescue StandardError
-      nil
-    end
+      rescue StandardError
+        nil
+      end
     )
     (class << io; self; end;).class_eval do
       define_method(:original_filename) { base_uri.path.split('/').last }
