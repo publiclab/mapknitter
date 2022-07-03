@@ -1,4 +1,4 @@
-SimpleCov.start 'rails' do
+SimpleCov.start('rails') do
   add_group 'Units', 'app/models'
   add_group 'Functionals', 'app/controllers'
   add_group 'Services', 'app/services'
