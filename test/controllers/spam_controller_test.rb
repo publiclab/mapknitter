@@ -301,4 +301,34 @@ class SpamControllerTest < ActionController::TestCase
     assert_equal '0 maps published and 0 authors unbanned.', flash[:notice]
     assert_redirected_to root_path
   end
+
+  test 'should batch-delete maps' do
+    @maps << maps(:yaya)
+    all_maps_count = Map.count
+
+    custom_setup(false)
+    session[:user_id] = 2
+    delete(:batch_delete_maps, params: { ids: @map_ids })
+    
+    assert_equal @maps.length, 2
+    assert_equal @maps.uniq.length, 2
+    assert_equal '2 maps deleted.', flash[:notice]
+    assert_redirected_to root_path
+    assert_equal Map.count, all_maps_count - 2
+  end
+
+  test 'should not batch-delete a duplicate map' do
+    @maps << maps(:cubbon)
+    all_maps_count = Map.count
+
+    custom_setup(false)
+    session[:user_id] = 2
+    delete(:batch_delete_maps, params: { ids: @map_ids })
+    
+    assert_equal @maps.length, 2
+    assert_equal @maps.uniq.length, 1
+    assert_equal '1 map deleted.', flash[:notice]
+    assert_redirected_to root_path
+    assert_equal Map.count, all_maps_count - 1
+  end
 end
