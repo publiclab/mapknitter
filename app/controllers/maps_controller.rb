@@ -112,7 +112,7 @@ class MapsController < ApplicationController
       flash[:notice] = 'Map deleted.'
       redirect_back(fallback_location: "/")
     else
-      flash[:error] = 'Only admins or map owners may delete maps.'
+      flash[:error] = 'Only admins, moderators, or map owners may delete maps.'
       redirect_to(@map)
     end
   end

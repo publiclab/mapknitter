@@ -159,12 +159,22 @@ class MapsControllerTest < ActionController::TestCase
     post(:destroy, params: { id: @map.slug })
 
     assert_redirected_to '/maps/' + @map.slug
-    assert_equal flash[:error], 'Only admins or map owners may delete maps.'
+    assert_equal flash[:error], 'Only admins, moderators, or map owners may delete maps.'
     assert_equal before_count, Map.count
   end
 
   test 'should delete map if owner' do
     session[:user_id] = 1
+    before_count = Map.count
+    post(:destroy, params: { id: @map.slug })
+
+    assert_redirected_to '/'
+    assert_not_equal before_count, Map.count
+    assert_equal flash[:notice], 'Map deleted.'
+  end
+
+  test 'should delete map if admin' do
+    session[:user_id] = 2
     before_count = Map.count
     post(:destroy, params: { id: @map.slug })
 

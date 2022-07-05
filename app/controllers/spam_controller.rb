@@ -77,4 +77,15 @@ class SpamController < ApplicationController
     flash[:notice] = helpers.pluralize(published_maps, 'map') + ' published and ' + helpers.pluralize(unbanned_authors, 'author') + ' unbanned.'
     redirect_back(fallback_location: root_path)
   end
+
+  def batch_delete_maps
+    deleted_maps = 0
+    params[:ids].split(',').uniq.each do |id|
+      map = Map.find(id)
+      map.destroy
+      deleted_maps += 1
+    end
+    flash[:notice] = helpers.pluralize(deleted_maps, 'map') + ' deleted.'
+    redirect_back(fallback_location: root_path)
+  end
 end

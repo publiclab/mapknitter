@@ -131,6 +131,10 @@ Mapknitter::Application.routes.draw do
     %w(batch_spam_maps batch_publish_maps).each do |action|
       patch action + '/:ids', action: action, as: action
     end
+
+    %w(batch_delete_maps).each do |action|
+      delete action + '/:ids', action: action, as: action
+    end
   end
   
   # See how all your routes lay out with 'rails routes'
