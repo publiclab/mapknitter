@@ -16,7 +16,7 @@ class TagsController < ApplicationController
     @tag = Tag.find_by_name(params[:id])
     @maps = @tag.maps.paginate(page: params[:page], per_page: 24)
     @title = "Maps tagged with ' #{@tag.name} '"
-    tag = Tag.where(name: 'featured').first # note that this is not a join table but the .maps method still works
+    tag = Tag.where(name: 'featured').first # NOTE: that this is not a join table but the .maps method still works
     @unpaginated = true
     @authors = User.where(login: tag.maps.collect(&:author)) if tag
     @authors ||= []

@@ -62,11 +62,11 @@ class Map < ApplicationRecord
   def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
     if tag.nil?
       Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon])
+                 minlat, maxlat, minlon, maxlon,])
     else
       Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon])
-         .joins(:tags).where("tags.name = ?", tag)
+                 minlat, maxlat, minlon, maxlon,])
+        .joins(:tags).where("tags.name = ?", tag)
     end
   end
 
@@ -91,10 +91,10 @@ class Map < ApplicationRecord
 
   def self.search(query)
     query = query.squeeze(' ').strip
-    Map.active
-       .where(['author LIKE ? OR name LIKE ?
-                OR location LIKE ? OR description LIKE ?',
-               "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%"])
+    Map.active.where([
+      'author LIKE ? OR name LIKE ? OR location LIKE ? OR description LIKE ?',
+      "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%",
+    ])
   end
 
   def self.featured
@@ -132,9 +132,10 @@ class Map < ApplicationRecord
   end
 
   def self.maps_nearby(lat:, lon:, dist:)
-    Map.active
-       .where(['lat>? AND lat<? AND lon>? AND lon<?',
-               lat - dist, lat + dist, lon - dist, lon + dist])
+    Map.active.where([
+      'lat>? AND lat<? AND lon>? AND lon<?',
+      lat - dist, lat + dist, lon - dist, lon + dist,
+    ])
   end
 
   def nodes
@@ -169,8 +170,7 @@ class Map < ApplicationRecord
     placed_warpables.each do |warpable|
       pxperms << 100.00 / warpable.cm_per_pixel if warpable.placed?
     end
-    average = (pxperms.inject { |sum, n| sum + n }) / pxperms.length
-    average
+    pxperms.sum / pxperms.length
   end
 
   def best_cm_per_pixel
@@ -202,7 +202,7 @@ class Map < ApplicationRecord
         res = 1 if res.zero? # let's not ever try to go for infinite resolution
         scales << res unless res.nil?
       end
-      total_sum = (scales.inject { |sum, n| sum + n }) if scales
+      total_sum = scales.sum unless scales.empty?
       average = total_sum / count if total_sum
       average
     else
