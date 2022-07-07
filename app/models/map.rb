@@ -205,8 +205,8 @@ class Map < ApplicationRecord
         res = 1 if res.zero? # let's not ever try to go for infinite resolution
         scales << res unless res.nil?
       end
-      total_sum = (scales.sum) if scales
-      average = (total_sum / count) if total_sum
+      total_sum = scales.sum unless scales.empty?
+      average = total_sum / count if total_sum
       average
     else
       0
