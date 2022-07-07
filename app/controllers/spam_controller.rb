@@ -24,7 +24,7 @@ class SpamController < ApplicationController
   include ModerationGuards
 
   before_action :require_login
-  before_action { logged_in_as(['admin', 'moderator'], 'moderate maps and users') }
+  before_action { logged_in_as(%w[admin moderator], 'moderate maps and users') }
 
   def spam_map
     @map = Map.find(params[:id])
