@@ -61,15 +61,12 @@ class Map < ApplicationRecord
 
   def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
     if tag.nil?
-      Map.where([
-        'lat > ? AND lat < ? AND lon > ? AND lon < ?',
-        minlat, maxlat, minlon, maxlon,
-      ])
+      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+                 minlat, maxlat, minlon, maxlon,])
     else
-      Map.where([
-        'lat > ? AND lat < ? AND lon > ? AND lon < ?',
-        minlat, maxlat, minlon, maxlon,
-      ]).joins(:tags).where("tags.name = ?", tag)
+      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+                 minlat, maxlat, minlon, maxlon,])
+        .joins(:tags).where("tags.name = ?", tag)
     end
   end
 
