@@ -9,7 +9,7 @@
 +---
 +
 +### 💡Format this Issue Into a First Timers Issue
-+This has been marked as a good candidate for becoming a **first-timers-only** issue [like these](https://code.publiclab.org/#r=all), meaning that it's **simple, self-contained**, and with some extra formatting✍️, could be a great entry point for a new contributor. If you're familiar enough with this code, please consider **reformatting it as a first-timers-only issue**, and then ping @publiclab/reviewers to get it labelled🏷. Or, if this is not your first time, **try to solve it yourself**🧑<U+200D>💻!
+This has been marked as a good candidate for becoming a **first-timers-only** issue [like these](https://code.publiclab.org/#r=all), meaning that it's **simple, self-contained**, and with some extra formatting✍️, could be a great entry point for a new contributor. If you're familiar enough with this code, please consider **reformatting it as a first-timers-only issue**, and then ping @publiclab/reviewers to get it labelled🏷. Or, if this is not your first time, **try to solve it yourself**🧑‍💻!
 +
 +****
 +
