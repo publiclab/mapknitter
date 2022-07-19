@@ -33,7 +33,7 @@ WORKDIR /app
 RUN apt-get clean && \
     apt-get autoremove -y
 
-ENV BUNDLER_VERSION=2.1.4
+ENV BUNDLER_VERSION=2.3.18
 RUN gem install --default bundler && \
     gem update --system && \
     bundle install
