@@ -43,7 +43,7 @@ group :dependencies do
   gem 'bootstrap-sass'
   gem 'sassc-rails'
   gem 'jquery-rails'
-  gem 'sprockets', '3.7.2'
+  gem 'sprockets', '4.1.1'
   gem 'sprockets-rails'
   gem 'sass', require: 'sass'
   gem 'autoprefixer-rails', '~> 10.4.7'
