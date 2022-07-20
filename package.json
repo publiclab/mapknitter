@@ -11,7 +11,7 @@
     "blueimp-file-upload": "blueimp/jQuery-File-Upload#~9.22.1",
     "blueimp-load-image": "blueimp/JavaScript-Load-Image#>=5.16.0",
     "blueimp-tmpl": "blueimp/JavaScript-Templates#2.5.4",
-    "bootstrap": "twbs/bootstrap#^4.5.2",
+    "bootstrap": "twbs/bootstrap#^5.2.0",
     "components-jqueryui": "components/jqueryui#^1.12.1",
     "decompress-zip": "0.2.2",
     "exif-js": "jseidelin/exif-js#*",

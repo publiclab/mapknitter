@@ -524,9 +524,10 @@ bootstrap@^3.4.1:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.1.tgz#c3a347d419e289ad11f4033e3c4132b87c081d72"
   integrity sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==
 
-bootstrap@twbs/bootstrap#^4.5.2:
-  version "4.5.2"
-  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/5f2480a90ab911babc53039835fe78c6fc12646d"
+bootstrap@twbs/bootstrap#^5.2.0:
+  version "5.2.0"
+  uid edf9c40956d19e6ab3f9151bfe0dfac6be06fa21
+  resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/edf9c40956d19e6ab3f9151bfe0dfac6be06fa21"
 
 brace-expansion@^1.1.7:
   version "1.1.11"
