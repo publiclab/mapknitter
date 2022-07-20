@@ -34,7 +34,7 @@ Mapknitter::Application.routes.draw do
   # Registered user pages:
   get 'register', to: 'users#create'
   get 'signup', to: 'users#new'
-  get 'profile', to: 'users#profile', id: 0
+  get 'profile', to: 'users#profile'
   get 'profile/:id', to: 'users#profile'
   get 'dashboard', to: 'users#dashboard'
   get 'authors', to: 'users#index'

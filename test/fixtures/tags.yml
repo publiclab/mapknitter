@@ -7,7 +7,7 @@ nice:
   user_id: 1
 
 featured:
-    name: featured
-    created_at: <%= Time.now %>
-    map_id: 3
-    user_id: 1
+  name: featured
+  created_at: <%= Time.now %>
+  map_id: 3
+  user_id: 1

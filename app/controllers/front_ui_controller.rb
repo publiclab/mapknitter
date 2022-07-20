@@ -10,7 +10,7 @@ class FrontUiController < ApplicationController
     # TODO: these could use optimization but are better than prev:
     tag = Tag.where(name: 'featured').first
     @mappers = if tag
-      User.where(login: tag.maps.collect(&:author))
+      User.where(login: tag.maps.collect(&:author), status: User::Status::NORMAL)
     else
       []
                end
@@ -29,7 +29,7 @@ class FrontUiController < ApplicationController
                       .page(params[:page])
                       .per_page(12)
     @nearby_mappers = User.where(login: Map.maps_nearby(lat: lat, lon: lon, dist: 10)
-                                           .collect(&:author))
+                                           .collect(&:author), status: User::Status::NORMAL)
                                            .paginate(page: params[:mappers], per_page: 12)
   end
 
@@ -52,7 +52,7 @@ class FrontUiController < ApplicationController
 
     @maps = Map.page(params[:page])
                .per_page(20)
-               .where('archived = ? and password = ? and location LIKE ?', false, '', "%#{@loc}%")
+               .where('status = ? and password = ? and location LIKE ?', Map::Status::NORMAL, '', "%#{@loc}%")
                .order('updated_at DESC')
                .group('maps.id')
 
@@ -64,11 +64,11 @@ class FrontUiController < ApplicationController
   def gallery
     @maps = Map.page(params[:page])
                .per_page(20)
-               .where(archived: false, password: '')
+               .where(status: Map::Status::NORMAL, password: '')
                .order('updated_at DESC')
                .group('maps.id')
 
-    @authors = User.where(login: Map.featured.collect(&:author))
+    @authors = User.where(login: Map.featured.collect(&:author), status: User::Status::NORMAL)
                                     .paginate(page: params[:mappers], per_page: 20)
   end
 end

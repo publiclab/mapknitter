@@ -57,7 +57,7 @@ class User < ApplicationRecord
   end
 
   def can_delete?(resource)
-    owns?(resource) || owns_map?(resource) || role == "admin"
+    owns?(resource) || owns_map?(resource) || can_moderate?
   end
 
   def can_edit?(resource)
@@ -70,5 +70,10 @@ class User < ApplicationRecord
 
   def unban
     update!({ status: Status::NORMAL, status_updated_at: Time.now })
+  end
+
+  # Permissions for viewing banned maps and users
+  def can_moderate?
+    role == 'admin' || role == 'moderator'
   end
 end

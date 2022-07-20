@@ -3,7 +3,7 @@ class FeedsController < ApplicationController
 
   def all
     # (Warpable.all + Map.all).sort_by(&:created_at)
-    @maps = Map.where(archived: false, password: '')
+    @maps = Map.where(status: 1, password: '')
                .joins(%i(user warpables))
                .group('maps.id')
                .order('id DESC')
@@ -24,10 +24,13 @@ class FeedsController < ApplicationController
   end
 
   def author
-    @maps = Map.where(author: params[:id], archived: false, password: '')
-               .order('id DESC')
-               .joins(:warpables)
-               .group('maps.id')
+    @maps = []
+    @author = User.find_by(login: params[:id], status: 1)
+    return @maps unless @author
+    @maps = Map.where(author: @author.login, status: 1, password: '')
+              .order('id DESC')
+              .joins(:warpables)
+              .group('maps.id')
     images = []
     @maps.each do |map|
       images += map.warpables
@@ -38,12 +41,12 @@ class FeedsController < ApplicationController
   end
 
   def tag
+    @maps = []
     @tag = Tag.find_by_name(params[:id])
+    return @maps unless @tag
     @maps = @tag.maps.paginate(page: params[:page], per_page: 24)
     render(layout: false, template: 'feeds/tag')
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
-  rescue NoMethodError
-    render(plain: "No maps with tag #{params[:id]}")
   end
 
   private
@@ -51,7 +54,7 @@ class FeedsController < ApplicationController
   def query
     @maps = Map.order(id: :desc)
                .limit(20)
-               .where(archived: false, password: '')
+               .where(status: 1, password: '')
                .joins(:warpables)
                .group('maps.id')
   end

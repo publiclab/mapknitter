@@ -48,7 +48,7 @@ class FrontUiControllerTest < ActionController::TestCase
 
   test 'should not display archived maps' do
     session[:user_id] = 1
-    @map.update(archived: true)
+    @map.update(archived: true, status: Map::Status::BANNED)
     get :gallery
     @maps = assigns(:maps)
 
