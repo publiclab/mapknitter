@@ -24,11 +24,8 @@ class FeedsController < ApplicationController
   end
 
   def author
-    @maps = []
-    @author = User.find_by(login: params[:id], status: 1)
-    return @maps unless @author
-
-    @maps = Map.where(author: @author.login, status: 1, password: '')
+    @author = User.find_by(login: params[:id], status: User::Status::NORMAL)
+    @maps = Map.where(author: @author&.login, status: Map::Status::NORMAL, password: '')
               .order('id DESC')
               .joins(:warpables)
               .group('maps.id')
@@ -42,11 +39,8 @@ class FeedsController < ApplicationController
   end
 
   def tag
-    @maps = []
     @tag = Tag.find_by_name(params[:id])
-    return @maps unless @tag
-
-    @maps = @tag.maps.paginate(page: params[:page], per_page: 24)
+    @maps = @tag ? @tag.maps.paginate(page: params[:page], per_page: 24) : []
     render(layout: false, template: 'feeds/tag')
     response.headers['Content-Type'] = 'application/xml; charset=utf-8'
   end
