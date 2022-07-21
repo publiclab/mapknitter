@@ -45,24 +45,6 @@ class SpamMgtTest < ApplicationSystemTestCase
     page.assert_selector('div.alert', text: 'This author has been banned')
     banner_text = find('small').text
     assert banner_text.include?('Banned')
-
-    # fill_in('map_name', with: 'New Haven Map')
-
-    # fill_in('map_location', with: 'New Haven')
-
-    # assert_selector('.ui-menu-item', text: 'New Haven, CT, USA') # if geocoding works
-
-    # # expect at least one result
-    # assert page.evaluate_script("$('.ui-menu-item').length >= 1")
-    
-    # find('.ui-menu-item').click
-
-    # click_on "Create map"
-
-    # assert_selector('h3#map_title', text: "New Haven Map")
-    
-    # assert page.evaluate_script("parseInt($('#map_lat').val()) == 41")
-    # assert page.evaluate_script("parseInt($('#map_lon').val()) == -72")
   end
 
 end

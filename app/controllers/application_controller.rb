@@ -67,13 +67,13 @@ class ApplicationController < ActionController::Base
   end
 
   def alert_and_redirect_if_banned
-    if (@map.anonymous? && @map.status != Map::Status::NORMAL && !(current_user&.can_moderate?))
-      return true
-    elsif (!@map.anonymous? && @map.user.status == User::Status::BANNED && !(current_user&.login == @map.user.login || current_user&.can_moderate?))
+    if @map.anonymous? && @map.status != Map::Status::NORMAL && !current_user&.can_moderate?
+      true
+    elsif !@map.anonymous? && @map.user.status == User::Status::BANNED && !(current_user&.login == @map.user.login || current_user&.can_moderate?)
       flash[:error] = 'The author of that map has been banned'
-      return true
-    elsif (!@map.anonymous? && @map.status != Map::Status::NORMAL && !(current_user&.login == @map.user.login || current_user&.can_moderate?))
-      return true
+      true
+    elsif !@map.anonymous? && @map.status != Map::Status::NORMAL && !(current_user&.login == @map.user.login || current_user&.can_moderate?)
+      true
     end
   end
 end
