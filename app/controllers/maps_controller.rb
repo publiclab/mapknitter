@@ -55,7 +55,7 @@ class MapsController < ApplicationController
 
   def show
     if alert_and_redirect_if_banned
-      redirect_to('/') and return
+      redirect_to('/')
     else
       @map.zoom ||= 12
       @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)

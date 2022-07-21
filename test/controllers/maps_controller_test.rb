@@ -68,6 +68,16 @@ class MapsControllerTest < ActionController::TestCase
     assert_template 'front_ui/gallery'
   end
 
+  test 'should exclude spammed maps from search results' do
+    maps(:nairobi).spam
+    get :search, params: { q: 'Kenya' }
+    @maps = assigns(:maps)
+
+    assert_not @maps.collect(&:name).include?('Nairobi City')
+    assert_response :success
+    assert_template 'front_ui/gallery'
+  end
+
   test 'query should be at least 3 chars long' do
     get :search, params: { q: 'ce' }
     msg = 'Invalid Query: non white-space character count is less than 3'
@@ -183,15 +193,49 @@ class MapsControllerTest < ActionController::TestCase
     assert_equal flash[:notice], 'Map deleted.'
   end
 
-  test "should get show" do
+  test "should show a single map if not spammed" do
     @map = maps(:yaya)
     map = maps(:nairobi)
     get(:show, params: { id: @map.slug })
+
     assert_response :success
     assert_not_nil assigns(:map)
     assert assigns(:users)
     assert assigns(:maps)
     assert_includes assigns(:maps), map
+  end
+
+  test "should redirect to home and not show a single map if spammed" do
+    @map.spam
+    get(:show, params: { id: @map.slug })
+
+    assert_not_nil assigns(:map)
+    assert_response :redirect
+    assert_nil assigns(:users)
+    assert_nil assigns(:maps)
+  end
+
+  test "should redirect to home and not show a single map if its author has been banned" do
+    @map.user.ban
+    get(:show, params: { id: @map.slug })
+
+    assert_not_nil assigns(:map)
+    assert_response :redirect
+    assert_nil assigns(:users)
+    assert_nil assigns(:maps)
+    assert_equal 'The author of that map has been banned', flash[:error]
+  end
+
+  test "should redirect to home and not show a single anonymous map if spammed and the viewer is not an admin" do
+    @map = maps(:yaya)
+    @map.spam
+    session[:user_id] = 1
+    get(:show, params: { id: @map.slug })
+
+    assert_not_nil assigns(:map)
+    assert_response :redirect
+    assert_nil assigns(:users)
+    assert_nil assigns(:maps)
   end
 
   test 'should archive map' do

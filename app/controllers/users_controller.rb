@@ -3,17 +3,14 @@ class UsersController < ApplicationController
 
   def profile
     params[:id] = current_user.login if logged_in? && params[:id].nil?
-    user = User.find_by_login(params[:id])
-    maps = Map.where(user_id: user.id, status: Map::Status::NORMAL)
+    @user = User.find_by(login: params[:id])
+    @maps = Map.where(user_id: @user.id, status: Map::Status::NORMAL)
             .paginate(page: params[:page], per_page: 24)
-    if (user.status == User::Status::NORMAL)
-      @user = user
-      @maps = maps
-    elsif (user.status == User::Status::BANNED)
+    return if @user.status == User::Status::NORMAL
+
+    if @user.status == User::Status::BANNED
       if current_user&.can_moderate?
         flash.now[:error] = 'This author has been banned'
-        @user = user
-        @maps = maps
       else
         flash[:error] = 'That author has been banned'
         redirect_to('/')

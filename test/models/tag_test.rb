@@ -17,4 +17,10 @@ class TagTest < ActiveSupport::TestCase
     assert_not_nil tag.maps.last.created_at
   end
 
+  test 'should find all maps with the provided tag' do
+    @tag = Tag.find_by_name('featured')
+    @maps = @tag.maps
+    assert_equal 1, @maps.length
+  end
+
 end

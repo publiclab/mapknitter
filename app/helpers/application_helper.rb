@@ -3,12 +3,12 @@ module ApplicationHelper
     user_id = session[:user_id]
     if user_id
       begin
-        @user = User.find(user_id)
+        @current_user = User.find(user_id)
       rescue StandardError
-        @user = nil
+        @current_user = nil
       end
     else
-      @user = nil
+      @current_user = nil
     end
   end
 

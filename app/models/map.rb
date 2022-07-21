@@ -56,17 +56,20 @@ class Map < ApplicationRecord
   end
 
   def self.anonymous
-    Map.where(user_id: 0)
+    Map.active.where(user_id: 0)
   end
 
   def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
     if tag.nil?
-      Map.active.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon,])
+      Map.active.where(
+        ['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+         minlat, maxlat, minlon, maxlon,]
+      )
     else
-      Map.active.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon,])
-        .joins(:tags).where("tags.name = ?", tag)
+      Map.active.where(
+        ['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+         minlat, maxlat, minlon, maxlon,]
+      ).joins(:tags).where("tags.name = ?", tag)
     end
   end
 

@@ -22,12 +22,12 @@ class ApplicationController < ActionController::Base
       begin
         u = User.find(user_id)
         cookies.signed["user_id"] = u.id
-        @user = u
+        @current_user = u
       rescue StandardError
-        @user = nil
+        @current_user = nil
       end
     else
-      @user = nil
+      @current_user = nil
     end
   end
 
