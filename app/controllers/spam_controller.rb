@@ -5,9 +5,14 @@ class SpamController < ApplicationController
       map.spam unless map.status == Map::Status::BANNED
     end
 
-    def check_and_ban(map)
-      # check and ban only unbanned non-anonymous authors
-      map.user.ban unless map.anonymous? || map.user.status == User::Status::BANNED
+    def check_and_ban(resource, type) # toggle between directly banning a user or banning them via their map
+      if type == 'map'
+        # check and ban a map's author as long as the author is unbanned and non-anonymous
+        resource.user.ban unless resource.anonymous? || resource.user.status == User::Status::BANNED
+      elsif type == 'user'
+        # check and ban only unbanned authors
+        resource.ban if resource.status != User::Status::BANNED
+      end
     end
 
     def check_and_publish(map)
@@ -30,7 +35,7 @@ class SpamController < ApplicationController
     @map = Map.find(params[:id])
     if check_and_spam(@map)
       notice_text = 'Map marked as spam.'
-      notice_text.chop! << ' and author banned.' if check_and_ban(@map)
+      notice_text.chop! << ' and author banned.' if check_and_ban(@map, 'map')
     else
       notice_text = 'Map already marked as spam.'
     end
@@ -45,7 +50,7 @@ class SpamController < ApplicationController
       map = Map.find(id)
       if check_and_spam(map)
         spammed_maps += 1
-        banned_authors += 1 if check_and_ban(map)
+        banned_authors += 1 if check_and_ban(map, 'map')
       end
     end
     flash[:notice] = helpers.pluralize(spammed_maps, 'map') + ' spammed and ' + helpers.pluralize(banned_authors, 'author') + ' banned.'
@@ -86,6 +91,28 @@ class SpamController < ApplicationController
       deleted_maps += 1
     end
     flash[:notice] = helpers.pluralize(deleted_maps, 'map') + ' deleted.'
+    redirect_back(fallback_location: root_path)
+  end
+
+  def ban_user
+    @user = User.find(params[:id])
+    notice_text = check_and_ban(@user, 'user') ? 'Author banned.' : 'Author already banned.'
+    flash[:notice] = notice_text
+    redirect_back(fallback_location: root_path)
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = 'Failed to ban as the user is either anonymous or does not exist on MapKnitter.'
+    redirect_back(fallback_location: root_path)
+  end
+
+  def batch_ban_users
+    banned_authors = 0
+    params[:ids].split(',').uniq.each do |id|
+      author = User.find_by_id(id)
+      if author && check_and_ban(author, 'user')
+        banned_authors += 1
+      end
+    end
+    flash[:notice] = helpers.pluralize(banned_authors, 'author') + ' banned.'
     redirect_back(fallback_location: root_path)
   end
 end

@@ -21,4 +21,12 @@ class RoutesTest < ActionDispatch::IntegrationTest
   test "test batch-delete-maps route" do
     assert_routing({ path: '/moderate/batch_delete_maps/3,4', method: :delete }, { controller: 'spam', action: 'batch_delete_maps', ids: '3,4' })
   end
+
+  test "test single-ban-user route" do
+    assert_routing({ path: '/moderate/ban_user/1', method: :patch }, { controller: 'spam', action: 'ban_user', id: '1' })
+  end
+
+  test "test batch-ban-users route" do
+    assert_routing({ path: '/moderate/batch_ban_users/1,2', method: :patch }, { controller: 'spam', action: 'batch_ban_users', ids: '1,2' })
+  end
 end
