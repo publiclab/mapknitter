@@ -10,7 +10,7 @@ class SpamControllerTest < ActionController::TestCase
 
   def maps_custom_setup(spam_maps)
     if spam_maps
-      @maps.collect { |map|
+      @maps.uniq.collect { |map|
         map.spam
         map.user.ban
       }
@@ -18,7 +18,12 @@ class SpamControllerTest < ActionController::TestCase
     @map_ids = @maps.collect(&:id).join(',')
   end
 
-  def users_custom_setup
+  def users_custom_setup(ban_users)
+    if ban_users
+      @users.uniq.collect { |user|
+        user.ban
+      }
+    end
     @user_ids = @users.collect(&:id).join(',')
   end 
 
@@ -338,7 +343,7 @@ class SpamControllerTest < ActionController::TestCase
     assert_equal Map.count, all_maps_count - 1
   end
 
-  test 'should ban a user' do
+  test 'should ban an unbanned user' do
     session[:user_id] = 2
     assert_equal @user.status, User::Status::NORMAL
 
@@ -374,7 +379,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-ban users' do
     @users << @user
-    users_custom_setup
+    users_custom_setup(false)
 
     session[:user_id] = 2
     patch(:batch_ban_users, params: { ids: @user_ids })
@@ -388,7 +393,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should not batch-ban a duplicate user' do
     @users << users(:chris)
-    users_custom_setup
+    users_custom_setup(false)
 
     session[:user_id] = 2
     patch(:batch_ban_users, params: { ids: @user_ids })
@@ -401,10 +406,9 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not batch-ban already-banned users' do
-    @users[0].ban
-    users_custom_setup
+    users_custom_setup(true)
 
-    assert_equal User::Status::BANNED, @users[0].status
+    assert @users.uniq.one? { |user| user.status == User::Status::BANNED }
 
     session[:user_id] = 2
     patch(:batch_ban_users, params: { ids: @user_ids })
@@ -412,6 +416,79 @@ class SpamControllerTest < ActionController::TestCase
     assert_equal 1, @maps.length
     assert_equal 1, @maps.uniq.length
     assert_equal '0 authors banned.', flash[:notice]
+    assert_redirected_to root_path
+  end
+
+  test 'should unban a banned user' do
+    @user.ban
+    assert_equal User::Status::BANNED, @user.status
+
+    session[:user_id] = 2
+    patch(:unban_user, params: { id: @user.id })
+    @user.reload
+
+    assert_equal 'Author unbanned.', flash[:notice]
+    assert_equal User::Status::NORMAL, @user.status
+    assert_redirected_to root_path
+  end
+
+  test 'should not unban a non-existent author' do
+    session[:user_id] = 2
+    patch(:unban_user, params: { id: 22 })
+    
+    assert_equal 'Failed to unban as the user is either anonymous or does not exist on MapKnitter.', flash[:error]
+    assert_redirected_to root_path
+  end
+
+  test "should not unban a user that hasn't been banned in the first place" do
+    assert_equal User::Status::NORMAL, @user.status
+
+    session[:user_id] = 2
+    patch(:unban_user, params: { id: @user.id })
+
+    assert_equal 'Only banned authors can be unbanned.', flash[:notice]
+    assert_redirected_to root_path
+  end
+
+  test 'should batch-unban users' do
+    @users << @user
+    users_custom_setup(true)
+
+    session[:user_id] = 2
+    patch(:batch_unban_users, params: { ids: @user_ids })
+    
+    assert_equal 2, @users.length
+    assert_equal 2, @users.uniq.length
+    assert_equal '2 authors unbanned.', flash[:notice]
+    assert @users.all? { |user| user.reload.status == User::Status::NORMAL }
+    assert_redirected_to root_path
+  end
+
+  test 'should not batch-unban a duplicate user' do
+    @users << users(:chris)
+    users_custom_setup(true)
+
+    session[:user_id] = 2
+    patch(:batch_unban_users, params: { ids: @user_ids })
+    
+    assert_equal 2, @users.length
+    assert_equal 1, @users.uniq.length
+    assert_equal '1 author unbanned.', flash[:notice]
+    assert @users.uniq.one? { |user| user.reload.status == User::Status::NORMAL }
+    assert_redirected_to root_path
+  end
+
+  test 'should not batch-unban unbanned users' do
+    users_custom_setup(false)
+
+    assert @users.uniq.one? { |user| user.status == User::Status::NORMAL }
+
+    session[:user_id] = 2
+    patch(:batch_unban_users, params: { ids: @user_ids })
+    
+    assert_equal 1, @maps.length
+    assert_equal 1, @maps.uniq.length
+    assert_equal '0 authors unbanned.', flash[:notice]
     assert_redirected_to root_path
   end
 end
