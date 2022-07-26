@@ -8,7 +8,7 @@ class SpamControllerTest < ActionController::TestCase
     @users = [users(:chris)]
   end
 
-  def maps_custom_setup(spam_maps)
+  def maps_custom_setup(spam_maps: true)
     if spam_maps
       @maps.uniq.collect { |map|
         map.spam
@@ -18,7 +18,7 @@ class SpamControllerTest < ActionController::TestCase
     @map_ids = @maps.collect(&:id).join(',')
   end
 
-  def users_custom_setup(ban_users)
+  def users_custom_setup(ban_users: true)
     if ban_users
       @users.uniq.collect { |user|
         user.ban
@@ -37,7 +37,7 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not moderate maps if user is not an admin or a moderator' do
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 1
     patch(:batch_spam_maps, params: { ids: @map_ids })
 
@@ -99,7 +99,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-spam maps and ban non-anonymous authors' do
     @maps << maps(:village)
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     patch(:batch_spam_maps, params: { ids: @map_ids })
     
@@ -113,7 +113,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-spam maps and not ban anonymous authors' do
     @maps << maps(:yaya)
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     patch(:batch_spam_maps, params: { ids: @map_ids })
     
@@ -127,7 +127,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should not batch-spam a duplicate map' do
     @maps << maps(:cubbon)
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     patch(:batch_spam_maps, params: { ids: @map_ids })
     
@@ -140,7 +140,7 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not batch-spam already-spammed maps' do
-    maps_custom_setup(true)
+    maps_custom_setup
     assert_equal 0, @maps[0].status
     assert_equal 0, @maps[0].user.status
 
@@ -155,7 +155,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-spam maps and skip banning of authors already banned' do
     @maps << @map
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     patch(:batch_spam_maps, params: { ids: @map_ids })
     
@@ -228,7 +228,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-publish maps and unban non-anonymous banned authors' do
     @maps << maps(:village)
-    maps_custom_setup(true)
+    maps_custom_setup
 
     assert @maps.all? { |map| map.status == 0 }
     assert @maps.all? { |map| map.user.status == 0 }
@@ -251,7 +251,7 @@ class SpamControllerTest < ActionController::TestCase
 
     assert @maps.all? { |map| map.status == 0 }
 
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     patch(:batch_publish_maps, params: { ids: @map_ids })
     
@@ -265,7 +265,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-publish maps and skip banning of authors already unbanned' do
     @maps << @map
-    maps_custom_setup(true)
+    maps_custom_setup
 
     assert @maps.all? { |map| map.status == 0 }
     assert @maps.all? { |map| map.user.status == 0 }
@@ -283,7 +283,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should not batch-publish a duplicate map' do
     @maps << maps(:cubbon)
-    maps_custom_setup(true)
+    maps_custom_setup
 
     assert @maps.uniq.one? { |map| map.status == 0 }
     assert @maps.uniq.one? { |map| map.user.status == 0 }
@@ -300,7 +300,7 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not batch-publish already-published maps' do
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     assert_equal 1, @maps[0].status
     assert_equal 1, @maps[0].user.status
 
@@ -317,7 +317,7 @@ class SpamControllerTest < ActionController::TestCase
     @maps << maps(:yaya)
     all_maps_count = Map.count
 
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     delete(:batch_delete_maps, params: { ids: @map_ids })
     
@@ -332,7 +332,7 @@ class SpamControllerTest < ActionController::TestCase
     @maps << maps(:cubbon)
     all_maps_count = Map.count
 
-    maps_custom_setup(false)
+    maps_custom_setup(spam_maps: false)
     session[:user_id] = 2
     delete(:batch_delete_maps, params: { ids: @map_ids })
     
@@ -379,7 +379,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-ban users' do
     @users << @user
-    users_custom_setup(false)
+    users_custom_setup(ban_users: false)
 
     session[:user_id] = 2
     patch(:batch_ban_users, params: { ids: @user_ids })
@@ -393,7 +393,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should not batch-ban a duplicate user' do
     @users << users(:chris)
-    users_custom_setup(false)
+    users_custom_setup(ban_users: false)
 
     session[:user_id] = 2
     patch(:batch_ban_users, params: { ids: @user_ids })
@@ -406,7 +406,7 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not batch-ban already-banned users' do
-    users_custom_setup(true)
+    users_custom_setup
 
     assert @users.uniq.one? { |user| user.status == User::Status::BANNED }
 
@@ -452,7 +452,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should batch-unban users' do
     @users << @user
-    users_custom_setup(true)
+    users_custom_setup
 
     session[:user_id] = 2
     patch(:batch_unban_users, params: { ids: @user_ids })
@@ -466,7 +466,7 @@ class SpamControllerTest < ActionController::TestCase
 
   test 'should not batch-unban a duplicate user' do
     @users << users(:chris)
-    users_custom_setup(true)
+    users_custom_setup
 
     session[:user_id] = 2
     patch(:batch_unban_users, params: { ids: @user_ids })
@@ -479,7 +479,7 @@ class SpamControllerTest < ActionController::TestCase
   end
 
   test 'should not batch-unban unbanned users' do
-    users_custom_setup(false)
+    users_custom_setup(ban_users: false)
 
     assert @users.uniq.one? { |user| user.status == User::Status::NORMAL }
 
