@@ -124,11 +124,11 @@ Mapknitter::Application.routes.draw do
   get '/warps/:map/:file(.:format)', to: redirect('https://archive.publiclab.org/warps/%{map}/%{file}.%{format}')
 
   scope 'moderate', module: 'spam' do
-    %w(spam_map publish_map ban_user).each do |action|
+    %w(spam_map publish_map ban_user unban_user).each do |action|
       patch action + '/:id', action: action, as: action
     end
 
-    %w(batch_spam_maps batch_publish_maps batch_ban_users).each do |action|
+    %w(batch_spam_maps batch_publish_maps batch_ban_users batch_unban_users).each do |action|
       patch action + '/:ids', action: action, as: action
     end
 

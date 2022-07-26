@@ -20,9 +20,14 @@ class SpamController < ApplicationController
       map.publish unless map.status == Map::Status::NORMAL
     end
 
-    def check_and_unban(map)
-      # check and unban only banned non-anonymous authors
-      map.user.unban unless map.anonymous? || map.user.status != User::Status::BANNED
+    def check_and_unban(resource, type) # toggle between directly unbanning a user or unbanning them via their map
+      if type == 'map'
+        # check and unban a map's author as long as the author is banned and non-anonymous
+        resource.user.unban unless resource.anonymous? || resource.user.status != User::Status::BANNED
+      elsif type == 'user'
+        # check and unban only banned authors
+        resource.unban if resource.status == User::Status::BANNED
+      end
     end
   end
 
@@ -61,7 +66,7 @@ class SpamController < ApplicationController
     @map = Map.find(params[:id])
     if check_and_publish(@map)
       notice_text = 'Map published.'
-      notice_text.chop! << ' and author unbanned.' if check_and_unban(@map)
+      notice_text.chop! << ' and author unbanned.' if check_and_unban(@map, 'map')
     else
       notice_text = 'Map already published.'
     end
@@ -76,7 +81,7 @@ class SpamController < ApplicationController
       map = Map.find(id)
       if check_and_publish(map)
         published_maps += 1
-        unbanned_authors += 1 if check_and_unban(map)
+        unbanned_authors += 1 if check_and_unban(map, 'map')
       end
     end
     flash[:notice] = helpers.pluralize(published_maps, 'map') + ' published and ' + helpers.pluralize(unbanned_authors, 'author') + ' unbanned.'
@@ -113,6 +118,28 @@ class SpamController < ApplicationController
       end
     end
     flash[:notice] = helpers.pluralize(banned_authors, 'author') + ' banned.'
+    redirect_back(fallback_location: root_path)
+  end
+
+  def unban_user
+    @user = User.find(params[:id])
+    notice_text = check_and_unban(@user, 'user') ? 'Author unbanned.' : 'Only banned authors can be unbanned.'
+    flash[:notice] = notice_text
+    redirect_back(fallback_location: root_path)
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = 'Failed to unban as the user is either anonymous or does not exist on MapKnitter.'
+    redirect_back(fallback_location: root_path)
+  end
+
+  def batch_unban_users
+    unbanned_authors = 0
+    params[:ids].split(',').uniq.each do |id|
+      author = User.find_by_id(id)
+      if author && check_and_unban(author, 'user')
+        unbanned_authors += 1
+      end
+    end
+    flash[:notice] = helpers.pluralize(unbanned_authors, 'author') + ' unbanned.'
     redirect_back(fallback_location: root_path)
   end
 end
