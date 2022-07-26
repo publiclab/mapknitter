@@ -2,6 +2,11 @@ require 'test_helper'
 
 class MapTest < ActiveSupport::TestCase
 
+  def custom_setup
+    @map = maps(:saugus)
+    @map.spam
+  end
+
   test 'should not have empty default attributes' do
     assert_not_nil Map.bbox(0,0,90,180)
     assert_not_nil Map.authors
@@ -88,18 +93,34 @@ class MapTest < ActiveSupport::TestCase
     assert map.anonymous?
   end
 
-  test 'filter bbox with tag if present' do
+  test 'should filter bbox with tag if present' do
     maps =  Map.bbox(-5,35,0,40,'featured')
     assert maps.collect(&:name).include?('Nairobi City')
   end
 
-  test 'bbox without tag returns results' do
+  test 'should return bbox without tag results' do
     maps =  Map.bbox(40,-80,50,-60)
     assert maps.collect(&:name).include?('Saugus Landfill Incinerator')
   end
 
+  test 'should exclude spammed maps from bbox results' do
+    custom_setup
+    maps =  Map.bbox(40,-80,50,-60)
+    assert_not maps.collect(&:name).include?('Saugus Landfill Incinerator')
+  end
+
+  test 'should fetch most recent maps excluding spammed maps' do
+    maps =  Map.new_maps
+    assert maps.collect(&:name).include?('Saugus Landfill Incinerator')
+
+    custom_setup
+
+    maps =  Map.new_maps
+    assert_not maps.collect(&:name).include?('Saugus Landfill Incinerator')
+  end
+
   test 'should spam and publish map' do
-    map = maps(:saugus)
+    map = maps(:cubbon)
     assert_equal Map::Status::NORMAL, map.status
 
     map.spam

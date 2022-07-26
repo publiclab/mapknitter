@@ -5,6 +5,7 @@
     <% if @user.maps %> (<%= @maps.length %> maps)<% end %>
     <small>
     | <%= @user.role %>
+    <% if @user.status == 0 %> | <i class="fa fa-ban" style="color:#a00;"></i> <%= 'Banned' %><% end %>
     | <a href="/feeds/author/<%= @user.login %>">RSS</a>
     </small>
   </h2>

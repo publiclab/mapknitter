@@ -30,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
     )
   end
 
-  test 'should edit and delete map' do
+  test 'should confirm if user can edit and delete map' do
     user = users(:quentin)
     map = maps(:saugus)
     assert user.owns?(map)
@@ -65,6 +65,14 @@ class UserTest < ActiveSupport::TestCase
     user.unban
     assert_equal User::Status::NORMAL, user.status
     assert user.status_updated_at.to_f >= old_time.to_f
+  end
+
+  test 'should confirm if user can moderate' do
+    admin = users(:admin)
+    assert admin.can_moderate?
+
+    user = users(:quentin)
+    assert_not user.can_moderate?
   end
 
   # def test_should_authenticate_user

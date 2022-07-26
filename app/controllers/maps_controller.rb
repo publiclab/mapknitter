@@ -54,19 +54,23 @@ class MapsController < ApplicationController
   end
 
   def show
-    @map.zoom ||= 12
-    @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
+    if alert_and_redirect_if_banned
+      redirect_to('/')
+    else
+      @map.zoom ||= 12
+      @maps = Map.maps_nearby(lat: @map.lat, lon: @map.lon, dist: 10)
                .where.not(id: @map.id)
                .sample(4)
-    @unpaginated = true
-    @users = @map.authors
-    render(layout: 'application')
+      @unpaginated = true
+      @users = @map.authors
+      render(layout: 'application')
+    end
   end
 
   def archive
     if logged_in? && current_user.can_delete?(@map)
       @map.archived = true
-      @map.status = 0
+      @map.status = Map::Status::BANNED
       if @map.save
         flash[:notice] = 'Archived map.'
       else
@@ -164,7 +168,7 @@ class MapsController < ApplicationController
   # list by license
   def license
     @title = "Maps licensed '#{params[:id]}'"
-    @maps = Map.where(password: '', license: params[:id])
+    @maps = Map.where(password: '', license: params[:id], status: Map::Status::NORMAL)
                .order('updated_at DESC')
                .paginate(page: params[:page], per_page: 24)
     render('maps/index', layout: 'application')
@@ -187,7 +191,7 @@ class MapsController < ApplicationController
         @maps = Map.featured
                    .paginate(page: params[:page], per_page: 24)
                    .except(:styles, :email)
-        @authors = User.where(login: Map.featured.collect(&:author))
+        @authors = User.where(login: Map.featured.collect(&:author), status: User::Status::NORMAL)
                                      .paginate(page: params[:mappers], per_page: 20)
         format.html { render('front_ui/gallery', layout: 'application') }
       else

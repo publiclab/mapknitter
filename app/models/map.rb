@@ -31,7 +31,7 @@ class Map < ApplicationRecord
   belongs_to :user, optional: true
 
   has_many :warpables
-  scope :active, -> { where(archived: false) }
+  scope :active, -> { where(status: Status::NORMAL) }
   scope :has_user, -> { where('user_id != ?', 0) }
 
   def validate
@@ -56,17 +56,20 @@ class Map < ApplicationRecord
   end
 
   def self.anonymous
-    Map.where(user_id: 0)
+    Map.active.where(user_id: 0)
   end
 
   def self.bbox(minlat, minlon, maxlat, maxlon, tag = nil)
     if tag.nil?
-      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon,])
+      Map.active.where(
+        ['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+         minlat, maxlat, minlon, maxlon,]
+      )
     else
-      Map.where(['lat > ? AND lat < ? AND lon > ? AND lon < ?',
-                 minlat, maxlat, minlon, maxlon,])
-        .joins(:tags).where("tags.name = ?", tag)
+      Map.active.where(
+        ['lat > ? AND lat < ? AND lon > ? AND lon < ?',
+         minlat, maxlat, minlon, maxlon,]
+      ).joins(:tags).where("tags.name = ?", tag)
     end
   end
 
@@ -83,7 +86,7 @@ class Map < ApplicationRecord
   end
 
   def self.authors(limit = 50)
-    Map.where(archived: false, password: '')
+    Map.where(status: Status::NORMAL, password: '')
        .limit(limit)
        .order("maps.id DESC")
        .collect(&:author)
@@ -98,22 +101,22 @@ class Map < ApplicationRecord
   end
 
   def self.featured
-    Map.joins(:warpables)
+    Map.active.joins(:warpables)
        .select('maps.*, count(maps.id) as image_count')
        .group('warpables.map_id')
        .order('image_count DESC')
   end
 
   def self.new_maps
-    Map.where(['password = "" AND archived = "false"'])
+    Map.where(status: Status::NORMAL, password: '')
       .order('created_at DESC')
       .limit(12)
   end
 
   def self.map
-    Map.where(archived: false, password: '')
-       .select('author, maps.name, lat, lon, slug, archived, password,
-               users.login as user_login')
+    Map.where(status: Status::NORMAL, password: '')
+       .select('author, maps.name, lat, lon, slug, archived, maps.status as map_status,
+        password, users.login as user_login')
        .joins(:warpables, :user)
        .group('maps.id')
   end
@@ -127,7 +130,7 @@ class Map < ApplicationRecord
 
     author_counts.map do |a|
       user = User.find(a.user_id)
-      { user: user, count: a.maps_count, location: user.maps.first.location }
+      { user: user, count: a.maps_count, location: user.maps.first.location } if user.status = Status::NORMAL
     end
   end
 
@@ -158,7 +161,7 @@ class Map < ApplicationRecord
   def nearby_maps(dist)
     return [] if lat.to_f == 0.0 || lon.to_f == 0.0
 
-    Map.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
+    Map.active.where('id != ? AND lat > ? AND lat < ? AND lon > ? AND lon < ?',
       id, lat - dist, lat + dist, lon - dist, lon + dist)
       .limit(10)
   end

@@ -7,6 +7,6 @@ class Tag < ApplicationRecord
   validates_presence_of :map_id, on: :create, message: "can't be blank"
 
   def maps
-    Map.where(id: Tag.where(name: name).collect(&:map_id).uniq)
+    Map.where(id: Tag.where(name: name).collect(&:map_id).uniq, status: Map::Status::NORMAL)
   end
 end

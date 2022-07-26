@@ -22,12 +22,12 @@ class ApplicationController < ActionController::Base
       begin
         u = User.find(user_id)
         cookies.signed["user_id"] = u.id
-        @user = u
+        @current_user = u
       rescue StandardError
-        @user = nil
+        @current_user = nil
       end
     else
-      @user = nil
+      @current_user = nil
     end
   end
 
@@ -63,6 +63,17 @@ class ApplicationController < ActionController::Base
 
     params[:tags].tr(' ', ',').split(',').each do |tagname|
       map.add_tag(tagname.strip, current_user)
+    end
+  end
+
+  def alert_and_redirect_if_banned
+    if @map.anonymous? && @map.status != Map::Status::NORMAL && !current_user&.can_moderate?
+      true
+    elsif !@map.anonymous? && @map.user.status == User::Status::BANNED && !(current_user&.login == @map.user.login || current_user&.can_moderate?)
+      flash[:error] = 'The author of that map has been banned'
+      true
+    elsif !@map.anonymous? && @map.status != Map::Status::NORMAL && !(current_user&.login == @map.user.login || current_user&.can_moderate?)
+      true
     end
   end
 end
