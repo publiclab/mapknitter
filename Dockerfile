@@ -18,7 +18,7 @@ RUN apt-get update -qq && apt-get install --allow-unauthenticated -y --no-instal
 # Configure ImageMagick
 COPY ./nolimit.xml /etc/ImageMagick-6/policy.xml
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y npm
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y nodejs
 RUN npm install -g yarn
 
 # See https://github.com/instructure/canvas-lms/issues/1404#issuecomment-461023483 and
