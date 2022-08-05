@@ -29,7 +29,7 @@ Nothing. This issue is meant to welcome you to Open Source :) We are happy to wa
 - [ ] 🙋 **Claim this issue**: Claim the issue by commenting. If someone else has claimed it, ask if they've opened a pull request already and if they're stuck -- maybe you can help them solve a problem or move it along!
 <details>
   <summary>💡 <i>Learn how to claim</i> 🙋</summary>
- <h3>Claiming an issue</h3>
+  <h3>Claiming an issue</h3>
   <p>Unless the issue is marked as reserved for someone, you can just say "I'd like to try this!" and then you've claimed it - no need to wait for someone to assign it to you. Just be sure you link your pull request (PR) to this issue so we can see where your solution is.</p>
   <p>And open one early if possible - even before you've completed it with additional commits - and others can help you figure out any issues you may face.</p>
 </details>
