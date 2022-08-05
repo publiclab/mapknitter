@@ -76,4 +76,9 @@ class ApplicationController < ActionController::Base
       true
     end
   end
+
+  def paginate_results(results)
+    params[:limit] ||= 30
+    results.page(params[:page]).per_page(params[:limit].to_i)
+  end
 end

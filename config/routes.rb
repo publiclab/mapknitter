@@ -135,6 +135,10 @@ Mapknitter::Application.routes.draw do
     %w(batch_delete_maps).each do |action|
       delete action + '/:ids', action: action, as: action
     end
+
+    %w(filter_maps).each do |action|
+      get action + '/:type', action: action, as: action
+    end
   end
   
   # See how all your routes lay out with 'rails routes'

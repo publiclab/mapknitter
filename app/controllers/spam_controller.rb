@@ -142,4 +142,17 @@ class SpamController < ApplicationController
     flash[:notice] = helpers.pluralize(unbanned_authors, 'author') + ' unbanned.'
     redirect_back(fallback_location: root_path)
   end
+
+  def filter_maps
+    @maps = case params[:type]
+      when 'spammed'
+        paginate_results(Map.where(status: 0).order('updated_at DESC'))
+      when 'published'
+        paginate_results(Map.where(status: 1).order('updated_at DESC'))
+      when 'created'
+        paginate_results(Map.order('created_at DESC'))
+      else
+        paginate_results(Map.order('updated_at DESC'))
+      end
+  end
 end
