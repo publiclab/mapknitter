@@ -491,4 +491,50 @@ class SpamControllerTest < ActionController::TestCase
     assert_equal '0 authors unbanned.', flash[:notice]
     assert_redirected_to root_path
   end
+
+  test 'should filter maps and show only published maps' do
+    @map.spam
+
+    assert_equal Map::Status::BANNED, @map.status
+    assert_equal 'Saugus Landfill Incinerator', @map.name
+
+    session[:user_id] = 2
+    post(:filter_maps, params: { type: 'published' })
+    @maps = assigns(:maps)
+    
+    assert_equal 5, Map.count
+    assert_equal 4, @maps.length
+    assert @maps.all? { |map| map.status == Map::Status::NORMAL }
+    assert @maps.collect(&:name).exclude?('Saugus Landfill Incinerator')
+  end
+
+  test 'should filter maps and show only spammed maps' do
+    @map.spam
+
+    session[:user_id] = 2
+    post(:filter_maps, params: { type: 'spammed' })
+    @maps = assigns(:maps)
+    
+    assert_equal 5, Map.count
+    assert_equal 1, @maps.length
+    assert @maps.all? { |map| map.status == Map::Status::BANNED && map.name == 'Saugus Landfill Incinerator'}
+  end
+
+  test 'should show first 3 recently created maps' do
+    session[:user_id] = 2
+    post(:filter_maps, params: { type: 'created', limit: 3 })
+    @maps = assigns(:maps)
+    
+    assert_equal 5, Map.count
+    assert_equal 3, @maps.length
+  end
+
+  test 'should show the most recently updated map' do
+    session[:user_id] = 2
+    post(:filter_maps, params: { type: 'updated', limit: 1 })
+    @maps = assigns(:maps)
+    
+    assert_equal 5, Map.count
+    assert_equal 1, @maps.length
+  end
 end

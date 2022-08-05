@@ -37,4 +37,8 @@ class RoutesTest < ActionDispatch::IntegrationTest
   test "test batch-unban-users route" do
     assert_routing({ path: '/moderate/batch_unban_users/1,2', method: :patch }, { controller: 'spam', action: 'batch_unban_users', ids: '1,2' })
   end
+
+  test "test filter-maps route" do
+    assert_routing({ path: '/moderate/filter_maps/created', method: :get }, { controller: 'spam', action: 'filter_maps', type: 'created' })
+  end
 end
