@@ -39,6 +39,10 @@ class RoutesTest < ActionDispatch::IntegrationTest
   end
 
   test "test filter-maps route" do
-    assert_routing({ path: '/moderate/filter_maps/created', method: :get }, { controller: 'spam', action: 'filter_maps', type: 'created' })
+    assert_routing({ path: '/moderate/filter_maps/updated', method: :get }, { controller: 'spam', action: 'filter_maps', type: 'updated' })
+  end
+
+  test "test filter-users route" do
+    assert_routing({ path: '/moderate/filter_users/active', method: :get }, { controller: 'spam', action: 'filter_users', type: 'active' })
   end
 end
