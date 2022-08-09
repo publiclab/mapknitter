@@ -537,4 +537,50 @@ class SpamControllerTest < ActionController::TestCase
     assert_equal 5, Map.count
     assert_equal 1, @maps.length
   end
+
+  test 'should filter users and show only active users' do
+    @user.ban
+
+    assert_equal User::Status::BANNED, @user.status
+    assert_equal 'quentin', @user.login
+
+    session[:user_id] = 2
+    post(:filter_users, params: { type: 'active' })
+    @users = assigns(:users)
+    
+    assert_equal 4, User.count
+    assert_equal 3, @users.length
+    assert @users.all? { |user| user.status == User::Status::NORMAL }
+    assert @users.collect(&:login).exclude?('quentin')
+  end
+
+  test 'should filter users and show only banned users' do
+    @user.ban
+
+    session[:user_id] = 2
+    post(:filter_users, params: { type: 'banned' })
+    @users = assigns(:users)
+    
+    assert_equal 4, User.count
+    assert_equal 1, @users.length
+    assert @users.all? { |user| user.status == User::Status::BANNED && user.login == 'quentin'}
+  end
+
+  test 'should filter users and show only moderators' do
+    session[:user_id] = 2
+    post(:filter_users, params: { type: 'moderator', limit: 5 })
+    @users = assigns(:users)
+    
+    assert_equal 4, User.count
+    assert_equal 0, @users.length
+  end
+
+  test 'should filter users and show only admins' do
+    session[:user_id] = 2
+    post(:filter_users, params: { type: 'admin', limit: 5 })
+    @users = assigns(:users)
+    
+    assert_equal 4, User.count
+    assert_equal 1, @users.length
+  end
 end

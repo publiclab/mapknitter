@@ -136,7 +136,7 @@ Mapknitter::Application.routes.draw do
       delete action + '/:ids', action: action, as: action
     end
 
-    %w(filter_maps).each do |action|
+    %w(filter_maps filter_users).each do |action|
       get action + '/:type', action: action, as: action
     end
   end

@@ -155,4 +155,18 @@ class SpamController < ApplicationController
         paginate_results(Map.order('updated_at DESC'))
       end
   end
+
+  def filter_users
+    @users = case params[:type]
+      when 'banned'
+        paginate_results(User.where(status: 0).order('created_at DESC'))
+      when 'moderator'
+        paginate_results(User.where(role: 'moderator').order('created_at DESC'))
+      when 'admin'
+        paginate_results(User.where(role: 'admin').order('created_at DESC'))
+      else
+        paginate_results(User.where(status: 1).order('created_at DESC'))
+      end
+    puts @users.inspect
+  end
 end
