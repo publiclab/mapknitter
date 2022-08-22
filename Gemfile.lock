@@ -251,7 +251,7 @@ GEM
       net-http-persistent (~> 2.9)
       redcarpet (>= 3.0.0)
       ruby-hmac (>= 0.4.0)
-    rubocop (1.35.0)
+    rubocop (1.35.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
