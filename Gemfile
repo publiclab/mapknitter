@@ -18,7 +18,7 @@ gem 'paper_trail'
 group :dependencies do
   gem 'mysql2', '< 0.6'
   gem 'image_science', '1.3.1'
-  gem 'recaptcha', '~> 5.10.0', require: 'recaptcha/rails'
+  gem 'recaptcha', '~> 5.12.1', require: 'recaptcha/rails'
   gem 'oa-openid', '0.3.2'
   gem 'ruby-openid', '~>2.9'
   gem 'open_id_authentication'
