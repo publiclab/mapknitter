@@ -19,7 +19,7 @@
     "leaflet-google-places-autocomplete": "0.0.9",
     "image-sequencer": "^3.7.3",
     "ion-rangeslider": "ionDen/ion.rangeslider#~2.3.1",
-    "jquery": "^3.6.0",
+    "jquery": "^3.6.1",
     "jquery-ui": "components/jqueryui#^1.12.1",
     "jquery-ujs": "rails/jquery-ujs#~1.2.3",
     "junction": "theleagueof/junction#*",
