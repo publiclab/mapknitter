@@ -23,7 +23,7 @@
     "jquery-ui": "components/jqueryui#^1.12.1",
     "jquery-ujs": "rails/jquery-ujs#~1.2.3",
     "junction": "theleagueof/junction#*",
-    "leaflet": "^1.8.0",
+    "leaflet": "^1.9.0",
     "leaflet-distortableimage": "^0.21.7",
     "leaflet-draw": "Leaflet/Leaflet.draw#0.2.4",
     "leaflet-easybutton": "^2.4.0",
