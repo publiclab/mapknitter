@@ -75,23 +75,9 @@ class SessionsController < ApplicationController
       # we splice back in the real username from PublicLab.org's response
       identity_url = identity_url.split('/')[0..-2].join('/') + '/' + registration['nickname']
       if result.successful?
-        @user = User.find_by_identity_url(identity_url)
-        unless @user
-          @user = User.new
-          @user.login = registration['nickname']
-          @user.email = registration['email']
-          @user.identity_url = identity_url
+        @user = check_user_status(identity_url, registration)
+        return false unless @user
 
-          hash = registration['fullname'].split(':')
-          @user.role = hash[1].split('=')[1]
-          begin
-            @user.save!
-          rescue ActiveRecord::RecordInvalid => e
-            puts e
-            failed_login("User can not be associated to local account. Probably the account already exists with different capitalization!")
-            return
-          end
-        end
         nonce = params[:n]
         if nonce
           tmp = Sitetmp.find_by(nonce: nonce)
@@ -133,6 +119,47 @@ class SessionsController < ApplicationController
         redirect_to(back_to)
       else
         redirect_to('/sites')
+      end
+    end
+  end
+
+  def check_user_status(identity_url, registration)
+    # extract user status and role on PublicLab
+    pl_status = registration['fullname'].split(':').first.split('=')[1].to_i
+    pl_role = registration['fullname'].split(':').last.split('=')[1]
+    # check if user already exists on MapKnitter
+    user = User.find_by_identity_url(identity_url)
+    if user
+      if user.status != User::Status::NORMAL
+        failed_login('User has either been banned or moderated and cannot access MapKnitter')
+        nil
+      else
+        if pl_status == User::Status::NORMAL
+          user
+        else
+          user.update_user(pl_status)
+          failed_login('User has either been banned or moderated and cannot access MapKnitter')
+          nil
+        end
+      end
+    else
+      if pl_status == User::Status::NORMAL
+        user = User.new
+        user.login = registration['nickname']
+        user.email = registration['email']
+        user.identity_url = identity_url
+        user.role = pl_role
+        user.status = pl_status
+        begin
+          user.save!
+        rescue ActiveRecord::RecordInvalid => e
+          puts e
+          failed_login("User can not be associated to local account. Probably the account already exists with different capitalization!")
+          nil
+        end
+      else
+        failed_login('User has either been banned or moderated and cannot access MapKnitter')
+        nil
       end
     end
   end
