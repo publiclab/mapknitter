@@ -3003,9 +3003,10 @@ jquery-ujs@rails/jquery-ujs#~1.2.3:
   version "1.2.3"
   resolved "https://codeload.github.com/rails/jquery-ujs/tar.gz/83b041ba72261f487b9264b9e94211e8107a1f18"
 
-jquery@>=1.10, jquery@^3.2.1, jquery@^3.3.1, jquery@^3.6.0:
-  version "3.6.0"
-  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/e786e3d9707ffd9b0dd330ca135b66344dcef85a"
+jquery@>=1.10, jquery@^3.2.1, jquery@^3.3.1, jquery@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
+  integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
 
 js-yaml@3.x:
   version "3.14.1"
