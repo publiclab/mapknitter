@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "test": "bundle exec rspec && yarn test",
+    "build": "bundle install && yarn install",
+    "launch": "rails server"
+  }
+}
