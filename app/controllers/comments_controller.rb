@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
     if logged_in?
 
       @comment = current_user.comments.new(comment_params)
+      @comment.body = markdown_to_html(@comment.body)
       @map = @comment.map
       if @comment.save!
         users = @map.comments.collect(&:user).uniq
@@ -28,6 +29,8 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     if logged_in? && current_user.can_edit?(@comment)
       @comment.update_attributes(comment_params)
+      @comment.body = markdown_to_html(@comment.body)
+      @comment.save
       redirect_to(@comment.map)
     else
       flash[:error] = 'You do not have permissions to update that comment.'

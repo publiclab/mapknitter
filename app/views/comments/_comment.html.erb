@@ -27,7 +27,7 @@
       </div>
     </div>
   </div><!-- .comment-header -->
-  <div class="comment-body" style="border: 1px solid #e7e7e7;padding: 18px; margin-bottom: 20px;" data-comment-id="<%= comment.id %>"><%=raw markdown_to_html(comment.body) %></div><!-- .comment-body -->
+  <div class="comment-body" style="border: 1px solid #e7e7e7;padding: 18px; margin-bottom: 20px;" data-comment-id="<%= comment.id %>"><%=raw convert_markdown_to_html_for_comments(comment.body) %></div><!-- .comment-body -->
   <div class="comment-edit-form" data-comment-id="<%= comment.id %>" style="display:none">
     <%= form_for([@map, comment]) do |f| %>
       <%= f.text_area :body, :class => "form-control" %>
