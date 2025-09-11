@@ -23,13 +23,13 @@
     -->
     <script>
       if (window.location == "https://mapknitter.org/") {
-        window.location = "https://publiclab.github.io/Leaflet.DistortableImage/examples/archive/";
+        window.location = "https://publiclab.github.io/Leaflet.DistortableImage/examples/archive";
       } else if (window.location.href.split('/')[4] == "embed") {
         var path = "https://publiclab.github.io/Leaflet.DistortableImage/examples/archive?json=https://archive.org/download/mapknitter-wayback/" + document.location.href.split('.org/embed/')[1];
-        window.location = "https://publiclab.github.io/Leaflet.DistortableImage/" + path;
+        window.location = path;
       } else {
         var path = "https://publiclab.github.io/Leaflet.DistortableImage/examples/archive?json=https://archive.org/download/mapknitter-wayback/" + document.location.href.split('.org/map/')[1];
-        window.location = "https://publiclab.github.io/Leaflet.DistortableImage/" + path;
+        window.location = path;
       }
     </script>
   </body>
