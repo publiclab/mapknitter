@@ -7,12 +7,17 @@
 [![first-timers-only-friendly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://code.publiclab.org#r=all)
 [![View performance data on Skylight](https://badges.skylight.io/typical/ArYnJAb3VUC9.svg?token=DJ-zenCIFAootUAeQ8BkTiTkMBXkNpNc-PXTLA4dqDU)](https://www.skylight.io/app/applications/ArYnJAb3VUC9)
 
-Use Public Lab's open source MapKnitter to upload your own aerial photographs (for example, those from balloon or kite mapping: https://publiclab.org/wiki/balloon-mapping) and combine them into:
+MapKnitter is an open-source tool developed by [Public Lab](https://publiclab.org) that allows users to upload aerial photographs (from kites, balloons, drones, etc.) and stitch them together into maps. You can export these maps as:
+- Web "slippy maps" (like Google Maps)
+- GeoTiff
+- TMS
+- High-resolution JPEG
 
-* Web "slippy maps" like Google Maps
-* GeoTiff
-* TMS
-* High resolution JPEG
+### Key Features
+- Combine aerial imagery into cohesive maps
+- Export in multiple formats (GeoTiff, TMS, JPEG)
+- Client-side image distortion through the [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage) plugin
+
 
 ![demo](https://raw.githubusercontent.com/publiclab/mapknitter/master/public/demo.gif)
 
@@ -51,11 +56,10 @@ MapKnitter is broken into three major components:
 
 ## Installation
 
-Please consider which installation method you prefer. Cloud Installation requires fewer steps and is platform agnostic, but you may value working from your terminal, for familiarity, more.
-
-- [Cloud Installation](#cloud-installation)
-- [Standard Installation](#standard-installation)
-- [Windows Installation](#windows-installation)
+Please choose the installation method that suits your environment:
+- **Cloud Installation**: Fewer steps, works on any platform, recommended for quick setup.
+- **Standard Installation**: Terminal-based installation for those familiar with working locally.
+- **Windows Installation**: If you're using Windows, it's recommended to set up a virtual environment or dual-boot with Linux for smoother compatibility with Ruby on Rails.
 
 <hr>
 
@@ -194,17 +198,20 @@ We recommend either working in a virtual environment or on a dual-booted system 
 
 <hr>
 
-## Logging in when running locally
+## Usage Guide
 
-Because MapKnitter uses a remote, OpenID login system that depends on PublicLab.org, it can be hard to log in when running it locally. To get around this, we've created a local login route that requires no password:
+### Logging in Locally
+Since MapKnitter uses a remote OpenID login system, it may be challenging to log in locally without some tweaks. To work around this, we’ve created a local login route that doesn’t require a password. 
 
-You can log in locally at the path `http://localhost:3000/local/USERNAME` where `USERNAME` is the login name of a user saved on your database.
+You can log in locally using:
+http://localhost:3000/local/USERNAME
 
-For this to work:
+where `USERNAME` is the name of an existing user in your database.
 
- - You will need to have copied and configured config/config.yml from config/config.yml.example.
-
- - The user has to be an existing record. For your convenience, we have added two user accounts in [seeds.rb](./db/seeds.rb) to make their corresponding paths available in development after installation:
+1. Configure the `config/config.yml` file as outlined in the installation steps.
+2. After running the seeds file, two default user accounts will be available:
+    - `harry` for basic access: http://localhost:3000/local/harry
+    - `albus` for admin access: http://localhost:3000/local/albus
 
 ```Ruby
 # basic account path - http://localhost:3000/local/harry
@@ -256,6 +263,15 @@ Help improve Public Lab software!
 * Some devs hang out in http://publiclab.org/chat (IRC webchat)
 * Find lots of info on contributing at http://publiclab.org/wiki/developers
 * Join our gitter chat at https://gitter.im/publiclab/publiclab
+
+## Contributing
+
+We encourage contributions to improve MapKnitter! If you're new to open source, check out the [First-Timers-Only issues](https://code.publiclab.org#r=all) to get started. 
+
+For general contributing guidelines, visit:
+- [Contribution Guide](https://publiclab.org/wiki/contributing-to-public-lab-software)
+- [Open Issues on GitHub](https://github.com/publiclab/mapknitter/issues)
+
 
 ## Staging infrastructure and testing
 
