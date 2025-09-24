@@ -72,6 +72,10 @@ class User < ApplicationRecord
     update!({ status: Status::NORMAL, status_updated_at: Time.now })
   end
 
+  def update_user(status)
+    update!({ status: status, status_updated_at: Time.now })
+  end
+
   # Permissions for viewing banned maps and users
   def can_moderate?
     role == 'admin' || role == 'moderator'
