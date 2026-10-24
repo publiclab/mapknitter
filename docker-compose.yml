@@ -17,6 +17,8 @@ services:
     image: mapknitter-dev
     env_file:
       - mapknitter.env
+    environment:
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE:?Set SECRET_KEY_BASE to a unique random value (e.g. rake secret)}
     volumes:
       - .:/app
       - bundle_cache:/usr/local/bundle
